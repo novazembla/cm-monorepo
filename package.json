@@ -1,0 +1,66 @@
+{
+  "name": "culturemap",
+  "private": true,
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint"
+    }
+  },
+  "scripts": {
+    "dev": "npx concurrently -k -p \"[{name}]\" -n \"CORE,API,FRONTEND\" -c \"#d531f5,#4d5ffa,#09e3b4\" \"npm run core:dev\" \"npm run api:dev\" \"npm run frontend:dev\"",
+    "build": "npm run core:build && npm run api:build",
+    "lint": "npm run core:lint && npm run api:lint",
+    "api:start": "node ./packages/api/dist/index.js",
+    "api:dev": "npm run api:build && npx concurrently -k -p \"[{name}]\" -n \"BABEL,TYPINGS,NODE\" -c \"#dddddd,#aaaaaa,#777777\" \"npm run api:watch:babel\" \"npm run api:watch:typings\" \"npm run api:watch:node\"",
+    "api:build": "npx rimraf ./packages/api/dist && npx babel ./packages/api/src --out-dir ./packages/api/dist --extensions .ts",
+    "api:typings": "npx tsc ./packages/api/src/**/*.ts  --declaration --esModuleInterop  --emitDeclarationOnly --outDir ./packages/api/types",
+    "api:watch:babel": "npx babel ./packages/api/src --watch --out-dir ./packages/api/dist --extensions .ts",
+    "api:watch:node": "nodemon --watch ./packages/api/dist --watch ./packages/core/dist ./packages/api/dist/index.js",
+    "api:watch:typings": "npx tsc --preserveWatchOutput --declaration --esModuleInterop --emitDeclarationOnly --watch ./packages/api/src/**/*.ts --outDir ./packages/api/types",
+    "api:lint": "eslint ./packages/api/src --ext .js,.ts",
+    "core:dev": "npx concurrently -k -p \"[{name}]\" -n \"BABEL,TYPINGS\" -c \"#dddddd,#aaaaaa,#777777\" \"npm run core:watch:babel\" \"npm run core:watch:typings\"",
+    "core:build": "npm run core:build && npx rimraf ./packages/core/dist && npx babel ./packages/core/src --out-dir ./packages/core/dist --extensions .ts && npm run core:typings",
+    "core:typings": "npx tsc ./packages/core/src/**/*.ts --declaration --esModuleInterop --emitDeclarationOnly --outDir ./packages/core/types",
+    "core:watch:babel": "npx babel ./packages/core/src --watch --out-dir ./packages/core/dist --extensions .ts",
+    "core:watch:typings": "npx tsc ./packages/core/src/*.ts --watch --declaration --esModuleInterop --emitDeclarationOnly --preserveWatchOutput --outDir ./packages/core/types",
+    "core:lint": "eslint ./packages/api/src --ext .js,.ts",
+    "frontend:dev": "npm run dev -w @culturemap/frontend"
+  },
+  "lint-staged": {
+    "packages/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
+      "prettier --write"
+    ]
+  },
+  "devEngines": {
+    "node": "^14.x || 15.x || 16.x"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.14.5",
+    "@babel/core": "^7.14.6",
+    "@babel/preset-env": "^7.14.7",
+    "@babel/preset-typescript": "^7.14.5",
+    "@typescript-eslint/eslint-plugin": "^4.28.1",
+    "babel-plugin-add-import-extension": "^1.5.1",
+    "concurrently": "^6.2.0",
+    "eslint": "^7.29.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-airbnb-typescript": "^12.3.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-jest": "^24.3.6",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-prettier": "^3.4.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "eslint-plugin-security": "^1.4.0",
+    "husky": "^7.0.0",
+    "jest": "^27.0.6",
+    "lerna": "^4.0.0",
+    "lint-staged": "^11.0.0",
+    "prettier": "^2.3.2",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.3.5"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
+}

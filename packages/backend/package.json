@@ -1,0 +1,16 @@
+{
+  "name": "@culturemap/backend",
+  "version": "0.0.1",
+  "description": "CultureMap's backend",
+  "main": "src/index.ts",
+  "private": false,
+  "scripts": {
+    "lint": "eslint ./src --ext .js,.ts"
+  },
+  "contributors": [
+    {
+      "name": "Vincent Van Uffelen"
+    }
+  ],
+  "license": "MIT"
+}

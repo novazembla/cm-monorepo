@@ -1,0 +1,27 @@
+{
+  "name": "@culturemap/api",
+  "version": "0.0.1",
+  "type": "module",
+  "description": "The CultureMap API",
+  "main": "dist/index.js",
+  "typings": "typings/index.d.ts",
+  "private": false,
+  "contributors": [
+    {
+      "name": "Vincent Van Uffelen"
+    }
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@types/cors": "^2.8.10",
+    "@types/express": "^4.17.12",
+    "apollo-server-express": "^2.25.2",
+    "core-js": "^3.15.2",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "graphql": "^15.5.1"
+  },
+  "peerDependencies": {
+    "@culturemap/core": "^0.0.1"
+  }
+}

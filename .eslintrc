@@ -1,0 +1,26 @@
+{
+  "env": {
+    "node": true,
+    "jest": true,
+    "es6": true
+  },
+  "extends": [
+    "airbnb-typescript",
+    "plugin:jest/recommended",
+    "plugin:prettier/recommended"
+  ],
+  "plugins": ["jest", "security", "prettier"],
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "sourceType": "module",
+    "project": "./tsconfig.eslint.json"
+  },
+  "rules": {
+    "no-console": "error",
+    "func-names": "off",
+    "no-underscore-dangle": "off",
+    "consistent-return": "off",
+    "jest/expect-expect": "off",
+    "security/detect-object-injection": "off"
+  }
+}
