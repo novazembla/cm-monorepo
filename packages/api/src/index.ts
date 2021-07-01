@@ -10,15 +10,17 @@ async function startApolloServer() {
   });
   await server.start();
 
-  server.applyMiddleware({ app }); 
+  server.applyMiddleware({ app });
 
   app.use((req, res) => {
     res.status(200);
-    res.send("Hello! 222");
+    res.json({"xxx":"Hello! 222"});
     res.end();
   });
 
   app.listen({ port: 8080 });
+
+  // eslint-disable-next-line no-console
   console.log(`🚀 Server ready at http://localhost:8080${server.graphqlPath}`);
   return { server, app };
 }

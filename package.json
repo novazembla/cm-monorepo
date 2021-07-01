@@ -7,6 +7,7 @@
     }
   },
   "scripts": {
+    "install": "npx husky install",
     "dev": "npx concurrently -k -p \"[{name}]\" -n \"CORE,API,FRONTEND\" -c \"#d531f5,#4d5ffa,#09e3b4\" \"npm run core:dev\" \"npm run api:dev\" \"npm run frontend:dev\"",
     "build": "npm run core:build && npm run api:build",
     "lint": "npm run core:lint && npm run api:lint",
@@ -24,7 +25,8 @@
     "core:watch:babel": "npx babel ./packages/core/src --watch --out-dir ./packages/core/dist --extensions .ts",
     "core:watch:typings": "npx tsc ./packages/core/src/*.ts --watch --declaration --esModuleInterop --emitDeclarationOnly --preserveWatchOutput --outDir ./packages/core/types",
     "core:lint": "eslint ./packages/api/src --ext .js,.ts",
-    "frontend:dev": "npm run dev -w @culturemap/frontend"
+    "frontend:dev": "npm run dev -w @culturemap/frontend",
+    "frontend:lint": "eslint ./packages/frontend/ --ext .js,.ts,.jsx,.tsx"
   },
   "lint-staged": {
     "packages/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [

@@ -1,3 +1,4 @@
+import { request, gql } from 'graphql-request'
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
@@ -5,10 +6,22 @@ import useSWR from 'swr'
 
 const fetchURL = (url: string) => fetch(url).then(res => res.json())
 
+
+
+const fetcher = (query) => request('http://localhost:8080/graphql', query)
+
+
+const query = gql`query {
+  books {
+    title
+    author
+  }
+}`
+
 export default function Home() {
   const { data, error } = useSWR(
-    'http://localhost:8080/', 
-    fetchURL
+    query, 
+    fetcher
   )
 
   if (error) return <p>Error!</p>
@@ -24,7 +37,7 @@ export default function Home() {
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          {JSON.stringify(data, null, 2)} dddd
+          {JSON.stringify(data, null, 2)}
         </h1>
  
         <p className={styles.description}>
