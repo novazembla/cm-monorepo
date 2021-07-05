@@ -1,32 +1,30 @@
-import { request, gql } from 'graphql-request'
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
-import useSWR from 'swr'
+import React from "react";
+import { request, gql } from "graphql-request";
+import useSWR from "swr";
 
-const fetchURL = (url: string) => fetch(url).then(res => res.json())
+import Head from "next/head";
+import Image from "next/image";
 
+import styles from "../styles/Home.module.css";
 
+const fetcher = (query: string) =>
+  request("http://localhost:8080/graphql", query);
 
-const fetcher = (query) => request('http://localhost:8080/graphql', query)
-
-
-const query = gql`query {
-  books {
-    title
-    author
+const query = gql`
+  query {
+    books {
+      title
+      author
+    }
   }
-}`
+`;
 
 export default function Home() {
-  const { data, error } = useSWR(
-    query, 
-    fetcher
-  )
+  const { data, error } = useSWR(query, fetcher);
 
-  if (error) return <p>Error!</p>
-  if (!data) return <p>Loading...</p>
-  
+  if (error) return <p>Error!</p>;
+  if (!data) return <p>Loading...</p>;
+
   return (
     <div className={styles.container}>
       <Head>
@@ -36,12 +34,10 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          {JSON.stringify(data, null, 2)}
-        </h1>
- 
+        <h1 className={styles.title}>{JSON.stringify(data, null, 2)}</h1>
+
         <p className={styles.description}>
-          Get started by editing{' '}
+          Get started by editing{" "}
           <code className={styles.code}>pages/index.js</code>
         </p>
 
@@ -82,12 +78,12 @@ export default function Home() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by{' '}
+          Powered by{" "}
           <span className={styles.logo}>
             <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
           </span>
         </a>
       </footer>
     </div>
-  )
+  );
 }

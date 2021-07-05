@@ -139,7 +139,7 @@ temp/
 .husky/
 
 dist/
-types/
+build/
 
 data/*
 !data/.keep

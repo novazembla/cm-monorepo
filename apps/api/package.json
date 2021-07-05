@@ -1,0 +1,18 @@
+{
+  "name": "culturemap-api",
+  "type": "module",
+  "version": "0.0.1",
+  "description": "CultureMap's Api APP",
+  "main": "src/index.ts",
+  "private": true,
+  "contributors": [
+    {
+      "name": "Vincent Van Uffelen"
+    }
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@culturemap/api": "^0.0.1",
+    "@culturemap/core": "^0.0.1"
+  }
+}

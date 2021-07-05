@@ -1,23 +1,35 @@
 type PluginScopes = "location" | "event" | "page";
 
 interface Plugin {
-  name: string,
-  scope: PluginScopes
+  name: string;
+  scope: PluginScopes;
 }
 
-interface Plugins {
-  plugins: Array<Plugin>,
-  register: Function,
-  apply: Function; 
+export interface Plugins {
+  plugins: Array<Plugin>;
+  register: (plugin: Plugin) => void;
+  apply: (scope: string) => number;
 }
 
-const plugins: Plugins = {
-  plugins: [{
-    name: 'Lichtenberg Veranstaltung Plugin',
-    scope: 'event'
-  }],
-  register: () => console.log('Register plugin'),
-  apply: () => console.log('Register plugin')
+export const plugins: Plugins = {
+  plugins: [
+    {
+      name: "Lichtenberg Veranstaltung Plugin",
+      scope: "event",
+    },
+  ],
+  register(plugin: Plugin) {
+    this.plugins.push(plugin);
+  },
+  apply(scope: string) {
+    let count = 0;
+    this.plugins.forEach((plugin) => {
+      if (plugin.scope === scope) {
+        count += 1;
+      }
+    });
+    return count;
+  },
 };
 
-export default plugins
+export default plugins;

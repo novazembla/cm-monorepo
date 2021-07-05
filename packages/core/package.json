@@ -10,5 +10,8 @@
       "name": "Vincent Van Uffelen"
     }
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^10.0.0"
+  }
 }
