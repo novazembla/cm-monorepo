@@ -1,4 +1,6 @@
 TODO: so much to do 
+TODO: Learn from: https://github.com/belgattitude/nextjs-monorepo-example
+
 
 #Installation
 

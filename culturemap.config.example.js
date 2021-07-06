@@ -1,3 +1,4 @@
+// TODO: Complete once all settings have been set.
 const plugins = [];
 
 plugins.push({

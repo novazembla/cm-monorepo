@@ -3,8 +3,9 @@
   "version": "0.0.1",
   "type": "module",
   "description": "The CultureMap API",
+  "source": "src/index.ts",
   "main": "dist/index.js",
-  "typings": "typings/index.d.ts",
+  "typings": "dist/index.d.ts",
   "private": false,
   "contributors": [
     {
@@ -13,8 +14,11 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "@prisma/client": "^2.26.0",
     "@types/cors": "^2.8.10",
     "@types/express": "^4.17.12",
+    "@types/graphql": "^14.5.0",
+    "@types/node": "^16.0.0",
     "apollo-server-express": "^2.25.2",
     "core-js": "^3.15.2",
     "cors": "^2.8.5",
@@ -23,5 +27,11 @@
   },
   "peerDependencies": {
     "@culturemap/core": "^0.0.1"
+  },
+  "devDependencies": {
+    "prisma": "^2.26.0"
+  },
+  "prisma": {
+    "schema": "./prisma/schema.prisma"
   }
 }

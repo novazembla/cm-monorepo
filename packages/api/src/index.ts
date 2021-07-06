@@ -1,2 +1,3 @@
-export { default as app } from "./app";
-export { default as server } from "./server";
+export * from "./graphql";
+export * from "./app";
+export * from "./server";

@@ -17,4 +17,5 @@ export const roles: Roles = {
 roles.add("administrator");
 roles.add("editor");
 roles.add("contributor");
+
 export default roles;

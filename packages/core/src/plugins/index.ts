@@ -1,6 +1,6 @@
-type PluginScopes = "location" | "event" | "page";
+export type PluginScopes = "location" | "event" | "page";
 
-interface Plugin {
+export interface Plugin {
   name: string;
   scope: PluginScopes;
 }
@@ -16,7 +16,7 @@ export const plugins: Plugins = {
     {
       name: "Lichtenberg Veranstaltung Plugin",
       scope: "event",
-    },
+    }, 
   ],
   register(plugin: Plugin) {
     this.plugins.push(plugin);
