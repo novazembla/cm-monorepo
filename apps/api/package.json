@@ -1,5 +1,5 @@
 {
-  "name": "culturemap-api",
+  "name": "api",
   "type": "module",
   "version": "0.0.1",
   "description": "CultureMap's Api APP",

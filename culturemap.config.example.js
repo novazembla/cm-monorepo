@@ -1,4 +1,3 @@
-// TODO: Complete once all settings have been set.
 const plugins = [];
 
 plugins.push({
@@ -21,7 +20,19 @@ const theme = {
   },
 };
 
+const db = {
+  defaultPageSize: 50,
+  privateJSONDataKeys: {
+    all: ["password"],
+    location: ["createdAt", "updatedAt"],
+    event: ["createdAt", "updatedAt"],
+    tour: ["createdAt", "updatedAt"],
+    user: ["password"],
+  },
+};
+
 export default {
   plugins,
   theme,
+  db,
 };

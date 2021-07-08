@@ -3,33 +3,51 @@ import { access } from "fs/promises";
 import path from "path";
 import dotenv from "dotenv";
 
-import { Plugin, plugins } from "../plugins";
+import { Plugins, plugins } from "../plugins";
 import { updateWindmillUISettings, updateCultureMapSettings } from "../theme";
 
 dotenv.config();
 export const { env } = process;
 
-export interface CulturemapSettings {
-  plugins: Array<Plugin>;
+export interface CulturemapPrivateJSONDataKeys {
+  all: Array<string>;
+  location: Array<string>;
+  event: Array<string>;
+  tour: Array<string>;
+  user: Array<string>;
+}
+
+export interface CulturemapDBSettings {
+  defaultPageSize: number;
+  privateJSONDataKeys: CulturemapPrivateJSONDataKeys;
+}
+
+export interface Config {
+  plugins: Plugins;
   theme: {
     windmillUI: object;
     culturemap: object;
   };
-}
-
-export const culturemap: CulturemapSettings = {
-  plugins: [],
-  theme: {
-    windmillUI: {},
-    culturemap: {},
-  },
-};
-
-export interface Config {
-  culturemap: CulturemapSettings;
+  db: CulturemapDBSettings;
   env: NodeJS.ProcessEnv;
   prepare: Function;
 }
+
+const theme = {
+  windmillUI: {},
+  culturemap: {},
+};
+
+const db: CulturemapDBSettings = {
+  defaultPageSize: 50,
+  privateJSONDataKeys: {
+    all: ["password"],
+    location: ["createdAt", "updatedAt"],
+    event: ["createdAt", "updatedAt"],
+    tour: ["createdAt", "updatedAt"],
+    user: ["password"],
+  },
+};
 
 async function exists(filePath) {
   try {
@@ -44,27 +62,41 @@ async function getConfigFromFile(configFilePath) {
   try {
     const cmConfig = await import(configFilePath);
 
-    if (
-      cmConfig?.default?.plugins &&
-      Array.isArray(cmConfig?.default.plugins)
-    ) {
-      culturemap.plugins = [
-        ...culturemap.plugins,
-        ...cmConfig?.default.plugins,
-      ];
+    if (cmConfig?.default?.plugins && Array.isArray(cmConfig.default.plugins)) {
+      cmConfig.default.plugins.forEach((plugin) => {
+        plugins.register(plugin);
+      });
+    }
+
+    if ("privateJSONDataKeys" in cmConfig?.default) {
+      Object.keys(db.privateJSONDataKeys).forEach((key) => {
+        if (key in cmConfig.default.privateJSONDataKeys) {
+          db.privateJSONDataKeys[key] = cmConfig.default.privateJSONDataKeys[
+            key
+          ].reduce((jsonKeys, jsonKey) => {
+            if (jsonKeys.indexOf(jsonKey) === -1) jsonKeys.push(jsonKey);
+
+            return jsonKeys;
+          }, db.privateJSONDataKeys[key]);
+        }
+      });
+    }
+
+    if ("db" in cmConfig?.default && "defaultPageSize" in cmConfig.default.db) {
+      db.defaultPageSize = cmConfig.default.db.defaultPageSize;
     }
 
     if ("theme" in cmConfig?.default) {
       if ("windmillUI" in cmConfig?.default.theme) {
-        culturemap.theme.windmillUI = {
-          ...culturemap.theme.windmillUI,
-          ...cmConfig?.default.theme.windmillUI,
+        theme.windmillUI = {
+          ...theme.windmillUI,
+          ...cmConfig.default.theme.windmillUI,
         };
       }
       if ("culturemap" in cmConfig?.default.theme) {
-        culturemap.theme.culturemap = {
-          ...culturemap.theme.culturemap,
-          ...cmConfig?.default.theme.culturemap,
+        theme.culturemap = {
+          ...theme.culturemap,
+          ...cmConfig.default.theme.culturemap,
         };
       }
     }
@@ -80,24 +112,14 @@ export const prepare = async () => {
     await getConfigFromFile(configFilePath);
   }
 
-  if (Array.isArray(culturemap.plugins)) {
-    culturemap.plugins.forEach((plugin) => {
-      plugins.register(plugin);
-    });
-  }
-
-  if ("theme" in culturemap) {
-    if ("windmillUI" in culturemap.theme) {
-      updateWindmillUISettings(culturemap.theme.windmillUI);
-    }
-    if ("culturemap" in culturemap.theme) {
-      updateCultureMapSettings(culturemap.theme.culturemap);
-    }
-  }
+  updateWindmillUISettings(theme.windmillUI);
+  updateCultureMapSettings(theme.culturemap);
 };
 
 export const config: Config = {
-  culturemap,
+  db,
+  theme,
+  plugins,
   env,
   prepare,
 };

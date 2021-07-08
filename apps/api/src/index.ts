@@ -2,6 +2,17 @@ import { app, server } from "@culturemap/api";
 import { config } from "@culturemap/core";
 
 async function startApolloServer() {
+  // The api makes use of the default prisma.schema found in
+  // ./packages/api/prisma/ you can run your own schema by extending/changing
+  // the base schema and having a second prisma folder, generating an own
+  // Prisma client and setting the instance before you start the server.
+  // Set the instance by importing db from @culturemap/api and then calling
+  // db.setPrismaClient(YourPrismaClientInstance)
+  //
+  // import { app, server, db } from "@culturemap/api"
+  // db.setPrismaClient(prismaClientInstance)
+  //
+
   // before we start the server we want to make sure to
   // prepare the default settings and overwrite it with
   // additional customization and plugin initialization that might
@@ -26,12 +37,12 @@ async function startApolloServer() {
   */
 
   // finally listen to the configured port
-  app.listen({ port: config.env.API_PORT });
-
-  // eslint-disable-next-line no-console
-  console.log(
-    `🚀 Server ready at http://localhost:${config.env.API_PORT}${server.graphqlPath}`
-  );
+  app.listen({ port: config.env.API_PORT }, () => {
+    // eslint-disable-next-line no-console
+    console.log(
+      `🚀 Server ready at http://localhost:${config.env.API_PORT}${server.graphqlPath}`
+    );
+  });
 }
 
 startApolloServer();

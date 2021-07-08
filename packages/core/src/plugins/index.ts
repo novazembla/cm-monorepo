@@ -16,9 +16,10 @@ export const plugins: Plugins = {
     {
       name: "Lichtenberg Veranstaltung Plugin",
       scope: "event",
-    }, 
+    },
   ],
   register(plugin: Plugin) {
+    // TODO: the plugins mus do some sanity check, right?
     this.plugins.push(plugin);
   },
   apply(scope: string) {

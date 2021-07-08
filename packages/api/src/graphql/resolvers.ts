@@ -1,17 +1,9 @@
-const books = [
-  {
-    title: "The Awakening",
-    author: "Kate Chopin",
-  },
-  {
-    title: "City of Glass",
-    author: "Paul Auster",
-  },
-];
+import { user } from "../dao";
 
 const resolvers = {
   Query: {
-    books: () => books,
+    /* parent, args, context, info */
+    users: (...args) => user.queryUsers(args[1]),
   },
 };
 
