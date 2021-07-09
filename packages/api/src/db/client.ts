@@ -1,5 +1,5 @@
 import Prisma from "@prisma/client";
-import { config, utils } from "@culturemap/core";
+import { utils } from "@culturemap/core";
 
 const { PrismaClient } = Prisma;
 
@@ -10,7 +10,7 @@ declare let global: {
 let instance: Prisma.PrismaClient | undefined;
 
 const createNewInstance = function (): Prisma.PrismaClient {
-  const url = config.env.DATABASE_URL ?? null;
+  const url = process.env.DATABASE_URL ?? null;
   utils.Asserts.nonEmptyString(
     url,
     `Cannot create prisma client instance, missing env variable DATABASE_URL.`
@@ -25,7 +25,7 @@ const createNewInstance = function (): Prisma.PrismaClient {
 };
 
 export const setPrismaClient = function (pClient: Prisma.PrismaClient) {
-  if (config.env.NODE_ENV === "production") {
+  if (process.env.NODE_ENV === "production") {
     instance = pClient;
   } else {
     global.__PRISMA_CLIENT__ = pClient;

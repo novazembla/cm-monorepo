@@ -9,18 +9,22 @@
   },
   "scripts": {
     "install": "npx husky install",
-    "dev": "npx concurrently -k -p \"[{name}]\" -n \"P:CORE,P:API,A:API,A:FRONTEND,A:BACKEND\" -c \"#d531f5,#4d5ffa,#09e3b4,#f41788,#f1610a\" \"npm run package:core:dev\" \"npm run package:api:dev\" \"npm run app:api:dev\" \"npm run app:frontend:dev\"",
+    "dev": "npx concurrently -k -p \"[{name}]\" -n \"P:CORE,P:API,A:API,A:FRONTEND,A:BACKEND,P:EXAMPLE\" -c \"#d531f5,#4d5ffa,#09e3b4,#f41788,#f1610a,#61f10a\" \"npm run package:core:dev\" \"npm run package:api:dev\" \"npm run app:api:dev\" \"npm run app:frontend:dev\"  \"npm run app:backend:dev\" \"npm run plugin:example:dev\"",
     "lint": "npm run package:core:lint && npm run package:api:lint && npm run app:api:lint && npm run app:frontend:lint",
     "app:api:start": "node ./apps/api/build/index.js",
     "app:api:dev": "npx concurrently -k -p \"[{name}]\" -n \"BABEL,NODE\" -c \"#dddddd,#aaaaaa,#777777\" \"npm run app:api:watch:babel\" \"npm run app:api:watch:node\"",
     "app:api:build": "npx rimraf ./apps/api/build && npm run app:api:babel",
     "app:api:babel": "npx babel ./apps/api/src --out-dir ./apps/api/build --extensions .ts",
     "app:api:watch:babel": "npx babel ./apps/api/src --watch --out-dir ./apps/api/build --extensions .ts",
-    "app:api:watch:node": "nodemon --watch ./apps/api/build --watch ./packages/api/dist --watch ./packages/core/dist ./apps/api/build/index.js",
+    "app:api:watch:node": "env-cmd -f ./.env nodemon --watch ./apps/api/build --watch ./packages/api/dist --watch ./packages/core/dist --watch ./plugins/example/dist ./apps/api/build/index.js",
     "app:api:lint": "eslint ./apps/api/src --ext .js,.ts",
+    "app:backend:start": "npm run start -w backend",
+    "app:backend:build": "npm run build -w backend",
+    "app:backend:dev": "PORT=$(grep BACKEND_PORT .env | cut -d '=' -f2) NEXT_PUBLIC_API_URL=$(grep NEXT_PUBLIC_API_URL .env | cut -d '=' -f2) npm run dev -w backend",
+    "app:backend:lint": "eslint ./apps/backend/ --ext .ts,.tsx",
     "app:frontend:start": "npm run start -w frontend",
     "app:frontend:build": "npm run build -w frontend",
-    "app:frontend:dev": "npm run dev -w frontend",
+    "app:frontend:dev": "PORT=$(grep FRONTEND_PORT .env | cut -d '=' -f2) NEXT_PUBLIC_API_URL=$(grep NEXT_PUBLIC_API_URL .env | cut -d '=' -f2) npm run dev -w frontend",
     "app:frontend:lint": "eslint ./apps/frontend/ --ext .ts,.tsx",
     "package:api:start": "node ./packages/api/dist/index.js",
     "package:api:dev": "npx concurrently -k -p \"[{name}]\" -n \"BABEL,TYPINGS\" -c \"#dddddd,#aaaaaa,#777777\" \"npm run package:api:watch:babel\" \"npm run package:api:watch:typings\"",
@@ -36,7 +40,13 @@
     "package:core:typings": "npx tsc ./packages/core/src/*.ts --declaration --esModuleInterop --emitDeclarationOnly --outDir ./packages/core/dist",
     "package:core:watch:babel": "npx babel ./packages/core/src --watch --out-dir ./packages/core/dist --extensions .ts",
     "package:core:watch:typings": "npx tsc ./packages/core/src/*.ts --watch --declaration --esModuleInterop --emitDeclarationOnly --preserveWatchOutput --outDir ./packages/core/dist",
-    "package:core:lint": "eslint ./packages/api/src --ext .js,.ts"
+    "package:core:lint": "eslint ./packages/api/src --ext .js,.ts",
+    "plugin:example:dev": "npx concurrently -k -p \"[{name}]\" -n \"BABEL,TYPINGS\" -c \"#dddddd,#aaaaaa,#777777\" \"npm run plugin:example:watch:babel\" \"npm run plugin:example:watch:typings\"",
+    "plugin:example:build": "npx rimraf ./plugins/example/dist && npm run plugin:example:babel && npm run plugin:example:typings",
+    "plugin:example:babel": "npx babel ./plugins/example/src --out-dir ./plugins/example/dist --extensions .ts",
+    "plugin:example:typings": "npx tsc ./plugins/example/src/*.ts  --declaration --esModuleInterop  --emitDeclarationOnly --outDir ./plugins/example/dist",
+    "plugin:example:watch:babel": "npx babel ./plugins/example/src --watch --out-dir ./plugins/example/dist --extensions .ts",
+    "plugin:example:watch:typings": "npx tsc ./plugins/example/src/*.ts --watch --declaration --esModuleInterop --emitDeclarationOnly --preserveWatchOutput --outDir ./plugins/example/dist"
   },
   "lint-staged": {
     "packages/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
@@ -54,6 +64,7 @@
     "@typescript-eslint/eslint-plugin": "^4.28.1",
     "babel-plugin-add-import-extension": "^1.5.1",
     "concurrently": "^6.2.0",
+    "env-cmd": "^10.1.0",
     "eslint": "^7.29.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-airbnb-typescript": "^12.3.1",
@@ -74,10 +85,12 @@
     "typescript": "^4.3.5"
   },
   "workspaces": [
+    "apps/*",
     "packages/*",
-    "apps/*"
+    "plugins/*"
   ],
   "dependencies": {
+    "@windmill/react-ui": "^0.6.0",
     "dotenv": "^10.0.0"
   },
   "prisma": {

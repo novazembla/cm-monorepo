@@ -1,7 +1,13 @@
-import { app, server } from "@culturemap/api";
-import { config } from "@culturemap/core";
+import { app, server, config } from "@culturemap/api";
+import { plugins } from "@culturemap/core";
+import examplePlugins from "plugin-example";
+import CMSettings from "../culturemap";
 
 async function startApolloServer() {
+  // you can register additional plugins that provide hooks that will be called at
+  // appropriate places (aka "hooks") to extend the core functionality
+  plugins.register(examplePlugins);
+
   // The api makes use of the default prisma.schema found in
   // ./packages/api/prisma/ you can run your own schema by extending/changing
   // the base schema and having a second prisma folder, generating an own
@@ -16,15 +22,19 @@ async function startApolloServer() {
   // before we start the server we want to make sure to
   // prepare the default settings and overwrite it with
   // additional customization and plugin initialization that might
-  // have been done in ./culturemap.config.js
-  // This is all done by clalling config.prepare()
-  await config.prepare();
+  // have been done in ./culturemap.js
+  // This is all done by clalling config.update() and passing the imported settings
+  config.update(CMSettings);
 
   // now start the appolo server
   await server.start();
 
   // and attach it to the express app
   server.applyMiddleware({ app });
+
+  app.get("/", function (req, res) {
+    res.json({ hello: "Hello World" });
+  });
 
   /*
     Here you could attach further routes and middleware to your express app
@@ -37,10 +47,10 @@ async function startApolloServer() {
   */
 
   // finally listen to the configured port
-  app.listen({ port: config.env.API_PORT }, () => {
+  app.listen({ port: process.env.API_PORT }, () => {
     // eslint-disable-next-line no-console
     console.log(
-      `🚀 Server ready at http://localhost:${config.env.API_PORT}${server.graphqlPath}`
+      `🚀 Server ready at http://localhost:${process.env.API_PORT}${server.graphqlPath}`
     );
   });
 }

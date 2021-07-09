@@ -71,11 +71,14 @@
     }
   },
   "include": [
-    "culturemap.config.js",
-    "culturemap.config.example.js",
     "packages/*/src/**/*",
     "packages/*/dist/**/*",
+    "plugins/*/src/**/*",
+    "plugins/*/dist/**/*",
+    "apps/*/culturemap.js",
+    "apps/*/culturemap.example.js",
     "apps/api/src/**/*",
+    "apps/backend/**/*",
     "apps/frontend/**/*"
   ],
   "exclude": ["node_modules","apps/*/.next"]

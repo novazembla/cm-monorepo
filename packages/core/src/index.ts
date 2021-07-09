@@ -1,4 +1,3 @@
-export * from "./config";
 export * from "./plugins";
-export * from "./theme";
+export * from "./roles";
 export { default as utils } from "./utils";

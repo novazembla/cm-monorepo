@@ -1,6 +1,5 @@
 import winston from "winston";
 import morgan from "morgan";
-import { config } from "@culturemap/core";
 
 const enumerateErrorFormat = winston.format((info) => {
   if (info instanceof Error) {
@@ -10,10 +9,10 @@ const enumerateErrorFormat = winston.format((info) => {
 });
 
 export const logger = winston.createLogger({
-  level: config.env.env === "development" ? "debug" : "info",
+  level: process.env.env === "development" ? "debug" : "info",
   format: winston.format.combine(
     enumerateErrorFormat(),
-    config.env.env === "development"
+    process.env.env === "development"
       ? winston.format.colorize()
       : winston.format.uncolorize(),
     winston.format.splat(),
@@ -29,7 +28,7 @@ export const logger = winston.createLogger({
 morgan.token("message", (req, res) => res.locals.errorMessage || "");
 
 const getIpFormat = () =>
-  config.env.env === "production" ? ":remote-addr - " : "";
+  process.env.env === "production" ? ":remote-addr - " : "";
 const successResponseFormat = `${getIpFormat()}:method :url :status - :response-time ms`;
 const errorResponseFormat = `${getIpFormat()}:method :url :status - :response-time ms - message: :message`;
 

@@ -1,6 +1,6 @@
 import argon2 from "argon2";
 import httpStatus from "http-status";
-import { config } from "@culturemap/core";
+import config from "../config";
 import { getPrismaClient } from "../db/client";
 import { ApiError, restrictJSONOutput } from "../utils";
 

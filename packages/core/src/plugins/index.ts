@@ -1,8 +1,15 @@
 export type PluginScopes = "location" | "event" | "page";
 
+export enum PluginHooksEnum {
+  GQLSCHEMA = "graphql:schema",
+  CRONDAILY = "cron:daily",
+  EDITFIELDS = "edit:fields",
+}
+
 export interface Plugin {
   name: string;
   scope: PluginScopes;
+  hooks: { [key in PluginHooksEnum]?: Function };
 }
 
 export interface Plugins {
@@ -12,12 +19,7 @@ export interface Plugins {
 }
 
 export const plugins: Plugins = {
-  plugins: [
-    {
-      name: "Lichtenberg Veranstaltung Plugin",
-      scope: "event",
-    },
-  ],
+  plugins: [],
   register(plugin: Plugin) {
     // TODO: the plugins mus do some sanity check, right?
     this.plugins.push(plugin);

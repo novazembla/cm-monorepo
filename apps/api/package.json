@@ -13,6 +13,7 @@
   "license": "MIT",
   "dependencies": {
     "@culturemap/api": "^0.0.1",
-    "@culturemap/core": "^0.0.1"
+    "@culturemap/core": "^0.0.1",
+    "plugin-example": "^0.0.1"
   }
 }

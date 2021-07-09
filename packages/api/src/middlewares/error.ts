@@ -1,7 +1,5 @@
 import httpStatus from "http-status";
 
-import { config } from "@culturemap/core";
-
 import { logger } from "../services/logging";
 
 import ApiError from "../utils/classApiError";
@@ -21,7 +19,7 @@ export const errorConverter = ({ err, next }) => {
 // eslint-disable-next-line no-unused-vars
 export const errorHandler = ({ err, res }) => {
   let { statusCode, message } = err;
-  if (config.env.env === "production" && !err.isOperational) {
+  if (process.env.env === "production" && !err.isOperational) {
     statusCode = httpStatus.INTERNAL_SERVER_ERROR;
     message = httpStatus[httpStatus.INTERNAL_SERVER_ERROR];
   }
@@ -31,10 +29,10 @@ export const errorHandler = ({ err, res }) => {
   const response = {
     code: statusCode,
     message,
-    ...(config.env.env === "development" && { stack: err.stack }),
+    ...(process.env.env === "development" && { stack: err.stack }),
   };
 
-  if (config.env.env === "development") {
+  if (process.env.env === "development") {
     logger.error(err);
   }
 

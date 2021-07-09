@@ -1,13 +1,12 @@
 import passport from "passport";
 import { JwtStrategy, ExtractJwt } from "passport-jwt";
-import { config } from "@culturemap/core";
 
 import { tokenTypes } from "../services/authentication";
 
 const userService = require("../dao/user");
 
 const jwtOptions = {
-  secretOrKey: config.env.jwt.secret,
+  secretOrKey: process.env.jwt.secret,
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
 };
 

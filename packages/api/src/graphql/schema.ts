@@ -1,5 +1,5 @@
 import { gql } from "apollo-server-express";
-import { config } from "@culturemap/core";
+import { db } from "../config";
 
 // A schema is a collection of type definitions (hence "typeDefs")
 // that together define the "shape" of queries that are executed against
@@ -36,7 +36,7 @@ const typeDefs = gql`
   # clients can execute, along with the return type for each. In this
   # case, the "books" query returns an array of zero or more Books (defined above).
   type Query {
-    users(page: Int = 1, pageSize: Int = ${config.db.defaultPageSize}): [User!]!
+    users(page: Int = 1, pageSize: Int = ${db.defaultPageSize}): [User!]!
   }
 `;
 
