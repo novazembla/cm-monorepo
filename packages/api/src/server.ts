@@ -1,18 +1,24 @@
-import { ApolloServer } from "apollo-server-express";
+import { ApolloServer, AuthenticationError } from "apollo-server-express";
 import { typeDefs, resolvers } from "./graphql";
-import { DirectiveFieldAuth } from "./graphql/directives";
+import { DirectiveAuth } from "./graphql/directives";
 
 export const server = new ApolloServer({
   typeDefs,
   resolvers,
   uploads: false,
   schemaDirectives: {
-    fieldauth: DirectiveFieldAuth,
+    auth: DirectiveAuth,
   },
   context: ({ req }) => {
     const token = req.headers.authorization;
     // const currentUser = {}; // TODO: User.getUserByToken(token);
-    return { user: token ? 1 : 0 };
+
+    const user = Math.random() < 0.2 ? 1 : 0;
+    // if (!user) throw new AuthenticationError("Access Denied");
+
+    if (user > 2) throw AuthenticationError;
+
+    return { user, token };
   },
 });
 

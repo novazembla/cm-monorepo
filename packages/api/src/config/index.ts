@@ -1,3 +1,7 @@
+import dotenv from "dotenv";
+
+dotenv.config();
+
 export interface CulturemapPrivateJSONDataKeys {
   all: Array<string>;
   location: Array<string>;
@@ -43,4 +47,5 @@ export const update = (cmConfig) => {
   }
 };
 
-export default { db };
+// TODO: validate the existence of the needed keys
+export default { db, env: process.env };

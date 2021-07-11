@@ -73,6 +73,9 @@ export function addApolloState(client: ApolloClient<any>, pageProps: any) {
 
 export function useApollo(pageProps: any, settings: CultureMapSettings) {
   const state = pageProps[APOLLO_STATE_PROP_NAME];
-  const store = useMemo(() => initializeApollo(settings, state), [state]);
+  const store = useMemo(
+    () => initializeApollo(settings, state),
+    [state, settings]
+  );
   return store;
 }

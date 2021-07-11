@@ -5,7 +5,9 @@
     "es6": true
   },
   "extends": [
+    "react-app",
     "airbnb-typescript",
+    "plugin:jsx-a11y/strict",
     "plugin:jest/recommended",
     "plugin:prettier/recommended"
   ],

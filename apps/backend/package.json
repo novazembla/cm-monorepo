@@ -1,22 +1,81 @@
 {
   "name": "backend",
-  "version": "0.0.1",
-  "description": "The CultureMap backend",
+  "version": "0.1.0",
   "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start"
-  },
   "dependencies": {
-    "next": "^11.0.1",
+    "@craco/craco": "^6.1.2",
+    "@hookform/resolvers": "^2.5.0",
+    "@tailwindcss/forms": "^0.3.2",
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^12.0.0",
+    "@testing-library/user-event": "^13.1.9",
+    "@windmill/react-ui": "^0.6.0",
+    "axios": "^0.21.1",
+    "axios-jwt": "^1.7.1",
+    "i18next": "^20.2.4",
+    "i18next-browser-languagedetector": "^6.1.1",
+    "jsonwebtoken": "^8.5.1",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react-dom": "^17.0.2",
+    "react-hook-form": "^7.6.0",
+    "react-i18next": "^11.8.15",
+    "react-redux": "^7.2.4",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "4.0.3",
+    "redux-localstorage-simple": "^2.4.0",
+    "yup": "^0.32.9"
+  },
+  "scripts": {
+    "start": "craco start",
+    "build": "INLINE_RUNTIME_CHUNK=false craco build",
+    "test": "craco test",
+    "eject": "react-scripts eject",
+    "i18n-extract": "i18next --config ./scripts/i18next-parser.config.js"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest",
+      "plugin:jsx-a11y/strict"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   },
   "devDependencies": {
-    "@types/node": "^16.0.1",
+    "@types/jest": "^26.0.24",
+    "@types/node": "^16.3.1",
     "@types/react": "^17.0.14",
     "@types/react-dom": "^17.0.9",
-    "typescript": "^4.3.5"
+    "@types/react-router-dom": "^5.1.8",
+    "autoprefixer": "^9",
+    "babel-jest": "^26.6.0",
+    "i18next-parser": "^4.0.1",
+    "jest": "^26.6.0",
+    "postcss": "^7",
+    "react-icons": "^4.2.0",
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
+      "prettier --write"
+    ],
+    "api/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
+      "prettier --write"
+    ]
   }
 }

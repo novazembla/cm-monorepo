@@ -5,12 +5,21 @@ import { db } from "../config";
 // that together define the "shape" of queries that are executed against
 // your data.
 const typeDefs = gql`
+  enum Role {
+    ADMINISTRATOR
+    EDITOR
+    CONTRIBUTOR
+    UNKNOWN
+  }
+
   # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
-  directive @authfield on FIELD_DEFINITION
+  directive @auth(
+    requires: [Role]
+  ) on OBJECT | FIELD_DEFINITION
 
   # "Users" are given access to the backend. They can create, read, update, or delete
   # locations, events, tours, or other users.
-  type User {
+  type User @auth(requires: [ADMINISTRATOR, EDITOR]) {
     id: ID!
     firstName: String!
     lastName: String!
@@ -18,8 +27,38 @@ const typeDefs = gql`
     locations: [Location!]
   }
 
+  input UserCreateInput {
+    email: String!
+    firstName: String!
+    lastName: String!
+    password: String!
+  }
+
+  input UserLoginInput {
+    email: String!
+    password: String!
+  }
+
+  input UserLogoutInput {
+    userId: Int!
+  }
+
+  type AuthPayloadToken {
+    token: String!
+    expires: String!
+  }
+  type AuthPayloadTokens {
+    access: AuthPayloadToken!
+    refresh: AuthPayloadToken!
+  }
+  type AuthPayload {
+    user: User!
+    tokens: AuthPayloadTokens!
+  }
+
   # "Locations" represent the individual points listed on the map or the tours
-  type Location {
+  #  @auth(requires: ADMINISTRATOR | EDITOR | CONTRIBUTOR)
+  type Location  {
     id: ID!
     title: String!
     creator: User!
@@ -30,6 +69,7 @@ const typeDefs = gql`
     id: ID!
     title: String!
     location: Location!
+    secres: String  @auth(requires: EDITOR)
   }
 
   # The "Query" type is special: it lists all of the available queries that
@@ -37,6 +77,12 @@ const typeDefs = gql`
   # case, the "books" query returns an array of zero or more Books (defined above).
   type Query {
     users(page: Int = 1, pageSize: Int = ${db.defaultPageSize}): [User!]!
+  }
+
+  type Mutation {
+    userSignup(data: UserCreateInput!) : AuthPayload!
+    userLogin(data: UserLoginInput!): AuthPayload!
+    userLogout(data: UserLogoutInput!): Boolean!
   }
 `;
 
