@@ -51,7 +51,7 @@ export const logout = async (userId: number): Promise<boolean> => {
 export const refreshAuth = async (refreshToken: string) => {
   try {
     const tokenPayload = verifyToken(refreshToken, TokenTypes.REFRESH);
-    const user: User = await getUserById((tokenPayload as any).userId);
+    const user: User = await getUserById((tokenPayload as any).user.id);
     if (!user) {
       throw new ApiError(httpStatus.UNAUTHORIZED, "Please authenticate");
     }
@@ -80,7 +80,7 @@ export const resetPassword = async (resetPasswordToken, newPassword) => {
       resetPasswordToken,
       TokenTypes.RESET_PASSWORD
     );
-    const user = await getUserById((tokenPayload as any).userId);
+    const user = await getUserById((tokenPayload as any).user.id);
     if (!user) {
       throw new ApiError(httpStatus.UNAUTHORIZED, "Please authenticate");
     }
@@ -104,7 +104,7 @@ export const resetPassword = async (resetPasswordToken, newPassword) => {
 export const verifyEmail = async (verifyEmailToken) => {
   try {
     const tokenPayload = verifyToken(verifyEmailToken, TokenTypes.VERIFY_EMAIL);
-    const user: User = await getUserById((tokenPayload as any).userId); // TODO: crate type for token payload and replace as any
+    const user: User = await getUserById((tokenPayload as any).user.id); // TODO: crate type for token payload and replace as any
     if (!user) {
       throw new Error();
     }

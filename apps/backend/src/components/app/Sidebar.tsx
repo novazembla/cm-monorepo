@@ -1,6 +1,5 @@
 import React from "react";
 
-import { clearAuthTokens } from "axios-jwt";
 import { useHistory } from "react-router";
 
 const Sidebar = () => {
@@ -8,7 +7,7 @@ const Sidebar = () => {
   
   const onButtonClick = () => {
     // TODO: axios logout ... 
-    clearAuthTokens()
+    // clearAuthTokens() TODO: Fix
     history.push('/login');
   };
 

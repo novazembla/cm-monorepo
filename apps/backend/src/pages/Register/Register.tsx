@@ -6,12 +6,9 @@ import { useTranslation } from "react-i18next";
 import { Button } from "@windmill/react-ui";
 
 import { ValidationSchemaRegister } from "../../validation";
-import { setAuthTokens } from "axios-jwt";
 
 import { ErrorMessage, FieldInput } from "../../components/forms";
 import { LanguageButtons } from "../../components/ui";
-
-import { httpAPI } from "../../services";
 
 type dataRegistration = {
   firstName: string;
@@ -33,13 +30,13 @@ const Register = () => {
   const onSubmit = async (data: dataRegistration) => {
     setIsRegistrationError(false); // TODO: how to have this clear set on form change, also how to set the form fields to not valid to make them red...
     try {
-      const response = await httpAPI.post("/api/v1/auth/login", data);
+      // TODO:  fix const response = await httpAPI.post("/api/v1/auth/login", data);
 
       // save tokens to storage
-      setAuthTokens({
-        accessToken: response?.data?.tokens?.access,
-        refreshToken: response?.data?.tokens?.refresh,
-      });
+      // setAuthTokens({
+      //   accessToken: response?.data?.tokens?.access,
+      //   refreshToken: response?.data?.tokens?.refresh,
+      // });
 
       history.push("/");
     } catch (err) {

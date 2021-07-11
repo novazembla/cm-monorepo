@@ -1,13 +1,13 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
-import { isLoggedIn } from "axios-jwt";
 
 type CompontentProps = {
   component: React.FC;
 };
 
+const isLoggedIn = () => false; // TODO: fix
+
 const PrivateRoute = (props: CompontentProps) => {
-  console.log(props);
   const { component: Component, ...restProps } = props;
 
   if (!Component) return null;

@@ -30,7 +30,15 @@ async function startApolloServer() {
   await server.start();
 
   // and attach it to the express app
-  server.applyMiddleware({ app });
+  server.applyMiddleware({
+    app,
+    cors: {
+      origin: "http://localhost:4001", // TODO: research find solution also why has it to double up? with the server cors, also will that work with other consumres?
+      credentials: true,
+      methods: "GET,PUT,POST,OPTIONS",
+      allowedHeaders: "Content-Type,Authorization",
+    },
+  });
 
   app.get("/", function (req, res) {
     res.json({ hello: "Hello World" });

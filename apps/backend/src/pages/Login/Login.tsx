@@ -6,19 +6,20 @@ import { useTranslation } from "react-i18next";
 import { Button } from "@windmill/react-ui";
 
 import { ValidationSchemaLogin } from "../../validation";
-import { setAuthTokens } from "axios-jwt";
-
+import { useLoginMutation } from "../../graphql/mutations";
 import { ErrorMessage, FieldInput } from "../../components/forms";
 import { LanguageButtons } from "../../components/ui";
-
-import { httpAPI } from "../../services";
 
 type dataLogin = {
   email: string;
   password: string;
-}
+};
 
 const Login = () => {
+  
+  const [loginMutation, loginMutationResults] = useLoginMutation();
+
+  console.log(loginMutation, loginMutationResults);
   const [isLoginError, setIsLoginError] = useState(false);
   const { t } = useTranslation();
   const history = useHistory();
@@ -28,22 +29,20 @@ const Login = () => {
   });
   const { handleSubmit } = formMethods;
 
+  const disableForm = loginMutationResults.loading;
+
   const onSubmit = async (data: dataLogin) => {
     setIsLoginError(false); // TODO: how to have this clear set on form change, also how to set the form fields to not valid to make them red...
     try {
-      const response = await httpAPI.post("/api/v1/auth/login", data);
+      const result = await loginMutation(data.email, data.password);
 
-      // save tokens to storage
-      setAuthTokens({
-        accessToken: response?.data?.tokens?.access,
-        refreshToken: response?.data?.tokens?.refresh,
-      });
-
+      console.log(result);
+      
       history.push("/");
     } catch (err) {
       setIsLoginError(true);
     }
-  }; 
+  };
 
   // t("page.login.error", "The login failed. Please try again.")
   return (
@@ -105,15 +104,11 @@ const Login = () => {
                   className="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline"
                   to="/register"
                 >
-                  {t(
-                    "page.login.register",
-                    "Register as new user?"
-                  )}
+                  {t("page.login.register", "Register as new user?")}
                   (xxx URL TABINDEX?)
                 </Link>
 
-
-                <Button type="submit">
+                <Button type="submit" disabled={disableForm}>
                   {t("page.login.form_button_login", "Login")}
                 </Button>
               </div>

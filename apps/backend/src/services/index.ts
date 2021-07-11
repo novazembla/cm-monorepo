@@ -1,1 +1,1 @@
-export { default as httpAPI } from './httpAPI';
+export * from './apolloClient';

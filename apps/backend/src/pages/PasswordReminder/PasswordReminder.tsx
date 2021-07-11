@@ -10,7 +10,6 @@ import { FieldInput } from "../../components/forms";
 import { Button } from "@windmill/react-ui";
 import { LanguageButtons } from "../../components/ui";
 import { Link } from "react-router-dom";
-import { httpAPI } from "../../services";
 
 const Login = () => {
   const { t } = useTranslation();
@@ -21,7 +20,7 @@ const Login = () => {
 
   // TODO: fix data: object
   const onSubmit = (data: object) => {
-    httpAPI.post('/api/v1/auth/forgot-password', data);
+    // TODO: FIXhttpAPI.post('/api/v1/auth/forgot-password', data);
   };
 
   return (

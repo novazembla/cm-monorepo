@@ -11,6 +11,10 @@ export const server = new ApolloServer({
   },
   context: ({ req }) => {
     const token = req.headers.authorization;
+
+    // read cookie here ..
+    // get user from token ..
+    // TODO: write/delete actions have to confirm token in DB
     // const currentUser = {}; // TODO: User.getUserByToken(token);
 
     const user = Math.random() < 0.2 ? 1 : 0;

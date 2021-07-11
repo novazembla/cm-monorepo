@@ -21,9 +21,11 @@ export const generateToken = (
 ) => {
   // expose roles in token TODO: expose roles
   const payload = {
-    userId,
-    userRoles: [],
-    userPermissions: [],
+    user: {
+      id: userId,
+      roles: ["ADMINISTRATOR"],
+      permissions: ["X1", "X2"],
+    },
     iat: new Date().getTime() / 1000,
     exp: expires.getTime() / 1000,
     type,
@@ -39,7 +41,7 @@ export const verifyToken = (token: string, type: string) => {
       where: {
         token,
         type,
-        userId: parseInt((tokenPayload as any).userId, 10),
+        userId: parseInt((tokenPayload as any).user.id, 10),
         blacklisted: false,
       },
     });

@@ -18,7 +18,7 @@
     "app:api:watch:babel": "npx babel ./apps/api/src --watch --out-dir ./apps/api/build --extensions .ts",
     "app:api:watch:node": "env-cmd -f ./.env nodemon --watch ./apps/api/build --watch ./packages/api/dist --watch ./packages/core/dist --watch ./plugins/example/dist ./apps/api/build/index.js",
     "app:api:lint": "eslint ./apps/api/src --ext .js,.ts",
-    "app:backend:build": "PORT=$(grep BACKEND_PORT .env | cut -d '=' -f2) REACT_APP_API_URL=$(grep '^API_URL' .env | cut -d '=' -f2) SKIP_PREFLIGHT_CHECK=true npm run build -w backend",
+    "app:backend:build": "PORT=$(grep BACKEND_PORT .env | cut -d '=' -f2) REACT_APP_API_URL=$(grep '^API_URL' .env | cut -d '=' -f2) REACT_APP_API_DOMAIN=$(grep '^REACT_APP_API_DOMAIN' .env | cut -d '=' -f2) SKIP_PREFLIGHT_CHECK=true npm run build -w backend",
     "app:backend:dev": "PORT=$(grep BACKEND_PORT .env | cut -d '=' -f2) REACT_APP_API_URL=$(grep '^API_URL' .env | cut -d '=' -f2) SKIP_PREFLIGHT_CHECK=true npm run start -w backend",
     "app:backend:lint": "eslint ./apps/backend/ --ext .js,.jsx,.ts,.tsx",
     "app:frontend:start": "npm run start -w frontend",
