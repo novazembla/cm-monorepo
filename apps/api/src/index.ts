@@ -1,4 +1,10 @@
-import { app, server, config } from "@culturemap/api";
+import {
+  app,
+  initializeExpressApp,
+  server,
+  initializeServer,
+  config,
+} from "@culturemap/api";
 import { plugins } from "@culturemap/core";
 import examplePlugins from "plugin-example";
 import CMSettings from "../culturemap";
@@ -26,23 +32,13 @@ async function startApolloServer() {
   // This is all done by clalling config.update() and passing the imported settings
   config.update(CMSettings);
 
-  // now start the appolo server
-  await server.start();
+  // cors settings do need to be set twice for the express app (serving everything)
+  // but ../graphql served by the apollo server. Apropriate defaults are in place but
+  // you can overwrite them using the following method.
+  // config.updateCors(cors);
 
-  // and attach it to the express app
-  server.applyMiddleware({
-    app,
-    cors: {
-      origin: "http://localhost:4001", // TODO: research find solution also why has it to double up? with the server cors, also will that work with other consumres?
-      credentials: true,
-      methods: "GET,PUT,POST,OPTIONS",
-      allowedHeaders: "Content-Type,Authorization",
-    },
-  });
-
-  app.get("/", function (req, res) {
-    res.json({ hello: "Hello World" });
-  });
+  // as now evertying is configured initialize the express app.
+  initializeExpressApp();
 
   /*
     Here you could attach further routes and middleware to your express app
@@ -53,6 +49,25 @@ async function startApolloServer() {
       res.end();
     });
   */
+
+  // this is to make sure that the root domain is anwering something.
+  app.get("/", function (req, res) {
+    res.send("ok");
+  });
+
+  // as well as the apollo server instance.
+  // now configure the server (either pass a GraphQL Schema)
+  // or use the preinstalled one.
+  initializeServer();
+
+  // now start the appolo server
+  await server.start();
+
+  // and attach it to the express app
+  server.applyMiddleware({
+    app,
+    cors: config.cors as any,
+  });
 
   // finally listen to the configured port
   app.listen({ port: process.env.API_PORT }, () => {

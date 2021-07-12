@@ -1,15 +1,12 @@
 import express from "express";
 import cors from "cors";
+import config from "./config";
 
 export const app: express.Application = express();
 
-app.use(
-  cors({
-    origin: "http://localhost:4001", // TODO: research find solution also why has it to double up? with the server cors
-    credentials: true,
-    methods: "GET,PUT,POST,OPTIONS",
-    allowedHeaders: "Content-Type,Authorization",
-  })
-);
+export const initializeExpressApp = () => {
+  // eslint-disable-next-line import/no-named-as-default-member
+  app.use(cors(config.cors));
+};
 
 export default app;

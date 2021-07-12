@@ -71,6 +71,19 @@ export const findTokensOfUser = async (userId: number): Promise<Token[]> => {
   return tokens;
 };
 
+export const getUserIdByAccessToken = async (
+  token: string
+): Promise<number | void> => {
+  const foundToken = await prisma.token.findFirst({
+    where: {
+      token,
+      type: TokenTypes.ACCESS,
+    },
+  });
+
+  if (foundToken) return foundToken.userId;
+};
+
 export default {
   TokenTypes,
   saveToken,

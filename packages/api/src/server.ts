@@ -1,29 +1,53 @@
 import { ApolloServer, AuthenticationError } from "apollo-server-express";
+import { makeExecutableSchema } from "@graphql-tools/schema";
+import { GraphQLSchema } from "graphql";
 import { typeDefs, resolvers } from "./graphql";
-import { DirectiveAuth } from "./graphql/directives";
+import { AuthenticatedUser, authenticateUserByToken } from "./services/auth";
 
-export const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-  uploads: false,
-  schemaDirectives: {
-    auth: DirectiveAuth,
-  },
-  context: ({ req }) => {
-    const token = req.headers.authorization;
+// TODO: include import { DirectiveAuth } from "./graphql/directives";
 
-    // read cookie here ..
-    // get user from token ..
-    // TODO: write/delete actions have to confirm token in DB
-    // const currentUser = {}; // TODO: User.getUserByToken(token);
+// eslint-disable-next-line import/no-mutable-exports
+export let server = null;
 
-    const user = Math.random() < 0.2 ? 1 : 0;
-    // if (!user) throw new AuthenticationError("Access Denied");
+export const initializeServer = (schema?: GraphQLSchema | undefined) => {
+  server = new ApolloServer({
+    schema:
+      schema ||
+      makeExecutableSchema({
+        typeDefs,
+        resolvers,
+        // xxx fix https://www.graphql-tools.com/docs/schema-directives/ TODO:: FIX:
+        // schemaTransforms: [DirectiveAuth]
+      }),
+    context: ({ req /* , res  */ }) => {
+      let user: AuthenticatedUser;
 
-    if (user > 2) throw AuthenticationError;
+      if ("cookies" in req && "authToken" in req.cookies) {
+        const { token } = req.cookies;
 
-    return { user, token };
-  },
-});
+        user = authenticateUserByToken(token);
+
+        if (!user) {
+          throw new AuthenticationError("Access denied");
+        }
+      }
+
+      return { user };
+    },
+    formatError: (err) => {
+      // Don't give the specific errors to the client.
+      if (
+        err.message.startsWith(
+          "TODO: ... better error handling Database Error: "
+        )
+      ) {
+        return new Error("Internal server error");
+      }
+      // Otherwise return the original error. The error can also
+      // be manipulated in other ways, as long as it's returned.
+      return err;
+    },
+  });
+};
 
 export default server;

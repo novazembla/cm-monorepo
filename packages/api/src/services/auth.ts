@@ -1,12 +1,33 @@
 import httpStatus from "http-status";
 import { User } from "@prisma/client";
+import { JwtPayload } from "jsonwebtoken";
 
 import { AuthPayload } from "../typings/auth";
 
 import { TokenTypes, deleteManyTokens } from "../dao/token";
 import { getUserByLogin, getUserById, updateUserById } from "../dao/user";
 import { ApiError } from "../utils";
-import { verifyToken, generateAuthTokens } from "./token";
+import { verifyToken, verifyTokenInDB, generateAuthTokens } from "./token";
+
+export interface AuthenticatedUser {
+  id: number;
+  roles: string[];
+  permissions: string[];
+}
+
+export const authenticateUserByToken = (
+  token: string
+): AuthenticatedUser | null => {
+  const tokenPayload = verifyToken(token);
+
+  if (tokenPayload) {
+    if ("user" in (tokenPayload as JwtPayload)) {
+      return (tokenPayload as JwtPayload).user;
+    }
+  }
+
+  return null;
+};
 
 export const loginUserWithEmailAndPassword = async (
   email: string,
@@ -50,7 +71,10 @@ export const logout = async (userId: number): Promise<boolean> => {
  */
 export const refreshAuth = async (refreshToken: string) => {
   try {
-    const tokenPayload = verifyToken(refreshToken, TokenTypes.REFRESH);
+    const tokenPayload = await verifyTokenInDB(
+      refreshToken,
+      TokenTypes.REFRESH
+    );
     const user: User = await getUserById((tokenPayload as any).user.id);
     if (!user) {
       throw new ApiError(httpStatus.UNAUTHORIZED, "Please authenticate");
@@ -76,7 +100,7 @@ export const refreshAuth = async (refreshToken: string) => {
  */
 export const resetPassword = async (resetPasswordToken, newPassword) => {
   try {
-    const tokenPayload = verifyToken(
+    const tokenPayload = await verifyTokenInDB(
       resetPasswordToken,
       TokenTypes.RESET_PASSWORD
     );
@@ -103,7 +127,10 @@ export const resetPassword = async (resetPasswordToken, newPassword) => {
  */
 export const verifyEmail = async (verifyEmailToken) => {
   try {
-    const tokenPayload = verifyToken(verifyEmailToken, TokenTypes.VERIFY_EMAIL);
+    const tokenPayload = await verifyTokenInDB(
+      verifyEmailToken,
+      TokenTypes.VERIFY_EMAIL
+    );
     const user: User = await getUserById((tokenPayload as any).user.id); // TODO: crate type for token payload and replace as any
     if (!user) {
       throw new Error();
@@ -122,6 +149,7 @@ export const verifyEmail = async (verifyEmailToken) => {
 };
 
 export default {
+  authenticateUserByToken,
   loginUserWithEmailAndPassword,
   logout,
   refreshAuth,

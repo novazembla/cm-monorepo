@@ -1,25 +1,23 @@
 import React from "react";
-
+import { Link } from "react-router-dom";
 import { useHistory } from "react-router";
+import { useAuthUser } from "../../hooks";
 
 const Sidebar = () => {
-  const history = useHistory()
-  
+  const [, , , logout] = useAuthUser();
+
+  const history = useHistory();
+
   const onButtonClick = () => {
-    // TODO: axios logout ... 
-    // clearAuthTokens() TODO: Fix
-    history.push('/login');
+    logout();
+    history.push("/login");
   };
 
   return (
     <aside className="z-30 flex-shrink-0 hidden w-64 overflow-y-auto bg-white dark:bg-gray-800 filter drop-shadow-md lg:block">
       <div className="py-4 text-gray-500 dark:text-gray-400">
-        <a
-          className="ml-6 text-lg font-bold text-gray-800 dark:text-gray-200"
-          href="#xxx"
-        >
-          Culture Maps
-        </a>
+        <Link to="/"  className="ml-6 text-lg font-bold text-gray-800 dark:text-gray-200">Culture Maps</Link>
+
         <ul className="mt-6">
           <li className="relative px-6 py-3">
             <a

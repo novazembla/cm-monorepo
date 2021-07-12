@@ -16,10 +16,8 @@ type dataLogin = {
 };
 
 const Login = () => {
-  
   const [loginMutation, loginMutationResults] = useLoginMutation();
 
-  console.log(loginMutation, loginMutationResults);
   const [isLoginError, setIsLoginError] = useState(false);
   const { t } = useTranslation();
   const history = useHistory();
@@ -34,10 +32,7 @@ const Login = () => {
   const onSubmit = async (data: dataLogin) => {
     setIsLoginError(false); // TODO: how to have this clear set on form change, also how to set the form fields to not valid to make them red...
     try {
-      const result = await loginMutation(data.email, data.password);
-
-      console.log(result);
-      
+      await loginMutation(data.email, data.password);
       history.push("/");
     } catch (err) {
       setIsLoginError(true);

@@ -1,13 +1,13 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
+import { useAuthUser } from "../../hooks";
 
 type CompontentProps = {
   component: React.FC;
 };
 
-const isLoggedIn = () => false; // TODO: fix
-
 const PrivateRoute = (props: CompontentProps) => {
+  const [isLoggedIn,] = useAuthUser();
   const { component: Component, ...restProps } = props;
 
   if (!Component) return null;
@@ -28,7 +28,7 @@ const PrivateRoute = (props: CompontentProps) => {
     />
   );
 
-  // return (
+  // TODO: what's that? return (
   //   <Route
   //     {...restProps}
   //     render={(routeRenderProps) =>

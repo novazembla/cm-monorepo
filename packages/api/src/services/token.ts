@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import httpStatus from "http-status";
 import { addDays, addMinutes } from "date-fns";
 
@@ -32,12 +32,34 @@ export const generateToken = (
   };
   return jwt.sign(payload, secret);
 };
-
-export const verifyToken = (token: string, type: string) => {
+export const verifyToken = async (
+  token: string
+): Promise<JwtPayload | string> => {
   try {
     const tokenPayload = jwt.verify(token, config.env.JWT_SECRET, {});
 
-    const tokenDoc = prisma.token.findFirst({
+    if (Date.now() >= (tokenPayload as JwtPayload).exp * 1000) {
+      throw new ApiError(httpStatus.UNAUTHORIZED, "Token not authorized");
+    }
+
+    return tokenPayload;
+  } catch (err) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, "Token not authorized");
+  }
+};
+
+export const verifyTokenInDB = async (
+  token: string,
+  type: string
+): Promise<JwtPayload | string> => {
+  try {
+    const tokenPayload = jwt.verify(token, config.env.JWT_SECRET, {});
+
+    if (Date.now() >= (tokenPayload as JwtPayload).exp * 1000) {
+      throw new ApiError(httpStatus.UNAUTHORIZED, "Token not authorized");
+    }
+
+    const tokenDoc = await prisma.token.findFirst({
       where: {
         token,
         type,
@@ -138,6 +160,7 @@ const generateVerifyEmailToken = async (userId: number) => {
 export default {
   generateToken,
   verifyToken,
+  verifyTokenInDB,
   generateAuthTokens,
   generateResetPasswordToken,
   generateVerifyEmailToken,

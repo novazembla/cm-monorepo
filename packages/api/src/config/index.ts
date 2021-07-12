@@ -1,4 +1,19 @@
 import dotenv from "dotenv";
+import { CorsOptions } from "cors";
+
+// TODO: how to sensible harden cors ...
+// Would it be possible to catch Mutations and require a whitelist of origins?
+// Read CORS w/ Dynamic origins https://expressjs.com/en/resources/middleware/cors.html
+// https://www.npmjs.com/package/cors#enabling-cors-pre-flight
+// Are pre flights needed? https://www.npmjs.com/package/cors#enabling-cors-pre-flight
+
+// eslint-disable-next-line import/no-mutable-exports
+export let cors: CorsOptions = {
+  origin: true, // TODO: you might want to have a more complex origin, true for but requests from the requests to the admin tool ...
+  credentials: true,
+  methods: "GET,PUT,POST,OPTIONS",
+  allowedHeaders: "Content-Type,Authorization",
+};
 
 dotenv.config();
 
@@ -47,5 +62,9 @@ export const update = (cmConfig) => {
   }
 };
 
+export const updateCors = (newCorsSettings: CorsOptions) => {
+  cors = newCorsSettings;
+};
+
 // TODO: validate the existence of the needed keys
-export default { db, env: process.env };
+export default { db, env: process.env, cors };
