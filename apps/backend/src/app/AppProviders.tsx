@@ -8,7 +8,7 @@ import combinedReduxReducers from "../state/reducers";
 
 import { AppProps } from "../types";
 
-import { useApollo } from "../services/apolloClient";
+import { useApollo } from "../hooks";
 import {
   CulturemapContextProvider,
   getCulturemapSettings,

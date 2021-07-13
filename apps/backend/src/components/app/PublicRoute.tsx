@@ -13,7 +13,7 @@ export const PublicRoute = (props: CompontentProps) => {
   if (!Component) return null;
   
   return !isLoggedIn() ? (
-    <Route component={Component} />
+    <Route {...restProps} component={Component} />
   ) : (
     <Route
       {...restProps}

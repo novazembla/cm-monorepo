@@ -1,34 +1,37 @@
 // TODO: never used remvoe
+import { AuthenticatedUser } from "../../hooks/useAuthUser";
 
-interface AuthenticationReducerAction {
-  type: string;
-  payload: {
-    user: object;
-  }
+interface AuthenticationState {
+  authenticated: boolean;
+  user: AuthenticatedUser | null;
 }
 
-const defaultValues = {
+const defaultState: AuthenticationState = {
   authenticated: false, 
-  user: {
-    "firstname": "",
-    "lastname": "",
-    "email": "",
-  }  
+  user: null    
 }
 
-const authenticationReducer = (state = defaultValues, action: AuthenticationReducerAction) => {
+type AuthenticationActions =
+  | {
+      type: "auth.login";
+      payload: {
+        user: AuthenticatedUser;
+      };
+    }
+  | { type: "auth.logout" };
+
+const authenticationReducer = (state: AuthenticationState = defaultState, action: AuthenticationActions) => {
   switch(action.type) {
-    case 'LOGOUT':
-      return defaultValues;
-      
-    case 'LOGIN':
+    case 'auth.login':
       return {
         authenticated: true, 
-        user: {
-          "firstname": "",
-          "lastname": "",
-          "email": "",
-        }  
+        user: action.payload.user  
+      };
+      
+    case 'auth.logout':
+      return {
+        authenticated: false, 
+        user: null
       }
       
     default: 

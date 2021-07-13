@@ -1,12 +1,11 @@
 import { combineReducers } from 'redux'
-//import progressReducer from './progressReducer'
 import authenticationReducer from './authentication'
-// import httpReducer from './httpReducer'
 
 const combinedReduxReducers = combineReducers({
-  //progress: progressReducer,
-  user: authenticationReducer,
-  //http: httpReducer
+  auth: authenticationReducer,
+  // TODO: add further reducers
 })
+
+export type ReduxRootState = ReturnType<typeof combinedReduxReducers>
 
 export default combinedReduxReducers

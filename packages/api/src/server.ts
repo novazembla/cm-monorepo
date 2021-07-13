@@ -19,20 +19,26 @@ export const initializeServer = (schema?: GraphQLSchema | undefined) => {
         // xxx fix https://www.graphql-tools.com/docs/schema-directives/ TODO:: FIX:
         // schemaTransforms: [DirectiveAuth]
       }),
-    context: ({ req /* , res  */ }) => {
+    context: ({ req, res }) => {
       let user: AuthenticatedUser;
 
-      if ("cookies" in req && "authToken" in req.cookies) {
-        const { token } = req.cookies;
+      let token = req?.headers?.authorization;
 
-        user = authenticateUserByToken(token);
+      if (token) {
+        try {
+          if (token.indexOf("Bearer ") !== -1)
+            token = token.replace("Bearer ", "");
 
-        if (!user) {
+          user = authenticateUserByToken(token);
+          if (!user) {
+            throw new AuthenticationError("Access denied");
+          }
+        } catch (Err) {
           throw new AuthenticationError("Access denied");
         }
       }
 
-      return { user };
+      return { res, user };
     },
     formatError: (err) => {
       // Don't give the specific errors to the client.

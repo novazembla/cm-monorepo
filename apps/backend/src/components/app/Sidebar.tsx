@@ -1,16 +1,24 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { useHistory } from "react-router";
+import { Link, useHistory } from "react-router-dom";
+
+import { useLogoutMutation } from "../../graphql/mutations";
 import { useAuthUser } from "../../hooks";
 
 const Sidebar = () => {
-  const [, , , logout] = useAuthUser();
-
+  const [logoutMutation, logoutMutationResults] = useLogoutMutation();
+  const [ , getUser] = useAuthUser();
   const history = useHistory();
 
+  const buttonDisabled = logoutMutationResults.loading;
+
   const onButtonClick = () => {
-    logout();
-    history.push("/login");
+    const user = getUser();
+    console.log(3, user);
+    if (user) {
+      console.log(4, user);
+      logoutMutation(user.id);
+      history.push("/login");
+    }
   };
 
   return (
@@ -205,11 +213,9 @@ const Sidebar = () => {
             onClick={onButtonClick}
             className="align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none px-4 py-2 rounded-lg text-sm text-white bg-purple-600 border border-transparent active:bg-purple-600 hover:bg-purple-700 focus:shadow-outline-purple"
             type="button"
+            disabled={buttonDisabled}
           >
-            Create account
-            <span className="ml-2" aria-hidden="true">
-              +
-            </span>
+            Logout
           </button>
         </div>
       </div>

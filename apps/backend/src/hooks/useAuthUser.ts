@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { decode } from "jsonwebtoken";
-
+import { useDispatch, useSelector } from "react-redux";
 import { useAuthToken } from ".";
+import { ReduxRootState } from "../state/reducers";
+import { useApolloClient } from "@apollo/client";
 
 export interface AuthenticatedUser {
   id: number;
@@ -10,43 +10,49 @@ export interface AuthenticatedUser {
 }
 
 export const useAuthUser = () => {
-  const [getAuthToken, , , , removeAuthToken, removeRefreshToken] = useAuthToken();
-  const [storedUser, setUser] = useState<AuthenticatedUser | null>(null);
+  const [, , , getRefreshCookie, , removeAuthToken, removeRefreshCookie] = useAuthToken();
+  const { user } = useSelector( ( { auth }: ReduxRootState ) => auth )
+  const client = useApolloClient();
+  const dispatch = useDispatch();
 
   const retrieveUser = () => {
-    if (!storedUser) {
+    if (!user) {
+      console.log("User is not known");
       
-      const authToken = getAuthToken();
-  
-      if (authToken) {
-        if (new Date(authToken.expires).getTime() > Date.now()) {
-          const payload = decode(authToken.token, { json: true });
-          if (payload?.user?.id && Array.isArray(payload?.user?.roles) && Array.isArray(payload?.user?.permissions))
-            setUser(payload.user);  
-        } else {
-          removeAuthToken();
-          setUser(null);
-        }        
+      const refreshCookie = getRefreshCookie();
+
+      if (refreshCookie === "active") {
+        
+        console.log("!current should attempt to refresh");
+      } else {
+        removeRefreshCookie();
+        removeAuthToken();
       }
+      
+    } else {
+      console.log("user stored", user)
     }
   };
 
-  const getUser = (): AuthenticatedUser | null => {
+  const getUser = (): AuthenticatedUser | null => { 
     retrieveUser();
-    return storedUser;
+    return user;
   };
 
   const isLoggedIn = (): boolean => {
     retrieveUser();
-    return storedUser !== null;
+    return user !== null;
   };
 
-  const login = (user: AuthenticatedUser) => setUser(user);
+  const login = (justLoggedInUser: AuthenticatedUser) => {
+    dispatch({type:"auth.login", payload: {user: justLoggedInUser}});
+  }
 
   const logout = () => {
+    client.clearStore();
     removeAuthToken();
-    removeRefreshToken();
-    setUser(null);
+    removeRefreshCookie();
+    dispatch({type:"auth.logout"});
   };
 
   return [isLoggedIn, getUser, login, logout] as const;

@@ -32,9 +32,7 @@ export const generateToken = (
   };
   return jwt.sign(payload, secret);
 };
-export const verifyToken = async (
-  token: string
-): Promise<JwtPayload | string> => {
+export const verifyToken = (token: string): JwtPayload | string => {
   try {
     const tokenPayload = jwt.verify(token, config.env.JWT_SECRET, {});
 
@@ -101,7 +99,12 @@ export const generateAuthTokens = async (
     TokenTypes.REFRESH
   );
 
-  saveToken(refreshToken, userId, refreshTokenExpires, TokenTypes.REFRESH);
+  await saveToken(
+    refreshToken,
+    userId,
+    refreshTokenExpires,
+    TokenTypes.REFRESH
+  );
 
   const authPayload: AuthPayload = {
     user: undefined,
@@ -153,7 +156,7 @@ const generateVerifyEmailToken = async (userId: number) => {
     expires,
     TokenTypes.VERIFY_EMAIL
   );
-  saveToken(verifyEmailToken, userId, expires, TokenTypes.VERIFY_EMAIL);
+  await saveToken(verifyEmailToken, userId, expires, TokenTypes.VERIFY_EMAIL);
   return verifyEmailToken;
 };
 

@@ -1,58 +1,102 @@
-import Cookies, { CookieSetOptions} from 'universal-cookie';
+import Cookies, { CookieSetOptions } from "universal-cookie";
+import { decode, JwtPayload } from "jsonwebtoken";
 
-export const ACCESS_TOKEN_NAME = "authToken";
-export const REFRESH_TOKEN_NAME = "refreshToken";
+import { AuthenticatedUser } from "./useAuthUser";
+
+export const HAS_RERESH_COOKIE_NAME = "authRefresh";
+export const REFRES_TIMEOUT_COOKIE_NAME = "authRefreshTimeout";
 
 export interface Token {
   token: string;
   expires: string;
 }
 
+export interface TokenPayload extends JwtPayload {
+  exp: number;
+  iat: number;
+  type: string;
+  user: AuthenticatedUser;
+}
+
+let authToken: Token | null = null;
+
 const cookies = new Cookies();
 
 const options: CookieSetOptions = {
-  sameSite: "strict",
+  sameSite: "lax",
   secure: process.env.NODE_ENV === "production",
-  path: '/', 
+  path: "/",
 };
 
 // custom hook to handle authToken - we use compositon to decouple the auth system and it's storage
 export const useAuthToken = () => {
-  
-  const getAuthToken = (): Token => cookies.get(ACCESS_TOKEN_NAME);
+  const getAuthToken = (): Token | null => authToken;
 
-  const setAuthToken = (token: Token) => {
-    cookies.set(ACCESS_TOKEN_NAME, token, {
+  const getTokenPayload = (token: Token): TokenPayload | null => {
+    if (!token) return null;
+
+    try {
+      if (new Date(token.expires).getTime() > Date.now()) {
+        
+        const payload = decode(token.token, { json: true });
+        
+        if (!payload)
+          return null;
+        
+        if (payload.exp && payload.exp * 1000 < Date.now())
+          return null;
+        
+        if (
+          !payload.user ||
+          !payload.user.id ||
+          !Array.isArray(payload.user.roles) ||
+          !Array.isArray(payload.user.permissions)
+        )
+          return null;
+        
+        return payload as TokenPayload;
+      }
+    } catch (Err) {
+      console.error(Err);
+    }
+
+    return null;
+  };
+
+  const setAuthToken = (token: Token): void => {
+    authToken = token;
+    cookies.set(REFRES_TIMEOUT_COOKIE_NAME, "active", {
       ...options,
-      ...{ maxAge: new Date(token.expires).getTime() - new Date().getTime() },
+      ...{ expires: new Date(token.expires) },
     });
   };
 
-  const getRefreshToken = (): Token => cookies.get(REFRESH_TOKEN_NAME);;
+  const getRefreshCookie = (): string => cookies.get(HAS_RERESH_COOKIE_NAME);
 
-  const setRefreshToken = (token: Token) => {
-    // should I deal with HTTP only?, TODO: max age ... 
-    cookies.set(REFRESH_TOKEN_NAME, token, {
+  const setRefreshCookie = (token: Token) => {
+    cookies.set(HAS_RERESH_COOKIE_NAME, "active", {
       ...options,
-      ...{ maxAge: new Date(token.expires).getTime() - new Date().getTime() },
+      ...{ expires: new Date(token.expires) },
     });
   };
 
   const removeAuthToken = () => {
-    cookies.remove(ACCESS_TOKEN_NAME, options);
+    authToken = null;
+    cookies.remove(REFRES_TIMEOUT_COOKIE_NAME, options);
   };
 
-  const removeRefresh = () => {
-    cookies.remove(REFRESH_TOKEN_NAME, options);
+  const removeRefreshCookie = () => {
+    cookies.remove(HAS_RERESH_COOKIE_NAME, options);
   };
 
   return [
     getAuthToken,
+    getTokenPayload,
     setAuthToken,
-    getRefreshToken,
-    setRefreshToken,
+    getRefreshCookie,
+    setRefreshCookie,
     removeAuthToken,
-    removeRefresh,
+    removeRefreshCookie,
   ] as const;
 };
 
