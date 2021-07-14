@@ -1,21 +1,18 @@
 import React from "react";
 import { Link, useHistory } from "react-router-dom";
 
-import { useLogoutMutation } from "../../graphql/mutations";
-import { useAuthUser } from "../../hooks";
+import { useUserLogoutMutation } from "../../graphql/mutations";
+import { useAuthentication } from "../../hooks";
 
 const Sidebar = () => {
-  const [logoutMutation, logoutMutationResults] = useLogoutMutation();
-  const [ , getUser] = useAuthUser();
+  const [logoutMutation, logoutMutationResults] = useUserLogoutMutation();
+  const [ user ] = useAuthentication();
   const history = useHistory();
 
   const buttonDisabled = logoutMutationResults.loading;
 
   const onButtonClick = () => {
-    const user = getUser();
-    console.log(3, user);
     if (user) {
-      console.log(4, user);
       logoutMutation(user.id);
       history.push("/login");
     }
@@ -24,7 +21,12 @@ const Sidebar = () => {
   return (
     <aside className="z-30 flex-shrink-0 hidden w-64 overflow-y-auto bg-white dark:bg-gray-800 filter drop-shadow-md lg:block">
       <div className="py-4 text-gray-500 dark:text-gray-400">
-        <Link to="/"  className="ml-6 text-lg font-bold text-gray-800 dark:text-gray-200">Culture Maps</Link>
+        <Link
+          to="/"
+          className="ml-6 text-lg font-bold text-gray-800 dark:text-gray-200"
+        >
+          Culture Maps
+        </Link>
 
         <ul className="mt-6">
           <li className="relative px-6 py-3">

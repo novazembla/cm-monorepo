@@ -54,7 +54,7 @@ export const verifyTokenInDB = async (
     const tokenPayload = jwt.verify(token, config.env.JWT_SECRET, {});
 
     if (Date.now() >= (tokenPayload as JwtPayload).exp * 1000) {
-      throw new ApiError(httpStatus.UNAUTHORIZED, "Token not authorized");
+      throw new ApiError(httpStatus.UNAUTHORIZED, "Token not authorized (1)");
     }
 
     const tokenDoc = await prisma.token.findFirst({
@@ -66,11 +66,11 @@ export const verifyTokenInDB = async (
       },
     });
     if (!tokenDoc) {
-      throw new ApiError(httpStatus.UNAUTHORIZED, "Token not authorized");
+      throw new ApiError(httpStatus.UNAUTHORIZED, "Token not authorized (2)");
     }
     return tokenPayload;
   } catch (err) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, "Token not authorized");
+    throw new ApiError(httpStatus.UNAUTHORIZED, "Token not authorized (3)");
   }
 };
 

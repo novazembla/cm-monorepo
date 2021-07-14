@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { Button } from "@windmill/react-ui";
 
 import { ValidationSchemaLogin } from "../../validation";
-import { useLoginMutation } from "../../graphql/mutations";
+import { useUserLoginMutation } from "../../graphql/mutations";
 import { ErrorMessage, FieldInput } from "../../components/forms";
 import { LanguageButtons } from "../../components/ui";
 
@@ -16,7 +16,7 @@ type dataLogin = {
 };
 
 const Login = () => {
-  const [loginMutation, loginMutationResults] = useLoginMutation();
+  const [loginMutation, loginMutationResults] = useUserLoginMutation();
 
   const [isLoginError, setIsLoginError] = useState(false);
   const { t } = useTranslation();

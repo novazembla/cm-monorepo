@@ -9,7 +9,9 @@
   },
   "scripts": {
     "install": "npx husky install",
-    "dev": "npx concurrently -k -p \"[{name}]\" -n \"P:CORE,P:API,A:API,A:FRONTEND,A:BACKEND,P:EXAMPLE\" -c \"#d531f5,#4d5ffa,#09e3b4,#f41788,#f1610a,#61f10a\" \"npm run package:core:dev\" \"npm run package:api:dev\" \"npm run app:api:dev\" \"npm run app:frontend:dev\"  \"npm run app:backend:dev\" \"npm run plugin:example:dev\"",
+    "dev": "NODE_ENV=development npx concurrently -k -p \"[{name}]\" -n \"P:CORE,P:API,A:API,A:FRONTEND,A:BACKEND,P:EXAMPLE\" -c \"#d531f5,#4d5ffa,#09e3b4,#f41788,#f1610a,#61f10a\" \"npm run package:core:dev\" \"npm run package:api:dev\" \"npm run app:api:dev\" \"npm run app:frontend:dev\"  \"npm run app:backend:dev\" \"npm run plugin:example:dev\"",
+    "dev:api": "NODE_ENV=development npx concurrently -k -p \"[{name}]\" -n \"P:CORE,P:API,A:API,P:EXAMPLE\" -c \"#d531f5,#4d5ffa,#09e3b4,#f41788,#f1610a,#61f10a\" \"npm run package:core:dev\" \"npm run package:api:dev\" \"npm run app:api:dev\" \"npm run plugin:example:dev\"",
+    "dev:backend": "NODE_ENV=development npx concurrently -k -p \"[{name}]\" -n \"P:CORE,P:API,A:API,A:BACKEND\" -c \"#d531f5,#4d5ffa,#09e3b4,#f41788,#f1610a,#61f10a\" \"npm run package:core:dev\" \"npm run package:api:dev\" \"npm run app:api:dev\" \"npm run app:backend:dev\"",
     "lint": "npm run package:core:lint && npm run package:api:lint && npm run app:api:lint && npm run app:backend:lint && npm run app:frontend:lint",
     "app:api:start": "node ./apps/api/build/index.js",
     "app:api:dev": "npx concurrently -k -p \"[{name}]\" -n \"BABEL,NODE\" -c \"#dddddd,#aaaaaa,#777777\" \"npm run app:api:watch:babel\" \"npm run app:api:watch:node\"",

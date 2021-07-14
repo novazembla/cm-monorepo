@@ -1,6 +1,11 @@
 {
   "presets": [
-    "@babel/preset-typescript",
+    [
+      "@babel/preset-typescript",
+      {
+        "resolveJsonModule": true
+      }
+    ],
     [
       "@babel/preset-env",
       {

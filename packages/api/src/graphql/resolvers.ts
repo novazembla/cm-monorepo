@@ -1,6 +1,11 @@
+import { AuthenticationError } from "apollo-server-express";
 import { queryUsers } from "../dao/user";
 import { registerNewUser } from "../services/user";
-import { loginUserWithEmailAndPassword, logout } from "../services/auth";
+import {
+  loginUserWithEmailAndPassword,
+  logout,
+  refreshAuth,
+} from "../services/auth";
 
 const resolvers = {
   Query: {
@@ -47,6 +52,29 @@ const resolvers = {
       });
 
       return logout(userId);
+    },
+    userRefresh: async (...args) => {
+      const { res, req } = args[2];
+
+      const token = req?.cookies?.refreshToken;
+
+      if (!token) throw new AuthenticationError("Access Denied");
+
+      const authPayload = await refreshAuth(token);
+
+      if (!authPayload) throw new AuthenticationError("Access Denied");
+
+      res.cookie("refreshToken", authPayload.tokens.refresh.token, {
+        sameSite: "lax",
+        httpOnly: true,
+        maxAge:
+          new Date(authPayload.tokens.refresh.expires).getTime() -
+          new Date().getTime(),
+      });
+
+      authPayload.tokens.refresh.token = "content is hidden";
+
+      return authPayload;
     },
   },
 };

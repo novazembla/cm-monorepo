@@ -82,6 +82,7 @@ const typeDefs = gql`
   type Mutation {
     userSignup(data: UserCreateInput!) : AuthPayload!
     userLogin(data: UserLoginInput!): AuthPayload!
+    userRefresh: AuthPayload!
     userLogout(data: UserLogoutInput!): Boolean!
   }
 `;

@@ -1,4 +1,3 @@
-
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 import { privateRoutes, publicOnlyRoutes } from "./AppRoutes";
@@ -19,19 +18,23 @@ import { Windmill } from "@windmill/react-ui";
 import windmillTheme from "../theme";
 
 const App = () => {
-  // TODO: routes path array should be generated from Private/Public Routes ... 
   return (
     <Windmill theme={windmillTheme}>
       <AppProviders>
-        <span className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+        <span
+          className="sr-only"
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+        >
           Navigated to app/dashboard page.
         </span>
         <BrowserRouter>
           <Switch>
-            <Route exact path={["/","/profile"]}>
+            <Route exact path={["/", "/profile"]}>
               <LayoutFull>
                 <Switch>
-                  {privateRoutes.map(privateRouteProps => (
+                  {privateRoutes.map((privateRouteProps) => (
                     <PrivateRoute {...privateRouteProps} />
                   ))}
                 </Switch>
@@ -41,7 +44,7 @@ const App = () => {
             <Route exact path={["/login", "/register", "/forgot-password"]}>
               <LayoutLight>
                 <Switch>
-                  {publicOnlyRoutes.map(publicRouteProps => (
+                  {publicOnlyRoutes.map((publicRouteProps) => (
                     <PublicRoute {...publicRouteProps} />
                   ))}
                 </Switch>
@@ -56,8 +59,7 @@ const App = () => {
               </LayoutLight>
             </Route>
           </Switch>
-
-          </BrowserRouter>
+        </BrowserRouter>
       </AppProviders>
     </Windmill>
   );

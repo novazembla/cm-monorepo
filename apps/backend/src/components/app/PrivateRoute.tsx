@@ -1,13 +1,13 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
-import { useAuthUser } from "../../hooks";
+import { useAuthentication } from "../../hooks";
 
 type CompontentProps = {
   component: React.FC;
 };
 
 const PrivateRoute = (props: CompontentProps) => {
-  const [isLoggedIn,] = useAuthUser();
+  const [, { isLoggedIn }] = useAuthentication();
   const { component: Component, ...restProps } = props;
 
   if (!Component) return null;
@@ -27,24 +27,6 @@ const PrivateRoute = (props: CompontentProps) => {
       }
     />
   );
-
-  // TODO: what's that? return (
-  //   <Route
-  //     {...restProps}
-  //     render={(routeRenderProps) =>
-  //       isLoggedIn() ? (
-  //         <Component {...routeRenderProps} />
-  //       ) : (
-  //         <Redirect
-  //           to={{
-  //             pathname: "/login",
-  //             state: { from: routeRenderProps.location },
-  //           }}
-  //         />
-  //       )
-  //     }
-  //   />
-  // );
 };
 
 export default PrivateRoute;

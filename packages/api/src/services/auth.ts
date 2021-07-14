@@ -63,12 +63,6 @@ export const logout = async (userId: number): Promise<boolean> => {
   return true;
 };
 
-/**
- * Reset password TODO: xxx123
- * @param {string} resetPasswordToken
- * @param {string} newPassword
- * @returns {Promise}
- */
 export const refreshAuth = async (refreshToken: string) => {
   try {
     const tokenPayload = await verifyTokenInDB(
@@ -77,18 +71,17 @@ export const refreshAuth = async (refreshToken: string) => {
     );
     const user: User = await getUserById((tokenPayload as any).user.id);
     if (!user) {
-      throw new ApiError(httpStatus.UNAUTHORIZED, "Please authenticate");
+      throw new ApiError(httpStatus.UNAUTHORIZED, "Please authenticate (1)");
     }
 
     await deleteManyTokens({
-      token: refreshToken,
       userId: user.id,
       type: TokenTypes.REFRESH,
     });
 
     return await generateAuthTokens(user.id);
   } catch (error) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, "Please authenticate");
+    throw new ApiError(httpStatus.UNAUTHORIZED, "Please authenticate (2)");
   }
 };
 
@@ -111,7 +104,6 @@ export const resetPassword = async (resetPasswordToken, newPassword) => {
     await updateUserById(user.id, { password: newPassword });
 
     deleteManyTokens({
-      token: resetPasswordToken,
       userId: user.id,
       type: TokenTypes.RESET_PASSWORD,
     });
@@ -137,7 +129,6 @@ export const verifyEmail = async (verifyEmailToken) => {
     }
 
     deleteManyTokens({
-      token: verifyEmailToken,
       userId: user.id,
       type: TokenTypes.VERIFY_EMAIL,
     });

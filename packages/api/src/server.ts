@@ -1,4 +1,8 @@
 import { ApolloServer, AuthenticationError } from "apollo-server-express";
+import {
+  ApolloServerPluginLandingPageProductionDefault,
+  ApolloServerPluginLandingPageGraphQLPlayground,
+} from "apollo-server-core";
 import { makeExecutableSchema } from "@graphql-tools/schema";
 import { GraphQLSchema } from "graphql";
 import { typeDefs, resolvers } from "./graphql";
@@ -8,6 +12,8 @@ import { AuthenticatedUser, authenticateUserByToken } from "./services/auth";
 
 // eslint-disable-next-line import/no-mutable-exports
 export let server = null;
+
+console.log(process.env.NODE_ENV);
 
 export const initializeServer = (schema?: GraphQLSchema | undefined) => {
   server = new ApolloServer({
@@ -31,14 +37,14 @@ export const initializeServer = (schema?: GraphQLSchema | undefined) => {
 
           user = authenticateUserByToken(token);
           if (!user) {
-            throw new AuthenticationError("Access denied");
+            throw new AuthenticationError("Access denied (C1)");
           }
         } catch (Err) {
-          throw new AuthenticationError("Access denied");
+          throw new AuthenticationError("Access denied (C2)");
         }
       }
 
-      return { res, user };
+      return { req, res, user };
     },
     formatError: (err) => {
       // Don't give the specific errors to the client.
@@ -53,6 +59,14 @@ export const initializeServer = (schema?: GraphQLSchema | undefined) => {
       // be manipulated in other ways, as long as it's returned.
       return err;
     },
+    plugins: [
+      // Install a landing page plugin based on NODE_ENV
+      process.env.NODE_ENV === "production"
+        ? ApolloServerPluginLandingPageProductionDefault({
+            footer: false,
+          })
+        : ApolloServerPluginLandingPageGraphQLPlayground(),
+    ],
   });
 };
 

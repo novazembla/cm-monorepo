@@ -1,1 +1,1 @@
-export * from './apolloClient';
+export { default as authentication } from "./authentication";
