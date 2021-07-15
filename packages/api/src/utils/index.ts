@@ -1,2 +1,2 @@
 export * from "./restrictJSONOutput";
-export * from "./classAPIError";
+export { default as ApiError } from "./classAPIError";

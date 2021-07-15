@@ -1,12 +1,7 @@
-import gql from "graphql-tag";
+import { userLogoutMutationGQL } from "@culturemap/core";
 import { useMutation } from "@apollo/client";
-import { useAuthentication } from "../../hooks";
+import { useAuthentication } from "..";
 
-export const userLogoutMutationGQL = gql`
-  mutation userLogout($userId: Int!) {
-    userLogout(data: { userId: $userId })
-  }
-`;
 
 export const useUserLogoutMutation = () => {
   const [, { logout }] = useAuthentication();

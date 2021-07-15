@@ -1,7 +1,7 @@
 import Cookies, { CookieSetOptions } from "universal-cookie";
 import { decode, JwtPayload } from "jsonwebtoken";
 
-import { AuthenticatedUser } from "../hooks/useAuthentication";
+import { AuthenticatedUser } from "./user";
 
 export const HAS_RERESH_COOKIE_NAME = "authRefresh";
 export const REFRESH_TIMEOUT_COOKIE_NAME = "authRefreshTimeout";

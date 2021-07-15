@@ -1,4 +1,4 @@
-import { PartialRecord } from "../typings";
+import { PartialRecord } from "../types";
 
 export type RoleNames = "administrator" | "editor" | "contributor";
 

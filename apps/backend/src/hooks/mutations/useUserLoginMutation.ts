@@ -1,22 +1,8 @@
-import gql from "graphql-tag";
+import { userLoginMutationGQL } from "@culturemap/core";
 import { useMutation } from "@apollo/client";
-import { useAuthentication } from "../../hooks";
+import { useAuthentication } from "..";
 import { authentication } from "../../services";
-export const userLoginMutationGQL = gql`
-  mutation userLogin($email: String!, $password: String!) {
-    userLogin(data: { email: $email, password: $password }) {
-      tokens {
-        access {
-          token
-          expires
-        }
-        refresh {
-          expires
-        }
-      }
-    }
-  }
-`;
+
 
 export const useUserLoginMutation = () => {
   const [, { login, logout }] = useAuthentication();

@@ -13,8 +13,6 @@ import { AuthenticatedUser, authenticateUserByToken } from "./services/auth";
 // eslint-disable-next-line import/no-mutable-exports
 export let server = null;
 
-console.log(process.env.NODE_ENV);
-
 export const initializeServer = (schema?: GraphQLSchema | undefined) => {
   server = new ApolloServer({
     schema:

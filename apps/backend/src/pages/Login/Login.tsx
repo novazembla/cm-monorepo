@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { Button } from "@windmill/react-ui";
 
 import { ValidationSchemaLogin } from "../../validation";
-import { useUserLoginMutation } from "../../graphql/mutations";
+import { useUserLoginMutation } from "../../hooks/mutations";
 import { ErrorMessage, FieldInput } from "../../components/forms";
 import { LanguageButtons } from "../../components/ui";
 

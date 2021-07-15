@@ -8,6 +8,12 @@ let status: TypeLoginStatus = "logged-out";
 
 let eventAttached = false;
 
+export const setTabWideAccessInfo = (loginStatus: TypeLoginStatus) => {
+  if (typeof window !== "undefined") {
+    window.localStorage.setItem("loginStatus", loginStatus);
+  }
+};
+
 export const useAuthTabWideLogout = () => {
   const history = useHistory();
   
@@ -25,13 +31,9 @@ export const useAuthTabWideLogout = () => {
     });
   }
 
-  const setAccessInfo = (loginStatus: TypeLoginStatus) => {
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem("loginStatus", loginStatus);
-    }
-  };
+  
 
-  return [status, setAccessInfo] as const;
+  return [status, setTabWideAccessInfo] as const;
 };
 
 export default useAuthTabWideLogout;

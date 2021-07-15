@@ -15,3 +15,5 @@ export const userRefreshMutationGQL = gql`
     }
   }
 `;
+
+export default userRefreshMutationGQL;

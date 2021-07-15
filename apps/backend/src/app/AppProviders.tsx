@@ -13,7 +13,7 @@ import {
 } from "../context/culturemap";
 
 const WrapWithProviders = (pageProps: AppProps) => {
-  const apolloClient = useApollo(pageProps, getCulturemapSettings());
+  const apolloClient = useApollo(getCulturemapSettings());
 
   return (
     <CulturemapContextProvider>

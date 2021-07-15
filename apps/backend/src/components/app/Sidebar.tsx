@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useHistory } from "react-router-dom";
 
-import { useUserLogoutMutation } from "../../graphql/mutations";
+import { useUserLogoutMutation } from "../../hooks/mutations";
 import { useAuthentication } from "../../hooks";
 
 const Sidebar = () => {
@@ -12,8 +12,9 @@ const Sidebar = () => {
   const buttonDisabled = logoutMutationResults.loading;
 
   const onButtonClick = () => {
-    if (user) {
-      logoutMutation(user.id);
+    const u = user.get();
+    if (u) {
+      logoutMutation(u.id);
       history.push("/login");
     }
   };

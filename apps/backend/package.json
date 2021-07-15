@@ -5,6 +5,7 @@
   "dependencies": {
     "@apollo/client": "^3.3.21",
     "@craco/craco": "^6.1.2",
+    "@culturemap/api": "^0.0.1",
     "@hookform/resolvers": "^2.5.0",
     "@reduxjs/toolkit": "^1.6.0",
     "@tailwindcss/forms": "^0.3.2",
