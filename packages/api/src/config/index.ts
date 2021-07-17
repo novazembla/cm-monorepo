@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import { CorsOptions } from "cors";
+import { PartialRecord } from "@culturemap/core";
 
 // TODO: how to sensible harden cors ...
 // Would it be possible to catch Mutations and require a whitelist of origins?
@@ -17,17 +18,17 @@ export let cors: CorsOptions = {
 
 dotenv.config();
 
-export interface CulturemapPrivateJSONDataKeys {
-  all: Array<string>;
-  location: Array<string>;
-  event: Array<string>;
-  tour: Array<string>;
-  user: Array<string>;
-}
+export type CulturemapScopes =
+  | "all"
+  | "location"
+  | "event"
+  | "tour"
+  | "user"
+  | "terms";
 
 export interface CulturemapDBSettings {
   defaultPageSize: number;
-  privateJSONDataKeys: CulturemapPrivateJSONDataKeys;
+  privateJSONDataKeys: PartialRecord<CulturemapScopes, Array<string>>;
 }
 
 export const db: CulturemapDBSettings = {
@@ -41,18 +42,22 @@ export const db: CulturemapDBSettings = {
   },
 };
 
-export const update = (cmConfig) => {
+export const update = (cmConfig: any) => {
+  if (typeof cmConfig !== "object")
+    throw Error("Plase just pass objects to the config.update function");
+
   if ("privateJSONDataKeys" in cmConfig) {
     Object.keys(db.privateJSONDataKeys).forEach((key) => {
       if (key in cmConfig.privateJSONDataKeys) {
-        db.privateJSONDataKeys[key] = cmConfig.privateJSONDataKeys[key].reduce(
-          (jsonKeys, jsonKey) => {
-            if (jsonKeys.indexOf(jsonKey) === -1) jsonKeys.push(jsonKey);
+        db.privateJSONDataKeys[key as CulturemapScopes] =
+          cmConfig.privateJSONDataKeys[key as CulturemapScopes]?.reduce(
+            (jsonKeys: string[], jsonKey: string) => {
+              if (jsonKeys?.indexOf(jsonKey) === -1) jsonKeys.push(jsonKey);
 
-            return jsonKeys;
-          },
-          db.privateJSONDataKeys[key]
-        );
+              return jsonKeys;
+            },
+            db.privateJSONDataKeys[key as CulturemapScopes]
+          );
       }
     });
   }

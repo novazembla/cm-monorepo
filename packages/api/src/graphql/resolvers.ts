@@ -1,23 +1,31 @@
 import { AuthenticationError } from "apollo-server-express";
-import { queryUsers } from "../dao/user";
+import { daoUserQuery } from "../dao/user";
 import { registerNewUser } from "../services/user";
+
 import {
   loginUserWithEmailAndPassword,
   logout,
   refreshAuth,
 } from "../services/auth";
+import { processRefreshToken } from "../services/token";
 
 const resolvers = {
   Query: {
     /* parent, args, context, info */
-    users: (...args) => queryUsers(args[1]),
+    users: (...args: any[]) => {
+      const { query } = args[1];
+      const where = {
+        email: query.email,
+      };
+      return daoUserQuery(where, query.page, query.pageSize);
+    },
   },
   Mutation: {
-    userSignup: async (...args) => {
+    userSignup: async (...args: any[]) => {
       const { data } = args[1];
       return registerNewUser(data);
     },
-    userLogin: async (...args) => {
+    userLogin: async (...args: any[]) => {
       const {
         data: { email, password },
       } = args[1];
@@ -26,19 +34,15 @@ const resolvers = {
 
       const authPayload = await loginUserWithEmailAndPassword(email, password);
 
-      res.cookie("refreshToken", authPayload.tokens.refresh.token, {
-        sameSite: "lax",
-        httpOnly: true,
-        maxAge:
-          new Date(authPayload.tokens.refresh.expires).getTime() -
-          new Date().getTime(),
-      });
+      if (!authPayload || !(authPayload as any)?.tokens?.access.token)
+        throw new AuthenticationError("Access Denied");
 
-      authPayload.tokens.refresh.token = "content is hidden";
+      if (!authPayload || !(authPayload as any)?.tokens?.refresh.token)
+        throw new AuthenticationError("Access Denied");
 
-      return authPayload;
+      return processRefreshToken(res, authPayload);
     },
-    userLogout: async (...args) => {
+    userLogout: async (...args: any[]) => {
       const {
         data: { userId },
       } = args[1];
@@ -53,7 +57,7 @@ const resolvers = {
 
       return logout(userId);
     },
-    userRefresh: async (...args) => {
+    userRefresh: async (...args: any[]) => {
       const { res, req } = args[2];
 
       const token = req?.cookies?.refreshToken;
@@ -62,19 +66,10 @@ const resolvers = {
 
       const authPayload = await refreshAuth(token);
 
-      if (!authPayload) throw new AuthenticationError("Access Denied");
+      if (!authPayload || !(authPayload as any)?.tokens?.refresh.token)
+        throw new AuthenticationError("Access Denied");
 
-      res.cookie("refreshToken", authPayload.tokens.refresh.token, {
-        sameSite: "lax",
-        httpOnly: true,
-        maxAge:
-          new Date(authPayload.tokens.refresh.expires).getTime() -
-          new Date().getTime(),
-      });
-
-      authPayload.tokens.refresh.token = "content is hidden";
-
-      return authPayload;
+      return processRefreshToken(res, authPayload);
     },
   },
 };

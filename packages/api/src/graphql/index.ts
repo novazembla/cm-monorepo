@@ -1,2 +1,3 @@
-export { default as resolvers } from "./resolvers";
-export { default as typeDefs } from "./schema";
+export * as types from "./types";
+export * from "./schema";
+export * from "./context";

@@ -1,45 +1,90 @@
 import { PartialRecord } from "../types";
 
-export type RoleNames = "administrator" | "editor" | "contributor";
+export type RoleNames =
+  | "administrator"
+  | "editor"
+  | "contributor"
+  | "user"
+  | "test";
 
 export interface Role {
   name: RoleNames;
-  permissions: Set<string>;
+  permissions: string[];
+  extends: RoleNames[];
 }
 
 export interface Roles {
   roles: PartialRecord<RoleNames, Role>;
-  add: (name: string, permissions?: string | Array<string>) => void;
+  add: (name: RoleNames, permissions?: string | Array<string>) => void;
+  extend: (name: RoleNames, extended: RoleNames) => void;
   addPermissions: (
-    roleName: string,
-    permissions: string | Array<string>
+    roleName: RoleNames,
+    permissions?: string | Array<string>
   ) => void;
+  getOwnPermissions: (roleName: RoleNames) => string[];
+  getExtendedPermissions: (roleName: RoleNames) => string[];
 }
 
 export const roles: Roles = {
   roles: {},
-  add(name: string, permissions: string | Array<string>) {
+  add(name: RoleNames, permissions?: string | Array<string>) {
     if (!(name in this.roles)) {
       this.roles[name] = {
         name,
-        permissions: new Set(),
+        permissions: [],
+        extends: [],
       };
+      this.addPermissions(name, permissions);
     }
-
-    this.addPermissions(name, permissions);
   },
-  addPermissions(roleName: string, permissions: string | Array<string>) {
+  extend(roleName: RoleNames, extended: RoleNames) {
+    if (roleName in this.roles && extended in this.roles) {
+      (this.roles[roleName] as Role).extends.push(extended);
+    }
+  },
+  addPermissions(roleName: RoleNames, permissions?: string | Array<string>) {
     if (roleName in this.roles && permissions) {
       if (Array.isArray(permissions)) {
         permissions.forEach((permission) =>
-          this.roles[roleName].permissions.add(permission)
+          (this.roles[roleName] as Role).permissions.push(permission)
         );
       } else if (typeof permissions === "string")
-        this.roles[roleName].permissions.add(permissions);
+        (this.roles[roleName] as Role).permissions.push(permissions);
     }
   },
+  getOwnPermissions(roleName: RoleNames): string[] {
+    if (roleName in this.roles) {
+      return Array.from(
+        // using Array.from(new Set(...)) to filter duplicates out
+        new Set((this.roles[roleName] as Role).permissions.values())
+      );
+    }
+    return [];
+  },
+  getExtendedPermissions(roleName: RoleNames): string[] {
+    if (roleName in this.roles) {
+      return Array.from(
+        // using Array.from(new Set(...)) to filter duplicates out
+        new Set(
+          [roleName, ...(this.roles[roleName] as Role).extends].reduce(
+            (perms: string[], rN: RoleNames) => [
+              ...perms,
+              ...this.getOwnPermissions(rN),
+            ],
+            []
+          )
+        )
+      );
+    }
+    return [];
+  },
 };
-roles.add("administrator");
+roles.add("administrator", [
+  "userCreate",
+  "userRead",
+  "userUpdate",
+  "userDelete",
+]);
 roles.add("editor", [
   "locationRead",
   "locationCreate",
@@ -57,6 +102,10 @@ roles.add("editor", [
   "pageCreate",
   "pageUpdate",
   "pageDelete",
+  "taxCreate",
+  "taxRead",
+  "taxUpdate",
+  "taxDelete",
 ]);
 roles.add("contributor", [
   "locationRead",
@@ -76,5 +125,14 @@ roles.add("contributor", [
   "pageUpdate",
   "pageDeleteOwn",
 ]);
+roles.add("user", ["accessAsAuthenticatedUser"]);
 
+roles.extend("administrator", "editor");
+roles.extend("administrator", "contributor");
+roles.extend("administrator", "user");
+
+roles.extend("editor", "contributor");
+roles.extend("editor", "user");
+
+roles.extend("contributor", "user");
 export default roles;

@@ -10,30 +10,29 @@ export enum TokenTypes {
   VERIFY_EMAIL = "verifyEmail",
 }
 
-export const deleteManyTokens = async (
+export const daoTokenDeleteMany = async (
   where: Prisma.TokenWhereInput
-): Promise<Prisma.BatchPayload> => {
-  const result = await prisma.token.deleteMany({
+): Promise<number> => {
+  const { count } = await prisma.token.deleteMany({
     where,
   });
-  return result;
+  return count;
 };
 
-export const findFirstToken = async (
+export const daoTokenFindFirst = async (
   where: Prisma.TokenWhereInput
-): Promise<Token> => {
-  const token: Token = await prisma.token.findFirst({
+): Promise<Token | null> => {
+  const token: Token | null = await prisma.token.findFirst({
     where,
   });
   return token;
 };
 
-export const saveToken = async (
+export const daoTokenCreate = async (
   token: string,
   userId: number,
   expires: Date,
-  type: string,
-  blacklisted: boolean = false
+  type: string
 ): Promise<Token> => {
   const tokenInDB = await prisma.token.create({
     data: {
@@ -41,28 +40,15 @@ export const saveToken = async (
       userId,
       expires: expires.toISOString(),
       type,
-      blacklisted,
     },
   });
 
   return tokenInDB;
 };
 
-export const banTokensOfUser = async (
+export const daoTokenFindByUserId = async (
   userId: number
-): Promise<Prisma.BatchPayload> => {
-  const result = await prisma.token.updateMany({
-    where: {
-      userId,
-    },
-    data: {
-      blacklisted: true,
-    },
-  });
-  return result;
-};
-
-export const findTokensOfUser = async (userId: number): Promise<Token[]> => {
+): Promise<Token[]> => {
   const tokens = prisma.token.findMany({
     where: {
       userId,
@@ -71,7 +57,7 @@ export const findTokensOfUser = async (userId: number): Promise<Token[]> => {
   return tokens;
 };
 
-export const getUserIdByAccessToken = async (
+export const daoTokenGetUserIdByToken = async (
   token: string
 ): Promise<number | void> => {
   const foundToken = await prisma.token.findFirst({
@@ -84,10 +70,19 @@ export const getUserIdByAccessToken = async (
   if (foundToken) return foundToken.userId;
 };
 
+export const daoTokenDeleteByUserId = async (
+  userId: number
+): Promise<number> => {
+  const count = await daoTokenDeleteMany({ userId });
+  return count;
+};
+
 export default {
   TokenTypes,
-  saveToken,
-  banTokensOfUser,
-  findTokensOfUser,
-  deleteManyTokens,
+  daoTokenDeleteMany,
+  daoTokenFindFirst,
+  daoTokenCreate,
+  daoTokenFindByUserId,
+  daoTokenDeleteByUserId,
+  daoTokenGetUserIdByToken,
 };

@@ -1,49 +1,19 @@
-import { ApolloServer, AuthenticationError } from "apollo-server-express";
+import { ApolloServer } from "apollo-server-express";
+
 import {
   ApolloServerPluginLandingPageProductionDefault,
   ApolloServerPluginLandingPageGraphQLPlayground,
 } from "apollo-server-core";
-import { makeExecutableSchema } from "@graphql-tools/schema";
-import { GraphQLSchema } from "graphql";
-import { typeDefs, resolvers } from "./graphql";
-import { AuthenticatedUser, authenticateUserByToken } from "./services/auth";
-
-// TODO: include import { DirectiveAuth } from "./graphql/directives";
+import { GraphQLSchema } from "graphql/type/schema";
+import { schema, context } from "./graphql";
 
 // eslint-disable-next-line import/no-mutable-exports
-export let server = null;
+export let server: ApolloServer | null = null;
 
-export const initializeServer = (schema?: GraphQLSchema | undefined) => {
+export const initializeServer = (customSchema?: GraphQLSchema | undefined) => {
   server = new ApolloServer({
-    schema:
-      schema ||
-      makeExecutableSchema({
-        typeDefs,
-        resolvers,
-        // xxx fix https://www.graphql-tools.com/docs/schema-directives/ TODO:: FIX:
-        // schemaTransforms: [DirectiveAuth]
-      }),
-    context: ({ req, res }) => {
-      let user: AuthenticatedUser;
-
-      let token = req?.headers?.authorization;
-
-      if (token) {
-        try {
-          if (token.indexOf("Bearer ") !== -1)
-            token = token.replace("Bearer ", "");
-
-          user = authenticateUserByToken(token);
-          if (!user) {
-            throw new AuthenticationError("Access denied (C1)");
-          }
-        } catch (Err) {
-          throw new AuthenticationError("Access denied (C2)");
-        }
-      }
-
-      return { req, res, user };
-    },
+    schema: customSchema || schema,
+    context,
     formatError: (err) => {
       // Don't give the specific errors to the client.
       if (

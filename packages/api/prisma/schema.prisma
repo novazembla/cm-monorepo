@@ -15,7 +15,10 @@ model User {
   email          String     @unique
   firstName      String
   lastName       String
+  role           String     @default("user")
   emailConfirmed Boolean    @default(false)
+  acceptedTerms  Boolean    @default(false)
+  userBanned     Boolean    @default(false)
   password       String
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @default(now()) @updatedAt
@@ -42,9 +45,8 @@ model Token {
   type   String @db.VarChar(16)
   userId Int
   user   User   @relation(fields: [userId], references: [id])
-
   expires     DateTime
-  blacklisted Boolean  @default(false)
+  
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now()) @updatedAt
 

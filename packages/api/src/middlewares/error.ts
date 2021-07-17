@@ -2,7 +2,7 @@ import httpStatus from "http-status";
 
 import { logger } from "../services/logging";
 
-import { ApiError } from "../utils/classApiError";
+import { ApiError } from "../utils/ApiError";
 
 export const errorConverter = ({ err, next }) => {
   let error = err;

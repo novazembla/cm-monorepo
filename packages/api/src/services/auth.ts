@@ -1,28 +1,68 @@
 import httpStatus from "http-status";
 import { User } from "@prisma/client";
 import { JwtPayload } from "jsonwebtoken";
+import { RoleNames } from "@culturemap/core";
 
 import { AuthPayload } from "../typings/auth";
 
-import { TokenTypes, deleteManyTokens } from "../dao/token";
-import { getUserByLogin, getUserById, updateUserById } from "../dao/user";
+import { TokenTypes, daoTokenDeleteMany } from "../dao/token";
+import { daoUserGetByLogin, daoUserGetById, daoUserUpdate } from "../dao/user";
 import { ApiError } from "../utils";
 import { verifyToken, verifyTokenInDB, generateAuthTokens } from "./token";
 
-export interface AuthenticatedUser {
+export interface AuthenticatedApiUser {
   id: number;
   roles: string[];
   permissions: string[];
+  has: (name: RoleNames) => boolean;
+  can: (permission: string) => boolean;
 }
+
+export const generateAuthenticatedApiUser = (
+  id: number,
+  roles: string[],
+  permissions: string[]
+): AuthenticatedApiUser => {
+  const user: AuthenticatedApiUser = {
+    id,
+    roles,
+    permissions,
+    has(name: RoleNames) {
+      return (this.roles &&
+        Array.isArray(this.roles) &&
+        this.roles.indexOf(name) > -1) as boolean;
+    },
+    can(permission: string) {
+      return (this.permissions &&
+        Array.isArray(this.permissions) &&
+        this.permissions.indexOf(permission) > -1) as boolean;
+    },
+  };
+
+  return user;
+};
 
 export const authenticateUserByToken = (
   token: string
-): AuthenticatedUser | null => {
+): AuthenticatedApiUser | null => {
   const tokenPayload = verifyToken(token);
 
   if (tokenPayload) {
     if ("user" in (tokenPayload as JwtPayload)) {
-      return (tokenPayload as JwtPayload).user;
+      if (
+        !(
+          "id" in (tokenPayload as JwtPayload).user &&
+          "roles" in (tokenPayload as JwtPayload).user &&
+          "permissions" in (tokenPayload as JwtPayload).user
+        )
+      )
+        return null;
+
+      return generateAuthenticatedApiUser(
+        (tokenPayload as JwtPayload).user.id,
+        (tokenPayload as JwtPayload).user.roles,
+        (tokenPayload as JwtPayload).user.permissions
+      );
     }
   }
 
@@ -33,27 +73,30 @@ export const loginUserWithEmailAndPassword = async (
   email: string,
   password: string
 ): Promise<AuthPayload> => {
-  const user: User = await getUserByLogin(email, password);
+  const user = await daoUserGetByLogin(email, password);
 
   if (!user) {
     throw new ApiError(httpStatus.UNAUTHORIZED, "Incorrect email or password");
   }
 
-  deleteManyTokens({
+  daoTokenDeleteMany({
     userId: user.id,
     type: {
       in: [TokenTypes.REFRESH, TokenTypes.ACCESS],
     },
   });
 
-  const authpayload: AuthPayload = await generateAuthTokens(user.id);
+  const authpayload: AuthPayload = await generateAuthTokens(
+    user.id,
+    user.role as RoleNames
+  );
   authpayload.user = user;
 
   return authpayload;
 };
 
 export const logout = async (userId: number): Promise<boolean> => {
-  deleteManyTokens({
+  daoTokenDeleteMany({
     userId,
     type: {
       in: [TokenTypes.REFRESH, TokenTypes.ACCESS],
@@ -69,17 +112,17 @@ export const refreshAuth = async (refreshToken: string) => {
       refreshToken,
       TokenTypes.REFRESH
     );
-    const user: User = await getUserById((tokenPayload as any).user.id);
+    const user: User = await daoUserGetById((tokenPayload as any).user.id);
     if (!user) {
       throw new ApiError(httpStatus.UNAUTHORIZED, "Please authenticate (1)");
     }
 
-    await deleteManyTokens({
+    await daoTokenDeleteMany({
       userId: user.id,
       type: TokenTypes.REFRESH,
     });
 
-    return await generateAuthTokens(user.id);
+    return await generateAuthTokens(user.id, user.role as RoleNames);
   } catch (error) {
     throw new ApiError(httpStatus.UNAUTHORIZED, "Please authenticate (2)");
   }
@@ -91,19 +134,22 @@ export const refreshAuth = async (refreshToken: string) => {
  * @param {string} newPassword
  * @returns {Promise}
  */
-export const resetPassword = async (resetPasswordToken, newPassword) => {
+export const resetPassword = async (
+  resetPasswordToken: string,
+  newPassword: string
+) => {
   try {
     const tokenPayload = await verifyTokenInDB(
       resetPasswordToken,
       TokenTypes.RESET_PASSWORD
     );
-    const user = await getUserById((tokenPayload as any).user.id);
+    const user = await daoUserGetById((tokenPayload as any).user.id);
     if (!user) {
       throw new ApiError(httpStatus.UNAUTHORIZED, "Please authenticate");
     }
-    await updateUserById(user.id, { password: newPassword });
+    await daoUserUpdate(user.id, { password: newPassword });
 
-    deleteManyTokens({
+    daoTokenDeleteMany({
       userId: user.id,
       type: TokenTypes.RESET_PASSWORD,
     });
@@ -117,23 +163,23 @@ export const resetPassword = async (resetPasswordToken, newPassword) => {
  * @param {string} verifyEmailToken
  * @returns {Promise}
  */
-export const verifyEmail = async (verifyEmailToken) => {
+export const verifyEmail = async (emailVerificationToken: string) => {
   try {
     const tokenPayload = await verifyTokenInDB(
-      verifyEmailToken,
+      emailVerificationToken,
       TokenTypes.VERIFY_EMAIL
     );
-    const user: User = await getUserById((tokenPayload as any).user.id); // TODO: crate type for token payload and replace as any
+    const user: User = await daoUserGetById((tokenPayload as any).user.id); // TODO: crate type for token payload and replace as any
     if (!user) {
       throw new Error();
     }
 
-    deleteManyTokens({
+    daoTokenDeleteMany({
       userId: user.id,
       type: TokenTypes.VERIFY_EMAIL,
     });
 
-    updateUserById(user.id, { isEmailVerified: true });
+    daoUserUpdate(user.id, { emailConfirmed: true });
   } catch (error) {
     throw new ApiError(httpStatus.UNAUTHORIZED, "Email verification failed");
   }

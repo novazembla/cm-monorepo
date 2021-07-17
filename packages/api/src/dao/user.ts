@@ -1,124 +1,145 @@
 import { hash, verify } from "argon2";
 import httpStatus from "http-status";
-import { User } from "@prisma/client";
+import { User, Prisma } from "@prisma/client";
 
-import { ApiError, restrictJSONOutput } from "../utils";
+import { ApiError, filteredOutputOrNotFound, filteredOutput } from "../utils";
 import { db } from "../config";
 import { getPrismaClient } from "../db/client";
 
 const prisma = getPrismaClient();
 
-export const checkIsEmailTaken = async (
+export const daoUserCheckIsEmailTaken = async (
   email: string,
-  userId: number
-): Promise<User> => {
+  userId?: number | undefined
+): Promise<boolean> => {
   const where: any = {
     email,
   };
 
-  if (userId > 0) {
-    where.userId = userId;
+  if (!Number.isNaN(userId)) {
+    where.id = userId;
   }
 
-  const user: User = await prisma.user.findUnique({
+  const count = await prisma.user.count({
     where,
   });
 
-  return user;
+  return count > 0;
 };
 
-export const createUser = async (userBody: any): Promise<User> => {
-  if (await checkIsEmailTaken(userBody.email, 0)) {
+export const daoUserCreate = async (
+  data: Prisma.UserCreateInput
+): Promise<User> => {
+  if (await daoUserCheckIsEmailTaken(data.email)) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Email already taken");
   }
 
-  // TODO: this needs to better typed
   const user: User = await prisma.user.create({
     data: {
-      email: userBody.email,
-      firstName: userBody.firstName,
-      lastName: userBody.lastName,
-      password: await hash(userBody.password),
+      ...data,
+      ...{
+        password: await hash(data.password),
+      },
     },
   });
 
-  return restrictJSONOutput(user, db.privateJSONDataKeys.user);
+  return filteredOutputOrNotFound(user, db.privateJSONDataKeys.user);
 };
 
-export const queryUsers = async ({ page, pageSize }): Promise<User[]> => {
+export const daoUserQuery = async (
+  where: Prisma.UserWhereInput,
+  page: number = 0,
+  pageSize: number = db.defaultPageSize
+): Promise<User[]> => {
   const users: User[] = await prisma.user.findMany({
+    where,
     skip: page > 1 ? page * pageSize : 0,
     take: pageSize,
   });
 
-  return restrictJSONOutput(users, db.privateJSONDataKeys.user);
+  return filteredOutput(users, db.privateJSONDataKeys.user);
 };
 
-export const getUserById = async (id: number): Promise<User> => {
-  const user: User = await prisma.user.findUnique({ where: { id } });
+export const daoUserGetById = async (id: number): Promise<User> => {
+  const user: User | null = await prisma.user.findUnique({ where: { id } });
 
-  return restrictJSONOutput(user, db.privateJSONDataKeys.user);
+  return filteredOutputOrNotFound(user, db.privateJSONDataKeys.user);
 };
 
-export const getUserByEmail = async (email: string): Promise<User> => {
-  const user: User = await prisma.user.findUnique({ where: { email } });
+export const daoUserGetByEmail = async (email: string): Promise<User> => {
+  const user: User | null = await prisma.user.findUnique({ where: { email } });
 
-  return restrictJSONOutput(user, db.privateJSONDataKeys.user);
+  return filteredOutputOrNotFound(user, db.privateJSONDataKeys.user);
 };
 
-export const getUserByLogin = async (
+export const daoUserGetByLogin = async (
   email: string,
   password: string
-): Promise<User> => {
-  const user: User = await prisma.user.findUnique({ where: { email } });
+): Promise<User | null> => {
+  const user: User | null = await prisma.user.findUnique({ where: { email } });
 
   if (!user || !(await verify(user.password, password))) return null;
 
-  return restrictJSONOutput(user, db.privateJSONDataKeys.user);
+  // TODO: filteredOutput(user, db.privateJSONDataKeys.user);
+  /*
+    [A:API] [NODE] {
+    [A:API] [NODE]   id: 6,
+    [A:API] [NODE]   email: 'hoh2243@ho.com',
+    [A:API] [NODE]   firstName: 'hoho',
+    [A:API] [NODE]   lastName: 'hoho',
+    [A:API] [NODE]   role: 'user',
+    [A:API] [NODE]   emailConfirmed: false,
+    [A:API] [NODE]   acceptedTerms: true,
+    [A:API] [NODE]   userBanned: false,
+    [A:API] [NODE]   createdAt: {}, <!==== WHY IS THAT ?
+    [A:API] [NODE]   updatedAt: {}
+    [A:API] [NODE] }
+  */
+  return filteredOutput(user, db.privateJSONDataKeys.user);
 };
 
-// TODO: how to type updateBody
-export const updateUserById = async (
+export const daoUserUpdate = async (
   userId: number,
-  updateBody: any
+  data: Prisma.UserUpdateInput
 ): Promise<User> => {
-  const userTest = await getUserById(userId);
+  const userTest = await daoUserGetById(userId);
   if (!userTest) {
     throw new ApiError(httpStatus.NOT_FOUND, "Not found");
   }
-  if (updateBody.email && (await checkIsEmailTaken(updateBody.email, userId))) {
+  if (
+    data.email &&
+    (await daoUserCheckIsEmailTaken(data.email as string, userId))
+  ) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Email already taken");
   }
 
   const user: User = await prisma.user.update({
-    data: updateBody,
+    data,
     where: {
       id: userId,
     },
   });
 
-  return restrictJSONOutput(user, db.privateJSONDataKeys.user);
+  return filteredOutputOrNotFound(user, db.privateJSONDataKeys.user);
 };
 
-export const deleteUserById = async (userId: number): Promise<User> => {
+export const daoUserDelete = async (userId: number): Promise<User> => {
   const user: User = await prisma.user.delete({
     where: {
       id: userId,
     },
   });
-  if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, "Not found");
-  }
 
-  return restrictJSONOutput(user, db.privateJSONDataKeys.user);
+  return filteredOutputOrNotFound(user, db.privateJSONDataKeys.user);
 };
 
 export default {
-  createUser,
-  queryUsers,
-  getUserById,
-  getUserByEmail,
-  getUserByLogin,
-  updateUserById,
-  deleteUserById,
+  daoUserCreate,
+  daoUserQuery,
+  daoUserGetById,
+  daoUserGetByLogin,
+  daoUserGetByEmail,
+  daoUserUpdate,
+  daoUserDelete,
+  daoUserCheckIsEmailTaken,
 };

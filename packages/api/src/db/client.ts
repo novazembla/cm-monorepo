@@ -1,4 +1,7 @@
 import Prisma from "@prisma/client";
+
+// TODO: how to deal with loggin issues?
+
 import { utils } from "@culturemap/core";
 
 const { PrismaClient } = Prisma;

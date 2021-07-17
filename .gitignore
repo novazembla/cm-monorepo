@@ -143,3 +143,5 @@ build/
 
 data/*
 !data/.keep
+!data/postgres/.keep
+!data/postgres-test/.keep
