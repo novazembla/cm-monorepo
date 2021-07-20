@@ -9,7 +9,7 @@ import { PartialRecord } from "@culturemap/core";
 // Are pre flights needed? https://www.npmjs.com/package/cors#enabling-cors-pre-flight
 
 // eslint-disable-next-line import/no-mutable-exports
-export let cors: CorsOptions = {
+export let corsOptions: CorsOptions = {
   origin: true, // TODO: you might want to have a more complex origin, true for but requests from the requests to the admin tool ...
   credentials: true,
   methods: "GET,PUT,POST,OPTIONS",
@@ -68,8 +68,8 @@ export const update = (cmConfig: any) => {
 };
 
 export const updateCors = (newCorsSettings: CorsOptions) => {
-  cors = newCorsSettings;
+  corsOptions = newCorsSettings;
 };
 
 // TODO: validate the existence of the needed keys
-export default { db, env: process.env, cors };
+export default { db, env: process.env, corsOptions };

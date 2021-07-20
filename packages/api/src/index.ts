@@ -1,4 +1,4 @@
-export * as graphql from "./graphql";
+export * as nexusGraphql from "./nexus-graphql";
 export * from "./app";
 export * from "./server";
 export * as config from "./config";

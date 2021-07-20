@@ -5,7 +5,7 @@ import { RoleNames } from "@culturemap/core";
 import { daoUserCreate, daoUserDelete, daoUserUpdate } from "../dao/user";
 import { AuthPayload } from "../typings/auth";
 import { ApiError } from "../utils";
-import { generateAuthTokens } from "./token";
+import { tokenGenerateAuthTokens } from "./token";
 
 export const registerNewUser = async (
   data: Prisma.UserCreateInput
@@ -24,7 +24,10 @@ export const registerNewUser = async (
       "User could not be created"
     );
 
-  const authPayload: AuthPayload = await generateAuthTokens(user.id, "user");
+  const authPayload: AuthPayload = await tokenGenerateAuthTokens(
+    user.id,
+    "user"
+  );
   authPayload.user = user;
   return authPayload;
 };
@@ -46,7 +49,7 @@ export const addUser = async (
       "User could not be created"
     );
 
-  const authPayload: AuthPayload = await generateAuthTokens(
+  const authPayload: AuthPayload = await tokenGenerateAuthTokens(
     user.id,
     data.role && data.role.length ? (data.role as RoleNames) : "user"
   );

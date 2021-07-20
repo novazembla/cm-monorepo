@@ -29,12 +29,15 @@ type AuthUser {
 }
 
 type Mutation {
-  login(data: UserLoginInput!): AuthPayload!
+  userLogin(data: UserLoginInput!): AuthPayload!
+  userLogout(data: UserLogoutInput!): UserLogoutResult!
+  userRefresh: AuthPayload!
   userSignup(data: UserSignupInput!): AuthPayload!
 }
 
 type Query {
   users: [User]!
+  users2: [User]!
 }
 
 type User {
@@ -47,6 +50,14 @@ type User {
 input UserLoginInput {
   email: String!
   password: String!
+}
+
+input UserLogoutInput {
+  userId: Int!
+}
+
+type UserLogoutResult {
+  result: Boolean!
 }
 
 input UserSignupInput {

@@ -3,7 +3,7 @@ import { objectType, extendType, inputObjectType, nonNull } from "nexus";
 import httpStatus from "http-status";
 
 import { registerNewUser } from "../../services/user";
-import { processRefreshToken } from "../../services/token";
+import { tokenProcessRefreshToken } from "../../services/token";
 import { ApiError } from "../../utils";
 
 export const User = objectType({
@@ -16,13 +16,42 @@ export const User = objectType({
   },
 });
 
+// const userQueryAuthentication: fieldAuthorizePluginCore.FieldAuthorizeResolver<
+//   "Query",
+//   "users"
+// > = async (...[, , ctx]) => !!(ctx.apiUser && ctx.apiUser.can("userRead"));
+
 export const UserQuery = extendType({
   type: "Query",
   definition(t) {
     t.nonNull.list.field("users", {
       type: "User",
-      // TODO: permissions: ["userRead"],
-      // TODO: authorize: (...[, , ctx]) => ctx.apiUser.can(ctx.apiUser),
+
+      authorize: async (...[, , ctx]) =>
+        !!(ctx.apiUser && ctx.apiUser.can("userRead")),
+
+      // resolve(root, args, ctx, info)
+      resolve(...[, , ctx]) {
+        return [
+          {
+            id: 1,
+            firstName: `Vincent (${ctx.apiUser?.id})`,
+            lastName: "Van Uffelen",
+            email: "test@test.com",
+          },
+        ];
+      },
+    });
+  },
+});
+
+// TODO: remove!
+export const User2Query = extendType({
+  type: "Query",
+  definition(t) {
+    t.nonNull.list.field("users2", {
+      type: "User",
+
       // resolve(root, args, ctx, info)
       resolve(...[, , ctx]) {
         return [
@@ -64,7 +93,7 @@ export const UserSignupMutation = extendType({
         if (!authPayload)
           throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Signup Failed");
 
-        return processRefreshToken(res, authPayload);
+        return tokenProcessRefreshToken(res, authPayload);
       },
     });
   },

@@ -2,13 +2,15 @@ import httpStatus from "http-status";
 import { User } from "@prisma/client";
 import { JwtPayload } from "jsonwebtoken";
 import { RoleNames } from "@culturemap/core";
+import { AuthenticationError } from "apollo-server-express";
 
 import { AuthPayload } from "../typings/auth";
 
 import { TokenTypes, daoTokenDeleteMany } from "../dao/token";
 import { daoUserGetByLogin, daoUserGetById, daoUserUpdate } from "../dao/user";
 import { ApiError } from "../utils";
-import { verifyToken, verifyTokenInDB, generateAuthTokens } from "./token";
+import { tokenVerify, tokenVerifyInDB, tokenGenerateAuthTokens } from "./token";
+import { logger } from "./logging";
 
 export interface AuthenticatedApiUser {
   id: number;
@@ -18,7 +20,7 @@ export interface AuthenticatedApiUser {
   can: (permission: string) => boolean;
 }
 
-export const generateAuthenticatedApiUser = (
+export const authGenerateAuthenticatedApiUser = (
   id: number,
   roles: string[],
   permissions: string[]
@@ -42,41 +44,45 @@ export const generateAuthenticatedApiUser = (
   return user;
 };
 
-export const authenticateUserByToken = (
+export const authAuthenticateUserByToken = (
   token: string
 ): AuthenticatedApiUser | null => {
-  const tokenPayload = verifyToken(token);
+  try {
+    const tokenPayload = tokenVerify(token);
 
-  if (tokenPayload) {
-    if ("user" in (tokenPayload as JwtPayload)) {
-      if (
-        !(
-          "id" in (tokenPayload as JwtPayload).user &&
-          "roles" in (tokenPayload as JwtPayload).user &&
-          "permissions" in (tokenPayload as JwtPayload).user
+    if (tokenPayload) {
+      if ("user" in (tokenPayload as JwtPayload)) {
+        if (
+          !(
+            "id" in (tokenPayload as JwtPayload).user &&
+            "roles" in (tokenPayload as JwtPayload).user &&
+            "permissions" in (tokenPayload as JwtPayload).user
+          )
         )
-      )
-        return null;
+          return null;
 
-      return generateAuthenticatedApiUser(
-        (tokenPayload as JwtPayload).user.id,
-        (tokenPayload as JwtPayload).user.roles,
-        (tokenPayload as JwtPayload).user.permissions
-      );
+        return authGenerateAuthenticatedApiUser(
+          (tokenPayload as JwtPayload).user.id,
+          (tokenPayload as JwtPayload).user.roles,
+          (tokenPayload as JwtPayload).user.permissions
+        );
+      }
     }
+  } catch (err) {
+    logger.debug(`[auth.authenticateUserByToken]: ${err.name}: ${err.message}`);
   }
 
   return null;
 };
 
-export const loginUserWithEmailAndPassword = async (
+export const authLoginUserWithEmailAndPassword = async (
   email: string,
   password: string
 ): Promise<AuthPayload> => {
   const user = await daoUserGetByLogin(email, password);
 
   if (!user) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, "Incorrect email or password");
+    throw new AuthenticationError("Incorrect email or password");
   }
 
   daoTokenDeleteMany({
@@ -86,7 +92,7 @@ export const loginUserWithEmailAndPassword = async (
     },
   });
 
-  const authpayload: AuthPayload = await generateAuthTokens(
+  const authpayload: AuthPayload = await tokenGenerateAuthTokens(
     user.id,
     user.role as RoleNames
   );
@@ -95,7 +101,7 @@ export const loginUserWithEmailAndPassword = async (
   return authpayload;
 };
 
-export const logout = async (userId: number): Promise<boolean> => {
+export const authLogout = async (userId: number): Promise<boolean> => {
   daoTokenDeleteMany({
     userId,
     type: {
@@ -106,9 +112,9 @@ export const logout = async (userId: number): Promise<boolean> => {
   return true;
 };
 
-export const refreshAuth = async (refreshToken: string) => {
+export const authRefresh = async (refreshToken: string) => {
   try {
-    const tokenPayload = await verifyTokenInDB(
+    const tokenPayload = await tokenVerifyInDB(
       refreshToken,
       TokenTypes.REFRESH
     );
@@ -122,7 +128,7 @@ export const refreshAuth = async (refreshToken: string) => {
       type: TokenTypes.REFRESH,
     });
 
-    return await generateAuthTokens(user.id, user.role as RoleNames);
+    return await tokenGenerateAuthTokens(user.id, user.role as RoleNames);
   } catch (error) {
     throw new ApiError(httpStatus.UNAUTHORIZED, "Please authenticate (2)");
   }
@@ -134,12 +140,12 @@ export const refreshAuth = async (refreshToken: string) => {
  * @param {string} newPassword
  * @returns {Promise}
  */
-export const resetPassword = async (
+export const authResetPassword = async (
   resetPasswordToken: string,
   newPassword: string
 ) => {
   try {
-    const tokenPayload = await verifyTokenInDB(
+    const tokenPayload = await tokenVerifyInDB(
       resetPasswordToken,
       TokenTypes.RESET_PASSWORD
     );
@@ -163,9 +169,9 @@ export const resetPassword = async (
  * @param {string} verifyEmailToken
  * @returns {Promise}
  */
-export const verifyEmail = async (emailVerificationToken: string) => {
+export const authVerifyEmail = async (emailVerificationToken: string) => {
   try {
-    const tokenPayload = await verifyTokenInDB(
+    const tokenPayload = await tokenVerifyInDB(
       emailVerificationToken,
       TokenTypes.VERIFY_EMAIL
     );
@@ -186,10 +192,10 @@ export const verifyEmail = async (emailVerificationToken: string) => {
 };
 
 export default {
-  authenticateUserByToken,
-  loginUserWithEmailAndPassword,
-  logout,
-  refreshAuth,
-  resetPassword,
-  verifyEmail,
+  authAuthenticateUserByToken,
+  authLoginUserWithEmailAndPassword,
+  authLogout,
+  authRefresh,
+  authResetPassword,
+  authVerifyEmail,
 };

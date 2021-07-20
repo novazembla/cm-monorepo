@@ -1,13 +1,7 @@
 import { AuthenticationError } from "apollo-server-express";
 import { daoUserQuery } from "../dao/user";
 import { registerNewUser } from "../services/user";
-
-import {
-  loginUserWithEmailAndPassword,
-  logout,
-  refreshAuth,
-} from "../services/auth";
-import { processRefreshToken } from "../services/token";
+// TODO: remove from codebase
 
 const resolvers = {
   Query: {

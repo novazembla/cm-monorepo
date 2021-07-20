@@ -3,13 +3,14 @@ import { AuthenticationError } from "apollo-server-express";
 
 import {
   AuthenticatedApiUser,
-  authenticateUserByToken,
+  authAuthenticateUserByToken,
 } from "../services/auth";
 
 export interface NexusResolverContext {
   req: Request;
   res: Response;
   apiUser: AuthenticatedApiUser | null;
+  tokenProvided: boolean;
 }
 
 export const context = ({
@@ -20,25 +21,26 @@ export const context = ({
   res: Response;
 }): NexusResolverContext => {
   let apiUser: AuthenticatedApiUser | null = null;
-
+  let tokenProvided = false;
   let token = req?.headers?.authorization;
 
   if (token) {
     try {
       if (token.indexOf("Bearer") > -1)
         token = token.replace(/(Bearer:? )/g, "");
-        
-      apiUser = authenticateUserByToken(token);
-      if (!apiUser) {
-        throw new AuthenticationError("Access denied (T1)");
-      }
+
+      tokenProvided = true;
+
+      apiUser = authAuthenticateUserByToken(token);
+
+      if (!apiUser)
+        throw new AuthenticationError("Authentication rejected in context");
     } catch (Err) {
-      console.log(Err);
-      throw new AuthenticationError("Access denied (T2)");
+      throw new AuthenticationError("Authentication rejected in context");
     }
   }
 
-  return { req, res, apiUser };
+  return { req, res, apiUser, tokenProvided };
 };
 
 export default context;

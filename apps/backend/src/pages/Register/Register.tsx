@@ -7,6 +7,8 @@ import { Button } from "@windmill/react-ui";
 
 import { ValidationSchemaRegister } from "../../validation";
 
+import { useUserSignupMutation } from "../../hooks/mutations";
+
 import { ErrorMessage, FieldInput } from "../../components/forms";
 import { LanguageButtons } from "../../components/ui";
 
@@ -15,30 +17,34 @@ type dataRegistration = {
   lastName: string;
   email: string;
   password: string;
+  acceptedTerms: boolean;
 }
 // TODO: needs email confirmation
 const Register = () => {
+  const [signupMutation, signupMutationResults] = useUserSignupMutation();
+
   const [isRegistrationError, setIsRegistrationError] = useState(false);
   const { t } = useTranslation();
   const history = useHistory();
 
+  // TODO: this should block the whole form not only the button ... 
+  const disableForm = signupMutationResults.loading;
+
   const formMethods = useForm({
     resolver: yupResolver(ValidationSchemaRegister),
   });
-  const { handleSubmit } = formMethods;
+  const { handleSubmit, register } = formMethods;
 
   const onSubmit = async (data: dataRegistration) => {
+    console.log("submit");
     setIsRegistrationError(false); // TODO: how to have this clear set on form change, also how to set the form fields to not valid to make them red...
-    try {
-      // TODO:  fix const response = await httpAPI.post("/api/v1/auth/login", data);
+    try { // does this really 
 
-      // save tokens to storage
-      // setAuthTokens({
-      //   accessToken: response?.data?.tokens?.access,
-      //   refreshToken: response?.data?.tokens?.refresh,
-      // });
+      console.log(data)
+      await signupMutation(data);
+      //history.push("/");
 
-      history.push("/");
+      console.log(2134234)
     } catch (err) {
       setIsRegistrationError(true);
     }
@@ -123,6 +129,11 @@ const Register = () => {
                   }}
                 />
               </div>
+              <div className="w-full mt-3">
+                  <input type="checkbox" id="acceptedTerms" checked {...register("acceptedTerms")} />
+                  Terms are great!
+                </div>
+                
               <div className="flex items-center justify-between mt-4">
                 <Link
                   className="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline"
@@ -134,8 +145,7 @@ const Register = () => {
                   )}
                   (xxx URL TABINDEX?)
                 </Link>
-
-                <Button type="submit">
+                <Button type="submit" disabled={disableForm}>
                   {t("page.register.form_button_register", "Register")}
                 </Button>
               </div>

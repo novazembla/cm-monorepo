@@ -1,10 +1,12 @@
-export default {
+const settings = {
   defaultPageSize: 50,
   privateJSONDataKeys: {
-    all: ["password"],
-    location: ["createdAt", "updatedAt"],
-    event: ["createdAt", "updatedAt"],
-    tour: ["createdAt", "updatedAt"],
-    user: ["password"],
+    all: ["password", "test1"],
+    location: ["createdAt", "updatedAt", "test2"],
+    event: ["createdAt", "updatedAt", "test3"],
+    tour: ["createdAt", "updatedAt", "test4"],
+    user: ["password", "test5"],
   },
 };
+
+export default settings;

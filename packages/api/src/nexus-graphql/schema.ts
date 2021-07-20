@@ -1,6 +1,7 @@
+/// <reference path="../typings/nexus-typegen.ts" />
+
 import { makeSchema, fieldAuthorizePlugin } from "nexus";
 import { dirname, resolve, join } from "path";
-import { AuthorizeByPermissionsPlugin } from "./plugins";
 
 import * as types from "./types";
 
@@ -17,10 +18,10 @@ export const schema = makeSchema({
     schema: join(packageRootDir, "graphql/schema.graphql"),
   },
   contextType: {
-    module: join(packageRootDir, "src/graphql/context.ts"),
+    module: join(packageRootDir, "src/nexus-graphql/context.ts"),
     export: "NexusResolverContext",
   },
-  plugins: [AuthorizeByPermissionsPlugin(), fieldAuthorizePlugin()],
+  plugins: [fieldAuthorizePlugin()],
 });
 
 export default schema;

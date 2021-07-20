@@ -1,4 +1,5 @@
-export default {
+// TODO: make better that that
+const settings = {
   defaultPageSize: 50,
   privateJSONDataKeys: {
     all: ["password", "test1"],
@@ -8,3 +9,5 @@ export default {
     user: ["password", "test5"],
   },
 };
+
+export default settings;

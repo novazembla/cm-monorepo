@@ -1,45 +1,69 @@
 import httpStatus from "http-status";
-
-import { logger } from "../services/logging";
+import { ErrorRequestHandler, RequestHandler } from "express";
 
 import { ApiError } from "../utils/ApiError";
 
-export const errorConverter = ({ err, next }) => {
-  let error = err;
-  if (!(error instanceof ApiError)) {
-    // const statusCode =
-    //   error.statusCode || error instanceof mongoose.Error ? httpStatus.BAD_REQUEST : httpStatus.INTERNAL_SERVER_ERROR;
-    const statusCode = error.statusCode || httpStatus.INTERNAL_SERVER_ERROR; // TODO: fix mongoose above
-    const message = error.message || httpStatus[statusCode];
-    error = new ApiError(statusCode, message, false, err.stack);
+export const errorProcessErrors: ErrorRequestHandler = (
+  err,
+  req,
+  res,
+  next
+) => {
+  if (!err) return next(err);
+
+  if (err && !(err instanceof ApiError)) {
+    const statusCode = err.statusCode || httpStatus.INTERNAL_SERVER_ERROR;
+    const message = err.message || httpStatus[statusCode];
+
+    const error = new ApiError(statusCode, message, false, err.stack ?? "");
+    res.locals.lastErr = error;
+    return next(error);
   }
-  next(error);
+
+  if (res?.locals) res.locals.lastErr = err;
+
+  next(err);
 };
 
-// eslint-disable-next-line no-unused-vars
-export const errorHandler = ({ err, res }) => {
+export const errorDisplayInResponse: ErrorRequestHandler = (
+  err,
+  req,
+  res,
+  // eslint-disable-next-line
+  next
+) => {
   let { statusCode, message } = err;
   if (process.env.env === "production" && !err.isOperational) {
     statusCode = httpStatus.INTERNAL_SERVER_ERROR;
     message = httpStatus[httpStatus.INTERNAL_SERVER_ERROR];
   }
 
-  res.locals.errorMessage = err.message;
+  if (res?.locals) {
+    res.locals.lastErr = err;
+  }
+
+  statusCode = statusCode ?? 500;
 
   const response = {
     code: statusCode,
     message,
-    ...(process.env.env === "development" && { stack: err.stack }),
+    ...(process?.env?.NODE_ENV === "development" && { stack: err.stack }),
   };
 
-  if (process.env.env === "development") {
-    logger.error(err);
-  }
+  res.status(statusCode).json(response);
+};
 
-  res.status(statusCode).send(response);
+export const errorConvert404ToApiError: RequestHandler = (
+  req,
+  res,
+  // eslint-disable-next-line
+  next
+) => {
+  next(new ApiError(httpStatus.NOT_FOUND, "Not found"));
 };
 
 export default {
-  errorConverter,
-  errorHandler,
+  errorConvert404ToApiError,
+  errorProcessErrors,
+  errorDisplayInResponse,
 };

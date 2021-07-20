@@ -15,15 +15,24 @@ import { CultureMapSettings } from "../context";
 export let client: ApolloClient<any> | null = null;
 
 const authLink = new ApolloLink((operation, forward) => {
-  // retrieve access token from memory
-  const accessToken = authentication.getAuthToken();
+  console.log("ApolloLink Add token", operation);
 
-  if (accessToken) {
-    operation.setContext({
-      headers: {
-        authorization: `Bearer ${accessToken.token}`,
-      },
-    });
+  if (
+    operation.operationName !== "userRefresh"
+  ) {
+    // retrieve access token from memory
+    const accessToken = authentication.getAuthToken();
+
+    if (accessToken) {
+      operation.setContext({
+        headers: {
+          authorization: `Bearer ${accessToken.token}`,
+        },
+      });
+    }
+  } else {
+    // TODO: would this also be possible for the context ... 
+    console.log("Skipped auth header refresh");
   }
 
   // Call the next link in the middleware chain.
@@ -34,24 +43,20 @@ const authLink = new ApolloLink((operation, forward) => {
 const errorLink = onError(
   ({ graphQLErrors, networkError, operation, forward }) => {
     if (graphQLErrors) {
-      graphQLErrors.map(({ message, locations, path }) =>
-        console.log(
-          `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
-        )
-      );
-      
-      let retryLogin = false;
-      for (let err of graphQLErrors) {
-        console.log("Error", err?.extensions?.code);
+      console.log(graphQLErrors);
 
-        switch (err?.extensions?.code) {
-          case "UNAUTHENTICATED":
-            retryLogin = true;
-            break;
-        }
+      const hasAuthDeclinedError = graphQLErrors.filter(
+        (err) => err.message.indexOf("Authentication rejected") > -1
+      );
+
+      if (hasAuthDeclinedError.length) {
+        console.error("Authentication rejected (oops)");
       }
 
+      let retryLogin = false;
+
       if (retryLogin) {
+        console.log("attempt to refresh!");
         user.refreshAccessToken(
           (u: AuthenticatedUser) => {
             user.setRefreshing(false);
@@ -62,9 +67,8 @@ const errorLink = onError(
             user.set(null);
             authentication.removeAuthToken();
             authentication.removeRefreshCookie();
-            
-            if (client)
-              client.clearStore();
+
+            if (client) client.clearStore();
           }
         );
 
@@ -101,7 +105,12 @@ const createApolloClient = (settings: CultureMapSettings) => {
         },
         attempts: {
           max: 5,
-          retryIf: (error, _operation) => !!error,
+          retryIf: (error, _operation) => {
+            console.log("Reject if")
+            console.log(error);
+            console.log(_operation);
+            return !!error;
+          },
         },
       }),
       errorLink,

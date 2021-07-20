@@ -30,6 +30,12 @@ const schema = yup.object().shape({
       // t("validation.page.login.passwordRequiredError", "Please enter your password")
       "validation.page.register.passwordRequiredError"
     ),
+  acceptedTerms: yup
+    .boolean()
+    .required(
+      // t("validation.page.login.acceptedTermsRequiredError", "Please accept out terms & conditions")
+      "validation.page.register.acceptedTermsRequiredError"
+    ),
 });
 
 export default schema;

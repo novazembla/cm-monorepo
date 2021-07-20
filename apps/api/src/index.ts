@@ -1,5 +1,6 @@
 import {
   app,
+  addTerminatingErrorHandlingToApp,
   initializeExpressApp,
   server,
   initializeServer,
@@ -7,6 +8,8 @@ import {
 } from "@culturemap/api";
 import { plugins } from "@culturemap/core";
 import examplePlugins from "plugin-example";
+
+// @ts-ignore (CMSetting is JS file)
 import CMSettings from "../culturemap";
 
 async function startApolloServer() {
@@ -15,7 +18,7 @@ async function startApolloServer() {
   plugins.register(examplePlugins);
 
   // The api makes use of the default prisma.schema found in
-  // ./packages/api/prisma/ you can run your own schema by extending/changing
+  // ./packages/api/prisma/ you can run your own schema  by extending/changing
   // the base schema and having a second prisma folder, generating an own
   // Prisma client and setting the instance before you start the server.
   // Set the instance by importing db from @culturemap/api and then calling
@@ -50,30 +53,44 @@ async function startApolloServer() {
     });
   */
 
+  // change TODO:
   // this is to make sure that the root domain is anwering something.
   app.get("/", function (req, res) {
     res.send("ok");
   });
+
+  // remove TODO: remove
+  app.get("/err", function () {
+    throw Error("dasfdsffdsa");
+  });
+
+  // app.use(errorToApiErrorConverter);
+  // app.use(errorDisplayInResponse);
 
   // as well as the apollo server instance.
   // now configure the server (either pass a GraphQL Schema)
   // or use the preinstalled one.
   initializeServer();
 
-  // now start the appolo server
-  await server.start();
+  if (server) {
+    // now start the appolo server
+    await server.start();
 
-  // and attach it to the express app
-  server.applyMiddleware({
-    app,
-    cors: config.cors as any,
-  });
+    // and attach it to the express app
+    server.applyMiddleware({
+      app,
+      cors: config.corsOptions as any,
+    });
+  }
+
+  // make sure that any unprocessed errors are displayed in a nice and (data) safe way
+  addTerminatingErrorHandlingToApp();
 
   // finally listen to the configured port
   app.listen({ port: process.env.API_PORT }, () => {
     // eslint-disable-next-line no-console
     console.log(
-      `🚀 Server ready at http://localhost:${process.env.API_PORT}${server.graphqlPath}`
+      `🚀 Server ready at http://localhost:${process.env.API_PORT}${server?.graphqlPath}`
     );
   });
 }
