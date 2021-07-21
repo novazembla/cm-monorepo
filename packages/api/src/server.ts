@@ -3,7 +3,6 @@ import { ApolloServer } from "apollo-server-express";
 import {
   ApolloServerPluginLandingPageProductionDefault,
   ApolloServerPluginLandingPageGraphQLPlayground,
-  ForbiddenError,
   AuthenticationError,
   ValidationError,
 } from "apollo-server-core";
@@ -11,7 +10,7 @@ import httpStatus from "http-status";
 import { GraphQLSchema } from "graphql/type/schema";
 import { schema, context } from "./nexus-graphql";
 import { ApolloLogPlugin } from "./utils/ApolloLogPlugin";
-import { logger } from "./services/logging";
+import { logger } from "./services/serviceLogging";
 import { ApiError } from "./utils/ApiError";
 
 // eslint-disable-next-line import/no-mutable-exports
@@ -29,18 +28,15 @@ export const initializeServer = (customSchema?: GraphQLSchema | undefined) => {
 
       // map the error returned by nexus' fieldAuthorizePlugin() to an apollo error
       if (err.name === "GraphQLError" && err.message === "Not authorized") {
-        if (process.env.NODE_ENV === "development") {
-          logger.debug(`${msg} ${stackTrace}`);
-        }
-        return new ForbiddenError("Access denied");
-      }
+        // the plugin passes the originally raised error as originalError throug
+        // as it is wrapped in an GraphQLError let us get the original message and pass it on
+        const authMessage =
+          (err?.originalError as Error & { originalError?: Error })
+            ?.originalError?.message ?? err.message;
 
-      if (
-        err.name === "AuthenticationError" &&
-        err.message.indexOf("Authentication rejected in context") > -1
-      ) {
-        logger.debug(`${msg} Authentication rejected`);
-        return new ApiError(httpStatus.UNAUTHORIZED, "Authentication rejected");
+        logger.warn(`${msg} AuthenticationError: ${authMessage}`);
+
+        return new AuthenticationError(authMessage);
       }
 
       if (err.name === "ForbiddenError" || err.name === "AuthenticationError") {
@@ -49,9 +45,8 @@ export const initializeServer = (customSchema?: GraphQLSchema | undefined) => {
         } else {
           logger.warn(`${msg} ${returnedErr.name} ${returnedErr.message}`);
         }
-        return new ForbiddenError(err.message);
+        return err;
       }
-
       if (err.name === "ValidationError" || err.name === "UserInputError") {
         if (process.env.NODE_ENV === "development") {
           logger.debug(`${msg} ${stackTrace}`);
@@ -59,6 +54,7 @@ export const initializeServer = (customSchema?: GraphQLSchema | undefined) => {
         return err;
       }
 
+      // but mayb the API raised an error. Let's make sure it's message got though.
       if (err.name === "GraphQLError") {
         if (err?.extensions?.exception?.name === "ApiError") {
           returnedErr = new ApiError(
@@ -81,12 +77,6 @@ export const initializeServer = (customSchema?: GraphQLSchema | undefined) => {
             err?.extensions?.exception?.message ?? err.message
           );
         }
-
-        if (err.message.indexOf("Context Authentication declined") > -1)
-          return new ApiError(
-            httpStatus.UNAUTHORIZED,
-            "Authentication declined"
-          );
       }
 
       if (err.name === "GraphQLError") {

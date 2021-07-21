@@ -5,7 +5,7 @@ import { RoleNames } from "@culturemap/core";
 import { daoUserCreate, daoUserDelete, daoUserUpdate } from "../dao/user";
 import { AuthPayload } from "../typings/auth";
 import { ApiError } from "../utils";
-import { tokenGenerateAuthTokens } from "./token";
+import { tokenGenerateAuthTokens } from "./serviceToken";
 
 export const registerNewUser = async (
   data: Prisma.UserCreateInput

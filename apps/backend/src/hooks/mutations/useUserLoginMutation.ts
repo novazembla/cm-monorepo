@@ -9,14 +9,17 @@ export const useUserLoginMutation = () => {
 
   const [mutation, mutationResults] = useMutation(userLoginMutationGQL, {
     onCompleted: (data) => {
-      // TODO: xxx find out if data sanity check is needed?
 
+      console.log("userLoginMutationGQL completed");
+      // TODO: xxx find out if data sanity check is needed?
+      
       if (data?.userLogin?.tokens?.access && data?.userLogin?.tokens?.refresh) {
         const payload = authentication.getTokenPayload(data.userLogin.tokens.access);
 
         if (payload) {
           authentication.setAuthToken(data.userLogin.tokens.access);
           authentication.setRefreshCookie(data.userLogin.tokens.refresh);
+          console.log("aboutToTrigger Login");
           login(payload.user);
         }
       }

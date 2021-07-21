@@ -63,7 +63,7 @@ const defaults: LogOptions = {
 const nanoid = customAlphabet("1234567890abcdef", 6);
 const ignoredOps = ["IntrospectionQuery"];
 
-const getInternalLogger = (logger: winston.Logger) => {
+const getInternalLogger = (logger: winston.Logger | undefined) => {
   return (id: string, data: LogData) => {
     if (!logger) return;
 
@@ -74,7 +74,7 @@ const getInternalLogger = (logger: winston.Logger) => {
           `GRAPHQL #${id} - ${data.event} - E: [${err.name}: ${
             err.message
           }] OP: ${data.operationName} ${
-            data.queryStartsWith ? ` - Q: "${data.queryStartsWith} ..."` : ""
+            data.queryStartsWith ? `- Q: "${data.queryStartsWith} ..."` : ""
           }`
         )
       );
@@ -82,7 +82,7 @@ const getInternalLogger = (logger: winston.Logger) => {
       logger.log(
         "info",
         `GRAPHQL #${id} - ${data.event} - OP: ${data.operationName} ${
-          data.queryStartsWith ? ` - Q: "${data.queryStartsWith} ..."` : ""
+          data.queryStartsWith ? `- Q: "${data.queryStartsWith} ..."` : ""
         }`
       );
     }
@@ -127,7 +127,10 @@ export const ApolloLogPlugin = (
 
       const matches = query.match(/((mutation|query)?[^{]*{[^{(]*)/g);
       if (matches && matches.length > 0)
-        queryStartsWith = matches[0].replace("\t", "").replace("  ", " ");
+        queryStartsWith = matches[0]
+          .replace(/\([^)(]*\)/gm, " ( ... )")
+          .replace("\t", "")
+          .replace("  ", " ");
 
       const { events } = options;
       const ignore = ignoredOps.includes(operationName);
@@ -252,6 +255,7 @@ export const ApolloLogPlugin = (
           if (options.events.willSendResponse)
             log(operationId, {
               event: "willSendResponse",
+              queryStartsWith,
               operationName,
               variables,
               ctx,

@@ -2,18 +2,18 @@ import { useHistory } from "react-router";
 import { useTypedSelector } from "../hooks";
 
 import { user } from "../services";
-import type { AuthenticatedUser } from "../services/user";
+import type { ApiUser } from "../services/user";
 
 export const useAuthentication = () => {
-  const { authenticated } = useTypedSelector(({ auth }) => auth);
+  const { authenticated, apiUser } = useTypedSelector(({ user }) => user);
 
   const history = useHistory();
-  
+
   const isLoggedIn = (): boolean => {
-    return (authenticated && user.get() !== null) || user.isRefreshing();
+    return (authenticated && apiUser !== null) || user.isRefreshing();
   };
 
-  const login = (u: AuthenticatedUser) => {
+  const login = (u: ApiUser) => {
     user.login(u);
   };
 
@@ -22,8 +22,5 @@ export const useAuthentication = () => {
     history.push("/login");
   };
 
-  return [
-    user,
-    { isLoggedIn, login, logout },
-  ] as const;
+  return [apiUser, { isLoggedIn, login, logout }] as const;
 };

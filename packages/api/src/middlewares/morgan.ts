@@ -1,7 +1,7 @@
 import morgan from "morgan";
 import { Response, Request } from "express";
 import { server } from "../server";
-import { logger } from "../services/logging";
+import { logger } from "../services/serviceLogging";
 
 morgan.token("message", (req: Request, res: Response) => {
   return res?.locals?.lastErr && res?.locals?.lastErr?.name

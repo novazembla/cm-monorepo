@@ -10,7 +10,7 @@ import { daoTokenCreate, TokenTypes, daoTokenFindFirst } from "../dao/token";
 import { daoUserGetByEmail } from "../dao/user";
 
 import { ApiError } from "../utils";
-import { logger } from "./logging";
+import { logger } from "./serviceLogging";
 
 export const generateToken = (
   userId: number,
@@ -31,14 +31,26 @@ export const generateToken = (
   };
 
   if (role) {
-    user = {
-      ...user,
-      ...{
-        roles: role ? [role] : [],
-        permissions: role ? roles.getExtendedPermissions(role) : [],
-      },
-    };
+    if (type === "access")
+      user = {
+        ...user,
+        ...{
+          roles: role ? [role] : [],
+          permissions: role ? roles.getExtendedPermissions(role) : [],
+        },
+      };
+
+    // the refresh token should only grant the minimal permissions
+    if (type === "refresh")
+      user = {
+        ...user,
+        ...{
+          roles: ["refresh"],
+          permissions: roles.getExtendedPermissions("refresh"),
+        },
+      };
   }
+
   // expose roles in token TODO: expose roles
   const payload = {
     user,

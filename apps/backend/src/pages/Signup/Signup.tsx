@@ -20,7 +20,7 @@ type dataRegistration = {
   acceptedTerms: boolean;
 }
 // TODO: needs email confirmation
-const Register = () => {
+const Signup = () => {
   const [signupMutation, signupMutationResults] = useUserSignupMutation();
 
   const [isRegistrationError, setIsRegistrationError] = useState(false);
@@ -42,7 +42,7 @@ const Register = () => {
 
       console.log(data)
       await signupMutation(data);
-      //history.push("/");
+      history.push("/");
 
       console.log(2134234)
     } catch (err) {
@@ -157,4 +157,4 @@ const Register = () => {
     </>
   );
 };
-export default Register;
+export default Signup;

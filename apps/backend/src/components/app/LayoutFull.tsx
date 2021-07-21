@@ -4,12 +4,12 @@ import Footer from "./Footer";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 
-import { useAuthTabWideLogout } from "../../hooks";
+import { useAuthTabWideLogInOutReload } from "../../hooks";
 
 import { AppProps } from "../../types";
 
 const LayoutFull = ({ children }: AppProps) => {
-  const [loginStatus] = useAuthTabWideLogout();
+  const [loginStatus] = useAuthTabWideLogInOutReload();
 
   return (
     <div

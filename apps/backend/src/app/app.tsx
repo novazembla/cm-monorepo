@@ -39,7 +39,7 @@ const App = () => {
                </LayoutFull>
              </Route>
 
-        <Route exact path={["/login", "/register", "/forgot-password"]}>
+              <Route exact path={["/login", "/register", "/forgot-password"]}>
                <LayoutLight>
                  <Switch>
                    {publicOnlyRoutes.map((publicRouteProps) => (

@@ -1,39 +1,38 @@
 import { useHistory } from "react-router-dom";
+import { useTypedSelector } from ".";
 
 type TypeLoginStatus = "logged-in" | "logged-out";
 
 export const STORAGE_ITEM_NAME = "loginStatus";
 
-let status: TypeLoginStatus = "logged-out";
-
 let eventAttached = false;
 
-export const setTabWideAccessInfo = (loginStatus: TypeLoginStatus) => {
+export const setTabWideAccessStatus = (loginStatus: TypeLoginStatus) => {
   if (typeof window !== "undefined") {
-    window.localStorage.setItem("loginStatus", loginStatus);
+    window.localStorage.setItem(STORAGE_ITEM_NAME, loginStatus);
   }
 };
 
-export const useAuthTabWideLogout = () => {
+export const useAuthTabWideLogInOutReload = () => {
+  const authenticated = useTypedSelector(({ user }) => user.authenticated);
+  const status = authenticated ? "logged-in":"logged-out";
   const history = useHistory();
-  
+
   if (typeof window !== "undefined" && !eventAttached) {
     eventAttached = true;
-    
+
     window.addEventListener("storage", (event) => {
       if (event.key === STORAGE_ITEM_NAME) {
         if (event.newValue === "logged-out") {
           document.location.reload();
         } else {
-          history.push('/');
+          history.push("/");
         }
       }
     });
   }
 
-  
-
-  return [status, setTabWideAccessInfo] as const;
+  return [status] as const;
 };
 
-export default useAuthTabWideLogout;
+export default useAuthTabWideLogInOutReload;

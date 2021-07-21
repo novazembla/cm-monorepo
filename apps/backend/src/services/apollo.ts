@@ -4,35 +4,28 @@ import {
   HttpLink,
   InMemoryCache,
   ApolloLink,
+  Observable,
 } from "@apollo/client";
+import { userRefreshMutationGQL } from "@culturemap/core";
 import { onError } from "@apollo/client/link/error";
 import { RetryLink } from "@apollo/client/link/retry";
 
 import { authentication, user } from ".";
-import type { AuthenticatedUser } from "./user";
 import { CultureMapSettings } from "../context";
 
 export let client: ApolloClient<any> | null = null;
 
 const authLink = new ApolloLink((operation, forward) => {
-  console.log("ApolloLink Add token", operation);
+  // retrieve access token from memory
+  const accessToken = authentication.getAuthToken();
 
-  if (
-    operation.operationName !== "userRefresh"
-  ) {
-    // retrieve access token from memory
-    const accessToken = authentication.getAuthToken();
-
-    if (accessToken) {
-      operation.setContext({
-        headers: {
-          authorization: `Bearer ${accessToken.token}`,
-        },
-      });
-    }
-  } else {
-    // TODO: would this also be possible for the context ... 
-    console.log("Skipped auth header refresh");
+  if (accessToken) {
+    operation.setContext(({ headers = {} }) => ({
+      headers: {
+        ...headers,
+        authorization: `Bearer ${accessToken.token}`,
+      },
+    }));
   }
 
   // Call the next link in the middleware chain.
@@ -40,75 +33,112 @@ const authLink = new ApolloLink((operation, forward) => {
 });
 
 // Log any GraphQL errors or network error that occurred
-const errorLink = onError(
+const retryWithRefreshTokenLink = onError(
   ({ graphQLErrors, networkError, operation, forward }) => {
     if (graphQLErrors) {
-      console.log(graphQLErrors);
+      const observables: Observable<any>[] = graphQLErrors.reduce(
+        (observables, graphQLError) => {
+          const { extensions } = graphQLError;
+          if (
+            graphQLError.message === "Authentication failed (maybe refresh)" &&
+            extensions &&
+            extensions.code &&
+            extensions.code === "UNAUTHENTICATED"
+          ) {
+            const observable = new Observable((observer) => {
+              if (client) {
+                client.mutate({
+                  mutation: userRefreshMutationGQL,
+                })//     // TODO: is there a way to get a typed query here?
+                .then(({ data }: any) => {
+                  if (
+                    data?.userRefresh?.tokens?.access &&
+                    data?.userRefresh?.tokens?.refresh
+                  ) {
+                    const payload = authentication.getTokenPayload(
+                      data.userRefresh.tokens.access
+                    );
 
-      const hasAuthDeclinedError = graphQLErrors.filter(
-        (err) => err.message.indexOf("Authentication rejected") > -1
+                    if (payload) {
+                      console.log("Refreshed", payload);
+                      authentication.setAuthToken(
+                        data.userRefresh.tokens.access
+                      );
+                      authentication.setRefreshCookie(
+                        data.userRefresh.tokens.refresh
+                      );
+
+                      user.setRefreshing(false);
+                      user.login(payload.user);
+
+                      operation.setContext(({ headers = {} }) => ({
+                        headers: {
+                          ...headers,
+                          authorization: `Bearer ${data.userRefresh.tokens.access.token}`,
+                        },
+                      }));
+                    } else {
+                      throw new Error("Unable to fetch new access token");
+                    }
+                  } else {
+                    throw new Error("Unable to fetch new access token");
+                  }
+                })
+                .then(() => {
+                  const subscriber = {
+                    next: observer.next.bind(observer),
+                    error: observer.error.bind(observer),
+                    complete: observer.complete.bind(observer),
+                  };
+
+                  forward(operation).subscribe(subscriber);
+                })
+                .catch((error) => {
+
+                  user.logout();
+                  
+                  observer.error(error);
+                });
+              }
+              
+            });
+            observables.push(observable);
+          }
+          return observables;
+        },
+        [] as Observable<any>[]
       );
 
-      if (hasAuthDeclinedError.length) {
-        console.error("Authentication rejected (oops)");
-      }
-
-      let retryLogin = false;
-
-      if (retryLogin) {
-        console.log("attempt to refresh!");
-        user.refreshAccessToken(
-          (u: AuthenticatedUser) => {
-            user.setRefreshing(false);
-            user.set(u);
-          },
-          () => {
-            user.setRefreshing(false);
-            user.set(null);
-            authentication.removeAuthToken();
-            authentication.removeRefreshCookie();
-
-            if (client) client.clearStore();
-          }
-        );
-
-        const accessToken = authentication.getAuthToken();
-
-        if (accessToken) {
-          const oldHeaders = operation.getContext().headers;
-          // modify the operation context with a new token
-          operation.setContext({
-            headers: {
-              ...oldHeaders,
-              authorization: `Bearer ${accessToken}`,
-            },
-          });
-          return forward(operation);
-        }
-      }
+      if (observables.length) return observables.shift();
     }
-
-    if (networkError) console.log(`[Network error]: ${networkError}`);
   }
 );
+
+const errorLink = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors)
+    graphQLErrors.forEach((err) =>
+      console.log(`[GQLError error]: ${err.message} ${err?.extensions?.code}`)
+    );
+
+  if (networkError) console.log(`[Network error]: ${networkError}`);
+});
 
 const createApolloClient = (settings: CultureMapSettings) => {
   return new ApolloClient({
     ssrMode: typeof window === "undefined",
     link: from([
       authLink,
+      retryWithRefreshTokenLink,
       new RetryLink({
         delay: {
-          initial: 300,
+          initial: 500,
           max: 20000,
           jitter: true,
         },
         attempts: {
-          max: 5,
+          max: 3,
           retryIf: (error, _operation) => {
-            console.log("Reject if")
-            console.log(error);
-            console.log(_operation);
+            console.log("Calling retryIf", error, _operation);
             return !!error;
           },
         },
@@ -129,12 +159,13 @@ const createApolloClient = (settings: CultureMapSettings) => {
       //       allPosts: concatPagination(), // TODO: adjust to useful results ..., not working ... https://github.com/apollographql/apollo-client/issues/6679
       //     },
       //   },
-      // },
+      // },¸
     }),
   });
 };
 
 export const initializeClient = (settings: CultureMapSettings) => {
+  console.log("initializeClient");
   const aClient = client ?? createApolloClient(settings);
 
   // For SSG and SSR always create a new Apollo Client

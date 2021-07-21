@@ -1,5 +1,5 @@
 export * from "./useAuthentication";
-export * from "./useAuthTabWideLogout";
+export * from "./useAuthTabWideLogInOutReload";
 export * from "./useApollo";
 export * from "./useTypedDispatch";
 export * from "./useTypedSelector";

@@ -9,15 +9,19 @@ import { AuthPayload } from "../typings/auth";
 import { TokenTypes, daoTokenDeleteMany } from "../dao/token";
 import { daoUserGetByLogin, daoUserGetById, daoUserUpdate } from "../dao/user";
 import { ApiError } from "../utils";
-import { tokenVerify, tokenVerifyInDB, tokenGenerateAuthTokens } from "./token";
-import { logger } from "./logging";
+import {
+  tokenVerify,
+  tokenVerifyInDB,
+  tokenGenerateAuthTokens,
+} from "./serviceToken";
+import { logger } from "./serviceLogging";
 
 export interface AuthenticatedApiUser {
   id: number;
   roles: string[];
   permissions: string[];
-  has: (name: RoleNames) => boolean;
-  can: (permission: string) => boolean;
+  has(name: RoleNames): boolean;
+  can(permissions: string | string[]): boolean;
 }
 
 export const authGenerateAuthenticatedApiUser = (
@@ -34,10 +38,10 @@ export const authGenerateAuthenticatedApiUser = (
         Array.isArray(this.roles) &&
         this.roles.indexOf(name) > -1) as boolean;
     },
-    can(permission: string) {
-      return (this.permissions &&
-        Array.isArray(this.permissions) &&
-        this.permissions.indexOf(permission) > -1) as boolean;
+    can(perms: string | string[]) {
+      return (Array.isArray(perms) ? perms : [perms]).some(
+        (perm) => this.permissions.indexOf(perm) !== -1
+      );
     },
   };
 
@@ -118,6 +122,7 @@ export const authRefresh = async (refreshToken: string) => {
       refreshToken,
       TokenTypes.REFRESH
     );
+
     const user: User = await daoUserGetById((tokenPayload as any).user.id);
     if (!user) {
       throw new ApiError(httpStatus.UNAUTHORIZED, "Please authenticate (1)");

@@ -4,11 +4,12 @@ import {
   authLoginUserWithEmailAndPassword,
   authLogout,
   authRefresh,
-} from "../../services/auth";
+} from "../../services/serviceAuth";
 import {
   tokenProcessRefreshToken,
   tokenClearRefreshToken,
-} from "../../services/token";
+} from "../../services/serviceToken";
+import { authorizeApiUser } from "../helpers";
 
 export const AuthUser = objectType({
   name: "AuthUser",
@@ -90,7 +91,13 @@ export const UserRefreshMutation = extendType({
   definition(t) {
     t.nonNull.field("userRefresh", {
       type: "AuthPayload",
+
+      authorize: async (...[, , ctx]) =>
+        authorizeApiUser(ctx, "canRefreshAccessToken", true),
+
       async resolve(...[, , { res, req }]) {
+        // throw new AuthenticationError("Access Denied"); TODO: REmove
+
         const token = req?.cookies?.refreshToken;
 
         if (!token) throw new AuthenticationError("Access Denied");
@@ -130,15 +137,19 @@ export const UserLogoutMutation = extendType({
         data: nonNull(UserLogoutInput),
       },
 
-      authorize: async (...[, , ctx]) =>
-        !!(ctx.apiUser && ctx.apiUser.can("accessAsAuthenticatedUser")),
+      async resolve(...[, args, { res, apiUser }]) {
+        // in any case we want to remove the refresh token for the submitting user
+        tokenClearRefreshToken(res);
 
-      async resolve(...[, args, { res }]) {
+        // then test if the submitting user is the user to be logged out
+        if (!apiUser || apiUser.id !== args.data.userId)
+          throw new AuthenticationError("Logout Failed (1)");
+
+        // okay then log the user out
         const result = await authLogout(args.data.userId);
 
-        if (!result) throw new AuthenticationError("Logout Failed");
+        if (!result) throw new AuthenticationError("Logout Failed (2)");
 
-        tokenClearRefreshToken(res);
         return { result };
       },
     });

@@ -2,141 +2,105 @@ import { userRefreshMutationGQL } from "@culturemap/core";
 
 import { client } from "./apollo";
 import { authentication } from ".";
-import { Token } from "./authentication";
+import { getAuthToken, getRefreshCookie } from "./authentication";
 
 import { store } from "../redux/store";
-import { authLogout, authLogin } from "../redux/slices/authentication";
-import { setTabWideAccessInfo } from "../hooks/useAuthTabWideLogout";
+import { userLogout, userLogin, userRefreshing } from "../redux/slices/user";
+import { setTabWideAccessStatus } from "../hooks/useAuthTabWideLogInOutReload";
 
-export interface AuthenticatedUser {
+export interface ApiUser {
   id: number;
   roles: string[];
   permissions: string[];
+  firstName?: string;
+  lastName?: string;
 }
 
-let user: AuthenticatedUser | null = null;
-let refreshing = false;
-// let currentPath = "/"; TODO: needed 
+let refreshTimeoutId: ReturnType<typeof setTimeout>;
 
-export const refreshAccessToken = async (
-  onSuccess?: Function | undefined,
-  onFail?: Function | undefined
-) => {
-  if (client) {
-    await client
-      .mutate({
-        mutation: userRefreshMutationGQL,
-      })
-      // TODO: is there a way to get a typed query here?
-      .then(({ data }: any) => {
-        if (
-          data?.userRefresh?.tokens?.access &&
-          data?.userRefresh?.tokens?.refresh
-        ) {
-          const payload = authentication.getTokenPayload(
+// TODO: xxx is the autorefresh really needed? Or is it good enough to rely on the refresh by use of the API? 
+const refreshToken = () => {
+  console.log('triggered auto user refresh');
+  if (client && !isRefreshing() && getRefreshCookie()) {
+    setRefreshing(true);
+    client.mutate({
+      mutation: userRefreshMutationGQL,
+    })
+    // TODO: is there a way to get a typed query here?
+    .then(({ data }: any) => {
+      console.log(data);
+      if (
+        data?.userRefresh?.tokens?.access &&
+        data?.userRefresh?.tokens?.refresh
+      ) {
+        const payload = authentication.getTokenPayload(
+          data.userRefresh.tokens.access
+        );
+
+        if (payload) {
+          authentication.setAuthToken(
             data.userRefresh.tokens.access
           );
+          authentication.setRefreshCookie(
+            data.userRefresh.tokens.refresh
+          );
 
-          if (payload) {
-            console.log("Refreshed", data.userRefresh);
-            authentication.setAuthToken(data.userRefresh.tokens.access);
-            authentication.setRefreshCookie(data.userRefresh.tokens.refresh);
-
-            if (onSuccess) onSuccess.apply(this, [payload.user]);
-          } else {
-            if (onFail) onFail.call(this);
-          }
+          login(payload.user);
         } else {
-          if (onFail) onFail.call(this);
+          throw new Error("Unable to fetch new access token");
         }
-      })
-      .catch(() => {
-        if (onFail) onFail.call(this);
-      });
-  } else {
-    if (onFail) onFail.call(this);
-  }
-};
-
-
-const retrieveUser = () => {
-  const timeOutCookie = authentication.getRefreshTimeOutCookie();
-
-  if (!user || !timeOutCookie) {
-    let tryRefresh = false;
-
-    if (authentication.getAuthToken()) {
-      const tokenPayload = authentication.getTokenPayload(
-        authentication.getAuthToken() as Token
-      );
-
-      if (tokenPayload?.user) {
-        user = tokenPayload.user;
       } else {
-        tryRefresh = true;
+        throw new Error("Unable to fetch new access token");
       }
-    } else {
-      tryRefresh = true;
-    }
-
-    if (tryRefresh) {
-      const refreshCookie = authentication.getRefreshCookie();
-
-      if (refreshCookie === "active" && !refreshing) {
-        refreshing = true;
-
-        // if (typeof window !== "undefined") TODO: needed
-        //   currentPath = window.location.pathname;
-
-        refreshAccessToken((u: AuthenticatedUser) => {
-          login(u);
-
-
-          // history.push(currentPath); TODO: needed
-        }, logout);
-      }
-    }
+    })
+    .catch((error) => {
+      console.log(error);
+      logout();
+    });
+  } else if (!isRefreshing) {
+    logout();
   }
 };
 
-const set = (u: AuthenticatedUser | null) => (user = u);
+const setRefreshing = (status: boolean) =>
+  store.dispatch(userRefreshing(status));
 
-const get = (): AuthenticatedUser | null => {
-  retrieveUser();
-  return user;
-};
+const isRefreshing = () => store.getState().user.refreshing;
 
-const setRefreshing = (status: boolean) => refreshing = status;
-const isRefreshing = () => refreshing;
-
-const login = (u: AuthenticatedUser) => {
+const login = (u: ApiUser) => {
+  console.log("login user");
   setRefreshing(false);
-  set(u);
-  store.dispatch(authLogin());
-  setTabWideAccessInfo("logged-in");
-}
+  setTabWideAccessStatus("logged-in");
+
+  clearTimeout(refreshTimeoutId);
+  const token = getAuthToken();
+
+  if (token) {
+    refreshTimeoutId = setTimeout(refreshToken, 
+      new Date(token.expires).getTime() - Date.now() - 1000)
+  }
+  
+  store.dispatch(userLogin(u));
+};
 
 const logout = () => {
-  setRefreshing(false); 
-  set(null);
-  
-  if (client)
-    client.clearStore();
-  
+  console.log("logout user");
+  setRefreshing(false);
+
+  if (client) client.clearStore();
+
   authentication.removeAuthToken();
   authentication.removeRefreshCookie();
-  
-  store.dispatch(authLogout());
-  setTabWideAccessInfo("logged-out");
-}
+
+  setTabWideAccessStatus("logged-out");
+  store.dispatch(userLogout());
+};
 
 const defaults = {
+  refreshToken,
   login,
   logout,
-  set,
-  get,
   setRefreshing,
-  isRefreshing,
-  refreshAccessToken,
+  isRefreshing
 };
 export default defaults;

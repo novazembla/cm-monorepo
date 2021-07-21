@@ -5,6 +5,7 @@ export type RoleNames =
   | "editor"
   | "contributor"
   | "user"
+  | "refresh"
   | "test";
 
 export interface Role {
@@ -126,13 +127,19 @@ roles.add("contributor", [
   "pageDeleteOwn",
 ]);
 roles.add("user", ["accessAsAuthenticatedUser"]);
+roles.add("refresh", ["canRefreshAccessToken"]);
 
 roles.extend("administrator", "editor");
 roles.extend("administrator", "contributor");
 roles.extend("administrator", "user");
+roles.extend("administrator", "refresh");
 
 roles.extend("editor", "contributor");
 roles.extend("editor", "user");
+roles.extend("editor", "refresh");
 
 roles.extend("contributor", "user");
+roles.extend("contributor", "refresh");
+
+roles.extend("user", "refresh");
 export default roles;

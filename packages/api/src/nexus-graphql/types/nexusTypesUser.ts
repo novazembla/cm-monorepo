@@ -2,9 +2,10 @@
 import { objectType, extendType, inputObjectType, nonNull } from "nexus";
 import httpStatus from "http-status";
 
-import { registerNewUser } from "../../services/user";
-import { tokenProcessRefreshToken } from "../../services/token";
+import { registerNewUser } from "../../services/serviceUser";
+import { tokenProcessRefreshToken } from "../../services/serviceToken";
 import { ApiError } from "../../utils";
+import { authorizeApiUser } from "../helpers";
 
 export const User = objectType({
   name: "User",
@@ -27,8 +28,7 @@ export const UserQuery = extendType({
     t.nonNull.list.field("users", {
       type: "User",
 
-      authorize: async (...[, , ctx]) =>
-        !!(ctx.apiUser && ctx.apiUser.can("userRead")),
+      authorize: async (...[, , ctx]) => authorizeApiUser(ctx, "userRead"),
 
       // resolve(root, args, ctx, info)
       resolve(...[, , ctx]) {

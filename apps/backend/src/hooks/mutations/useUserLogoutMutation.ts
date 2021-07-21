@@ -8,6 +8,7 @@ export const useUserLogoutMutation = () => {
 
   const [mutation, mutationResults] = useMutation(userLogoutMutationGQL, {
     onCompleted: (data) => {
+      console.log("logout completed");
       console.log("about to trigger logout");
       logout();
     },

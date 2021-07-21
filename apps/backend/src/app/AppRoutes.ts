@@ -2,7 +2,7 @@ import DashBoard from "../modules/DashBoard/DashBoard";
 import Login from "../pages/Login/Login";
 import PasswordReminder from "../pages/PasswordReminder/PasswordReminder";
 import Profile from "../pages/Profile/Profile";
-import Register from "../pages/Register/Register";
+import Signup from "../pages/Signup/Signup";
 
 export const publicOnlyRoutes = [
   {
@@ -14,7 +14,7 @@ export const publicOnlyRoutes = [
   {
     key: "register",
     path: "/register",
-    component: Register,
+    component: Signup,
     exact: true
   },
   {

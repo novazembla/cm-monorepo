@@ -1,21 +1,18 @@
 import React from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import { useUserLogoutMutation } from "../../hooks/mutations";
 import { useAuthentication } from "../../hooks";
 
 const Sidebar = () => {
   const [logoutMutation, logoutMutationResults] = useUserLogoutMutation();
-  const [ user ] = useAuthentication();
-  const history = useHistory();
-
+  const [ apiUser ] = useAuthentication();
+  
   const buttonDisabled = logoutMutationResults.loading;
 
   const onButtonClick = () => {
-    const u = user.get();
-    if (u) {
-      logoutMutation(u.id);
-      history.push("/login");
+    if (apiUser) {
+      logoutMutation(apiUser.id);
     }
   };
 
@@ -29,6 +26,7 @@ const Sidebar = () => {
           Culture Maps
         </Link>
 
+        {apiUser && <h1 style={{textAlign:"center",marginTop:10}}>Welcome {apiUser.id}</h1>}
         <ul className="mt-6">
           <li className="relative px-6 py-3">
             <a

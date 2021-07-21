@@ -1,10 +1,9 @@
 import Cookies, { CookieSetOptions } from "universal-cookie";
 import { decode, JwtPayload } from "jsonwebtoken";
 
-import { AuthenticatedUser } from "./user";
+import { ApiUser } from "./user";
 
-export const HAS_RERESH_COOKIE_NAME = "authRefresh";
-export const REFRESH_TIMEOUT_COOKIE_NAME = "authRefreshTimeout";
+export const HAS_REFRESH_COOKIE_NAME = "authRefresh";
 
 export interface Token {
   token: string;
@@ -15,7 +14,7 @@ export interface TokenPayload extends JwtPayload {
   exp: number;
   iat: number;
   type: string;
-  user: AuthenticatedUser;
+  user: ApiUser;
 }
 
 let authToken: Token | null = null;
@@ -26,15 +25,13 @@ const options: CookieSetOptions = {
   sameSite: "lax",
   secure: process.env.NODE_ENV === "production",
   path: "/",
+  expires: new Date("1970-01-01"),
 };
 
 export const getAuthToken = (): Token | null => authToken;
 
 export const getRefreshCookie = (): string =>
-  cookies.get(HAS_RERESH_COOKIE_NAME);
-
-export const getRefreshTimeOutCookie = (): string =>
-  cookies.get(REFRESH_TIMEOUT_COOKIE_NAME);
+  cookies.get(HAS_REFRESH_COOKIE_NAME);
 
 export const getTokenPayload = (token: Token): TokenPayload | null => {
   if (!token) return null;
@@ -66,23 +63,18 @@ export const getTokenPayload = (token: Token): TokenPayload | null => {
 
 export const removeAuthToken = () => {
   authToken = null;
-  cookies.remove(REFRESH_TIMEOUT_COOKIE_NAME, options);
 };
 
 export const removeRefreshCookie = () => {
-  cookies.remove(HAS_RERESH_COOKIE_NAME, options);
+  cookies.remove(HAS_REFRESH_COOKIE_NAME, options);
 };
 
 export const setAuthToken = (token: Token): void => {
   authToken = token;
-  cookies.set(REFRESH_TIMEOUT_COOKIE_NAME, "active", {
-    ...options,
-    ...{ expires: new Date(token.expires) },
-  });
 };
 
 export const setRefreshCookie = (token: Token) => {
-  cookies.set(HAS_RERESH_COOKIE_NAME, "active", {
+  cookies.set(HAS_REFRESH_COOKIE_NAME, "active", {
     ...options,
     ...{ expires: new Date(token.expires) },
   });
@@ -91,7 +83,6 @@ export const setRefreshCookie = (token: Token) => {
 export const authentication = {
   getAuthToken,
   getRefreshCookie,
-  getRefreshTimeOutCookie,
   setAuthToken,
   setRefreshCookie,
   removeRefreshCookie,

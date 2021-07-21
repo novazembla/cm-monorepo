@@ -2,11 +2,11 @@ import React from "react";
 
 import FooterLight from "./FooterLight";
 
-import { useAuthTabWideLogout } from "../../hooks";
+import { useAuthTabWideLogInOutReload } from "../../hooks";
 import type { AppProps } from "../../types";
 
 const LayoutLight = ({ children }: AppProps) => {
-  const [loginStatus] = useAuthTabWideLogout();
+  const [loginStatus] = useAuthTabWideLogInOutReload();
   return (
     <div
       className={`flex items-center min-h-screen p-6 bg-gray-50 dark:bg-gray-900 ${loginStatus}`}
