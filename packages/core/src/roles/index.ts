@@ -8,19 +8,79 @@ export type RoleNames =
   | "refresh"
   | "test";
 
+export type PermissionsOfAdministrator =
+  | "userCreate"
+  | "userRead"
+  | "userUpdate"
+  | "userDelete";
+
+export type PermissionsOfEditor =
+  | "locationRead"
+  | "locationCreate"
+  | "locationUpdate"
+  | "locationDelete"
+  | "eventRead"
+  | "eventCreate"
+  | "eventUpdate"
+  | "eventDelete"
+  | "tourRead"
+  | "tourCreate"
+  | "tourUpdate"
+  | "tourDelete"
+  | "pageRead"
+  | "pageCreate"
+  | "pageUpdate"
+  | "pageDelete"
+  | "taxCreate"
+  | "taxRead"
+  | "taxUpdate"
+  | "taxDelete";
+
+export type PermissionsOfContributor =
+  | "locationRead"
+  | "locationCreate"
+  | "locationUpdate"
+  | "locationDeleteOwn"
+  | "eventRead"
+  | "eventCreate"
+  | "eventUpdate"
+  | "eventDeleteOwn"
+  | "tourRead"
+  | "tourCreate"
+  | "tourUpdate"
+  | "tourDeleteOwn"
+  | "pageRead"
+  | "pageCreate"
+  | "pageUpdate"
+  | "pageDeleteOwn";
+
+export type PermissionsOfUser = "accessAsAuthenticatedUser";
+
+export type PermissionsOfRefresh = "canRefreshAccessToken";
+
+export type PermisionsNames =
+  | PermissionsOfAdministrator
+  | PermissionsOfEditor
+  | PermissionsOfContributor
+  | PermissionsOfUser
+  | PermissionsOfRefresh;
+
 export interface Role {
   name: RoleNames;
-  permissions: string[];
+  permissions: PermisionsNames[];
   extends: RoleNames[];
 }
 
 export interface Roles {
   roles: PartialRecord<RoleNames, Role>;
-  add: (name: RoleNames, permissions?: string | Array<string>) => void;
-  extend: (name: RoleNames, extended: RoleNames) => void;
+  add: (
+    name: RoleNames,
+    permissions?: PermisionsNames | Array<PermisionsNames>
+  ) => void;
+  extend: (name: RoleNames, extended: RoleNames | RoleNames[]) => void;
   addPermissions: (
     roleName: RoleNames,
-    permissions?: string | Array<string>
+    permissions?: PermisionsNames | Array<PermisionsNames>
   ) => void;
   getOwnPermissions: (roleName: RoleNames) => string[];
   getExtendedPermissions: (roleName: RoleNames) => string[];
@@ -28,7 +88,7 @@ export interface Roles {
 
 export const roles: Roles = {
   roles: {},
-  add(name: RoleNames, permissions?: string | Array<string>) {
+  add(name: RoleNames, permissions?: PermisionsNames | Array<PermisionsNames>) {
     if (!(name in this.roles)) {
       this.roles[name] = {
         name,
@@ -38,19 +98,32 @@ export const roles: Roles = {
       this.addPermissions(name, permissions);
     }
   },
-  extend(roleName: RoleNames, extended: RoleNames) {
-    if (roleName in this.roles && extended in this.roles) {
-      (this.roles[roleName] as Role).extends.push(extended);
+  extend(roleName: RoleNames, extended: RoleNames | RoleNames[]) {
+    if (roleName in this.roles) {
+      (Array.isArray(extended)
+        ? extended
+        : ([extended] as RoleNames[])
+      ).forEach((role) => {
+        if (
+          role in this.roles &&
+          !(role in (this.roles[roleName] as Role).extends)
+        )
+          (this.roles[roleName] as Role).extends.push(role);
+      });
     }
   },
-  addPermissions(roleName: RoleNames, permissions?: string | Array<string>) {
-    if (roleName in this.roles && permissions) {
-      if (Array.isArray(permissions)) {
-        permissions.forEach((permission) =>
-          (this.roles[roleName] as Role).permissions.push(permission)
-        );
-      } else if (typeof permissions === "string")
-        (this.roles[roleName] as Role).permissions.push(permissions);
+  addPermissions(
+    roleName: RoleNames,
+    permissions?: PermisionsNames | Array<PermisionsNames>
+  ) {
+    if (roleName in this.roles) {
+      (Array.isArray(permissions)
+        ? permissions
+        : ([permissions] as PermisionsNames[])
+      ).forEach((perm) => {
+        if (!(perm in (this.roles[roleName] as Role).permissions))
+          (this.roles[roleName] as Role).permissions.push(perm);
+      });
     }
   },
   getOwnPermissions(roleName: RoleNames): string[] {
@@ -129,17 +202,8 @@ roles.add("contributor", [
 roles.add("user", ["accessAsAuthenticatedUser"]);
 roles.add("refresh", ["canRefreshAccessToken"]);
 
-roles.extend("administrator", "editor");
-roles.extend("administrator", "contributor");
-roles.extend("administrator", "user");
-roles.extend("administrator", "refresh");
-
-roles.extend("editor", "contributor");
-roles.extend("editor", "user");
-roles.extend("editor", "refresh");
-
-roles.extend("contributor", "user");
-roles.extend("contributor", "refresh");
-
+roles.extend("administrator", ["editor", "contributor", "user", "refresh"]);
+roles.extend("editor", ["contributor", "user", "refresh"]);
+roles.extend("contributor", ["user", "refresh"]);
 roles.extend("user", "refresh");
 export default roles;

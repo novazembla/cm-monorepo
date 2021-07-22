@@ -1,8 +1,9 @@
+import type { PermisionsNames } from "@culturemap/core";
 import type { NexusResolverContext } from "../context";
 
 export const authorizeApiUser = async (
   ctx: NexusResolverContext,
-  permissions: string | string[],
+  permissions: PermisionsNames | PermisionsNames[],
   doingRefresh = false
 ) => {
   if (doingRefresh && !ctx.tokenInfo.validRefreshTokenProvided) return false;

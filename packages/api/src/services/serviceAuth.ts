@@ -1,7 +1,7 @@
 import httpStatus from "http-status";
 import { User } from "@prisma/client";
 import { JwtPayload } from "jsonwebtoken";
-import { RoleNames } from "@culturemap/core";
+import type { RoleNames, PermisionsNames } from "@culturemap/core";
 import { AuthenticationError } from "apollo-server-express";
 
 import { AuthPayload } from "../typings/auth";
@@ -18,16 +18,16 @@ import { logger } from "./serviceLogging";
 
 export interface AuthenticatedApiUser {
   id: number;
-  roles: string[];
-  permissions: string[];
+  roles: RoleNames[];
+  permissions: PermisionsNames[];
   has(name: RoleNames): boolean;
-  can(permissions: string | string[]): boolean;
+  can(permissions: PermisionsNames | PermisionsNames[]): boolean;
 }
 
 export const authGenerateAuthenticatedApiUser = (
   id: number,
-  roles: string[],
-  permissions: string[]
+  roles: RoleNames[],
+  permissions: PermisionsNames[]
 ): AuthenticatedApiUser => {
   const user: AuthenticatedApiUser = {
     id,
@@ -38,7 +38,7 @@ export const authGenerateAuthenticatedApiUser = (
         Array.isArray(this.roles) &&
         this.roles.indexOf(name) > -1) as boolean;
     },
-    can(perms: string | string[]) {
+    can(perms: PermisionsNames | PermisionsNames[]) {
       return (Array.isArray(perms) ? perms : [perms]).some(
         (perm) => this.permissions.indexOf(perm) !== -1
       );
