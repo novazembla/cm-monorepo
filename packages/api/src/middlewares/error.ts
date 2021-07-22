@@ -33,7 +33,7 @@ export const errorDisplayInResponse: ErrorRequestHandler = (
   next
 ) => {
   let { statusCode, message } = err;
-  if (process.env.env === "production" && !err.isOperational) {
+  if (process.env.NODE_ENV === "production" && !err.isOperational) {
     statusCode = httpStatus.INTERNAL_SERVER_ERROR;
     message = httpStatus[httpStatus.INTERNAL_SERVER_ERROR];
   }

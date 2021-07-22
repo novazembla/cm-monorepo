@@ -1,6 +1,10 @@
 import dotenv from "dotenv";
 import { CorsOptions } from "cors";
-import { PartialRecord } from "@culturemap/core";
+import { PartialRecord, AppScopes, utils } from "@culturemap/core";
+
+import { logger } from "../services/serviceLogging";
+
+dotenv.config();
 
 // TODO: how to sensible harden cors ...
 // Would it be possible to catch Mutations and require a whitelist of origins?
@@ -9,7 +13,7 @@ import { PartialRecord } from "@culturemap/core";
 // Are pre flights needed? https://www.npmjs.com/package/cors#enabling-cors-pre-flight
 
 // eslint-disable-next-line import/no-mutable-exports
-export let corsOptions: CorsOptions = {
+export const corsOptions: CorsOptions = {
   origin: true, // TODO: you might want to have a more complex origin, true for but requests from the requests to the admin tool ...
   credentials: true,
   methods: "GET,PUT,POST,OPTIONS",
@@ -26,12 +30,71 @@ export type CulturemapScopes =
   | "user"
   | "terms";
 
-export interface CulturemapDBSettings {
+export interface ApiConfigDB {
+  url: string;
   defaultPageSize: number;
   privateJSONDataKeys: PartialRecord<CulturemapScopes, Array<string>>;
 }
 
-export const db: CulturemapDBSettings = {
+export interface ApiConfigSmtp {
+  host: string;
+  port: number;
+  secure: boolean;
+  user: string;
+  password: string;
+}
+
+export interface ApiConfigBaseUrls {
+  subjectPrefix: string;
+  from: string;
+  formName: string;
+}
+
+export interface ApiConfigEmail {
+  subjectPrefix: string;
+  from: string;
+  formName: string;
+}
+
+export interface ApiConfigJwt {
+  secret: string;
+  expiration: {
+    access: number;
+    refresh: number;
+    passwordReset: number;
+    emailConfirmation: number;
+  };
+}
+
+export interface ApiConfig {
+  appName: string;
+  baseUrl: PartialRecord<AppScopes, Array<string>>;
+  db: ApiConfigDB;
+  smtp: ApiConfigSmtp;
+  email: ApiConfigEmail;
+  env: typeof process.env;
+  corsOptions: CorsOptions;
+  jwt: ApiConfigJwt;
+}
+
+export interface ApiConfigOverwrite {
+  appName?: string;
+  baseUrl?: PartialRecord<AppScopes, Array<string>>;
+  db?: Partial<ApiConfigDB>;
+  smtp?: Partial<ApiConfigSmtp>;
+  email?: Partial<ApiConfigEmail>;
+  corsOptions: CorsOptions;
+  jwt: Partial<ApiConfigJwt>;
+}
+
+const db: ApiConfigDB = {
+  url: utils.safeGuardVariable(
+    logger,
+    "string",
+    process.env.DATABASE_URL,
+    "",
+    "Error: missing/wrong .env config: DATABASE_URL"
+  ),
   defaultPageSize: 50,
   privateJSONDataKeys: {
     all: ["password"],
@@ -42,34 +105,168 @@ export const db: CulturemapDBSettings = {
   },
 };
 
-export const update = (cmConfig: any) => {
-  if (typeof cmConfig !== "object")
+export const apiConfig = {
+  db,
+  env: process.env,
+  corsOptions,
+  appName: utils.safeGuardVariable(
+    logger,
+    "string",
+    process.env.APP_NAME,
+    "",
+    "Error: missing/wrong .env config: APP_NAME"
+  ),
+  baseUrl: {
+    frontend: utils.safeGuardVariable(
+      logger,
+      "string",
+      process.env.BASE_URL_FRONTEND,
+      "",
+      "Error: missing/wrong .env config: BASE_URL_FRONTEND"
+    ),
+    backend: utils.safeGuardVariable(
+      logger,
+      "string",
+      process.env.BASE_URL_BACKEND,
+      "",
+      "Error: missing/wrong .env config: BASE_URL_BACKEND"
+    ),
+    api: utils.safeGuardVariable(
+      logger,
+      "string",
+      process.env.BASE_URL_API,
+      "",
+      "Error: missing/wrong .env config: BASE_URL_API"
+    ),
+  },
+  email: {
+    subjectPrefix: utils.safeGuardVariable(
+      logger,
+      "string",
+      process.env.MAIL_EMAIL_SUBJECT_PREFIX,
+      "",
+      "Error: missing/wrong .env config: MAIL_EMAIL_SUBJECT_PREFIX"
+    ),
+    from: utils.safeGuardVariable(
+      logger,
+      "string",
+      process.env.MAIL_FROM_ADDRESS,
+      "",
+      "Error: missing/wrong .env config: MAIL_FROM_ADDRESS"
+    ),
+    fromName: utils.safeGuardVariable(
+      logger,
+      "string",
+      process.env.MAIL_FROM_NAME,
+      "",
+      "Error: missing/wrong .env config: MAIL_FROM_NAME"
+    ),
+  },
+  smtp: {
+    host: utils.safeGuardVariable(
+      logger,
+      "string",
+      process.env.MAIL_HOST,
+      "",
+      "Error: missing/wrong .env config: MAIL_HOST"
+    ),
+    port: utils.safeGuardVariable(
+      logger,
+      "int",
+      process.env.MAIL_PORT,
+      0,
+      "Error: missing/wrong .env config: MAIL_PORT"
+    ),
+    secure: utils.safeGuardVariable(
+      logger,
+      "boolean",
+      process.env.MAIL_SECURE,
+      false,
+      "Error: missing/wrong .env config: MAIL_SECURE"
+    ),
+    user: utils.safeGuardVariable(
+      logger,
+      "string",
+      process.env.MAIL_USERNAME,
+      "",
+      "Error: missing/wrong .env config: MAIL_USERNAME"
+    ),
+    password: utils.safeGuardVariable(
+      logger,
+      "string",
+      process.env.MAIL_PASSWORD,
+      "",
+      "Error: missing/wrong .env config: MAIL_PASSWORD"
+    ),
+  },
+  jwt: {
+    secret: utils.safeGuardVariable(
+      logger,
+      "string",
+      process.env.JWT_SECRET,
+      "",
+      "Error: missing/wrong .env config: JWT_SECRET"
+    ),
+    expiration: {
+      access: utils.safeGuardVariable(
+        logger,
+        "int",
+        process.env.JWT_ACCESS_EXPIRATION_MINUTES,
+        10,
+        "Error: missing/wrong .env config: JWT_ACCESS_EXPIRATION_MINUTES"
+      ),
+      refresh: utils.safeGuardVariable(
+        logger,
+        "int",
+        process.env.JWT_REFRESH_EXPIRATION_DAYS,
+        30,
+        "Error: missing/wrong .env config: JWT_REFRESH_EXPIRATION_DAYS"
+      ),
+      passwordReset: utils.safeGuardVariable(
+        logger,
+        "int",
+        process.env.JWT_RESET_PASSWORD_EXPIRATION_MINUTES,
+        240,
+        "Error: missing/wrong .env config: JWT_RESET_PASSWORD_EXPIRATION_MINUTES"
+      ),
+      emailConfirmation: utils.safeGuardVariable(
+        logger,
+        "int",
+        process.env.JWT_VERIFY_EMAIL_EXPIRATION_MINUTES,
+        480,
+        "Error: missing/wrong .env config: JWT_VERIFY_EMAIL_EXPIRATION_MINUTES"
+      ),
+    },
+  },
+};
+
+export const update = (aCfg: ApiConfigOverwrite) => {
+  if (typeof aCfg !== "object")
     throw Error("Plase just pass objects to the config.update function");
 
-  if ("privateJSONDataKeys" in cmConfig) {
-    Object.keys(db.privateJSONDataKeys).forEach((key) => {
-      if (key in cmConfig.privateJSONDataKeys) {
-        db.privateJSONDataKeys[key as CulturemapScopes] =
-          cmConfig.privateJSONDataKeys[key as CulturemapScopes]?.reduce(
-            (jsonKeys: string[], jsonKey: string) => {
-              if (jsonKeys?.indexOf(jsonKey) === -1) jsonKeys.push(jsonKey);
+  if ("db" in aCfg) {
+    if ("privateJSONDataKeys" in (aCfg.db as ApiConfigDB)) {
+      Object.keys(apiConfig.db.privateJSONDataKeys).forEach((key) => {
+        if (key in (aCfg?.db?.privateJSONDataKeys ?? {})) {
+          const newKeys = (aCfg?.db?.privateJSONDataKeys ?? {})[
+            key as CulturemapScopes
+          ];
+          if (Array.isArray(newKeys)) {
+            (apiConfig?.db?.privateJSONDataKeys ?? {})[
+              key as CulturemapScopes
+            ] = newKeys;
+          }
+        }
+      });
+    }
 
-              return jsonKeys;
-            },
-            db.privateJSONDataKeys[key as CulturemapScopes]
-          );
-      }
-    });
-  }
-
-  if ("db" in cmConfig && "defaultPageSize" in cmConfig.db) {
-    db.defaultPageSize = cmConfig.defaultPageSize;
+    apiConfig.db.defaultPageSize =
+      aCfg?.db?.defaultPageSize ?? apiConfig.db.defaultPageSize;
   }
 };
 
 export const updateCors = (newCorsSettings: CorsOptions) => {
-  corsOptions = newCorsSettings;
+  apiConfig.corsOptions = newCorsSettings;
 };
 
-// TODO: validate the existence of the needed keys
-export default { db, env: process.env, corsOptions };
+export default apiConfig;

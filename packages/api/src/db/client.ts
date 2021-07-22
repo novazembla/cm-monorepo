@@ -1,8 +1,6 @@
 import Prisma from "@prisma/client";
 
-// TODO: how to deal with loggin issues?
-
-import { utils } from "@culturemap/core";
+import config from "../config";
 
 const { PrismaClient } = Prisma;
 
@@ -13,15 +11,10 @@ declare let global: {
 let instance: Prisma.PrismaClient | undefined;
 
 const createNewInstance = function (): Prisma.PrismaClient {
-  const url = process.env.DATABASE_URL ?? null;
-  utils.Asserts.nonEmptyString(
-    url,
-    `Cannot create prisma client instance, missing env variable DATABASE_URL.`
-  );
   return new PrismaClient({
     datasources: {
       db: {
-        url,
+        url: config.db.url,
       },
     },
   });

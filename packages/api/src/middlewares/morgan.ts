@@ -23,7 +23,7 @@ morgan.token("stack", (req: Request, res: Response) => {
 });
 
 const getIpFormat = () =>
-  process.env.env === "production" ? ":remote-addr - " : "";
+  process.env.NODE_ENV === "production" ? ":remote-addr - " : "";
 
 export const morganSuccessHandler = morgan(
   `${getIpFormat()}:method :url :status - :response-time ms`,

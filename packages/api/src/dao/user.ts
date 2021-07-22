@@ -3,7 +3,7 @@ import httpStatus from "http-status";
 import { User, Prisma } from "@prisma/client";
 
 import { ApiError, filteredOutputOrNotFound, filteredOutput } from "../utils";
-import { db } from "../config";
+import config from "../config";
 import { getPrismaClient } from "../db/client";
 
 const prisma = getPrismaClient();
@@ -43,13 +43,13 @@ export const daoUserCreate = async (
     },
   });
 
-  return filteredOutputOrNotFound(user, db.privateJSONDataKeys.user);
+  return filteredOutputOrNotFound(user, config.db.privateJSONDataKeys.user);
 };
 
 export const daoUserQuery = async (
   where: Prisma.UserWhereInput,
   page: number = 0,
-  pageSize: number = db.defaultPageSize
+  pageSize: number = config.db.defaultPageSize
 ): Promise<User[]> => {
   const users: User[] = await prisma.user.findMany({
     where,
@@ -57,19 +57,19 @@ export const daoUserQuery = async (
     take: pageSize,
   });
 
-  return filteredOutput(users, db.privateJSONDataKeys.user);
+  return filteredOutput(users, config.db.privateJSONDataKeys.user);
 };
 
 export const daoUserGetById = async (id: number): Promise<User> => {
   const user: User | null = await prisma.user.findUnique({ where: { id } });
 
-  return filteredOutputOrNotFound(user, db.privateJSONDataKeys.user);
+  return filteredOutputOrNotFound(user, config.db.privateJSONDataKeys.user);
 };
 
 export const daoUserGetByEmail = async (email: string): Promise<User> => {
   const user: User | null = await prisma.user.findUnique({ where: { email } });
 
-  return filteredOutputOrNotFound(user, db.privateJSONDataKeys.user);
+  return filteredOutputOrNotFound(user, config.db.privateJSONDataKeys.user);
 };
 
 export const daoUserGetByLogin = async (
@@ -80,7 +80,7 @@ export const daoUserGetByLogin = async (
 
   if (!user || !(await verify(user.password, password))) return null;
 
-  // TODO: filteredOutput(user, db.privateJSONDataKeys.user);
+  // TODO: filteredOutput(user, config.db.privateJSONDataKeys.user);
   /*
     [A:API] [NODE] {
     [A:API] [NODE]   id: 6,
@@ -95,7 +95,7 @@ export const daoUserGetByLogin = async (
     [A:API] [NODE]   updatedAt: {}
     [A:API] [NODE] }
   */
-  return filteredOutput(user, db.privateJSONDataKeys.user);
+  return filteredOutput(user, config.db.privateJSONDataKeys.user);
 };
 
 export const daoUserUpdate = async (
@@ -120,7 +120,7 @@ export const daoUserUpdate = async (
     },
   });
 
-  return filteredOutputOrNotFound(user, db.privateJSONDataKeys.user);
+  return filteredOutputOrNotFound(user, config.db.privateJSONDataKeys.user);
 };
 
 export const daoUserDelete = async (userId: number): Promise<User> => {
@@ -130,7 +130,7 @@ export const daoUserDelete = async (userId: number): Promise<User> => {
     },
   });
 
-  return filteredOutputOrNotFound(user, db.privateJSONDataKeys.user);
+  return filteredOutputOrNotFound(user, config.db.privateJSONDataKeys.user);
 };
 
 export default {

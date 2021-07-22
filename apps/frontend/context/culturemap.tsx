@@ -13,7 +13,7 @@ export type CultureMapSettings = {
 
 // initial state
 const settingsDefault: CultureMapSettings = {
-  apiUrl: `${process.env.NEXT_PUBLIC_API_URL}`,
+  apiUrl: `${process.env.NEXT_PUBLIC_API_GRAPHQL_URL}`,
   navigation: {
     main: [],
     footer: [],

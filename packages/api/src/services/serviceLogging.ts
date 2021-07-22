@@ -37,7 +37,7 @@ const enumerateErrorFormat = winston.format((info) => {
 const format = winston.format.combine(
   winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss:ms" }),
   enumerateErrorFormat(),
-  process.env.env === "development"
+  process.env.NODE_ENV === "development"
     ? winston.format.colorize({ all: true })
     : winston.format.uncolorize(),
   winston.format.splat(),

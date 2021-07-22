@@ -17,7 +17,8 @@ export class Asserts {
     v: unknown,
     msgOrErrorFactory?: string | (() => Error)
   ): asserts v is number {
-    if (typeof v !== "number" || !Number.isSafeInteger(v)) {
+    const test = parseInt(`${v}`, 10);
+    if (typeof test !== "number" || !Number.isSafeInteger(test)) {
       throw Asserts.createException(
         msgOrErrorFactory,
         "Value is not a safe integer"
@@ -32,6 +33,15 @@ export class Asserts {
     trim?: boolean
   ): asserts v is string {
     if (!isNonEmptyString(v, trim ?? true)) {
+      throw Asserts.createException(msgOrErrorFactory);
+    }
+  }
+
+  static isBoolean(
+    v: unknown,
+    msgOrErrorFactory?: string | (() => Error)
+  ): asserts v is boolean {
+    if (!v || `${v}` === "false") {
       throw Asserts.createException(msgOrErrorFactory);
     }
   }
@@ -55,5 +65,31 @@ export class Asserts {
     throw msgOrErrorFactory();
   }
 }
+
+export const safeGuardVariable = (
+  logger: any,
+  type: "string" | "int" | "boolean",
+  v: unknown,
+  f: unknown,
+  message: string
+): any => {
+  try {
+    if (type === "string") {
+      Asserts.nonEmptyString(v, message);
+      return v;
+    }
+    if (type === "int") {
+      Asserts.safeInteger(v, message);
+      return parseInt(`${v}`, 10);
+    }
+    if (type === "boolean") {
+      Asserts.isBoolean(v, message);
+      return Boolean(v) && `${v}` !== "false";
+    }
+  } catch (Err) {
+    logger.error(Err);
+    return f;
+  }
+};
 
 export default Asserts;

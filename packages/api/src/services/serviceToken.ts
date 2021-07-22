@@ -19,13 +19,6 @@ export const generateToken = (
   type: string,
   secret?: string
 ) => {
-  if (!config.env.JWT_SECRET) {
-    // TODO: better loggins
-    // eslint-disable-next-line no-console
-    logger.error("Please configure JWT_SECRET");
-    throw new ApiError(httpStatus.BAD_REQUEST, "Token not created");
-  }
-
   let user = {
     id: userId,
   };
@@ -59,12 +52,12 @@ export const generateToken = (
     type,
   };
 
-  return jwt.sign(payload, secret ?? config.env.JWT_SECRET);
+  return jwt.sign(payload, secret ?? config.jwt.secret);
 };
 
 export const tokenVerify = (token: string): JwtPayload | null => {
   try {
-    if (!config.env.JWT_SECRET) {
+    if (!config.jwt.secret) {
       const msg = "Please configure your JWT Secret";
       logger.info(`Error: ${msg}`);
 
@@ -76,7 +69,7 @@ export const tokenVerify = (token: string): JwtPayload | null => {
 
     const tokenPayload: JwtPayload | string = jwt.verify(
       token,
-      config.env.JWT_SECRET ?? "",
+      config.jwt.secret ?? "",
       {}
     );
 
@@ -139,7 +132,7 @@ export const tokenGenerateAuthTokens = async (
 ): Promise<AuthPayload> => {
   const accessTokenExpires = addMinutes(
     new Date(),
-    parseInt(config.env.JWT_ACCESS_EXPIRATION_MINUTES ?? "10", 10)
+    config.jwt.expiration.access
   );
 
   const accessToken = generateToken(
@@ -151,7 +144,7 @@ export const tokenGenerateAuthTokens = async (
 
   const refreshTokenExpires = addDays(
     new Date(),
-    parseInt(config.env.JWT_REFRESH_EXPIRATION_DAYS ?? "30", 10)
+    config.jwt.expiration.refresh
   );
 
   const refreshToken = generateToken(
@@ -189,10 +182,7 @@ export const tokenGenerateResetPasswordToken = async (email: string) => {
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, "Email not found");
   }
-  const expires = addMinutes(
-    new Date(),
-    parseInt(config.env.JWT_RESET_PASSWORD_EXPIRATION_MINUTES ?? "30", 10)
-  );
+  const expires = addMinutes(new Date(), config.jwt.expiration.passwordReset);
 
   const resetPasswordToken = generateToken(
     user.id,
@@ -212,7 +202,7 @@ export const tokenGenerateResetPasswordToken = async (email: string) => {
 const tokenGenerateVerifyEmailToken = async (userId: number) => {
   const expires = addMinutes(
     new Date(),
-    parseInt(config.env.JWT_VERIFY_EMAIL_EXPIRATION_MINUTES ?? "240", 10)
+    config.jwt.expiration.emailConfirmation
   );
   const verifyEmailToken = generateToken(
     userId,

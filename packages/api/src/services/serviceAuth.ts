@@ -7,7 +7,12 @@ import { AuthenticationError } from "apollo-server-express";
 import { AuthPayload } from "../typings/auth";
 
 import { TokenTypes, daoTokenDeleteMany } from "../dao/token";
-import { daoUserGetByLogin, daoUserGetById, daoUserUpdate } from "../dao/user";
+import {
+  daoUserGetByLogin,
+  daoUserGetById,
+  daoUserUpdate,
+  daoUserGetByEmail,
+} from "../dao/user";
 import { ApiError } from "../utils";
 import {
   tokenVerify,
@@ -34,13 +39,13 @@ export const authGenerateAuthenticatedApiUser = (
     roles,
     permissions,
     has(name: RoleNames) {
-      return (this.roles &&
-        Array.isArray(this.roles) &&
-        this.roles.indexOf(name) > -1) as boolean;
+      return (
+        this.roles && Array.isArray(this.roles) && this.roles.includes(name)
+      );
     },
     can(perms: PermisionsNames | PermisionsNames[]) {
-      return (Array.isArray(perms) ? perms : [perms]).some(
-        (perm) => this.permissions.indexOf(perm) !== -1
+      return (Array.isArray(perms) ? perms : [perms]).some((perm) =>
+        this.permissions.includes(perm)
       );
     },
   };
@@ -123,9 +128,14 @@ export const authRefresh = async (refreshToken: string) => {
       TokenTypes.REFRESH
     );
 
-    const user: User = await daoUserGetById((tokenPayload as any).user.id);
+    const user: User = await daoUserGetById(
+      (tokenPayload as JwtPayload).user.id
+    );
     if (!user) {
-      throw new ApiError(httpStatus.UNAUTHORIZED, "Please authenticate (1)");
+      throw new ApiError(
+        httpStatus.UNAUTHORIZED,
+        "[auth.authRefresh] Please authenticate (1)"
+      );
     }
 
     await daoTokenDeleteMany({
@@ -135,7 +145,10 @@ export const authRefresh = async (refreshToken: string) => {
 
     return await tokenGenerateAuthTokens(user.id, user.role as RoleNames);
   } catch (error) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, "Please authenticate (2)");
+    throw new ApiError(
+      httpStatus.UNAUTHORIZED,
+      "[auth.authRefresh] Please authenticate (2)"
+    );
   }
 };
 
@@ -145,18 +158,21 @@ export const authRefresh = async (refreshToken: string) => {
  * @param {string} newPassword
  * @returns {Promise}
  */
-export const authResetPassword = async (
-  resetPasswordToken: string,
-  newPassword: string
-) => {
+export const authRequestPasswordReset = async (email: string) => {
   try {
+    const userInDB = await daoUserGetByEmail(email);
+    if (userInDB) {
+    }
     const tokenPayload = await tokenVerifyInDB(
       resetPasswordToken,
       TokenTypes.RESET_PASSWORD
     );
-    const user = await daoUserGetById((tokenPayload as any).user.id);
+    const user = await daoUserGetById((tokenPayload as JwtPayload).user.id);
     if (!user) {
-      throw new ApiError(httpStatus.UNAUTHORIZED, "Please authenticate");
+      throw new ApiError(
+        httpStatus.UNAUTHORIZED,
+        "[auth.authResetPassword] Please authenticate"
+      );
     }
     await daoUserUpdate(user.id, { password: newPassword });
 
@@ -165,7 +181,46 @@ export const authResetPassword = async (
       type: TokenTypes.RESET_PASSWORD,
     });
   } catch (error) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, "Password reset failed");
+    throw new ApiError(
+      httpStatus.UNAUTHORIZED,
+      "[auth.authRequestPasswordReset] Password reset request failed"
+    );
+  }
+};
+
+/**
+ * Reset password TODO: xxx123
+ * @param {string} resetPasswordToken
+ * @param {string} newPassword
+ * @returns {Promise}
+ */
+export const authReqestPasswordReset = async (
+  resetPasswordToken: string,
+  newPassword: string
+) => {
+  try {
+    const tokenPayload = await tokenVerifyInDB(
+      resetPasswordToken,
+      TokenTypes.RESET_PASSWORD
+    );
+    const user = await daoUserGetById((tokenPayload as JwtPayload).user.id);
+    if (!user) {
+      throw new ApiError(
+        httpStatus.UNAUTHORIZED,
+        "[auth.authResetPassword] Please authenticate"
+      );
+    }
+    await daoUserUpdate(user.id, { password: newPassword });
+
+    daoTokenDeleteMany({
+      userId: user.id,
+      type: TokenTypes.RESET_PASSWORD,
+    });
+  } catch (error) {
+    throw new ApiError(
+      httpStatus.UNAUTHORIZED,
+      "[auth.authResetPassword] Password reset failed"
+    );
   }
 };
 
@@ -180,7 +235,9 @@ export const authVerifyEmail = async (emailVerificationToken: string) => {
       emailVerificationToken,
       TokenTypes.VERIFY_EMAIL
     );
-    const user: User = await daoUserGetById((tokenPayload as any).user.id); // TODO: crate type for token payload and replace as any
+    const user: User = await daoUserGetById(
+      (tokenPayload as JwtPayload).user.id
+    );
     if (!user) {
       throw new Error();
     }
@@ -201,6 +258,7 @@ export default {
   authLoginUserWithEmailAndPassword,
   authLogout,
   authRefresh,
-  authResetPassword,
+  authRequestPasswordReset,
+  authReqestPasswordReset,
   authVerifyEmail,
 };

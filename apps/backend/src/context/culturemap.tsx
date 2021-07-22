@@ -9,7 +9,7 @@ export type CultureMapSettings = {
 
 // initial state
 const settingsDefault: CultureMapSettings = {
-  apiUrl: `${process.env.REACT_APP_API_URL}`,
+  apiUrl: `${process.env.REACT_APP_API_GRAPHQL_URL}`,
   apiDomain: `${process.env.REACT_APP_API_DOMAIN}`,
 };
 
