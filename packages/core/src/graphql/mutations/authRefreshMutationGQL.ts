@@ -1,8 +1,8 @@
 import gql from "graphql-tag";
 
-export const userRefreshMutationGQL = gql`
-  mutation userRefresh {
-    userRefresh {
+export const authRefreshMutationGQL = gql`
+  mutation authRefresh {
+    authRefresh {
       tokens {
         access {
           token
@@ -16,4 +16,4 @@ export const userRefreshMutationGQL = gql`
   }
 `;
 
-export default userRefreshMutationGQL;
+export default authRefreshMutationGQL;

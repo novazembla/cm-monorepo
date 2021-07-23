@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import * as yup from "yup";
 import { Link, useHistory } from "react-router-dom";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -12,43 +13,31 @@ import { useUserSignupMutation } from "../../hooks/mutations";
 import { ErrorMessage, FieldInput } from "../../components/forms";
 import { LanguageButtons } from "../../components/ui";
 
-type dataRegistration = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  acceptedTerms: boolean;
-}
 // TODO: needs email confirmation
-const Signup = () => {
-  const [signupMutation, signupMutationResults] = useUserSignupMutation();
 
-  const [isRegistrationError, setIsRegistrationError] = useState(false);
+const Signup = () => {
+  const [firstMutation, firstMutationResults] = useUserSignupMutation();
+  const [isFormError, setIsFormError] = useState(false);
+
   const { t } = useTranslation();
   const history = useHistory();
 
-  // TODO: this should block the whole form not only the button ... 
-  const disableForm = signupMutationResults.loading;
+  const disableForm = firstMutationResults.loading;
 
   const formMethods = useForm({
     resolver: yupResolver(ValidationSchemaRegister),
   });
   const { handleSubmit, register } = formMethods;
 
-  const onSubmit = async (data: dataRegistration) => {
-    console.log("submit");
-    setIsRegistrationError(false); // TODO: how to have this clear set on form change, also how to set the form fields to not valid to make them red...
-    try { // does this really 
-
-      console.log(data)
-      await signupMutation(data);
+  const onSubmit = async (data: yup.InferType<typeof ValidationSchemaRegister>) => {
+    setIsFormError(false); // TODO: how to have this clear set on form change, also how to set the form fields to not valid to make them red...
+    try {
+      await firstMutation(data);
       history.push("/");
-
-      console.log(2134234)
     } catch (err) {
-      setIsRegistrationError(true);
+      setIsFormError(true);
     }
-  }; 
+  };
 
   // t("page.register.error", "The login failed. Please try again.")
   return (
@@ -56,11 +45,18 @@ const Signup = () => {
       <div className="w-full max-w-sm mx-auto overflow-hidden bg-white filter drop-shadow-md rounded-lg shadow-md dark:bg-gray-800">
         <div className="px-6 py-4">
           <FormProvider {...formMethods}>
-            <form noValidate onSubmit={handleSubmit(onSubmit)}>
+            <form
+              noValidate
+              onSubmit={handleSubmit(onSubmit)}
+              onChange={() => {
+                setIsFormError(false);
+              }}
+            > 
+            <fieldset disabled={disableForm}>
               <h2 className="text-3xl font-bold text-center text-gray-700 dark:text-white">
                 {t("page.register.title", "Register as new User")}
               </h2>
-              {isRegistrationError && <ErrorMessage error="page.register.error" />}
+              {isFormError && <ErrorMessage error="page.register.error" />}
               <div className="w-full mt-3">
                 <FieldInput
                   name="firstName"
@@ -74,7 +70,7 @@ const Signup = () => {
                     placeholder: t(
                       "page.register.form_field_firstName_placeholder",
                       "Your first name"
-                    ),
+                    )
                   }}
                 />
               </div>
@@ -92,6 +88,9 @@ const Signup = () => {
                       "page.register.form_field_lastName_placeholder",
                       "Your last name"
                     ),
+                    onChange: () => {
+                      setIsFormError(false);
+                    },
                   }}
                 />
               </div>
@@ -109,6 +108,9 @@ const Signup = () => {
                       "page.register.form_field_registration_placeholder",
                       "Please enter your email address"
                     ),
+                    onChange: () => {
+                      setIsFormError(false);
+                    },
                   }}
                 />
               </div>
@@ -130,25 +132,28 @@ const Signup = () => {
                 />
               </div>
               <div className="w-full mt-3">
-                  <input type="checkbox" id="acceptedTerms" checked {...register("acceptedTerms")} />
-                  Terms are great!
-                </div>
-                
+                <input
+                  type="checkbox"
+                  id="acceptedTerms"
+                  checked
+                  {...register("acceptedTerms")}
+                />
+                Terms are great!
+              </div>
+
               <div className="flex items-center justify-between mt-4">
                 <Link
                   className="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline"
                   to="/login"
                 >
-                  {t(
-                    "page.register.form_button_goto_login",
-                    "Login"
-                  )}
+                  {t("page.register.form_button_goto_login", "Login")}
                   (xxx URL TABINDEX?)
                 </Link>
-                <Button type="submit" disabled={disableForm}>
-                  {t("page.register.form_button_register", "Register")}
+                <Button type="submit">
+                  {t("page.register.form_button_submit", "Register")}
                 </Button>
               </div>
+              </fieldset>
             </form>
           </FormProvider>
         </div>

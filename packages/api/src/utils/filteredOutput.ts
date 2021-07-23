@@ -35,7 +35,8 @@ export const filteredOutputOrNotFound = (
   obj: object | object[] | null,
   keys?: string[] | undefined
 ): any => {
-  if (!obj) throw new ApiError(httpStatus.NOT_FOUND, "Not found");
+  if (!obj)
+    throw new ApiError(httpStatus.BAD_REQUEST, "Invalid data in request");
 
   if (!keys) {
     // TODO: better error logging

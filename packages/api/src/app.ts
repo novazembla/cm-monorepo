@@ -1,8 +1,10 @@
+// TODO: Make use of https://github.com/godaddy/terminus https://stackoverflow.com/questions/43003870/how-do-i-shut-down-my-express-server-gracefully-when-its-process-is-killed
+//
+
 import express, { Application } from "express";
 import cors from "cors";
-
 import cookieParser from "cookie-parser";
-import { corsOptions } from "./config";
+import config from "./config";
 import {
   errorConvert404ToApiError,
   errorDisplayInResponse,
@@ -17,7 +19,7 @@ export const initializeExpressApp = () => {
   app.use(cookieParser());
 
   // eslint-disable-next-line import/no-named-as-default-member
-  app.use(cors(corsOptions));
+  app.use(cors(config.corsOptions));
 
   app.use(morganSuccessHandler);
   app.use(morganErrorHandler);

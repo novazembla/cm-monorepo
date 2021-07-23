@@ -1,15 +1,13 @@
-import { userLogoutMutationGQL } from "@culturemap/core";
+import { authLogoutMutationGQL } from "@culturemap/core";
 import { useMutation } from "@apollo/client";
 import { useAuthentication } from "..";
 
 
-export const useUserLogoutMutation = () => {
+export const useAuthLogoutMutation = () => {
   const [, { logout }] = useAuthentication();
 
-  const [mutation, mutationResults] = useMutation(userLogoutMutationGQL, {
+  const [mutation, mutationResults] = useMutation(authLogoutMutationGQL, {
     onCompleted: (data) => {
-      console.log("logout completed");
-      console.log("about to trigger logout");
       logout();
     },
   });

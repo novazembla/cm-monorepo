@@ -6,7 +6,7 @@ import {
   ApolloLink,
   Observable,
 } from "@apollo/client";
-import { userRefreshMutationGQL } from "@culturemap/core";
+import { authRefreshMutationGQL } from "@culturemap/core";
 import { onError } from "@apollo/client/link/error";
 import { RetryLink } from "@apollo/client/link/retry";
 
@@ -48,7 +48,7 @@ const retryWithRefreshTokenLink = onError(
             const observable = new Observable((observer) => {
               if (client) {
                 client.mutate({
-                  mutation: userRefreshMutationGQL,
+                  mutation: authRefreshMutationGQL,
                 })//     // TODO: is there a way to get a typed query here?
                 .then(({ data }: any) => {
                   if (
@@ -60,7 +60,6 @@ const retryWithRefreshTokenLink = onError(
                     );
 
                     if (payload) {
-                      console.log("Refreshed", payload);
                       authentication.setAuthToken(
                         data.userRefresh.tokens.access
                       );
@@ -117,7 +116,7 @@ const retryWithRefreshTokenLink = onError(
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors)
     graphQLErrors.forEach((err) =>
-      console.log(`[GQLError error]: ${err.message} ${err?.extensions?.code}`)
+      console.log(`[GQLError error]: ${err.message} ${err?.extensions?.code ?? ''}`)
     );
 
   if (networkError) console.log(`[Network error]: ${networkError}`);
@@ -138,7 +137,6 @@ const createApolloClient = (settings: CultureMapSettings) => {
         attempts: {
           max: 3,
           retryIf: (error, _operation) => {
-            console.log("Calling retryIf", error, _operation);
             return !!error;
           },
         },
@@ -165,7 +163,6 @@ const createApolloClient = (settings: CultureMapSettings) => {
 };
 
 export const initializeClient = (settings: CultureMapSettings) => {
-  console.log("initializeClient");
   const aClient = client ?? createApolloClient(settings);
 
   // For SSG and SSR always create a new Apollo Client

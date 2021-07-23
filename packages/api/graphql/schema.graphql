@@ -28,11 +28,19 @@ type AuthUser {
   roles: [String]
 }
 
+type BooleanResult {
+  result: Boolean!
+}
+
 type Mutation {
-  userLogin(data: UserLoginInput!): AuthPayload!
-  userLogout(data: UserLogoutInput!): UserLogoutResult!
-  userRefresh: AuthPayload!
-  userSignup(data: UserSignupInput!): AuthPayload!
+  authConfirmEmail(token: String!): BooleanResult!
+  authConfirmationEmailRequest(scope: String!, userId: Int!): BooleanResult!
+  authLogin(email: String!, password: String!): AuthPayload!
+  authLogout(userId: Int!): BooleanResult!
+  authPasswordRequest(email: String!, scope: String!): BooleanResult!
+  authPasswordReset(password: String!, token: String!): BooleanResult!
+  authRefresh: AuthPayload!
+  userSignup(data: UserSignupInput!, scope: String!): AuthPayload!
 }
 
 type Query {
@@ -45,19 +53,6 @@ type User {
   firstName: String
   id: Int!
   lastName: String
-}
-
-input UserLoginInput {
-  email: String!
-  password: String!
-}
-
-input UserLogoutInput {
-  userId: Int!
-}
-
-type UserLogoutResult {
-  result: Boolean!
 }
 
 input UserSignupInput {

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import * as yup from "yup";
 import { Link, useHistory } from "react-router-dom";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -6,19 +7,14 @@ import { useTranslation } from "react-i18next";
 import { Button } from "@windmill/react-ui";
 
 import { ValidationSchemaLogin } from "../../validation";
-import { useUserLoginMutation } from "../../hooks/mutations";
+import { useAuthLoginMutation } from "../../hooks/mutations";
 import { ErrorMessage, FieldInput } from "../../components/forms";
 import { LanguageButtons } from "../../components/ui";
 
-type dataLogin = {
-  email: string;
-  password: string;
-};
-
 const Login = () => {
-  const [loginMutation, loginMutationResults] = useUserLoginMutation();
+  const [firstMutation, firstMutationResults] = useAuthLoginMutation();
+  const [isFormError, setIsFormError] = useState(false);
 
-  const [isLoginError, setIsLoginError] = useState(false);
   const { t } = useTranslation();
   const history = useHistory();
 
@@ -27,15 +23,16 @@ const Login = () => {
   });
   const { handleSubmit } = formMethods;
 
-  const disableForm = loginMutationResults.loading;
+  // TODO: how to block entire form on submission ... 
+  const disableForm = firstMutationResults.loading;
 
-  const onSubmit = async (data: dataLogin) => {
-    setIsLoginError(false); // TODO: how to have this clear set on form change, also how to set the form fields to not valid to make them red...
+  const onSubmit = async (data: yup.InferType<typeof ValidationSchemaLogin>) => {
+    setIsFormError(false);
     try {
-      await loginMutation(data.email, data.password);
+      await firstMutation(data.email, data.password);
       history.push("/");
     } catch (err) {
-      setIsLoginError(true);
+      setIsFormError(true);
     }
   };
 
@@ -45,11 +42,18 @@ const Login = () => {
       <div className="w-full max-w-sm mx-auto overflow-hidden bg-white filter drop-shadow-md rounded-lg shadow-md dark:bg-gray-800">
         <div className="px-6 py-4">
           <FormProvider {...formMethods}>
-            <form noValidate onSubmit={handleSubmit(onSubmit)}>
+            <form
+              noValidate
+              onSubmit={handleSubmit(onSubmit)}
+              onChange={() => {
+                setIsFormError(false);
+              }}
+            >
+              <fieldset disabled={disableForm}>
               <h2 className="text-3xl font-bold text-center text-gray-700 dark:text-white">
                 {t("page.login.title", "Login")}
               </h2>
-              {isLoginError && <ErrorMessage error="page.login.error" />}
+              {isFormError && <ErrorMessage error="page.login.error" />}
               <div className="w-full mt-3">
                 <FieldInput
                   name="email"
@@ -103,10 +107,11 @@ const Login = () => {
                   (xxx URL TABINDEX?)
                 </Link>
 
-                <Button type="submit" disabled={disableForm}>
+                <Button type="submit">
                   {t("page.login.form_button_login", "Login")}
                 </Button>
               </div>
+              </fieldset>
             </form>
           </FormProvider>
         </div>

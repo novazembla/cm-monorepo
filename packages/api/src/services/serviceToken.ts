@@ -5,7 +5,7 @@ import { roles, RoleNames } from "@culturemap/core";
 import { Response } from "express";
 
 import config from "../config";
-import { AuthPayload } from "../typings/auth";
+import { AuthPayload, JwtTokenPayloadUser } from "../types/auth";
 import { daoTokenCreate, TokenTypes, daoTokenFindFirst } from "../dao/token";
 import { daoUserGetByEmail } from "../dao/user";
 
@@ -13,14 +13,14 @@ import { ApiError } from "../utils";
 import { logger } from "./serviceLogging";
 
 export const generateToken = (
-  userId: number,
+  payloadUser: JwtTokenPayloadUser,
   role: RoleNames | null,
   expires: Date,
   type: string,
   secret?: string
 ) => {
-  let user = {
-    id: userId,
+  let user: JwtTokenPayloadUser = {
+    id: payloadUser.id,
   };
 
   if (role) {
@@ -127,7 +127,7 @@ export const tokenVerifyInDB = async (
 };
 
 export const tokenGenerateAuthTokens = async (
-  userId: number,
+  user: JwtTokenPayloadUser,
   role: RoleNames
 ): Promise<AuthPayload> => {
   const accessTokenExpires = addMinutes(
@@ -136,7 +136,7 @@ export const tokenGenerateAuthTokens = async (
   );
 
   const accessToken = generateToken(
-    userId,
+    user,
     role,
     accessTokenExpires,
     TokenTypes.ACCESS
@@ -148,7 +148,9 @@ export const tokenGenerateAuthTokens = async (
   );
 
   const refreshToken = generateToken(
-    userId,
+    {
+      id: user.id,
+    },
     role,
     refreshTokenExpires,
     TokenTypes.REFRESH
@@ -156,7 +158,7 @@ export const tokenGenerateAuthTokens = async (
 
   await daoTokenCreate(
     refreshToken,
-    userId,
+    user.id,
     refreshTokenExpires,
     TokenTypes.REFRESH
   );
@@ -185,8 +187,10 @@ export const tokenGenerateResetPasswordToken = async (email: string) => {
   const expires = addMinutes(new Date(), config.jwt.expiration.passwordReset);
 
   const resetPasswordToken = generateToken(
-    user.id,
-    null,
+    {
+      id: user.id,
+    },
+    "api",
     expires,
     TokenTypes.RESET_PASSWORD
   );
@@ -199,14 +203,16 @@ export const tokenGenerateResetPasswordToken = async (email: string) => {
   return resetPasswordToken;
 };
 
-const tokenGenerateVerifyEmailToken = async (userId: number) => {
+export const tokenGenerateVerifyEmailToken = async (userId: number) => {
   const expires = addMinutes(
     new Date(),
     config.jwt.expiration.emailConfirmation
   );
   const verifyEmailToken = generateToken(
-    userId,
-    null,
+    {
+      id: userId,
+    },
+    "api",
     expires,
     TokenTypes.VERIFY_EMAIL
   );

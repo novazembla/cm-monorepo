@@ -14,7 +14,7 @@ morgan.token("stack", (req: Request, res: Response) => {
 
   if (
     !res?.locals?.lastErr ||
-    (res?.locals?.lastErr?.name === "Error" &&
+    (["Error", "ApiError"].includes(res?.locals?.lastErr?.name) &&
       res?.locals?.lastErr?.message === "Not found")
   )
     return "";

@@ -6,6 +6,7 @@ export type RoleNames =
   | "contributor"
   | "user"
   | "refresh"
+  | "api"
   | "test";
 
 export type PermissionsOfAdministrator =
@@ -58,12 +59,15 @@ export type PermissionsOfUser = "accessAsAuthenticatedUser";
 
 export type PermissionsOfRefresh = "canRefreshAccessToken";
 
+export type PermissionsOfApi = "canConfirmToken";
+
 export type PermisionsNames =
   | PermissionsOfAdministrator
   | PermissionsOfEditor
   | PermissionsOfContributor
   | PermissionsOfUser
-  | PermissionsOfRefresh;
+  | PermissionsOfRefresh
+  | PermissionsOfApi;
 
 export interface Role {
   name: RoleNames;
@@ -201,9 +205,17 @@ roles.add("contributor", [
 ]);
 roles.add("user", ["accessAsAuthenticatedUser"]);
 roles.add("refresh", ["canRefreshAccessToken"]);
+roles.add("api", ["canConfirmToken"]);
 
-roles.extend("administrator", ["editor", "contributor", "user", "refresh"]);
-roles.extend("editor", ["contributor", "user", "refresh"]);
-roles.extend("contributor", ["user", "refresh"]);
-roles.extend("user", "refresh");
+roles.extend("administrator", [
+  "editor",
+  "contributor",
+  "user",
+  "refresh",
+  "api",
+]);
+roles.extend("editor", ["contributor", "user", "refresh", "api"]);
+roles.extend("contributor", ["user", "refresh", "api"]);
+roles.extend("user", ["refresh", "api"]);
+roles.extend("refresh", "api");
 export default roles;

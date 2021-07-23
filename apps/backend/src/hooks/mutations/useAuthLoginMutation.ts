@@ -1,24 +1,24 @@
-import { userLoginMutationGQL } from "@culturemap/core";
+import { authLoginMutationGQL } from "@culturemap/core";
 import { useMutation } from "@apollo/client";
 import { useAuthentication } from "..";
 import { authentication } from "../../services";
 
 
-export const useUserLoginMutation = () => {
+export const useAuthLoginMutation = () => {
   const [, { login, logout }] = useAuthentication();
 
-  const [mutation, mutationResults] = useMutation(userLoginMutationGQL, {
+  const [mutation, mutationResults] = useMutation(authLoginMutationGQL, {
     onCompleted: (data) => {
 
-      console.log("userLoginMutationGQL completed");
+      console.log("authLoginMutationGQL completed");
       // TODO: xxx find out if data sanity check is needed?
-      
-      if (data?.userLogin?.tokens?.access && data?.userLogin?.tokens?.refresh) {
-        const payload = authentication.getTokenPayload(data.userLogin.tokens.access);
+       
+      if (data?.authLogin?.tokens?.access && data?.authLogin?.tokens?.refresh) {
+        const payload = authentication.getTokenPayload(data.authLogin.tokens.access);
 
         if (payload) {
-          authentication.setAuthToken(data.userLogin.tokens.access);
-          authentication.setRefreshCookie(data.userLogin.tokens.refresh);
+          authentication.setAuthToken(data.authLogin.tokens.access);
+          authentication.setRefreshCookie(data.authLogin.tokens.refresh);
           console.log("aboutToTrigger Login");
           login(payload.user);
         }

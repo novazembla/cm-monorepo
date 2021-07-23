@@ -1,11 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import { useUserLogoutMutation } from "../../hooks/mutations";
+import { useAuthLogoutMutation } from "../../hooks/mutations";
 import { useAuthentication } from "../../hooks";
 
 const Sidebar = () => {
-  const [logoutMutation, logoutMutationResults] = useUserLogoutMutation();
+  const [logoutMutation, logoutMutationResults] = useAuthLogoutMutation();
   const [ apiUser ] = useAuthentication();
   
   const buttonDisabled = logoutMutationResults.loading;

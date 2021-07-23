@@ -1,6 +1,13 @@
 // import { objectType, extendType, stringArg, nonNull } from "nexus";
-import { objectType, extendType, inputObjectType, nonNull } from "nexus";
+import {
+  objectType,
+  extendType,
+  inputObjectType,
+  nonNull,
+  stringArg,
+} from "nexus";
 import httpStatus from "http-status";
+import { AppScopes } from "@culturemap/core";
 
 import { registerNewUser } from "../../services/serviceUser";
 import { tokenProcessRefreshToken } from "../../services/serviceToken";
@@ -86,9 +93,13 @@ export const UserSignupMutation = extendType({
       type: "AuthPayload",
       args: {
         data: nonNull(UserSignupInput),
+        scope: nonNull(stringArg()),
       },
-      async resolve(...[, { data }, { res }]) {
-        const authPayload = await registerNewUser(data);
+      async resolve(...[, args, { res }]) {
+        const authPayload = await registerNewUser(
+          args.scope as AppScopes,
+          args.data
+        );
 
         if (!authPayload)
           throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Signup Failed");

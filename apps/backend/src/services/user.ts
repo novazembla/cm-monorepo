@@ -1,4 +1,4 @@
-import { userRefreshMutationGQL } from "@culturemap/core";
+import { authRefreshMutationGQL } from "@culturemap/core";
 
 import { client } from "./apollo";
 import { authentication } from ".";
@@ -24,7 +24,7 @@ const refreshToken = () => {
   if (client && !isRefreshing() && getRefreshCookie()) {
     setRefreshing(true);
     client.mutate({
-      mutation: userRefreshMutationGQL,
+      mutation: authRefreshMutationGQL,
     })
     // TODO: is there a way to get a typed query here?
     .then(({ data }: any) => {

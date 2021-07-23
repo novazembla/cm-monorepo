@@ -1,18 +1,18 @@
 import {
   app,
-  addTerminatingErrorHandlingToApp,
   initializeExpressApp,
-  server,
-  initializeServer,
+  startApi,
+  initializeApolloServer,
   config,
 } from "@culturemap/api";
 import { plugins } from "@culturemap/core";
+
 import examplePlugins from "plugin-example";
 
 // @ts-ignore (CMSetting is JS file)
 import CMSettings from "../culturemap";
 
-async function startApolloServer() {
+const start = async () => {
   // you can register additional plugins that provide hooks that will be called at
   // appropriate places (aka "hooks") to extend the core functionality
   plugins.register(examplePlugins);
@@ -26,7 +26,6 @@ async function startApolloServer() {
   //
   // import { app, server, db } from "@culturemap/api"
   // db.setPrismaClient(prismaClientInstance)
-  //
 
   // before we start the server we want to make sure to
   // prepare the default settings and overwrite it with
@@ -67,32 +66,12 @@ async function startApolloServer() {
   // app.use(errorToApiErrorConverter);
   // app.use(errorDisplayInResponse);
 
-  // as well as the apollo server instance.
   // now configure the server (either pass a GraphQL Schema)
-  // or use the preinstalled one.
-  initializeServer();
+  // or use the preinstalled one by not setting and config settings.
+  initializeApolloServer();
 
-  if (server) {
-    // now start the appolo server
-    await server.start();
+  // and now run the whole thing ...
+  await startApi();
+};
 
-    // and attach it to the express app
-    server.applyMiddleware({
-      app,
-      cors: config.corsOptions as any,
-    });
-  }
-
-  // make sure that any unprocessed errors are displayed in a nice and (data) safe way
-  addTerminatingErrorHandlingToApp();
-
-  // finally listen to the configured port
-  app.listen({ port: process.env.API_PORT }, () => {
-    // eslint-disable-next-line no-console
-    console.log(
-      `🚀 Server ready at http://localhost:${process.env.API_PORT}${server?.graphqlPath}`
-    );
-  });
-}
-
-startApolloServer();
+start();

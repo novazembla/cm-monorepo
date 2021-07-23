@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import { CorsOptions } from "cors";
 import { PartialRecord, AppScopes, utils } from "@culturemap/core";
+import { join, resolve, dirname } from "path";
 
 import { logger } from "../services/serviceLogging";
 
@@ -13,7 +14,7 @@ dotenv.config();
 // Are pre flights needed? https://www.npmjs.com/package/cors#enabling-cors-pre-flight
 
 // eslint-disable-next-line import/no-mutable-exports
-export const corsOptions: CorsOptions = {
+const corsOptions: CorsOptions = {
   origin: true, // TODO: you might want to have a more complex origin, true for but requests from the requests to the admin tool ...
   credentials: true,
   methods: "GET,PUT,POST,OPTIONS",
@@ -67,6 +68,8 @@ export interface ApiConfigJwt {
 }
 
 export interface ApiConfig {
+  baseDir: string;
+  packageBaseDir: string;
   appName: string;
   baseUrl: PartialRecord<AppScopes, Array<string>>;
   db: ApiConfigDB;
@@ -78,6 +81,8 @@ export interface ApiConfig {
 }
 
 export interface ApiConfigOverwrite {
+  baseDir?: string;
+  packageBaseDir?: string;
   appName?: string;
   baseUrl?: PartialRecord<AppScopes, Array<string>>;
   db?: Partial<ApiConfigDB>;
@@ -105,7 +110,12 @@ const db: ApiConfigDB = {
   },
 };
 
+const trimTrailingSlash = (str: string) =>
+  str.endsWith("/") ? str.slice(0, -1) : str;
+
 export const apiConfig = {
+  baseDir: resolve(dirname("")),
+  packageBaseDir: join(resolve(dirname(""), "packages/api")),
   db,
   env: process.env,
   corsOptions,
@@ -117,26 +127,32 @@ export const apiConfig = {
     "Error: missing/wrong .env config: APP_NAME"
   ),
   baseUrl: {
-    frontend: utils.safeGuardVariable(
-      logger,
-      "string",
-      process.env.BASE_URL_FRONTEND,
-      "",
-      "Error: missing/wrong .env config: BASE_URL_FRONTEND"
+    frontend: trimTrailingSlash(
+      utils.safeGuardVariable(
+        logger,
+        "string",
+        process.env.BASE_URL_FRONTEND,
+        "",
+        "Error: missing/wrong .env config: BASE_URL_FRONTEND"
+      )
     ),
-    backend: utils.safeGuardVariable(
-      logger,
-      "string",
-      process.env.BASE_URL_BACKEND,
-      "",
-      "Error: missing/wrong .env config: BASE_URL_BACKEND"
+    backend: trimTrailingSlash(
+      utils.safeGuardVariable(
+        logger,
+        "string",
+        process.env.BASE_URL_BACKEND,
+        "",
+        "Error: missing/wrong .env config: BASE_URL_BACKEND"
+      )
     ),
-    api: utils.safeGuardVariable(
-      logger,
-      "string",
-      process.env.BASE_URL_API,
-      "",
-      "Error: missing/wrong .env config: BASE_URL_API"
+    api: trimTrailingSlash(
+      utils.safeGuardVariable(
+        logger,
+        "string",
+        process.env.BASE_URL_API,
+        "",
+        "Error: missing/wrong .env config: BASE_URL_API"
+      )
     ),
   },
   email: {
@@ -180,7 +196,7 @@ export const apiConfig = {
     secure: utils.safeGuardVariable(
       logger,
       "boolean",
-      process.env.MAIL_SECURE,
+      `${process.env.MAIL_SECURE}` === "true",
       false,
       "Error: missing/wrong .env config: MAIL_SECURE"
     ),

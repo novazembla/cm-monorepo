@@ -5,12 +5,11 @@ import { authentication } from "../../services";
 
 
 export const useUserSignupMutation = () => {
-  const [, { login, logout }] = useAuthentication();
+  const [apiUser, { login }] = useAuthentication();
 
   const [mutation, mutationResults] = useMutation(userSignupMutationGQL, {
     onCompleted: (data) => {
 
-      console.log("Signup payload", data);
       // TODO: xxx find out if data sanity check is needed?
 
       if (data?.userSignup?.tokens?.access && data?.userSignup?.tokens?.refresh) {
@@ -26,10 +25,16 @@ export const useUserSignupMutation = () => {
   });
 
   // full login function
+  // data should probably not be "Any" TODO: 
   const execute = (data: any) => {
-    logout();
+    if (apiUser)
+      throw Error("You're already logged in");
+  
     return mutation({
-      variables: data,
+      variables: {
+        scope: "backend",
+        ...data,
+      }
     });
   };
   return [execute, mutationResults] as const;

@@ -1,11 +1,11 @@
-import React from "react";
+import React, { ChangeEventHandler, ChangeEvent } from "react";
 import { useFormContext } from "react-hook-form";
 import { Input, Label } from "@windmill/react-ui";
 
 import ErrorMessage from "./ErrorMessage";
 
 export interface FieldInputData {
-  onChange?: Function;
+  onChange?: ChangeEventHandler;
   rows?: number;
   key?: string;
   name?: string;
@@ -59,7 +59,7 @@ const FieldInput = ({ data, id, label, name, type }: ComponentProps) => {
 
   // TODO: autoResize ever used?
   if (data.autoResize) {
-    const autoResizeOnChange = (event: React.FormEvent<HTMLInputElement>) => {
+    const autoResizeOnChange: ChangeEventHandler = (event: ChangeEvent<HTMLInputElement>) => {
       (event.target as HTMLInputElement).style.height = "";
       (event.target as HTMLInputElement).style.height =
         Math.max(
@@ -69,14 +69,16 @@ const FieldInput = ({ data, id, label, name, type }: ComponentProps) => {
     };
 
     if (typeof data.onChange === "function") {
-      fieldProps.onChange = (event: React.FormEvent<HTMLInputElement>) => {
+      const changeEventWrapper: ChangeEventHandler = (event: ChangeEvent<HTMLInputElement>) => {
         data.onChange && data.onChange.call(null, event);
         autoResizeOnChange.call(null, event);
       };
+      fieldProps.onChange = changeEventWrapper;
     } else {
       fieldProps.onChange = autoResizeOnChange;
     }
   }
+
   // TODO: <Label  htmlFor={id} ...></Label> does not work
   return (
     <>

@@ -1,27 +1,40 @@
-/// <reference path="../typings/nexus-typegen.ts" />
+/// <reference path="../types/nexus-typegen.ts" />
 
 import { makeSchema, fieldAuthorizePlugin } from "nexus";
-import { dirname, resolve, join } from "path";
+import type { core } from "nexus";
+
+import { join } from "path";
+
+import config from "../config";
 
 import * as types from "./types";
 
-const packageRootDir = join(resolve(dirname(""), "packages/api"));
 // TODO: interesting plugins:
 // https://www.npmjs.com/package/nexus-args-validation
 // https://www.npmjs.com/package/@jcm/nexus-plugin-datetime
 // https://nexusjs.org/docs/plugins/query-complexity
 
-export const schema = makeSchema({
+let schemaConfig: core.SchemaConfig = {
   types,
-  outputs: {
-    typegen: join(packageRootDir, "src/typings/nexus-typegen.ts"),
-    schema: join(packageRootDir, "graphql/schema.graphql"),
-  },
-  contextType: {
-    module: join(packageRootDir, "src/nexus-graphql/context.ts"),
-    export: "NexusResolverContext",
-  },
   plugins: [fieldAuthorizePlugin()],
-});
+};
+
+// in production we don't need to generate typings or the schema file
+if (process.env.NODE_ENV !== "production")
+  schemaConfig = {
+    ...schemaConfig,
+    ...{
+      outputs: {
+        typegen: join(config.packageBaseDir, "src/types/nexus-typegen.ts"),
+        schema: join(config.packageBaseDir, "graphql/schema.graphql"),
+      },
+      contextType: {
+        module: join(config.packageBaseDir, "src/nexus-graphql/context.ts"),
+        export: "NexusResolverContext",
+      },
+    },
+  };
+
+export const schema = makeSchema(schemaConfig);
 
 export default schema;

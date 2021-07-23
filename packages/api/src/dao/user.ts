@@ -102,19 +102,16 @@ export const daoUserUpdate = async (
   userId: number,
   data: Prisma.UserUpdateInput
 ): Promise<User> => {
-  const userTest = await daoUserGetById(userId);
-  if (!userTest) {
-    throw new ApiError(httpStatus.NOT_FOUND, "Not found");
-  }
-  if (
-    data.email &&
-    (await daoUserCheckIsEmailTaken(data.email as string, userId))
-  ) {
-    throw new ApiError(httpStatus.BAD_REQUEST, "Email already taken");
-  }
+  let updateData = data;
+
+  if (data.password)
+    updateData = {
+      ...data,
+      ...{ password: await hash(data.password as string) },
+    };
 
   const user: User = await prisma.user.update({
-    data,
+    data: updateData,
     where: {
       id: userId,
     },

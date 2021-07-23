@@ -9,7 +9,7 @@
       "forgot_your_password": "Forgot your password?",
       "form_button_login": "Login"
     },
-    "forgottenPassword": {
+    "passwordreset": {
       "title": "Forgot your password?"
     }
   },

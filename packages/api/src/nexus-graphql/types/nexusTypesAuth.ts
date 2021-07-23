@@ -1,15 +1,22 @@
-import { objectType, extendType, nonNull, inputObjectType } from "nexus";
+import { objectType, extendType, nonNull, intArg, stringArg } from "nexus";
 import { AuthenticationError } from "apollo-server-express";
+import { AppScopes } from "@culturemap/core";
+
 import {
   authLoginUserWithEmailAndPassword,
   authLogout,
   authRefresh,
+  authRequestPasswordReset,
+  authResetPassword,
+  authConfirmEmail,
+  authConfirmationEmailRequest,
 } from "../../services/serviceAuth";
 import {
   tokenProcessRefreshToken,
   tokenClearRefreshToken,
 } from "../../services/serviceToken";
 import { authorizeApiUser } from "../helpers";
+import { BooleanResult } from "./nexusTypesShared";
 
 export const AuthUser = objectType({
   name: "AuthUser",
@@ -54,42 +61,36 @@ export const AuthPayload = objectType({
   },
 });
 
-export const UserLoginInput = inputObjectType({
-  name: "UserLoginInput",
-  definition(t) {
-    t.nonNull.string("email");
-    t.nonNull.string("password");
-  },
-});
-
-export const UserLoginMutation = extendType({
+export const AuthLoginMutation = extendType({
   type: "Mutation",
 
   definition(t) {
-    t.nonNull.field("userLogin", {
+    t.nonNull.field("authLogin", {
       type: "AuthPayload",
       args: {
-        data: nonNull(UserLoginInput),
+        email: nonNull(stringArg()),
+        password: nonNull(stringArg()),
       },
       async resolve(...[, args, { res }]) {
-        const authPayload = await authLoginUserWithEmailAndPassword(
-          args.data.email,
-          args.data.password
-        );
-
-        if (!authPayload) throw new AuthenticationError("Login Failed");
-
-        return tokenProcessRefreshToken(res, authPayload);
+        try {
+          const authPayload = await authLoginUserWithEmailAndPassword(
+            args.email,
+            args.password
+          );
+          return tokenProcessRefreshToken(res, authPayload);
+        } catch (Err) {
+          throw new AuthenticationError("Login Failed");
+        }
       },
     });
   },
 });
 
-export const UserRefreshMutation = extendType({
+export const AuthRefreshMutation = extendType({
   type: "Mutation",
 
   definition(t) {
-    t.nonNull.field("userRefresh", {
+    t.nonNull.field("authRefresh", {
       type: "AuthPayload",
 
       authorize: async (...[, , ctx]) =>
@@ -113,28 +114,14 @@ export const UserRefreshMutation = extendType({
   },
 });
 
-export const UserLogoutInput = inputObjectType({
-  name: "UserLogoutInput",
-  definition(t) {
-    t.nonNull.int("userId");
-  },
-});
-
-export const UserLogoutResult = objectType({
-  name: "UserLogoutResult",
-  definition(t) {
-    t.nonNull.boolean("result");
-  },
-});
-
-export const UserLogoutMutation = extendType({
+export const AuthLogoutMutation = extendType({
   type: "Mutation",
 
   definition(t) {
-    t.nonNull.field("userLogout", {
-      type: UserLogoutResult,
+    t.nonNull.field("authLogout", {
+      type: BooleanResult,
       args: {
-        data: nonNull(UserLogoutInput),
+        userId: nonNull(intArg()),
       },
 
       async resolve(...[, args, { res, apiUser }]) {
@@ -142,11 +129,11 @@ export const UserLogoutMutation = extendType({
         tokenClearRefreshToken(res);
 
         // then test if the submitting user is the user to be logged out
-        if (!apiUser || apiUser.id !== args.data.userId)
+        if (!apiUser || apiUser.id !== args.userId)
           throw new AuthenticationError("Logout Failed (1)");
 
         // okay then log the user out
-        const result = await authLogout(args.data.userId);
+        const result = await authLogout(args.userId);
 
         if (!result) throw new AuthenticationError("Logout Failed (2)");
 
@@ -156,4 +143,90 @@ export const UserLogoutMutation = extendType({
   },
 });
 
-export default AuthPayload;
+export const AuthPasswordRequestMutation = extendType({
+  type: "Mutation",
+
+  definition(t) {
+    t.nonNull.field("authPasswordRequest", {
+      type: BooleanResult,
+      args: {
+        scope: nonNull(stringArg()),
+        email: nonNull(stringArg()),
+      },
+
+      async resolve(...[, args]) {
+        const result = await authRequestPasswordReset(
+          args.scope as AppScopes,
+          args.email
+        );
+
+        return { result };
+      },
+    });
+  },
+});
+
+export const AuthPasswordResetMutation = extendType({
+  type: "Mutation",
+
+  definition(t) {
+    t.nonNull.field("authPasswordReset", {
+      type: BooleanResult,
+      args: {
+        password: nonNull(stringArg()),
+        token: nonNull(stringArg()),
+      },
+
+      async resolve(...[, args]) {
+        const result = await authResetPassword(args.password, args.token);
+
+        return { result };
+      },
+    });
+  },
+});
+
+export const AuthConfirmEmailMutation = extendType({
+  type: "Mutation",
+
+  definition(t) {
+    t.nonNull.field("authConfirmEmail", {
+      type: BooleanResult,
+      args: {
+        token: nonNull(stringArg()),
+      },
+
+      async resolve(...[, args]) {
+        const result = await authConfirmEmail(args.token);
+
+        return { result };
+      },
+    });
+  },
+});
+
+export const AuthConfirmationEmailRequestMutation = extendType({
+  type: "Mutation",
+
+  definition(t) {
+    t.nonNull.field("authConfirmationEmailRequest", {
+      type: BooleanResult,
+      args: {
+        scope: nonNull(stringArg()),
+        userId: nonNull(intArg()),
+      },
+
+      authorize: async (...[, , ctx]) =>
+        authorizeApiUser(ctx, "canConfirmToken"),
+
+      async resolve(...[, args]) {
+        const result = await authConfirmationEmailRequest(
+          args.scope as AppScopes,
+          args.userId
+        );
+
+        return { result };
+      },
+    });
+  },
+});

@@ -16,7 +16,9 @@ import { ApiError } from "./utils/ApiError";
 // eslint-disable-next-line import/no-mutable-exports
 export let server: ApolloServer | null = null;
 
-export const initializeServer = (customSchema?: GraphQLSchema | undefined) => {
+export const initializeApolloServer = (
+  customSchema?: GraphQLSchema | undefined
+) => {
   server = new ApolloServer({
     schema: customSchema || schema,
     context,
@@ -45,48 +47,68 @@ export const initializeServer = (customSchema?: GraphQLSchema | undefined) => {
         } else {
           logger.warn(`${msg} ${returnedErr.name} ${returnedErr.message}`);
         }
+
         return err;
       }
       if (err.name === "ValidationError" || err.name === "UserInputError") {
         if (process.env.NODE_ENV === "development") {
           logger.debug(`${msg} ${stackTrace}`);
         }
+
         return err;
       }
 
-      // but mayb the API raised an error. Let's make sure it's message got though.
       if (err.name === "GraphQLError") {
+        if (err?.extensions?.code === "GRAPHQL_VALIDATION_FAILED") {
+          if (process.env.NODE_ENV === "development") {
+            logger.debug(`${msg} ${stackTrace}`);
+          }
+          return new ValidationError(err?.extensions?.exception?.message);
+        }
+        if (err?.extensions?.code === "UNAUTHENTICATED") {
+          logger.warn(`${msg}`);
+
+          return new AuthenticationError(
+            err?.extensions?.exception?.message ?? err.message
+          );
+        }
+
+        // but mayb the API raised an error. Let's make sure it's message got though.
+
         if (err?.extensions?.exception?.name === "ApiError") {
-          returnedErr = new ApiError(
-            err?.extensions?.exception?.statusCode,
-            err?.extensions?.exception?.message,
-            err?.extensions?.exception?.isOperational,
-            process.env.NODE_ENV === "development"
-              ? err?.extensions?.exception?.stacktrace
-              : undefined
-          );
-        }
-      }
+          returnedErr.message =
+            err?.extensions?.exception?.message ?? err?.message;
 
-      if (err.name === "GraphQLError") {
-        if (err?.extensions?.code === "GRAPHQL_VALIDATION_FAILED") {
-          return new ValidationError(err?.extensions?.exception?.message);
-        }
-        if (err?.extensions?.code === "UNAUTHENTICATED") {
-          return new AuthenticationError(
-            err?.extensions?.exception?.message ?? err.message
-          );
-        }
-      }
+          if (err?.extensions?.exception) {
+            (returnedErr as any).extensions.exception.stacktrace =
+              process.env.NODE_ENV === "development"
+                ? err?.extensions?.exception?.stacktrace
+                : undefined;
+          }
 
-      if (err.name === "GraphQLError") {
-        if (err?.extensions?.code === "GRAPHQL_VALIDATION_FAILED") {
-          return new ValidationError(err?.extensions?.exception?.message);
-        }
-        if (err?.extensions?.code === "UNAUTHENTICATED") {
-          return new AuthenticationError(
-            err?.extensions?.exception?.message ?? err.message
-          );
+          let code = "INTERNAL_SERVER_ERROR";
+
+          if (err?.extensions?.exception?.statusCode === httpStatus.BAD_REQUEST)
+            code = "BAD_REQUEST";
+
+          if (err?.extensions?.exception?.statusCode === httpStatus.FORBIDDEN)
+            code = "FORBIDDEN";
+
+          if (
+            err?.extensions?.exception?.statusCode === httpStatus.UNAUTHORIZED
+          )
+            code = "UNAUTHORIZED";
+
+          (returnedErr as any).extensions.code = code;
+
+          if (
+            process.env.NODE_ENV === "development" &&
+            (code === "INTERNAL_SERVER_ERROR" || code === "BAD_REQUEST")
+          ) {
+            logger.debug(`${msg} ${stackTrace}`);
+          }
+
+          return returnedErr;
         }
       }
 

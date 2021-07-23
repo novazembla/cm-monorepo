@@ -41,7 +41,7 @@ export class Asserts {
     v: unknown,
     msgOrErrorFactory?: string | (() => Error)
   ): asserts v is boolean {
-    if (!v || `${v}` === "false") {
+    if (v !== false && v !== true) {
       throw Asserts.createException(msgOrErrorFactory);
     }
   }

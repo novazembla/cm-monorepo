@@ -20,7 +20,7 @@ try {
 } catch (Err) {
   // eslint-disable-next-line no-console
   console.error(
-    "Please make sure to hava a culturemap.js file in the root folder"
+    "Please make sure to hava a culturemap.js file in the config folder"
   );
 }
 

@@ -77,6 +77,15 @@ export const daoTokenDeleteByUserId = async (
   return count;
 };
 
+export const daoTokenDeleteExpired = async (): Promise<number> => {
+  const count = await daoTokenDeleteMany({
+    expires: {
+      lt: new Date(),
+    },
+  });
+  return count;
+};
+
 export default {
   TokenTypes,
   daoTokenDeleteMany,

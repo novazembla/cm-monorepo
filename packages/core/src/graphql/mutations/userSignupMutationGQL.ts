@@ -2,6 +2,7 @@ import gql from "graphql-tag";
 
 export const userSignupMutationGQL = gql`
   mutation userSignup(
+    $scope: String!
     $firstName: String!
     $lastName: String!
     $email: String!
@@ -9,6 +10,7 @@ export const userSignupMutationGQL = gql`
     $acceptedTerms: Boolean!
   ) {
     userSignup(
+      scope: $scope
       data: {
         firstName: $firstName
         lastName: $lastName
