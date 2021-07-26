@@ -1,15 +1,16 @@
 import React from "react";
-import { HelperText } from "@windmill/react-ui";
+import { FormErrorMessage } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 
 type TypeErrorMessage = {
   key: string;
   values: object;
-}
-type ComonentProps = {
-  error: TypeErrorMessage | string;
-}
-const ErrorMessage = ({ error }: ComonentProps): JSX.Element | null  => {
+};
+const ErrorMessage = ({
+  error
+}: {
+  error: TypeErrorMessage | string;  
+}): JSX.Element | null => {
   const { t } = useTranslation();
 
   let message;
@@ -25,7 +26,7 @@ const ErrorMessage = ({ error }: ComonentProps): JSX.Element | null  => {
   // make sure first character is uppder case
   message = message.charAt(0).toUpperCase() + message.slice(1);
 
-  return <HelperText valid={false}>{message}</HelperText>;
+  return <FormErrorMessage>{message}</FormErrorMessage>;
 };
 
 export default ErrorMessage;

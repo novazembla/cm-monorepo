@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction} from "@reduxjs/toolkit";
-import type { ApiUser } from "../../services/user";
+import type { ApiUser } from "~/services/user";
 
 const userSlice = createSlice({
   name: "user",
@@ -25,7 +25,7 @@ const userSlice = createSlice({
       state.authenticated = true;
       state.apiUser = action.payload;
     },
-    userRefreshing(state, action: PayloadAction<boolean>) {
+    authRefreshing(state, action: PayloadAction<boolean>) {
       state.refreshing = action.payload;
     }
   },
@@ -35,7 +35,7 @@ const userSlice = createSlice({
 const { actions, reducer } = userSlice;
 
 // Extract and export each action creator by name
-export const { userLogout, userLogin, userRefreshing } = actions;
+export const { userLogout, userLogin, authRefreshing } = actions;
 
 // Export the reducer, either as a default or named export
 export default reducer;

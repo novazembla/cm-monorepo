@@ -1,8 +1,8 @@
 import { useHistory } from "react-router";
-import { useTypedSelector } from "../hooks";
+import { useTypedSelector } from "~/hooks";
 
-import { user } from "../services";
-import type { ApiUser } from "../services/user";
+import { user } from "~/services";
+import type { ApiUser } from "~/services/user";
 
 export const useAuthentication = () => {
   const { authenticated, apiUser } = useTypedSelector(({ user }) => user);

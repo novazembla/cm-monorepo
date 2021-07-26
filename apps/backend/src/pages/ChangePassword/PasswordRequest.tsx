@@ -5,15 +5,15 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Button } from "@windmill/react-ui";
 import { Link } from "react-router-dom";
 
-import { ValidationSchemaPasswordRequest } from "../../validation";
+import { ValidationSchemaPasswordRequest } from "~/validation";
 
 import { useTranslation } from "react-i18next";
 
-import { ErrorMessage, FieldInput } from "../../components/forms";
+import { ErrorMessage, FieldInput } from "~/components/forms";
 
-import { LanguageButtons } from "../../components/ui";
+import { LanguageButtons } from "~/components/ui";
 
-import { useAuthPasswordRequestMutation } from "../../hooks/mutations";
+import { useAuthPasswordRequestMutation } from "~/hooks/mutations";
 
 const PasswordRequest = () => {
   const [firstMutation, firstMutationResults] =

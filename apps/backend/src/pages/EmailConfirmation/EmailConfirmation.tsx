@@ -5,10 +5,10 @@ import { useHistory, useLocation } from "react-router-dom";
 
 import { useTranslation } from "react-i18next";
 
-import { LanguageButtons } from "../../components/ui";
+import { LanguageButtons } from "~/components/ui";
 
-import { useAuthConfirmEmailMutation } from "../../hooks/mutations";
-import { useAuthentication } from "../../hooks";
+import { useAuthConfirmEmailMutation } from "~/hooks/mutations";
+import { useAuthentication } from "~/hooks";
 
 const useQuery = () => {
   return new URLSearchParams(useLocation().search);

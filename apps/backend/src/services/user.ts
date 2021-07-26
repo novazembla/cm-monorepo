@@ -4,9 +4,9 @@ import { client } from "./apollo";
 import { authentication } from ".";
 import { getAuthToken, getRefreshCookie } from "./authentication";
 
-import { store } from "../redux/store";
-import { userLogout, userLogin, userRefreshing } from "../redux/slices/user";
-import { setTabWideAccessStatus } from "../hooks/useAuthTabWideLogInOutReload";
+import { store } from "~/redux/store";
+import { userLogout, userLogin, authRefreshing } from "~/redux/slices/user";
+import { setTabWideAccessStatus } from "~/hooks/useAuthTabWideLogInOutReload";
 
 export interface ApiUser {
   id: number;
@@ -30,19 +30,19 @@ const refreshToken = () => {
     .then(({ data }: any) => {
       console.log(data);
       if (
-        data?.userRefresh?.tokens?.access &&
-        data?.userRefresh?.tokens?.refresh
+        data?.authRefresh?.tokens?.access &&
+        data?.authRefresh?.tokens?.refresh
       ) {
         const payload = authentication.getTokenPayload(
-          data.userRefresh.tokens.access
+          data.authRefresh.tokens.access
         );
 
         if (payload) {
           authentication.setAuthToken(
-            data.userRefresh.tokens.access
+            data.authRefresh.tokens.access
           );
           authentication.setRefreshCookie(
-            data.userRefresh.tokens.refresh
+            data.authRefresh.tokens.refresh
           );
 
           login(payload.user);
@@ -63,7 +63,7 @@ const refreshToken = () => {
 };
 
 const setRefreshing = (status: boolean) =>
-  store.dispatch(userRefreshing(status));
+  store.dispatch(authRefreshing(status));
 
 const isRefreshing = () => store.getState().user.refreshing;
 

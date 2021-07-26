@@ -1,25 +1,21 @@
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
-import "./App.css";
+import "./App.scss";
 
 import AppProviders from "./AppProviders";
 
-import NotFound from "../pages/NotFound/NotFound";
+import NotFound from "~/pages/NotFound/NotFound";
 
-import LayoutLight from "../components/app/LayoutLight";
-import LayoutFull from "../components/app/LayoutFull";
+import LayoutLight from "~/components/app/LayoutLight";
+import LayoutFull from "~/components/app/LayoutFull";
 
-import PrivateRoute from "../components/app/PrivateRoute";
-import PublicRoute from "../components/app/PublicRoute";
-import { routes, privateRoutes, publicOnlyRoutes, getPrivateRoutesPathsArray, getPublicOnlyRoutesPathsArray, getRoutesPathsArray } from "../config/routes";
-
-import { Windmill } from "@windmill/react-ui";
-import windmillTheme from "../theme";
+import PrivateRoute from "~/components/app/PrivateRoute";
+import PublicRoute from "~/components/app/PublicRoute";
+import { routes, privateRoutes, publicOnlyRoutes, getPrivateRoutesPathsArray, getPublicOnlyRoutesPathsArray, getRoutesPathsArray } from "~/config/routes";
 
 
 const App = () => {
-  return <Windmill theme={windmillTheme}>
-      <AppProviders>
+  return <AppProviders>
       <span
         className="sr-only"
         role="status"
@@ -69,8 +65,7 @@ const App = () => {
           </Route>
         </Switch>
       </BrowserRouter>
-    </AppProviders>
-  </Windmill>;
+    </AppProviders>;
 };
 
 export default App;

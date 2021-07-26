@@ -66,11 +66,10 @@ export const initializeApolloServer = (
           return new ValidationError(err?.extensions?.exception?.message);
         }
         if (err?.extensions?.code === "UNAUTHENTICATED") {
-          logger.warn(`${msg}`);
+          let errMsg = err?.extensions?.exception?.message ?? err.message;
+          logger.warn(`${msg} ${errMsg}`);
 
-          return new AuthenticationError(
-            err?.extensions?.exception?.message ?? err.message
-          );
+          return new AuthenticationError(errMsg);
         }
 
         // but mayb the API raised an error. Let's make sure it's message got though.

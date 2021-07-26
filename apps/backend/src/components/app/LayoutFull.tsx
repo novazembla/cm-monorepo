@@ -4,9 +4,9 @@ import Footer from "./Footer";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 
-import { useAuthTabWideLogInOutReload } from "../../hooks";
+import { useAuthTabWideLogInOutReload } from "~/hooks";
 
-import { AppProps } from "../../types";
+import { AppProps } from "~/types";
 
 const LayoutFull = ({ children }: AppProps) => {
   const [loginStatus] = useAuthTabWideLogInOutReload();

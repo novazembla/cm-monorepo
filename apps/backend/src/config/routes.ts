@@ -1,10 +1,10 @@
-import DashBoard from "../modules/DashBoard/DashBoard";
-import Login from "../pages/Login/Login";
-import PasswordRequest from "../pages/ChangePassword/PasswordRequest";
-import PasswordReset from "../pages/ChangePassword/PasswordReset";
-import Profile from "../pages/Profile/Profile";
-import Signup from "../pages/Signup/Signup";
-import EmailConfirmation from "../pages/EmailConfirmation/EmailConfirmation";
+import DashBoard from "~/modules/DashBoard/DashBoard";
+import Login from "~/pages/Login/Login";
+import PasswordRequest from "~/pages/ChangePassword/PasswordRequest";
+import PasswordReset from "~/pages/ChangePassword/PasswordReset";
+import Profile from "~/pages/Profile/Profile";
+import Signup from "~/pages/Signup/Signup";
+import EmailConfirmation from "~/pages/EmailConfirmation/EmailConfirmation";
 
 
 export type RouteParams = {

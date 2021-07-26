@@ -88,7 +88,9 @@ export const context = ({
   }
 
   if (accessTokenProvided || refreshTokenProvided)
-    logger.debug(`Context: resolved ApiUser ID(${apiUser?.id})`);
+    logger.debug(
+      `Context: resolved ApiUser ID(${apiUser?.id}) AT: ${accessTokenProvided} RT: ${refreshTokenProvided}`
+    );
 
   return {
     req,

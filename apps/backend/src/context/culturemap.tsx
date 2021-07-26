@@ -1,6 +1,6 @@
 import React, { Context, createContext, ReactNode } from "react";
 import merge from "deepmerge";
-import CMSettings from "../config/culturemap";
+import CMSettings from "~/config/culturemap";
 
 export type CultureMapSettings = {
   apiUrl?: string | undefined;

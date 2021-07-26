@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
-import { useAuthentication } from "../../hooks";
+import { useAuthentication } from "~/hooks";
 
 type CompontentProps = {
   component: React.FC;

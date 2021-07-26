@@ -6,12 +6,12 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
 import { Button } from "@windmill/react-ui";
 
-import { ValidationSchemaRegister } from "../../validation";
+import { ValidationSchemaRegister } from "~/validation";
 
-import { useUserSignupMutation } from "../../hooks/mutations";
+import { useUserSignupMutation } from "~/hooks/mutations";
 
-import { ErrorMessage, FieldInput } from "../../components/forms";
-import { LanguageButtons } from "../../components/ui";
+import { ErrorMessage, FieldInput } from "~/components/forms";
+import { LanguageButtons } from "~/components/ui";
 
 // TODO: needs email confirmation
 

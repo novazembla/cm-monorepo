@@ -114,7 +114,7 @@ const trimTrailingSlash = (str: string) =>
   str.endsWith("/") ? str.slice(0, -1) : str;
 
 export const apiConfig = {
-  baseDir: resolve(dirname("")),
+  baseDir: resolve(dirname("")), 
   packageBaseDir: join(resolve(dirname(""), "packages/api")),
   db,
   env: process.env,

@@ -6,15 +6,15 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Button } from "@windmill/react-ui";
 import { Link, useHistory, useLocation } from "react-router-dom";
 
-import { ValidationSchemaPasswordReset } from "../../validation";
+import { ValidationSchemaPasswordReset } from "~/validation";
 
 import { useTranslation } from "react-i18next";
 
-import { ErrorMessage, FieldInput } from "../../components/forms";
+import { ErrorMessage, FieldInput } from "~/components/forms";
 
-import { LanguageButtons } from "../../components/ui";
+import { LanguageButtons } from "~/components/ui";
 
-import { useAuthPasswordResetMutation } from "../../hooks/mutations";
+import { useAuthPasswordResetMutation } from "~/hooks/mutations";
 
 const useQuery = () => {
   return new URLSearchParams(useLocation().search);

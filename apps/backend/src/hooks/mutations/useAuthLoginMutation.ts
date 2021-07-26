@@ -1,7 +1,7 @@
 import { authLoginMutationGQL } from "@culturemap/core";
 import { useMutation } from "@apollo/client";
 import { useAuthentication } from "..";
-import { authentication } from "../../services";
+import { authentication } from "~/services";
 
 
 export const useAuthLoginMutation = () => {

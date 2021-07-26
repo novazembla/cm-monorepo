@@ -1,14 +1,10 @@
 import React from 'react'
-import { Alert } from '@windmill/react-ui'
-
-import { useAuthentication } from '../../hooks'
 
 const DashBoard = () => {
-  const [apiUser] = useAuthentication();
   return (
     <>
       <div className={`primary no-secondary is404`}>
-        <Alert type="warning">Lorem ipsum dolor sit {apiUser?.id}</Alert>
+        
 
         <h2>Page Dashboard</h2>
         <p>

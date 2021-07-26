@@ -1,15 +1,18 @@
 import React, { useState } from "react";
+import { Heading, Text, Button, Flex } from "@chakra-ui/react";
 import * as yup from "yup";
 import { Link, useHistory } from "react-router-dom";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
-import { Button } from "@windmill/react-ui";
 
-import { ValidationSchemaLogin } from "../../validation";
-import { useAuthLoginMutation } from "../../hooks/mutations";
-import { ErrorMessage, FieldInput } from "../../components/forms";
-import { LanguageButtons } from "../../components/ui";
+import { ValidationSchemaLogin } from "~/validation";
+import { useAuthLoginMutation } from "~/hooks/mutations";
+import { ErrorMessage, FieldInput } from "~/components/forms";
+import {
+  AuthenticationPage,
+  AuthenticationFormContainer,
+} from "~/components/ui";
 
 const Login = () => {
   const [firstMutation, firstMutationResults] = useAuthLoginMutation();
@@ -21,12 +24,15 @@ const Login = () => {
   const formMethods = useForm({
     resolver: yupResolver(ValidationSchemaLogin),
   });
-  const { handleSubmit } = formMethods;
 
-  // TODO: how to block entire form on submission ... 
-  const disableForm = firstMutationResults.loading;
+  const {
+    handleSubmit,
+    formState: { isSubmitting },
+  } = formMethods;
 
-  const onSubmit = async (data: yup.InferType<typeof ValidationSchemaLogin>) => {
+  const onSubmit = async (
+    data: yup.InferType<typeof ValidationSchemaLogin>
+  ) => {
     setIsFormError(false);
     try {
       await firstMutation(data.email, data.password);
@@ -38,21 +44,27 @@ const Login = () => {
 
   // t("page.login.error", "The login failed. Please try again.")
   return (
-    <>
-      <div className="w-full max-w-sm mx-auto overflow-hidden bg-white filter drop-shadow-md rounded-lg shadow-md dark:bg-gray-800">
-        <div className="px-6 py-4">
-          <FormProvider {...formMethods}>
-            <form
-              noValidate
-              onSubmit={handleSubmit(onSubmit)}
-              onChange={() => {
-                setIsFormError(false);
-              }}
-            >
-              <fieldset disabled={disableForm}>
-              <h2 className="text-3xl font-bold text-center text-gray-700 dark:text-white">
-                {t("page.login.title", "Login")}
-              </h2>
+    <AuthenticationPage>
+      <Heading as="h2" mb="4">
+        {t("page.login.title", "Login")}
+      </Heading>
+      <Text>
+        {t(
+          "page.login.prompt",
+          "Please login to access the administration tool"
+        )}
+      </Text>
+
+      <AuthenticationFormContainer>
+        <FormProvider {...formMethods}>
+          <form
+            noValidate
+            onSubmit={handleSubmit(onSubmit)}
+            onChange={() => {
+              setIsFormError(false);
+            }}
+          >
+            <fieldset>
               {isFormError && <ErrorMessage error="page.login.error" />}
               <div className="w-full mt-3">
                 <FieldInput
@@ -64,6 +76,7 @@ const Login = () => {
                     "Email Address"
                   )}
                   data={{
+                    required: true,
                     placeholder: t(
                       "page.login.form_field_login_placeholder",
                       "Please enter your email address"
@@ -81,6 +94,7 @@ const Login = () => {
                     "Your password"
                   )}
                   data={{
+                    required: true,
                     placeholder: t(
                       "page.login.form_field_password_placeholder",
                       "Please enter your password"
@@ -91,33 +105,36 @@ const Login = () => {
               <div className="flex items-center justify-between mt-4">
                 <Link
                   className="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline"
-                  to="/forgot-password"
-                >
-                  {t(
-                    "page.login.forgot_your_password",
-                    "Forgot your password?"
-                  )}
-                  (xxx URL TABINDEX?)
-                </Link>
-                <Link
-                  className="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline"
                   to="/register"
                 >
                   {t("page.login.register", "Register as new user?")}
                   (xxx URL TABINDEX?)
                 </Link>
-
-                <Button type="submit">
-                  {t("page.login.form_button_login", "Login")}
-                </Button>
+                <Flex justify="space-between" alignItems="center">
+                  <Link
+                    className="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline"
+                    to="/forgot-password"
+                  >
+                    {t(
+                      "page.login.forgot_your_password",
+                      "Forgot your password?"
+                    )}
+                    (xxx URL TABINDEX?)
+                  </Link>
+                  <Button
+                    isLoading={isSubmitting}
+                    type="submit"
+                    colorScheme="pink"
+                  >
+                    {t("page.login.form_button_login", "Login")}
+                  </Button>
+                </Flex>
               </div>
-              </fieldset>
-            </form>
-          </FormProvider>
-        </div>
-      </div>
-      <LanguageButtons />
-    </>
+            </fieldset>
+          </form>
+        </FormProvider>
+      </AuthenticationFormContainer>
+    </AuthenticationPage>
   );
 };
 export default Login;

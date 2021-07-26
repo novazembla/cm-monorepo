@@ -11,7 +11,7 @@ import { onError } from "@apollo/client/link/error";
 import { RetryLink } from "@apollo/client/link/retry";
 
 import { authentication, user } from ".";
-import { CultureMapSettings } from "../context";
+import { CultureMapSettings } from "~/context";
 
 export let client: ApolloClient<any> | null = null;
 
@@ -52,19 +52,19 @@ const retryWithRefreshTokenLink = onError(
                 })//     // TODO: is there a way to get a typed query here?
                 .then(({ data }: any) => {
                   if (
-                    data?.userRefresh?.tokens?.access &&
-                    data?.userRefresh?.tokens?.refresh
+                    data?.authRefresh?.tokens?.access &&
+                    data?.authRefresh?.tokens?.refresh
                   ) {
                     const payload = authentication.getTokenPayload(
-                      data.userRefresh.tokens.access
+                      data.authRefresh.tokens.access
                     );
 
                     if (payload) {
                       authentication.setAuthToken(
-                        data.userRefresh.tokens.access
+                        data.authRefresh.tokens.access
                       );
                       authentication.setRefreshCookie(
-                        data.userRefresh.tokens.refresh
+                        data.authRefresh.tokens.refresh
                       );
 
                       user.setRefreshing(false);
@@ -73,14 +73,14 @@ const retryWithRefreshTokenLink = onError(
                       operation.setContext(({ headers = {} }) => ({
                         headers: {
                           ...headers,
-                          authorization: `Bearer ${data.userRefresh.tokens.access.token}`,
+                          authorization: `Bearer ${data.authRefresh.tokens.access.token}`,
                         },
                       }));
                     } else {
-                      throw new Error("Unable to fetch new access token");
+                      throw new Error("Unable to fetch new access token (1)");
                     }
                   } else {
-                    throw new Error("Unable to fetch new access token");
+                    throw new Error("Unable to fetch new access token (2)");
                   }
                 })
                 .then(() => {
@@ -93,7 +93,7 @@ const retryWithRefreshTokenLink = onError(
                   forward(operation).subscribe(subscriber);
                 })
                 .catch((error) => {
-
+                  console.error(error)
                   user.logout();
                   
                   observer.error(error);

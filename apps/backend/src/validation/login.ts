@@ -7,11 +7,11 @@ yup.setLocale(translations);
 const schema = yup.object().shape({
   email: yup
     .string()
+    .email()
     .required(
       // t("validation.page.login.emailRequiredError", "Please enter your email address")
       "validation.page.login.emailRequiredError"
-    )
-    .email(),
+    ),
   password: yup
     .string()
     .required(
