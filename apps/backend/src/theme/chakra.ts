@@ -1,4 +1,30 @@
-export const chakraTheme = {
+import {
+  extendTheme,
+  withDefaultVariant,
+  withDefaultSize,
+  withDefaultColorScheme
+} from "@chakra-ui/react";
+import { createBreakpoints } from "@chakra-ui/theme-tools"
+import { components } from "./components";
+
+// https://smart-swatch.netlify.app/#b248bb
+
+const themeConfig = {
+  components,
+  breakpoints: createBreakpoints({
+    // 16px default font size * ...em
+    mn: "0em", // 0px - aka "Mobile Narrow"
+    sm: "22em", // ~360px < Chakra requirement don't use
+    m: "22em", // ~360px - aka "Mobile"    
+    md: "30em", // ~480px < Chakra requirement don't use
+    mw: "30em", // ~480px - aka "Mobile wide"
+    lg: "45em", // 720px < Chakra requirement don't use
+    t: "45em", // 720px - aka "Tablet"
+    xl: "55em", // 880px < Chakra requirement don't use
+    tw: "55em", // 880px - aka "Tablet Wide"
+    d: "75em", // 1200px - aka "Desktop"
+    s: "106em", // ~1700px - aka "Screen"
+  }),
   styles: {
     global: {
       "html, body": {
@@ -18,19 +44,80 @@ export const chakraTheme = {
         bgAttachment: "fixed",
       },
       a: {
-        color: "teal.500",
+        transitionProperty: "common",
+        transitionDuration: "fast",
+        transitionTimingFunction: "ease-out",
+        cursor: "pointer",
+        textDecoration: "none",
+        outline: "none",
+        color: "wine.400",
+        _hover: {
+          color: "wine.600"
+        },
+        _focus: {
+          "boxShadow": "outline"
+        }
       },
-    },
-    
-  },
+      "p a": {
+        textDecoration: "underline"
+      },
+      "p": {
+        mb: "0.6em",
+        _last: {
+          mb: "0"
+        }
 
+      }
+    },
+  },
+  colors: {
+    wine: {
+      50: '#fde9ff',
+      100: '#ebc6ed',
+      200: '#d9a1de',
+      300: '#c97dd0',
+      400: '#b958c1',
+      500: '#9f3ea7',
+      600: '#7d2f83',
+      700: '#59225e',
+      800: '#37133a',
+      900: '#170418',
+    }
+  },
+  shadows: {
+    xs: "0 0 0 1px rgba(0, 0, 0, 0.05)",
+    sm: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+    base: "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)",
+    md: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+    lg: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+    xl: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+    "2xl": "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
+    outline: "0 0 0 3px rgba(255, 153, 225, 0.6)",
+    "button-wine": "0 0 0 3px rgba(178, 72, 187, 0.6)",
+    inner: "inset 0 2px 4px 0 rgba(0,0,0,0.06)",
+    none: "none",
+    "dark-lg":
+      "rgba(0, 0, 0, 0.1) 0px 0px 0px 1px, rgba(0, 0, 0, 0.2) 0px 5px 10px, rgba(0, 0, 0, 0.4) 0px 15px 40px",
+  },
+  radii: {
+    none: "0",
+    sm: "0.125rem",
+    base: "0.25rem",
+    md: "0.25rem", // 0.375rem
+    lg: "0.5rem",
+    xl: "0.75rem",
+    "2xl": "1rem",
+    "3xl": "1.5rem",
+    full: "9999px",
+  },
   layerStyles: {
     pageContainer: {
       bg: "gray.100",
       border: "1px dashed gray.200",
       borderRadius: "10px",
       borderColor: "#ff0",
-      boxShadow: '1px 1px 2px 0px rgba(0,0,0,0.10)'
+      shadow: "sm",
+      //boxShadow: '1px 1px 2px 0px rgba(0,0,0,0.10)'
     },
   },
   textStyles: {
@@ -46,8 +133,53 @@ export const chakraTheme = {
       fontWeight: "semibold",
       lineHeight: "110%",
       letterSpacing: "-1%",
-    },
+    }
   },
 };
 
+const defaultPropsForFormComponentents = (components: string[]): object => {
+  return {
+    components: components.reduce((options, key) => {
+      return {
+        ...options,
+        [key]: {
+          defaultProps: {
+            focusBorderColor: "gray.500",
+            errorBorderColor: "red.400",
+          },
+        },
+      };
+    }, {}),
+  };
+};
+
+export const chakraTheme = extendTheme(
+  themeConfig,
+
+  defaultPropsForFormComponentents([
+    "Input",
+    "Button",
+    "NumberInput",
+    "PinInput",
+  ]),
+
+  withDefaultColorScheme({
+    colorScheme: "wine",
+    components: ["Button", "Badge", "Checkbox"],
+  }),
+  withDefaultVariant({
+    variant: "solid",
+    components: ["Button","IconButton"],
+  }),
+  withDefaultVariant({
+    variant: "outline",
+    components: ["Input", "NumberInput", "PinInput"],
+  }),
+  withDefaultSize({
+    size: "md",
+    components: ["Input", "NumberInput", "PinInput","Button"],
+  })
+);
+
+console.log(chakraTheme);
 export default chakraTheme;

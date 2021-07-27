@@ -3,18 +3,23 @@ import * as yup from "yup";
 
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Button } from "@windmill/react-ui";
+
 import { Link, useHistory, useLocation } from "react-router-dom";
 
 import { ValidationSchemaPasswordReset } from "~/validation";
 
 import { useTranslation } from "react-i18next";
 
-import { ErrorMessage, FieldInput } from "~/components/forms";
-
-import { LanguageButtons } from "~/components/ui";
+import { ErrorMessage, FieldInput, FieldRow } from "~/components/forms";
 
 import { useAuthPasswordResetMutation } from "~/hooks/mutations";
+
+import { Heading, Text, Button, Flex, Box, Divider } from "@chakra-ui/react";
+
+import {
+  AuthenticationPage,
+  AuthenticationFormContainer,
+} from "~/components/ui";
 
 const useQuery = () => {
   return new URLSearchParams(useLocation().search);
@@ -24,19 +29,22 @@ const PasswordReset = () => {
   const query = useQuery();
   const token = query.get("token");
 
-  const [firstMutation, firstMutationResults] = useAuthPasswordResetMutation();
+  const [firstMutation] = useAuthPasswordResetMutation();
   const [isFormError, setIsFormError] = useState(false);
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
   const { t } = useTranslation();
 
-  const disableForm = firstMutationResults.loading;
-
   const formMethods = useForm({
     resolver: yupResolver(ValidationSchemaPasswordReset),
   });
 
-  const { handleSubmit, trigger } = formMethods;
+  const {
+    handleSubmit,
+    trigger,
+    formState: { isSubmitting },
+  } = formMethods;
+
   const history = useHistory();
   useEffect(() => {
     if (!token) {
@@ -57,26 +65,43 @@ const PasswordReset = () => {
 
   if (isFormSubmitted)
     return (
-      <div className="w-full max-w-sm mx-auto overflow-hidden bg-white filter drop-shadow-md rounded-lg shadow-md dark:bg-gray-800">
-        <div className="px-6 py-4">
-          <h2 className="text-3xl font-bold text-center text-gray-700 dark:text-white">
+      <AuthenticationPage>
+        <AuthenticationFormContainer>
+          <Box mb="6">
+            <Heading as="h2" mb="2">
             {t("page.passwordreset.thankyou", "Thank you!")}
-          </h2>
-          <p>{t("page.passwordreset.youCanNowLogin", "You can now login.")}</p>
-          <p>
-            <Button type="submit" onClick={() => history.push("/login")}>
+            </Heading>
+          </Box>
+          <Text>
+            {t("page.passwordreset.youCanNowLogin", "Your password has been reset.")}
+          </Text>
+
+          <Text>
+          <Button type="submit" onClick={() => history.push("/login")}>
               {t("page.passwordreset.button_goto_login", "Goto login")}
             </Button>
-          </p>
-        </div>
-      </div>
+          </Text>
+        </AuthenticationFormContainer>
+      </AuthenticationPage>
     );
 
-  // t("page.passwordreset.error", "The request has failed. Please try again.")
+
+  
   return (
-    <>
-      <div className="w-full max-w-sm mx-auto overflow-hidden bg-white filter drop-shadow-md rounded-lg shadow-md dark:bg-gray-800">
-        <div className="px-6 py-4">
+    <AuthenticationPage>
+      <AuthenticationFormContainer>
+        <Box mb="6">
+          <Heading as="h2" mb="2">
+          {t("page.passwordreset.title", "Reset your password?")}
+          </Heading>
+          <Text>
+          {t(
+                    "page.passwordreset.info",
+                    "Enter your new password and confirm it in the second field."
+                  )}
+          </Text>
+        </Box>
+        <Divider/>
           <FormProvider {...formMethods}>
             <form
               noValidate
@@ -86,20 +111,13 @@ const PasswordReset = () => {
                 setIsFormError(false);
               }}
             >
-              <fieldset disabled={disableForm}>
-                <h2 className="text-3xl font-bold text-center text-gray-700 dark:text-white">
-                  {t("page.passwordreset.title", "Reset your password?")}
-                </h2>
+              <fieldset>
                 {isFormError && (
+                  // t("page.passwordreset.error", "The request has failed. Please try again.")
                   <ErrorMessage error="page.passwordreset.error" />
                 )}
-                <p>
-                  {t(
-                    "page.passwordreset.info",
-                    "Enter your new password and confirm it in the second field."
-                  )}
-                </p>
-                <div className="w-full mt-3">
+   
+                <FieldRow>
                   <FieldInput
                     name="newPassword"
                     id="newPassword"
@@ -115,9 +133,9 @@ const PasswordReset = () => {
                       ),
                     }}
                   />
-                </div>
+                </FieldRow>
 
-                <div className="w-full mt-3">
+                <FieldRow>
                   <FieldInput
                     name="confirmPassword"
                     id="confirmPassword"
@@ -133,30 +151,32 @@ const PasswordReset = () => {
                       ),
                     }}
                   />
-                </div>
-
-                <div className="flex items-center justify-between mt-4">
-                  <Link
-                    className="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline"
-                    to="/"
-                  >
+                </FieldRow>
+                <Divider/>
+                <FieldRow>
+                <Flex justify="space-between" alignItems="center" w="100%">
+                  <Link to="/login">
                     {t("page.passwordreset.back_to_login", "Back to login")}
+                    {/* (TODO: TABINDEX?) */}
                   </Link>
-
-                  <Button type="submit">
+                  <Button
+                    isLoading={isSubmitting}
+                    type="submit"
+                    colorScheme="wine"
+                  >
                     {t(
                       "page.passwordreset.form_button_submit",
                       "Change password"
                     )}
                   </Button>
-                </div>
+                </Flex>
+              </FieldRow>
               </fieldset>
             </form>
           </FormProvider>
-        </div>
-      </div>
-      <LanguageButtons />
-    </>
+        
+      </AuthenticationFormContainer>
+      </AuthenticationPage>
   );
 };
 export default PasswordReset;

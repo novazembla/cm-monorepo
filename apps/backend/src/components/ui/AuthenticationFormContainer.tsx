@@ -2,9 +2,13 @@ import React from "react";
 import { Box } from "@chakra-ui/react";
 
 export const AuthenticationFormContainer = ({
-  children
+  children,
 }: {
-  children?: React.ReactNode;  
+  children?: React.ReactNode;
 }) => {
-  return <Box layerStyle="pageContainer" padding="4" mt="4">{children}</Box>;
-}
+  return (
+    <Box layerStyle="pageContainer" padding={{ base: 4, t: 5, d: 7 }} mt="4">
+      {children}
+    </Box>
+  );
+};

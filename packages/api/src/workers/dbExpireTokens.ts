@@ -1,7 +1,9 @@
 import { parentPort } from "worker_threads";
-
+import { prismaDisconnect } from "../db";
 import { daoTokenDeleteExpired } from "../dao/token";
 import { logger } from "../services/serviceLogging";
+
+// ALWAY REMEMBER TO CLOSE YOU DB CONNECTION !!!
 
 // https://github.com/breejs/bree#long-running-jobs
 // Or use https://threads.js.org/usage for a queing experience .. .
@@ -15,16 +17,20 @@ import { logger } from "../services/serviceLogging";
 //     if (message === "cancel") isCancelled = true;
 //   });
 
-(async () => {
+const doChores = async () => {
   try {
     const count = await daoTokenDeleteExpired();
-
-    logger.debug(`[WORKER:Db]: Deleted ${count} expired token`);
+    logger.debug(`[WORKER:DbExpireTokens]: Deleted ${count} expired token`);
+    await prismaDisconnect();
   } catch (Err) {
     logger.warn(
-      `[WORKER:Db]: Failed to run worker. ${Err.name} ${Err.message}`
+      `[WORKER:DbExpireTokens]: Failed to run worker. ${Err.name} ${Err.message}`
     );
   }
+};
+
+(async () => {
+  await doChores();
 
   // signal to parent that the job is done
   if (parentPort) parentPort.postMessage("done");

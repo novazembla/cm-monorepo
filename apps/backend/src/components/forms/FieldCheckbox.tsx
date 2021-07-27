@@ -1,23 +1,26 @@
 import React from "react";
-// import { /* Controller */, useFormContext } from 'react-hook-form'
 
-type ComponentProps = {
-  name: string;
-  label: string;
-  color: string;
-  disabled: boolean;
-  defaultValue: boolean;
-};
+import { Checkbox } from "@chakra-ui/react";
 
-const ReconomeFieldCheckboxRow = ({
+// import { useFormContext } from 'react-hook-form'
+
+export const FieldCheckbox = ({
   name,
   label,
-  color,
-  disabled,
+  disabled = false,
   defaultValue = false,
-}: ComponentProps) => {
+}: {
+  name: string;
+  label: string;
+  disabled?: boolean;
+  defaultValue?: boolean;
+}) => {
   // const { control } = useFormContext();
-  return <></>;
+
+
+  return <Checkbox name={name} isDisabled={disabled} defaultChecked={defaultValue} isRequired>
+  {label}
+</Checkbox>;
   // return <FormControlLabel
   //   control={<Controller
   //     render={({ onChange, onBlur, value }) => (
@@ -42,4 +45,4 @@ const ReconomeFieldCheckboxRow = ({
   // />
 };
 
-export default ReconomeFieldCheckboxRow;
+export default FieldCheckbox;

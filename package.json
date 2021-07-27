@@ -104,7 +104,6 @@
     "plugins/*"
   ],
   "dependencies": {
-    "@windmill/react-ui": "^0.6.0",
     "dotenv": "^10.0.0"
   },
   "prisma": {

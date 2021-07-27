@@ -1,16 +1,18 @@
 import Prisma from "@prisma/client";
 
 import config from "../config";
+import { logger } from "../services/serviceLogging";
 
 const { PrismaClient } = Prisma;
 
-declare let global: {
-  __PRISMA_CLIENT__: Prisma.PrismaClient | undefined;
+declare const global: {
+  prisma: Prisma.PrismaClient | undefined;
 };
 
 let instance: Prisma.PrismaClient | undefined;
 
 const createNewInstance = function (): Prisma.PrismaClient {
+  logger.info("Creating new prisma client instance");
   return new PrismaClient({
     datasources: {
       db: {
@@ -24,31 +26,27 @@ export const setPrismaClient = function (pClient: Prisma.PrismaClient) {
   if (process.env.NODE_ENV === "production") {
     instance = pClient;
   } else {
-    global.__PRISMA_CLIENT__ = pClient;
+    global.prisma = pClient;
   }
 };
 
 export const getPrismaClient = function (): Prisma.PrismaClient {
-  if (process.env.NODE_ENV === "production") {
-    if (!instance) {
-      instance = createNewInstance();
-    }
-    return instance;
-    // eslint-disable-next-line no-else-return
-  } else {
-    // PrismaClient is attached to the `global` object in development to prevent
-    // exhausting your database connection limit.
-    //
-    // Learn more:
-    // https://pris.ly/d/help/next-js-best-practices
-    if (!global.__PRISMA_CLIENT__) {
-      global.__PRISMA_CLIENT__ = createNewInstance();
-    }
-    return global.__PRISMA_CLIENT__;
-  }
+  instance = global.prisma || createNewInstance();
+
+  if (process.env.NODE_ENV === "development" && !global.prisma)
+    global.prisma = instance;
+
+  return instance;
+};
+
+export const prismaDisconnect = async function () {
+  if (instance instanceof PrismaClient) await instance.$disconnect();
+  instance = undefined;
+  global.prisma = undefined;
 };
 
 export default {
+  prismaDisconnect,
   setPrismaClient,
   getPrismaClient,
 };

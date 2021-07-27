@@ -1,24 +1,27 @@
 import React from 'react'
 import { useTranslation } from "react-i18next";
-import { Button } from "@windmill/react-ui";
+import { Button, HStack } from "@chakra-ui/react";
 
 const LanguageButtons = () => {
   const { i18n } = useTranslation();
   return (
-    <div className="fixed left-1 bottom-1">
+    <HStack position="fixed" bottom={{base:4, t:5, d:6}} left={{base:2, t:4, d:6}} spacing="2">
+
       <Button
-        className={i18n.language === "en" ? "button-toggle-active" : ""}
+        size="sm"
         onClick={() => i18n.changeLanguage("en")}
+        disabled={i18n.language === "en"}
       >
         EN
       </Button>
       <Button
-        className={i18n.language === "de" ? "button-toggle-active" : ""}
+        size="sm"
+        disabled={i18n.language === "de"}
         onClick={() => i18n.changeLanguage("de")}
       >
         DE
       </Button>
-    </div>
+    </HStack>
   )
 }
 

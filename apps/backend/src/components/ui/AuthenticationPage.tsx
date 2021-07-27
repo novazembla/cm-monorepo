@@ -6,5 +6,5 @@ export const AuthenticationPage =({
 }: {
   children?: React.ReactNode;
 }) => {
-  return <Box mt="4" textAlign="center">{children}</Box>;
+  return <Box mt="4" textAlign="center" w="100%">{children}</Box>;
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import { Provider } from "react-redux";
 import { ApolloProvider } from "@apollo/client";
-import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import { ChakraProvider } from "@chakra-ui/react";
 
 import { AppProps } from "~/types";
 
@@ -18,11 +18,11 @@ import { chakraTheme } from "~/theme";
 
 const WrapWithProviders = (pageProps: AppProps) => {
   const apolloClient = useApollo(getCulturemapSettings());
-  console.log(extendTheme(chakraTheme));
+
   return (
     <CulturemapContextProvider>
       <ApolloProvider client={apolloClient}>
-      <ChakraProvider theme={extendTheme(chakraTheme)}>
+      <ChakraProvider theme={chakraTheme}>
       <Provider store={store}>{pageProps.children}</Provider>
     </ChakraProvider>
         

@@ -6,7 +6,8 @@ type TypeErrorMessage = {
   key: string;
   values: object;
 };
-const ErrorMessage = ({
+
+export const ErrorMessage = ({
   error
 }: {
   error: TypeErrorMessage | string;  
@@ -26,7 +27,7 @@ const ErrorMessage = ({
   // make sure first character is uppder case
   message = message.charAt(0).toUpperCase() + message.slice(1);
 
-  return <FormErrorMessage>{message}</FormErrorMessage>;
+  return <FormErrorMessage mt="0.5">{message}</FormErrorMessage>;
 };
 
 export default ErrorMessage;

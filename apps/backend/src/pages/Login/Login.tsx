@@ -1,21 +1,23 @@
 import React, { useState } from "react";
-import { Heading, Text, Button, Flex } from "@chakra-ui/react";
+import { Heading, Text, Button, Flex, Box, Divider, Link } from "@chakra-ui/react";
 import * as yup from "yup";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory, Link as RouterLink } from "react-router-dom";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
 
 import { ValidationSchemaLogin } from "~/validation";
 import { useAuthLoginMutation } from "~/hooks/mutations";
-import { ErrorMessage, FieldInput } from "~/components/forms";
 import {
   AuthenticationPage,
   AuthenticationFormContainer,
 } from "~/components/ui";
+import { ErrorMessage, FieldInput, FieldRow } from "~/components/forms";
+
+import { config } from "~/config/culturemap";
 
 const Login = () => {
-  const [firstMutation, firstMutationResults] = useAuthLoginMutation();
+  const [firstMutation] = useAuthLoginMutation();
   const [isFormError, setIsFormError] = useState(false);
 
   const { t } = useTranslation();
@@ -45,17 +47,32 @@ const Login = () => {
   // t("page.login.error", "The login failed. Please try again.")
   return (
     <AuthenticationPage>
-      <Heading as="h2" mb="4">
-        {t("page.login.title", "Login")}
-      </Heading>
-      <Text>
-        {t(
-          "page.login.prompt",
-          "Please login to access the administration tool"
-        )}
-      </Text>
-
       <AuthenticationFormContainer>
+        <Box mb="6">
+          <Heading as="h2" mb="2">
+            {t("page.login.title", "Login")}
+          </Heading>
+          <Text>
+            {t(
+              "page.login.prompt",
+              "Please login to access the administration tool."
+            )}
+            {config.enableRegistration && (
+              <>
+                <br />
+                {t(
+                  "page.login.no_account_prompt",
+                  "Don't have an account?"
+                )}{" "}
+                <Link as={RouterLink} to="/register">
+                  {t("page.login.register_link", "Register as new user")}
+                  {/* (TODO TABINDEX?) */}
+                </Link>
+              </>
+            )}
+          </Text>
+        </Box>
+        <Divider/>
         <FormProvider {...formMethods}>
           <form
             noValidate
@@ -66,7 +83,7 @@ const Login = () => {
           >
             <fieldset>
               {isFormError && <ErrorMessage error="page.login.error" />}
-              <div className="w-full mt-3">
+              <FieldRow>
                 <FieldInput
                   name="email"
                   id="email"
@@ -83,8 +100,8 @@ const Login = () => {
                     ),
                   }}
                 />
-              </div>
-              <div className="w-full mt-3">
+              </FieldRow>
+              <FieldRow>
                 <FieldInput
                   name="password"
                   id="password"
@@ -101,35 +118,26 @@ const Login = () => {
                     ),
                   }}
                 />
-              </div>
-              <div className="flex items-center justify-between mt-4">
-                <Link
-                  className="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline"
-                  to="/register"
-                >
-                  {t("page.login.register", "Register as new user?")}
-                  (xxx URL TABINDEX?)
-                </Link>
-                <Flex justify="space-between" alignItems="center">
-                  <Link
-                    className="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline"
-                    to="/forgot-password"
-                  >
+              </FieldRow>
+              <Divider/>
+              <FieldRow>
+                <Flex justify="space-between" alignItems="center" w="100%">
+                  <Link as={RouterLink} to="/forgot-password">
                     {t(
                       "page.login.forgot_your_password",
                       "Forgot your password?"
                     )}
-                    (xxx URL TABINDEX?)
+                    {/* (TODO: TABINDEX?) */}
                   </Link>
                   <Button
                     isLoading={isSubmitting}
                     type="submit"
-                    colorScheme="pink"
+                    colorScheme="wine"
                   >
                     {t("page.login.form_button_login", "Login")}
                   </Button>
                 </Flex>
-              </div>
+              </FieldRow>
             </fieldset>
           </form>
         </FormProvider>

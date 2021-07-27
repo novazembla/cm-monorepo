@@ -1,1 +1,1 @@
-declare module "@windmill/react-ui/lib/defaultTheme";
+declare module "@chakra-ui/react/lib/defaultTheme";

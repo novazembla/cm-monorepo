@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import { Button } from "@windmill/react-ui";
+import { Button } from "@chakra-ui/react";
 import { useHistory, useLocation } from "react-router-dom";
 
 import { useTranslation } from "react-i18next";
@@ -46,7 +46,7 @@ const EmailConfirmation = () => {
       
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
+  // todo make better TODO: 
   if (!confirmingToken && confirmationError)
     return (
       <div className="w-full max-w-sm mx-auto overflow-hidden bg-white filter drop-shadow-md rounded-lg shadow-md dark:bg-gray-800">
