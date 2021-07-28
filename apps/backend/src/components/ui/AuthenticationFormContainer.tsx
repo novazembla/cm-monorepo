@@ -7,7 +7,7 @@ export const AuthenticationFormContainer = ({
   children?: React.ReactNode;
 }) => {
   return (
-    <Box layerStyle="pageContainer" padding={{ base: 4, t: 5, d: 7 }} mt="4">
+    <Box layerStyle="pageContainerGray" padding={{ base: 4, t: 5, d: 7 }} mt="4">
       {children}
     </Box>
   );

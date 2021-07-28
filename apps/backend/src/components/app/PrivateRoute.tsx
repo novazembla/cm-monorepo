@@ -6,7 +6,7 @@ type CompontentProps = {
   component: React.FC;
 };
 
-const PrivateRoute = (props: CompontentProps) => {
+export const PrivateRoute = (props: CompontentProps) => {
   const [, { isLoggedIn }] = useAuthentication();
   const { component: Component, ...restProps } = props;
 
@@ -28,5 +28,3 @@ const PrivateRoute = (props: CompontentProps) => {
     />
   );
 };
-
-export default PrivateRoute;

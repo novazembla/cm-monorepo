@@ -1,30 +1,30 @@
 import React from "react";
+import { Box, Grid, Divider } from "@chakra-ui/react";
 
-import Footer from "./Footer";
-import Header from "./Header";
-import Sidebar from "./Sidebar";
+import { Footer, Header, Sidebar } from ".";
 
 import { useAuthTabWideLogInOutReload } from "~/hooks";
 
 import { AppProps } from "~/types";
 
-const LayoutFull = ({ children }: AppProps) => {
+export const LayoutFull = ({ children }: AppProps) => {
   const [loginStatus] = useAuthTabWideLogInOutReload();
 
   return (
-    <div
-      className={`flex h-screen bg-gray-50 dark:bg-gray-900 ${loginStatus}`}
-    >
+    <Grid className={loginStatus} w="100%" templateColumns={{base:"1fr", tw:"300px 1fr"}} gap="4" alignItems="start">
+      <Header />
+      
       <Sidebar />
-      <div className="flex flex-col flex-1 w-full relative t-0">
-        <Header />
-        <div className="h-full overflow-y-auto">
+      
+      <Box pl={{ base: 3, tw: 4 }} pr={{ base: 3, tw: 4 }} pb={{base:3, tw:4}} mt={{base:"4.5em", tw:"6.5em"}} w="100%">
+        <Box layerStyle="pageContainerWhite">
           {children}
+          <Divider/>
           <Footer />
-        </div>
-      </div>
-    </div>
+        </Box>
+        
+      </Box>
+      
+    </Grid>
   );
 };
-
-export default LayoutFull;

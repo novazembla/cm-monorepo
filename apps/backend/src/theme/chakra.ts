@@ -32,8 +32,8 @@ const themeConfig = {
         lineHeight: "tall",
         margin: 0,
         padding: 0,
-        minHeight: "100%",
         height: "100%",
+        bg: "#b5d3ee",
       },
       "#root": {
         height: "100%",
@@ -111,13 +111,16 @@ const themeConfig = {
     full: "9999px",
   },
   layerStyles: {
-    pageContainer: {
+    pageContainerGray: {
       bg: "gray.100",
-      border: "1px dashed gray.200",
       borderRadius: "10px",
-      borderColor: "#ff0",
       shadow: "sm",
-      //boxShadow: '1px 1px 2px 0px rgba(0,0,0,0.10)'
+    },
+    pageContainerWhite: {
+      bg: "white",
+      borderRadius: "10px",
+      shadow: "md",
+      p:{ base: 4, tw: 5 },
     },
   },
   textStyles: {

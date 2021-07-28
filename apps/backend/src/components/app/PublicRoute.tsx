@@ -28,4 +28,3 @@ export const PublicRoute = (props: CompontentProps) => {
     />
   );
 };
-export default PublicRoute;

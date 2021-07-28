@@ -8,11 +8,8 @@ import AppProviders from "./AppProviders";
 
 import NotFound from "~/pages/NotFound/NotFound";
 
-import LayoutLight from "~/components/app/LayoutLight";
-import LayoutFull from "~/components/app/LayoutFull";
+import { LayoutLight, LayoutFull, PrivateRoute, PublicRoute } from "~/components/app";
 
-import PrivateRoute from "~/components/app/PrivateRoute";
-import PublicRoute from "~/components/app/PublicRoute";
 import {
   routes,
   privateRoutes,
