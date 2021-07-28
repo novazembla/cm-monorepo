@@ -1,10 +1,10 @@
 import React from "react";
-import { Checkbox, FormControl, Flex } from "@chakra-ui/react";
+import { Switch, FormControl, Flex } from "@chakra-ui/react";
 import { useFormContext } from "react-hook-form";
 
 import { FieldErrorMessage } from ".";
 
-export const FieldCheckbox = ({
+export const FieldSwitch = ({
   name,
   label,
   isRequired = false,
@@ -27,9 +27,10 @@ export const FieldCheckbox = ({
       mt="1"
       {...{ isRequired, isDisabled }}
       isInvalid={!!errors[name]?.message}
+      
     >
       <Flex alignItems="center">
-        <Checkbox
+        <Switch
           id={name}
           mt="1"
           key={`key-${name}`}
@@ -37,11 +38,9 @@ export const FieldCheckbox = ({
           {...{ isRequired, isDisabled, defaultChecked }}
           {...register(name, { required: isRequired })}
           display="flex"
-        >{label}</Checkbox>
-        
+        >{label}</Switch>
       </Flex>
       <FieldErrorMessage error={errors[name]?.message} />
     </FormControl>
   );
 };
-

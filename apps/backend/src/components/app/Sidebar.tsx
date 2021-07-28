@@ -26,6 +26,17 @@ const Sidebar = () => {
           Culture Maps
         </Link>
 
+        <div className="px-6 my-6">
+          <button
+            onClick={onButtonClick}
+            className="align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none px-4 py-2 rounded-lg text-sm text-white bg-purple-600 border border-transparent active:bg-purple-600 hover:bg-purple-700 focus:shadow-outline-purple"
+            type="button"
+            disabled={buttonDisabled}
+          >
+            Logout
+          </button>
+        </div>
+
         {apiUser && <h1 style={{textAlign:"center",marginTop:10}}>Welcome {apiUser.id}</h1>}
         <ul className="mt-6">
           <li className="relative px-6 py-3">
@@ -209,16 +220,7 @@ const Sidebar = () => {
             </button>
           </li>
         </ul>
-        <div className="px-6 my-6">
-          <button
-            onClick={onButtonClick}
-            className="align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none px-4 py-2 rounded-lg text-sm text-white bg-purple-600 border border-transparent active:bg-purple-600 hover:bg-purple-700 focus:shadow-outline-purple"
-            type="button"
-            disabled={buttonDisabled}
-          >
-            Logout
-          </button>
-        </div>
+        
       </div>
     </aside>
   );

@@ -13,6 +13,11 @@ export const components = {
     baseStyle: {
       control: {
         borderColor:"gray.500",
+
+        _disabled: {
+          bg: "gray.100",
+          borderColor: "gray.300",
+        },
       }
     }
   },
@@ -34,7 +39,7 @@ export const components = {
             borderColor: "gray.500",
           },
           _autofill: {
-            bg: "#fefefe",
+            bg: "wine.300",
           },
         },
       },
@@ -42,10 +47,20 @@ export const components = {
   },
   Link: {
     baseStyle: {
-      color: "wine.400",
+      color: "wine.600",
       _hover: {
-        color: "wine.600"
+        color: "wine.800"
       },
     },
+  },
+  Switch: {
+    baseStyle: {
+      track: {
+        bg:"gray.400",
+        _invalid: {
+          bg: "red.400",
+        }
+      }
+    }
   }
 };

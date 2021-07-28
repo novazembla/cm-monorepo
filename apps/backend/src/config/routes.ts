@@ -1,12 +1,13 @@
-import DashBoard from "~/modules/DashBoard/DashBoard";
-import Login from "~/pages/Login/Login";
-import PasswordRequest from "~/pages/ChangePassword/PasswordRequest";
-import PasswordReset from "~/pages/ChangePassword/PasswordReset";
-import Profile from "~/pages/Profile/Profile";
-import Signup from "~/pages/Signup/Signup";
-import EmailConfirmation from "~/pages/EmailConfirmation/EmailConfirmation";
-
+import { lazy } from "react";
 import { config } from "./culturemap";
+
+const DashBoard = lazy(() => import("~/modules/DashBoard/DashBoard"));
+const Login = lazy(() => import("~/pages/Login/Login"));
+const PasswordRequest = lazy(() => import("~/pages/ChangePassword/PasswordRequest"));
+const PasswordReset = lazy(() => import("~/pages/ChangePassword/PasswordReset"));
+const Profile = lazy(() => import("~/pages/Profile/Profile"));
+const Signup = lazy(() => import("~/pages/Signup/Signup"));
+const EmailConfirmation = lazy(() => import("~/pages/EmailConfirmation/EmailConfirmation"));
 
 export type RouteParams = {
   key: string;

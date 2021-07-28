@@ -20,7 +20,6 @@ let refreshTimeoutId: ReturnType<typeof setTimeout>;
 
 // TODO: xxx is the autorefresh really needed? Or is it good enough to rely on the refresh by use of the API? 
 const refreshToken = () => {
-  console.log('triggered auto user refresh');
   if (client && !isRefreshing() && getRefreshCookie()) {
     setRefreshing(true);
     client.mutate({
@@ -28,7 +27,6 @@ const refreshToken = () => {
     })
     // TODO: is there a way to get a typed query here?
     .then(({ data }: any) => {
-      console.log(data);
       if (
         data?.authRefresh?.tokens?.access &&
         data?.authRefresh?.tokens?.refresh
@@ -68,7 +66,6 @@ const setRefreshing = (status: boolean) =>
 const isRefreshing = () => store.getState().user.refreshing;
 
 const login = (u: ApiUser) => {
-  console.log("login user");
   setRefreshing(false);
   setTabWideAccessStatus("logged-in");
 
@@ -84,7 +81,6 @@ const login = (u: ApiUser) => {
 };
 
 const logout = () => {
-  console.log("logout user");
   setRefreshing(false);
 
   if (client) client.clearStore();

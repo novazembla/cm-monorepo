@@ -4,11 +4,11 @@ import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Link } from "react-router-dom";
 
-import { ValidationSchemaPasswordRequest } from "~/validation";
+import { ValidationSchemaPasswordRequest, yupFieldIsRequired } from "~/validation";
 
 import { useTranslation } from "react-i18next";
 
-import { ErrorMessage, FieldInput, FieldRow } from "~/components/forms";
+import { TextErrorMessage, FieldInput, FieldRow } from "~/components/forms";
 
 import { useAuthPasswordRequestMutation } from "~/hooks/mutations";
 
@@ -27,6 +27,7 @@ const PasswordRequest = () => {
   const { t } = useTranslation();
 
   const formMethods = useForm({
+    'mode':'onTouched',
     resolver: yupResolver(ValidationSchemaPasswordRequest),
   });
   const {
@@ -92,7 +93,7 @@ const PasswordRequest = () => {
             <fieldset>
               {isFormError && (
                 //  t("page.passwordrequest.error", "The reset request has failed. Please try again.")
-                <ErrorMessage error="page.passwordrequest.error" />
+                <TextErrorMessage error="page.passwordrequest.error" />
               )}
 
               <FieldRow>
@@ -104,6 +105,7 @@ const PasswordRequest = () => {
                     "page.passwordrequest.form_field_email_label",
                     "Email Address"
                   )}
+                  isRequired={yupFieldIsRequired("email",ValidationSchemaPasswordRequest)}
                   data={{
                     placeholder: t(
                       "page.passwordrequest.form_field_email_placeholder",

@@ -50,9 +50,9 @@ const themeConfig = {
         cursor: "pointer",
         textDecoration: "none",
         outline: "none",
-        color: "wine.400",
+        color: "wine.600",
         _hover: {
-          color: "wine.600"
+          color: "wine.800"
         },
         _focus: {
           "boxShadow": "outline"
@@ -165,7 +165,7 @@ export const chakraTheme = extendTheme(
 
   withDefaultColorScheme({
     colorScheme: "wine",
-    components: ["Button", "Badge", "Checkbox"],
+    components: ["Button", "Badge", "Checkbox", "Switch"],
   }),
   withDefaultVariant({
     variant: "solid",

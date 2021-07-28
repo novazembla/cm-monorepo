@@ -1,13 +1,13 @@
 import React from "react";
-import { FormErrorMessage } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
+import { Text } from "@chakra-ui/react";
 
 type TypeErrorMessage = {
   key: string;
   values: object;
 };
 
-export const ErrorMessage = ({
+export const TextErrorMessage = ({
   error
 }: {
   error: TypeErrorMessage | string;  
@@ -27,7 +27,7 @@ export const ErrorMessage = ({
   // make sure first character is uppder case
   message = message.charAt(0).toUpperCase() + message.slice(1);
 
-  return <FormErrorMessage mt="0.5">{message}</FormErrorMessage>;
+  return <Text pb="4" color="red.400">{message}</Text>;
 };
 
-export default ErrorMessage;
+export default TextErrorMessage;

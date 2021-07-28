@@ -2,7 +2,7 @@ import React from 'react'
 import { useTranslation } from "react-i18next";
 import { Button, HStack } from "@chakra-ui/react";
 
-const LanguageButtons = () => {
+export const LanguageButtons = () => {
   const { i18n } = useTranslation();
   return (
     <HStack position="fixed" bottom={{base:4, t:5, d:6}} left={{base:2, t:4, d:6}} spacing="2">
@@ -25,4 +25,3 @@ const LanguageButtons = () => {
   )
 }
 
-export default LanguageButtons

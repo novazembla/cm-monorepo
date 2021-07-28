@@ -3,7 +3,8 @@ import React, {
   ChangeEvent,
   MouseEventHandler,
   MouseEvent,
-  useRef
+  useRef,
+  useEffect,
 } from "react";
 import { useFormContext } from "react-hook-form";
 
@@ -20,7 +21,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { HiOutlineEyeOff, HiOutlineEye } from "react-icons/hi";
 
-import ErrorMessage from "./ErrorMessage";
+import FieldErrorMessage from "./FieldErrorMessage";
 
 export interface FieldInputData {
   onChange?: ChangeEventHandler;
@@ -39,73 +40,68 @@ export interface FieldInputData {
   };
 }
 
-export interface FieldPropsData extends FieldInputData {
-  css: string;
-}
-
-type ComponentProps = {
-  data: FieldInputData;
+export const FieldInput = ({
+  data,
+  id,
+  label,
+  name,
+  type,
+  isRequired,
+  isDisabled,
+}: {
+  data?: FieldInputData;
   id: string;
+  isRequired?: boolean;
+  isDisabled?: boolean;
   label: string;
   name: string;
   type: string;
-};
-
-export const FieldInput = ({ data, id, label, name, type }: ComponentProps) => {
+}) => {
   const fieldRef = useRef<HTMLInputElement | null>(null);
   const [revealFlag, setTevealFlag] = useBoolean();
   const { t } = useTranslation();
 
   const {
-    formState: { errors, dirtyFields },
+    formState: { errors },
     register,
-    trigger,
+    setValue,
   } = useFormContext();
 
-  let fieldProps: FieldPropsData = {
+  let fieldProps: FieldInputData = {
     key: `key-${id}`,
     name: name,
-    type: type,
-    css: "",
+    type: type
   };
 
-  fieldProps.rows = data.rows ?? undefined;
+  fieldProps.rows = data?.rows ?? undefined;
 
-  fieldProps.required = data.required ?? undefined;
+  fieldProps.defaultValue = data?.defaultValue ?? undefined;
 
-  fieldProps.defaultValue = data.defaultValue ?? undefined;
+  fieldProps.className = data?.className ?? undefined;
 
-  fieldProps.className = data.className ?? undefined;
-
-  fieldProps.placeholder = data.placeholder ?? undefined;
+  fieldProps.placeholder = data?.placeholder ?? undefined;
 
   if (errors[name]?.message) fieldProps.valid = undefined;
 
   const onChangeHandler: ChangeEventHandler = (
     event: ChangeEvent<HTMLInputElement>
   ) => {
-    data.onChange && data.onChange.call(null, event);
+    data?.onChange && data?.onChange.call(null, event);
 
-    if (data.autoResize) {
+    if (data?.autoResize) {
       (event.target as HTMLInputElement).style.height = "";
       (event.target as HTMLInputElement).style.height =
         Math.max(
-          data.autoResize ? data.autoResize.min : 0,
+          data?.autoResize ? data?.autoResize.min : 0,
           Math.min(
-            data.autoResize ? data.autoResize.min : 1000,
+            data?.autoResize ? data?.autoResize.min : 1000,
             (event.target as HTMLInputElement).scrollHeight
           )
         ) + "px";
     }
-
-    dirtyFields[name] && trigger(name);
   };
-
-  fieldProps.onChange = onChangeHandler;
-
-  fieldProps.type = revealFlag ? "text" : fieldProps.type;
-
   
+  fieldProps.type = revealFlag ? "text" : fieldProps.type;
 
   const visibilityClickEvent: MouseEventHandler<HTMLButtonElement> = (
     event: MouseEvent
@@ -113,14 +109,26 @@ export const FieldInput = ({ data, id, label, name, type }: ComponentProps) => {
     setTevealFlag.toggle();
     fieldRef?.current?.focus();
   };
+  
+  const { ref, onBlur, onChange } = register(id, {required:isRequired});
 
-
-  const { ref, ...rest} = register(id);
-
-  let input = <Input {...rest}  {...fieldProps} ref={(e: HTMLInputElement) => {
+  let input = <Input name={name} onBlur={onBlur} onChange={(event) => {onChange(event);onChangeHandler(event);}} {...fieldProps} ref={(e: HTMLInputElement) => {
     ref(e)
     fieldRef.current = e;// you can still assign to ref
   }} />;
+
+  useEffect(() => {
+    let interval = setInterval(() => {
+      if (fieldRef.current && fieldRef.current.value) {
+        setValue(name, fieldRef.current.value);
+        clearInterval(interval)
+      }
+    }, 100)
+
+    return () => {
+      clearInterval(interval);
+    }
+  })
 
   if (type === "password") {
     input = (
@@ -129,7 +137,7 @@ export const FieldInput = ({ data, id, label, name, type }: ComponentProps) => {
         <InputRightElement width="2.5rem">
           <IconButton
             border="1px"
-            borderColor="gray.400"
+            borderColor="gray.300"
             colorScheme="gray"
             color="gray.800"
             aria-label={
@@ -151,20 +159,17 @@ export const FieldInput = ({ data, id, label, name, type }: ComponentProps) => {
     );
   }
 
-  console.log(errors, dirtyFields);
-
-  // xxx first change shold trigger validation ...
   return (
     <FormControl
       id={id}
       isInvalid={errors[name]?.message}
-      isRequired={fieldProps.required}
+      {...{isRequired, isDisabled}}
     >
       <FormLabel htmlFor={id} mb="0.5">
         {label}
       </FormLabel>
       {input}
-      <ErrorMessage error={errors[name]?.message}></ErrorMessage>
+      <FieldErrorMessage error={errors[name]?.message} />
     </FormControl>
   );
 };

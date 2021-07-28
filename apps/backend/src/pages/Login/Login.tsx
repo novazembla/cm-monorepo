@@ -6,13 +6,13 @@ import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
 
-import { ValidationSchemaLogin } from "~/validation";
+import { ValidationSchemaLogin, yupFieldIsRequired } from "~/validation";
 import { useAuthLoginMutation } from "~/hooks/mutations";
 import {
   AuthenticationPage,
   AuthenticationFormContainer,
 } from "~/components/ui";
-import { ErrorMessage, FieldInput, FieldRow } from "~/components/forms";
+import { TextErrorMessage, FieldInput, FieldRow } from "~/components/forms";
 
 import { config } from "~/config/culturemap";
 
@@ -24,6 +24,7 @@ const Login = () => {
   const history = useHistory();
 
   const formMethods = useForm({
+    'mode':'onTouched',
     resolver: yupResolver(ValidationSchemaLogin),
   });
 
@@ -82,7 +83,7 @@ const Login = () => {
             }}
           >
             <fieldset>
-              {isFormError && <ErrorMessage error="page.login.error" />}
+              {isFormError && <TextErrorMessage error="page.login.error" />}
               <FieldRow>
                 <FieldInput
                   name="email"
@@ -92,8 +93,8 @@ const Login = () => {
                     "page.login.form_field_login_label",
                     "Email Address"
                   )}
+                  isRequired={yupFieldIsRequired('email', ValidationSchemaLogin)}
                   data={{
-                    required: true,
                     placeholder: t(
                       "page.login.form_field_login_placeholder",
                       "Please enter your email address"
@@ -110,8 +111,8 @@ const Login = () => {
                     "page.login.form_field_password_label",
                     "Your password"
                   )}
+                  isRequired={yupFieldIsRequired('password', ValidationSchemaLogin)}
                   data={{
-                    required: true,
                     placeholder: t(
                       "page.login.form_field_password_placeholder",
                       "Please enter your password"

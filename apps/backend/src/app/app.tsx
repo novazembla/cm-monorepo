@@ -1,4 +1,6 @@
+import React, { Suspense } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { Flex } from "@chakra-ui/react"
 
 import "./App.scss";
 
@@ -11,11 +13,21 @@ import LayoutFull from "~/components/app/LayoutFull";
 
 import PrivateRoute from "~/components/app/PrivateRoute";
 import PublicRoute from "~/components/app/PublicRoute";
-import { routes, privateRoutes, publicOnlyRoutes, getPrivateRoutesPathsArray, getPublicOnlyRoutesPathsArray, getRoutesPathsArray } from "~/config/routes";
+import {
+  routes,
+  privateRoutes,
+  publicOnlyRoutes,
+  getPrivateRoutesPathsArray,
+  getPublicOnlyRoutesPathsArray,
+  getRoutesPathsArray,
+} from "~/config/routes";
 
+
+import { PageLoading } from "~/components/ui";
 
 const App = () => {
-  return <AppProviders>
+  return (
+    <AppProviders>
       <span
         className="sr-only"
         role="status"
@@ -24,48 +36,52 @@ const App = () => {
       >
         Navigated to app/dashboard page.
       </span>
-      <BrowserRouter>
-        <Switch>
-          <Route exact path={getRoutesPathsArray()}>
-            <LayoutLight>
-              <Switch>
-                {routes.map((routeProps) => (
-                  <Route {...routeProps} />
-                ))}
-              </Switch>
-            </LayoutLight>
-          </Route>
+      
+      <Suspense fallback={<Flex w="100" h="100%" justify="center" alignItems="center"><PageLoading/></Flex>}>
+        <BrowserRouter>
+          <Switch>
+            <Route exact path={getRoutesPathsArray()}>
+              <LayoutLight>
+                <Switch>
+                  {routes.map((routeProps) => (
+                    <Route {...routeProps} />
+                  ))}
+                </Switch>
+              </LayoutLight>
+            </Route>
 
-          <Route exact path={getPrivateRoutesPathsArray()}>
-            <LayoutFull>
-              <Switch>
-                {privateRoutes.map((privateRouteProps) => (
-                  <PrivateRoute {...privateRouteProps} />
-                ))}
-              </Switch>
-            </LayoutFull>
-          </Route>
-        
-          <Route exact path={getPublicOnlyRoutesPathsArray()}>
-            <LayoutLight>
-              <Switch>
-                {publicOnlyRoutes.map((publicRouteProps) => (
-                  <PublicRoute {...publicRouteProps} />
-                ))}
-              </Switch>
-            </LayoutLight>
-          </Route>
+            <Route exact path={getPrivateRoutesPathsArray()}>
+              <LayoutFull>
+                <Switch>
+                  {privateRoutes.map((privateRouteProps) => (
+                    <PrivateRoute {...privateRouteProps} />
+                  ))}
+                </Switch>
+              </LayoutFull>
+            </Route>
 
-          <Route path="*">
-            <LayoutLight>
-              <Switch>
-                <Route component={NotFound} />
-              </Switch>
-            </LayoutLight>
-          </Route>
-        </Switch>
-      </BrowserRouter>
-    </AppProviders>;
+            <Route exact path={getPublicOnlyRoutesPathsArray()}>
+              <LayoutLight>
+                <Switch>
+                  {publicOnlyRoutes.map((publicRouteProps) => (
+                    <PublicRoute {...publicRouteProps} />
+                  ))}
+                </Switch>
+              </LayoutLight>
+            </Route>
+
+            <Route path="*">
+              <LayoutLight>
+                <Switch>
+                  <Route component={NotFound} />
+                </Switch>
+              </LayoutLight>
+            </Route>
+          </Switch>
+        </BrowserRouter>
+      </Suspense>
+    </AppProviders>
+  );
 };
 
 export default App;

@@ -6,11 +6,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import { Link, useHistory, useLocation } from "react-router-dom";
 
-import { ValidationSchemaPasswordReset } from "~/validation";
+import { ValidationSchemaPasswordReset, yupFieldIsRequired } from "~/validation";
 
 import { useTranslation } from "react-i18next";
 
-import { ErrorMessage, FieldInput, FieldRow } from "~/components/forms";
+import { TextErrorMessage, FieldInput, FieldRow } from "~/components/forms";
 
 import { useAuthPasswordResetMutation } from "~/hooks/mutations";
 
@@ -36,6 +36,7 @@ const PasswordReset = () => {
   const { t } = useTranslation();
 
   const formMethods = useForm({
+    'mode':'onTouched',
     resolver: yupResolver(ValidationSchemaPasswordReset),
   });
 
@@ -114,7 +115,7 @@ const PasswordReset = () => {
               <fieldset>
                 {isFormError && (
                   // t("page.passwordreset.error", "The request has failed. Please try again.")
-                  <ErrorMessage error="page.passwordreset.error" />
+                  <TextErrorMessage error="page.passwordreset.error" />
                 )}
    
                 <FieldRow>
@@ -126,6 +127,7 @@ const PasswordReset = () => {
                       "page.passwordreset.form_field_password_label",
                       "Password"
                     )}
+                    isRequired={yupFieldIsRequired("newPassword",ValidationSchemaPasswordReset)}
                     data={{
                       placeholder: t(
                         "page.passwordreset.form_field_password_placeholder",
@@ -144,6 +146,7 @@ const PasswordReset = () => {
                       "page.passwordreset.form_field_password_confirmation_label",
                       "Password confirmation"
                     )}
+                    isRequired={yupFieldIsRequired("confirmPassword",ValidationSchemaPasswordReset)}
                     data={{
                       placeholder: t(
                         "page.passwordreset.form_field_password_confirm_placeholder",

@@ -21,7 +21,6 @@ const userSlice = createSlice({
       state,
       action: PayloadAction<ApiUser>
     ) {
-      console.log("Redux userLogin Action");
       state.authenticated = true;
       state.apiUser = action.payload;
     },
