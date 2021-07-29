@@ -9,7 +9,7 @@ export const Footer = ({ type = "full" }: { type?: string }) => {
 
   return (
     <Box textAlign="center">
-      <Link href={`mailto:${settings.contactEmail}`} color={type === "light"?"wine.700":undefined}>
+      <Link href={`mailto:${settings.contactEmail}`} color={type === "light"?"wine.700":"wine.700"}>
         {t("footer.contactLink.title", "Contact")}
       </Link>
     </Box>

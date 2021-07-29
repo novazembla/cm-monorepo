@@ -1,4 +1,4 @@
-import React from "react";
+import React, {MouseEventHandler} from "react";
 import { HiMenu, HiOutlineHome, HiOutlineUsers, HiOutlineMap, HiOutlineLocationMarker } from "react-icons/hi";
 import { RiCalendarEventLine } from "react-icons/ri";
 import { IoSettingsOutline } from "react-icons/io5";
@@ -20,17 +20,19 @@ const NavItem = ({
   path,
   exact,
   icon,
+  onClick,
 }: {
   title: string;
   path: string;
   exact: boolean;
   icon: any;
+  onClick: MouseEventHandler;
 }) => {
   return (
     <Box _first={{borderTop:"1px solid ", borderColor:"gray.200"}}>
       <Link
         as={NavLink}
-        {...exact}
+        exact={exact}
         to={path}
         key={path}
         display="flex"
@@ -58,6 +60,8 @@ const NavItem = ({
             color: "wine.600"
           }
         }}
+
+        onClick={onClick}
       >
         <Icon as={icon} mr="2" />
         {title}
@@ -114,6 +118,7 @@ export const Sidebar = () => {
     }
     
   ];
+
   return (
     <>
       {menuState && (
@@ -174,7 +179,7 @@ export const Sidebar = () => {
           w={{ base: "100%", tw: "300px" }}
         >
           {mainNavLinks.map((link) => (
-            <NavItem key={link.path} {...link} />
+            <NavItem key={link.path} {...link} onClick={onToggle} />
           ))}
 
           <Box mt="8">

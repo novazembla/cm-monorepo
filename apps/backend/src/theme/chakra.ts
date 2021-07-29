@@ -117,12 +117,12 @@ const themeConfig = {
   layerStyles: {
     pageContainerGray: {
       bg: "gray.100",
-      borderRadius: "10px",
+      borderRadius: "lg",
       shadow: "sm",
     },
     pageContainerWhite: {
       bg: "white",
-      borderRadius: "10px",
+      borderRadius: "lg",
       shadow: "md",
       p:{ base: 4, tw: 5 },
     },

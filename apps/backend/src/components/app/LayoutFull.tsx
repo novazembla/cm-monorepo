@@ -16,13 +16,12 @@ export const LayoutFull = ({ children }: AppProps) => {
       
       <Sidebar />
       
-      <Box pl={{ base: 3, tw: 4 }} pr={{ base: 3, tw: 4 }} pb={{base:3, tw:4}} mt={{base:"4.5em", tw:"6.5em"}} w="100%">
-        <Box layerStyle="pageContainerWhite">
-          {children}
-          <Divider/>
-          <Footer />
+      <Box pl={{ base: 3, tw: 4 }} pr={{ base: 3, tw: 4 }} pb={{base:3, tw:4}} mt={{base:"4.5em", tw:"6.5em"}}  w="100%">
+        <Box  mb={{base:2, tw:3}}>
+        {children}
         </Box>
         
+        <Footer />
       </Box>
       
     </Grid>
