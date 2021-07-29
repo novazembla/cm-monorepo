@@ -32,6 +32,7 @@ const NavItem = ({
         as={NavLink}
         {...exact}
         to={path}
+        key={path}
         display="flex"
         alignItems="center"
         fontSize="xl"
@@ -173,7 +174,7 @@ export const Sidebar = () => {
           w={{ base: "100%", tw: "300px" }}
         >
           {mainNavLinks.map((link) => (
-            <NavItem {...link} />
+            <NavItem key={link.path} {...link} />
           ))}
 
           <Box mt="8">

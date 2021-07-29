@@ -10,6 +10,10 @@ import { components } from "./components";
 // https://smart-swatch.netlify.app/#b248bb
 
 const themeConfig = {
+  fonts: {
+    heading: "Raleway",
+    body: "Open Sans",
+  },
   components,
   breakpoints: createBreakpoints({
     // 16px default font size * ...em
