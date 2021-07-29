@@ -1,6 +1,6 @@
 import React, { Context, createContext, ReactNode } from "react";
 import merge from "deepmerge";
-import CMSettings from "~/config/culturemap";
+import { CMConfig } from "~/config";
 
 export type CultureMapSettings = {
   apiUrl?: string | undefined;
@@ -16,7 +16,7 @@ const settingsDefault: CultureMapSettings = {
 let settings: CultureMapSettings = {};
 
 try {
-  settings = merge(settingsDefault, CMSettings);
+  settings = merge(settingsDefault, CMConfig);
 } catch (Err) {
   // eslint-disable-next-line no-console
   console.error(

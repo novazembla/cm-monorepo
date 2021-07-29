@@ -1,5 +1,5 @@
 import { lazy } from "react";
-import { config } from "./culturemap";
+import { CMConfig } from ".";
 
 const DashBoard = lazy(() => import("~/modules/DashBoard/DashBoard"));
 const Login = lazy(() => import("~/pages/Login/Login"));
@@ -53,7 +53,7 @@ export const publicOnlyRoutes: RouteParams[] = [
   },
 ];
 
-if (config.enableRegistration) {
+if (CMConfig.enableRegistration) {
   publicOnlyRoutes.push({
     key: "register",
     path: "/register",

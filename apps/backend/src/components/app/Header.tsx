@@ -11,6 +11,7 @@ import {
   Link,
   Avatar,
   Box,
+  Icon,
   Menu,
   MenuButton,
   MenuList,
@@ -20,6 +21,11 @@ import {
 
 import { useAuthLogoutMutation } from "~/hooks/mutations";
 import { useAuthentication } from "~/hooks";
+
+const menuLinkStyling = {
+  bg:"#fff",
+  color:"wine.500",
+};
 
 export const Header = (/* props */) => {
   const history = useHistory();
@@ -75,7 +81,10 @@ export const Header = (/* props */) => {
           Search
         </Box>
 
-        <Menu>
+        <Menu
+          offset={[tw?-20:-20,tw?-20:-10]}
+          placement="bottom-start"
+        >
           <MenuButton>
             <Avatar
               bg="wine.500"
@@ -86,19 +95,31 @@ export const Header = (/* props */) => {
             />
           </MenuButton>
           <MenuList
-            shadow="base"
-            mt={{ base: 1.5, tw: 2.5 }}
-            mr={{ base: -1, tw: -1 }}
+            shadow="lg"
+            
+            // mt={{ base: 1.5, tw: 2.5 }}
+            // mr={{ base: -1, tw: -1 }}
             bg="white"
-            borderColor="gray.200"
+            borderRadius="lg"
+            fontSize="lg"
           >
             <MenuItem
-              icon={<CgProfile />}
+              iconSpacing="2"
+              icon={<Icon as={CgProfile} fontSize="lg"/>}
               onClick={() => history.push("/profile")}
+
+              _hover={menuLinkStyling}
+              _focus={menuLinkStyling}
             >
               {t("avatar.menu.myprofile", "My profile")}
             </MenuItem>
-            <MenuItem icon={<HiOutlineLogout />} onClick={onLogoutClick}>
+            <MenuItem
+              iconSpacing="2"
+              icon={<Icon as={HiOutlineLogout} mt="-1" fontSize="lg"/>}
+              onClick={onLogoutClick}
+              _hover={menuLinkStyling}
+              _focus={menuLinkStyling}
+            >
               {t("avatar.menu.logout", "Logout")}
             </MenuItem>
           </MenuList>

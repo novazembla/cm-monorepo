@@ -14,7 +14,7 @@ import {
 } from "~/components/ui";
 import { TextErrorMessage, FieldInput, FieldRow } from "~/components/forms";
 
-import { config } from "~/config/culturemap";
+import { CMConfig } from "~/config/culturemap";
 
 const Login = () => {
   const [firstMutation] = useAuthLoginMutation();
@@ -58,7 +58,7 @@ const Login = () => {
               "page.login.prompt",
               "Please login to access the administration tool."
             )}
-            {config.enableRegistration && (
+            {CMConfig.enableRegistration && (
               <>
                 <br />
                 {t(

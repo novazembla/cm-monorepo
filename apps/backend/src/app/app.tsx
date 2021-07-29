@@ -8,7 +8,7 @@ import AppProviders from "./AppProviders";
 
 import NotFound from "~/pages/NotFound/NotFound";
 
-import { LayoutLight, LayoutFull, PrivateRoute, PublicRoute } from "~/components/app";
+import { LayoutLight, LayoutBlank, LayoutFull, PrivateRoute, PublicRoute } from "~/components/app";
 
 import {
   routes,
@@ -68,11 +68,11 @@ const App = () => {
             </Route>
 
             <Route path="*">
-              <LayoutLight>
+              <LayoutBlank>
                 <Switch>
                   <Route component={NotFound} />
                 </Switch>
-              </LayoutLight>
+              </LayoutBlank>
             </Route>
           </Switch>
         </BrowserRouter>
