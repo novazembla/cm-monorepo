@@ -66,7 +66,7 @@ export const initializeApolloServer = (
           return new ValidationError(err?.extensions?.exception?.message);
         }
         if (err?.extensions?.code === "UNAUTHENTICATED") {
-          let errMsg = err?.extensions?.exception?.message ?? err.message;
+          const errMsg = err?.extensions?.exception?.message ?? err.message;
           logger.warn(`${msg} ${errMsg}`);
 
           return new AuthenticationError(errMsg);

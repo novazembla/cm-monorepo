@@ -30,12 +30,16 @@ const menuLinkStyling = {
 export const Header = (/* props */) => {
   const history = useHistory();
   const [logoutMutation] = useAuthLogoutMutation();
-  const [apiUser] = useAuthentication();
+  const [apiUser, {logout}] = useAuthentication();
   const { t } = useTranslation();
 
-  const onLogoutClick = () => {
+  const onLogoutClick = async () => {
     if (apiUser) {
-      logoutMutation(apiUser.id);
+      try {
+        await logoutMutation(apiUser.id);
+      } catch (err) {
+        logout();
+      }
     }
   };
 
@@ -47,20 +51,22 @@ export const Header = (/* props */) => {
   return (
     <Box
       m="0"
-      p={{ base: 3, tw: 4 }}
+      pr={{ base: 3, tw: 4 }}
+      pl={{ base: 3, tw: 4 }}
       position="fixed"
       w="100%"
       h="auto"
       top="0"
       minH="40px"
       zIndex="overlay"
+      bg="white"
+      shadow="md"
     >
       <Grid
         bg="white"
         gap={6}
-        templateColumns={{ base: "32px 1fr 32px", tw: "300px 1fr 48px" }}
+        templateColumns={{ base: "32px 1fr 32px", tw: "260px 1fr 48px" }}
         alignItems="center"
-        layerStyle="pageContainerWhite"
         p={{ base: 2, tw: 3 }}
       >
         <Box>
@@ -69,7 +75,7 @@ export const Header = (/* props */) => {
               display={showLogo}
               as={NavLink}
               exact
-              to="/"
+              to="/dashboard"
               color="black"
               textDecoration="none !important"
             >

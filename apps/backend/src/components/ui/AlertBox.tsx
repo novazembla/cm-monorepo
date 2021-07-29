@@ -15,6 +15,7 @@ import { HiOutlineCheck } from "react-icons/hi";
 export const AlertBox = ({
   status,
   title,
+  twoCol = false,
   description,
   children,
   hasClose = false,
@@ -24,6 +25,7 @@ export const AlertBox = ({
   description?: string;
   status: "warning" | "success" | "info" | "error";
   hasClose?: boolean;
+  twoCol?: boolean;
 }) => {
   const [isOpen, setIsOpen] = useState(true);
   const [tw] = useMediaQuery("(min-width: 55em)");
@@ -50,11 +52,11 @@ export const AlertBox = ({
       borderRadius="lg"
       shadow="md"      
     >
-      <Grid templateColumns={hasClose? "32px 1fr 32px":"32px 1fr"} gap="2" w="100%">
-        <Icon fontSize="2xl" as={icon} transform="translateY(+20%)">
+      <Grid templateColumns={hasClose? "32px 1fr 32px":"32px 1fr"}  alignItems={(!tw || (tw && !twoCol))?"start":"center"} gap="2" w="100%">
+        <Icon fontSize="2xl" as={icon} transform={(!tw || (tw && !twoCol))?"translateY(20%)" : undefined} >
           Your browser is outdated!
         </Icon>
-        <Box display="flex" flexDirection={tw?"row":"column"} alignItems={tw?"center":"flex-start"}>
+        <Box display="flex" flexDirection={tw && twoCol?"row":"column"} alignItems={tw && twoCol?"center":"flex-start"}>
           {title && <AlertTitle mr={2}>{title}</AlertTitle>}
           {description && <AlertDescription>
             {description}
@@ -64,7 +66,7 @@ export const AlertBox = ({
         </Box>
         {hasClose && (
           <CloseButton fontSize="md"
-            transform="translateX(+20%)"
+            transform="translateX(20%)"
             onClick={() => setIsOpen(false)}
           />
         )}

@@ -1,16 +1,24 @@
 // import { useFetch } from "~/hooks/useFetch";
 // const users = useFretch('xxx');
 
-import React from 'react'
+import { Route, Switch} from "react-router-dom";
+import { moduleRoutes, getModuleRoutesPathsArray } from "./routes";
+import { RoutePrivate } from "~/components/app";
+
+import ModulePageNotFound from "~/components/modules/ModulePageNotFound";
 
 const Users = () => {
   return (
     <>
-      <div className={`primary no-secondary is404`}>
-        <h2>Page Users</h2>
-        <p>xxx</p>
-      </div>      
+        <Switch>
+          <Route exact path={getModuleRoutesPathsArray()}>
+            <Switch>
+              {moduleRoutes.map((routeProps) => (<RoutePrivate {...routeProps} />))}
+            </Switch>
+          </Route>
+          <Route path="*" component={ModulePageNotFound} />
+        </Switch>
     </>
-  )
-}
-export default Users
+  );
+};
+export default Users;

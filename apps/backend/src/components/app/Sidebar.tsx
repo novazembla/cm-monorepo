@@ -1,5 +1,11 @@
-import React, {MouseEventHandler} from "react";
-import { HiMenu, HiOutlineHome, HiOutlineUsers, HiOutlineMap, HiOutlineLocationMarker } from "react-icons/hi";
+import React, { MouseEventHandler } from "react";
+import {
+  HiMenu,
+  HiOutlineHome,
+  HiOutlineUsers,
+  HiOutlineMap,
+  HiOutlineLocationMarker,
+} from "react-icons/hi";
 import { RiCalendarEventLine } from "react-icons/ri";
 import { IoSettingsOutline } from "react-icons/io5";
 import { MdClose } from "react-icons/md";
@@ -29,7 +35,7 @@ const NavItem = ({
   onClick: MouseEventHandler;
 }) => {
   return (
-    <Box _first={{borderTop:"1px solid ", borderColor:"gray.200"}}>
+    <Box>
       <Link
         as={NavLink}
         exact={exact}
@@ -37,30 +43,25 @@ const NavItem = ({
         key={path}
         display="flex"
         alignItems="center"
-        fontSize="xl"
+        fontSize="lg"
         color="gray.800"
-        borderBottom="1px solid"
-        borderColor="gray.200"
-        borderRadius="2"
         ml="-3px"
         pl="1"
-        py="2"
+        py="1"
         transition="all 0.3s"
         activeClassName="active"
         _hover={{
           textDecoration: "none",
           color: "wine.600",
         }}
-
         sx={{
           "&.active": {
-            color: "wine.600"
+            color: "wine.600",
           },
           "&.active .chakra-icon": {
-            color: "wine.600"
-          }
+            color: "wine.600",
+          },
         }}
-
         onClick={onClick}
       >
         <Icon as={icon} mr="2" />
@@ -72,7 +73,7 @@ const NavItem = ({
 
 export const Sidebar = () => {
   const { t } = useTranslation();
-
+  
   const [tw] = useMediaQuery("(min-width: 55em)");
 
   const menuState = tw ? false : true;
@@ -81,42 +82,41 @@ export const Sidebar = () => {
 
   const mainNavLinks = [
     {
-      title: t("nav.main.dashboard", "Dashboard"),
-      path: "/",
+      title: t("module.title.dashboard", "Dashboard"),
+      path: "/dashboard",
       exact: true,
       icon: HiOutlineHome,
     },
     {
-      title: t("nav.main.locations", "Locations"),
+      title: t("module.title.locations", "Locations"),
       path: "/locations",
       exact: false,
       icon: HiOutlineLocationMarker,
     },
     {
-      title: t("nav.main.events", "Events"),
+      title: t("module.title.events", "Events"),
       path: "/events",
       exact: false,
       icon: RiCalendarEventLine,
     },
     {
-      title: t("nav.main.tours", "Tours"),
+      title: t("module.title.tours", "Tours"),
       path: "/tours",
       exact: false,
       icon: HiOutlineMap,
     },
     {
-      title: t("nav.main.users", "Users"),
+      title: t("module.title.users", "Users"),
       path: "/users",
       exact: false,
       icon: HiOutlineUsers,
     },
     {
-      title: t("nav.main.settings", "Settings"),
+      title: t("module.title.settings", "Settings"),
       path: "/settings",
       exact: false,
       icon: IoSettingsOutline,
-    }
-    
+    },
   ];
 
   return (
@@ -127,7 +127,7 @@ export const Sidebar = () => {
           color="black"
           size="sm"
           position="fixed"
-          top="4"
+          top="4px"
           left="4"
           w="40px"
           h="40px"
@@ -145,7 +145,7 @@ export const Sidebar = () => {
       )}
       <Box
         w="100vw"
-        maxW={{ base: "100%", tw: "calc(300px + 1rem)" }}
+        maxW={{ base: "100%", tw: "calc(260px + 1rem)" }}
         className={`${menuState ? "active" : "inactive"} ${
           !isOpen || !menuState ? "closed" : "open"
         }`}
@@ -154,7 +154,7 @@ export const Sidebar = () => {
         pl={{ base: 3, tw: 4 }}
         pb={{ base: 3, tw: 4 }}
         position="sticky"
-        top="0"
+        top={{ base: "48px", tw: "72px"}}
         sx={{
           "&.active": {
             position: "fixed",
@@ -175,8 +175,8 @@ export const Sidebar = () => {
       >
         <Box
           layerStyle="pageContainerWhite"
-          mt={{ base: "3.5em", tw: "6.5em" }}
-          w={{ base: "100%", tw: "300px" }}
+          mt={{ base: 12, tw: 4}}
+          w={{ base: "100%", tw: "260px" }}
         >
           {mainNavLinks.map((link) => (
             <NavItem key={link.path} {...link} onClick={onToggle} />

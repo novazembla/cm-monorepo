@@ -6,7 +6,7 @@ type CompontentProps = {
   component: React.FC;
 };
 
-export const PublicRoute = (props: CompontentProps) => {
+export const RoutePublic = (props: CompontentProps) => {
   const [, { isLoggedIn } ] = useAuthentication();
   const { component: Component, ...restProps } = props;
 

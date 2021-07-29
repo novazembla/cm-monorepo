@@ -1,20 +1,42 @@
 import { lazy } from "react";
+
+import type { PermisionsNames, RoleNames } from "@culturemap/core";
+
 import { CMConfig } from ".";
 
 const DashBoard = lazy(() => import("~/modules/DashBoard/DashBoard"));
+const Users = lazy(() => import("~/modules/Users/Users"));
 const Login = lazy(() => import("~/pages/Login/Login"));
-const PasswordRequest = lazy(() => import("~/pages/ChangePassword/PasswordRequest"));
-const PasswordReset = lazy(() => import("~/pages/ChangePassword/PasswordReset"));
+const PasswordRequest = lazy(
+  () => import("~/pages/ChangePassword/PasswordRequest")
+);
+const PasswordReset = lazy(
+  () => import("~/pages/ChangePassword/PasswordReset")
+);
 const Profile = lazy(() => import("~/pages/Profile/Profile"));
 const Signup = lazy(() => import("~/pages/Signup/Signup"));
-const EmailConfirmation = lazy(() => import("~/pages/EmailConfirmation/EmailConfirmation"));
+const EmailConfirmation = lazy(
+  () => import("~/pages/EmailConfirmation/EmailConfirmation")
+);
 
-export type RouteParams = {
+export interface RouteParams {
   key: string;
   path: string;
   component: any;
   exact: boolean;
-};
+}
+
+export interface RoutePrivateUserCanParams extends RouteParams {
+  userCan: PermisionsNames | PermisionsNames[];
+}
+
+export interface RoutePrivateUserIsParams extends RouteParams {
+  userIs: RoleNames | RoleNames[];
+}
+
+export type RoutePrivateParams =
+  | RoutePrivateUserCanParams
+  | RoutePrivateUserIsParams;
 
 export const routes: RouteParams[] = [
   {
@@ -22,7 +44,7 @@ export const routes: RouteParams[] = [
     path: "/email-confirmation",
     component: EmailConfirmation,
     exact: true,
-  },
+  }
   // {
   //   key: "profile",
   //   path: "/profile",
@@ -62,18 +84,29 @@ if (CMConfig.enableRegistration) {
   });
 }
 
-export const privateRoutes: RouteParams[] = [
+// TODO: implement access protection ... 
+
+export const privateRoutes: RoutePrivateParams[] = [
   {
-    key: "home",
-    path: "/",
+    key: "dashboard",
+    path: "/dashboard",
     component: DashBoard,
     exact: true,
+    userCan: "accessAsAuthenticatedUser",
   },
   {
     key: "profile",
     path: "/profile",
     component: Profile,
+    exact: true,
+    userCan: "accessAsAuthenticatedUser",
+  },
+  {
+    key: "users",
+    path: "/users",
+    component: Users,
     exact: false,
+    userIs: "administrator",
   },
   // {
   //   key: "profile",

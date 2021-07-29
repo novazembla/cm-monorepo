@@ -6,12 +6,12 @@ type CompontentProps = {
   component: React.FC;
 };
 
-export const PrivateRoute = (props: CompontentProps) => {
+export const RoutePrivate = (props: CompontentProps) => {
   const [, { isLoggedIn }] = useAuthentication();
   const { component: Component, ...restProps } = props;
 
   if (!Component) return null;
-
+  
   return isLoggedIn() ? (
     <Route {...restProps} component={Component} />
   ) : (
