@@ -4,7 +4,7 @@ import { User, Prisma } from "@prisma/client";
 
 import {
   ApiError,
-  filteredOutputOrNotFound,
+  filteredOutputByBlacklistOrNotFound,
   filteredOutputByBlacklist,
 } from "../utils";
 import config from "../config";
@@ -47,7 +47,10 @@ export const daoUserCreate = async (
     },
   });
 
-  return filteredOutputOrNotFound(user, config.db.privateJSONDataKeys.user);
+  return filteredOutputByBlacklistOrNotFound(
+    user,
+    config.db.privateJSONDataKeys.user
+  );
 };
 
 export const daoUserQuery = async (
@@ -61,19 +64,25 @@ export const daoUserQuery = async (
     take: pageSize,
   });
 
-  return filteredOutput(users, config.db.privateJSONDataKeys.user);
+  return filteredOutputByBlacklist(users, config.db.privateJSONDataKeys.user);
 };
 
 export const daoUserGetById = async (id: number): Promise<User> => {
   const user: User | null = await prisma.user.findUnique({ where: { id } });
 
-  return filteredOutputOrNotFound(user, config.db.privateJSONDataKeys.user);
+  return filteredOutputByBlacklistOrNotFound(
+    user,
+    config.db.privateJSONDataKeys.user
+  );
 };
 
 export const daoUserGetByEmail = async (email: string): Promise<User> => {
   const user: User | null = await prisma.user.findUnique({ where: { email } });
 
-  return filteredOutputOrNotFound(user, config.db.privateJSONDataKeys.user);
+  return filteredOutputByBlacklistOrNotFound(
+    user,
+    config.db.privateJSONDataKeys.user
+  );
 };
 
 export const daoUserGetByLogin = async (
@@ -121,7 +130,10 @@ export const daoUserUpdate = async (
     },
   });
 
-  return filteredOutputOrNotFound(user, config.db.privateJSONDataKeys.user);
+  return filteredOutputByBlacklistOrNotFound(
+    user,
+    config.db.privateJSONDataKeys.user
+  );
 };
 
 export const daoUserDelete = async (userId: number): Promise<User> => {
@@ -131,7 +143,10 @@ export const daoUserDelete = async (userId: number): Promise<User> => {
     },
   });
 
-  return filteredOutputOrNotFound(user, config.db.privateJSONDataKeys.user);
+  return filteredOutputByBlacklistOrNotFound(
+    user,
+    config.db.privateJSONDataKeys.user
+  );
 };
 
 export default {

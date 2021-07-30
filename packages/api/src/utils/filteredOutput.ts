@@ -59,7 +59,7 @@ export const filteredOutputByWhitelist = (
     }, {});
 };
 
-export const filteredOutputOrNotFound = (
+export const filteredOutputByBlacklistOrNotFound = (
   obj: object | object[] | null,
   keys?: string[] | undefined
 ): any => {
@@ -74,8 +74,24 @@ export const filteredOutputOrNotFound = (
   return filteredOutputByBlacklist(obj, keys);
 };
 
+export const filteredOutputByWhitelistOrNotFound = (
+  obj: object | object[] | null,
+  keys?: string[] | undefined
+): any => {
+  if (!obj)
+    throw new ApiError(httpStatus.BAD_REQUEST, "Invalid data in request");
+
+  if (!keys) {
+    // TODO: better error logging
+    return obj;
+  }
+
+  return filteredOutputByWhitelist(obj, keys);
+};
+
 export default {
   filteredOutputByBlacklist,
   filteredOutputByWhitelist,
-  filteredOutputOrNotFound,
+  filteredOutputByWhitelistOrNotFound,
+  filteredOutputByBlacklistOrNotFound,
 };
