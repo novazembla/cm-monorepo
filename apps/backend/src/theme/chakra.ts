@@ -71,8 +71,13 @@ const themeConfig = {
           mb: "0"
         }
 
+      },
+      "p + p > button": {
+        mt: 2
       }
     },
+
+    
   },
   colors: {
     wine: {

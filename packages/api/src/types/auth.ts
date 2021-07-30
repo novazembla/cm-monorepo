@@ -1,12 +1,7 @@
-import { PartialRecord, RoleNames } from "@culturemap/core";
-
-export interface JwtTokenPayloadUser {
-  id: number;
-  firstName?: string;
-  lastName?: string;
-  roles?: RoleNames[];
-  permissions?: string[];
-}
+import {
+  PartialRecord,
+  JwtPayloadAuthenticatedApiUser,
+} from "@culturemap/core";
 
 export type AuthTokenType =
   | "access"
@@ -20,6 +15,6 @@ export type AuthPayloadToken = {
 };
 
 export type AuthPayload = {
-  user: JwtTokenPayloadUser | undefined;
+  user: JwtPayloadAuthenticatedApiUser | undefined;
   tokens: PartialRecord<AuthTokenType, AuthPayloadToken>;
 };

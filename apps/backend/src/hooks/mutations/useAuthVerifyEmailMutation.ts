@@ -1,8 +1,8 @@
-import { authConfirmEmailMutationGQL } from "@culturemap/core";
+import { authVerifyEmailMutationGQL } from "@culturemap/core";
 import { useMutation } from "@apollo/client";
 
-export const useAuthConfirmEmailMutation = () => {
-  const [mutation, mutationResults] = useMutation(authConfirmEmailMutationGQL);
+export const useAuthVerifyEmailMutation = () => {
+  const [mutation, mutationResults] = useMutation(authVerifyEmailMutationGQL);
 
   // full login function
   const execute = (token: string) => {

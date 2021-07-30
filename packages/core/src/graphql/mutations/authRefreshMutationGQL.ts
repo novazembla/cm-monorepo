@@ -1,8 +1,8 @@
 import gql from "graphql-tag";
 
 export const authRefreshMutationGQL = gql`
-  mutation authRefresh {
-    authRefresh {
+  mutation authRefresh($scope: String!) {
+    authRefresh(scope: $scope) {
       tokens {
         access {
           token

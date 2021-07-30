@@ -2,7 +2,11 @@ import { hash, verify } from "argon2";
 import httpStatus from "http-status";
 import { User, Prisma } from "@prisma/client";
 
-import { ApiError, filteredOutputOrNotFound, filteredOutput } from "../utils";
+import {
+  ApiError,
+  filteredOutputOrNotFound,
+  filteredOutputByBlacklist,
+} from "../utils";
 import config from "../config";
 import { getPrismaClient } from "../db/client";
 
@@ -80,7 +84,7 @@ export const daoUserGetByLogin = async (
 
   if (!user || !(await verify(user.password, password))) return null;
 
-  // TODO: filteredOutput(user, config.db.privateJSONDataKeys.user);
+  // TODO: filteredOutputByBlacklist(user, config.db.privateJSONDataKeys.user);
   /*
     [A:API] [NODE] {
     [A:API] [NODE]   id: 6,
@@ -95,7 +99,7 @@ export const daoUserGetByLogin = async (
     [A:API] [NODE]   updatedAt: {}
     [A:API] [NODE] }
   */
-  return filteredOutput(user, config.db.privateJSONDataKeys.user);
+  return filteredOutputByBlacklist(user, config.db.privateJSONDataKeys.user);
 };
 
 export const daoUserUpdate = async (

@@ -4,10 +4,16 @@
 export const components = {
   Button: {
     baseStyle: {
+      borderRadius: "md",
       _focus: {
         boxShadow: "button-wine",
       },
     },
+    variants: {
+      outline: {
+        bg: "white"
+      }
+    }
   },
   Checkbox: {
     baseStyle: {

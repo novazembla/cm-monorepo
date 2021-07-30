@@ -80,6 +80,8 @@ export const Sidebar = () => {
 
   const { isOpen, onToggle } = useDisclosure();
 
+  // TODO: use useEffect ot monitor tw, close menu when change ... 
+
   const mainNavLinks = [
     {
       title: t("module.title.dashboard", "Dashboard"),

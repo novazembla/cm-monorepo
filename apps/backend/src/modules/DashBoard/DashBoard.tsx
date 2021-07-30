@@ -1,9 +1,12 @@
 import { Box } from "@chakra-ui/react";
-
+import { AlertEmailVerification } from "~/components/housekeeping";
 
 const DashBoard = () => {
+
+  
   return (
     <>
+    <AlertEmailVerification />
     <Box layerStyle="pageContainerWhite">
       <h2>Page Dashboard</h2>
       <p>

@@ -248,9 +248,9 @@ export const apiConfig = {
       emailConfirmation: utils.safeGuardVariable(
         logger,
         "int",
-        process.env.JWT_VERIFY_EMAIL_EXPIRATION_MINUTES,
+        process.env.JWT_VERIFY_EMAIL_EXPIRATION_DAYS,
         480,
-        "Error: missing/wrong .env config: JWT_VERIFY_EMAIL_EXPIRATION_MINUTES"
+        "Error: missing/wrong .env config: JWT_VERIFY_EMAIL_EXPIRATION_DAYS"
       ),
     },
   },

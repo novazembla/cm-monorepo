@@ -55,7 +55,10 @@ export type PermissionsOfContributor =
   | "pageUpdate"
   | "pageDeleteOwn";
 
-export type PermissionsOfUser = "accessAsAuthenticatedUser";
+export type PermissionsOfUser =
+  | "accessAsAuthenticatedUser"
+  | "profileRead"
+  | "profileUpdate";
 
 export type PermissionsOfRefresh = "canRefreshAccessToken";
 
@@ -203,7 +206,11 @@ roles.add("contributor", [
   "pageUpdate",
   "pageDeleteOwn",
 ]);
-roles.add("user", ["accessAsAuthenticatedUser"]);
+roles.add("user", [
+  "accessAsAuthenticatedUser",
+  "profileRead",
+  "profileUpdate",
+]);
 roles.add("refresh", ["canRefreshAccessToken"]);
 roles.add("api", ["canConfirmToken"]);
 

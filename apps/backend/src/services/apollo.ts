@@ -13,6 +13,8 @@ import { RetryLink } from "@apollo/client/link/retry";
 import { authentication, user } from ".";
 import { CultureMapSettings } from "~/context";
 
+import { CMConfig } from "~/config";
+
 export let client: ApolloClient<any> | null = null;
 
 const authLink = new ApolloLink((operation, forward) => {
@@ -48,7 +50,11 @@ const retryWithRefreshTokenLink = onError(
             const observable = new Observable((observer) => {
               if (client) {
                 client.mutate({
+                  fetchPolicy: "no-cache",
                   mutation: authRefreshMutationGQL,
+                  variables: {
+                    scope: CMConfig.scope
+                  }
                 })//     // TODO: is there a way to get a typed query here?
                 .then(({ data }: any) => {
                   if (
@@ -159,6 +165,20 @@ const createApolloClient = (settings: CultureMapSettings) => {
       //   },
       // },¸
     }),
+    defaultOptions: {
+      watchQuery: {
+        fetchPolicy: 'cache-and-network',
+        errorPolicy: 'ignore',
+      },
+      query: {
+        // TODO: revist better caching at some point
+        fetchPolicy: 'network-only',
+        errorPolicy: 'all',
+      },
+      mutate: {
+        errorPolicy: 'all',
+      },
+    }
   });
 };
 

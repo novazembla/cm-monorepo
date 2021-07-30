@@ -1,11 +1,9 @@
 import { Request, Response } from "express";
+import { AuthenticatedApiUser } from "@culturemap/core";
 
 import { logger } from "../services/serviceLogging";
 
-import {
-  AuthenticatedApiUser,
-  authAuthenticateUserByToken,
-} from "../services/serviceAuth";
+import { authAuthenticateUserByToken } from "../services/serviceAuth";
 
 export interface NexusResolverContext {
   req: Request;

@@ -15,6 +15,11 @@ declare global {
 }
 
 export interface NexusGenInputs {
+  UserProfileInput: { // input type
+    email: string; // String!
+    firstName: string; // String!
+    lastName: string; // String!
+  }
   UserSignupInput: { // input type
     acceptedTerms: boolean; // Boolean!
     email: string; // String!
@@ -57,12 +62,25 @@ export interface NexusGenObjects {
     result: boolean; // Boolean!
   }
   Mutation: {};
-  Query: {};
-  User: { // root type
+  ProfileUser: { // root type
     email?: string | null; // String
+    emailVerified?: boolean | null; // Boolean
     firstName?: string | null; // String
     id: number; // Int!
     lastName?: string | null; // String
+    role?: string | null; // String
+  }
+  Query: {};
+  User: { // root type
+    createdAt?: string | null; // String
+    email?: string | null; // String
+    emailVerified?: boolean | null; // Boolean
+    firstName?: string | null; // String
+    id: number; // Int!
+    lastName?: string | null; // String
+    role?: string | null; // String
+    updatedAt?: string | null; // String
+    userBanned?: boolean | null; // Boolean
   }
 }
 
@@ -98,24 +116,40 @@ export interface NexusGenFieldTypes {
     result: boolean; // Boolean!
   }
   Mutation: { // field return type
-    authConfirmEmail: NexusGenRootTypes['BooleanResult']; // BooleanResult!
-    authConfirmationEmailRequest: NexusGenRootTypes['BooleanResult']; // BooleanResult!
     authLogin: NexusGenRootTypes['AuthPayload']; // AuthPayload!
     authLogout: NexusGenRootTypes['BooleanResult']; // BooleanResult!
     authPasswordRequest: NexusGenRootTypes['BooleanResult']; // BooleanResult!
     authPasswordReset: NexusGenRootTypes['BooleanResult']; // BooleanResult!
     authRefresh: NexusGenRootTypes['AuthPayload']; // AuthPayload!
+    authRequestEmailVerificationEmail: NexusGenRootTypes['BooleanResult']; // BooleanResult!
+    authVerifyEmail: NexusGenRootTypes['BooleanResult']; // BooleanResult!
+    userProfilePasswordUpdate: NexusGenRootTypes['User']; // User!
+    userProfileUpdate: NexusGenRootTypes['User']; // User!
     userSignup: NexusGenRootTypes['AuthPayload']; // AuthPayload!
   }
+  ProfileUser: { // field return type
+    email: string | null; // String
+    emailVerified: boolean | null; // Boolean
+    firstName: string | null; // String
+    id: number; // Int!
+    lastName: string | null; // String
+    role: string | null; // String
+  }
   Query: { // field return type
+    userProfileRead: NexusGenRootTypes['ProfileUser']; // ProfileUser!
     users: Array<NexusGenRootTypes['User'] | null>; // [User]!
     users2: Array<NexusGenRootTypes['User'] | null>; // [User]!
   }
   User: { // field return type
+    createdAt: string | null; // String
     email: string | null; // String
+    emailVerified: boolean | null; // Boolean
     firstName: string | null; // String
     id: number; // Int!
     lastName: string | null; // String
+    role: string | null; // String
+    updatedAt: string | null; // String
+    userBanned: boolean | null; // Boolean
   }
 }
 
@@ -141,39 +175,49 @@ export interface NexusGenFieldTypeNames {
     result: 'Boolean'
   }
   Mutation: { // field return type name
-    authConfirmEmail: 'BooleanResult'
-    authConfirmationEmailRequest: 'BooleanResult'
     authLogin: 'AuthPayload'
     authLogout: 'BooleanResult'
     authPasswordRequest: 'BooleanResult'
     authPasswordReset: 'BooleanResult'
     authRefresh: 'AuthPayload'
+    authRequestEmailVerificationEmail: 'BooleanResult'
+    authVerifyEmail: 'BooleanResult'
+    userProfilePasswordUpdate: 'User'
+    userProfileUpdate: 'User'
     userSignup: 'AuthPayload'
   }
+  ProfileUser: { // field return type name
+    email: 'String'
+    emailVerified: 'Boolean'
+    firstName: 'String'
+    id: 'Int'
+    lastName: 'String'
+    role: 'String'
+  }
   Query: { // field return type name
+    userProfileRead: 'ProfileUser'
     users: 'User'
     users2: 'User'
   }
   User: { // field return type name
+    createdAt: 'String'
     email: 'String'
+    emailVerified: 'Boolean'
     firstName: 'String'
     id: 'Int'
     lastName: 'String'
+    role: 'String'
+    updatedAt: 'String'
+    userBanned: 'Boolean'
   }
 }
 
 export interface NexusGenArgTypes {
   Mutation: {
-    authConfirmEmail: { // args
-      token: string; // String!
-    }
-    authConfirmationEmailRequest: { // args
-      scope: string; // String!
-      userId: number; // Int!
-    }
     authLogin: { // args
       email: string; // String!
       password: string; // String!
+      scope: string; // String!
     }
     authLogout: { // args
       userId: number; // Int!
@@ -186,9 +230,35 @@ export interface NexusGenArgTypes {
       password: string; // String!
       token: string; // String!
     }
+    authRefresh: { // args
+      scope: string; // String!
+    }
+    authRequestEmailVerificationEmail: { // args
+      scope: string; // String!
+      userId: number; // Int!
+    }
+    authVerifyEmail: { // args
+      token: string; // String!
+    }
+    userProfilePasswordUpdate: { // args
+      password: string; // String!
+      scope: string; // String!
+      userId: number; // Int!
+    }
+    userProfileUpdate: { // args
+      data: NexusGenInputs['UserProfileInput']; // UserProfileInput!
+      scope: string; // String!
+      userId: number; // Int!
+    }
     userSignup: { // args
       data: NexusGenInputs['UserSignupInput']; // UserSignupInput!
       scope: string; // String!
+    }
+  }
+  Query: {
+    userProfileRead: { // args
+      scope: string; // String!
+      userId: number; // Int!
     }
   }
 }

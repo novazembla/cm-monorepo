@@ -14,7 +14,7 @@ import { ApiError } from "../utils";
 import { tokenGenerateAuthTokens } from "./serviceToken";
 import { authSendEmailConfirmationEmail } from "./serviceAuth";
 
-export const registerNewUser = async (
+export const userRegister = async (
   scope: AppScopes,
   data: Prisma.UserCreateInput
 ): Promise<AuthPayload> => {
@@ -30,6 +30,7 @@ export const registerNewUser = async (
     await authSendEmailConfirmationEmail(scope, user.id, user.email);
 
     const authPayload: AuthPayload = await tokenGenerateAuthTokens(
+      scope,
       {
         id: user.id,
         firstName: user.firstName,
@@ -49,7 +50,9 @@ export const registerNewUser = async (
   );
 };
 
-export const addUser = async (data: Prisma.UserCreateInput): Promise<User> => {
+export const userCreate = async (
+  data: Prisma.UserCreateInput
+): Promise<User> => {
   if (!data.acceptedTerms)
     throw new ApiError(
       httpStatus.UNPROCESSABLE_ENTITY,
@@ -61,7 +64,7 @@ export const addUser = async (data: Prisma.UserCreateInput): Promise<User> => {
   return user;
 };
 
-export const updateUser = async (
+export const userUpdate = async (
   scope: string,
   userId: number,
   data: Prisma.UserUpdateInput
@@ -69,14 +72,19 @@ export const updateUser = async (
   const userInDb = await daoUserGetById(userId);
 
   let newEmailAddress = false;
+  let dbData = data;
 
   if (data.email && data.email !== userInDb.email) {
     newEmailAddress = true;
+    dbData = {
+      ...dbData,
+      emailVerified: false,
+    };
     if (await daoUserCheckIsEmailTaken(data.email as string, userId))
       throw new ApiError(httpStatus.BAD_REQUEST, "Email already taken");
   }
 
-  const user: User = await daoUserUpdate(userId, data);
+  const user: User = await daoUserUpdate(userId, dbData);
 
   if (newEmailAddress)
     await authSendEmailConfirmationEmail(
@@ -88,17 +96,37 @@ export const updateUser = async (
   return user;
 };
 
-export const deleteUser = async (userId: number): Promise<User> => {
+export const userRead = async (userId: number): Promise<User> => {
   if (Number.isNaN(userId))
     throw new ApiError(httpStatus.UNPROCESSABLE_ENTITY, "Invalid input data");
 
-  const user = await daoUserDelete(userId);
-  return user;
+  return daoUserGetById(userId);
 };
 
+export const userDelete = async (userId: number): Promise<User> => {
+  if (Number.isNaN(userId))
+    throw new ApiError(httpStatus.UNPROCESSABLE_ENTITY, "Invalid input data");
+
+  return daoUserDelete(userId);
+};
+
+export const userProfileUpdate = async (
+  scope: string,
+  userId: number,
+  data: Prisma.UserUpdateInput
+): Promise<User> => userUpdate(scope, userId, data);
+
+export const userProfilePasswordUpdate = async (
+  scope: string,
+  userId: number,
+  password: string
+): Promise<User> => userUpdate(scope, userId, { password });
+
 export default {
-  addUser,
-  updateUser,
-  deleteUser,
-  registerNewUser,
+  userCreate,
+  userUpdate,
+  userRead,
+  userRegister,
+  userProfileUpdate,
+  userProfilePasswordUpdate,
 };

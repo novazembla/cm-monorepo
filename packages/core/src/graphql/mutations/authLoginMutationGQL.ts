@@ -1,8 +1,8 @@
 import gql from "graphql-tag";
 
 export const authLoginMutationGQL = gql`
-  mutation authLogin($email: String!, $password: String!) {
-    authLogin(email: $email, password: $password) {
+  mutation authLogin($scope: String!, $email: String!, $password: String!) {
+    authLogin(scope: $scope, email: $email, password: $password) {
       tokens {
         access {
           token

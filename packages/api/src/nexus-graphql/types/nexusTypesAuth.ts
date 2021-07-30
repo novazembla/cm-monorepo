@@ -1,3 +1,5 @@
+/// <reference path="../../types/nexus-typegen.ts" />
+
 import { objectType, extendType, nonNull, intArg, stringArg } from "nexus";
 import { AuthenticationError } from "apollo-server-express";
 import { AppScopes } from "@culturemap/core";
@@ -6,16 +8,16 @@ import {
   authLoginUserWithEmailAndPassword,
   authLogout,
   authRefresh,
-  authRequestPasswordReset,
+  authRequestPasswordResetEmail,
   authResetPassword,
-  authConfirmEmail,
-  authConfirmationEmailRequest,
+  authRequestEmailVerificationEmail,
+  authVerifyEmail,
 } from "../../services/serviceAuth";
 import {
   tokenProcessRefreshToken,
   tokenClearRefreshToken,
 } from "../../services/serviceToken";
-import { authorizeApiUser } from "../helpers";
+import { authorizeApiUser, isCurrentApiUser } from "../helpers";
 import { BooleanResult } from "./nexusTypesShared";
 
 export const AuthUser = objectType({
@@ -68,12 +70,14 @@ export const AuthLoginMutation = extendType({
     t.nonNull.field("authLogin", {
       type: "AuthPayload",
       args: {
+        scope: nonNull(stringArg()),
         email: nonNull(stringArg()),
         password: nonNull(stringArg()),
       },
       async resolve(...[, args, { res }]) {
         try {
           const authPayload = await authLoginUserWithEmailAndPassword(
+            args.scope,
             args.email,
             args.password
           );
@@ -93,17 +97,21 @@ export const AuthRefreshMutation = extendType({
     t.nonNull.field("authRefresh", {
       type: "AuthPayload",
 
+      args: {
+        scope: nonNull(stringArg()),
+      },
+
       authorize: async (...[, , ctx]) =>
         authorizeApiUser(ctx, "canRefreshAccessToken", true),
 
-      async resolve(...[, , { res, req }]) {
+      async resolve(...[, args, { res, req }]) {
         // throw new AuthenticationError("Access Denied"); TODO: REmove
 
         const token = req?.cookies?.refreshToken;
 
         if (!token) throw new AuthenticationError("Access Denied");
 
-        const authPayload = await authRefresh(token);
+        const authPayload = await authRefresh(args.scope, token);
 
         if (!authPayload || !authPayload?.tokens?.refresh?.token)
           throw new AuthenticationError("Access Denied");
@@ -155,9 +163,36 @@ export const AuthPasswordRequestMutation = extendType({
       },
 
       async resolve(...[, args]) {
-        const result = await authRequestPasswordReset(
+        const result = await authRequestPasswordResetEmail(
           args.scope as AppScopes,
           args.email
+        );
+
+        return { result };
+      },
+    });
+  },
+});
+
+export const authRequestEmailVerificationEmailMutation = extendType({
+  type: "Mutation",
+
+  definition(t) {
+    t.nonNull.field("authRequestEmailVerificationEmail", {
+      type: BooleanResult,
+      args: {
+        scope: nonNull(stringArg()),
+        userId: nonNull(intArg()),
+      },
+
+      authorize: async (...[, args, ctx]) =>
+        authorizeApiUser(ctx, "profileUpdate") &&
+        isCurrentApiUser(ctx, args.userId),
+
+      async resolve(...[, args]) {
+        const result = await authRequestEmailVerificationEmail(
+          args.scope as AppScopes,
+          args.userId
         );
 
         return { result };
@@ -186,44 +221,18 @@ export const AuthPasswordResetMutation = extendType({
   },
 });
 
-export const AuthConfirmEmailMutation = extendType({
+export const AuthVerifyEmailMutation = extendType({
   type: "Mutation",
 
   definition(t) {
-    t.nonNull.field("authConfirmEmail", {
+    t.nonNull.field("authVerifyEmail", {
       type: BooleanResult,
       args: {
         token: nonNull(stringArg()),
       },
 
       async resolve(...[, args]) {
-        const result = await authConfirmEmail(args.token);
-
-        return { result };
-      },
-    });
-  },
-});
-
-export const AuthConfirmationEmailRequestMutation = extendType({
-  type: "Mutation",
-
-  definition(t) {
-    t.nonNull.field("authConfirmationEmailRequest", {
-      type: BooleanResult,
-      args: {
-        scope: nonNull(stringArg()),
-        userId: nonNull(intArg()),
-      },
-
-      authorize: async (...[, , ctx]) =>
-        authorizeApiUser(ctx, "canConfirmToken"),
-
-      async resolve(...[, args]) {
-        const result = await authConfirmationEmailRequest(
-          args.scope as AppScopes,
-          args.userId
-        );
+        const result = await authVerifyEmail(args.token);
 
         return { result };
       },

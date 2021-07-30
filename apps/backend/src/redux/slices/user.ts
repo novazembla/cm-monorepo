@@ -1,14 +1,18 @@
 import { createSlice, PayloadAction} from "@reduxjs/toolkit";
 import type { ApiUser } from "~/services/user";
 
+type EmailVerificationState = "unknown" | "yes" | "no";
+
 const userSlice = createSlice({
   name: "user",
   initialState: {
     authenticated: false,
+    emailVerified: "unknown",
     apiUser: null,
     refreshing: false,
   } as {
     authenticated: boolean,
+    emailVerified: EmailVerificationState,
     apiUser: ApiUser | null,
     refreshing: boolean,
   },
@@ -16,6 +20,7 @@ const userSlice = createSlice({
     userLogout(state) {
       state.authenticated = false;
       state.apiUser = null;
+      state.emailVerified = "unknown";
     },
     userLogin(
       state,
@@ -24,6 +29,10 @@ const userSlice = createSlice({
       state.authenticated = true;
       state.apiUser = action.payload;
     },
+    userEmailVerificationState(state, action: PayloadAction<EmailVerificationState>) {
+      state.emailVerified = action.payload;
+    },
+
     authRefreshing(state, action: PayloadAction<boolean>) {
       state.refreshing = action.payload;
     }
@@ -34,7 +43,7 @@ const userSlice = createSlice({
 const { actions, reducer } = userSlice;
 
 // Extract and export each action creator by name
-export const { userLogout, userLogin, authRefreshing } = actions;
+export const { userLogout, userLogin, authRefreshing, userEmailVerificationState } = actions;
 
 // Export the reducer, either as a default or named export
 export default reducer;

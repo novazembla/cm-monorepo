@@ -96,7 +96,7 @@ export const Header = (/* props */) => {
               bg="wine.500"
               color="white"
               size={avatarSize}
-              name="Jon DOe"
+              name={`${apiUser?.firstName ?? "User"} ${apiUser?.lastName ?? "Profile"}`}
               _hover={{ bg: "wine.600" }}
             />
           </MenuButton>

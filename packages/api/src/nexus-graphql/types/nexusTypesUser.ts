@@ -1,18 +1,40 @@
-// import { objectType, extendType, stringArg, nonNull } from "nexus";
+/// <reference path="../../types/nexus-typegen.ts" />
+
 import {
   objectType,
   extendType,
   inputObjectType,
   nonNull,
   stringArg,
+  intArg,
 } from "nexus";
 import httpStatus from "http-status";
 import { AppScopes } from "@culturemap/core";
 
-import { registerNewUser } from "../../services/serviceUser";
+import {
+  userRegister,
+  userRead,
+  userProfileUpdate,
+  userProfilePasswordUpdate,
+} from "../../services/serviceUser";
 import { tokenProcessRefreshToken } from "../../services/serviceToken";
-import { ApiError } from "../../utils";
-import { authorizeApiUser } from "../helpers";
+import { ApiError, filteredOutputByWhitelist } from "../../utils";
+import { authorizeApiUser, isCurrentApiUser } from "../helpers";
+
+// TODO this white listing of keys is rather annoying,
+const FIELD_KEYS_USER_PROFILE = [
+  "id",
+  "email",
+  "firstName",
+  "lastName",
+  "role",
+  "emailVerified",
+];
+
+const FIELD_KEYS_USER = [
+  ...FIELD_KEYS_USER_PROFILE,
+  ...["userBanned", "createdAt", "updatedAt"],
+];
 
 export const User = objectType({
   name: "User",
@@ -21,6 +43,23 @@ export const User = objectType({
     t.string("firstName");
     t.string("lastName");
     t.string("email");
+    t.string("role");
+    t.boolean("emailVerified");
+    t.boolean("userBanned");
+    t.string("createdAt");
+    t.string("updatedAt");
+  },
+});
+
+export const ProfileUser = objectType({
+  name: "ProfileUser",
+  definition(t) {
+    t.nonNull.int("id");
+    t.string("firstName");
+    t.string("lastName");
+    t.string("email");
+    t.string("role");
+    t.boolean("emailVerified");
   },
 });
 
@@ -39,14 +78,17 @@ export const UserQuery = extendType({
 
       // resolve(root, args, ctx, info)
       resolve(...[, , ctx]) {
-        return [
-          {
-            id: 1,
-            firstName: `Vincent (${ctx.apiUser?.id})`,
-            lastName: "Van Uffelen",
-            email: "test@test.com",
-          },
-        ];
+        return filteredOutputByWhitelist(
+          [
+            {
+              id: 1,
+              firstName: `Vincent (${ctx.apiUser?.id}) ${new Date()}`,
+              lastName: "Van Uffelen",
+              email: "test@test.com",
+            },
+          ],
+          FIELD_KEYS_USER
+        );
       },
     });
   },
@@ -61,14 +103,44 @@ export const User2Query = extendType({
 
       // resolve(root, args, ctx, info)
       resolve(...[, , ctx]) {
-        return [
-          {
-            id: 1,
-            firstName: `Vincent (${ctx.apiUser?.id})`,
-            lastName: "Van Uffelen",
-            email: "test@test.com",
-          },
-        ];
+        return filteredOutputByWhitelist(
+          [
+            {
+              id: 1,
+              firstName: `Vincent (${ctx.apiUser?.id}) ${new Date()}`,
+              lastName: "Van Uffelen",
+              email: "test@test.com",
+            },
+          ],
+          FIELD_KEYS_USER
+        );
+      },
+    });
+  },
+});
+
+export const UserProfileQuery = extendType({
+  type: "Query",
+  definition(t) {
+    t.nonNull.field("userProfileRead", {
+      type: "ProfileUser",
+
+      args: {
+        scope: nonNull(stringArg()),
+        userId: nonNull(intArg()),
+      },
+
+      authorize: async (...[, args, ctx]) =>
+        authorizeApiUser(ctx, "profileRead") &&
+        isCurrentApiUser(ctx, args.userId),
+
+      // resolve(root, args, ctx, info)
+      async resolve(...[, args]) {
+        const user = await userRead(args.userId);
+
+        // it's a bit annoying that we can't just dump the dao returs.
+        // TODO: more comfortable work arround
+        return filteredOutputByWhitelist(user, FIELD_KEYS_USER_PROFILE);
       },
     });
   },
@@ -92,11 +164,11 @@ export const UserSignupMutation = extendType({
     t.nonNull.field("userSignup", {
       type: "AuthPayload",
       args: {
-        data: nonNull(UserSignupInput),
         scope: nonNull(stringArg()),
+        data: nonNull(UserSignupInput),
       },
       async resolve(...[, args, { res }]) {
-        const authPayload = await registerNewUser(
+        const authPayload = await userRegister(
           args.scope as AppScopes,
           args.data
         );
@@ -105,6 +177,81 @@ export const UserSignupMutation = extendType({
           throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Signup Failed");
 
         return tokenProcessRefreshToken(res, authPayload);
+      },
+    });
+  },
+});
+
+export const UserProfileUpdateInput = inputObjectType({
+  name: "UserProfileInput",
+  definition(t) {
+    t.nonNull.string("firstName");
+    t.nonNull.string("lastName");
+    t.nonNull.string("email");
+  },
+});
+
+export const UserProfileUpdateMutation = extendType({
+  type: "Mutation",
+
+  definition(t) {
+    t.nonNull.field("userProfileUpdate", {
+      type: "User",
+
+      args: {
+        scope: nonNull(stringArg()),
+        userId: nonNull(intArg()),
+        data: nonNull(UserProfileUpdateInput),
+      },
+
+      authorize: async (...[, args, ctx]) =>
+        authorizeApiUser(ctx, "profileUpdate") &&
+        isCurrentApiUser(ctx, args.userId),
+
+      async resolve(...[, args]) {
+        const user = await userProfileUpdate(
+          args.scope as AppScopes,
+          args.userId,
+          args.data
+        );
+
+        if (!user)
+          throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Update failed");
+
+        return filteredOutputByWhitelist(user, FIELD_KEYS_USER_PROFILE);
+      },
+    });
+  },
+});
+
+export const UserProfilePasswordUpdateMutation = extendType({
+  type: "Mutation",
+
+  definition(t) {
+    t.nonNull.field("userProfilePasswordUpdate", {
+      type: "User",
+
+      args: {
+        scope: nonNull(stringArg()),
+        userId: nonNull(intArg()),
+        password: nonNull(stringArg()),
+      },
+
+      authorize: async (...[, args, ctx]) =>
+        authorizeApiUser(ctx, "profileUpdate") &&
+        isCurrentApiUser(ctx, args.userId),
+
+      async resolve(...[, args]) {
+        const user = await userProfilePasswordUpdate(
+          args.scope as AppScopes,
+          args.userId,
+          args.password
+        );
+
+        if (!user)
+          throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Update failed");
+
+        return filteredOutputByWhitelist(user, FIELD_KEYS_USER_PROFILE);
       },
     });
   },

@@ -20,7 +20,7 @@ import {
 } from "~/components/ui";
 
 const PasswordRequest = () => {
-  const [firstMutation] = useAuthPasswordRequestMutation();
+  const [firstMutation, firstMutationResponse] = useAuthPasswordRequestMutation();
   const [isFormError, setIsFormError] = useState(false);
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
@@ -47,7 +47,7 @@ const PasswordRequest = () => {
     }
   };
 
-  if (isFormSubmitted)
+  if (isFormSubmitted && !firstMutationResponse.error && !isFormError)
     return (
       <AuthenticationPage>
         <AuthenticationFormContainer>

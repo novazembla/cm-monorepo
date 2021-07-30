@@ -1,11 +1,15 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
 import httpStatus from "http-status";
 import { addDays, addMinutes } from "date-fns";
-import { roles, RoleNames } from "@culturemap/core";
+import {
+  roles,
+  RoleNames,
+  JwtPayloadAuthenticatedApiUser,
+} from "@culturemap/core";
 import { Response } from "express";
 
 import config from "../config";
-import { AuthPayload, JwtTokenPayloadUser } from "../types/auth";
+import { AuthPayload } from "../types/auth";
 import { daoTokenCreate, TokenTypes, daoTokenFindFirst } from "../dao/token";
 import { daoUserGetByEmail } from "../dao/user";
 
@@ -13,15 +17,29 @@ import { ApiError } from "../utils";
 import { logger } from "./serviceLogging";
 
 export const generateToken = (
-  payloadUser: JwtTokenPayloadUser,
+  scope: string,
+  payloadUser: JwtPayloadAuthenticatedApiUser,
   role: RoleNames | null,
   expires: Date,
   type: string,
   secret?: string
 ) => {
-  let user: JwtTokenPayloadUser = {
+  let user: JwtPayloadAuthenticatedApiUser = {
     id: payloadUser.id,
+    scope,
   };
+
+  if (payloadUser.firstName)
+    user = {
+      ...user,
+      firstName: payloadUser.firstName,
+    };
+
+  if (payloadUser.lastName)
+    user = {
+      ...user,
+      lastName: payloadUser.lastName,
+    };
 
   if (role) {
     if (type === "access")
@@ -127,7 +145,8 @@ export const tokenVerifyInDB = async (
 };
 
 export const tokenGenerateAuthTokens = async (
-  user: JwtTokenPayloadUser,
+  scope: string,
+  user: JwtPayloadAuthenticatedApiUser,
   role: RoleNames
 ): Promise<AuthPayload> => {
   const accessTokenExpires = addMinutes(
@@ -136,6 +155,7 @@ export const tokenGenerateAuthTokens = async (
   );
 
   const accessToken = generateToken(
+    scope,
     user,
     role,
     accessTokenExpires,
@@ -148,6 +168,7 @@ export const tokenGenerateAuthTokens = async (
   );
 
   const refreshToken = generateToken(
+    scope,
     {
       id: user.id,
     },
@@ -179,7 +200,10 @@ export const tokenGenerateAuthTokens = async (
   return authPayload;
 };
 
-export const tokenGenerateResetPasswordToken = async (email: string) => {
+export const tokenGenerateResetPasswordToken = async (
+  scope: string,
+  email: string
+) => {
   const user = await daoUserGetByEmail(email);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, "Email not found");
@@ -187,6 +211,7 @@ export const tokenGenerateResetPasswordToken = async (email: string) => {
   const expires = addMinutes(new Date(), config.jwt.expiration.passwordReset);
 
   const resetPasswordToken = generateToken(
+    scope,
     {
       id: user.id,
     },
@@ -203,12 +228,13 @@ export const tokenGenerateResetPasswordToken = async (email: string) => {
   return resetPasswordToken;
 };
 
-export const tokenGenerateVerifyEmailToken = async (userId: number) => {
-  const expires = addMinutes(
-    new Date(),
-    config.jwt.expiration.emailConfirmation
-  );
+export const tokenGenerateVerifyEmailToken = async (
+  scope: string,
+  userId: number
+) => {
+  const expires = addDays(new Date(), config.jwt.expiration.emailConfirmation);
   const verifyEmailToken = generateToken(
+    scope,
     {
       id: userId,
     },
@@ -239,6 +265,7 @@ export const tokenProcessRefreshToken = (
 
   // eslint-disable-next-line no-param-reassign
   (authPayload as any).tokens.refresh.token = "content is hidden ;-P";
+
   return authPayload;
 };
 

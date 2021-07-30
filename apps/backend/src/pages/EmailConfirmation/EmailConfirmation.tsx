@@ -7,102 +7,184 @@ import { useTranslation } from "react-i18next";
 
 import { PageLoading } from "~/components/ui";
 
-import { useAuthConfirmEmailMutation } from "~/hooks/mutations";
+import { decode } from "jsonwebtoken";
+
+import {
+  useAuthVerifyEmailMutation,
+  useAuthRequestEmailVerificationEmail,
+} from "~/hooks/mutations";
 import { useAuthentication } from "~/hooks";
 
-import { AuthenticationPage, AuthenticationFormContainer} from "~/components/ui";
+import {
+  AuthenticationPage,
+  AuthenticationFormContainer,
+} from "~/components/ui";
 
 const useQuery = () => {
   return new URLSearchParams(useLocation().search);
 };
 
 const EmailConfirmation = () => {
-  const [, { isLoggedIn }] = useAuthentication();
+  const [apiUser, { isLoggedIn }] = useAuthentication();
   const query = useQuery();
   const token = query.get("token");
 
-  const [firstMutation, firstMutationResults] = useAuthConfirmEmailMutation();
-  
+  const [verificationMutation, verificationMutationResults] =
+    useAuthVerifyEmailMutation();
+  const [requestMutation, requestMutationResults] =
+    useAuthRequestEmailVerificationEmail();
+
   const [isTokenConfirmed, setIsTokenConfirmed] = useState(false);
+  const [isTokenError, setIsTokenError] = useState(false);
+  const [hasRequestedEmail, setHasRequestedEmail] = useState(false);
+  const [isRequestingError, setIsRequestingError] = useState(false);
 
   const { t } = useTranslation();
 
-  const confirmingToken = firstMutationResults.loading;
-  const confirmationError = firstMutationResults.error;
+  const confirmingToken = verificationMutationResults.loading;
+  const confirmationError = verificationMutationResults.error;
 
   const history = useHistory();
   useEffect(() => {
     const confirmToken = async () => {
       try {
-        await firstMutation(token ?? '');
+        const payload = decode(token ?? "", { json: true });
+
+        if (!payload || 
+            (payload.exp && payload.exp * 1000 < Date.now()) ||
+            (!payload?.user?.id))
+          throw Error("Incorrect token provided");
+
+        if (decode(token ?? ""))
+          await verificationMutation(token ?? "");
+
         setIsTokenConfirmed(true);
       } catch (err) {
-        setIsTokenConfirmed(false);
+        setIsTokenError(true);
       }
-    }
+    };
 
-    if (token)
-      confirmToken();
-
+    if (token) confirmToken();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // todo make better TODO: 
-  if (!confirmingToken && confirmationError)
-    return (
-      <AuthenticationPage>
-        <AuthenticationFormContainer>
+  const requestAnotherEmail = async () => {
+    setIsRequestingError(false);
+
+    try {
+      if (apiUser?.id) {
+        await requestMutation(apiUser.id);
+        setHasRequestedEmail(true);
+      } else {
+        setHasRequestedEmail(true);
+        setIsRequestingError(true);
+      }
+    } catch (err) {
+      setHasRequestedEmail(true);
+      setIsRequestingError(true);
+    }
+  };
+
+  let content = (<Flex height="220" alignItems="center" justify="center"><PageLoading /></Flex>);
+
+  let buttonDashboardLogin = (<Text>
+    <Button onClick={() => history.push(isLoggedIn() ? "/dashboard" : "/login")}>
+      {isLoggedIn()
+        ? t(
+            "page.emailconfirmation.button_goto_dashboard",
+            "Goto dashboard"
+          )
+        : t("page.emailconfirmation.button_goto_login", "Goto login")}
+    </Button>
+  </Text>);
+
+  if (hasRequestedEmail) 
+    content = (
+      <>
+        <Box mb="6">
+          <Heading as="h2" mb="2">
+            {(isRequestingError || requestMutationResults.error) && t("general.error.title", "We are sorry")}
+            {(!isRequestingError && !requestMutationResults.error) && t("page.emailconfirmation.requestsuccesstitles", "Thanky you")}
+          </Heading>
+        </Box>
+        <Text>
+          {(isRequestingError || requestMutationResults.error) && t(
+            "page.emailconfirmation.errorExplanation",
+            "We could not verify your email address based on the information provided."
+          )}
+          {(!isRequestingError && !requestMutationResults.error) && t("page.emailconfirmation.requestsuccessexplanation", "We've send you another email. Please check your inbox.")}
+        </Text>
+        <>{buttonDashboardLogin}</>
+      </>
+    );
+  
+  if (!confirmingToken && (isTokenError || confirmationError) && !hasRequestedEmail) 
+    // todo make better TODO:
+    content = (
+      <>
           <Box mb="6">
             <Heading as="h2" mb="2">
-            {t("page.emailconfirmation.error", "Oops!")}
+              {t("general.error.title", "We are sorry")}
             </Heading>
           </Box>
           <Text>
-            {t("page.emailconfirmation.errorExplanation", "We could not verify your email address.")}
-            <br/><br/>TODO: add some logic to request a new verification email if user is logged in
+            {t(
+              "page.emailconfirmation.errorExplanation",
+              "We could not verify your email address based on the information provided."
+            )}{" "}
+            {(!isLoggedIn() &&
+                t(
+                  "page.emailconfirmation.logintoproceed",
+                  "Please login to request another verification email."
+                ))}
           </Text>
 
-          <Text>
-            <Button onClick={() => history.push(isLoggedIn()? "/" : "/login")}>
-              {(isLoggedIn())? t("page.emailconfirmation.button_goto_dashboard", "Goto dashboard") : t("page.emailconfirmation.button_goto_login", "Goto login")}
-            </Button>
-          </Text>
-        </AuthenticationFormContainer>
-      </AuthenticationPage>
-
+          {isLoggedIn() && (
+            <>
+              <Text>
+                <Button
+                  onClick={requestAnotherEmail}
+                  isLoading={requestMutationResults.loading}
+                >
+                  {t(
+                    "page.emailconfirmation.requestanotheremail",
+                    "Request a new verification email."
+                  )}
+                </Button>
+              </Text>
+            </>
+          )}
+          {(!isLoggedIn()) && (
+            <>{buttonDashboardLogin}</>
+          )}
+      </>
     );
+  
 
   if (!confirmingToken && isTokenConfirmed)
-    return (
-      <AuthenticationPage>
-        <AuthenticationFormContainer>
+    content = (
+      <>
           <Box mb="6">
             <Heading as="h2" mb="2">
-            {t("page.emailconfirmation.thankyou", "Thank you!")}
+              {t("general.success.title", "Thank you!")}
             </Heading>
           </Box>
           <Text>
-          {t("page.emailconfirmation.youCanNowLogin", "Your email has been confirmed.")}
+            {t(
+              "page.emailconfirmation.youCanNowLogin",
+              "Your email has been confirmed."
+            )}
           </Text>
 
-          <Text>
-            <Button onClick={() => history.push(isLoggedIn()? "/" : "/login")}>
-              {(isLoggedIn())? t("page.emailconfirmation.button_goto_dashboard", "Goto dashboard") : t("page.emailconfirmation.button_goto_login", "Goto login")}
-            </Button>
-          </Text>
-        </AuthenticationFormContainer>
-      </AuthenticationPage>
+          <>{buttonDashboardLogin}</>
+        </>
     );
 
-  return <AuthenticationPage>
-        <AuthenticationFormContainer>
-          <Flex height="220" alignItems="center" justify="center">
-            <PageLoading/>
-          </Flex>          
-        </AuthenticationFormContainer>
-      </AuthenticationPage>
-  
-  
-  
-
+  return (
+    <AuthenticationPage>
+      <AuthenticationFormContainer>
+        {content}
+      </AuthenticationFormContainer>
+    </AuthenticationPage>
+  );
 };
 export default EmailConfirmation;

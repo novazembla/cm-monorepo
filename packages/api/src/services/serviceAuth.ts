@@ -1,7 +1,12 @@
 import httpStatus from "http-status";
 import { User } from "@prisma/client";
 import { JwtPayload } from "jsonwebtoken";
-import type { RoleNames, PermisionsNames, AppScopes } from "@culturemap/core";
+import type {
+  RoleNames,
+  AppScopes,
+  AuthenticatedApiUser,
+} from "@culturemap/core";
+import { createAuthenticatedApiUser } from "@culturemap/core";
 import { AuthenticationError } from "apollo-server-express";
 
 import { AuthPayload } from "../types/auth";
@@ -29,47 +34,18 @@ import {
   sendEmailConfirmationEmail,
 } from "./serviceEmail";
 
-export interface AuthenticatedApiUser {
-  id: number;
-  roles: RoleNames[];
-  permissions: PermisionsNames[];
-  has(name: RoleNames): boolean;
-  can(permissions: PermisionsNames | PermisionsNames[]): boolean;
-}
-
 export const authSendEmailConfirmationEmail = async (
   scope: AppScopes,
   userId: number,
   email: string
 ) => {
-  const emailVerificationToken = await tokenGenerateVerifyEmailToken(userId);
+  const emailVerificationToken = await tokenGenerateVerifyEmailToken(
+    scope,
+    userId
+  );
 
   sendEmailConfirmationEmail(scope, email, emailVerificationToken);
   return true;
-};
-
-export const authGenerateAuthenticatedApiUser = (
-  id: number,
-  roles: RoleNames[],
-  permissions: PermisionsNames[]
-): AuthenticatedApiUser => {
-  const user: AuthenticatedApiUser = {
-    id,
-    roles,
-    permissions,
-    has(name: RoleNames) {
-      return (
-        this.roles && Array.isArray(this.roles) && this.roles.includes(name)
-      );
-    },
-    can(perms: PermisionsNames | PermisionsNames[]) {
-      return (Array.isArray(perms) ? perms : [perms]).some((perm) =>
-        this.permissions.includes(perm)
-      );
-    },
-  };
-
-  return user;
 };
 
 export const authAuthenticateUserByToken = (
@@ -84,15 +60,17 @@ export const authAuthenticateUserByToken = (
           !(
             "id" in (tokenPayload as JwtPayload).user &&
             "roles" in (tokenPayload as JwtPayload).user &&
-            "permissions" in (tokenPayload as JwtPayload).user
+            "permissions" in (tokenPayload as JwtPayload).user &&
+            "scope" in (tokenPayload as JwtPayload).user
           )
         )
           return null;
 
-        return authGenerateAuthenticatedApiUser(
+        return createAuthenticatedApiUser(
           (tokenPayload as JwtPayload).user.id,
           (tokenPayload as JwtPayload).user.roles,
-          (tokenPayload as JwtPayload).user.permissions
+          (tokenPayload as JwtPayload).user.permissions,
+          (tokenPayload as JwtPayload).user.scope
         );
       }
     }
@@ -104,6 +82,7 @@ export const authAuthenticateUserByToken = (
 };
 
 export const authLoginUserWithEmailAndPassword = async (
+  scope: string,
   email: string,
   password: string
 ): Promise<AuthPayload> => {
@@ -123,7 +102,8 @@ export const authLoginUserWithEmailAndPassword = async (
     },
   });
 
-  const authpayload: AuthPayload = await tokenGenerateAuthTokens(
+  const authPayload: AuthPayload = await tokenGenerateAuthTokens(
+    scope,
     {
       id: user.id,
       firstName: user.firstName,
@@ -131,9 +111,10 @@ export const authLoginUserWithEmailAndPassword = async (
     },
     user.role as RoleNames
   );
-  authpayload.user = user;
 
-  return authpayload;
+  authPayload.user = user;
+
+  return authPayload;
 };
 
 export const authLogout = async (userId: number): Promise<boolean> => {
@@ -147,7 +128,7 @@ export const authLogout = async (userId: number): Promise<boolean> => {
   return true;
 };
 
-export const authRefresh = async (refreshToken: string) => {
+export const authRefresh = async (scope: string, refreshToken: string) => {
   try {
     const tokenPayload = await tokenVerifyInDB(
       refreshToken,
@@ -173,6 +154,7 @@ export const authRefresh = async (refreshToken: string) => {
     });
 
     return await tokenGenerateAuthTokens(
+      scope,
       {
         id: user.id,
         firstName: user.firstName,
@@ -188,7 +170,7 @@ export const authRefresh = async (refreshToken: string) => {
   }
 };
 
-export const authRequestPasswordReset = async (
+export const authRequestPasswordResetEmail = async (
   scope: AppScopes,
   email: string
 ): Promise<boolean> => {
@@ -196,6 +178,7 @@ export const authRequestPasswordReset = async (
     const userInDB = await daoUserGetByEmail(email);
 
     const passwordResetToken = await tokenGenerateResetPasswordToken(
+      scope,
       userInDB.email
     );
 
@@ -211,7 +194,7 @@ export const authRequestPasswordReset = async (
   }
 };
 
-export const authConfirmationEmailRequest = async (
+export const authRequestEmailVerificationEmail = async (
   scope: AppScopes,
   userId: number
 ): Promise<boolean> => {
@@ -230,7 +213,7 @@ export const authConfirmationEmailRequest = async (
     logger.warn(error);
     throw new ApiError(
       httpStatus.BAD_REQUEST,
-      "[auth.authRequestPasswordReset] Password reset request failed"
+      "[auth.authRequestEmailVerificationEmail] Email verification request failed"
     );
   }
 };
@@ -281,9 +264,9 @@ export const authResetPassword = async (
   }
 };
 
-export const authConfirmEmail = async (toekn: string) => {
+export const authVerifyEmail = async (token: string) => {
   try {
-    const tokenPayload = await tokenVerifyInDB(toekn, TokenTypes.VERIFY_EMAIL);
+    const tokenPayload = await tokenVerifyInDB(token, TokenTypes.VERIFY_EMAIL);
     if (
       tokenPayload &&
       "user" in (tokenPayload as JwtPayload) &&
@@ -294,7 +277,7 @@ export const authConfirmEmail = async (toekn: string) => {
         type: TokenTypes.VERIFY_EMAIL,
       });
       await daoUserUpdate((tokenPayload as JwtPayload).user.id, {
-        emailConfirmed: true,
+        emailVerified: true,
       });
 
       return true;
@@ -302,7 +285,7 @@ export const authConfirmEmail = async (toekn: string) => {
 
     throw new ApiError(
       httpStatus.UNAUTHORIZED,
-      "[auth.authConfirmEmail] Token validation failed"
+      "[auth.authVerifyEmail] Token validation failed"
     );
   } catch (error) {
     throw new ApiError(httpStatus.UNAUTHORIZED, "Email verification failed");
@@ -314,9 +297,9 @@ export default {
   authLoginUserWithEmailAndPassword,
   authLogout,
   authRefresh,
-  authRequestPasswordReset,
-  authConfirmationEmailRequest,
+  authRequestPasswordResetEmail,
+  authRequestEmailVerificationEmail,
   authResetPassword,
   authSendEmailConfirmationEmail,
-  authConfirmEmail,
+  authVerifyEmail,
 };

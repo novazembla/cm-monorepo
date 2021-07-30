@@ -1,3 +1,5 @@
+/// <reference path="../../types/nexus-typegen.ts" />
+
 import { objectType } from "nexus";
 
 export const BooleanResult = objectType({

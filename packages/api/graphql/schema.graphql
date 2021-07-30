@@ -33,26 +33,49 @@ type BooleanResult {
 }
 
 type Mutation {
-  authConfirmEmail(token: String!): BooleanResult!
-  authConfirmationEmailRequest(scope: String!, userId: Int!): BooleanResult!
-  authLogin(email: String!, password: String!): AuthPayload!
+  authLogin(email: String!, password: String!, scope: String!): AuthPayload!
   authLogout(userId: Int!): BooleanResult!
   authPasswordRequest(email: String!, scope: String!): BooleanResult!
   authPasswordReset(password: String!, token: String!): BooleanResult!
-  authRefresh: AuthPayload!
+  authRefresh(scope: String!): AuthPayload!
+  authRequestEmailVerificationEmail(scope: String!, userId: Int!): BooleanResult!
+  authVerifyEmail(token: String!): BooleanResult!
+  userProfilePasswordUpdate(password: String!, scope: String!, userId: Int!): User!
+  userProfileUpdate(data: UserProfileInput!, scope: String!, userId: Int!): User!
   userSignup(data: UserSignupInput!, scope: String!): AuthPayload!
 }
 
+type ProfileUser {
+  email: String
+  emailVerified: Boolean
+  firstName: String
+  id: Int!
+  lastName: String
+  role: String
+}
+
 type Query {
+  userProfileRead(scope: String!, userId: Int!): ProfileUser!
   users: [User]!
   users2: [User]!
 }
 
 type User {
+  createdAt: String
   email: String
+  emailVerified: Boolean
   firstName: String
   id: Int!
   lastName: String
+  role: String
+  updatedAt: String
+  userBanned: Boolean
+}
+
+input UserProfileInput {
+  email: String!
+  firstName: String!
+  lastName: String!
 }
 
 input UserSignupInput {

@@ -70,7 +70,7 @@ const PasswordReset = () => {
         <AuthenticationFormContainer>
           <Box mb="6">
             <Heading as="h2" mb="2">
-            {t("page.passwordreset.thankyou", "Thank you!")}
+            {t("general.success.title", "Thank you!")}
             </Heading>
           </Box>
           <Text>
@@ -114,7 +114,7 @@ const PasswordReset = () => {
             >
               <fieldset>
                 {isFormError && (
-                  // t("page.passwordreset.error", "The request has failed. Please try again.")
+                  // t("general.error.requestfailed", "The request has failed. Please try again.")
                   <TextErrorMessage error="page.passwordreset.error" />
                 )}
    

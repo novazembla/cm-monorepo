@@ -7,6 +7,7 @@ import { getAuthToken, getRefreshCookie } from "./authentication";
 import { store } from "~/redux/store";
 import { userLogout, userLogin, authRefreshing } from "~/redux/slices/user";
 import { setTabWideAccessStatus } from "~/hooks/useAuthTabWideLogInOutReload";
+import { CMConfig } from "~/config";
 
 export interface ApiUser {
   id: number;
@@ -23,7 +24,11 @@ const refreshToken = () => {
   if (client && !isRefreshing() && getRefreshCookie()) {
     setRefreshing(true);
     client.mutate({
+      fetchPolicy: "no-cache",
       mutation: authRefreshMutationGQL,
+      variables: {
+        scope: CMConfig.scope
+      }
     })
     // TODO: is there a way to get a typed query here?
     .then(({ data }: any) => {

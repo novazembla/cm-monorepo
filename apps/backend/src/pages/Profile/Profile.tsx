@@ -32,6 +32,9 @@ const Profile = () => {
   if (error) return <div className={`primary no-secondary`}><p>Error!</p></div>;
   if (loading) return <div className={`primary no-secondary`}><p>Loading ... !</p></div>;
 
+  console.log(data);
+  
+
   return (
     <>
       <AlertBox status="warning" hasClose>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse a

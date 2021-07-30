@@ -1,13 +1,15 @@
 import { authPasswordRequestMutationGQL } from "@culturemap/core";
 import { useMutation } from "@apollo/client";
 
+import { CMConfig } from "~/config";
+
 export const useAuthPasswordRequestMutation = () => {
   const [mutation, mutationResults] = useMutation(authPasswordRequestMutationGQL);
 
   const execute = (email: string) => {
     return mutation({
       variables: {
-        scope: "backend",
+        scope: CMConfig.scope,
         email,
       },
     });

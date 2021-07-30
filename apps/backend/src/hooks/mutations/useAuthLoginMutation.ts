@@ -3,6 +3,7 @@ import { useMutation } from "@apollo/client";
 import { useAuthentication } from "..";
 import { authentication } from "~/services";
 
+import { CMConfig } from "~/config";
 
 export const useAuthLoginMutation = () => {
   const [, { login, logout }] = useAuthentication();
@@ -29,6 +30,7 @@ export const useAuthLoginMutation = () => {
     logout();
     return mutation({
       variables: {
+        scope: CMConfig.scope,
         email,
         password,
       },

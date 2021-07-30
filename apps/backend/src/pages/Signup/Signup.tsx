@@ -55,7 +55,7 @@ const Signup = () => {
     }
   };
 
-  // t("page.register.error", "The login failed. Please try again.")
+  // t("page.register.error", "We're sorry something went wrong. Please check your data and try again.")
   return (
     <>
       <AuthenticationPage>
