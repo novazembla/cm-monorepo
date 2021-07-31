@@ -1,29 +1,21 @@
-// import { useFetch } from "~/hooks/useFetch";
-// const users = useFretch('xxx');
-
-import { Box, Button, HStack, Link } from "@chakra-ui/react";
+import { Box, Button, HStack } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router-dom";
 import {ModuleSubNav} from "~/components/modules";
 
-const moduleRootPath = "/users";
+import { moduleRootPath } from "./config";
 
 const Index = () => {
   const { t } = useTranslation();
+  const breadcrumb = [{
+    path: moduleRootPath,
+    title: t("module.users.title", "Users")
+  }];
 
   return (
     <>
       <ModuleSubNav
-        breadcrumb={
-          <Link
-            as={NavLink}
-            to={moduleRootPath}
-            color="black"
-            _hover={{ color: "wine.600" }}
-          >
-            {t("module.title.users", "Users")}
-          </Link>
-        }
+        breadcrumb={breadcrumb}
       >
         <HStack spacing="2">
           <Button as={NavLink} to="/users/create">{t('module.users.button.create',"Add user")}</Button>

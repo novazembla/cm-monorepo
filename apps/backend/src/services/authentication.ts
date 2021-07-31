@@ -74,7 +74,7 @@ export const setAuthToken = (token: Token): void => {
 };
 
 export const setRefreshCookie = (token: Token) => {
-  cookies.set(HAS_REFRESH_COOKIE_NAME, "active", {
+  cookies.set(HAS_REFRESH_COOKIE_NAME, token.expires, {
     ...options,
     ...{ expires: new Date(token.expires) },
   });

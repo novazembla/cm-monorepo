@@ -1,4 +1,4 @@
-export * from "./culturemap";
+export * from "./config";
 export * from "./internationalization";
 export * from "./roles";
 export * from "./routes";

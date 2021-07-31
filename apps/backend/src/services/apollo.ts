@@ -11,9 +11,10 @@ import { onError } from "@apollo/client/link/error";
 import { RetryLink } from "@apollo/client/link/retry";
 
 import { authentication, user } from ".";
-import { CultureMapSettings } from "~/context";
 
-import { CMConfig } from "~/config";
+import { getAppConfig, AppConfig } from "~/config";
+
+const config = getAppConfig();
 
 export let client: ApolloClient<any> | null = null;
 
@@ -49,11 +50,12 @@ const retryWithRefreshTokenLink = onError(
           ) {
             const observable = new Observable((observer) => {
               if (client) {
+                console.log("refresh-2");
                 client.mutate({
                   fetchPolicy: "no-cache",
                   mutation: authRefreshMutationGQL,
                   variables: {
-                    scope: CMConfig.scope
+                    scope: config.scope
                   }
                 })//     // TODO: is there a way to get a typed query here?
                 .then(({ data }: any) => {
@@ -128,7 +130,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (networkError) console.log(`[Network error]: ${networkError}`);
 });
 
-const createApolloClient = (settings: CultureMapSettings) => {
+const createApolloClient = (settings: AppConfig) => {
   return new ApolloClient({
     ssrMode: typeof window === "undefined",
     link: from([
@@ -182,7 +184,7 @@ const createApolloClient = (settings: CultureMapSettings) => {
   });
 };
 
-export const initializeClient = (settings: CultureMapSettings) => {
+export const initializeClient = (settings: AppConfig) => {
   const aClient = client ?? createApolloClient(settings);
 
   // For SSG and SSR always create a new Apollo Client

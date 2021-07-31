@@ -8,15 +8,16 @@ import { useTranslation } from "react-i18next";
 
 import { ValidationSchemaLogin, yupFieldIsRequired } from "~/validation";
 import { useAuthLoginMutation } from "~/hooks/mutations";
+import { useConfig } from "~/hooks";
+
 import {
   AuthenticationPage,
   AuthenticationFormContainer,
 } from "~/components/ui";
 import { TextErrorMessage, FieldInput, FieldRow } from "~/components/forms";
 
-import { CMConfig } from "~/config/culturemap";
-
 const Login = () => {
+  const config = useConfig();
   const [firstMutation] = useAuthLoginMutation();
   const [isFormError, setIsFormError] = useState(false);
 
@@ -58,7 +59,7 @@ const Login = () => {
               "page.login.prompt",
               "Please login to access the administration tool."
             )}
-            {CMConfig.enableRegistration && (
+            {config.enableRegistration && (
               <>
                 <br />
                 {t(
@@ -78,9 +79,6 @@ const Login = () => {
           <form
             noValidate
             onSubmit={handleSubmit(onSubmit)}
-            onChange={() => {
-              setIsFormError(false);
-            }}
           >
             <fieldset>
               {isFormError && <TextErrorMessage error="page.login.error" />}
@@ -94,7 +92,7 @@ const Login = () => {
                     "Email Address"
                   )}
                   isRequired={yupFieldIsRequired('email', ValidationSchemaLogin)}
-                  data={{
+                  settings={{
                     placeholder: t(
                       "page.login.form_field_login_placeholder",
                       "Please enter your email address"
@@ -112,7 +110,7 @@ const Login = () => {
                     "Your password"
                   )}
                   isRequired={yupFieldIsRequired('password', ValidationSchemaLogin)}
-                  data={{
+                  settings={{
                     placeholder: t(
                       "page.login.form_field_password_placeholder",
                       "Please enter your password"

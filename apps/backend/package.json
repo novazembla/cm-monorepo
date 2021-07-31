@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@apollo/client": "^3.3.21",
+    "@chakra-ui/icons": "^1.0.14",
     "@chakra-ui/react": "^1.6.5",
     "@craco/craco": "^6.2.0",
     "@culturemap/api": "^0.0.1",

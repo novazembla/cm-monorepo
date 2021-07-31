@@ -1,3 +1,13 @@
+TODO: 
+
+
+Installation
+Important to mention to clone src/config/appconfig.example.ts to src/config/appconfig.ts and to fill in the required settings .. 
+
+
+monmitor is dirty and block back if data has been added ... 
+
+
 Choc UI 
 
 https://github.com/anubra266/choc-ui

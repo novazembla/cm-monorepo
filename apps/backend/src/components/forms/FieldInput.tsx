@@ -23,7 +23,7 @@ import { HiOutlineEyeOff, HiOutlineEye } from "react-icons/hi";
 
 import FieldErrorMessage from "./FieldErrorMessage";
 
-export interface FieldInputData {
+export interface FieldSettings {
   onChange?: ChangeEventHandler;
   rows?: number;
   required?: boolean;
@@ -41,7 +41,7 @@ export interface FieldInputData {
 }
 
 export const FieldInput = ({
-  data,
+  settings,
   id,
   label,
   name,
@@ -49,7 +49,7 @@ export const FieldInput = ({
   isRequired,
   isDisabled,
 }: {
-  data?: FieldInputData;
+  settings?: FieldSettings;
   id: string;
   isRequired?: boolean;
   isDisabled?: boolean;
@@ -67,34 +67,35 @@ export const FieldInput = ({
     setValue,
   } = useFormContext();
 
-  let fieldProps: FieldInputData = {
+  let fieldProps: FieldSettings = {
     key: `key-${id}`,
     name: name,
     type: type
   };
 
-  fieldProps.rows = data?.rows ?? undefined;
+  fieldProps.rows = settings?.rows ?? undefined;
 
-  fieldProps.defaultValue = data?.defaultValue ?? undefined;
+  if (settings?.defaultValue)
+    fieldProps.defaultValue = settings?.defaultValue;
 
-  fieldProps.className = data?.className ?? undefined;
+  fieldProps.className = settings?.className ?? undefined;
 
-  fieldProps.placeholder = data?.placeholder ?? undefined;
+  fieldProps.placeholder = settings?.placeholder ?? undefined;
 
   if (errors[name]?.message) fieldProps.valid = undefined;
 
   const onChangeHandler: ChangeEventHandler = (
     event: ChangeEvent<HTMLInputElement>
   ) => {
-    data?.onChange && data?.onChange.call(null, event);
+    settings?.onChange && settings?.onChange.call(null, event);
 
-    if (data?.autoResize) {
+    if (settings?.autoResize) {
       (event.target as HTMLInputElement).style.height = "";
       (event.target as HTMLInputElement).style.height =
         Math.max(
-          data?.autoResize ? data?.autoResize.min : 0,
+          settings?.autoResize ? settings?.autoResize.min : 0,
           Math.min(
-            data?.autoResize ? data?.autoResize.min : 1000,
+            settings?.autoResize ? settings?.autoResize.min : 1000,
             (event.target as HTMLInputElement).scrollHeight
           )
         ) + "px";
@@ -117,6 +118,10 @@ export const FieldInput = ({
     fieldRef.current = e;// you can still assign to ref
   }} />;
 
+  // browser auto fill and form initation might be at the wrong times
+  // if this happens the "hook forms" does not register the auto filled
+  // value and the field does not validate successfully despite being
+  // (visibly) filled. 
   useEffect(() => {
     let interval = setInterval(() => {
       if (fieldRef.current && fieldRef.current.value) {

@@ -4,12 +4,12 @@ import { concatPagination } from "@apollo/client/utilities";
 
 import merge from "deepmerge";
 import isEqual from "lodash/isEqual";
-import { CultureMapSettings } from "../context";
+import { AppConfig } from "../context";
 
 export const APOLLO_STATE_PROP_NAME = "__APOLLO_STATE__";
 let apolloClient: ApolloClient<any>;
 
-function createApolloClient(settings: CultureMapSettings) {
+function createApolloClient(settings: AppConfig) {
   return new ApolloClient({
     ssrMode: typeof window === "undefined",
     link: new HttpLink({
@@ -29,7 +29,7 @@ function createApolloClient(settings: CultureMapSettings) {
 }
 
 export function initializeApollo(
-  settings: CultureMapSettings,
+  settings: AppConfig,
   initialState = null
 ) {
   const aClient = apolloClient ?? createApolloClient(settings);
@@ -71,7 +71,7 @@ export function addApolloState(client: ApolloClient<any>, pageProps: any) {
   return pageProps;
 }
 
-export function useApollo(pageProps: any, settings: CultureMapSettings) {
+export function useApollo(pageProps: any, settings: AppConfig) {
   const state = pageProps[APOLLO_STATE_PROP_NAME];
   const store = useMemo(
     () => initializeApollo(settings, state),

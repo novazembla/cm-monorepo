@@ -1,13 +1,13 @@
-import type { RoleNames, PermisionsNames } from "../roles";
+import type { RoleNames, PermissionNames } from "../roles";
 import type { AppScopes } from "../types";
 
 export interface AuthenticatedApiUser {
   id: number;
   roles: RoleNames[];
-  permissions: PermisionsNames[];
+  permissions: PermissionNames[];
   scope: AppScopes;
   has(name: RoleNames): boolean;
-  can(permissions: PermisionsNames | PermisionsNames[]): boolean;
+  can(permissions: PermissionNames | PermissionNames[]): boolean;
 }
 
 export interface JwtPayloadAuthenticatedApiUser {
@@ -22,7 +22,7 @@ export interface JwtPayloadAuthenticatedApiUser {
 export const createAuthenticatedApiUser = (
   id: number,
   roles: RoleNames[],
-  permissions: PermisionsNames[],
+  permissions: PermissionNames[],
   scope: AppScopes
 ): AuthenticatedApiUser => {
   const user: AuthenticatedApiUser = {
@@ -35,7 +35,7 @@ export const createAuthenticatedApiUser = (
         this.roles && Array.isArray(this.roles) && this.roles.includes(name)
       );
     },
-    can(perms: PermisionsNames | PermisionsNames[]) {
+    can(perms: PermissionNames | PermissionNames[]) {
       return (Array.isArray(perms) ? perms : [perms]).some((perm) =>
         this.permissions.includes(perm)
       );

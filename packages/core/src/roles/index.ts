@@ -64,7 +64,7 @@ export type PermissionsOfRefresh = "canRefreshAccessToken";
 
 export type PermissionsOfApi = "canConfirmToken";
 
-export type PermisionsNames =
+export type PermissionNames =
   | PermissionsOfAdministrator
   | PermissionsOfEditor
   | PermissionsOfContributor
@@ -74,7 +74,7 @@ export type PermisionsNames =
 
 export interface Role {
   name: RoleNames;
-  permissions: PermisionsNames[];
+  permissions: PermissionNames[];
   extends: RoleNames[];
 }
 
@@ -82,12 +82,12 @@ export interface Roles {
   roles: PartialRecord<RoleNames, Role>;
   add: (
     name: RoleNames,
-    permissions?: PermisionsNames | Array<PermisionsNames>
+    permissions?: PermissionNames | Array<PermissionNames>
   ) => void;
   extend: (name: RoleNames, extended: RoleNames | RoleNames[]) => void;
   addPermissions: (
     roleName: RoleNames,
-    permissions?: PermisionsNames | Array<PermisionsNames>
+    permissions?: PermissionNames | Array<PermissionNames>
   ) => void;
   getOwnPermissions: (roleName: RoleNames) => string[];
   getExtendedPermissions: (roleName: RoleNames) => string[];
@@ -95,7 +95,7 @@ export interface Roles {
 
 export const roles: Roles = {
   roles: {},
-  add(name: RoleNames, permissions?: PermisionsNames | Array<PermisionsNames>) {
+  add(name: RoleNames, permissions?: PermissionNames | Array<PermissionNames>) {
     if (!(name in this.roles)) {
       this.roles[name] = {
         name,
@@ -121,12 +121,12 @@ export const roles: Roles = {
   },
   addPermissions(
     roleName: RoleNames,
-    permissions?: PermisionsNames | Array<PermisionsNames>
+    permissions?: PermissionNames | Array<PermissionNames>
   ) {
     if (roleName in this.roles) {
       (Array.isArray(permissions)
         ? permissions
-        : ([permissions] as PermisionsNames[])
+        : ([permissions] as PermissionNames[])
       ).forEach((perm) => {
         if (!(perm in (this.roles[roleName] as Role).permissions))
           (this.roles[roleName] as Role).permissions.push(perm);

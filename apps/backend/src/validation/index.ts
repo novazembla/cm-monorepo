@@ -1,6 +1,6 @@
-export { default as ValidationSchemaLogin } from "./login";
-export { default as ValidationSchemaPasswordReset } from "./passwordReset";
-export { default as ValidationSchemaPasswordRequest } from "./passwordRequest";
-export { default as ValidationSchemaRegister } from "./register";
-
+export * from "./ValidationSchemaLogin";
+export * from "./PasswordResetValidationSchema";
+export * from "./PasswordRequestValidationSchema";
+export * from "./ValidationSchemaSignup";
 export * from "./yupFieldIsRequired";
+export * from "./UserProfileUpdateValidationSchema";

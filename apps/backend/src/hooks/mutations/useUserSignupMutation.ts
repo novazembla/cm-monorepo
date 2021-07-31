@@ -3,9 +3,10 @@ import { useMutation } from "@apollo/client";
 import { useAuthentication } from "..";
 import { authentication } from "~/services";
 
-import { CMConfig } from "~/config";
+import { useConfig } from "~/hooks";
 
 export const useUserSignupMutation = () => {
+  const config = useConfig();
   const [apiUser, { login }] = useAuthentication();
 
   const [mutation, mutationResults] = useMutation(userSignupMutationGQL, {
@@ -33,7 +34,7 @@ export const useUserSignupMutation = () => {
   
     return mutation({
       variables: {
-        scope: CMConfig.scope,
+        scope: config.scope,
         ...data,
       }
     });

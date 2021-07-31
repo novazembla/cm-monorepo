@@ -4,7 +4,7 @@ import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Link } from "react-router-dom";
 
-import { ValidationSchemaPasswordRequest, yupFieldIsRequired } from "~/validation";
+import { PasswordRequestValidationSchema, yupFieldIsRequired } from "~/validation";
 
 import { useTranslation } from "react-i18next";
 
@@ -28,7 +28,7 @@ const PasswordRequest = () => {
 
   const formMethods = useForm({
     'mode':'onTouched',
-    resolver: yupResolver(ValidationSchemaPasswordRequest),
+    resolver: yupResolver(PasswordRequestValidationSchema),
   });
   const {
     handleSubmit,
@@ -36,7 +36,7 @@ const PasswordRequest = () => {
   } = formMethods;
 
   const onSubmit = async (
-    data: yup.InferType<typeof ValidationSchemaPasswordRequest>
+    data: yup.InferType<typeof PasswordRequestValidationSchema>
   ) => {
     setIsFormError(false);
     try {
@@ -86,9 +86,6 @@ const PasswordRequest = () => {
           <form
             noValidate
             onSubmit={handleSubmit(onSubmit)}
-            onChange={() => {
-              setIsFormError(false);
-            }}
           >
             <fieldset>
               {isFormError && (
@@ -105,8 +102,8 @@ const PasswordRequest = () => {
                     "page.passwordrequest.form_field_email_label",
                     "Email Address"
                   )}
-                  isRequired={yupFieldIsRequired("email",ValidationSchemaPasswordRequest)}
-                  data={{
+                  isRequired={yupFieldIsRequired("email",PasswordRequestValidationSchema)}
+                  settings={{
                     placeholder: t(
                       "page.passwordrequest.form_field_email_placeholder",
                       "Please enter your email address"

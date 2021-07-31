@@ -3,8 +3,7 @@ import { useTranslation } from "react-i18next";
 import { gql, useQuery } from "@apollo/client";
 
 import { AlertBox } from "~/components/ui";
-import { useTypedDispatch, useAuthentication, useTypedSelector } from "~/hooks";
-import { CMConfig } from "~/config";
+import { useTypedDispatch, useAuthentication, useTypedSelector, useConfig } from "~/hooks";
 
 import { userEmailVerificationState } from "~/redux/slices/user";
 import {
@@ -26,7 +25,7 @@ const GET_EMAIL_VERIFICATION_STATUS = gql`
 
 export const AlertEmailVerification = () => {
   const { emailVerified } = useTypedSelector(({ user }) => user);
-
+  const config = useConfig();
   const [isRequestingError, setIsRequestingError] = useState(false);
 
   const [requestMutation, requestMutationResults] =
@@ -44,10 +43,10 @@ export const AlertEmailVerification = () => {
 
   const [apiUser] = useAuthentication();
 
-  const { data } = useQuery(GET_EMAIL_VERIFICATION_STATUS, {
+  const { data, error } = useQuery(GET_EMAIL_VERIFICATION_STATUS, {
     skip: emailVerified === "yes",
     variables: {
-      scope: CMConfig.scope,
+      scope: config.scope,
       userId: apiUser?.id ?? 0,
     },
   });
@@ -60,8 +59,16 @@ export const AlertEmailVerification = () => {
       : emailVerified;
 
   useEffect(() => {
-    if (localEmailVerified !== emailVerified)
-      wrappedDispatch(localEmailVerified);
+    let mounted = true;
+
+    if (localEmailVerified !== emailVerified) {
+      if (mounted) 
+        wrappedDispatch(localEmailVerified);
+    }
+
+    return () => {
+      mounted = false
+    }
   }, [wrappedDispatch, emailVerified, localEmailVerified]);
 
   const requestAnotherEmail = async () => {
@@ -105,7 +112,7 @@ export const AlertEmailVerification = () => {
 
   return (
     <>
-      {localEmailVerified === "no" && !requestMutationResults.loading && (
+      {!error && localEmailVerified === "no" && !requestMutationResults.loading && (
         <AlertBox status="warning" hasClose>
           <Grid
             w="100%"

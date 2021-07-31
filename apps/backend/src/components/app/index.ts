@@ -7,3 +7,4 @@ export * from "./RoutePrivate";
 export * from "./RouteHome";
 export * from "./RoutePublic";
 export * from "./Sidebar";
+export * from "./AuthenticationSessionActiveGate";

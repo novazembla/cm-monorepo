@@ -146,7 +146,7 @@ export const Sidebar = () => {
         />
       )}
       <Box
-        w="100vw"
+        w="100%"
         maxW={{ base: "100%", tw: "calc(260px + 1rem)" }}
         className={`${menuState ? "active" : "inactive"} ${
           !isOpen || !menuState ? "closed" : "open"

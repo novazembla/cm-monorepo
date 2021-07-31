@@ -8,7 +8,7 @@ export const ModulePageNotFound = () => {
   const { t } = useTranslation();
   return (
     <>
-      <Box layerStyle="pageContainerWhite">
+      <Box layerStyle="pageContainerWhite" minH={{base:"calc(100vh - 106px)",tw:"calc(100vh - 142px)"}}>
         <Heading as="h2" mb="2">
           {t("http.error.404.title", "Not found")}
         </Heading>

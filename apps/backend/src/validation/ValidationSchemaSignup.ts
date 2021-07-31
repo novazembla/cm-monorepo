@@ -4,7 +4,7 @@ import translations from "./translations";
 
 yup.setLocale(translations);
 
-const schema = yup.object().shape({
+export const ValidationSchemaSignup = yup.object().shape({
   firstName: yup.string().required(
     // t("validation.page.login.emailRequiredError", "Please enter your email address")
     "validation.page.register.firstNameRequiredError"
@@ -31,13 +31,7 @@ const schema = yup.object().shape({
       // t("validation.page.login.acceptedTermsRequiredError", "Please accept out terms & conditions")
       "validation.page.register.acceptedTermsRequiredError"
     ),
-  acceptedTermsCB: yup
-    .bool()
-    .oneOf(
-      [true],
-      // t("validation.page.login.acceptedTermsRequiredError", "Please accept out terms & conditions")
-      "validation.page.register.acceptedTermsRequiredError"
-    )
+  
 });
 
-export default schema;
+export default ValidationSchemaSignup;

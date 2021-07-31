@@ -7,7 +7,9 @@ import { getAuthToken, getRefreshCookie } from "./authentication";
 import { store } from "~/redux/store";
 import { userLogout, userLogin, authRefreshing } from "~/redux/slices/user";
 import { setTabWideAccessStatus } from "~/hooks/useAuthTabWideLogInOutReload";
-import { CMConfig } from "~/config";
+import { getAppConfig } from "~/config";
+
+const config = getAppConfig();
 
 export interface ApiUser {
   id: number;
@@ -19,47 +21,46 @@ export interface ApiUser {
 
 let refreshTimeoutId: ReturnType<typeof setTimeout>;
 
-// TODO: xxx is the autorefresh really needed? Or is it good enough to rely on the refresh by use of the API? 
+// TODO: xxx is the autorefresh really needed? Or is it good enough to rely on the refresh by use of the API?
 const refreshToken = () => {
   if (client && !isRefreshing() && getRefreshCookie()) {
+    console.log("refresh-1");
+  
     setRefreshing(true);
-    client.mutate({
-      fetchPolicy: "no-cache",
-      mutation: authRefreshMutationGQL,
-      variables: {
-        scope: CMConfig.scope
-      }
-    })
-    // TODO: is there a way to get a typed query here?
-    .then(({ data }: any) => {
-      if (
-        data?.authRefresh?.tokens?.access &&
-        data?.authRefresh?.tokens?.refresh
-      ) {
-        const payload = authentication.getTokenPayload(
-          data.authRefresh.tokens.access
-        );
-
-        if (payload) {
-          authentication.setAuthToken(
+    client
+      .mutate({
+        fetchPolicy: "no-cache",
+        mutation: authRefreshMutationGQL,
+        variables: {
+          scope: config.scope,
+        },
+      })
+      // TODO: is there a way to get a typed query here?
+      .then(({ data }: any) => {
+        if (
+          data?.authRefresh?.tokens?.access &&
+          data?.authRefresh?.tokens?.refresh
+        ) {
+          const payload = authentication.getTokenPayload(
             data.authRefresh.tokens.access
           );
-          authentication.setRefreshCookie(
-            data.authRefresh.tokens.refresh
-          );
 
-          login(payload.user);
+          if (payload) {
+            authentication.setAuthToken(data.authRefresh.tokens.access);
+            authentication.setRefreshCookie(data.authRefresh.tokens.refresh);
+
+            login(payload.user);
+          } else {
+            throw new Error("Unable to fetch new access token");
+          }
         } else {
           throw new Error("Unable to fetch new access token");
         }
-      } else {
-        throw new Error("Unable to fetch new access token");
-      }
-    })
-    .catch((error) => {
-      console.log(error);
-      logout();
-    });
+      })
+      .catch((error) => {
+        console.log(error);
+        logout();
+      });
   } else if (!isRefreshing) {
     logout();
   }
@@ -78,23 +79,46 @@ const login = (u: ApiUser) => {
   const token = getAuthToken();
 
   if (token) {
-    refreshTimeoutId = setTimeout(refreshToken, 
-      new Date(token.expires).getTime() - Date.now() - 1000)
+    refreshTimeoutId = setTimeout(
+      refreshToken,
+      new Date(token.expires).getTime() - Date.now() - 1000
+    );
   }
-  
-  store.dispatch(userLogin(u));
+
+  store.dispatch(
+    userLogin({ apiUser: u, expires: getRefreshCookie() })
+  );
 };
 
-const logout = () => {
+const logout = async () => {
   setRefreshing(false);
-
-  if (client) client.clearStore();
-
   authentication.removeAuthToken();
   authentication.removeRefreshCookie();
-
+  
+  console.log(22);
+  
+  console.log(23);
+  console.log(24);
+  console.log(25);
   setTabWideAccessStatus("logged-out");
+  
   store.dispatch(userLogout());
+  if (client) await client.clearStore();
+};
+
+export const isLocalSessionValid = (): boolean => {
+  let sessionOk = false;
+
+  const refreshCookie = authentication.getRefreshCookie();
+  if (refreshCookie) {
+    try {
+      const d = new Date(refreshCookie);
+      if (d > new Date())
+        sessionOk = true;
+    } catch (err) {}
+  }
+ 
+  return sessionOk;
 };
 
 const defaults = {
@@ -102,6 +126,7 @@ const defaults = {
   login,
   logout,
   setRefreshing,
-  isRefreshing
+  isRefreshing,
+  isLocalSessionValid,
 };
 export default defaults;

@@ -6,7 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import { Link, useHistory, useLocation } from "react-router-dom";
 
-import { ValidationSchemaPasswordReset, yupFieldIsRequired } from "~/validation";
+import { PasswordResetValidationSchema, yupFieldIsRequired } from "~/validation";
 
 import { useTranslation } from "react-i18next";
 
@@ -37,12 +37,11 @@ const PasswordReset = () => {
 
   const formMethods = useForm({
     'mode':'onTouched',
-    resolver: yupResolver(ValidationSchemaPasswordReset),
+    resolver: yupResolver(PasswordResetValidationSchema),
   });
 
   const {
     handleSubmit,
-    trigger,
     formState: { isSubmitting },
   } = formMethods;
 
@@ -54,7 +53,7 @@ const PasswordReset = () => {
     }
   }, [token, history]);
 
-  const onSubmit = async (data: yup.InferType<typeof ValidationSchemaPasswordReset>) => {
+  const onSubmit = async (data: yup.InferType<typeof PasswordResetValidationSchema>) => {
     setIsFormError(false);
     try {
       await firstMutation(data.newPassword, token ?? '');
@@ -107,10 +106,6 @@ const PasswordReset = () => {
             <form
               noValidate
               onSubmit={handleSubmit(onSubmit)}
-              onChange={() => {
-                trigger();
-                setIsFormError(false);
-              }}
             >
               <fieldset>
                 {isFormError && (
@@ -127,8 +122,8 @@ const PasswordReset = () => {
                       "page.passwordreset.form_field_password_label",
                       "Password"
                     )}
-                    isRequired={yupFieldIsRequired("newPassword",ValidationSchemaPasswordReset)}
-                    data={{
+                    isRequired={yupFieldIsRequired("newPassword",PasswordResetValidationSchema)}
+                    settings={{
                       placeholder: t(
                         "page.passwordreset.form_field_password_placeholder",
                         "Please enter your password"
@@ -146,8 +141,8 @@ const PasswordReset = () => {
                       "page.passwordreset.form_field_password_confirmation_label",
                       "Password confirmation"
                     )}
-                    isRequired={yupFieldIsRequired("confirmPassword",ValidationSchemaPasswordReset)}
-                    data={{
+                    isRequired={yupFieldIsRequired("confirmPassword",PasswordResetValidationSchema)}
+                    settings={{
                       placeholder: t(
                         "page.passwordreset.form_field_password_confirm_placeholder",
                         "Please confirm your password"

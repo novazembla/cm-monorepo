@@ -1,11 +1,10 @@
 import { authLoginMutationGQL } from "@culturemap/core";
 import { useMutation } from "@apollo/client";
-import { useAuthentication } from "..";
+import { useAuthentication, useConfig } from "~/hooks";
 import { authentication } from "~/services";
 
-import { CMConfig } from "~/config";
-
 export const useAuthLoginMutation = () => {
+  const config = useConfig();
   const [, { login, logout }] = useAuthentication();
 
   const [mutation, mutationResults] = useMutation(authLoginMutationGQL, {
@@ -30,7 +29,7 @@ export const useAuthLoginMutation = () => {
     logout();
     return mutation({
       variables: {
-        scope: CMConfig.scope,
+        scope: config.scope,
         email,
         password,
       },

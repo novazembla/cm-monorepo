@@ -5,7 +5,7 @@ import { useHistory, useLocation } from "react-router-dom";
 
 import { useTranslation } from "react-i18next";
 
-import { PageLoading } from "~/components/ui";
+import { LoadingIcon } from "~/components/ui";
 
 import { decode } from "jsonwebtoken";
 
@@ -84,8 +84,8 @@ const EmailConfirmation = () => {
     }
   };
 
-  let content = (<Flex height="220" alignItems="center" justify="center"><PageLoading /></Flex>);
-
+  let content = (<Flex height="220" alignItems="center" justify="center" position="relative"><LoadingIcon type="inline" size={90} /></Flex>);
+  
   let buttonDashboardLogin = (<Text>
     <Button onClick={() => history.push(isLoggedIn() ? "/dashboard" : "/login")}>
       {isLoggedIn()

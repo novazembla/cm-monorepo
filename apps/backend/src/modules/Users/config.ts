@@ -1,2 +1,4 @@
+import type { PermissionNames } from "@culturemap/core";
+
 export const moduleRootPath = "/users";
-export const basePermission = "userCan";
+export const basePermission: PermissionNames = "userRead";

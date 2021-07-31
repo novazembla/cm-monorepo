@@ -2,7 +2,7 @@ import React, { Context, createContext, ReactNode } from "react";
 import merge from "deepmerge";
 import CMSettings from "../culturemap";
 
-export type CultureMapSettings = {
+export type AppConfig = {
   apiUrl?: string | undefined;
   navigation?: {
     main: Array<object>;
@@ -12,7 +12,7 @@ export type CultureMapSettings = {
 };
 
 // initial state
-const settingsDefault: CultureMapSettings = {
+const settingsDefault: AppConfig = {
   apiUrl: `${process.env.NEXT_PUBLIC_API_GRAPHQL_URL}`,
   navigation: {
     main: [],
@@ -21,7 +21,7 @@ const settingsDefault: CultureMapSettings = {
   logos: [],
 };
 
-let settings: CultureMapSettings = {};
+let settings: AppConfig = {};
 
 try {
   settings = merge(settingsDefault, CMSettings);
@@ -37,21 +37,21 @@ type Props = {
 };
 
 // create context
-export const CulturemapContext: Context<any> = createContext({});
+export const ConfigContext: Context<any> = createContext({});
 
 // context provider
-export const CulturemapContextProvider = ({ children }: Props) => {
+export const ConfigContextProvider = ({ children }: Props) => {
   return (
-    <CulturemapContext.Provider value={settings}>
+    <ConfigContext.Provider value={settings}>
       {children}
-    </CulturemapContext.Provider>
+    </ConfigContext.Provider>
   );
 };
 
-export const getCulturemapSettings = (): CultureMapSettings => settings;
+export const getAppConfig = (): AppConfig => settings;
 
-CulturemapContextProvider.defaultProps = {
+ConfigContextProvider.defaultProps = {
   children: null,
 };
 
-export default { CulturemapContext, CulturemapContextProvider };
+export default { ConfigContext, ConfigContextProvider };

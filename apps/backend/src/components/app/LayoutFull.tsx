@@ -31,3 +31,4 @@ export const LayoutFull = ({ children }: AppProps) => {
     </Grid>
   );
 };
+export default LayoutFull;

@@ -212,8 +212,9 @@ export const AuthPasswordResetMutation = extendType({
         token: nonNull(stringArg()),
       },
 
-      async resolve(...[, args]) {
+      async resolve(...[, args, { res }]) {
         const result = await authResetPassword(args.password, args.token);
+        tokenClearRefreshToken(res);
 
         return { result };
       },

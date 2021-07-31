@@ -9,6 +9,9 @@ import {
   daoUserGetById,
   daoUserCheckIsEmailTaken,
 } from "../dao/user";
+
+import { daoTokenDeleteMany, TokenTypes } from "../dao/token";
+
 import { AuthPayload } from "../types/auth";
 import { ApiError } from "../utils";
 import { tokenGenerateAuthTokens } from "./serviceToken";
@@ -120,7 +123,19 @@ export const userProfilePasswordUpdate = async (
   scope: string,
   userId: number,
   password: string
-): Promise<User> => userUpdate(scope, userId, { password });
+): Promise<User> => {
+  const user = await userUpdate(scope, userId, { password });
+
+  if (user && user.id)
+    daoTokenDeleteMany({
+      userId: user.id,
+      type: {
+        in: [TokenTypes.RESET_PASSWORD, TokenTypes.ACCESS, TokenTypes.REFRESH],
+      },
+    });
+
+  return user;
+};
 
 export default {
   userCreate,

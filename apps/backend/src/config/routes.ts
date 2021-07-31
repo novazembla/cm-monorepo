@@ -1,11 +1,10 @@
 import { lazy } from "react";
 
-import type { PermisionsNames, RoleNames } from "@culturemap/core";
+import type { PermissionNames, RoleNames } from "@culturemap/core";
 
-import { CMConfig } from ".";
+import { getAppConfig } from "~/config";
 
-const DashBoard = lazy(() => import("~/modules/DashBoard/DashBoard"));
-const Users = lazy(() => import("~/modules/Users/Users"));
+// Public
 const Login = lazy(() => import("~/pages/Login/Login"));
 const PasswordRequest = lazy(
   () => import("~/pages/ChangePassword/PasswordRequest")
@@ -13,11 +12,24 @@ const PasswordRequest = lazy(
 const PasswordReset = lazy(
   () => import("~/pages/ChangePassword/PasswordReset")
 );
-const Profile = lazy(() => import("~/pages/Profile/Profile"));
+const PasswordHasBeenReset = lazy(
+  () => import("~/pages/ChangePassword/PasswordHasBeenReset")
+);
+
+
+const Profile = lazy(() => import("~/modules/Profile/Profile"));
 const Signup = lazy(() => import("~/pages/Signup/Signup"));
+
+// Public/Private
 const EmailConfirmation = lazy(
   () => import("~/pages/EmailConfirmation/EmailConfirmation")
 );
+
+// Private
+const DashBoard = lazy(() => import("~/modules/DashBoard/DashBoard"));
+const Users = lazy(() => import("~/modules/Users/Users"));
+
+const config = getAppConfig();
 
 export interface RouteParams {
   key: string;
@@ -27,7 +39,7 @@ export interface RouteParams {
 }
 
 export interface RoutePrivateUserCanParams extends RouteParams {
-  userCan: PermisionsNames | PermisionsNames[];
+  userCan: PermissionNames | PermissionNames[];
 }
 
 export interface RoutePrivateUserIsParams extends RouteParams {
@@ -44,7 +56,7 @@ export const routes: RouteParams[] = [
     path: "/email-confirmation",
     component: EmailConfirmation,
     exact: true,
-  }
+  },
   // {
   //   key: "profile",
   //   path: "/profile",
@@ -73,9 +85,15 @@ export const publicOnlyRoutes: RouteParams[] = [
     component: PasswordReset,
     exact: true,
   },
+  {
+    key: "password-has-been-reset",
+    path: "/password-has-been-reset",
+    component: PasswordHasBeenReset,
+    exact: true,
+  },
 ];
 
-if (CMConfig.enableRegistration) {
+if (config.enableRegistration) {
   publicOnlyRoutes.push({
     key: "register",
     path: "/register",
@@ -84,7 +102,7 @@ if (CMConfig.enableRegistration) {
   });
 }
 
-// TODO: implement access protection ... 
+// TODO: implement access protection ...
 
 export const privateRoutes: RoutePrivateParams[] = [
   {
@@ -98,8 +116,8 @@ export const privateRoutes: RoutePrivateParams[] = [
     key: "profile",
     path: "/profile",
     component: Profile,
-    exact: true,
-    userCan: "accessAsAuthenticatedUser",
+    exact: false,
+    userCan: "profileRead",
   },
   {
     key: "users",

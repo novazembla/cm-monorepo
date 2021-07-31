@@ -11,7 +11,9 @@ export const userProfilePasswordUpdateMutationGQL = gql`
       userId: $userId
       password: $password
     ) {
-      User
+      id
+      firstName
+      lastName
     }
   }
 `;

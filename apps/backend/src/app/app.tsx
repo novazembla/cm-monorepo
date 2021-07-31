@@ -1,6 +1,5 @@
-import React, { Suspense, useEffect } from "react";
+import React, { Suspense, useEffect, lazy } from "react";
 import { BrowserRouter, Route, Switch, useLocation } from "react-router-dom";
-import { Flex } from "@chakra-ui/react";
 
 import "./App.scss";
 
@@ -11,11 +10,11 @@ import NotFound from "~/pages/NotFound/NotFound";
 import {
   LayoutLight,
   LayoutBlank,
-  LayoutFull,
   RoutePrivate,
   RoutePublic,
   RouteHome,
 } from "~/components/app";
+
 
 import {
   routes,
@@ -26,18 +25,29 @@ import {
   getRoutesPathsArray,
 } from "~/config/routes";
 
-import { PageLoading } from "~/components/ui";
+import { LoadingIcon } from "~/components/ui";
 
+import { AuthenticationSessionActiveGate } from "~/components/app";
+
+const LayoutFull = lazy(() => import("~/components/app/LayoutFull"));
 const ScrollToTop = () => {
   const { pathname } = useLocation();
 
-  // TODO: suspense plays not so nicely with that, 
+  // TODO: suspense plays not so nicely with that,
+
   useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: "smooth",
-    });
+    let mounted = true;
+
+    if (mounted)
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: "smooth",
+      });
+
+    return () => {
+      mounted = false;
+    };
   }, [pathname]);
 
   return null;
@@ -55,48 +65,49 @@ const App = () => {
         Navigated to app/dashboard page.{" "}
         {/* TODO: announce change, how is this best done? */}
       </span>
-
-      <Suspense
-        fallback={
-          <Flex w="100" h="100%" justify="center" alignItems="center">
-            <PageLoading />
-          </Flex>
-        }
-      >
-        <BrowserRouter>
+      <Suspense fallback={<LoadingIcon type="light" size={120}/>}>
+      <BrowserRouter>
+        <AuthenticationSessionActiveGate>
           <ScrollToTop />
-          <Switch>
+          <Switch> 
             <Route exact path="/">
               <RouteHome />
             </Route>
 
             <Route exact path={getPublicOnlyRoutesPathsArray()}>
-              <LayoutLight>
-                <Switch>
-                  {publicOnlyRoutes.map((publicRouteProps) => (
-                    <RoutePublic {...publicRouteProps} />
-                  ))}
-                </Switch>
-              </LayoutLight>
+              
+                <Suspense fallback={<LoadingIcon type="light" size={120}/>}>
+                  <LayoutLight>
+                    <Switch>
+                      {publicOnlyRoutes.map((publicRouteProps) => (
+                        <RoutePublic {...publicRouteProps} />
+                      ))}
+                    </Switch>
+                  </LayoutLight>
+                </Suspense>
             </Route>
 
             <Route exact path={getRoutesPathsArray()}>
-              <LayoutLight>
-                <Switch>
-                  {routes.map((routeProps) => (
-                    <Route {...routeProps} />
-                  ))}
-                </Switch>
-              </LayoutLight>
+              
+                <Suspense fallback={<LoadingIcon type="light" size={120}/>}>
+                  <LayoutLight><Switch>
+                    {routes.map((routeProps) => (
+                      <Route {...routeProps} />
+                    ))}
+                  </Switch></LayoutLight>
+                </Suspense>
+              
             </Route>
 
             <Route path={getPrivateRoutesPathsArray()}>
               <LayoutFull>
-                <Switch>
-                  {privateRoutes.map((privateRouteProps) => (
-                    <RoutePrivate {...privateRouteProps} />
-                  ))}
-                </Switch>
+                <Suspense fallback={<LoadingIcon type="full" size={120}/>}>
+                  <Switch>
+                    {privateRoutes.map((privateRouteProps) => (
+                      <RoutePrivate {...privateRouteProps} />
+                    ))}
+                  </Switch>
+                </Suspense>
               </LayoutFull>
             </Route>
 
@@ -106,7 +117,8 @@ const App = () => {
               </LayoutBlank>
             </Route>
           </Switch>
-        </BrowserRouter>
+        </AuthenticationSessionActiveGate>
+      </BrowserRouter>
       </Suspense>
     </AppProviders>
   );

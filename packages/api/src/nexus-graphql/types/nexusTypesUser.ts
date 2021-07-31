@@ -17,7 +17,10 @@ import {
   userProfileUpdate,
   userProfilePasswordUpdate,
 } from "../../services/serviceUser";
-import { tokenProcessRefreshToken } from "../../services/serviceToken";
+import {
+  tokenProcessRefreshToken,
+  tokenClearRefreshToken,
+} from "../../services/serviceToken";
 import { ApiError, filteredOutputByWhitelist } from "../../utils";
 import { authorizeApiUser, isCurrentApiUser } from "../helpers";
 
@@ -241,7 +244,7 @@ export const UserProfilePasswordUpdateMutation = extendType({
         authorizeApiUser(ctx, "profileUpdate") &&
         isCurrentApiUser(ctx, args.userId),
 
-      async resolve(...[, args]) {
+      async resolve(...[, args, { res }]) {
         const user = await userProfilePasswordUpdate(
           args.scope as AppScopes,
           args.userId,
@@ -250,6 +253,8 @@ export const UserProfilePasswordUpdateMutation = extendType({
 
         if (!user)
           throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Update failed");
+
+        tokenClearRefreshToken(res);
 
         return filteredOutputByWhitelist(user, FIELD_KEYS_USER_PROFILE);
       },

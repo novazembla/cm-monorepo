@@ -5,7 +5,7 @@ import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
 
-import { ValidationSchemaRegister, yupFieldIsRequired } from "~/validation";
+import { ValidationSchemaSignup, yupFieldIsRequired } from "~/validation";
 
 import { useUserSignupMutation } from "~/hooks/mutations";
 
@@ -13,7 +13,8 @@ import {
   TextErrorMessage,
   FieldInput,
   FieldRow,
-  FieldSwitch
+  FieldSwitch,
+  TwoColFieldRow
 } from "~/components/forms";
 
 import { Heading, Text, Button, Flex, Box, Divider } from "@chakra-ui/react";
@@ -22,7 +23,6 @@ import {
   AuthenticationPage,
   AuthenticationFormContainer,
 } from "~/components/ui";
-import TwoColFieldRow from "~/components/forms/TwoColFieldRow";
 
 const Signup = () => {
   const [firstMutation, firstMutationResults] = useUserSignupMutation();
@@ -35,7 +35,7 @@ const Signup = () => {
 
   const formMethods = useForm({
     'mode':'onTouched',
-    resolver: yupResolver(ValidationSchemaRegister),
+    resolver: yupResolver(ValidationSchemaSignup),
   });
 
   const {
@@ -44,7 +44,7 @@ const Signup = () => {
   } = formMethods;
 
   const onSubmit = async (
-    data: yup.InferType<typeof ValidationSchemaRegister>
+    data: yup.InferType<typeof ValidationSchemaSignup>
   ) => {
     setIsFormError(false); // TODO: how to have this clear set on form change, also how to set the form fields to not valid to make them red...
     try {
@@ -77,9 +77,6 @@ const Signup = () => {
             <form
               noValidate
               onSubmit={handleSubmit(onSubmit)}
-              onChange={() => {
-                setIsFormError(false);
-              }}
             >
               <fieldset disabled={disableForm}>
                 {isFormError && (
@@ -96,8 +93,8 @@ const Signup = () => {
                         "page.register.form_field_firstName_label",
                         "First Name"
                       )}
-                      isRequired={yupFieldIsRequired("firstName",ValidationSchemaRegister)}
-                      data={{
+                      isRequired={yupFieldIsRequired("firstName",ValidationSchemaSignup)}
+                      settings={{
                         placeholder: t(
                           "page.register.form_field_firstName_placeholder",
                           "Your first name"
@@ -114,15 +111,12 @@ const Signup = () => {
                         "page.register.form_field_lastName_label",
                         "Last Name"
                       )}
-                      isRequired={yupFieldIsRequired("lastName",ValidationSchemaRegister)}
-                      data={{
+                      isRequired={yupFieldIsRequired("lastName",ValidationSchemaSignup)}
+                      settings={{
                         placeholder: t(
                           "page.register.form_field_lastName_placeholder",
                           "Your last name"
                         ),
-                        onChange: () => {
-                          setIsFormError(false);
-                        },
                       }}
                     />
                   </FieldRow>
@@ -136,15 +130,12 @@ const Signup = () => {
                       "page.register.form_field_registration_label",
                       "Email Address"
                     )}
-                    isRequired={yupFieldIsRequired("email",ValidationSchemaRegister)}
-                    data={{
+                    isRequired={yupFieldIsRequired("email",ValidationSchemaSignup)}
+                    settings={{
                       placeholder: t(
                         "page.register.form_field_registration_placeholder",
                         "Please enter your email address"
                       ),
-                      onChange: () => {
-                        setIsFormError(false);
-                      },
                     }}
                   />
                 </FieldRow>
@@ -158,8 +149,8 @@ const Signup = () => {
                       "page.register.form_field_password_label",
                       "Your password"
                     )}
-                    isRequired={yupFieldIsRequired("password",ValidationSchemaRegister)}
-                    data={{
+                    isRequired={yupFieldIsRequired("password",ValidationSchemaSignup)}
+                    settings={{
                       placeholder: t(
                         "page.register.form_field_password_placeholder",
                         "Please enter your password"
@@ -178,7 +169,7 @@ const Signup = () => {
                         )}
                       </span>
                     }
-                    isRequired={yupFieldIsRequired("acceptedTerms",ValidationSchemaRegister)}
+                    isRequired={yupFieldIsRequired("acceptedTerms",ValidationSchemaSignup)}
                   />
                 </FieldRow>
                 <Divider />

@@ -4,7 +4,7 @@ import translations from "./translations";
 
 yup.setLocale(translations);
 
-const schema = yup.object().shape({
+export const ValidationSchemaLogin = yup.object().shape({
   email: yup
     .string()
     .email()
@@ -20,4 +20,4 @@ const schema = yup.object().shape({
     ),
 });
 
-export default schema;
+export default ValidationSchemaLogin;

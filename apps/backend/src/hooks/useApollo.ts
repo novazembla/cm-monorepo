@@ -1,10 +1,10 @@
 import { useMemo } from "react";
 import { ApolloClient } from "@apollo/client";
 
-import { CultureMapSettings } from "~/context";
+import { AppConfig } from "~/config";
 import { apollo } from "~/services";
 
-export function useApollo(settings: CultureMapSettings): ApolloClient<any> {
+export function useApollo(settings: AppConfig): ApolloClient<any> {
   const client = useMemo(
     () => apollo.initializeClient(settings),
     [settings]

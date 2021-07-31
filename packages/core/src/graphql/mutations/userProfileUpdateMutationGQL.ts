@@ -13,7 +13,10 @@ export const userProfileUpdateMutationGQL = gql`
       userId: $userId
       data: { firstName: $firstName, lastName: $lastName, email: $email }
     ) {
-      User
+      id
+      firstName
+      lastName
+      email
     }
   }
 `;
