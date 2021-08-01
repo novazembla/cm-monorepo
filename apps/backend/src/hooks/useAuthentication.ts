@@ -13,14 +13,19 @@ export const useAuthentication = () => {
     return (authenticated && apiUser !== null) || user.isRefreshing();
   };
 
-  const login = (u: ApiUser) => {
-    user.login(u);
+  const login = async (u: ApiUser): Promise<boolean> => {
+    return await user.login(u);
   };
 
-  const logout = () => {
-    user.logout();
-    history.push("/login");
+  const logout = async () => {
+    return await user.logout();
   };
 
-  return [apiUser, { isLoggedIn, login, logout }] as const;
+  const logoutAndRedirect = async (path: string = "/login") => {
+    const result = await user.logout();
+    history.push(path);
+    return result;
+  };
+
+  return [apiUser, { isLoggedIn, login, logout, logoutAndRedirect }] as const;
 };

@@ -22,7 +22,7 @@ export interface ApiUser {
 let refreshTimeoutId: ReturnType<typeof setTimeout>;
 
 // TODO: xxx is the autorefresh really needed? Or is it good enough to rely on the refresh by use of the API?
-const refreshToken = () => {
+const refreshToken = async () => {
   if (client && !isRefreshing() && getRefreshCookie()) {
     console.log("refresh-1");
   
@@ -62,7 +62,7 @@ const refreshToken = () => {
         logout();
       });
   } else if (!isRefreshing) {
-    logout();
+    await logout();
   }
 };
 
@@ -71,7 +71,7 @@ const setRefreshing = (status: boolean) =>
 
 const isRefreshing = () => store.getState().user.refreshing;
 
-const login = (u: ApiUser) => {
+const login = async (u: ApiUser): Promise<boolean> => new Promise((resolve) => {
   setRefreshing(false);
   setTabWideAccessStatus("logged-in");
 
@@ -88,23 +88,23 @@ const login = (u: ApiUser) => {
   store.dispatch(
     userLogin({ apiUser: u, expires: getRefreshCookie() })
   );
-};
 
-const logout = async () => {
-  setRefreshing(false);
+  resolve(true);
+});
+
+const logout = async (): Promise<boolean> => new Promise(async (resolve) => {
+  setRefreshing(true);
   authentication.removeAuthToken();
   authentication.removeRefreshCookie();
   
-  console.log(22);
-  
-  console.log(23);
-  console.log(24);
-  console.log(25);
   setTabWideAccessStatus("logged-out");
   
   store.dispatch(userLogout());
   if (client) await client.clearStore();
-};
+  setRefreshing(false);
+
+  resolve(true);
+});
 
 export const isLocalSessionValid = (): boolean => {
   let sessionOk = false;

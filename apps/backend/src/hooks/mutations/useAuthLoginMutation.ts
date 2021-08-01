@@ -25,8 +25,9 @@ export const useAuthLoginMutation = () => {
   });
 
   // full login function
-  const execute = (email: string, password: string) => {
-    logout();
+  const execute = async (email: string, password: string) => {
+    await logout();
+
     return mutation({
       variables: {
         scope: config.scope,

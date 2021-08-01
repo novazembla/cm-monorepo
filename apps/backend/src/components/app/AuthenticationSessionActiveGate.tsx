@@ -3,10 +3,14 @@ import { useHistory } from 'react-router-dom';
 
 import { user} from "~/services";
 
-export const AuthenticationSessionActiveGate = ({children}:{children:React.ReactNode}) => {
+export const AuthenticationSessionActiveGate =  ({children}:{children:React.ReactNode}) => {
+  const processLogout = async () => {
+    await user.logout();
+  }
+
   const history = useHistory();
   if (!user.isLocalSessionValid()) {
-    user.logout();
+    processLogout();
     history.push("/login");
   }
   return (<>{children}</>)

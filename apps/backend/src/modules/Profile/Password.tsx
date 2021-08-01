@@ -1,7 +1,6 @@
 import { useState } from "react";
 import * as yup from "yup";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -9,9 +8,9 @@ import { TextErrorMessage } from "~/components/forms";
 
 import { PasswordResetValidationSchema } from "~/validation";
 import { useUserProfilePasswordUpdateMutation } from "~/hooks/mutations";
-import { useAuthentication, useTypedDispatch } from "~/hooks";
+import { useAuthentication } from "~/hooks";
 
-import { Button, Divider, HStack, useToast } from "@chakra-ui/react";
+import { Button, Divider, HStack } from "@chakra-ui/react";
 import { NavLink } from "react-router-dom";
 
 import { ModuleSubNav, ModulePage } from "~/components/modules";
@@ -23,13 +22,9 @@ import { PasswordUpdateForm } from "./forms";
 
 
 const Update = () => {
-  const dispatch = useTypedDispatch();
-  const [apiUser, {logout}] = useAuthentication();
+  const [apiUser, {logoutAndRedirect}] = useAuthentication();
   const { t } = useTranslation();
-  const toast = useToast();
-
-
-  const history = useHistory();
+  
   const [firstMutation, firstMutationResults] = useUserProfilePasswordUpdateMutation();
   const [isFormError, setIsFormError] = useState(false);
 
@@ -62,8 +57,7 @@ const Update = () => {
     try {
       if (apiUser) {
         await firstMutation(apiUser?.id, newData.newPassword);
-        logout();
-        history.push("/password-has-been-reset");
+        await logoutAndRedirect("/password-has-been-reset");
       } else {
         setIsFormError(true);
       }

@@ -30,16 +30,15 @@ const menuLinkStyling = {
 export const Header = (/* props */) => {
   const history = useHistory();
   const [logoutMutation] = useAuthLogoutMutation();
-  const [apiUser, {logout}] = useAuthentication();
+  const [apiUser, {logoutAndRedirect}] = useAuthentication();
   const { t } = useTranslation();
 
   const onLogoutClick = async () => {
     if (apiUser) {
       try {
         await logoutMutation(apiUser.id);
-      } catch (err) {
-        logout();
-      }
+      } catch (err) {}
+      await logoutAndRedirect();
     }
   };
 

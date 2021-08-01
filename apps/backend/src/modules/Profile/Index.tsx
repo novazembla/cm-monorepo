@@ -4,7 +4,6 @@ import { userProfileReadQueryGQL } from "@culturemap/core";
 
 import { useQuery } from "@apollo/client";
 import {
-  Box,
   Button,
   HStack,
   Stat,

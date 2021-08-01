@@ -49,8 +49,8 @@ const retryWithRefreshTokenLink = onError(
             extensions.code === "UNAUTHENTICATED"
           ) {
             const observable = new Observable((observer) => {
-              if (client) {
-                console.log("refresh-2");
+              if (client && !user.isRefreshing()) {
+                user.setRefreshing(true);
                 client.mutate({
                   fetchPolicy: "no-cache",
                   mutation: authRefreshMutationGQL,
@@ -100,9 +100,10 @@ const retryWithRefreshTokenLink = onError(
 
                   forward(operation).subscribe(subscriber);
                 })
-                .catch((error) => {
-                  console.error(error)
-                  user.logout();
+                .catch(async (error) => {
+                  console.error(error);
+                  
+                  await user.logout();
                   
                   observer.error(error);
                 });
