@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { Heading, Text, Button, Flex, Box, Divider, Link } from "@chakra-ui/react";
+import {
+  Heading,
+  Text,
+  Button,
+  Flex,
+  Box,
+  Divider,
+  Link,
+} from "@chakra-ui/react";
 import * as yup from "yup";
 import { Link as RouterLink } from "react-router-dom";
 import { useForm, FormProvider } from "react-hook-form";
@@ -22,9 +30,9 @@ const Login = () => {
   const [isFormError, setIsFormError] = useState(false);
 
   const { t } = useTranslation();
-  
+
   const formMethods = useForm({
-    'mode':'onTouched',
+    mode: "onTouched",
     resolver: yupResolver(ValidationSchemaLogin),
   });
 
@@ -38,8 +46,12 @@ const Login = () => {
   ) => {
     setIsFormError(false);
     try {
-      await firstMutation(data.email, data.password);
+      const { errors } = await firstMutation(data.email, data.password);
+
+      if (errors) setIsFormError(true);
+ 
     } catch (err) {
+      console.log(1);
       setIsFormError(true);
     }
   };
@@ -72,12 +84,9 @@ const Login = () => {
             )}
           </Text>
         </Box>
-        <Divider/>
+        <Divider />
         <FormProvider {...formMethods}>
-          <form
-            noValidate
-            onSubmit={handleSubmit(onSubmit)}
-          >
+          <form noValidate onSubmit={handleSubmit(onSubmit)}>
             <fieldset>
               {isFormError && <TextErrorMessage error="page.login.error" />}
               <FieldRow>
@@ -89,7 +98,10 @@ const Login = () => {
                     "page.login.form_field_login_label",
                     "Email Address"
                   )}
-                  isRequired={yupFieldIsRequired('email', ValidationSchemaLogin)}
+                  isRequired={yupFieldIsRequired(
+                    "email",
+                    ValidationSchemaLogin
+                  )}
                   settings={{
                     placeholder: t(
                       "page.login.form_field_login_placeholder",
@@ -107,7 +119,10 @@ const Login = () => {
                     "page.login.form_field_password_label",
                     "Your password"
                   )}
-                  isRequired={yupFieldIsRequired('password', ValidationSchemaLogin)}
+                  isRequired={yupFieldIsRequired(
+                    "password",
+                    ValidationSchemaLogin
+                  )}
                   settings={{
                     placeholder: t(
                       "page.login.form_field_password_placeholder",
@@ -116,7 +131,7 @@ const Login = () => {
                   }}
                 />
               </FieldRow>
-              <Divider/>
+              <Divider />
               <FieldRow>
                 <Flex justify="space-between" alignItems="center" w="100%">
                   <Link as={RouterLink} to="/forgot-password">

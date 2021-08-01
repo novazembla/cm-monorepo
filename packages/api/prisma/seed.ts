@@ -5,40 +5,74 @@ const { PrismaClient } = Prisma;
 
 const prisma = new PrismaClient();
 
+const upsertUser = async (
+  email: string,
+  role: string,
+  password: string,
+  i: number,
+  emailVerified: boolean = false
+) => {
+  try {
+    const data = {
+      email,
+      role,
+      firstName: role,
+      lastName: `${i}`,
+      emailVerified,
+      password: await argon2.hash(password),
+    };
+
+    const user = await prisma.user.upsert({
+      where: { email },
+      update: data,
+      create: data,
+      select: {
+        id: true,
+        email: true,
+      },
+    });
+    return user;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 async function main() {
   // eslint-disable-next-line no-console
   console.log("Running scripts ...");
 
-  const email = process.env.EMAIL_FROM;
-  const password = process.env.FIRST_USER_PASSWORD;
+  await Promise.all(
+    ["administrator", "editor", "contributor", "user"].map(async (role) => {
+      const user = await upsertUser(`${role}@user.com`, role, role, 1);
 
-  if (email && password) {
-    const admin = await prisma.user.upsert({
-      where: { email },
-      update: {},
-      create: {
-        email,
-        firstName: "Anne",
-        lastName: "Administrator",
-        password: await argon2.hash(password),
-      },
-    });
+      console.log(`Seeded: ${user?.email}`);
+      return user;
+    })
+  );
 
-    if (admin) {
-      // eslint-disable-next-line no-console
-      console.log("Created or updated admin user");
-    }
-  }
+  await Promise.all(
+    [...Array(100).keys()].map(async (i) => {
+      const user = await upsertUser(
+        `user${i}@user.com`,
+        "user",
+        "user",
+        i + 1,
+        i % 2 == 0
+      );
+
+      console.log(`Seeded: user${i + 1}@user.com`);
+      return user;
+    })
+  );
 }
 
 main()
-  .catch((e) => {
-    // eslint-disable-next-line no-console
-    console.error(e);
-    process.exit(1);
+  .then(async () => {
+    console.log("🎉  Seed successful");
+    process.exit(0);
   })
-  .finally(async () => {
-    await prisma.$disconnect();
-    // eslint-disable-next-line no-console
-    console.log("Done!");
+  .catch((e) => {
+    console.error(e);
+    console.error("\n❌  Seed failed. See above.");
+    process.exit(1);
   });

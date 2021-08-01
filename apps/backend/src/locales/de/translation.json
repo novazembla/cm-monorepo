@@ -28,9 +28,9 @@
       "defined": "{{path}} must be defined"
     },
     "string": {
-      "length": "{{path}} must be exactly {{length}} characters",
-      "min": "{{path}} must be at least {{min}} characters",
-      "max": "{{path}} must be at most {{max}} characters",
+      "length": "{{path}} must be exactly {{length}} characters long",
+      "min": "{{path}} must be at least {{min}} characters long",
+      "max": "{{path}} must be at most {{max}} characters long",
       "matches": "{{path}} must match the following: \"{{regex}}\"",
       "email": "{{path}} must be a valid email address",
       "url": "{{path}} must be a valid URL",

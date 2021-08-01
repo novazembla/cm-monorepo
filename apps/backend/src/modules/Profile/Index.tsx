@@ -1,19 +1,14 @@
-// import { useFetch } from "~/hooks/useFetch";
-// const users = useFretch('xxx');
 import { userProfileReadQueryGQL } from "@culturemap/core";
 
 import { useQuery } from "@apollo/client";
 import {
-  Button,
-  HStack,
   Stat,
   StatLabel,
   StatNumber,
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
-import { NavLink } from "react-router-dom";
 
-import { ModuleSubNav, ModulePage } from "~/components/modules";
+import { ModuleSubNav, ModulePage, ButtonListElement } from "~/components/modules";
 
 import { moduleRootPath } from "./config";
 import { useAuthentication, useConfig } from "~/hooks";
@@ -37,20 +32,25 @@ const Index = () => {
     },
   ];
 
+  const buttonList: ButtonListElement[] = [
+    {
+      type: "navigation",
+      to: "/profile/update",
+      label: t("module.profile.button.update", "Update profile"),
+      userCan: "profileUpdate",
+    },{
+      type: "navigation",
+      to: "/profile/password",
+      label: t("module.profile.button.updatepassword", "Update password"),
+      userCan: "profileUpdate",
+    },
+  ];
+
   const {firstName, lastName, email, emailVerified} = data?.userProfileRead ?? {};
 
   return (
     <>
-      <ModuleSubNav breadcrumb={breadcrumb}>
-        <HStack spacing="2">
-          <Button as={NavLink} to="/profile/update">
-            {t("module.profile.button.update", "Update profile")}
-          </Button>
-          <Button as={NavLink} to="/profile/password">
-            {t("module.profile.button.updatepassword", "Update password")}
-          </Button>
-        </HStack>
-      </ModuleSubNav>
+      <ModuleSubNav breadcrumb={breadcrumb} buttonList={buttonList} />
       <ModulePage isLoading={loading} isError={!!error}>
          {firstName &&
           <>

@@ -1,29 +1,40 @@
-import { Box, Button, HStack } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
-import { NavLink } from "react-router-dom";
-import {ModuleSubNav} from "~/components/modules";
+import {
+  ModuleSubNav,
+  ButtonListElement,
+  ModulePage,
+} from "~/components/modules";
 
 import { moduleRootPath } from "./config";
 
 const Index = () => {
   const { t } = useTranslation();
-  const breadcrumb = [{
-    path: moduleRootPath,
-    title: t("module.users.title", "Users")
-  }];
+  const breadcrumb = [
+    {
+      path: moduleRootPath,
+      title: t("module.users.title", "Users"),
+    },
+  ];
+
+  const buttonList: ButtonListElement[] = [
+    {
+      type: "navigation",
+      to: "/users/create",
+      label: t("module.users.button.create", "Add user"),
+      userCan: "userCreate",
+    },
+    {
+      type: "navigation",
+      to: "/users/update/123",
+      label: t("module.users.button.update", "Edit user"),
+      userCan: "userUpdate",
+    },
+  ];
 
   return (
     <>
-      <ModuleSubNav
-        breadcrumb={breadcrumb}
-      >
-        <HStack spacing="2">
-          <Button as={NavLink} to="/users/create">{t('module.users.button.create',"Add user")}</Button>
-          <Button as={NavLink} to="/users/update/123">{t('module.users.button.update',"Edit user")}</Button>
-        </HStack>
-      </ModuleSubNav>
-
-      <Box layerStyle="pageContainerWhite">
+      <ModuleSubNav breadcrumb={breadcrumb} buttonList={buttonList} />
+      <ModulePage>
         <h2>Page Dashboard</h2>
         <p>
           HERE SHOULD an alert be shown if the user has not cofirmed her
@@ -135,7 +146,7 @@ const Index = () => {
           fermentum. Vivamus fringilla nunc vitae justo consectetur, aliquam
           gravida nisl mollis.
         </p>
-      </Box>
+      </ModulePage>
     </>
   );
 };

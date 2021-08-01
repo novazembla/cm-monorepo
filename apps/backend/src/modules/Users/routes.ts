@@ -1,34 +1,36 @@
-import type { RoutePrivateParams } from '~/config/routes';
+import type { RoutePrivateParams, ModuleAccessRules } from '~/config/routes';
 
 import Add from "./Add";
 import Update from "./Update";
 import Index from "./Index";
 
 import { moduleRootPath } from './config';
-// TODO: implement access protection ... 
-// also how to ensure user can only access own ... items ... 
-// 
+
+export const moduleAccessRules: ModuleAccessRules = {
+  userCan: "userRead"
+}
+
 export const moduleRoutes: RoutePrivateParams[] = [
   {
     key: "add",
     path: `${moduleRootPath}/create`,
     component: Add,
     exact: true,
-    userIs: "administrator",
+    userCan: "userCreate",
   },
   {
     key: "update",
     path: `${moduleRootPath}/update/:id`,
     component: Update,
     exact: true,
-    userIs: "administrator",
+    userCan: "userUpdate",
   },
   {
     key: "index",
     path: `${moduleRootPath}`,
     component: Index,
     exact: true,
-    userIs: "administrator",
+    userCan: "userRead",
   }
 ];
 

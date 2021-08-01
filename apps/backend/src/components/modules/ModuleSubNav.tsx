@@ -1,23 +1,119 @@
-// import { useFetch } from "~/hooks/useFetch";
-// const users = useFretch('xxx');
-
-import { Box, Flex, Heading, Link } from "@chakra-ui/react";
+import React, { MouseEventHandler } from "react";
+import { Box, Flex, Heading, Link, HStack, Button } from "@chakra-ui/react";
 import { NavLink } from "react-router-dom";
 import { ChevronRightIcon } from "@chakra-ui/icons";
-
+import { ModuleAccessRules } from "~/config/routes";
+import { useAuthentication } from "~/hooks";
 interface BreadcrumbElement {
   title: string;
   path?: string;
 }
 
+export interface ButtonListElementLink extends ModuleAccessRules {
+  label: string;
+  to?: string;
+  as?: React.ReactNode;
+  type: "back" | "navigation";
+}
+
+export interface ButtonListElementSubmit extends ModuleAccessRules {
+  label: string;
+  isLoading: boolean;
+  type: "submit";
+}
+
+export interface ButtonListElementButton extends ModuleAccessRules {
+  label: string;
+  isLoading: boolean;
+  onClick: MouseEventHandler;
+  type: "button";
+}
+
+export interface ButtonListRenderElement extends ModuleAccessRules {
+  key?: string;
+  to?: string | undefined;
+  as?: any;
+  onClick?: MouseEventHandler | undefined;
+  isLoading?: boolean | undefined;
+  colorScheme?: string | undefined;
+  type?: "submit";
+}
+
+export type ButtonListElement =
+  | ButtonListElementLink
+  | ButtonListElementSubmit
+  | ButtonListElementButton;
+
 export const ModuleSubNav = ({
   breadcrumb,
+  buttonList,
   children,
 }: {
   breadcrumb: BreadcrumbElement[];
+  buttonList?: ButtonListElement[];
   children?: React.ReactNode;
 }) => {
   // TODO: improve look on mobile
+  const [appUser] = useAuthentication();
+
+  let permissisionedButtonList: React.ReactNode[] = [];
+
+  if (Array.isArray(buttonList) && buttonList.length) {
+    permissisionedButtonList = buttonList.reduce(function (
+      pButtonList,
+      button,
+      index
+    ) {
+      if (button.userIs && !appUser?.has(button.userIs)) return pButtonList;
+
+      if (button.userCan && !appUser?.can(button.userCan)) return pButtonList;
+
+      let buttonProps: ButtonListRenderElement = {
+        key: `bl-${index}`,
+      };
+
+      switch (button.type) {
+        case "navigation":
+          buttonProps = {
+            ...buttonProps,
+            to: button.to,
+            as: NavLink,
+          };
+          break;
+
+        case "back":
+          buttonProps = {
+            ...buttonProps,
+            to: button.to,
+            as: NavLink,
+            colorScheme: "gray",
+          };
+          break;
+
+        case "submit":
+          buttonProps = {
+            ...buttonProps,
+            type: "submit",
+            isLoading: button.isLoading,
+          };
+          break;
+
+        case "button":
+          buttonProps = {
+            ...buttonProps,
+            onClick: button.onClick,
+            isLoading: button.isLoading,
+          };
+          break;
+      }
+
+      const b = <Button {...buttonProps}>{button?.label}</Button>;
+      pButtonList.push(b);
+      return pButtonList;
+    },
+    [] as React.ReactNode[]);
+  }
+
   return (
     <>
       <Box
@@ -57,10 +153,43 @@ export const ModuleSubNav = ({
               return <span key={`${index}-sep`}>{element?.title}</span>;
             })}
           </Heading>
-          <Box>{children}</Box>
+          <Box>
+            {(permissisionedButtonList && permissisionedButtonList.length > 0) && (
+              <HStack spacing="2">{permissisionedButtonList}</HStack>
+            )}
+
+            {children}
+          </Box>
         </Flex>
       </Box>
     </>
   );
 };
 export default ModuleSubNav;
+
+/*
+Examples
+const buttonList: ButtonListElement[] = [
+    {
+      type: "back",
+      to: moduleRootPath,
+      label: t("module.button.cancel", "Cancel"),
+    },
+    {
+      type: "navigation",
+      to: moduleRootPath,
+      label: t("module.button.cancel", "Cancel"),
+    },
+    {
+      type: "submit",
+      isLoading: isSubmitting,
+      label: t("module.button.update", "Update"),
+    },
+    {
+      type: "button",
+      isLoading: isSubmitting,
+      onClick: () => console.log("click"),
+      label: "button test",
+    },
+  ];
+*/

@@ -8,7 +8,7 @@ export const PasswordResetValidationSchema = yup.object().shape({
   newPassword: yup.string().required(
     // t("validation.page.passwordreset.pleaseProvideYourNewPassword", "Please enter your new password")
     "validation.page.passwordreset.pleaseProvideYourNewPassword"
-  ),
+  ).min(12),
   confirmPassword: yup
     .string()
     .required(

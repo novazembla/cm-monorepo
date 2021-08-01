@@ -31,13 +31,13 @@ export let mixed = {
 };
 
 export let string = {
-  // t('validation.string.length', '{{path}} must be exactly {{length}} characters')
+  // t('validation.string.length', '{{path}} must be exactly {{length}} characters long')
   length: ({ path, length }: i18nTranslationProps) => ({ key: 'validation.string.length',  values: { path, length } }),
 
-  // t('validation.string.min', '{{path}} must be at least {{min}} characters')
+  // t('validation.string.min', '{{path}} must be at least {{min}} characters long')
   min: ({ path, min }: i18nTranslationProps) => ({ key: 'validation.string.min',  values: { path, min } }),
 
-  // t('validation.string.max', '{{path}} must be at most {{max}} characters')
+  // t('validation.string.max', '{{path}} must be at most {{max}} characters long')
   max: ({ path, max }: i18nTranslationProps) => ({ key: 'validation.string.max',  values: { path, max } }),
 
   // t('validation.string.matches', '{{path}} must match the following: "{{regex}}"')

@@ -12,12 +12,11 @@ import { useUserProfileUpdateMutation } from "~/hooks/mutations";
 import { useAuthentication, useConfig, useTypedDispatch } from "~/hooks";
 import { userProfileUpdate } from "~/redux/slices/user";
 
-import { Button, Divider, HStack, useToast } from "@chakra-ui/react";
-import { NavLink } from "react-router-dom";
+import { Divider, useToast } from "@chakra-ui/react";
 import { userProfileReadQueryGQL } from "@culturemap/core";
 import { useQuery } from "@apollo/client";
 
-import { ModuleSubNav, ModulePage } from "~/components/modules";
+import { ModuleSubNav, ModulePage, ButtonListElement } from "~/components/modules";
 
 import { moduleRootPath } from "./config";
 
@@ -43,15 +42,6 @@ const Update = () => {
 
   const disableForm = firstMutationResults.loading;
 
-  const breadcrumb = [
-    {
-      path: moduleRootPath,
-      title: t("module.profile.title", "Profile"),
-    },
-    {
-      title: t("module.profile.page.title.updateprofile", "Update profile"),
-    },
-  ];
 
   const formMethods = useForm({
     defaultValues: data,
@@ -106,21 +96,37 @@ const Update = () => {
     }
   };
 
+  const breadcrumb = [
+    {
+      path: moduleRootPath,
+      title: t("module.profile.title", "Profile"),
+    },
+    {
+      title: t("module.profile.page.title.updateprofile", "Update profile"),
+    },
+  ];
+
+  const buttonList: ButtonListElement[] = [
+    {
+      type: "back",
+      to: moduleRootPath,
+      label: t("module.button.cancel", "Cancel"),
+      userCan: "profileUpdate",
+    },
+    {
+      type: "submit",
+      isLoading: isSubmitting,
+      label: t("module.button.update", "Update"),
+      userCan: "profileUpdate",
+    },
+  ];
+
   return (
     <>
       <FormProvider {...formMethods}>
         <form noValidate onSubmit={handleSubmit(onSubmit)}>
           <fieldset disabled={disableForm}>
-            <ModuleSubNav breadcrumb={breadcrumb}>
-              <HStack spacing="2">
-                <Button colorScheme="gray" as={NavLink} to={moduleRootPath}>
-                  {t("module.button.cancel", "Cancel")}
-                </Button>
-                <Button type="submit" isLoading={isSubmitting}>
-                  {t("module.button.update", "Update")}
-                </Button>
-              </HStack>
-            </ModuleSubNav>
+            <ModuleSubNav breadcrumb={breadcrumb} buttonList={buttonList} />
             <ModulePage isLoading={loading} isError={!!error}>
               {(isFormError) && <><TextErrorMessage error="general.writeerror.desc" /><Divider/></>}
               <UpdateForm data={data?.userProfileRead} />

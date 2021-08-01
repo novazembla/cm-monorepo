@@ -3,11 +3,11 @@ import {
   HiMenu,
   HiOutlineHome,
   HiOutlineUsers,
-  HiOutlineMap,
-  HiOutlineLocationMarker,
+  // HiOutlineMap,
+  // HiOutlineLocationMarker,
 } from "react-icons/hi";
-import { RiCalendarEventLine } from "react-icons/ri";
-import { IoSettingsOutline } from "react-icons/io5";
+// import { RiCalendarEventLine } from "react-icons/ri";
+// import { IoSettingsOutline } from "react-icons/io5";
 import { MdClose } from "react-icons/md";
 import { NavLink } from "react-router-dom";
 import {
@@ -20,6 +20,10 @@ import {
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { InlineLanguageButtons } from "../ui";
+
+import { moduleAccessRules as dashboadModuleAccessRules } from "~/modules/DashBoard/routes";
+import { moduleAccessRules as usersModuleAccessRules } from "~/modules/Users/routes";
+import { useAuthentication } from "~/hooks";
 
 const NavItem = ({
   title,
@@ -44,7 +48,7 @@ const NavItem = ({
         display="flex"
         alignItems="center"
         fontSize="lg"
-        color="gray.800"
+        color="var(--chakra-colors-gray-800) !important"
         ml="-3px"
         pl="1"
         py="1"
@@ -52,14 +56,14 @@ const NavItem = ({
         activeClassName="active"
         _hover={{
           textDecoration: "none",
-          color: "wine.600",
+          color: "var(--chakra-colors-wine-600) !important",
         }}
         sx={{
           "&.active": {
-            color: "wine.600",
+            color: "var(--chakra-colors-wine-600) !important",
           },
           "&.active .chakra-icon": {
-            color: "wine.600",
+            color: "var(--chakra-colors-wine-600) !important",
           },
         }}
         onClick={onClick}
@@ -72,6 +76,8 @@ const NavItem = ({
 };
 
 export const Sidebar = () => {
+  const [appUser] = useAuthentication();
+
   const { t } = useTranslation();
   
   const [tw] = useMediaQuery("(min-width: 55em)");
@@ -88,37 +94,48 @@ export const Sidebar = () => {
       path: "/dashboard",
       exact: true,
       icon: HiOutlineHome,
+      ...dashboadModuleAccessRules,
     },
-    {
-      title: t("module.title.locations", "Locations"),
-      path: "/locations",
-      exact: false,
-      icon: HiOutlineLocationMarker,
-    },
-    {
-      title: t("module.title.events", "Events"),
-      path: "/events",
-      exact: false,
-      icon: RiCalendarEventLine,
-    },
-    {
-      title: t("module.title.tours", "Tours"),
-      path: "/tours",
-      exact: false,
-      icon: HiOutlineMap,
-    },
+    // {
+    //   title: t("module.title.locations", "Locations"),
+    //   path: "/locations",
+    //   exact: false,
+    //   icon: HiOutlineLocationMarker,
+    //   ...TODO:ModuleAccessRules,
+    // },
+    // {
+    //   title: t("module.title.events", "Events"),
+    //   path: "/events",
+    //   exact: false,
+    //   icon: RiCalendarEventLine,
+    //   ...TODO:ModuleAccessRules,
+    // },
+    // {
+    //   title: t("module.title.tours", "Tours"),
+    //   path: "/tours",
+    //   exact: false,
+    //   icon: HiOutlineMap,
+    // },,
+    // {
+    //   title: t("module.title.pages", "pages"),
+    //   path: "/pages",
+    //   exact: false,
+    //   icon: TODO: ,
+    //   ...TODO:ModuleAccessRules,
+    // }
     {
       title: t("module.title.users", "Users"),
       path: "/users",
       exact: false,
       icon: HiOutlineUsers,
+      ...usersModuleAccessRules,
     },
-    {
-      title: t("module.title.settings", "Settings"),
-      path: "/settings",
-      exact: false,
-      icon: IoSettingsOutline,
-    },
+    // {
+    //   title: t("module.title.settings", "Settings"),
+    //   path: "/settings",
+    //   exact: false,
+    //   icon: IoSettingsOutline,
+    // },
   ];
 
   return (
@@ -180,9 +197,15 @@ export const Sidebar = () => {
           mt={{ base: 12, tw: 4}}
           w={{ base: "100%", tw: "260px" }}
         >
-          {mainNavLinks.map((link) => (
-            <NavItem key={link.path} {...link} onClick={onToggle} />
-          ))}
+          {mainNavLinks.map((link) => {
+            if (link.userIs && !appUser?.has(link.userIs))
+              return null;
+        
+            if (link.userCan && !appUser?.can(link.userCan))
+              return null;
+            
+            return <NavItem key={link.path} {...link} onClick={onToggle} />
+          })}
 
           <Box mt="8">
             <InlineLanguageButtons />

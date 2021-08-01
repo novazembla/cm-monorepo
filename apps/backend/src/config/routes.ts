@@ -1,8 +1,13 @@
-import { lazy } from "react";
+import React, { lazy } from "react";
+import { RouteProps } from "react-router-dom";
 
 import type { PermissionNames, RoleNames } from "@culturemap/core";
 
 import { getAppConfig } from "~/config";
+
+import { moduleAccessRules as dashboadModuleAccessRules } from "~/modules/DashBoard/routes";
+import { moduleAccessRules as profileModuleAccessRules } from "~/modules/Profile/routes";
+import { moduleAccessRules as usersModuleAccessRules } from "~/modules/Users/routes";
 
 // Public
 const Login = lazy(() => import("~/pages/Login/Login"));
@@ -15,7 +20,6 @@ const PasswordReset = lazy(
 const PasswordHasBeenReset = lazy(
   () => import("~/pages/ChangePassword/PasswordHasBeenReset")
 );
-
 
 const Profile = lazy(() => import("~/modules/Profile/Profile"));
 const Signup = lazy(() => import("~/pages/Signup/Signup"));
@@ -34,7 +38,7 @@ const config = getAppConfig();
 export interface RouteParams {
   key: string;
   path: string;
-  component: any;
+  component: React.FC;
   exact: boolean;
 }
 
@@ -46,9 +50,16 @@ export interface RoutePrivateUserIsParams extends RouteParams {
   userIs: RoleNames | RoleNames[];
 }
 
-export type RoutePrivateParams =
-  | RoutePrivateUserCanParams
-  | RoutePrivateUserIsParams;
+export interface ModuleAccessRules {
+  userIs?: RoleNames | RoleNames[] | undefined;
+  userCan?: PermissionNames | PermissionNames[] | undefined;
+}
+
+export interface RoutePrivateParams extends RouteParams, ModuleAccessRules {}
+
+export interface AppRouteProps extends RouteProps, ModuleAccessRules {
+  key: string;  
+}   
 
 export const routes: RouteParams[] = [
   {
@@ -57,12 +68,6 @@ export const routes: RouteParams[] = [
     component: EmailConfirmation,
     exact: true,
   },
-  // {
-  //   key: "profile",
-  //   path: "/profile",
-  //   component: Profile, // sub routing is handled in that component
-  //   exact: false // important, PageSettings is just a new Router switch container
-  // }
 ];
 
 export const publicOnlyRoutes: RouteParams[] = [
@@ -102,36 +107,28 @@ if (config.enableRegistration) {
   });
 }
 
-// TODO: implement access protection ...
-
 export const privateRoutes: RoutePrivateParams[] = [
   {
     key: "dashboard",
     path: "/dashboard",
     component: DashBoard,
     exact: true,
-    userCan: "accessAsAuthenticatedUser",
+    ...dashboadModuleAccessRules
   },
   {
     key: "profile",
     path: "/profile",
     component: Profile,
     exact: false,
-    userCan: "profileRead",
+    ...profileModuleAccessRules
   },
   {
     key: "users",
     path: "/users",
     component: Users,
     exact: false,
-    userIs: "administrator",
+    ...usersModuleAccessRules
   },
-  // {
-  //   key: "profile",
-  //   path: "/profile",
-  //   component: Profile, // sub routing is handled in that component
-  //   exact: false // important, PageSettings is just a new Router switch container
-  // }
 ];
 
 export const getRoutesPathsArray = (): string[] => {

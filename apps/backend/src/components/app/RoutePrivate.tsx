@@ -1,30 +1,35 @@
-import React from "react";
 import { Route, Redirect } from "react-router-dom";
 import { useAuthentication } from "~/hooks";
+import type { AppRouteProps } from "~/config/routes";
+import { ModulePageAccessDenied } from "~/components/modules";
 
-type CompontentProps = {
-  component: React.FC;
-};
-
-export const RoutePrivate = (props: CompontentProps) => {
-  const [, { isLoggedIn }] = useAuthentication();
+export const RoutePrivate = (props: AppRouteProps) => {
+  const [appUser, { isLoggedIn }] = useAuthentication();
   const { component: Component, ...restProps } = props;
 
   if (!Component) return null;
   
-  return isLoggedIn() ? (
-    <Route {...restProps} component={Component} />
-  ) : (
-    <Route
-      {...restProps}
-      render={(routeRenderProps) =>
-        <Redirect
-          to={{
-            pathname: "/login",
-            state: { from: routeRenderProps.location },
-          }}
-        />
-      }
-    />
-  );
+  if (isLoggedIn()) {
+    if (props.userIs && !appUser?.has(props.userIs))
+      return <Route {...restProps} component={ModulePageAccessDenied} />;
+
+    if (props.userCan && !appUser?.can(props.userCan))
+      return <Route {...restProps} component={ModulePageAccessDenied} />;
+
+    return <Route {...restProps} component={Component} />;
+  } else {
+    return (
+      <Route
+        {...restProps}
+        render={(routeRenderProps) => (
+          <Redirect
+            to={{
+              pathname: "/login",
+              state: { from: routeRenderProps.location },
+            }}
+          />
+        )}
+      />
+    );
+  }
 };

@@ -120,10 +120,11 @@ const PasswordReset = () => {
                     type="password"
                     label={t(
                       "page.passwordreset.form_field_password_label",
-                      "Password"
+                      "New Password"
                     )}
                     isRequired={yupFieldIsRequired("newPassword",PasswordResetValidationSchema)}
                     settings={{
+                      autoComplete: "new-password",
                       placeholder: t(
                         "page.passwordreset.form_field_password_placeholder",
                         "Please enter your password"
@@ -139,10 +140,11 @@ const PasswordReset = () => {
                     type="password"
                     label={t(
                       "page.passwordreset.form_field_password_confirmation_label",
-                      "Password confirmation"
+                      "Confirm your new password"
                     )}
                     isRequired={yupFieldIsRequired("confirmPassword",PasswordResetValidationSchema)}
                     settings={{
+                      autoComplete: "new-password",
                       placeholder: t(
                         "page.passwordreset.form_field_password_confirm_placeholder",
                         "Please confirm your password"

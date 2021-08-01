@@ -1,6 +1,3 @@
-// import { useFetch } from "~/hooks/useFetch";
-// const users = useFretch('xxx');
-
 import { Box, Text, Heading } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 

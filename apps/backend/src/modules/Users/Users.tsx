@@ -1,6 +1,3 @@
-// import { useFetch } from "~/hooks/useFetch";
-// const users = useFretch('xxx');
-
 import { Route, Switch} from "react-router-dom";
 import { moduleRoutes, getModuleRoutesPathsArray } from "./routes";
 import { RoutePrivate } from "~/components/app";

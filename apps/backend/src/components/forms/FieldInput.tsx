@@ -27,6 +27,7 @@ export interface FieldSettings {
   onChange?: ChangeEventHandler;
   rows?: number;
   required?: boolean;
+  autoComplete?: string;
   key?: string;
   name?: string;
   type?: string;
@@ -79,6 +80,8 @@ export const FieldInput = ({
     fieldProps.defaultValue = settings?.defaultValue;
 
   fieldProps.className = settings?.className ?? undefined;
+
+  fieldProps.autoComplete = settings?.autoComplete ?? undefined;
 
   fieldProps.placeholder = settings?.placeholder ?? undefined;
 

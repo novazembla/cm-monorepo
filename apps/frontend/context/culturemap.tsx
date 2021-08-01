@@ -42,9 +42,7 @@ export const ConfigContext: Context<any> = createContext({});
 // context provider
 export const ConfigContextProvider = ({ children }: Props) => {
   return (
-    <ConfigContext.Provider value={settings}>
-      {children}
-    </ConfigContext.Provider>
+    <ConfigContext.Provider value={settings}>{children}</ConfigContext.Provider>
   );
 };
 

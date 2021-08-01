@@ -2,7 +2,7 @@ import type { RoleNames, PermissionNames } from "../roles";
 import type { AppScopes } from "../types";
 
 export interface AuthenticatedApiUserFunctions {
-  has(name: RoleNames): boolean;
+  has(names: RoleNames | RoleNames[]): boolean;
   can(permissions: PermissionNames | PermissionNames[]): boolean;
 }
 
@@ -38,13 +38,13 @@ export interface JwtPayloadAuthenticatedApiUser {
   permissions?: PermissionNames[];
 }
 
-const has = (roles: RoleNames[], name: RoleNames) =>
-  roles && Array.isArray(roles) && roles.includes(name);
+const has = (roles: RoleNames[], names: RoleNames | RoleNames[]): boolean =>
+  (Array.isArray(names) ? names : [names]).some((name) => roles.includes(name));
 
 const can = (
   permissions: PermissionNames[],
   perms: PermissionNames | PermissionNames[]
-) =>
+): boolean =>
   (Array.isArray(perms) ? perms : [perms]).some((perm) =>
     permissions.includes(perm)
   );
@@ -60,8 +60,8 @@ export const createAuthenticatedApiUser = (
     roles,
     permissions,
     scope,
-    has(name: RoleNames) {
-      return has(this.roles, name);
+    has(names: RoleNames | RoleNames[]) {
+      return has(this.roles, names);
     },
     can(perms: PermissionNames | PermissionNames[]) {
       return can(this.permissions, perms);
@@ -82,8 +82,8 @@ export const createAuthenticatedAppUser = (
     firstName: appUser.firstName,
     lastName: appUser.lastName,
     scope,
-    has(name: RoleNames) {
-      return has(this.roles, name);
+    has(names: RoleNames | RoleNames[]) {
+      return has(this.roles, names);
     },
     can(perms: PermissionNames | PermissionNames[]) {
       return can(this.permissions, perms);

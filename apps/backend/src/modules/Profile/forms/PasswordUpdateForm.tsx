@@ -29,6 +29,7 @@ export const PasswordUpdateForm = ({
             PasswordResetValidationSchema
           )}
           settings={{
+            autoComplete: "new-password",
             placeholder: t(
               "page.passwordreset.form_field_password_placeholder",
               "Please enter your password"
@@ -51,6 +52,7 @@ export const PasswordUpdateForm = ({
             PasswordResetValidationSchema
           )}
           settings={{
+            autoComplete: "new-password",
             placeholder: t(
               "page.passwordreset.form_field_password_confirm_placeholder",
               "Please confirm your password"

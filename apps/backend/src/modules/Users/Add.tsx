@@ -1,7 +1,5 @@
-import { Box, Button, HStack } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
-import { NavLink } from "react-router-dom";
-import {ModuleSubNav} from "~/components/modules";
+import {ModuleSubNav, ButtonListElement, ModulePage} from "~/components/modules";
 
 
 import { moduleRootPath } from './config';
@@ -16,28 +14,27 @@ const Add = () => {
     title: t("module.users.page.title.adduser", "Add user")
   }];
 
+  const buttonList: ButtonListElement[] = [
+    {
+      type: "back",
+      to: moduleRootPath,
+      label: t("module.button.cancel", "Cancel"),
+      userCan: "userRead",
+    },
+    {
+      type: "submit",
+      isLoading: false, //isSubmitting,
+      label: t("module.user.button.add", "Add new user"),
+      userCan: "userCreate",
+    },
+  ];
+
   return (
     <>
-      <ModuleSubNav
-        breadcrumb={breadcrumb}
-      >
-        <HStack spacing="2">
-        <Button colorScheme="gray" as={NavLink} to={moduleRootPath}>
-            {t("module.button.cancel", "Cancel")}
-          </Button>
-          <Button
-            onClick={() => {
-              alert(1);
-            }}
-          >
-            {t("module.user.button.add", "Add new user")}
-          </Button>
-        </HStack>
-      </ModuleSubNav>
-      <Box layerStyle="pageContainerWhite">
-      <h1>{t("module.users.page.title.adduser", "Add user")}</h1>
-      
-    </Box>   
+      <ModuleSubNav breadcrumb={breadcrumb} buttonList={buttonList} />
+      <ModulePage>
+        <h1>{t("module.users.page.title.adduser", "Add user")}</h1>
+      </ModulePage>
     </>
   )
 }
