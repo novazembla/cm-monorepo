@@ -1,10 +1,10 @@
 import { createSlice, PayloadAction} from "@reduxjs/toolkit";
-import type { ApiUser } from "~/services/user";
+import type { AuthenticatedAppUserData } from "@culturemap/core"
 
 type EmailVerificationState = "unknown" | "yes" | "no";
 
 type UserLoginPayload = {
-  apiUser: ApiUser;
+  appUserData: AuthenticatedAppUserData;
   expires: string;
 }
 
@@ -18,22 +18,24 @@ const userSlice = createSlice({
   name: "user",
   initialState: {
     authenticated: false,
-    apiUser: null,
+    appUserData: null,
     emailVerified: "unknown",
     refreshing: false,
+    allowRefresh: true,
     expires: new Date().toISOString(),
   } as {
     authenticated: boolean,
     emailVerified: EmailVerificationState,
-    apiUser: ApiUser | null,
+    appUserData: AuthenticatedAppUserData | null,
     refreshing: boolean,
+    allowRefresh: boolean,
     expires: string,
   },
   reducers: {
     userProfileUpdate(state, action: PayloadAction<UserProfileUpdate>) {
-      if (state.apiUser)
-        state.apiUser = {
-          ...state.apiUser,
+      if (state.appUserData)
+        state.appUserData = {
+          ...state.appUserData,
           ...{
             firstName: action.payload.firstName,
             lastName: action.payload.lastName,
@@ -45,7 +47,9 @@ const userSlice = createSlice({
     },
     userLogout(state) {
       state.authenticated = false;
-      state.apiUser = null;
+      state.refreshing = false;
+      state.allowRefresh = true;
+      state.appUserData = null;
       state.emailVerified = "unknown";
       state.expires = new Date().toISOString();
     },
@@ -54,14 +58,19 @@ const userSlice = createSlice({
       action: PayloadAction<UserLoginPayload>
     ) {
       state.authenticated = true;
-      state.apiUser = action.payload.apiUser;
+      state.appUserData = action.payload.appUserData;
       state.expires = action.payload.expires;
+      state.refreshing = false;
+      state.allowRefresh = true;
     },
     userEmailVerificationState(state, action: PayloadAction<EmailVerificationState>) {
       state.emailVerified = action.payload;
     },
     authRefreshing(state, action: PayloadAction<boolean>) {
       state.refreshing = action.payload;
+    },
+    authAllowRefresh(state, action: PayloadAction<boolean>) {
+      state.allowRefresh = action.payload;
     }
   },
 });
@@ -70,7 +79,7 @@ const userSlice = createSlice({
 const { actions, reducer } = userSlice;
 
 // Extract and export each action creator by name
-export const { userLogout, userLogin, authRefreshing, userEmailVerificationState, userProfileUpdate } = actions;
+export const { userLogout, userLogin, authRefreshing, userEmailVerificationState, userProfileUpdate, authAllowRefresh } = actions;
 
 // Export the reducer, either as a default or named export
 export default reducer;

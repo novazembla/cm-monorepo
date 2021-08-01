@@ -1,7 +1,7 @@
 import Cookies, { CookieSetOptions } from "universal-cookie";
-import { decode, JwtPayload } from "jsonwebtoken";
+import type { AuthenticatedAppUserData } from "@culturemap/core"
 
-import { ApiUser } from "./user";
+import { decode, JwtPayload } from "jsonwebtoken";
 
 export const HAS_REFRESH_COOKIE_NAME = "authRefresh";
 
@@ -14,7 +14,7 @@ export interface TokenPayload extends JwtPayload {
   exp: number;
   iat: number;
   type: string;
-  user: ApiUser;
+  user: AuthenticatedAppUserData;
 }
 
 let authToken: Token | null = null;

@@ -47,13 +47,17 @@ const themeConfig = {
         bgGradient: "linear(45deg, rgb(222,240,244), rgb(148,187,233)) fixed",
         bgAttachment: "fixed",
       },
-      a: {
+      "a": {
         transitionProperty: "common",
         transitionDuration: "fast",
-        transitionTimingFunction: "ease-out",
         cursor: "pointer",
         textDecoration: "none",
         outline: "none",
+        _hover: {
+          textDecoration: "none"
+        }
+      },
+      "a:not(.chakra-button)": {
         color: "wine.600",
         _hover: {
           color: "wine.800"

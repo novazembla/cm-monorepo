@@ -2,8 +2,6 @@ import { Box } from "@chakra-ui/react";
 import { AlertEmailVerification } from "~/components/housekeeping";
 
 const DashBoard = () => {
-
-  
   return (
     <>
     <AlertEmailVerification />

@@ -12,6 +12,9 @@ export const AuthenticationSessionActiveGate =  ({children}:{children:React.Reac
   if (!user.isLocalSessionValid()) {
     processLogout();
     history.push("/login");
+  } else {
+    user.setAllowRefresh(true);
+    user.setRefreshing(false);
   }
   return (<>{children}</>)
 }

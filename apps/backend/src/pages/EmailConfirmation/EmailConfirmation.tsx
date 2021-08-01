@@ -25,7 +25,7 @@ const useQuery = () => {
 };
 
 const EmailConfirmation = () => {
-  const [apiUser, { isLoggedIn }] = useAuthentication();
+  const [appUser, { isLoggedIn }] = useAuthentication();
   const query = useQuery();
   const token = query.get("token");
 
@@ -71,8 +71,8 @@ const EmailConfirmation = () => {
     setIsRequestingError(false);
 
     try {
-      if (apiUser?.id) {
-        await requestMutation(apiUser.id);
+      if (appUser?.id) {
+        await requestMutation(appUser.id);
         setHasRequestedEmail(true);
       } else {
         setHasRequestedEmail(true);

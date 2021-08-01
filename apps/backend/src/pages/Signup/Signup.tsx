@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import * as yup from "yup";
-import { Link, useHistory } from "react-router-dom";
+import { Link as RouterLink, useHistory } from "react-router-dom";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
@@ -17,7 +17,7 @@ import {
   TwoColFieldRow
 } from "~/components/forms";
 
-import { Heading, Text, Button, Flex, Box, Divider } from "@chakra-ui/react";
+import { Heading, Text, Button, Flex, Box, Divider, Link } from "@chakra-ui/react";
 
 import {
   AuthenticationPage,
@@ -175,7 +175,7 @@ const Signup = () => {
                 <Divider />
                 <FieldRow>
                   <Flex justify="space-between" alignItems="center" w="100%">
-                    <Link to="/login">
+                    <Link as={RouterLink}  to="/login">
                       {t("page.signup.back_to_login", "Back to login")}
                       {/* (TODO: TABINDEX?) */}
                     </Link>

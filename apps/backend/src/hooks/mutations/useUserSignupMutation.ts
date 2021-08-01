@@ -7,7 +7,7 @@ import { useConfig } from "~/hooks";
 
 export const useUserSignupMutation = () => {
   const config = useConfig();
-  const [apiUser, { login }] = useAuthentication();
+  const [appUser, { login }] = useAuthentication();
 
   const [mutation, mutationResults] = useMutation(userSignupMutationGQL, {
     onCompleted: (data) => {
@@ -29,7 +29,7 @@ export const useUserSignupMutation = () => {
   // full login function
   // data should probably not be "Any" TODO: 
   const execute = (data: any) => {
-    if (apiUser)
+    if (appUser)
       throw Error("You're already logged in");
   
     return mutation({

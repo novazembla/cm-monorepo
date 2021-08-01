@@ -41,13 +41,13 @@ export const AlertEmailVerification = () => {
 
   const { t } = useTranslation();
 
-  const [apiUser] = useAuthentication();
-
+  const [appUser, {isLoggedIn}] = useAuthentication();
+  
   const { data, error } = useQuery(GET_EMAIL_VERIFICATION_STATUS, {
-    skip: emailVerified === "yes",
+    skip: !isLoggedIn() || emailVerified === "yes",
     variables: {
       scope: config.scope,
-      userId: apiUser?.id ?? 0,
+      userId: appUser?.id ?? 0,
     },
   });
 
@@ -60,7 +60,7 @@ export const AlertEmailVerification = () => {
 
   useEffect(() => {
     let mounted = true;
-
+    
     if (localEmailVerified !== emailVerified) {
       if (mounted) 
         wrappedDispatch(localEmailVerified);
@@ -75,8 +75,8 @@ export const AlertEmailVerification = () => {
     setIsRequestingError(false);
 
     try {
-      if (apiUser?.id) {
-        await requestMutation(apiUser.id);
+      if (appUser?.id) {
+        await requestMutation(appUser.id);
       } else {
         setIsRequestingError(true);
       }

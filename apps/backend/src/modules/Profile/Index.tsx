@@ -19,18 +19,16 @@ import { moduleRootPath } from "./config";
 import { useAuthentication, useConfig } from "~/hooks";
 
 const Index = () => {
-  const config = useConfig();
-  const [apiUser] = useAuthentication();
-
-  // TODO: make better use of loading and error ... 
+  const config = useConfig(); 
+  const [appUser] = useAuthentication();
+  const { t } = useTranslation();
+  
   const { data, loading, error } = useQuery(userProfileReadQueryGQL, {
     variables: {
-      userId: apiUser?.id ?? 0,
+      userId: appUser?.id ?? 0,
       scope: config.scope,
     },
   });
-
-  const { t } = useTranslation();
 
   const breadcrumb = [
     {

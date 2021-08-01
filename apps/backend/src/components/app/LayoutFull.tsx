@@ -9,7 +9,7 @@ import { AppProps } from "~/types";
 
 export const LayoutFull = ({ children }: AppProps) => {
   const [loginStatus] = useAuthTabWideLogInOutReload();
-
+  
   return (
     <Grid
       className={loginStatus}

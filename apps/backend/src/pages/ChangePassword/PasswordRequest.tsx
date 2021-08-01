@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import * as yup from "yup";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Link } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 
 import { PasswordRequestValidationSchema, yupFieldIsRequired } from "~/validation";
 
@@ -12,7 +12,7 @@ import { TextErrorMessage, FieldInput, FieldRow } from "~/components/forms";
 
 import { useAuthPasswordRequestMutation } from "~/hooks/mutations";
 
-import { Heading, Text, Button, Flex, Box, Divider } from "@chakra-ui/react";
+import { Heading, Text, Button, Flex, Box, Divider, Link } from "@chakra-ui/react";
 
 import {
   AuthenticationPage,
@@ -114,7 +114,7 @@ const PasswordRequest = () => {
               <Divider/>
               <FieldRow>
                 <Flex justify="space-between" alignItems="center" w="100%">
-                  <Link to="/login">
+                  <Link as={RouterLink} to="/login">
                     {t("page.passwordrequest.back_to_login", "Back to login")}
                     {/* (TODO: TABINDEX?) */}
                   </Link>

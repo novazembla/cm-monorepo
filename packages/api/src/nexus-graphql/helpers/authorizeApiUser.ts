@@ -15,7 +15,11 @@ export const authorizeApiUser = async (
   )
     return Error("Authentication failed (maybe refresh)");
 
-  return !!(ctx.apiUser && ctx.apiUser.can(permissions));
+  if (!ctx.apiUser) return false;
+
+  return !!(
+    typeof ctx?.apiUser?.can === "function" && ctx.apiUser.can(permissions)
+  );
 };
 
 export default authorizeApiUser;

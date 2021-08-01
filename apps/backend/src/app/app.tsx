@@ -15,7 +15,6 @@ import {
   RouteHome,
 } from "~/components/app";
 
-
 import {
   routes,
   privateRoutes,
@@ -65,18 +64,17 @@ const App = () => {
         Navigated to app/dashboard page.{" "}
         {/* TODO: announce change, how is this best done? */}
       </span>
-      <Suspense fallback={<LoadingIcon type="light" size={120}/>}>
-      <BrowserRouter>
-        <AuthenticationSessionActiveGate>
-          <ScrollToTop />
-          <Switch> 
-            <Route exact path="/">
-              <RouteHome />
-            </Route>
+      <Suspense fallback={<LoadingIcon type="light" size={120} />}>
+        <BrowserRouter>
+          <AuthenticationSessionActiveGate>
+            <ScrollToTop />
+            <Switch>
+              <Route exact path="/">
+                <RouteHome />
+              </Route>
 
-            <Route exact path={getPublicOnlyRoutesPathsArray()}>
-              
-                <Suspense fallback={<LoadingIcon type="light" size={120}/>}>
+              <Route exact path={getPublicOnlyRoutesPathsArray()}>
+                <Suspense fallback={<LoadingIcon type="light" size={120} />}>
                   <LayoutLight>
                     <Switch>
                       {publicOnlyRoutes.map((publicRouteProps) => (
@@ -85,40 +83,40 @@ const App = () => {
                     </Switch>
                   </LayoutLight>
                 </Suspense>
-            </Route>
+              </Route>
 
-            <Route exact path={getRoutesPathsArray()}>
-              
-                <Suspense fallback={<LoadingIcon type="light" size={120}/>}>
-                  <LayoutLight><Switch>
-                    {routes.map((routeProps) => (
-                      <Route {...routeProps} />
-                    ))}
-                  </Switch></LayoutLight>
+              <Route exact path={getRoutesPathsArray()}>
+                <Suspense fallback={<LoadingIcon type="light" size={120} />}>
+                  <LayoutLight>
+                    <Switch>
+                      {routes.map((routeProps) => (
+                        <Route {...routeProps} />
+                      ))}
+                    </Switch>
+                  </LayoutLight>
                 </Suspense>
-              
-            </Route>
+              </Route>
 
-            <Route path={getPrivateRoutesPathsArray()}>
-              <LayoutFull>
-                <Suspense fallback={<LoadingIcon type="full" size={120}/>}>
-                  <Switch>
-                    {privateRoutes.map((privateRouteProps) => (
-                      <RoutePrivate {...privateRouteProps} />
-                    ))}
-                  </Switch>
-                </Suspense>
-              </LayoutFull>
-            </Route>
+              <Route path={getPrivateRoutesPathsArray()}>
+                <LayoutFull>
+                  <Suspense fallback={<LoadingIcon type="full" size={120} />}>
+                    <Switch>
+                      {privateRoutes.map((privateRouteProps) => (
+                        <RoutePrivate {...privateRouteProps} />
+                      ))}
+                    </Switch>
+                  </Suspense>
+                </LayoutFull>
+              </Route>
 
-            <Route path="*">
-              <LayoutBlank>
-                <Route component={NotFound} />
-              </LayoutBlank>
-            </Route>
-          </Switch>
-        </AuthenticationSessionActiveGate>
-      </BrowserRouter>
+              <Route path="*">
+                <LayoutBlank>
+                  <Route component={NotFound} />
+                </LayoutBlank>
+              </Route>
+            </Switch>
+          </AuthenticationSessionActiveGate>
+        </BrowserRouter>
       </Suspense>
     </AppProviders>
   );

@@ -26,13 +26,13 @@ import { UpdateForm } from "./forms";
 const Update = () => {
   const config = useConfig();
   const dispatch = useTypedDispatch();
-  const [apiUser] = useAuthentication();
+  const [appUser] = useAuthentication();
   const { t } = useTranslation();
   const toast = useToast();
 
   const { data, loading, error } = useQuery(userProfileReadQueryGQL, {
     variables: {
-      userId: apiUser?.id ?? 0,
+      userId: appUser?.id ?? 0,
       scope: config.scope,
     },
   });
@@ -74,8 +74,8 @@ const Update = () => {
   ) => {
     setIsFormError(false);
     try {
-      if (apiUser) {
-        await firstMutation(apiUser?.id, newData);
+      if (appUser) {
+        await firstMutation(appUser?.id, newData);
 
         dispatch(userProfileUpdate({
           firstName: newData.firstName,

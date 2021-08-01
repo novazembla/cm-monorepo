@@ -78,11 +78,7 @@ export const tokenVerify = (token: string): JwtPayload | null => {
     if (!config.jwt.secret) {
       const msg = "Please configure your JWT Secret";
       logger.info(`Error: ${msg}`);
-
-      throw new ApiError(
-        httpStatus.INTERNAL_SERVER_ERROR,
-        "Token not authorized (VT 1)"
-      );
+      throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "(VT 1)");
     }
 
     const tokenPayload: JwtPayload | string = jwt.verify(
@@ -93,17 +89,18 @@ export const tokenVerify = (token: string): JwtPayload | null => {
 
     if (typeof tokenPayload === "object") {
       if (Date.now() >= (tokenPayload.exp ?? 0) * 1000) {
-        throw new ApiError(
-          httpStatus.UNAUTHORIZED,
-          "Token not authorized (VT 2)"
-        );
+        logger.debug(`Error: Token expired (VT 2)`);
+        throw new ApiError(httpStatus.UNAUTHORIZED, "(VT 2)");
       }
     } else {
       return null;
     }
     return tokenPayload;
   } catch (err) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, "Token not authorized (VT 3)");
+    throw new ApiError(
+      httpStatus.UNAUTHORIZED,
+      `Token not authorized (${err.message})`
+    );
   }
 };
 
@@ -114,11 +111,10 @@ export const tokenVerifyInDB = async (
   try {
     const tokenPayload = tokenVerify(token);
 
-    if (!(tokenPayload as any)?.user?.id)
-      throw new ApiError(
-        httpStatus.UNAUTHORIZED,
-        "Token not authorized (VTDB 1)"
-      );
+    if (!(tokenPayload as any)?.user?.id) {
+      logger.debug(`Error: Supplied token incomplete (VTDB 1)`);
+      throw new ApiError(httpStatus.UNAUTHORIZED, "(VTDB 1)");
+    }
 
     // this should be dao
 
@@ -129,17 +125,16 @@ export const tokenVerifyInDB = async (
     });
 
     if (!tokenInDB) {
-      throw new ApiError(
-        httpStatus.UNAUTHORIZED,
-        "Token not authorized (VTDB 2)"
-      );
+      logger.debug(`Error: Token not found (VTDB 2)`);
+      throw new ApiError(httpStatus.UNAUTHORIZED, "(VTDB 2)");
     }
 
     return tokenPayload;
   } catch (err) {
+    logger.debug(`Token not authorized (${err.message})`);
     throw new ApiError(
       httpStatus.UNAUTHORIZED,
-      "Token not authorized (VTDB 3)"
+      `Token not authorized (${err.message})`
     );
   }
 };

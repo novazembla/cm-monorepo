@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Heading, Text, Button, Flex, Box, Divider, Link } from "@chakra-ui/react";
 import * as yup from "yup";
-import { useHistory, Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
@@ -22,8 +22,7 @@ const Login = () => {
   const [isFormError, setIsFormError] = useState(false);
 
   const { t } = useTranslation();
-  const history = useHistory();
-
+  
   const formMethods = useForm({
     'mode':'onTouched',
     resolver: yupResolver(ValidationSchemaLogin),
@@ -40,7 +39,6 @@ const Login = () => {
     setIsFormError(false);
     try {
       await firstMutation(data.email, data.password);
-      history.push("/");
     } catch (err) {
       setIsFormError(true);
     }

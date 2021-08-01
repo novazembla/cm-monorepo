@@ -22,7 +22,7 @@ import { PasswordUpdateForm } from "./forms";
 
 
 const Update = () => {
-  const [apiUser, {logoutAndRedirect}] = useAuthentication();
+  const [appUser, {logoutAndRedirect}] = useAuthentication();
   const { t } = useTranslation();
   
   const [firstMutation, firstMutationResults] = useUserProfilePasswordUpdateMutation();
@@ -55,8 +55,8 @@ const Update = () => {
   ) => {
     setIsFormError(false);
     try {
-      if (apiUser) {
-        await firstMutation(apiUser?.id, newData.newPassword);
+      if (appUser) {
+        await firstMutation(appUser?.id, newData.newPassword);
         await logoutAndRedirect("/password-has-been-reset");
       } else {
         setIsFormError(true);

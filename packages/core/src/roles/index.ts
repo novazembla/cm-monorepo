@@ -82,20 +82,20 @@ export interface Roles {
   roles: PartialRecord<RoleNames, Role>;
   add: (
     name: RoleNames,
-    permissions?: PermissionNames | Array<PermissionNames>
+    permissions?: PermissionNames | PermissionNames[]
   ) => void;
   extend: (name: RoleNames, extended: RoleNames | RoleNames[]) => void;
   addPermissions: (
     roleName: RoleNames,
-    permissions?: PermissionNames | Array<PermissionNames>
+    permissions?: PermissionNames | PermissionNames[]
   ) => void;
-  getOwnPermissions: (roleName: RoleNames) => string[];
-  getExtendedPermissions: (roleName: RoleNames) => string[];
+  getOwnPermissions: (roleName: RoleNames) => PermissionNames[];
+  getExtendedPermissions: (roleName: RoleNames) => PermissionNames[];
 }
 
 export const roles: Roles = {
   roles: {},
-  add(name: RoleNames, permissions?: PermissionNames | Array<PermissionNames>) {
+  add(name: RoleNames, permissions?: PermissionNames | PermissionNames[]) {
     if (!(name in this.roles)) {
       this.roles[name] = {
         name,
@@ -121,7 +121,7 @@ export const roles: Roles = {
   },
   addPermissions(
     roleName: RoleNames,
-    permissions?: PermissionNames | Array<PermissionNames>
+    permissions?: PermissionNames | PermissionNames[]
   ) {
     if (roleName in this.roles) {
       (Array.isArray(permissions)
@@ -133,7 +133,7 @@ export const roles: Roles = {
       });
     }
   },
-  getOwnPermissions(roleName: RoleNames): string[] {
+  getOwnPermissions(roleName: RoleNames): PermissionNames[] {
     if (roleName in this.roles) {
       return Array.from(
         // using Array.from(new Set(...)) to filter duplicates out
@@ -142,13 +142,13 @@ export const roles: Roles = {
     }
     return [];
   },
-  getExtendedPermissions(roleName: RoleNames): string[] {
+  getExtendedPermissions(roleName: RoleNames): PermissionNames[] {
     if (roleName in this.roles) {
       return Array.from(
         // using Array.from(new Set(...)) to filter duplicates out
         new Set(
           [roleName, ...(this.roles[roleName] as Role).extends].reduce(
-            (perms: string[], rN: RoleNames) => [
+            (perms: PermissionNames[], rN: RoleNames) => [
               ...perms,
               ...this.getOwnPermissions(rN),
             ],

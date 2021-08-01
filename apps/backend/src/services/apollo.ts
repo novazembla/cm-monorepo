@@ -49,7 +49,8 @@ const retryWithRefreshTokenLink = onError(
             extensions.code === "UNAUTHENTICATED"
           ) {
             const observable = new Observable((observer) => {
-              if (client && !user.isRefreshing()) {
+              if (client && user.canRefresh() && authentication.getRefreshCookie()) {
+                user.setAllowRefresh(false);
                 user.setRefreshing(true);
                 client.mutate({
                   fetchPolicy: "no-cache",
@@ -75,7 +76,7 @@ const retryWithRefreshTokenLink = onError(
                         data.authRefresh.tokens.refresh
                       );
 
-                      user.setRefreshing(false);
+                      user.setAllowRefresh(true);
                       user.login(payload.user);
 
                       operation.setContext(({ headers = {} }) => ({
@@ -107,6 +108,8 @@ const retryWithRefreshTokenLink = onError(
                   
                   observer.error(error);
                 });
+              } else {
+                observer.error(Error("Can't refresh session"));
               }
               
             });

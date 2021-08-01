@@ -4,7 +4,7 @@ import * as yup from "yup";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import { Link, useHistory, useLocation } from "react-router-dom";
+import { Link as RouterLink, useHistory, useLocation } from "react-router-dom";
 
 import { PasswordResetValidationSchema, yupFieldIsRequired } from "~/validation";
 
@@ -14,7 +14,7 @@ import { TextErrorMessage, FieldInput, FieldRow } from "~/components/forms";
 
 import { useAuthPasswordResetMutation } from "~/hooks/mutations";
 
-import { Heading, Text, Button, Flex, Box, Divider } from "@chakra-ui/react";
+import { Heading, Text, Button, Flex, Box, Divider, Link } from "@chakra-ui/react";
 
 import {
   AuthenticationPage,
@@ -153,7 +153,7 @@ const PasswordReset = () => {
                 <Divider/>
                 <FieldRow>
                 <Flex justify="space-between" alignItems="center" w="100%">
-                  <Link to="/login">
+                  <Link as={RouterLink}  to="/login">
                     {t("page.passwordreset.back_to_login", "Back to login")}
                     {/* (TODO: TABINDEX?) */}
                   </Link>

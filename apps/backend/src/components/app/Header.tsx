@@ -30,13 +30,13 @@ const menuLinkStyling = {
 export const Header = (/* props */) => {
   const history = useHistory();
   const [logoutMutation] = useAuthLogoutMutation();
-  const [apiUser, {logoutAndRedirect}] = useAuthentication();
+  const [appUser, {logoutAndRedirect}] = useAuthentication();
   const { t } = useTranslation();
 
   const onLogoutClick = async () => {
-    if (apiUser) {
+    if (appUser) {
       try {
-        await logoutMutation(apiUser.id);
+        await logoutMutation(appUser.id);
       } catch (err) {}
       await logoutAndRedirect();
     }
@@ -95,7 +95,7 @@ export const Header = (/* props */) => {
               bg="wine.500"
               color="white"
               size={avatarSize}
-              name={`${apiUser?.firstName ?? "User"} ${apiUser?.lastName ?? "Profile"}`}
+              name={`${appUser?.firstName ?? "User"} ${appUser?.lastName ?? "Profile"}`}
               _hover={{ bg: "wine.600" }}
             />
           </MenuButton>
@@ -110,7 +110,7 @@ export const Header = (/* props */) => {
           >
             <MenuItem
               iconSpacing="2"
-              icon={<Icon as={CgProfile} fontSize="lg"/>}
+              icon={<Icon as={CgProfile} fontSize="lg" transform="translateY(-2px)" />}
               onClick={() => history.push("/profile")}
 
               _hover={menuLinkStyling}

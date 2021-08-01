@@ -1,32 +1,26 @@
 import { authRefreshMutationGQL } from "@culturemap/core";
+import type { AuthenticatedAppUserData } from "@culturemap/core"
 
 import { client } from "./apollo";
 import { authentication } from ".";
 import { getAuthToken, getRefreshCookie } from "./authentication";
 
 import { store } from "~/redux/store";
-import { userLogout, userLogin, authRefreshing } from "~/redux/slices/user";
+import { userLogout, userLogin, authRefreshing, authAllowRefresh } from "~/redux/slices/user";
 import { setTabWideAccessStatus } from "~/hooks/useAuthTabWideLogInOutReload";
 import { getAppConfig } from "~/config";
 
 const config = getAppConfig();
 
-export interface ApiUser {
-  id: number;
-  roles: string[];
-  permissions: string[];
-  firstName?: string;
-  lastName?: string;
-}
-
 let refreshTimeoutId: ReturnType<typeof setTimeout>;
 
 // TODO: xxx is the autorefresh really needed? Or is it good enough to rely on the refresh by use of the API?
 const refreshToken = async () => {
-  if (client && !isRefreshing() && getRefreshCookie()) {
-    console.log("refresh-1");
-  
+  if (client && canRefresh() && getRefreshCookie()) {
+    setAllowRefresh(false);
     setRefreshing(true);
+    console.log("Triggering refreshToken via timeOut");
+
     client
       .mutate({
         fetchPolicy: "no-cache",
@@ -61,17 +55,22 @@ const refreshToken = async () => {
         console.log(error);
         logout();
       });
-  } else if (!isRefreshing) {
+  } else if (canRefresh()) {
     await logout();
   }
 };
+
+const setAllowRefresh = (status: boolean) =>
+  store.dispatch(authAllowRefresh(status));
+
+const canRefresh = () => store.getState().user.allowRefresh;
 
 const setRefreshing = (status: boolean) =>
   store.dispatch(authRefreshing(status));
 
 const isRefreshing = () => store.getState().user.refreshing;
 
-const login = async (u: ApiUser): Promise<boolean> => new Promise((resolve) => {
+const login = async (u: AuthenticatedAppUserData): Promise<boolean> => new Promise((resolve) => {
   setRefreshing(false);
   setTabWideAccessStatus("logged-in");
 
@@ -81,28 +80,27 @@ const login = async (u: ApiUser): Promise<boolean> => new Promise((resolve) => {
   if (token) {
     refreshTimeoutId = setTimeout(
       refreshToken,
-      new Date(token.expires).getTime() - Date.now() - 1000
+      new Date(token.expires).getTime() - Date.now() - 10000
     );
   }
 
   store.dispatch(
-    userLogin({ apiUser: u, expires: getRefreshCookie() })
+    userLogin({ appUserData: u, expires: getRefreshCookie() })
   );
 
   resolve(true);
 });
 
 const logout = async (): Promise<boolean> => new Promise(async (resolve) => {
-  setRefreshing(true);
+  setRefreshing(false);
   authentication.removeAuthToken();
   authentication.removeRefreshCookie();
   
-  setTabWideAccessStatus("logged-out");
-  
   store.dispatch(userLogout());
   if (client) await client.clearStore();
-  setRefreshing(false);
-
+  
+  setTabWideAccessStatus("logged-out");
+  
   resolve(true);
 });
 
@@ -127,6 +125,8 @@ const defaults = {
   logout,
   setRefreshing,
   isRefreshing,
+  canRefresh,
+  setAllowRefresh,
   isLocalSessionValid,
 };
 export default defaults;

@@ -26,7 +26,7 @@ export const useAuthTabWideLogInOutReload = () => {
         if (event.newValue === "logged-out") {
           document.location.reload();
         } else {
-          history.push("/");
+          history.push("/dashboard");
         }
       }
     });
