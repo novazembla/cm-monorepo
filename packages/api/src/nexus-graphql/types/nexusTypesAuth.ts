@@ -1,6 +1,6 @@
 /// <reference path="../../types/nexus-typegen.ts" />
 
-import { objectType, extendType, nonNull, intArg, stringArg } from "nexus";
+import { objectType, extendType, nonNull, intArg, stringArg, arg } from "nexus";
 import { AuthenticationError } from "apollo-server-express";
 import { AppScopes } from "@culturemap/core";
 
@@ -18,7 +18,7 @@ import {
   tokenClearRefreshToken,
 } from "../../services/serviceToken";
 import { authorizeApiUser, isCurrentApiUser } from "../helpers";
-import { BooleanResult } from "./nexusTypesShared";
+import { BooleanResult, GQLEmailAddress } from "./nexusTypesShared";
 
 export const AuthUser = objectType({
   name: "AuthUser",
@@ -34,7 +34,7 @@ export const AuthUser = objectType({
 export const AuthPayloadToken = objectType({
   name: "AuthPayloadToken",
   definition(t) {
-    t.string("token");
+    t.jwt("token");
     t.nonNull.string("expires");
   },
 });
@@ -71,7 +71,11 @@ export const AuthLoginMutation = extendType({
       type: "AuthPayload",
       args: {
         scope: nonNull(stringArg()),
-        email: nonNull(stringArg()),
+        email: nonNull(
+          arg({
+            type: GQLEmailAddress,
+          })
+        ),
         password: nonNull(stringArg()),
       },
       async resolve(...[, args, { res }]) {
@@ -159,7 +163,11 @@ export const AuthPasswordRequestMutation = extendType({
       type: BooleanResult,
       args: {
         scope: nonNull(stringArg()),
-        email: nonNull(stringArg()),
+        email: nonNull(
+          arg({
+            type: GQLEmailAddress,
+          })
+        ),
       },
 
       async resolve(...[, args]) {

@@ -102,8 +102,6 @@ const retryWithRefreshTokenLink = onError(
                   forward(operation).subscribe(subscriber);
                 })
                 .catch(async (error) => {
-                  console.error(error);
-                  
                   await user.logout();
                   
                   observer.error(error);

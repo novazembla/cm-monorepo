@@ -9,7 +9,7 @@ import {
   intArg,
 } from "nexus";
 import httpStatus from "http-status";
-import { AppScopes } from "@culturemap/core";
+import { AppScopes, filteredOutputByWhitelist } from "@culturemap/core";
 
 import {
   userRegister,
@@ -21,7 +21,7 @@ import {
   tokenProcessRefreshToken,
   tokenClearRefreshToken,
 } from "../../services/serviceToken";
-import { ApiError, filteredOutputByWhitelist } from "../../utils";
+import { ApiError } from "../../utils";
 import { authorizeApiUser, isCurrentApiUser } from "../helpers";
 
 // TODO this white listing of keys is rather annoying,
@@ -45,12 +45,12 @@ export const User = objectType({
     t.nonNull.int("id");
     t.string("firstName");
     t.string("lastName");
-    t.string("email");
+    t.email("email");
     t.string("role");
     t.boolean("emailVerified");
     t.boolean("userBanned");
-    t.string("createdAt");
-    t.string("updatedAt");
+    t.date("createdAt");
+    t.date("updatedAt");
   },
 });
 
@@ -60,7 +60,7 @@ export const ProfileUser = objectType({
     t.nonNull.int("id");
     t.string("firstName");
     t.string("lastName");
-    t.string("email");
+    t.email("email");
     t.string("role");
     t.boolean("emailVerified");
   },
@@ -154,7 +154,7 @@ export const UserSignupInput = inputObjectType({
   definition(t) {
     t.nonNull.string("firstName");
     t.nonNull.string("lastName");
-    t.nonNull.string("email");
+    t.nonNull.email("email");
     t.nonNull.string("password");
     t.nonNull.boolean("acceptedTerms");
   },
@@ -186,11 +186,11 @@ export const UserSignupMutation = extendType({
 });
 
 export const UserProfileUpdateInput = inputObjectType({
-  name: "UserProfileInput",
+  name: "UserProfileUpdateInput",
   definition(t) {
     t.nonNull.string("firstName");
     t.nonNull.string("lastName");
-    t.nonNull.string("email");
+    t.nonNull.email("email");
   },
 });
 

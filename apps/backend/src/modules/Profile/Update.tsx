@@ -13,7 +13,8 @@ import { useAuthentication, useConfig, useTypedDispatch } from "~/hooks";
 import { userProfileUpdate } from "~/redux/slices/user";
 
 import { Divider, useToast } from "@chakra-ui/react";
-import { userProfileReadQueryGQL } from "@culturemap/core";
+import { userProfileReadQueryGQL, filteredOutputByWhitelist } from "@culturemap/core";
+
 import { useQuery } from "@apollo/client";
 
 import { ModuleSubNav, ModulePage, ButtonListElement } from "~/components/modules";
@@ -56,7 +57,7 @@ const Update = () => {
   } = formMethods;
 
   useEffect(() => {
-    reset(data?.userProfileRead);
+    reset(filteredOutputByWhitelist(data?.userProfileRead, ["firstName","lastName","email"]));
   }, [reset, data]);
 
   const onSubmit = async (
@@ -65,6 +66,7 @@ const Update = () => {
     setIsFormError(false);
     try {
       if (appUser) {
+        
         await firstMutation(appUser?.id, newData);
 
         dispatch(userProfileUpdate({

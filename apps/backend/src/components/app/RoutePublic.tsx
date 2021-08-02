@@ -9,7 +9,7 @@ type CompontentProps = {
 export const RoutePublic = (props: CompontentProps) => {
   const [, { isLoggedIn } ] = useAuthentication();
   const { component: Component, ...restProps } = props;
-
+  
   if (!Component) return null;
   
   return !isLoggedIn() ? (

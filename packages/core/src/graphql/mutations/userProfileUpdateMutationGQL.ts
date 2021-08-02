@@ -4,15 +4,9 @@ export const userProfileUpdateMutationGQL = gql`
   mutation userProfileUpdate(
     $scope: String!
     $userId: Int!
-    $firstName: String!
-    $lastName: String!
-    $email: String!
+    $data: UserProfileUpdateInput!
   ) {
-    userProfileUpdate(
-      scope: $scope
-      userId: $userId
-      data: { firstName: $firstName, lastName: $lastName, email: $email }
-    ) {
+    userProfileUpdate(scope: $scope, userId: $userId, data: $data) {
       id
       firstName
       lastName

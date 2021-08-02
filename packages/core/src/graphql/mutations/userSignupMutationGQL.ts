@@ -5,7 +5,7 @@ export const userSignupMutationGQL = gql`
     $scope: String!
     $firstName: String!
     $lastName: String!
-    $email: String!
+    $email: EmailAddress!
     $password: String!
     $acceptedTerms: Boolean!
   ) {

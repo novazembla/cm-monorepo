@@ -1,22 +1,32 @@
-import React from 'react'
-import { useHistory } from 'react-router-dom';
+import React from "react";
+import { useHistory, useLocation } from "react-router-dom";
 
-import { user} from "~/services";
+import { user } from "~/services";
 
-export const AuthenticationSessionActiveGate =  ({children}:{children:React.ReactNode}) => {
+export const AuthenticationSessionActiveGate = ({
+  children,
+  publicRoutesPaths
+}: {
+  children: React.ReactNode;
+  publicRoutesPaths: string[]
+}) => {
+  const history = useHistory();
+  const {pathname} = useLocation();
+
   const processLogout = async () => {
     await user.logout();
-  }
+  };
 
-  const history = useHistory();
   if (!user.isLocalSessionValid()) {
     processLogout();
-    history.push("/login");
+    
+    if (!publicRoutesPaths.includes(pathname))
+      history.push("/login");
   } else {
     user.setAllowRefresh(true);
     user.setRefreshing(false);
   }
-  return (<>{children}</>)
-}
+  return <>{children}</>;
+};
 
 export default AuthenticationSessionActiveGate;

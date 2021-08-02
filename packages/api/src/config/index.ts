@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import { CorsOptions } from "cors";
-import { PartialRecord, AppScopes, utils } from "@culturemap/core";
+import { PartialRecord, AppScopes, safeGuardVariable } from "@culturemap/core";
 import { join, resolve, dirname } from "path";
 
 import { logger } from "../services/serviceLogging";
@@ -93,7 +93,7 @@ export interface ApiConfigOverwrite {
 }
 
 const db: ApiConfigDB = {
-  url: utils.safeGuardVariable(
+  url: safeGuardVariable(
     logger,
     "string",
     process.env.DATABASE_URL,
@@ -119,7 +119,7 @@ export const apiConfig = {
   db,
   env: process.env,
   corsOptions,
-  appName: utils.safeGuardVariable(
+  appName: safeGuardVariable(
     logger,
     "string",
     process.env.APP_NAME,
@@ -128,7 +128,7 @@ export const apiConfig = {
   ),
   baseUrl: {
     frontend: trimTrailingSlash(
-      utils.safeGuardVariable(
+      safeGuardVariable(
         logger,
         "string",
         process.env.BASE_URL_FRONTEND,
@@ -137,7 +137,7 @@ export const apiConfig = {
       )
     ),
     backend: trimTrailingSlash(
-      utils.safeGuardVariable(
+      safeGuardVariable(
         logger,
         "string",
         process.env.BASE_URL_BACKEND,
@@ -146,7 +146,7 @@ export const apiConfig = {
       )
     ),
     api: trimTrailingSlash(
-      utils.safeGuardVariable(
+      safeGuardVariable(
         logger,
         "string",
         process.env.BASE_URL_API,
@@ -156,21 +156,21 @@ export const apiConfig = {
     ),
   },
   email: {
-    subjectPrefix: utils.safeGuardVariable(
+    subjectPrefix: safeGuardVariable(
       logger,
       "string",
       process.env.MAIL_EMAIL_SUBJECT_PREFIX,
       "",
       "Error: missing/wrong .env config: MAIL_EMAIL_SUBJECT_PREFIX"
     ),
-    from: utils.safeGuardVariable(
+    from: safeGuardVariable(
       logger,
       "string",
       process.env.MAIL_FROM_ADDRESS,
       "",
       "Error: missing/wrong .env config: MAIL_FROM_ADDRESS"
     ),
-    fromName: utils.safeGuardVariable(
+    fromName: safeGuardVariable(
       logger,
       "string",
       process.env.MAIL_FROM_NAME,
@@ -179,35 +179,35 @@ export const apiConfig = {
     ),
   },
   smtp: {
-    host: utils.safeGuardVariable(
+    host: safeGuardVariable(
       logger,
       "string",
       process.env.MAIL_HOST,
       "",
       "Error: missing/wrong .env config: MAIL_HOST"
     ),
-    port: utils.safeGuardVariable(
+    port: safeGuardVariable(
       logger,
       "int",
       process.env.MAIL_PORT,
       0,
       "Error: missing/wrong .env config: MAIL_PORT"
     ),
-    secure: utils.safeGuardVariable(
+    secure: safeGuardVariable(
       logger,
       "boolean",
       `${process.env.MAIL_SECURE}` === "true",
       false,
       "Error: missing/wrong .env config: MAIL_SECURE"
     ),
-    user: utils.safeGuardVariable(
+    user: safeGuardVariable(
       logger,
       "string",
       process.env.MAIL_USERNAME,
       "",
       "Error: missing/wrong .env config: MAIL_USERNAME"
     ),
-    password: utils.safeGuardVariable(
+    password: safeGuardVariable(
       logger,
       "string",
       process.env.MAIL_PASSWORD,
@@ -216,7 +216,7 @@ export const apiConfig = {
     ),
   },
   jwt: {
-    secret: utils.safeGuardVariable(
+    secret: safeGuardVariable(
       logger,
       "string",
       process.env.JWT_SECRET,
@@ -224,28 +224,28 @@ export const apiConfig = {
       "Error: missing/wrong .env config: JWT_SECRET"
     ),
     expiration: {
-      access: utils.safeGuardVariable(
+      access: safeGuardVariable(
         logger,
         "int",
         process.env.JWT_ACCESS_EXPIRATION_MINUTES,
         10,
         "Error: missing/wrong .env config: JWT_ACCESS_EXPIRATION_MINUTES"
       ),
-      refresh: utils.safeGuardVariable(
+      refresh: safeGuardVariable(
         logger,
         "int",
         process.env.JWT_REFRESH_EXPIRATION_DAYS,
         30,
         "Error: missing/wrong .env config: JWT_REFRESH_EXPIRATION_DAYS"
       ),
-      passwordReset: utils.safeGuardVariable(
+      passwordReset: safeGuardVariable(
         logger,
         "int",
         process.env.JWT_RESET_PASSWORD_EXPIRATION_MINUTES,
         240,
         "Error: missing/wrong .env config: JWT_RESET_PASSWORD_EXPIRATION_MINUTES"
       ),
-      emailConfirmation: utils.safeGuardVariable(
+      emailConfirmation: safeGuardVariable(
         logger,
         "int",
         process.env.JWT_VERIFY_EMAIL_EXPIRATION_DAYS,

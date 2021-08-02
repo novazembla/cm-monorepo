@@ -6,8 +6,47 @@
 
 import type { NexusResolverContext } from "./../nexus-graphql/context"
 import type { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin"
-
-
+import type { core } from "nexus"
+declare global {
+  interface NexusGenCustomInputMethods<TypeName extends string> {
+    /**
+     * A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+     */
+    date<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "DateTime";
+    /**
+     * A field whose value conforms to the standard internet email address format as specified in RFC822: https://www.w3.org/Protocols/rfc822/.
+     */
+    email<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "EmailAddress";
+    /**
+     * The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+     */
+    json<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "JSON";
+    /**
+     * A field whose value is a JSON Web Token (JWT): https://jwt.io/introduction.
+     */
+    jwt<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "JWT";
+  }
+}
+declare global {
+  interface NexusGenCustomOutputMethods<TypeName extends string> {
+    /**
+     * A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+     */
+    date<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "DateTime";
+    /**
+     * A field whose value conforms to the standard internet email address format as specified in RFC822: https://www.w3.org/Protocols/rfc822/.
+     */
+    email<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "EmailAddress";
+    /**
+     * The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+     */
+    json<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "JSON";
+    /**
+     * A field whose value is a JSON Web Token (JWT): https://jwt.io/introduction.
+     */
+    jwt<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "JWT";
+  }
+}
 
 
 declare global {
@@ -15,14 +54,14 @@ declare global {
 }
 
 export interface NexusGenInputs {
-  UserProfileInput: { // input type
-    email: string; // String!
+  UserProfileUpdateInput: { // input type
+    email: NexusGenScalars['EmailAddress']; // EmailAddress!
     firstName: string; // String!
     lastName: string; // String!
   }
   UserSignupInput: { // input type
     acceptedTerms: boolean; // Boolean!
-    email: string; // String!
+    email: NexusGenScalars['EmailAddress']; // EmailAddress!
     firstName: string; // String!
     lastName: string; // String!
     password: string; // String!
@@ -38,6 +77,10 @@ export interface NexusGenScalars {
   Float: number
   Boolean: boolean
   ID: string
+  DateTime: any
+  EmailAddress: any
+  JSON: any
+  JWT: any
 }
 
 export interface NexusGenObjects {
@@ -47,7 +90,7 @@ export interface NexusGenObjects {
   }
   AuthPayloadToken: { // root type
     expires: string; // String!
-    token?: string | null; // String
+    token?: NexusGenScalars['JWT'] | null; // JWT
   }
   AuthPayloadTokens: { // root type
     access?: NexusGenRootTypes['AuthPayloadToken'] | null; // AuthPayloadToken
@@ -63,7 +106,7 @@ export interface NexusGenObjects {
   }
   Mutation: {};
   ProfileUser: { // root type
-    email?: string | null; // String
+    email?: NexusGenScalars['EmailAddress'] | null; // EmailAddress
     emailVerified?: boolean | null; // Boolean
     firstName?: string | null; // String
     id: number; // Int!
@@ -72,14 +115,14 @@ export interface NexusGenObjects {
   }
   Query: {};
   User: { // root type
-    createdAt?: string | null; // String
-    email?: string | null; // String
+    createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
+    email?: NexusGenScalars['EmailAddress'] | null; // EmailAddress
     emailVerified?: boolean | null; // Boolean
     firstName?: string | null; // String
     id: number; // Int!
     lastName?: string | null; // String
     role?: string | null; // String
-    updatedAt?: string | null; // String
+    updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
     userBanned?: boolean | null; // Boolean
   }
 }
@@ -101,7 +144,7 @@ export interface NexusGenFieldTypes {
   }
   AuthPayloadToken: { // field return type
     expires: string; // String!
-    token: string | null; // String
+    token: NexusGenScalars['JWT'] | null; // JWT
   }
   AuthPayloadTokens: { // field return type
     access: NexusGenRootTypes['AuthPayloadToken'] | null; // AuthPayloadToken
@@ -128,7 +171,7 @@ export interface NexusGenFieldTypes {
     userSignup: NexusGenRootTypes['AuthPayload']; // AuthPayload!
   }
   ProfileUser: { // field return type
-    email: string | null; // String
+    email: NexusGenScalars['EmailAddress'] | null; // EmailAddress
     emailVerified: boolean | null; // Boolean
     firstName: string | null; // String
     id: number; // Int!
@@ -141,14 +184,14 @@ export interface NexusGenFieldTypes {
     users2: Array<NexusGenRootTypes['User'] | null>; // [User]!
   }
   User: { // field return type
-    createdAt: string | null; // String
-    email: string | null; // String
+    createdAt: NexusGenScalars['DateTime'] | null; // DateTime
+    email: NexusGenScalars['EmailAddress'] | null; // EmailAddress
     emailVerified: boolean | null; // Boolean
     firstName: string | null; // String
     id: number; // Int!
     lastName: string | null; // String
     role: string | null; // String
-    updatedAt: string | null; // String
+    updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
     userBanned: boolean | null; // Boolean
   }
 }
@@ -160,7 +203,7 @@ export interface NexusGenFieldTypeNames {
   }
   AuthPayloadToken: { // field return type name
     expires: 'String'
-    token: 'String'
+    token: 'JWT'
   }
   AuthPayloadTokens: { // field return type name
     access: 'AuthPayloadToken'
@@ -187,7 +230,7 @@ export interface NexusGenFieldTypeNames {
     userSignup: 'AuthPayload'
   }
   ProfileUser: { // field return type name
-    email: 'String'
+    email: 'EmailAddress'
     emailVerified: 'Boolean'
     firstName: 'String'
     id: 'Int'
@@ -200,14 +243,14 @@ export interface NexusGenFieldTypeNames {
     users2: 'User'
   }
   User: { // field return type name
-    createdAt: 'String'
-    email: 'String'
+    createdAt: 'DateTime'
+    email: 'EmailAddress'
     emailVerified: 'Boolean'
     firstName: 'String'
     id: 'Int'
     lastName: 'String'
     role: 'String'
-    updatedAt: 'String'
+    updatedAt: 'DateTime'
     userBanned: 'Boolean'
   }
 }
@@ -215,7 +258,7 @@ export interface NexusGenFieldTypeNames {
 export interface NexusGenArgTypes {
   Mutation: {
     authLogin: { // args
-      email: string; // String!
+      email: NexusGenScalars['EmailAddress']; // EmailAddress!
       password: string; // String!
       scope: string; // String!
     }
@@ -223,7 +266,7 @@ export interface NexusGenArgTypes {
       userId: number; // Int!
     }
     authPasswordRequest: { // args
-      email: string; // String!
+      email: NexusGenScalars['EmailAddress']; // EmailAddress!
       scope: string; // String!
     }
     authPasswordReset: { // args
@@ -246,7 +289,7 @@ export interface NexusGenArgTypes {
       userId: number; // Int!
     }
     userProfileUpdate: { // args
-      data: NexusGenInputs['UserProfileInput']; // UserProfileInput!
+      data: NexusGenInputs['UserProfileUpdateInput']; // UserProfileUpdateInput!
       scope: string; // String!
       userId: number; // Int!
     }

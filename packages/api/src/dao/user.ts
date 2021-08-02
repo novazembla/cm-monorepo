@@ -1,12 +1,9 @@
 import { hash, verify } from "argon2";
 import httpStatus from "http-status";
 import { User, Prisma } from "@prisma/client";
+import { filteredOutputByBlacklist } from "@culturemap/core";
 
-import {
-  ApiError,
-  filteredOutputByBlacklistOrNotFound,
-  filteredOutputByBlacklist,
-} from "../utils";
+import { ApiError, filteredOutputByBlacklistOrNotFound } from "../utils";
 import config from "../config";
 import { getPrismaClient } from "../db/client";
 

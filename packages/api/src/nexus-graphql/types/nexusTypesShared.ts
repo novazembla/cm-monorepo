@@ -1,6 +1,17 @@
 /// <reference path="../../types/nexus-typegen.ts" />
 
-import { objectType } from "nexus";
+import { objectType, asNexusMethod } from "nexus";
+import {
+  GraphQLDateTime,
+  GraphQLJSON,
+  GraphQLJWT,
+  GraphQLEmailAddress,
+} from "graphql-scalars";
+
+export const GQLDateTime = asNexusMethod(GraphQLDateTime, "date");
+export const GQLJson = asNexusMethod(GraphQLJSON, "json");
+export const GQLJwt = asNexusMethod(GraphQLJWT, "jwt");
+export const GQLEmailAddress = asNexusMethod(GraphQLEmailAddress, "email");
 
 export const BooleanResult = objectType({
   name: "BooleanResult",
@@ -8,7 +19,3 @@ export const BooleanResult = objectType({
     t.nonNull.boolean("result");
   },
 });
-
-export default {
-  BooleanResult,
-};

@@ -66,7 +66,7 @@ const App = () => {
       </span>
       <Suspense fallback={<LoadingIcon type="light" size={120} />}>
         <BrowserRouter>
-          <AuthenticationSessionActiveGate>
+          <AuthenticationSessionActiveGate publicRoutesPaths={[...getPublicOnlyRoutesPathsArray(), ...getRoutesPathsArray()]}>
             <ScrollToTop />
             <Switch>
               <Route exact path="/">

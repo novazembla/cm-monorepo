@@ -14,7 +14,7 @@ export const useUserProfileUpdateMutation = () => {
       variables: {
         userId, 
         scope: config.scope,
-        ...data,
+        data,
       }
     });
   };
