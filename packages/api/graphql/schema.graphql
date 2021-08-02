@@ -60,6 +60,7 @@ type Mutation {
   authRefresh(scope: String!): AuthPayload!
   authRequestEmailVerificationEmail(scope: String!, userId: Int!): BooleanResult!
   authVerifyEmail(token: String!): BooleanResult!
+  settingsUpdate(data: [SettingInput!]): BooleanResult!
   userProfilePasswordUpdate(password: String!, scope: String!, userId: Int!): User!
   userProfileUpdate(data: UserProfileUpdateInput!, scope: String!, userId: Int!): User!
   userSignup(data: UserSignupInput!, scope: String!): AuthPayload!
@@ -75,9 +76,24 @@ type ProfileUser {
 }
 
 type Query {
+  setting(id: Int!): [Setting]
+  settings: [Setting]
   userProfileRead(scope: String!, userId: Int!): ProfileUser!
-  users: [User]!
-  users2: [User]!
+  users: [User]
+  users2: [User]
+}
+
+type Setting {
+  createdAt: DateTime
+  id: Int!
+  key: String
+  updatedAt: DateTime
+  value: JSON
+}
+
+input SettingInput {
+  key: String!
+  value: JSON!
 }
 
 type User {

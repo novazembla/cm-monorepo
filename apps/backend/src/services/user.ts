@@ -83,7 +83,6 @@ const login = async (u: AuthenticatedAppUserData): Promise<boolean> => new Promi
       new Date(token.expires).getTime() - Date.now() - 10000
     );
   }
-
   store.dispatch(
     userLogin({ appUserData: u, expires: getRefreshCookie() })
   );
@@ -97,7 +96,9 @@ const logout = async (): Promise<boolean> => new Promise(async (resolve) => {
   authentication.removeRefreshCookie();
   
   store.dispatch(userLogout());
-  if (client) await client.clearStore();
+
+  // we're using resetStore (as clearStore cancels all ongoing queries)
+  if (client) await client.resetStore();
   
   setTabWideAccessStatus("logged-out");
   

@@ -1,15 +1,14 @@
-import React from 'react'
+import React from "react";
 import { ApolloProvider } from "@apollo/client";
 
-import {
-  useApollo, useConfig
-} from "~/hooks"
+import { useApolloClient } from "~/hooks";
 
-export const AppApolloProvider = ({children}:{children:React.ReactNode}) => {
-  const config = useConfig();
-  const apolloClient = useApollo(config);
+export const AppApolloProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const apolloClient = useApolloClient();
 
-  return (
-    <ApolloProvider client={apolloClient}>{children}</ApolloProvider>
-  )
-}
+  return <ApolloProvider client={apolloClient}>{children}</ApolloProvider>;
+};

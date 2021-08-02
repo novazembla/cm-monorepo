@@ -90,21 +90,6 @@ export const daoUserGetByLogin = async (
 
   if (!user || !(await verify(user.password, password))) return null;
 
-  // TODO: filteredOutputByBlacklist(user, config.db.privateJSONDataKeys.user);
-  /*
-    [A:API] [NODE] {
-    [A:API] [NODE]   id: 6,
-    [A:API] [NODE]   email: 'hoh2243@ho.com',
-    [A:API] [NODE]   firstName: 'hoho',
-    [A:API] [NODE]   lastName: 'hoho',
-    [A:API] [NODE]   role: 'user',
-    [A:API] [NODE]   emailConfirmed: false,
-    [A:API] [NODE]   acceptedTerms: true,
-    [A:API] [NODE]   userBanned: false,
-    [A:API] [NODE]   createdAt: {}, <!==== WHY IS THAT ?
-    [A:API] [NODE]   updatedAt: {}
-    [A:API] [NODE] }
-  */
   return filteredOutputByBlacklist(user, config.db.privateJSONDataKeys.user);
 };
 

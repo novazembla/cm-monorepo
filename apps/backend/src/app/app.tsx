@@ -13,6 +13,7 @@ import {
   RoutePrivate,
   RoutePublic,
   RouteHome,
+  SettingsLoader,
 } from "~/components/app";
 
 import {
@@ -55,6 +56,7 @@ const ScrollToTop = () => {
 const App = () => {
   return (
     <AppProviders>
+      <SettingsLoader/>
       <span
         className="sr-only"
         role="status"

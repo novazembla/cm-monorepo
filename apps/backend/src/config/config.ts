@@ -2,14 +2,14 @@ import merge from "deepmerge";
 
 import { appConfig } from "./appconfig";
 
-import { AppSettingField } from "./settings";
+import { AppSettingsFieldDefinitions } from "./settings";
 
 export type AppConfig = {
   apiUrl?: string | undefined;
   apiDomain?: string | undefined;
   scope?: string | undefined;
   enableRegistration?: boolean;
-  settings?: Record<string, AppSettingField>;
+  settings?: AppSettingsFieldDefinitions;
 };
 
 // initial state

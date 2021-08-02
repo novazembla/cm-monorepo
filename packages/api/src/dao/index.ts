@@ -1,2 +1,3 @@
-export * as token from "./token";
-export * as user from "./user";
+export * from "./token";
+export * from "./user";
+export * from "./setting";

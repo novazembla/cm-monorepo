@@ -15,7 +15,7 @@ import {
   useTypedDispatch,
   useSuccessToast,
 } from "~/hooks";
-import { userProfileUpdate } from "~/redux/slices/user";
+import { settingUpdate } from "~/redux/slices/settings";
 
 import { Divider } from "@chakra-ui/react";
 import {
@@ -35,7 +35,7 @@ import { moduleRootPath } from "./config";
 
 import { UpdateForm } from "./forms";
 
-const Update = () => {
+const Update = ({ key }: { key: string }) => {
   const config = useConfig();
   const dispatch = useTypedDispatch();
   const [appUser] = useAuthentication();
@@ -86,22 +86,14 @@ const Update = () => {
 
         if (!errors) {
           dispatch(
-            userProfileUpdate({
-              firstName: newData.firstName,
-              lastName: newData.lastName,
-              emailVerified:
-                data?.userProfileRead?.email &&
-                newData?.email &&
-                data?.userProfileRead?.email !== newData?.email
-                  ? "no"
-                  : undefined,
+            settingUpdate({
+              key: newData.key,
+              value: null,
             })
           );
 
           successToast();
-
-          history.push("/profile");
-          
+          history.push("/settings");
         } else {
           setIsFormError(true);
         }
@@ -116,10 +108,10 @@ const Update = () => {
   const breadcrumb = [
     {
       path: moduleRootPath,
-      title: t("module.profile.title", "Profile"),
+      title: t("module.settings.title", "Settings"),
     },
     {
-      title: t("module.profile.page.title.updateprofile", "Update profile"),
+      title: t("module.settings.page.title.updatesettings", "Update settings"),
     },
   ];
 
@@ -128,13 +120,13 @@ const Update = () => {
       type: "back",
       to: moduleRootPath,
       label: t("module.button.cancel", "Cancel"),
-      userCan: "profileUpdate",
+      userCan: "settingRead",
     },
     {
       type: "submit",
       isLoading: isSubmitting,
       label: t("module.button.update", "Update"),
-      userCan: "profileUpdate",
+      userCan: "settingUpdate",
     },
   ];
 

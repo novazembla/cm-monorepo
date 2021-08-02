@@ -66,15 +66,10 @@ export const ProfileUser = objectType({
   },
 });
 
-// const userQueryAuthentication: fieldAuthorizePluginCore.FieldAuthorizeResolver<
-//   "Query",
-//   "users"
-// > = async (...[, , ctx]) => !!(ctx.apiUser && ctx.apiUser.can("userRead"));
-
 export const UserQuery = extendType({
   type: "Query",
   definition(t) {
-    t.nonNull.list.field("users", {
+    t.list.field("users", {
       type: "User",
 
       authorize: async (...[, , ctx]) => authorizeApiUser(ctx, "userRead"),
@@ -101,7 +96,7 @@ export const UserQuery = extendType({
 export const User2Query = extendType({
   type: "Query",
   definition(t) {
-    t.nonNull.list.field("users2", {
+    t.list.field("users2", {
       type: "User",
 
       // resolve(root, args, ctx, info)

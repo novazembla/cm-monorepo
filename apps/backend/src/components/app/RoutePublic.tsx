@@ -1,12 +1,9 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
 import { useAuthentication } from "~/hooks";
+import type { AppRouteProps } from "~/config/routes";
 
-type CompontentProps = {
-  component: React.FC;
-};
-
-export const RoutePublic = (props: CompontentProps) => {
+export const RoutePublic = (props: AppRouteProps) => {
   const [, { isLoggedIn } ] = useAuthentication();
   const { component: Component, ...restProps } = props;
   

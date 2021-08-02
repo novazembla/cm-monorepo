@@ -7,7 +7,7 @@ import {
   // HiOutlineLocationMarker,
 } from "react-icons/hi";
 // import { RiCalendarEventLine } from "react-icons/ri";
-// import { IoSettingsOutline } from "react-icons/io5";
+import { IoSettingsOutline } from "react-icons/io5";
 import { MdClose } from "react-icons/md";
 import { NavLink } from "react-router-dom";
 import {
@@ -23,6 +23,7 @@ import { InlineLanguageButtons } from "../ui";
 
 import { moduleAccessRules as dashboadModuleAccessRules } from "~/modules/DashBoard/routes";
 import { moduleAccessRules as usersModuleAccessRules } from "~/modules/Users/routes";
+import { moduleAccessRules as settingsModuleAccessRules } from "~/modules/Settings/routes";
 import { useAuthentication } from "~/hooks";
 
 const NavItem = ({
@@ -77,7 +78,6 @@ const NavItem = ({
 
 export const Sidebar = () => {
   const [appUser] = useAuthentication();
-
   const { t } = useTranslation();
   
   const [tw] = useMediaQuery("(min-width: 55em)");
@@ -85,6 +85,9 @@ export const Sidebar = () => {
   const menuState = tw ? false : true;
 
   const { isOpen, onToggle } = useDisclosure();
+
+  if (!appUser)
+    return <></>
 
   // TODO: use useEffect ot monitor tw, close menu when change ... 
 
@@ -130,12 +133,13 @@ export const Sidebar = () => {
       icon: HiOutlineUsers,
       ...usersModuleAccessRules,
     },
-    // {
-    //   title: t("module.title.settings", "Settings"),
-    //   path: "/settings",
-    //   exact: false,
-    //   icon: IoSettingsOutline,
-    // },
+    {
+      title: t("module.title.settings", "Settings"),
+      path: "/settings",
+      exact: false,
+      icon: IoSettingsOutline,
+      ...settingsModuleAccessRules,
+    },
   ];
 
   return (

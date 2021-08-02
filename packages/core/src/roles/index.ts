@@ -9,12 +9,16 @@ export type RoleNames =
   | "api"
   | "test";
 
+// !!! Also add new permissions to the constructing arrays on the bottom
 export type PermissionsOfAdministrator =
   | "userCreate"
   | "userRead"
   | "userUpdate"
-  | "userDelete";
+  | "userDelete"
+  | "settingRead"
+  | "settingUpdate";
 
+// !!! Also add new permissions to the constructing arrays on the bottom
 export type PermissionsOfEditor =
   | "locationRead"
   | "locationCreate"
@@ -37,6 +41,7 @@ export type PermissionsOfEditor =
   | "taxUpdate"
   | "taxDelete";
 
+// !!! Also add new permissions to the constructing arrays on the bottom
 export type PermissionsOfContributor =
   | "locationRead"
   | "locationCreate"
@@ -55,13 +60,16 @@ export type PermissionsOfContributor =
   | "pageUpdate"
   | "pageDeleteOwn";
 
+// !!! Also add new permissions to the constructing arrays on the bottom
 export type PermissionsOfUser =
   | "accessAsAuthenticatedUser"
   | "profileRead"
   | "profileUpdate";
 
+// !!! Also add new permissions to the constructing arrays on the bottom
 export type PermissionsOfRefresh = "canRefreshAccessToken";
 
+// !!! Also add new permissions to the constructing arrays on the bottom
 export type PermissionsOfApi = "canConfirmToken";
 
 export type PermissionNames =
@@ -165,6 +173,8 @@ roles.add("administrator", [
   "userRead",
   "userUpdate",
   "userDelete",
+  "settingRead",
+  "settingUpdate",
 ]);
 roles.add("editor", [
   "locationRead",

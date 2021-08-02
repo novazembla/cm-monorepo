@@ -54,6 +54,10 @@ declare global {
 }
 
 export interface NexusGenInputs {
+  SettingInput: { // input type
+    key: string; // String!
+    value: NexusGenScalars['JSON']; // JSON!
+  }
   UserProfileUpdateInput: { // input type
     email: NexusGenScalars['EmailAddress']; // EmailAddress!
     firstName: string; // String!
@@ -114,6 +118,13 @@ export interface NexusGenObjects {
     role?: string | null; // String
   }
   Query: {};
+  Setting: { // root type
+    createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
+    id: number; // Int!
+    key?: string | null; // String
+    updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
+    value?: NexusGenScalars['JSON'] | null; // JSON
+  }
   User: { // root type
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
     email?: NexusGenScalars['EmailAddress'] | null; // EmailAddress
@@ -166,6 +177,7 @@ export interface NexusGenFieldTypes {
     authRefresh: NexusGenRootTypes['AuthPayload']; // AuthPayload!
     authRequestEmailVerificationEmail: NexusGenRootTypes['BooleanResult']; // BooleanResult!
     authVerifyEmail: NexusGenRootTypes['BooleanResult']; // BooleanResult!
+    settingsUpdate: NexusGenRootTypes['BooleanResult']; // BooleanResult!
     userProfilePasswordUpdate: NexusGenRootTypes['User']; // User!
     userProfileUpdate: NexusGenRootTypes['User']; // User!
     userSignup: NexusGenRootTypes['AuthPayload']; // AuthPayload!
@@ -179,9 +191,18 @@ export interface NexusGenFieldTypes {
     role: string | null; // String
   }
   Query: { // field return type
+    setting: Array<NexusGenRootTypes['Setting'] | null> | null; // [Setting]
+    settings: Array<NexusGenRootTypes['Setting'] | null> | null; // [Setting]
     userProfileRead: NexusGenRootTypes['ProfileUser']; // ProfileUser!
-    users: Array<NexusGenRootTypes['User'] | null>; // [User]!
-    users2: Array<NexusGenRootTypes['User'] | null>; // [User]!
+    users: Array<NexusGenRootTypes['User'] | null> | null; // [User]
+    users2: Array<NexusGenRootTypes['User'] | null> | null; // [User]
+  }
+  Setting: { // field return type
+    createdAt: NexusGenScalars['DateTime'] | null; // DateTime
+    id: number; // Int!
+    key: string | null; // String
+    updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
+    value: NexusGenScalars['JSON'] | null; // JSON
   }
   User: { // field return type
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
@@ -225,6 +246,7 @@ export interface NexusGenFieldTypeNames {
     authRefresh: 'AuthPayload'
     authRequestEmailVerificationEmail: 'BooleanResult'
     authVerifyEmail: 'BooleanResult'
+    settingsUpdate: 'BooleanResult'
     userProfilePasswordUpdate: 'User'
     userProfileUpdate: 'User'
     userSignup: 'AuthPayload'
@@ -238,9 +260,18 @@ export interface NexusGenFieldTypeNames {
     role: 'String'
   }
   Query: { // field return type name
+    setting: 'Setting'
+    settings: 'Setting'
     userProfileRead: 'ProfileUser'
     users: 'User'
     users2: 'User'
+  }
+  Setting: { // field return type name
+    createdAt: 'DateTime'
+    id: 'Int'
+    key: 'String'
+    updatedAt: 'DateTime'
+    value: 'JSON'
   }
   User: { // field return type name
     createdAt: 'DateTime'
@@ -283,6 +314,9 @@ export interface NexusGenArgTypes {
     authVerifyEmail: { // args
       token: string; // String!
     }
+    settingsUpdate: { // args
+      data?: NexusGenInputs['SettingInput'][] | null; // [SettingInput!]
+    }
     userProfilePasswordUpdate: { // args
       password: string; // String!
       scope: string; // String!
@@ -299,6 +333,9 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
+    setting: { // args
+      id: number; // Int!
+    }
     userProfileRead: { // args
       scope: string; // String!
       userId: number; // Int!

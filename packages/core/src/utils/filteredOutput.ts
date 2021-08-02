@@ -4,7 +4,8 @@ export type FilterableObject<K extends keyof any, T> = {
 
 export const filteredOutputByBlacklist = (
   obj: object | object[],
-  keys?: string[] | undefined
+  keys?: string[] | undefined,
+  skipKeys?: string | string[]
 ): any => {
   if (!keys) {
     // TODO: better error logging
@@ -16,22 +17,29 @@ export const filteredOutputByBlacklist = (
   }
 
   if (Array.isArray(obj)) {
-    return obj.map((item) => filteredOutputByBlacklist(item, keys));
+    return obj.map((item) => filteredOutputByBlacklist(item, keys, skipKeys));
   }
 
+  let skipArray: string[] = [];
+
+  if (skipKeys) skipArray = Array.isArray(skipKeys) ? skipKeys : [skipKeys];
+
   return Object.keys(obj)
-    .filter((key) => !keys.includes(key))
+    .filter((key) => !keys.includes(key) || skipArray.includes(key))
     .reduce((acc, key) => {
       return {
         ...acc,
-        [key]: filteredOutputByBlacklist((obj as any)[key], keys),
+        [key]: skipArray.includes(key)
+          ? (obj as any)[key]
+          : filteredOutputByBlacklist((obj as any)[key], keys, skipKeys),
       };
     }, {});
 };
 
 export const filteredOutputByWhitelist = (
   obj: object | object[],
-  keys?: string[] | undefined
+  keys?: string[] | undefined,
+  skipKeys?: string | string[]
 ): any => {
   if (!keys) {
     // TODO: better error logging
@@ -43,15 +51,21 @@ export const filteredOutputByWhitelist = (
   }
 
   if (Array.isArray(obj)) {
-    return obj.map((item) => filteredOutputByWhitelist(item, keys));
+    return obj.map((item) => filteredOutputByWhitelist(item, keys, skipKeys));
   }
 
+  let skipArray: string[] = [];
+
+  if (skipKeys) skipArray = Array.isArray(skipKeys) ? skipKeys : [skipKeys];
+
   return Object.keys(obj)
-    .filter((key) => keys.includes(key))
+    .filter((key) => keys.includes(key) || skipArray.includes(key))
     .reduce((acc, key) => {
       return {
         ...acc,
-        [key]: filteredOutputByWhitelist((obj as any)[key], keys),
+        [key]: skipArray.includes(key)
+          ? (obj as any)[key]
+          : filteredOutputByWhitelist((obj as any)[key], keys, skipKeys),
       };
     }, {});
 };

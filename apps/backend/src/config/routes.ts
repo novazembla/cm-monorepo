@@ -8,6 +8,7 @@ import { getAppConfig } from "~/config";
 import { moduleAccessRules as dashboadModuleAccessRules } from "~/modules/DashBoard/routes";
 import { moduleAccessRules as profileModuleAccessRules } from "~/modules/Profile/routes";
 import { moduleAccessRules as usersModuleAccessRules } from "~/modules/Users/routes";
+import { moduleAccessRules as settingsModuleAccessRules } from "~/modules/Settings/routes";
 
 // Public
 const Login = lazy(() => import("~/pages/Login/Login"));
@@ -32,13 +33,16 @@ const EmailConfirmation = lazy(
 // Private
 const DashBoard = lazy(() => import("~/modules/DashBoard/DashBoard"));
 const Users = lazy(() => import("~/modules/Users/Users"));
+const Settings = lazy(() => import("~/modules/Settings/Settings"));
 
 const config = getAppConfig();
+
+export type RouteCompontent = React.FC | React.FC<{ id: number }> | React.FC<{ key: string }>
 
 export interface RouteParams {
   key: string;
   path: string;
-  component: React.FC;
+  component: RouteCompontent;
   exact: boolean;
 }
 
@@ -58,8 +62,8 @@ export interface ModuleAccessRules {
 export interface RoutePrivateParams extends RouteParams, ModuleAccessRules {}
 
 export interface AppRouteProps extends RouteProps, ModuleAccessRules {
-  key: string;  
-}   
+  key: string;
+}
 
 export const routes: RouteParams[] = [
   {
@@ -113,21 +117,28 @@ export const privateRoutes: RoutePrivateParams[] = [
     path: "/dashboard",
     component: DashBoard,
     exact: true,
-    ...dashboadModuleAccessRules
+    ...dashboadModuleAccessRules,
   },
   {
     key: "profile",
     path: "/profile",
     component: Profile,
     exact: false,
-    ...profileModuleAccessRules
+    ...profileModuleAccessRules,
   },
   {
     key: "users",
     path: "/users",
     component: Users,
     exact: false,
-    ...usersModuleAccessRules
+    ...usersModuleAccessRules,
+  },
+  {
+    key: "settings",
+    path: "/settings",
+    component: Settings,
+    exact: false,
+    ...settingsModuleAccessRules,
   },
 ];
 
