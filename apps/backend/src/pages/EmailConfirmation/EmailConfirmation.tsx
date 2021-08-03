@@ -55,10 +55,16 @@ const EmailConfirmation = () => {
             (!payload?.user?.id))
           throw Error("Incorrect token provided");
 
-        if (decode(token ?? ""))
-          await verificationMutation(token ?? "");
-
-        setIsTokenConfirmed(true);
+        if (decode(token ?? "")) {
+          const { errors } = await verificationMutation(token ?? "");
+          if (!errors) {
+            setIsTokenConfirmed(true);
+          } else {
+            setIsTokenError(true);
+          }
+        } else {
+          setIsTokenError(true);
+        }
       } catch (err) {
         setIsTokenError(true);
       }

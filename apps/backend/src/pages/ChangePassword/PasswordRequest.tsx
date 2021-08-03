@@ -40,8 +40,12 @@ const PasswordRequest = () => {
   ) => {
     setIsFormError(false);
     try {
-      await firstMutation(data.email);
-      setIsFormSubmitted(true);
+      const { errors } = await firstMutation(data.email);
+      if (!errors) {
+        setIsFormSubmitted(true);
+      } else {
+        setIsFormError(true);
+      }
     } catch (err) {
       setIsFormError(true);
     }

@@ -1,4 +1,4 @@
-TODO: 
+πππTODO: How does the system reject a double registration with the same email address?
 
 
 Installation

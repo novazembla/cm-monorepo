@@ -55,7 +55,7 @@ const Index = () => {
          {firstName &&
           <>
             <Stat mb="4">
-              <StatLabel >
+              <StatLabel fontSize="md">
                 {t("module.profile.data.title.fullname", "Name")}
               </StatLabel>
               <StatNumber textTransform="capitalize" mt="-1">
@@ -64,14 +64,14 @@ const Index = () => {
             </Stat>
 
             <Stat mb="4">
-              <StatLabel>
+              <StatLabel fontSize="md">
                 {t("module.profile.data.title.email", "Email address")}
               </StatLabel>
               <StatNumber mt="-1">{email}</StatNumber>
             </Stat>
 
             <Stat mb="4">
-              <StatLabel>
+              <StatLabel fontSize="md">
                 {t(
                   "module.profile.data.title.emailverificationstatus",
                   "Email verification status"

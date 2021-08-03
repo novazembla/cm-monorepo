@@ -56,8 +56,12 @@ const PasswordReset = () => {
   const onSubmit = async (data: yup.InferType<typeof PasswordResetValidationSchema>) => {
     setIsFormError(false);
     try {
-      await firstMutation(data.newPassword, token ?? '');
-      setIsFormSubmitted(true);
+      const { errors } = await firstMutation(data.newPassword, token ?? '');
+      if (!errors) {
+        setIsFormSubmitted(true);
+      } else {
+        setIsFormError(true);
+      }
     } catch (err) {
       setIsFormError(true);
     }
