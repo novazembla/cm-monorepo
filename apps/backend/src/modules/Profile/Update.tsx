@@ -31,7 +31,7 @@ import {
   ButtonListElement,
 } from "~/components/modules";
 
-import { moduleRootPath } from "./config";
+import { moduleRootPath } from "./moduleConfig";
 
 import { UpdateForm } from "./forms";
 

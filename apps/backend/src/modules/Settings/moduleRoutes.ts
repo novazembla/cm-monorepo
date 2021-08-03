@@ -1,36 +1,28 @@
 import type { RoutePrivateParams, ModuleAccessRules } from '~/config/routes';
 
 import Index from "./Index";
-import Password from "./Password";
 import Update from "./Update";
 
-import { moduleRootPath } from './config';
+import { moduleRootPath } from './moduleConfig';
 
 export const moduleAccessRules: ModuleAccessRules = {
-  userCan: "profileUpdate"
+  userCan: "settingRead"
 }
 
 export const moduleRoutes: RoutePrivateParams[] = [
-  {
-    key: "password",
-    path: `${moduleRootPath}/password`,
-    component: Password,
-    exact: true,
-    userCan: "profileUpdate",
-  },
   {
     key: "index",
     path: `${moduleRootPath}`,
     component: Index,
     exact: true,
-    userCan: "profileUpdate",
+    ...moduleAccessRules,
   },
   {
     key: "update",
     path: `${moduleRootPath}/update`,
     component: Update,
     exact: true,
-    userCan: "profileUpdate",
+    userCan: "settingUpdate",
   }   
 ];
 

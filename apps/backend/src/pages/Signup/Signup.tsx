@@ -5,7 +5,7 @@ import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
 
-import { UserSignupValidationSchema, yupFieldIsRequired } from "~/validation";
+import { UserSignupValidationSchema, yupIsFieldRequired } from "~/validation";
 
 import { useUserSignupMutation } from "~/hooks/mutations";
 
@@ -102,7 +102,7 @@ const Signup = () => {
                         "page.register.form_field_firstName_label",
                         "First Name"
                       )}
-                      isRequired={yupFieldIsRequired(
+                      isRequired={yupIsFieldRequired(
                         "firstName",
                         UserSignupValidationSchema
                       )}
@@ -123,7 +123,7 @@ const Signup = () => {
                         "page.register.form_field_lastName_label",
                         "Last Name"
                       )}
-                      isRequired={yupFieldIsRequired(
+                      isRequired={yupIsFieldRequired(
                         "lastName",
                         UserSignupValidationSchema
                       )}
@@ -145,7 +145,7 @@ const Signup = () => {
                       "page.register.form_field_registration_label",
                       "Email Address"
                     )}
-                    isRequired={yupFieldIsRequired(
+                    isRequired={yupIsFieldRequired(
                       "email",
                       UserSignupValidationSchema
                     )}
@@ -167,7 +167,7 @@ const Signup = () => {
                       "page.register.form_field_password_label",
                       "Your password"
                     )}
-                    isRequired={yupFieldIsRequired(
+                    isRequired={yupIsFieldRequired(
                       "password",
                       UserSignupValidationSchema
                     )}
@@ -189,7 +189,7 @@ const Signup = () => {
                       "page.passwordreset.form_field_password_confirmation_label",
                       "Confirm your new password"
                     )}
-                    isRequired={yupFieldIsRequired(
+                    isRequired={yupIsFieldRequired(
                       "password",
                       UserSignupValidationSchema
                     )}
@@ -213,7 +213,7 @@ const Signup = () => {
                         )}
                       </span>
                     }
-                    isRequired={yupFieldIsRequired(
+                    isRequired={yupIsFieldRequired(
                       "acceptedTerms",
                       UserSignupValidationSchema
                     )}

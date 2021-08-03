@@ -11,8 +11,8 @@ export const appConfig: AppConfig = {
   //     // t("settings.nameofyoursetting.label", "Label")
   //     label: "settings.nameofyoursetting.label",
   //     required: true, // or false
-  //     default: undefined,
-  //     validationSchema: ___, // your custom yup validation schama
+  //     defaultValue: undefined,
+  //     validationSchema: ___, // your custom yup validation schama needs to be object().shape(...) as the schemas will be merged object().shape({email:string(),emailconfirm:string()})
   //   },
   // }, // TODO: what else is needed?
 };

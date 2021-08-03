@@ -4,7 +4,7 @@ import Add from "./Add";
 import Update from "./Update";
 import Index from "./Index";
 
-import { moduleRootPath } from './config';
+import { moduleRootPath } from './moduleConfig';
 
 export const moduleAccessRules: ModuleAccessRules = {
   userCan: "userRead"

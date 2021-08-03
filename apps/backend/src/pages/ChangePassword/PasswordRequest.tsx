@@ -4,7 +4,7 @@ import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Link as RouterLink } from "react-router-dom";
 
-import { PasswordRequestValidationSchema, yupFieldIsRequired } from "~/validation";
+import { PasswordRequestValidationSchema, yupIsFieldRequired } from "~/validation";
 
 import { useTranslation } from "react-i18next";
 
@@ -106,7 +106,7 @@ const PasswordRequest = () => {
                     "page.passwordrequest.form_field_email_label",
                     "Email Address"
                   )}
-                  isRequired={yupFieldIsRequired("email",PasswordRequestValidationSchema)}
+                  isRequired={yupIsFieldRequired("email",PasswordRequestValidationSchema)}
                   settings={{
                     placeholder: t(
                       "page.passwordrequest.form_field_email_placeholder",

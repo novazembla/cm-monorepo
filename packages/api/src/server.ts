@@ -5,6 +5,7 @@ import {
   ApolloServerPluginLandingPageGraphQLPlayground,
   AuthenticationError,
   ValidationError,
+  ForbiddenError,
 } from "apollo-server-core";
 import httpStatus from "http-status";
 import { GraphQLSchema } from "graphql/type/schema";
@@ -37,6 +38,9 @@ export const initializeApolloServer = (
             ?.originalError?.message ?? err.message;
 
         logger.warn(`${msg} AuthenticationError: ${authMessage}`);
+
+        if (authMessage === "GQL authorization rejected")
+          return new ForbiddenError("Access Denied");
 
         return new AuthenticationError(authMessage);
       }

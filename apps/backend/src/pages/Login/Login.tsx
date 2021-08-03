@@ -14,7 +14,7 @@ import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
 
-import { ValidationSchemaLogin, yupFieldIsRequired } from "~/validation";
+import { UserLoginValidationSchema, yupIsFieldRequired } from "~/validation";
 import { useAuthLoginMutation } from "~/hooks/mutations";
 import { useConfig } from "~/hooks";
 
@@ -33,7 +33,7 @@ const Login = () => {
 
   const formMethods = useForm({
     mode: "onTouched",
-    resolver: yupResolver(ValidationSchemaLogin),
+    resolver: yupResolver(UserLoginValidationSchema),
   });
 
   const {
@@ -42,7 +42,7 @@ const Login = () => {
   } = formMethods;
 
   const onSubmit = async (
-    data: yup.InferType<typeof ValidationSchemaLogin>
+    data: yup.InferType<typeof UserLoginValidationSchema>
   ) => {
     setIsFormError(false);
     try {
@@ -51,7 +51,6 @@ const Login = () => {
       if (errors) setIsFormError(true);
  
     } catch (err) {
-      console.log(1);
       setIsFormError(true);
     }
   };
@@ -98,9 +97,9 @@ const Login = () => {
                     "page.login.form_field_login_label",
                     "Email Address"
                   )}
-                  isRequired={yupFieldIsRequired(
+                  isRequired={yupIsFieldRequired(
                     "email",
-                    ValidationSchemaLogin
+                    UserLoginValidationSchema
                   )}
                   settings={{
                     placeholder: t(
@@ -119,9 +118,9 @@ const Login = () => {
                     "page.login.form_field_password_label",
                     "Your password"
                   )}
-                  isRequired={yupFieldIsRequired(
+                  isRequired={yupIsFieldRequired(
                     "password",
-                    ValidationSchemaLogin
+                    UserLoginValidationSchema
                   )}
                   settings={{
                     placeholder: t(

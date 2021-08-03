@@ -4,7 +4,7 @@ import { FieldInput, FieldRow } from "~/components/forms";
 
 import {
   PasswordResetValidationSchema,
-  yupFieldIsRequired,
+  yupIsFieldRequired,
 } from "~/validation";
 
 export const PasswordUpdateForm = ({
@@ -24,7 +24,7 @@ export const PasswordUpdateForm = ({
           id="newPassword"
           type="password"
           label={t("page.passwordreset.form_field_password_label", "Password")}
-          isRequired={yupFieldIsRequired(
+          isRequired={yupIsFieldRequired(
             "newPassword",
             PasswordResetValidationSchema
           )}
@@ -47,7 +47,7 @@ export const PasswordUpdateForm = ({
             "page.passwordreset.form_field_password_confirmation_label",
             "Password confirmation"
           )}
-          isRequired={yupFieldIsRequired(
+          isRequired={yupIsFieldRequired(
             "confirmPassword",
             PasswordResetValidationSchema
           )}

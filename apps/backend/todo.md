@@ -1,5 +1,4 @@
-πππTODO: How does the system reject a double registration with the same email address?
-
+TODO: Scroll to (first) form error ... 
 
 Installation
 Important to mention to clone src/config/appconfig.example.ts to src/config/appconfig.ts and to fill in the required settings .. 

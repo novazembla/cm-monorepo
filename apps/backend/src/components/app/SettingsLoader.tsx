@@ -27,7 +27,7 @@ export const SettingsLoader = ({ type = "full" }: { type?: string }) => {
             ...acc,
             [setting.key]: {
               key: setting.key,
-              value: setting.value,
+              value: setting.value.json,
             },
           }),
           defaultSettings

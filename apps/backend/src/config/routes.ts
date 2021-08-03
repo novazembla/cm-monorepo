@@ -5,10 +5,10 @@ import type { PermissionNames, RoleNames } from "@culturemap/core";
 
 import { getAppConfig } from "~/config";
 
-import { moduleAccessRules as dashboadModuleAccessRules } from "~/modules/DashBoard/routes";
-import { moduleAccessRules as profileModuleAccessRules } from "~/modules/Profile/routes";
-import { moduleAccessRules as usersModuleAccessRules } from "~/modules/Users/routes";
-import { moduleAccessRules as settingsModuleAccessRules } from "~/modules/Settings/routes";
+import { moduleAccessRules as dashboadModuleAccessRules } from "~/modules/DashBoard/moduleRoutes";
+import { moduleAccessRules as profileModuleAccessRules } from "~/modules/Profile/moduleRoutes";
+import { moduleAccessRules as usersModuleAccessRules } from "~/modules/Users/moduleRoutes";
+import { moduleAccessRules as settingsModuleAccessRules } from "~/modules/Settings/moduleRoutes";
 
 // Public
 const Login = lazy(() => import("~/pages/Login/Login"));

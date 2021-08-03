@@ -125,8 +125,9 @@ const retryWithRefreshTokenLink = onError(
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors)
+    // TODO: remove? 
     graphQLErrors.forEach((err) =>
-      console.log(`[GQLError error]: ${err.message} ${err?.extensions?.code ?? ''}`)
+      console.log(err, `[GQLError error]: ${err.message} ${err?.extensions?.code ?? ''}`)
     );
 
   if (networkError) console.log(`[Network error]: ${networkError}`);
@@ -147,7 +148,8 @@ const createApolloClient = (settings: AppConfig) => {
         attempts: {
           max: 3,
           retryIf: (error, _operation) => {
-            return !!error;
+            console.log(error);
+            return !!error && ![400,403,404].includes(parseInt(error.statusCode, 10));
           },
         },
       }),

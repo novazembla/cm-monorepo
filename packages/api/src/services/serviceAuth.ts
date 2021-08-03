@@ -140,13 +140,13 @@ export const authRefresh = async (scope: string, refreshToken: string) => {
     );
     if (!user) {
       throw new ApiError(
-        httpStatus.UNAUTHORIZED,
+        httpStatus.FORBIDDEN,
         "[auth.authRefresh] Please authenticate (1)"
       );
     }
 
     if (user.userBanned)
-      throw new ApiError(httpStatus.UNAUTHORIZED, "[auth] Access denied");
+      throw new ApiError(httpStatus.FORBIDDEN, "[auth] Access denied");
 
     await daoTokenDeleteMany({
       userId: user.id,
@@ -164,7 +164,7 @@ export const authRefresh = async (scope: string, refreshToken: string) => {
     );
   } catch (error) {
     throw new ApiError(
-      httpStatus.UNAUTHORIZED,
+      httpStatus.FORBIDDEN,
       "[auth.authRefresh] Please authenticate (2)"
     );
   }

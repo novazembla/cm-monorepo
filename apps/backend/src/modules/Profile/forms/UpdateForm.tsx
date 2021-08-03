@@ -4,7 +4,7 @@ import { FieldInput, FieldRow, TwoColFieldRow } from "~/components/forms";
 
 import {
   UserProfileUpdateValidationSchema,
-  yupFieldIsRequired,
+  yupIsFieldRequired,
 } from "~/validation";
 
 export const UpdateForm = ({ data, errors }: { data?: any; errors?: any }) => {
@@ -19,7 +19,7 @@ export const UpdateForm = ({ data, errors }: { data?: any; errors?: any }) => {
             id="firstName"
             type="text"
             label={t("page.register.form_field_firstName_label", "First Name")}
-            isRequired={yupFieldIsRequired(
+            isRequired={yupIsFieldRequired(
               "firstName",
               UserProfileUpdateValidationSchema
             )}
@@ -38,7 +38,7 @@ export const UpdateForm = ({ data, errors }: { data?: any; errors?: any }) => {
             id="lastName"
             type="text"
             label={t("page.register.form_field_lastName_label", "Last Name")}
-            isRequired={yupFieldIsRequired(
+            isRequired={yupIsFieldRequired(
               "lastName",
               UserProfileUpdateValidationSchema
             )}
@@ -60,7 +60,7 @@ export const UpdateForm = ({ data, errors }: { data?: any; errors?: any }) => {
             "page.register.form_field_registration_label",
             "Email Address"
           )}
-          isRequired={yupFieldIsRequired(
+          isRequired={yupIsFieldRequired(
             "email",
             UserProfileUpdateValidationSchema
           )}

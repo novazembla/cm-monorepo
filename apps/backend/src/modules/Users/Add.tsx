@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import {ModuleSubNav, ButtonListElement, ModulePage} from "~/components/modules";
 
 
-import { moduleRootPath } from './config';
+import { moduleRootPath } from './moduleConfig';
 
 const Add = () => {
   const {t} = useTranslation();

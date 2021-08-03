@@ -1,3 +1,4 @@
+import React from "react";
 import { settingsQueryGQL } from "@culturemap/core";
 
 import { useQuery } from "@apollo/client";
@@ -9,10 +10,9 @@ import {
   ModulePage,
   ButtonListElement,
 } from "~/components/modules";
-import { getSettingsFieldDefinitions, AppSettingsFieldKeys } from "~/config";
+import { getSettingsFieldDefinitions, AppSettingsFieldKeys, AppSettingField, AppSettingsFieldDefinitions } from "~/config";
 
-import { moduleRootPath } from "./config";
-import React from "react";
+import { moduleRootPath, findSettingDbValueByKey } from "./moduleConfig";
 
 const Setting = ({
   setting,
@@ -21,25 +21,36 @@ const Setting = ({
   setting: AppSettingsFieldKeys;
   valueInDb: any;
 }) => {
-  const settingsFieldDefinitions = getSettingsFieldDefinitions();
+  const settingsFieldDefinitions: AppSettingsFieldDefinitions = getSettingsFieldDefinitions();
   const { t } = useTranslation();
 
-  let value = valueInDb ?? settingsFieldDefinitions[setting]?.default; 
+  let value = valueInDb ?? settingsFieldDefinitions[setting]?.defaultValue;
 
   let print;
 
   if (settingsFieldDefinitions[setting]?.printComponent) {
-    let props = value
-    if (typeof value !== 'object')
-      props = {value}
+    let props = value;
+    if (typeof value !== "object") props = { value };
 
-    print = React.createElement(settingsFieldDefinitions[setting]?.printComponent as React.FC<any>, props);
+    print = React.createElement(
+      settingsFieldDefinitions[setting]?.printComponent as React.FC<any>,
+      props
+    );
   } else {
-    if (typeof value === 'object') {
-      print = Object.entries(value).map(([, value]) => value).join(", ");
+    if (typeof value === "object") {
+      print = Object.entries(value)
+        .map(([, value]) => value)
+        .join(", ");
     } else {
       if (!value)
-        value = <Text color="red.600">{t("settings.empty.defaultvalue", "Empty! Please update the settings")}</Text>
+        value = (
+          <Text color="red.600">
+            {t(
+              "settings.empty.defaultvalue",
+              "Empty! Please update the settings"
+            )}
+          </Text>
+        );
 
       print = value;
     }
@@ -47,7 +58,7 @@ const Setting = ({
 
   return (
     <Stat mb="4">
-      <StatLabel>
+      <StatLabel fontSize="md">
         {t(settingsFieldDefinitions[setting]?.label ?? "settings.error.label")}
       </StatLabel>
       <StatNumber mt="-1">{print}</StatNumber>
@@ -56,7 +67,7 @@ const Setting = ({
 };
 
 const Index = () => {
-  const settingsFieldDefinitions = getSettingsFieldDefinitions();
+  const settingsFieldDefinitions: AppSettingsFieldDefinitions  = getSettingsFieldDefinitions();
   const { t } = useTranslation();
 
   const { data, loading, error } = useQuery(settingsQueryGQL);
@@ -77,25 +88,20 @@ const Index = () => {
     },
   ];
 
-  console.log(settingsFieldDefinitions);
-
   return (
     <>
       <ModuleSubNav breadcrumb={breadcrumb} buttonList={buttonList} />
       <ModulePage isLoading={loading} isError={!!error}>
-        {data?.settings &&
-          Object.entries(settingsFieldDefinitions).map(
-            ([setting, fielsDefinition], i) => {
-              console.log(setting, fielsDefinition);
-              return (
-                <Setting
-                  key={i}
-                  valueInDb={data?.settings[setting as AppSettingsFieldKeys]}
-                  setting={setting as AppSettingsFieldKeys}
-                />
-              );
-            }
-          )}
+        {Array.isArray(data?.settings) &&
+          Object.entries(settingsFieldDefinitions).map(([settingKey, fieldDefinition] , index:number) => {
+            return (
+              <Setting
+                key={index}
+                valueInDb={findSettingDbValueByKey((settingKey as AppSettingsFieldKeys), data.settings, (fieldDefinition as AppSettingField))}
+                setting={settingKey as AppSettingsFieldKeys}
+              />
+            );
+          })}
       </ModulePage>
     </>
   );

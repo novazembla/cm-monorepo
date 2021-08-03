@@ -6,7 +6,7 @@ export const TwoColFieldRow = ({
 }: {
   children: React.ReactNode;  
 }): JSX.Element | null => {
-  return <SimpleGrid columns={{base:1,mw:2}} spacing="6" sx={{
+  return <SimpleGrid columns={{base:1,mw:2}} spacing="6" mt="4" sx={{
     "> div:nth-of-type(2n)": {
       mt:"0"
     }

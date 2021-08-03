@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next";
 
 import { ModuleSubNav, ModulePage, ButtonListElement } from "~/components/modules";
 
-import { moduleRootPath } from "./config";
+import { moduleRootPath } from "./moduleConfig";
 import { useAuthentication, useConfig } from "~/hooks";
 
 const Index = () => {

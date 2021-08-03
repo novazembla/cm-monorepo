@@ -1,4 +1,5 @@
 import merge from "deepmerge";
+import { isPlainObject } from 'is-plain-object';
 
 import { appConfig } from "./appconfig";
 
@@ -23,7 +24,9 @@ const configDefault: AppConfig = {
 export let config: AppConfig = {};
 
 try {
-  config = merge(configDefault, appConfig);
+  config = merge(configDefault, appConfig, {
+    isMergeableObject: isPlainObject
+  });
 } catch (Err) {
   // eslint-disable-next-line no-console
   console.error(

@@ -105,7 +105,7 @@ export const AuthRefreshMutation = extendType({
         scope: nonNull(stringArg()),
       },
 
-      authorize: async (...[, , ctx]) =>
+      authorize: (...[, , ctx]) =>
         authorizeApiUser(ctx, "canRefreshAccessToken", true),
 
       async resolve(...[, args, { res, req }]) {
@@ -193,7 +193,7 @@ export const authRequestEmailVerificationEmailMutation = extendType({
         userId: nonNull(intArg()),
       },
 
-      authorize: async (...[, args, ctx]) =>
+      authorize: (...[, args, ctx]) =>
         authorizeApiUser(ctx, "profileUpdate") &&
         isCurrentApiUser(ctx, args.userId),
 

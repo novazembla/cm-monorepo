@@ -6,6 +6,8 @@ export * from "./authRequestEmailVerificationEmailMutationGQL";
 export * from "./authPasswordRequestMutationGQL";
 export * from "./authPasswordResetMutationGQL";
 
+export * from "./settingsUpdateMutationGQL";
+
 export * from "./userSignupMutationGQL";
 export * from "./userProfileUpdateMutationGQL";
 export * from "./userProfilePasswordUpdateMutationGQL";

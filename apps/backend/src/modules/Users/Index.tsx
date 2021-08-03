@@ -5,7 +5,7 @@ import {
   ModulePage,
 } from "~/components/modules";
 
-import { moduleRootPath } from "./config";
+import { moduleRootPath } from "./moduleConfig";
 
 const Index = () => {
   const { t } = useTranslation();

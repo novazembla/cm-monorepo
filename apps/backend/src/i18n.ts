@@ -15,10 +15,12 @@ let config = {
   },
 }
 
-i18n
-  // connect with React
-  .use(initReactI18next)
-  // for all options read: https://www.i18next.com/overview/configuration-options
-  .init(config);
- 
+const init = async () => 
+  await i18n
+    // connect with React
+    .use(initReactI18next)
+    // for all options read: https://www.i18next.com/overview/configuration-options
+    .init(config);
+
+init();
 export default i18n;

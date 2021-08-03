@@ -1,20 +1,15 @@
-import * as yup from "yup";
+import { string, object } from "yup";
 
-import translations from "./translations";
-
-yup.setLocale(translations);
-
-export const UserProfileUpdateValidationSchema = yup.object().shape({
-  firstName: yup.string().required(
+export const UserProfileUpdateValidationSchema = object().shape({
+  firstName: string().required(
     // t("validation.page.login.emailRequiredError", "Please enter your email address")
     "validation.page.register.firstNameRequiredError"
   ),
-  lastName: yup.string().required(
+  lastName: string().required(
     // t("validation.page.login.emailRequiredError", "Please enter your email address")
     "validation.page.register.lastNameRequiredError"
   ),
-  email: yup
-    .string()
+  email: string()
     .required(
       // t("validation.page.login.emailRequiredError", "Please enter your email address")
       "validation.page.register.emailRequiredError"

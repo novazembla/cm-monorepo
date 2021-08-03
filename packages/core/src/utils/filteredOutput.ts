@@ -1,3 +1,5 @@
+import { isPlainObject } from "is-plain-object";
+
 export type FilterableObject<K extends keyof any, T> = {
   [P in K]?: T;
 };
@@ -29,9 +31,10 @@ export const filteredOutputByBlacklist = (
     .reduce((acc, key) => {
       return {
         ...acc,
-        [key]: skipArray.includes(key)
-          ? (obj as any)[key]
-          : filteredOutputByBlacklist((obj as any)[key], keys, skipKeys),
+        [key]:
+          skipArray.includes(key) || !isPlainObject((obj as any)[key])
+            ? (obj as any)[key]
+            : filteredOutputByBlacklist((obj as any)[key], keys, skipKeys),
       };
     }, {});
 };
@@ -63,9 +66,10 @@ export const filteredOutputByWhitelist = (
     .reduce((acc, key) => {
       return {
         ...acc,
-        [key]: skipArray.includes(key)
-          ? (obj as any)[key]
-          : filteredOutputByWhitelist((obj as any)[key], keys, skipKeys),
+        [key]:
+          skipArray.includes(key) || !isPlainObject((obj as any)[key])
+            ? (obj as any)[key]
+            : filteredOutputByWhitelist((obj as any)[key], keys, skipKeys),
       };
     }, {});
 };

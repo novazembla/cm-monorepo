@@ -54,7 +54,7 @@ declare global {
 }
 
 export interface NexusGenInputs {
-  SettingInput: { // input type
+  SettingsUpdateInput: { // input type
     key: string; // String!
     value: NexusGenScalars['JSON']; // JSON!
   }
@@ -315,7 +315,7 @@ export interface NexusGenArgTypes {
       token: string; // String!
     }
     settingsUpdate: { // args
-      data?: NexusGenInputs['SettingInput'][] | null; // [SettingInput!]
+      data?: NexusGenInputs['SettingsUpdateInput'][] | null; // [SettingsUpdateInput!]
     }
     userProfilePasswordUpdate: { // args
       password: string; // String!

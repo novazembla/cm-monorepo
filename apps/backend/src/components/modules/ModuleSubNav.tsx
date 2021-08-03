@@ -188,7 +188,7 @@ const buttonList: ButtonListElement[] = [
     {
       type: "button",
       isLoading: isSubmitting,
-      onClick: () => console.log("click"),
+      onClick: () => _____ ,
       label: "button test",
     },
   ];

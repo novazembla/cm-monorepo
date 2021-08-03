@@ -1,5 +1,5 @@
 import { Route, Switch} from "react-router-dom";
-import { moduleRoutes, getModuleRoutesPathsArray } from "./routes";
+import { moduleRoutes, getModuleRoutesPathsArray } from "./moduleRoutes";
 import { RoutePrivate } from "~/components/app";
 
 import ModulePageNotFound from "~/components/modules/ModulePageNotFound";

@@ -40,24 +40,7 @@ export const SettingsQuery = extendType({
       // resolve(root, args, ctx, info)
       async resolve() {
         const settings = await daoSettingQuery();
-
-        return filteredOutputByWhitelist(
-          [
-            ...settings,
-            ...[
-              {
-                key: "test",
-                id: "1",
-                value: {
-                  k: "t",
-                  s: "s",
-                },
-              },
-            ],
-          ],
-          FIELD_KEYS_SETTING,
-          "value"
-        );
+        return filteredOutputByWhitelist(settings, FIELD_KEYS_SETTING, "value");
       },
     });
   },
@@ -73,7 +56,7 @@ export const SettingQuery = extendType({
         id: nonNull(intArg()),
       },
 
-      authorize: async (...[, , ctx]) => authorizeApiUser(ctx, "settingUpdate"),
+      // authorize: (...[, , ctx]) => authorizeApiUser(ctx, "settingUpdate"),
 
       // resolve(root, args, ctx, info)
       async resolve(...[, args]) {
@@ -85,8 +68,8 @@ export const SettingQuery = extendType({
   },
 });
 
-export const SettingInput = inputObjectType({
-  name: "SettingInput",
+export const SettingsUpdateInput = inputObjectType({
+  name: "SettingsUpdateInput",
   definition(t) {
     t.nonNull.string("key");
     t.nonNull.json("value");
@@ -100,16 +83,15 @@ export const SettingUpdateMutation = extendType({
     t.nonNull.field("settingsUpdate", {
       type: BooleanResult,
       args: {
-        data: list(nonNull(SettingInput)),
+        data: list(nonNull(SettingsUpdateInput)),
       },
 
-      authorize: async (...[, , ctx]) => authorizeApiUser(ctx, "settingUpdate"),
+      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "settingUpdate"),
 
       async resolve(...[, args]) {
-        if (!args?.data)
-          throw new ApiError(httpStatus.BAD_REQUEST, "Bad data supplied");
+        let result = false;
 
-        const result = await settingUpsertSettings(args.data);
+        if (args?.data) result = await settingUpsertSettings(args.data);
 
         if (!result)
           throw new ApiError(

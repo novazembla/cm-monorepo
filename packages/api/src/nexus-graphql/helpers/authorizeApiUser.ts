@@ -1,12 +1,13 @@
 import type { PermissionNames } from "@culturemap/core";
 import type { NexusResolverContext } from "../context";
 
-export const authorizeApiUser = async (
+export const authorizeApiUser = (
   ctx: NexusResolverContext,
   permissions: PermissionNames | PermissionNames[],
   doingRefresh = false
 ) => {
-  if (doingRefresh && !ctx.tokenInfo.validRefreshTokenProvided) return false;
+  if (doingRefresh && !ctx.tokenInfo.validRefreshTokenProvided)
+    throw Error("GQL authorization rejected");
 
   if (
     !doingRefresh &&
@@ -15,11 +16,14 @@ export const authorizeApiUser = async (
   )
     return Error("Authentication failed (maybe refresh)");
 
-  if (!ctx.apiUser) return false;
+  if (!ctx.apiUser) throw Error("GQL authorization rejected");
 
-  return !!(
-    typeof ctx?.apiUser?.can === "function" && ctx.apiUser.can(permissions)
-  );
+  if (
+    !(typeof ctx?.apiUser?.can === "function" && ctx.apiUser.can(permissions))
+  )
+    throw Error("GQL authorization rejected");
+
+  return true;
 };
 
 export default authorizeApiUser;

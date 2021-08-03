@@ -18,7 +18,7 @@ import {
   ModulePage,
 } from "~/components/modules";
 
-import { moduleRootPath } from "./config";
+import { moduleRootPath } from "./moduleConfig";
 
 import { PasswordUpdateForm } from "./forms";
 

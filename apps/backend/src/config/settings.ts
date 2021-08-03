@@ -5,6 +5,7 @@ import { getAppConfig } from "./config";
 import { AppConfigSettingsFiledKeys } from "./appconfig";
 
 import { Map } from "~/components/ui";
+import { LocationPicker } from "~/components/forms";
 
 export type AppSetting = {
   key: string;
@@ -15,43 +16,54 @@ export type AppSettingField = {
   type: string;
   label: string;
   validationSchema: SchemaOf<any>;
-  default: any;
+  defaultValue: any;
   required: boolean;
-  printComponent?: React.FC<any>
+  printComponent?: React.FC<any>;
+  formComponent?: React.FC<any>;
+  getFormComponentProps?(fieldDefs: AppSettingField, value: any): any;
+  getUpdateValue?(fieldDefs: AppSettingField, newData: any): any;
 };
 
-export type AppSettingsDefaultFieldKeys = "contactEmail" | "adminMapApiKey" | "centerOfGravity";
+export type AppSettingsDefaultFieldKeys =
+  | "contactEmail"
+  | "adminMapApiKey"
+  | "centerOfGravity";
 
-export type AppSettingsFieldKeys = AppConfigSettingsFiledKeys | AppSettingsDefaultFieldKeys;
+export type AppSettingsFieldKeys =
+  | AppConfigSettingsFiledKeys
+  | AppSettingsDefaultFieldKeys;
 
-export type AppSettingsFieldDefinitions = PartialRecord<AppSettingsFieldKeys, AppSettingField>;
+export type AppSettingsFieldDefinitions = PartialRecord<
+  AppSettingsFieldKeys,
+  AppSettingField
+>;
 
 export type AppSettings = PartialRecord<AppSettingsFieldKeys, AppSetting>;
 
 // t("settings.error.label", "No label translation key has been defined")
 export const settingFields: AppSettingsFieldDefinitions = {
   contactEmail: {
-    default: "",
+    defaultValue: "",
     type: "email",
     // t("settings.contactEmail.label", "Contact email address")
     label: "settings.contactEmail.label",
     validationSchema: object().shape({
-      email: string().required().email(),
+      contactEmail: string().email().required()
     }),
     required: true,
   },
   adminMapApiKey: {
-    default: "",
+    defaultValue: "",
     type: "text",
     // t("settings.adminMapApiKey.label", "Backend Map Api Key")
     label: "settings.adminMapApiKey.label",
     required: true,
     validationSchema: object().shape({
-      email: string().required(),
+      adminMapApiKey: string().required()
     }),
   },
   centerOfGravity: {
-    default: {
+    defaultValue: {
       lat: 52.518415,
       lng: 13.407183,
     },
@@ -77,7 +89,20 @@ export const settingFields: AppSettingsFieldDefinitions = {
           (value) => !!(value && isFinite(value) && Math.abs(value) <= 180)
         ),
     }),
-    printComponent: Map
+    printComponent: Map,
+    formComponent: LocationPicker,
+    getFormComponentProps: (fieldDefs: AppSettingField, value: any) => {
+      return {
+        lng: value["lng"] ?? fieldDefs.defaultValue.lng,
+        lat: value["lat"] ?? fieldDefs.defaultValue.lat,
+      }
+    },
+    getUpdateValue: (fieldDefs: AppSettingField, newData: any) => {
+      return {
+        lng: newData["lng"],
+        lat: newData["lat"],
+      }
+    },
   },
 };
 
@@ -87,7 +112,7 @@ export const getSettingsDefaultSettings = (): AppSettings => {
       ...acc,
       [key]: {
         key,
-        value: settingFields[(key as AppSettingsFieldKeys)]?.default ?? "",
+        value: settingFields[key as AppSettingsFieldKeys]?.defaultValue ?? "",
       },
     }),
     {}
@@ -101,7 +126,9 @@ export const getSettingsDefaultSettings = (): AppSettings => {
         ...acc,
         [key]: {
           key,
-          value: config?.settings ? config?.settings[(key as AppSettingsFieldKeys)]?.default ?? "" : "",
+          value: config?.settings
+            ? config?.settings[key as AppSettingsFieldKeys]?.defaultValue ?? ""
+            : "",
         },
       }),
       defaultSettings
@@ -112,6 +139,26 @@ export const getSettingsDefaultSettings = (): AppSettings => {
 
 export const getSettingsFieldDefinitions = (): AppSettingsFieldDefinitions => {
   const config = getAppConfig();
-
   return { ...settingFields, ...(config.settings ?? {}) };
+};
+
+export const getSettingsFieldKeys = (): AppSettingsFieldKeys[] =>
+  Object.keys(getSettingsFieldDefinitions()) as AppSettingsFieldKeys[];
+
+export const getSettingsValidationSchema = () => {
+  const fieldDefs = getSettingsFieldDefinitions();
+
+  let completeSchema: any = undefined;
+
+  (Object.keys(fieldDefs) as AppSettingsFieldKeys[]).forEach((setting) => {
+    if (!completeSchema) {
+      completeSchema = fieldDefs[setting]?.validationSchema
+    } else {
+      completeSchema = completeSchema.concat(fieldDefs[setting]?.validationSchema)
+    }
+      
+  });
+
+  return completeSchema;
+  
 };

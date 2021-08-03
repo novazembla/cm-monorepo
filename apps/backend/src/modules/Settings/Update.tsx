@@ -7,21 +7,12 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import { TextErrorMessage } from "~/components/forms";
 
-import { UserProfileUpdateValidationSchema } from "~/validation";
-import { useUserProfileUpdateMutation } from "~/hooks/mutations";
-import {
-  useAuthentication,
-  useConfig,
-  useTypedDispatch,
-  useSuccessToast,
-} from "~/hooks";
-import { settingUpdate } from "~/redux/slices/settings";
+import { useSettingsUpdateMutation } from "~/hooks/mutations";
+import { useAuthentication, useTypedDispatch, useSuccessToast } from "~/hooks";
+import { settingsSet } from "~/redux/slices/settings";
 
 import { Divider } from "@chakra-ui/react";
-import {
-  userProfileReadQueryGQL,
-  filteredOutputByWhitelist,
-} from "@culturemap/core";
+import { settingsQueryGQL, filteredOutputByWhitelist } from "@culturemap/core";
 
 import { useQuery } from "@apollo/client";
 
@@ -31,33 +22,38 @@ import {
   ButtonListElement,
 } from "~/components/modules";
 
-import { moduleRootPath } from "./config";
+import { AppSettings } from "~/config";
+
+import { moduleRootPath } from "./moduleConfig";
 
 import { UpdateForm } from "./forms";
+import {
+  getSettingsFieldKeys,
+  getSettingsValidationSchema,
+  getSettingsFieldDefinitions,
+  AppSettingField,
+  AppSettingsFieldKeys,
+} from "~/config";
 
-const Update = ({ key }: { key: string }) => {
-  const config = useConfig();
+const Update = () => {
   const dispatch = useTypedDispatch();
   const [appUser] = useAuthentication();
   const { t } = useTranslation();
   const successToast = useSuccessToast();
 
-  const { data, loading, error } = useQuery(userProfileReadQueryGQL, {
-    variables: {
-      userId: appUser?.id ?? 0,
-      scope: config.scope,
-    },
-  });
+  const { data, loading, error } = useQuery(settingsQueryGQL);
 
   const history = useHistory();
-  const [firstMutation, firstMutationResults] = useUserProfileUpdateMutation();
+  const [firstMutation, firstMutationResults] = useSettingsUpdateMutation();
   const [isFormError, setIsFormError] = useState(false);
 
   const disableForm = firstMutationResults.loading;
 
+  const settingsValidationSchema = getSettingsValidationSchema();
+
   const formMethods = useForm({
     mode: "onTouched",
-    resolver: yupResolver(UserProfileUpdateValidationSchema),
+    resolver: yupResolver(settingsValidationSchema),
   });
 
   const {
@@ -67,30 +63,49 @@ const Update = ({ key }: { key: string }) => {
   } = formMethods;
 
   useEffect(() => {
-    reset(
-      filteredOutputByWhitelist(data?.userProfileRead, [
-        "firstName",
-        "lastName",
-        "email",
-      ])
-    );
+    reset(filteredOutputByWhitelist(data?.settings, getSettingsFieldKeys()));
   }, [reset, data]);
 
   const onSubmit = async (
-    newData: yup.InferType<typeof UserProfileUpdateValidationSchema>
+    newData: yup.InferType<typeof settingsValidationSchema>
   ) => {
     setIsFormError(false);
     try {
       if (appUser) {
-        const { errors } = await firstMutation(appUser?.id, newData);
+        const fieldDefinitions = getSettingsFieldDefinitions();
 
+        const mutationData = (
+          Object.keys(fieldDefinitions) as AppSettingsFieldKeys[]
+        ).map((key) => {
+          const fieldDef: AppSettingField = fieldDefinitions[
+            key
+          ] as AppSettingField;
+          return {
+            key,
+            value: fieldDef.getUpdateValue
+              ? fieldDef.getUpdateValue(fieldDef, newData)
+              : newData[key],
+          };
+        });
+        
+        const { errors } = await firstMutation(mutationData);
+        
         if (!errors) {
-          dispatch(
-            settingUpdate({
-              key: newData.key,
-              value: null,
-            })
-          );
+          const settingInRedux = (
+            Object.keys(fieldDefinitions) as AppSettingsFieldKeys[]
+          ).reduce((acc, key) => {
+            const fieldDef: AppSettingField = fieldDefinitions[
+              key
+            ] as AppSettingField;
+            return {
+              ...acc,
+              [key]: fieldDef.getUpdateValue
+                ? fieldDef.getUpdateValue(fieldDef, newData)
+                : newData[key],
+            };
+          }, {} as AppSettings);
+
+          dispatch(settingsSet(settingInRedux));
 
           successToast();
           history.push("/settings");
@@ -143,7 +158,7 @@ const Update = ({ key }: { key: string }) => {
                   <Divider />
                 </>
               )}
-              <UpdateForm data={data?.userProfileRead} />
+              <UpdateForm data={data?.settings} />
             </ModulePage>
           </fieldset>
         </form>

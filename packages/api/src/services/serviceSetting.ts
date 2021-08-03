@@ -9,9 +9,13 @@ export const settingUpsertSettings = async (
   data: SettingUpdateData[]
 ): Promise<boolean> => {
   try {
-    Promise.all(
+    await Promise.all(
       data.map((setting) =>
-        daoSettingUpsert(setting.key, { value: setting.value })
+        daoSettingUpsert(
+          setting.key,
+          { value: { json: setting.value }, key: setting.key },
+          { value: { json: setting.value } }
+        )
       )
     ).catch((err) => {
       throw Error(err.message);
@@ -22,7 +26,7 @@ export const settingUpsertSettings = async (
     logger.info(err);
     throw new ApiError(
       httpStatus.INTERNAL_SERVER_ERROR,
-      `Settings could not be saved (${err.message})`
+      `Settings could not be saved`
     );
   }
 };

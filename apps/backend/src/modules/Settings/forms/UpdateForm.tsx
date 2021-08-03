@@ -1,77 +1,45 @@
-import { useTranslation } from "react-i18next";
+import React from "react";
+import { FieldInput, FieldRow } from "~/components/forms";
 
-import { FieldInput, FieldRow, TwoColFieldRow } from "~/components/forms";
+import { getSettingsFieldDefinitions, AppSettingsFieldKeys, AppSettingField } from "~/config";
 
-import {
-  UserProfileUpdateValidationSchema,
-  yupFieldIsRequired,
-} from "~/validation";
+import { findSettingDbValueByKey } from "../moduleConfig";
 
 export const UpdateForm = ({ data, errors }: { data?: any; errors?: any }) => {
-  const { t } = useTranslation();
+  const settingsFieldDefinitions = getSettingsFieldDefinitions();
+
+  if (!data) return <></>;
 
   return (
     <>
-      <TwoColFieldRow>
-        <FieldRow>
-          <FieldInput
-            name="firstName"
-            id="firstName"
-            type="text"
-            label={t("page.register.form_field_firstName_label", "First Name")}
-            isRequired={yupFieldIsRequired(
-              "firstName",
-              UserProfileUpdateValidationSchema
-            )}
-            settings={{
-              // defaultValue: data.abc.key
-              placeholder: t(
-                "page.register.form_field_firstName_placeholder",
-                "Your first name"
-              ),
-            }}
-          />
-        </FieldRow>
-        <FieldRow>
-          <FieldInput
-            name="lastName"
-            id="lastName"
-            type="text"
-            label={t("page.register.form_field_lastName_label", "Last Name")}
-            isRequired={yupFieldIsRequired(
-              "lastName",
-              UserProfileUpdateValidationSchema
-            )}
-            settings={{
-              placeholder: t(
-                "page.register.form_field_lastName_placeholder",
-                "Your last name"
-              ),
-            }}
-          />
-        </FieldRow>
-      </TwoColFieldRow>
-      <FieldRow>
-        <FieldInput
-          name="email"
-          id="email"
-          type="email"
-          label={t(
-            "page.register.form_field_registration_label",
-            "Email Address"
-          )}
-          isRequired={yupFieldIsRequired(
-            "email",
-            UserProfileUpdateValidationSchema
-          )}
-          settings={{
-            placeholder: t(
-              "page.register.form_field_registration_placeholder",
-              "Please enter your email address"
-            ),
-          }}
-        />
-      </FieldRow>
+      {Object.entries(settingsFieldDefinitions).map(
+        ([settingKey, fieldDefinition], i) => {
+          const value = findSettingDbValueByKey((settingKey as AppSettingsFieldKeys), data, (fieldDefinition as AppSettingField));
+
+          if (
+            fieldDefinition.formComponent &&
+            fieldDefinition.getFormComponentProps
+          )
+            return React.createElement(fieldDefinition.formComponent, {
+              key: i,
+              ...fieldDefinition.getFormComponentProps(fieldDefinition, value),
+            });
+          return (
+            <FieldRow key={i}>
+              <FieldInput
+                name={settingKey}
+                id={settingKey}
+                type={fieldDefinition.type}
+                label={fieldDefinition.label}
+                isRequired={fieldDefinition.required}
+                settings={{
+                  defaultValue: value
+                }}
+              />
+            </FieldRow>
+          );
+        }
+      )}
     </>
   );
 };

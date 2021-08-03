@@ -1,16 +1,16 @@
 import type { NexusResolverContext } from "../context";
 
-export const isCurrentApiUser = async (
-  ctx: NexusResolverContext,
-  userId: number
-) => {
+export const isCurrentApiUser = (ctx: NexusResolverContext, userId: number) => {
   if (
     !ctx.tokenInfo.validAccessTokenProvided &&
     ctx.tokenInfo.validRefreshTokenProvided
   )
     return Error("Authentication failed (maybe refresh)");
 
-  return !!(ctx.apiUser && ctx.apiUser.id === userId);
+  if (!(ctx.apiUser && ctx.apiUser.id === userId))
+    throw Error("GQL authorization rejected");
+
+  return true;
 };
 
 export default isCurrentApiUser;

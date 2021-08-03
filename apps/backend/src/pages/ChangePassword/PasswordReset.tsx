@@ -6,7 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import { Link as RouterLink, useHistory, useLocation } from "react-router-dom";
 
-import { PasswordResetValidationSchema, yupFieldIsRequired } from "~/validation";
+import { PasswordResetValidationSchema, yupIsFieldRequired } from "~/validation";
 
 import { useTranslation } from "react-i18next";
 
@@ -126,7 +126,7 @@ const PasswordReset = () => {
                       "page.passwordreset.form_field_password_label",
                       "New Password"
                     )}
-                    isRequired={yupFieldIsRequired("newPassword",PasswordResetValidationSchema)}
+                    isRequired={yupIsFieldRequired("newPassword",PasswordResetValidationSchema)}
                     settings={{
                       autoComplete: "new-password",
                       placeholder: t(
@@ -146,7 +146,7 @@ const PasswordReset = () => {
                       "page.passwordreset.form_field_password_confirmation_label",
                       "Confirm your new password"
                     )}
-                    isRequired={yupFieldIsRequired("confirmPassword",PasswordResetValidationSchema)}
+                    isRequired={yupIsFieldRequired("confirmPassword",PasswordResetValidationSchema)}
                     settings={{
                       autoComplete: "new-password",
                       placeholder: t(

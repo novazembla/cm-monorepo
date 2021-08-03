@@ -21,9 +21,9 @@ import {
 import { useTranslation } from "react-i18next";
 import { InlineLanguageButtons } from "../ui";
 
-import { moduleAccessRules as dashboadModuleAccessRules } from "~/modules/DashBoard/routes";
-import { moduleAccessRules as usersModuleAccessRules } from "~/modules/Users/routes";
-import { moduleAccessRules as settingsModuleAccessRules } from "~/modules/Settings/routes";
+import { moduleAccessRules as dashboadModuleAccessRules } from "~/modules/DashBoard/moduleRoutes";
+import { moduleAccessRules as usersModuleAccessRules } from "~/modules/Users/moduleRoutes";
+import { moduleAccessRules as settingsModuleAccessRules } from "~/modules/Settings/moduleRoutes";
 import { useAuthentication } from "~/hooks";
 
 const NavItem = ({

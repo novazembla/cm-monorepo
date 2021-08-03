@@ -12,8 +12,11 @@ export type SettingUpdateData = {
 };
 
 export const daoSettingQuery = async (): Promise<Setting[]> => {
-  const settings: Setting[] = await prisma.setting.findMany();
-
+  const settings: Setting[] = await prisma.setting.findMany({
+    orderBy: {
+      key: "asc",
+    },
+  });
   return filteredOutputByBlacklist(settings, config.db.privateJSONDataKeys.all);
 };
 
@@ -30,11 +33,12 @@ export const daoSettingGetById = async (id: number): Promise<Setting> => {
 
 export const daoSettingUpsert = async (
   key: string,
-  data: Prisma.SettingUpdateInput | Prisma.SettingCreateInput
+  createData: Prisma.SettingCreateInput,
+  updateData: Prisma.SettingUpdateInput
 ): Promise<Setting> => {
   const setting: Setting = await prisma.setting.upsert({
-    create: data as Prisma.SettingCreateInput,
-    update: data as Prisma.SettingUpdateInput,
+    create: createData,
+    update: updateData,
     where: {
       key,
     },

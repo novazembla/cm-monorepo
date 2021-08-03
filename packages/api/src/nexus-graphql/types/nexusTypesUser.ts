@@ -72,7 +72,7 @@ export const UserQuery = extendType({
     t.list.field("users", {
       type: "User",
 
-      authorize: async (...[, , ctx]) => authorizeApiUser(ctx, "userRead"),
+      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "userRead"),
 
       // resolve(root, args, ctx, info)
       resolve(...[, , ctx]) {
@@ -128,7 +128,7 @@ export const UserProfileQuery = extendType({
         userId: nonNull(intArg()),
       },
 
-      authorize: async (...[, args, ctx]) =>
+      authorize: (...[, args, ctx]) =>
         authorizeApiUser(ctx, "profileRead") &&
         isCurrentApiUser(ctx, args.userId),
 
@@ -202,7 +202,7 @@ export const UserProfileUpdateMutation = extendType({
         data: nonNull(UserProfileUpdateInput),
       },
 
-      authorize: async (...[, args, ctx]) =>
+      authorize: (...[, args, ctx]) =>
         authorizeApiUser(ctx, "profileUpdate") &&
         isCurrentApiUser(ctx, args.userId),
 
@@ -235,7 +235,7 @@ export const UserProfilePasswordUpdateMutation = extendType({
         password: nonNull(stringArg()),
       },
 
-      authorize: async (...[, args, ctx]) =>
+      authorize: (...[, args, ctx]) =>
         authorizeApiUser(ctx, "profileUpdate") &&
         isCurrentApiUser(ctx, args.userId),
 

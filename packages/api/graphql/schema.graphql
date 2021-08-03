@@ -60,7 +60,7 @@ type Mutation {
   authRefresh(scope: String!): AuthPayload!
   authRequestEmailVerificationEmail(scope: String!, userId: Int!): BooleanResult!
   authVerifyEmail(token: String!): BooleanResult!
-  settingsUpdate(data: [SettingInput!]): BooleanResult!
+  settingsUpdate(data: [SettingsUpdateInput!]): BooleanResult!
   userProfilePasswordUpdate(password: String!, scope: String!, userId: Int!): User!
   userProfileUpdate(data: UserProfileUpdateInput!, scope: String!, userId: Int!): User!
   userSignup(data: UserSignupInput!, scope: String!): AuthPayload!
@@ -91,7 +91,7 @@ type Setting {
   value: JSON
 }
 
-input SettingInput {
+input SettingsUpdateInput {
   key: String!
   value: JSON!
 }
