@@ -5,7 +5,7 @@ import { useHistory } from "react-router-dom";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import { TextErrorMessage } from "~/components/forms";
+import { TextErrorMessage, FormNavigationBlock } from "~/components/forms";
 
 import { UserProfileUpdateValidationSchema } from "~/validation";
 import { useUserProfileUpdateMutation } from "~/hooks/mutations";
@@ -63,7 +63,7 @@ const Update = () => {
   const {
     handleSubmit,
     reset,
-    formState: { isSubmitting },
+    formState: { isSubmitting, isDirty },
   } = formMethods;
 
   useEffect(() => {
@@ -140,6 +140,7 @@ const Update = () => {
 
   return (
     <>
+      <FormNavigationBlock shouldBlock={isDirty && !isSubmitting} />     
       <FormProvider {...formMethods}>
         <form noValidate onSubmit={handleSubmit(onSubmit)}>
           <fieldset disabled={disableForm}>

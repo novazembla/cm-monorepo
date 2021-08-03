@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import { TextErrorMessage } from "~/components/forms";
+import { TextErrorMessage, FormNavigationBlock } from "~/components/forms";
 
 import { PasswordResetValidationSchema } from "~/validation";
 import { useUserProfilePasswordUpdateMutation } from "~/hooks/mutations";
@@ -32,9 +32,6 @@ const Update = () => {
 
   const disableForm = firstMutationResults.loading;
 
-
-  
-
   const formMethods = useForm({
     mode: "onTouched",
     resolver: yupResolver(PasswordResetValidationSchema),
@@ -42,7 +39,7 @@ const Update = () => {
 
   const {
     handleSubmit,
-    formState: { isSubmitting },
+    formState: { isSubmitting, isDirty },
   } = formMethods;
 
   const onSubmit = async (
@@ -89,6 +86,7 @@ const Update = () => {
 
   return (
     <>
+      <FormNavigationBlock shouldBlock={isDirty && !isSubmitting} />     
       <FormProvider {...formMethods}>
         <form
           noValidate
