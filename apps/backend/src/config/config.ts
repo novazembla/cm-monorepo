@@ -11,6 +11,7 @@ export type AppConfig = {
   scope?: string | undefined;
   enableRegistration?: boolean;
   settings?: AppSettingsFieldDefinitions;
+  defaultPageSize?: number;
 };
 
 // initial state
@@ -19,6 +20,7 @@ const configDefault: AppConfig = {
   apiDomain: `${process.env.REACT_APP_API_DOMAIN}`,
   scope: "backend",
   enableRegistration: true,
+  defaultPageSize: 50,
 };
 
 export let config: AppConfig = {};

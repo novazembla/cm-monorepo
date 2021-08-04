@@ -4,7 +4,7 @@ import * as yup from "yup";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import { Link as RouterLink, useHistory, useLocation } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 
 import { PasswordResetValidationSchema, yupIsFieldRequired } from "~/validation";
 
@@ -15,19 +15,16 @@ import { TextErrorMessage, FieldInput, FieldRow } from "~/components/forms";
 import { useAuthPasswordResetMutation } from "~/hooks/mutations";
 
 import { Heading, Text, Button, Flex, Box, Divider, Link } from "@chakra-ui/react";
-
+import { useRouter } from "~/hooks";
 import {
   AuthenticationPage,
   AuthenticationFormContainer,
 } from "~/components/ui";
 
-const useQuery = () => {
-  return new URLSearchParams(useLocation().search);
-};
-
 const PasswordReset = () => {
-  const query = useQuery();
-  const token = query.get("token");
+  const router = useRouter();
+  
+  const token = router.query?.token;
 
   const [firstMutation] = useAuthPasswordResetMutation();
   const [isFormError, setIsFormError] = useState(false);
@@ -45,13 +42,12 @@ const PasswordReset = () => {
     formState: { isSubmitting },
   } = formMethods;
 
-  const history = useHistory();
   useEffect(() => {
     if (!token) {
-      history.push("/login");
+      router.push("/login");
     } else {
     }
-  }, [token, history]);
+  }, [token, router]);
 
   const onSubmit = async (data: yup.InferType<typeof PasswordResetValidationSchema>) => {
     setIsFormError(false);
@@ -81,15 +77,13 @@ const PasswordReset = () => {
           </Text>
 
           <Text>
-          <Button type="submit" onClick={() => history.push("/login")}>
+          <Button as={Link} to="/login" type="submit">
               {t("page.passwordreset.button_goto_login", "Goto login")}
             </Button>
           </Text>
         </AuthenticationFormContainer>
       </AuthenticationPage>
     );
-
-
   
   return (
     <AuthenticationPage>

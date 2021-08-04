@@ -1,4 +1,8 @@
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { usersQueryGQL } from "@culturemap/core";
+import { useQuery } from "@apollo/client";
+
 import {
   ModuleSubNav,
   ButtonListElement,
@@ -6,9 +10,33 @@ import {
 } from "~/components/modules";
 
 import { moduleRootPath } from "./moduleConfig";
+import { AdminTable, AdminTableColumn, AdminTableState } from "~/components/ui";
+import { config } from "~/config";
+
+const intitalTableState: AdminTableState = {
+  pageIndex: 0,
+  pageSize: config.defaultPageSize ?? 30
+} 
 
 const Index = () => {
+  const [tableState, setTableState] = useState(intitalTableState);
+  const [isRefetching, setIsRefetching] = useState(false);
+  console.log("Index");
+
   const { t } = useTranslation();
+  const { loading, error, data, refetch } = useQuery(usersQueryGQL, {
+    onCompleted: () => {
+      setIsRefetching(false);
+    },
+    onError: () => {
+      setIsRefetching(false);
+    },
+    variables: {
+      page: intitalTableState.pageIndex,
+      pageSize: intitalTableState.pageSize,
+    },
+  });
+
   const breadcrumb = [
     {
       path: moduleRootPath,
@@ -31,121 +59,74 @@ const Index = () => {
     },
   ];
 
+  const AdminTableColumns = [
+    {
+      Header: t("users.fields.label.id", "Id"),
+      accessor: "id",
+      isNumedric: false,
+    } as AdminTableColumn,
+    {
+      Header: t("users.fields.label.firstName", "First Name"),
+      accessor: "firstName",
+      isNumedric: false,
+    } as AdminTableColumn,
+    {
+      Header: t("users.fields.label.lastName", "Last name"),
+      accessor: "lastName",
+      isNumeric: false,
+    } as AdminTableColumn,
+    {
+      Header: t("users.fields.label.email", "Email"),
+      accessor: "email",
+      isNumeric: true,
+    } as AdminTableColumn,
+    {
+      Header: t("users.fields.label.role", "Role"),
+      accessor: "role",
+      isNumeric: true,
+    } as AdminTableColumn,
+    {
+      Header: t("users.fields.label.actions", "Actions"),
+      allowEdit: true,
+      allowDelete: true,
+    } as AdminTableColumn,
+  ];
+  
+  
+
+  const onFetchData = (pageIndex: number, pageSize: number) => {
+    if (tableState.pageIndex !== pageIndex || tableState.pageSize !== pageSize) {
+      console.log("on fetch data", pageIndex, pageSize);
+      setIsRefetching(true);
+      refetch({
+        page: pageIndex,
+        pageSize,
+        
+      });
+
+      setTableState({
+        pageIndex,
+        pageSize,
+      })
+    }
+    
+  };
+
+  const queryPageCount = (data?.users?.totalCount ?? 0) > 0 ? Math.ceil((data?.users?.totalCount ?? 0) / tableState.pageSize) : 0;
+
+  console.log(queryPageCount);
+
   return (
     <>
       <ModuleSubNav breadcrumb={breadcrumb} buttonList={buttonList} />
-      <ModulePage>
-        <h2>Page Dashboard</h2>
-        <p>
-          HERE SHOULD an alert be shown if the user has not cofirmed her
-          email...
-        </p>
-
-        <p>INDEX</p>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse a
-          sodales nulla, sed semper nisi. Cras lobortis volutpat nunc. Proin
-          tincidunt enim in felis aliquet, a ultricies purus bibendum. Quisque
-          in ultrices lectus. Nulla at urna diam. Proin sodales lobortis libero
-          eu facilisis. In sem urna, aliquam vel consectetur sit amet, pulvinar
-          sit amet lectus. Quisque molestie dapibus libero non pellentesque.
-          Vivamus quam arcu, dictum quis hendrerit eget, lobortis eu felis.
-          Nulla felis velit, ornare ac porttitor ut, rhoncus eu ipsum. Donec
-          auctor efficitur est vel congue. Nunc at nunc quis massa facilisis
-          fermentum. Vivamus fringilla nunc vitae justo consectetur, aliquam
-          gravida nisl mollis.
-        </p>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse a
-          sodales nulla, sed semper nisi. Cras lobortis volutpat nunc. Proin
-          tincidunt enim in felis aliquet, a ultricies purus bibendum. Quisque
-          in ultrices lectus. Nulla at urna diam. Proin sodales lobortis libero
-          eu facilisis. In sem urna, aliquam vel consectetur sit amet, pulvinar
-          sit amet lectus. Quisque molestie dapibus libero non pellentesque.
-          Vivamus quam arcu, dictum quis hendrerit eget, lobortis eu felis.
-          Nulla felis velit, ornare ac porttitor ut, rhoncus eu ipsum. Donec
-          auctor efficitur est vel congue. Nunc at nunc quis massa facilisis
-          fermentum. Vivamus fringilla nunc vitae justo consectetur, aliquam
-          gravida nisl mollis.
-        </p>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse a
-          sodales nulla, sed semper nisi. Cras lobortis volutpat nunc. Proin
-          tincidunt enim in felis aliquet, a ultricies purus bibendum. Quisque
-          in ultrices lectus. Nulla at urna diam. Proin sodales lobortis libero
-          eu facilisis. In sem urna, aliquam vel consectetur sit amet, pulvinar
-          sit amet lectus. Quisque molestie dapibus libero non pellentesque.
-          Vivamus quam arcu, dictum quis hendrerit eget, lobortis eu felis.
-          Nulla felis velit, ornare ac porttitor ut, rhoncus eu ipsum. Donec
-          auctor efficitur est vel congue. Nunc at nunc quis massa facilisis
-          fermentum. Vivamus fringilla nunc vitae justo consectetur, aliquam
-          gravida nisl mollis.
-        </p>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse a
-          sodales nulla, sed semper nisi. Cras lobortis volutpat nunc. Proin
-          tincidunt enim in felis aliquet, a ultricies purus bibendum. Quisque
-          in ultrices lectus. Nulla at urna diam. Proin sodales lobortis libero
-          eu facilisis. In sem urna, aliquam vel consectetur sit amet, pulvinar
-          sit amet lectus. Quisque molestie dapibus libero non pellentesque.
-          Vivamus quam arcu, dictum quis hendrerit eget, lobortis eu felis.
-          Nulla felis velit, ornare ac porttitor ut, rhoncus eu ipsum. Donec
-          auctor efficitur est vel congue. Nunc at nunc quis massa facilisis
-          fermentum. Vivamus fringilla nunc vitae justo consectetur, aliquam
-          gravida nisl mollis.
-        </p>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse a
-          sodales nulla, sed semper nisi. Cras lobortis volutpat nunc. Proin
-          tincidunt enim in felis aliquet, a ultricies purus bibendum. Quisque
-          in ultrices lectus. Nulla at urna diam. Proin sodales lobortis libero
-          eu facilisis. In sem urna, aliquam vel consectetur sit amet, pulvinar
-          sit amet lectus. Quisque molestie dapibus libero non pellentesque.
-          Vivamus quam arcu, dictum quis hendrerit eget, lobortis eu felis.
-          Nulla felis velit, ornare ac porttitor ut, rhoncus eu ipsum. Donec
-          auctor efficitur est vel congue. Nunc at nunc quis massa facilisis
-          fermentum. Vivamus fringilla nunc vitae justo consectetur, aliquam
-          gravida nisl mollis.
-        </p>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse a
-          sodales nulla, sed semper nisi. Cras lobortis volutpat nunc. Proin
-          tincidunt enim in felis aliquet, a ultricies purus bibendum. Quisque
-          in ultrices lectus. Nulla at urna diam. Proin sodales lobortis libero
-          eu facilisis. In sem urna, aliquam vel consectetur sit amet, pulvinar
-          sit amet lectus. Quisque molestie dapibus libero non pellentesque.
-          Vivamus quam arcu, dictum quis hendrerit eget, lobortis eu felis.
-          Nulla felis velit, ornare ac porttitor ut, rhoncus eu ipsum. Donec
-          auctor efficitur est vel congue. Nunc at nunc quis massa facilisis
-          fermentum. Vivamus fringilla nunc vitae justo consectetur, aliquam
-          gravida nisl mollis.
-        </p>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse a
-          sodales nulla, sed semper nisi. Cras lobortis volutpat nunc. Proin
-          tincidunt enim in felis aliquet, a ultricies purus bibendum. Quisque
-          in ultrices lectus. Nulla at urna diam. Proin sodales lobortis libero
-          eu facilisis. In sem urna, aliquam vel consectetur sit amet, pulvinar
-          sit amet lectus. Quisque molestie dapibus libero non pellentesque.
-          Vivamus quam arcu, dictum quis hendrerit eget, lobortis eu felis.
-          Nulla felis velit, ornare ac porttitor ut, rhoncus eu ipsum. Donec
-          auctor efficitur est vel congue. Nunc at nunc quis massa facilisis
-          fermentum. Vivamus fringilla nunc vitae justo consectetur, aliquam
-          gravida nisl mollis.
-        </p>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse a
-          sodales nulla, sed semper nisi. Cras lobortis volutpat nunc. Proin
-          tincidunt enim in felis aliquet, a ultricies purus bibendum. Quisque
-          in ultrices lectus. Nulla at urna diam. Proin sodales lobortis libero
-          eu facilisis. In sem urna, aliquam vel consectetur sit amet, pulvinar
-          sit amet lectus. Quisque molestie dapibus libero non pellentesque.
-          Vivamus quam arcu, dictum quis hendrerit eget, lobortis eu felis.
-          Nulla felis velit, ornare ac porttitor ut, rhoncus eu ipsum. Donec
-          auctor efficitur est vel congue. Nunc at nunc quis massa facilisis
-          fermentum. Vivamus fringilla nunc vitae justo consectetur, aliquam
-          gravida nisl mollis.
-        </p>
+      <ModulePage isLoading={loading && !isRefetching} isError={!!error}>
+        <AdminTable
+          columns={AdminTableColumns}
+          queryPageCount={queryPageCount}
+          data={data?.users?.users ?? []}
+          intitalTableState={intitalTableState}
+          onFetchData={onFetchData}
+        />
       </ModulePage>
     </>
   );

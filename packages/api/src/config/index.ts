@@ -34,6 +34,7 @@ export type CulturemapScopes =
 export interface ApiConfigDB {
   url: string;
   defaultPageSize: number;
+  maxPageSize: number;
   privateJSONDataKeys: PartialRecord<CulturemapScopes, Array<string>>;
 }
 
@@ -101,6 +102,7 @@ const db: ApiConfigDB = {
     "Error: missing/wrong .env config: DATABASE_URL"
   ),
   defaultPageSize: 50,
+  maxPageSize: 500,
   privateJSONDataKeys: {
     all: ["password"],
     location: ["createdAt", "updatedAt"],

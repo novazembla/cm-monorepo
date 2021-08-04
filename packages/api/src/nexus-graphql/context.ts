@@ -59,7 +59,17 @@ export const context = ({
     }
   }
 
+  // TODO: REMOVE
+  logger.debug(`Context: Auth token: ${token}`);
+
   token = req?.cookies?.refreshToken;
+
+  // TODO: REMOVE
+  logger.debug(`Context: Refresh token: ${token}`);
+
+  // TODO: Remove
+  if (token) console.log(token, authAuthenticateUserByToken(token ?? ""));
+
   if (token) {
     refreshTokenProvided = true;
 

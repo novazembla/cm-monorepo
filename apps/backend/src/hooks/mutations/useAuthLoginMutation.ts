@@ -26,6 +26,7 @@ export const useAuthLoginMutation = () => {
 
   // full login function
   const execute = async (email: string, password: string) => {
+    console.log("logout() useAuthLoginMutation");
     await logout();
 
     return mutation({

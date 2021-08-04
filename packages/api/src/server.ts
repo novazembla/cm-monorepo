@@ -29,20 +29,28 @@ export const initializeApolloServer = (
       const msg = `ApolloServer [${err?.path?.join(", ") ?? ""}]`;
       const stackTrace = err?.extensions?.exception?.stacktrace?.join("\n");
 
+      // the plugin passes the originally raised error as originalError throug
+      // as it is wrapped in an GraphQLError let us get the original message and pass it on
+
+      const originalMsg =
+        (err?.originalError as Error & { originalError?: Error })?.originalError
+          ?.message ?? err.message;
+
+      if (err.message.indexOf("prisma") > -1) {
+        logger.warn(`${msg} Prisma DB query rejected`);
+        logger.debug(`${msg} ${stackTrace}`);
+
+        return new ApiError(httpStatus.BAD_REQUEST, "Bad request");
+      }
+
       // map the error returned by nexus' fieldAuthorizePlugin() to an apollo error
       if (err.name === "GraphQLError" && err.message === "Not authorized") {
-        // the plugin passes the originally raised error as originalError throug
-        // as it is wrapped in an GraphQLError let us get the original message and pass it on
-        const authMessage =
-          (err?.originalError as Error & { originalError?: Error })
-            ?.originalError?.message ?? err.message;
+        logger.warn(`${msg} AuthenticationError: ${originalMsg}`);
 
-        logger.warn(`${msg} AuthenticationError: ${authMessage}`);
-
-        if (authMessage === "GQL authorization rejected")
+        if (originalMsg === "GQL authorization rejected")
           return new ForbiddenError("Access Denied");
 
-        return new AuthenticationError(authMessage);
+        return new AuthenticationError(originalMsg);
       }
 
       if (err.name === "ForbiddenError" || err.name === "AuthenticationError") {
@@ -122,9 +130,6 @@ export const initializeApolloServer = (
         console.error(
           `ERROR ERROR ERROR !!!! Untracked GraphQL Error ${err.name} ${err.message}`,
           err
-        );
-        logger.error(
-          `ERROR ERROR ERROR !!!! Untracked Error in Apollo ${err.name} ${err.message}`
         );
 
         let code = httpStatus.INTERNAL_SERVER_ERROR;

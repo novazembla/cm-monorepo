@@ -1,11 +1,11 @@
 import { useMemo } from "react";
 import { ApolloClient } from "@apollo/client";
-import { apollo } from "~/services";
+import { initializeClient } from "~/services/apollo";
 import { useConfig } from ".";
 
 export function useApolloClient(): ApolloClient<any> {
   const config = useConfig();
-  const client = useMemo(() => apollo.initializeClient(config), [config]);
+  const client = useMemo(() => initializeClient(config), [config]);
   return client;
 }
 

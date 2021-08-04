@@ -1,4 +1,10 @@
 TODO: Scroll to (first) form error ... 
+TODO: Is it possible to pause/queue apollo requests until the refresh action has come through? 
+      And fail all of if the refresh didn't come through .. 
+
+
+TODO: Change to use apollo cache: https://www.apollographql.com/blog/apollo-client/caching/when-to-use-refetch-queries/
+TODO: Study: https://github.com/sindresorhus/type-fest
 
 Installation
 Important to mention to clone src/config/appconfig.example.ts to src/config/appconfig.ts and to fill in the required settings .. 

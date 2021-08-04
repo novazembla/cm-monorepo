@@ -66,21 +66,19 @@ type Mutation {
   userSignup(data: UserSignupInput!, scope: String!): AuthPayload!
 }
 
-type ProfileUser {
+type ProfileUser implements UserBaseNode {
   email: EmailAddress
   emailVerified: Boolean
   firstName: String
   id: Int!
   lastName: String
-  role: String
 }
 
 type Query {
   setting(id: Int!): [Setting]
   settings: [Setting]
   userProfileRead(scope: String!, userId: Int!): ProfileUser!
-  users: [User]
-  users2: [User]
+  users(orderBy: JSON, page: Int = 1, pageSize: Int = 50, where: JSON): UsersQueryResult
 }
 
 type Setting {
@@ -96,7 +94,7 @@ input SettingsUpdateInput {
   value: JSON!
 }
 
-type User {
+type User implements UserBaseNode {
   createdAt: DateTime
   email: EmailAddress
   emailVerified: Boolean
@@ -106,6 +104,14 @@ type User {
   role: String
   updatedAt: DateTime
   userBanned: Boolean
+}
+
+interface UserBaseNode {
+  email: EmailAddress
+  emailVerified: Boolean
+  firstName: String
+  id: Int!
+  lastName: String
 }
 
 input UserProfileUpdateInput {
@@ -120,4 +126,15 @@ input UserSignupInput {
   firstName: String!
   lastName: String!
   password: String!
+}
+
+"""
+TODO: write better descriptions
+last item in the list. Pass this cuSimple wrapper around our list of launches that contains a cursor to the
+last item in the list. Pass this cursor to the launches query to fetch results
+after these.
+"""
+type UsersQueryResult {
+  totalCount: Int
+  users: [User]
 }

@@ -16,6 +16,7 @@ export const AuthenticationSessionActiveGate = ({
 
   useEffect(() => {
     const processLogout = async () => {
+      console.log("logout() AuthGate");
       await user.logout();
     };
   

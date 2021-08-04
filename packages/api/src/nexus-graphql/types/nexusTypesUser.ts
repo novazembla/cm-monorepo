@@ -1,5 +1,6 @@
 /// <reference path="../../types/nexus-typegen.ts" />
 
+import dedent from "dedent";
 import {
   objectType,
   extendType,
@@ -7,9 +8,14 @@ import {
   nonNull,
   stringArg,
   intArg,
+  arg,
+  list,
+  interfaceType,
 } from "nexus";
 import httpStatus from "http-status";
-import { AppScopes, filteredOutputByWhitelist } from "@culturemap/core";
+import { AppScopes } from "@culturemap/core";
+
+import { User as PrismaTypeUser } from "@prisma/client";
 
 import {
   userRegister,
@@ -21,33 +27,30 @@ import {
   tokenProcessRefreshToken,
   tokenClearRefreshToken,
 } from "../../services/serviceToken";
+import { GQLJson } from "./nexusTypesShared";
 import { ApiError } from "../../utils";
 import { authorizeApiUser, isCurrentApiUser } from "../helpers";
+import config from "../../config";
+import { daoUserQuery, daoUserQueryCount } from "../../dao";
 
-// TODO this white listing of keys is rather annoying,
-const FIELD_KEYS_USER_PROFILE = [
-  "id",
-  "email",
-  "firstName",
-  "lastName",
-  "role",
-  "emailVerified",
-];
-
-const FIELD_KEYS_USER = [
-  ...FIELD_KEYS_USER_PROFILE,
-  ...["userBanned", "createdAt", "updatedAt"],
-];
-
-export const User = objectType({
-  name: "User",
+const UserBaseNode = interfaceType({
+  name: "UserBaseNode",
+  resolveType: (data) =>
+    typeof (data as any).role !== "undefined" ? "User" : "ProfileUser",
   definition(t) {
     t.nonNull.int("id");
     t.string("firstName");
     t.string("lastName");
     t.email("email");
-    t.string("role");
     t.boolean("emailVerified");
+  },
+});
+
+export const User = objectType({
+  name: "User",
+  definition(t) {
+    t.implements(UserBaseNode);
+    t.string("role");
     t.boolean("userBanned");
     t.date("createdAt");
     t.date("updatedAt");
@@ -57,61 +60,66 @@ export const User = objectType({
 export const ProfileUser = objectType({
   name: "ProfileUser",
   definition(t) {
-    t.nonNull.int("id");
-    t.string("firstName");
-    t.string("lastName");
-    t.email("email");
-    t.string("role");
-    t.boolean("emailVerified");
+    t.implements(UserBaseNode);
   },
 });
 
-export const UserQuery = extendType({
-  type: "Query",
+export const UsersQueryResult = objectType({
+  name: "UsersQueryResult",
+  description: dedent`
+    TODO: write better descriptions
+    last item in the list. Pass this cuSimple wrapper around our list of launches that contains a cursor to the
+    last item in the list. Pass this cursor to the launches query to fetch results
+    after these.
+  `,
+  definition: (t) => {
+    t.int("totalCount");
+    t.field("users", { type: list(User) });
+  },
+});
+
+export const Query = objectType({
+  name: "Query",
   definition(t) {
-    t.list.field("users", {
-      type: "User",
+    // t.field('launches', {})
+    // https://clearbit.com/
+    t.field("users", {
+      type: UsersQueryResult,
+      args: {
+        page: intArg({
+          default: 1,
+        }),
+        pageSize: intArg({
+          default: config.db.defaultPageSize,
+        }),
+        orderBy: arg({
+          type: GQLJson,
+          default: undefined,
+        }),
+        where: arg({
+          type: GQLJson,
+          default: undefined,
+        }),
+      },
 
       authorize: (...[, , ctx]) => authorizeApiUser(ctx, "userRead"),
 
-      // resolve(root, args, ctx, info)
-      resolve(...[, , ctx]) {
-        return filteredOutputByWhitelist(
-          [
-            {
-              id: 1,
-              firstName: `Vincent (${ctx.apiUser?.id}) ${new Date()}`,
-              lastName: "Van Uffelen",
-              email: "test@test.com",
-            },
-          ],
-          FIELD_KEYS_USER
-        );
-      },
-    });
-  },
-});
+      async resolve(...[, args]) {
+        const totalCount = await daoUserQueryCount(args.where);
+        let users: PrismaTypeUser[] = [];
 
-// TODO: remove!
-export const User2Query = extendType({
-  type: "Query",
-  definition(t) {
-    t.list.field("users2", {
-      type: "User",
+        if (totalCount)
+          users = await daoUserQuery(
+            args.where,
+            args.orderBy,
+            args.page as number,
+            args.pageSize as number
+          );
 
-      // resolve(root, args, ctx, info)
-      resolve(...[, , ctx]) {
-        return filteredOutputByWhitelist(
-          [
-            {
-              id: 1,
-              firstName: `Vincent (${ctx.apiUser?.id}) ${new Date()}`,
-              lastName: "Van Uffelen",
-              email: "test@test.com",
-            },
-          ],
-          FIELD_KEYS_USER
-        );
+        return {
+          totalCount,
+          users,
+        };
       },
     });
   },
@@ -134,11 +142,7 @@ export const UserProfileQuery = extendType({
 
       // resolve(root, args, ctx, info)
       async resolve(...[, args]) {
-        const user = await userRead(args.userId);
-
-        // it's a bit annoying that we can't just dump the dao returs.
-        // TODO: more comfortable work arround
-        return filteredOutputByWhitelist(user, FIELD_KEYS_USER_PROFILE);
+        return userRead(args.userId);
       },
     });
   },
@@ -216,7 +220,7 @@ export const UserProfileUpdateMutation = extendType({
         if (!user)
           throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Update failed");
 
-        return filteredOutputByWhitelist(user, FIELD_KEYS_USER_PROFILE);
+        return user;
       },
     });
   },
@@ -251,7 +255,7 @@ export const UserProfilePasswordUpdateMutation = extendType({
 
         tokenClearRefreshToken(res);
 
-        return filteredOutputByWhitelist(user, FIELD_KEYS_USER_PROFILE);
+        return user;
       },
     });
   },

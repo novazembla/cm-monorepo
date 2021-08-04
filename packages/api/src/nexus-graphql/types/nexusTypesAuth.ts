@@ -20,6 +20,8 @@ import {
 import { authorizeApiUser, isCurrentApiUser } from "../helpers";
 import { BooleanResult, GQLEmailAddress } from "./nexusTypesShared";
 
+import { logger } from "../../services/serviceLogging";
+
 export const AuthUser = objectType({
   name: "AuthUser",
   definition(t) {
@@ -85,6 +87,9 @@ export const AuthLoginMutation = extendType({
             args.email,
             args.password
           );
+          logger.debug(
+            `authLogin, about toe set new refresh token cookie ${authPayload?.tokens?.refresh?.token}`
+          );
           return tokenProcessRefreshToken(res, authPayload);
         } catch (Err) {
           throw new AuthenticationError("Login Failed");
@@ -110,16 +115,22 @@ export const AuthRefreshMutation = extendType({
 
       async resolve(...[, args, { res, req }]) {
         // throw new AuthenticationError("Access Denied"); TODO: REmove
-
+        logger.debug("Auth refresh #1");
         const token = req?.cookies?.refreshToken;
 
         if (!token) throw new AuthenticationError("Access Denied");
 
+        logger.debug("Auth refresh #2");
         const authPayload = await authRefresh(args.scope, token);
 
+        logger.debug("Auth refresh #3");
         if (!authPayload || !authPayload?.tokens?.refresh?.token)
           throw new AuthenticationError("Access Denied");
 
+        logger.debug("Auth refresh #4");
+        logger.debug(
+          `authRefresh, about toe set new refresh token cookie ${authPayload.tokens.refresh.token}`
+        );
         return tokenProcessRefreshToken(res, authPayload);
       },
     });
@@ -138,6 +149,8 @@ export const AuthLogoutMutation = extendType({
 
       async resolve(...[, args, { res, apiUser }]) {
         // in any case we want to remove the refresh token for the submitting user
+
+        logger.debug(`authLogout calling tokenClearRefreshToken`);
         tokenClearRefreshToken(res);
 
         // then test if the submitting user is the user to be logged out
@@ -222,6 +235,8 @@ export const AuthPasswordResetMutation = extendType({
 
       async resolve(...[, args, { res }]) {
         const result = await authResetPassword(args.password, args.token);
+
+        logger.debug(`authPasswordReset calling tokenClearRefreshToken`);
         tokenClearRefreshToken(res);
 
         return { result };

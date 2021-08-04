@@ -88,6 +88,8 @@ export const tokenVerify = (token: string): JwtPayload | null => {
     );
 
     if (typeof tokenPayload === "object") {
+      console.log(`Token payload.exp ${tokenPayload.exp ?? 0}`);
+
       if (Date.now() >= (tokenPayload.exp ?? 0) * 1000) {
         logger.debug(`Error: Token expired (VT 2)`);
         throw new ApiError(httpStatus.UNAUTHORIZED, "(VT 2)");
@@ -113,7 +115,7 @@ export const tokenVerifyInDB = async (
 
     if (!(tokenPayload as any)?.user?.id) {
       logger.debug(`Error: Supplied token incomplete (VTDB 1)`);
-      throw new ApiError(httpStatus.UNAUTHORIZED, "(VTDB 1)");
+      throw new ApiError(httpStatus.UNAUTHORIZED, "VTDB 1");
     }
 
     // this should be dao
@@ -125,8 +127,13 @@ export const tokenVerifyInDB = async (
     });
 
     if (!tokenInDB) {
+      logger.debug({
+        token,
+        type,
+        userId: parseInt((tokenPayload as any).user.id, 10),
+      });
       logger.debug(`Error: Token not found (VTDB 2)`);
-      throw new ApiError(httpStatus.UNAUTHORIZED, "(VTDB 2)");
+      throw new ApiError(httpStatus.UNAUTHORIZED, "VTDB 2");
     }
 
     return tokenPayload;

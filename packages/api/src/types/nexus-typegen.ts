@@ -115,7 +115,6 @@ export interface NexusGenObjects {
     firstName?: string | null; // String
     id: number; // Int!
     lastName?: string | null; // String
-    role?: string | null; // String
   }
   Query: {};
   Setting: { // root type
@@ -136,15 +135,20 @@ export interface NexusGenObjects {
     updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
     userBanned?: boolean | null; // Boolean
   }
+  UsersQueryResult: { // root type
+    totalCount?: number | null; // Int
+    users?: Array<NexusGenRootTypes['User'] | null> | null; // [User]
+  }
 }
 
 export interface NexusGenInterfaces {
+  UserBaseNode: NexusGenRootTypes['ProfileUser'] | NexusGenRootTypes['User'];
 }
 
 export interface NexusGenUnions {
 }
 
-export type NexusGenRootTypes = NexusGenObjects
+export type NexusGenRootTypes = NexusGenInterfaces & NexusGenObjects
 
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
 
@@ -188,14 +192,12 @@ export interface NexusGenFieldTypes {
     firstName: string | null; // String
     id: number; // Int!
     lastName: string | null; // String
-    role: string | null; // String
   }
   Query: { // field return type
     setting: Array<NexusGenRootTypes['Setting'] | null> | null; // [Setting]
     settings: Array<NexusGenRootTypes['Setting'] | null> | null; // [Setting]
     userProfileRead: NexusGenRootTypes['ProfileUser']; // ProfileUser!
-    users: Array<NexusGenRootTypes['User'] | null> | null; // [User]
-    users2: Array<NexusGenRootTypes['User'] | null> | null; // [User]
+    users: NexusGenRootTypes['UsersQueryResult'] | null; // UsersQueryResult
   }
   Setting: { // field return type
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
@@ -214,6 +216,17 @@ export interface NexusGenFieldTypes {
     role: string | null; // String
     updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
     userBanned: boolean | null; // Boolean
+  }
+  UsersQueryResult: { // field return type
+    totalCount: number | null; // Int
+    users: Array<NexusGenRootTypes['User'] | null> | null; // [User]
+  }
+  UserBaseNode: { // field return type
+    email: NexusGenScalars['EmailAddress'] | null; // EmailAddress
+    emailVerified: boolean | null; // Boolean
+    firstName: string | null; // String
+    id: number; // Int!
+    lastName: string | null; // String
   }
 }
 
@@ -257,14 +270,12 @@ export interface NexusGenFieldTypeNames {
     firstName: 'String'
     id: 'Int'
     lastName: 'String'
-    role: 'String'
   }
   Query: { // field return type name
     setting: 'Setting'
     settings: 'Setting'
     userProfileRead: 'ProfileUser'
-    users: 'User'
-    users2: 'User'
+    users: 'UsersQueryResult'
   }
   Setting: { // field return type name
     createdAt: 'DateTime'
@@ -283,6 +294,17 @@ export interface NexusGenFieldTypeNames {
     role: 'String'
     updatedAt: 'DateTime'
     userBanned: 'Boolean'
+  }
+  UsersQueryResult: { // field return type name
+    totalCount: 'Int'
+    users: 'User'
+  }
+  UserBaseNode: { // field return type name
+    email: 'EmailAddress'
+    emailVerified: 'Boolean'
+    firstName: 'String'
+    id: 'Int'
+    lastName: 'String'
   }
 }
 
@@ -340,13 +362,22 @@ export interface NexusGenArgTypes {
       scope: string; // String!
       userId: number; // Int!
     }
+    users: { // args
+      orderBy?: NexusGenScalars['JSON'] | null; // JSON
+      page: number | null; // Int
+      pageSize: number | null; // Int
+      where?: NexusGenScalars['JSON'] | null; // JSON
+    }
   }
 }
 
 export interface NexusGenAbstractTypeMembers {
+  UserBaseNode: "ProfileUser" | "User"
 }
 
 export interface NexusGenTypeInterfaces {
+  ProfileUser: "UserBaseNode"
+  User: "UserBaseNode"
 }
 
 export type NexusGenObjectNames = keyof NexusGenObjects;
@@ -355,7 +386,7 @@ export type NexusGenInputNames = keyof NexusGenInputs;
 
 export type NexusGenEnumNames = never;
 
-export type NexusGenInterfaceNames = never;
+export type NexusGenInterfaceNames = keyof NexusGenInterfaces;
 
 export type NexusGenScalarNames = keyof NexusGenScalars;
 
@@ -363,7 +394,7 @@ export type NexusGenUnionNames = never;
 
 export type NexusGenObjectsUsingAbstractStrategyIsTypeOf = never;
 
-export type NexusGenAbstractsUsingStrategyResolveType = never;
+export type NexusGenAbstractsUsingStrategyResolveType = "UserBaseNode";
 
 export type NexusGenFeaturesConfig = {
   abstractTypeStrategies: {

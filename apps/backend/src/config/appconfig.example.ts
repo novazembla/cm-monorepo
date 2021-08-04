@@ -4,6 +4,7 @@ import { AppConfig } from "./config";
 export const appConfig: AppConfig = {
   scope: "backend", // Used throughout the site and the API to identify a client/scope
   enableRegistration: true, // If true new users can register via the website
+  defaultPageSize: 50,
   // settings: {
   //   latitude: {
   //     // ^-- key will be used as field name in the database, should be unique

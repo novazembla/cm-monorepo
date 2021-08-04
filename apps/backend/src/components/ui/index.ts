@@ -5,3 +5,4 @@ export * from './AuthenticationPage';
 export * from './LoadingIcon'; 
 export * from './AlertBox'; 
 export * from './Map'; 
+export * from './AdminTable'; 

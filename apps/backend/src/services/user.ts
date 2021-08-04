@@ -52,6 +52,7 @@ const refreshToken = async () => {
         }
       })
       .catch((error) => {
+        console.log("logout() refreshToken()");
         console.log(error);
         logout();
       });

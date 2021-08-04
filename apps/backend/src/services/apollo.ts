@@ -102,6 +102,7 @@ const retryWithRefreshTokenLink = onError(
                   forward(operation).subscribe(subscriber);
                 })
                 .catch(async (error) => {
+                  console.log("logout() ApolloClient");
                   await user.logout();
                   
                   observer.error(error);
@@ -148,7 +149,7 @@ const createApolloClient = (settings: AppConfig) => {
         attempts: {
           max: 3,
           retryIf: (error, _operation) => {
-            console.log(error);
+            console.log(error, `Will retry C:${parseInt(error.statusCode, 10)} ${!!error && ![400,403,404].includes(parseInt(error.statusCode, 10))}`);
             return !!error && ![400,403,404].includes(parseInt(error.statusCode, 10));
           },
         },
