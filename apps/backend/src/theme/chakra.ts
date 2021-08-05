@@ -174,6 +174,7 @@ export const chakraTheme = extendTheme(
 
   defaultPropsForFormComponentents([
     "Input",
+    "Select",
     "Button",
     "NumberInput",
     "PinInput",
@@ -193,7 +194,7 @@ export const chakraTheme = extendTheme(
   }),
   withDefaultSize({
     size: "md",
-    components: ["Input", "NumberInput", "PinInput","Button"],
+    components: ["Input", "NumberInput", "PinInput","Button","Select"],
   })
 );
 

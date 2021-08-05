@@ -6,3 +6,4 @@ export * from './LoadingIcon';
 export * from './AlertBox'; 
 export * from './Map'; 
 export * from './AdminTable'; 
+export * from './DangerZoneAlertDialog'; 

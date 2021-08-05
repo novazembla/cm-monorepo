@@ -1,4 +1,5 @@
 export * from "./FieldInput";
+export * from "./FieldSelect";
 export * from "./FieldRow";
 export * from "./FieldErrorMessage";
 export * from "./TextErrorMessage";

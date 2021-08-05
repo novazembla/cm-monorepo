@@ -51,6 +51,22 @@ export const components = {
       },
     },
   },
+  Select: {
+    variants: {
+      outline: {
+        field: {
+          bg: "#fff",
+          borderColor: "gray.400",
+          _hover: {
+            borderColor: "gray.500",
+          },
+          _autofill: {
+            bg: "wine.300",
+          },
+        },
+      },
+    },
+  },
   Link: {
     baseStyle: {
       color: "wine.600",

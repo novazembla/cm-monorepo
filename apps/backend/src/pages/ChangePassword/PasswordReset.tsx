@@ -77,9 +77,9 @@ const PasswordReset = () => {
           </Text>
 
           <Text>
-          <Button as={Link} to="/login" type="submit">
-              {t("page.passwordreset.button_goto_login", "Goto login")}
-            </Button>
+          <Button as={RouterLink} to="/login">
+            {t("page.passwordreset.button_goto_login", "Goto login")}
+          </Button>
           </Text>
         </AuthenticationFormContainer>
       </AuthenticationPage>

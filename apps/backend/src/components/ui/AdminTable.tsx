@@ -5,6 +5,7 @@ import React, {
   ChangeEvent,
   ChangeEventHandler,
 } from "react";
+import type { AuthenticatedAppUser } from "@culturemap/core";
 import { Link as RouterLink } from "react-router-dom";
 import {
   Table,
@@ -42,7 +43,7 @@ import {
   HiChevronDoubleRight,
   HiChevronLeft,
   HiChevronRight,
-  HiOutlineTrash
+  HiOutlineTrash,
 } from "react-icons/hi";
 
 import { FiEdit } from "react-icons/fi";
@@ -62,12 +63,16 @@ export type AdminTableColumn = {
   editButtonLabel?: string;
   editButtonComponent?: React.FC<any>;
 
-  allowEdit?: boolean;
+  canEdit?: boolean | ((cell: Cell, appUser: AuthenticatedAppUser) => boolean);
 
-  allowDelete?: boolean;
+  canDelete?:
+    | boolean
+    | ((cell: Cell, appUser: AuthenticatedAppUser) => boolean);
   deleteButtonLabel?: string;
   deleteButtonComponent?: React.FC<any>;
-  deleteButtonOnClick?: () => void;
+  deleteButtonOnClick?: (cell: Cell) => void;
+
+  appUser?: AuthenticatedAppUser;
   Cell?: React.FC<any>;
 };
 
@@ -92,7 +97,13 @@ export type AdminTableQueryVariables = {
 
 export const AdminTableActionButtonEdit = (cell: Cell) => {
   const column: any = cell.column;
-  
+
+  const hasAccess =
+    !column.canEdit ||
+    column.canEdit === true ||
+    (typeof column.canEdit === "function" &&
+      column.canEdit.call(null, cell, column.appUser));
+
   return (
     <IconButton
       variant="outline"
@@ -101,44 +112,49 @@ export const AdminTableActionButtonEdit = (cell: Cell) => {
       icon={<FiEdit />}
       fontSize="lg"
       aria-label={column.editButtonLabel}
-      disabled={!column.allowEdit}
+      disabled={!hasAccess}
     />
   );
 };
 
-
 export const AdminTableActionButtonDelete = (cell: Cell) => {
   const column: any = cell.column;
-  
+
+  const hasAccess =
+    !column.canDelete ||
+    column.canDelete === true ||
+    (typeof column.canDelete === "function" &&
+      column.canDelete.call(null, cell, column.appUser));
+
   return (
     <IconButton
       variant="outline"
       colorScheme="red"
-      onClick={column.deleteButtonOnClick}
+      onClick={() => { column.deleteButtonOnClick.call(null, cell)}}
       icon={<HiOutlineTrash />}
       fontSize="xl"
       aria-label={column.deleteButtonLabel}
-      disabled={!column.allowDelete}
+      disabled={!hasAccess}
     />
   );
 };
 
 export const AdminTableActionCell = (cell: Cell) => {
   const column: any = cell.column;
+
   return (
     <Flex justifyContent="center">
       <HStack>
-      {column.showDelete &&
-        React.createElement(
-          column.deleteButtonComponent ?? AdminTableActionButtonDelete,
-          cell
-        )}
-      {column.showEdit &&
-        React.createElement(
-          column.editButtonComponent ?? AdminTableActionButtonEdit,
-          cell
-        )}
-      
+        {column.showDelete &&
+          React.createElement(
+            column.deleteButtonComponent ?? AdminTableActionButtonDelete,
+            cell
+          )}
+        {column.showEdit &&
+          React.createElement(
+            column.editButtonComponent ?? AdminTableActionButtonEdit,
+            cell
+          )}
       </HStack>
     </Flex>
   );
@@ -248,18 +264,18 @@ export const AdminTable = ({
         borderY="1px solid"
         borderColor="gray.300"
       >
-        <FormLabel for="filter" w="25%"
-        m="0"
-          >
-          <VisuallyHidden>{t("admintable.search", "Keyword search")}</VisuallyHidden>
+        <FormLabel htmlFor="filter" w="25%" m="0">
+          <VisuallyHidden>
+            {t("admintable.search", "Keyword search")}
+          </VisuallyHidden>
           <Input
-          name="filter"
-          id="filter"
-          onChange={onFilterChange}
-          onBlur={onFilterChange}
-          defaultValue={intitalTableState.filterKeyword}
-          placeholder={t("admintable.search", "Keyword search")}
-        />
+            name="filter"
+            id="filter"
+            onChange={onFilterChange}
+            onBlur={onFilterChange}
+            defaultValue={intitalTableState.filterKeyword}
+            placeholder={t("admintable.search", "Keyword search")}
+          />
         </FormLabel>
       </Flex>
       <Table
@@ -284,8 +300,11 @@ export const AdminTable = ({
                   color="gray.800"
                   borderColor="gray.300"
                 >
-                  
-                  <Flex justifyContent={((column as any).isCentered)? "center": "flex-start"}>
+                  <Flex
+                    justifyContent={
+                      (column as any).isCentered ? "center" : "flex-start"
+                    }
+                  >
                     {column.render("Header")}
                     <chakra.span w="22" pl="1">
                       {column.isSorted ? (
@@ -321,12 +340,13 @@ export const AdminTable = ({
         <Tbody {...getTableBodyProps()}>
           {(!data || data.length === 0) && (
             <Tr>
-              <Td borderColor="gray.300" colspan="20" textAlign="center">
+              <Td borderColor="gray.300" colSpan={20} textAlign="center">
                 {t("admintable.nodata", "No items found")}
               </Td>
             </Tr>
           )}
           {rows.map((row) => {
+            
             prepareRow(row);
             return (
               <Tr

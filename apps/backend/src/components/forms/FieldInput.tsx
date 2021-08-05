@@ -59,7 +59,7 @@ export const FieldInput = ({
   type: string;
 }) => {
   const fieldRef = useRef<HTMLInputElement | null>(null);
-  const [revealFlag, setTevealFlag] = useBoolean();
+  const [revealFlag, setRevealFlag] = useBoolean();
   const { t } = useTranslation();
 
   const {
@@ -110,7 +110,7 @@ export const FieldInput = ({
   const visibilityClickEvent: MouseEventHandler<HTMLButtonElement> = (
     event: MouseEvent
   ) => {
-    setTevealFlag.toggle();
+    setRevealFlag.toggle();
     fieldRef?.current?.focus();
   };
   

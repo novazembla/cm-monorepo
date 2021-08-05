@@ -8,7 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { TextErrorMessage, FormNavigationBlock } from "~/components/forms";
 
 import { useSettingsUpdateMutation } from "~/hooks/mutations";
-import { useAuthentication, useTypedDispatch, useSuccessToast } from "~/hooks";
+import { useAuthentication, useTypedDispatch, useSuccessfullySavedToast } from "~/hooks";
 import { settingsSet } from "~/redux/slices/settings";
 
 import { Divider } from "@chakra-ui/react";
@@ -39,7 +39,7 @@ const Update = () => {
   const dispatch = useTypedDispatch();
   const [appUser] = useAuthentication();
   const { t } = useTranslation();
-  const successToast = useSuccessToast();
+  const successToast = useSuccessfullySavedToast();
 
   const { data, loading, error } = useQuery(settingsQueryGQL);
 

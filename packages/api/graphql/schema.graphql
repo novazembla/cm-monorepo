@@ -61,9 +61,12 @@ type Mutation {
   authRequestEmailVerificationEmail(scope: String!, userId: Int!): BooleanResult!
   authVerifyEmail(token: String!): BooleanResult!
   settingsUpdate(data: [SettingsUpdateInput!]): BooleanResult!
+  userCreate(data: UserInsertInput!, scope: String!): User!
+  userDelete(scope: String!, userId: Int!): BooleanResult!
   userProfilePasswordUpdate(password: String!, scope: String!, userId: Int!): User!
   userProfileUpdate(data: UserProfileUpdateInput!, scope: String!, userId: Int!): User!
   userSignup(data: UserSignupInput!, scope: String!): AuthPayload!
+  userUpdate(data: UserUpdateInput!, scope: String!, userId: Int!): BooleanResult!
 }
 
 type ProfileUser implements UserBaseNode {
@@ -78,6 +81,7 @@ type Query {
   setting(id: Int!): [Setting]
   settings: [Setting]
   userProfileRead(scope: String!, userId: Int!): ProfileUser!
+  userRead(scope: String!, userId: Int!): User!
   users(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): UsersQueryResult
 }
 
@@ -114,6 +118,16 @@ interface UserBaseNode {
   lastName: String
 }
 
+input UserInsertInput {
+  acceptedTerms: Boolean!
+  email: String!
+  firstName: String!
+  lastName: String!
+  password: String!
+  role: String!
+  userBanned: Boolean!
+}
+
 input UserProfileUpdateInput {
   email: EmailAddress!
   firstName: String!
@@ -126,6 +140,14 @@ input UserSignupInput {
   firstName: String!
   lastName: String!
   password: String!
+}
+
+input UserUpdateInput {
+  email: String!
+  firstName: String!
+  lastName: String!
+  role: String!
+  userBanned: Boolean!
 }
 
 """

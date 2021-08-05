@@ -1,6 +1,6 @@
 import type { RoutePrivateParams, ModuleAccessRules } from '~/config/routes';
 
-import Add from "./Add";
+import Create from "./Create";
 import Update from "./Update";
 import Index from "./Index";
 
@@ -12,9 +12,9 @@ export const moduleAccessRules: ModuleAccessRules = {
 
 export const moduleRoutes: RoutePrivateParams[] = [
   {
-    key: "add",
+    key: "create",
     path: `${moduleRootPath}/create`,
-    component: Add,
+    component: Create,
     exact: true,
     userCan: "userCreate",
   },

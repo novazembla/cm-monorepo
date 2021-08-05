@@ -8,14 +8,18 @@ export const FieldSwitch = ({
   name,
   label,
   isRequired = false,
+  isReadOnly = false,
   isDisabled = false,
   defaultChecked = false,
+  colorScheme,
 }: {
   name: string;
   label: string | React.ReactNode;
   isRequired?: boolean;
+  isReadOnly?: boolean;
   isDisabled?: boolean;
   defaultChecked?: boolean;
+  colorScheme?: string;
 }) => {
   const {
     register,
@@ -25,19 +29,20 @@ export const FieldSwitch = ({
   return (
     <FormControl
       mt="1"
-      {...{ isRequired, isDisabled }}
+      {...{ isRequired, isDisabled, isReadOnly }}
       isInvalid={!!errors[name]?.message}
-      
     >
       <Flex alignItems="center">
         <Switch
+          
           id={name}
           mt="1"
           key={`key-${name}`}
           isInvalid={!!errors[name]?.message}
-          {...{ isRequired, isDisabled, defaultChecked }}
+          {...{ isRequired, isDisabled, isReadOnly, defaultChecked, colorScheme }}
           {...register(name, { required: isRequired })}
           display="flex"
+          
         >{label}</Switch>
       </Flex>
       <FieldErrorMessage error={errors[name]?.message} />

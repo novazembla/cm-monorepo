@@ -1,6 +1,4 @@
-import { useHistory } from "react-router-dom";
-
-import { useTranslation } from "react-i18next";
+import { Link as RouterLink } from "react-router-dom";
 
 import { Heading, Text, Button, Box } from "@chakra-ui/react";
 
@@ -8,10 +6,10 @@ import {
   AuthenticationPage,
   AuthenticationFormContainer,
 } from "~/components/ui";
+import { useTranslation } from "react-i18next";
 
 
 const PasswordReset = () => {
-  const history = useHistory();
   const { t } = useTranslation();
 
   return (
@@ -27,9 +25,9 @@ const PasswordReset = () => {
         </Text>
 
         <Text>
-        <Button type="submit" onClick={() => history.push("/login")}>
-            {t("page.passwordreset.button_goto_login", "Goto login")}
-          </Button>
+        <Button as={RouterLink} to="/login">
+          {t("page.passwordreset.button_goto_login", "Goto login")}
+        </Button>
         </Text>
       </AuthenticationFormContainer>
     </AuthenticationPage>

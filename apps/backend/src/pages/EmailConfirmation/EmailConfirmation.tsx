@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import { Button, Box, Heading, Text, Flex } from "@chakra-ui/react";
-import { useHistory, useLocation } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 
 import { useTranslation } from "react-i18next";
 
@@ -13,21 +13,19 @@ import {
   useAuthVerifyEmailMutation,
   useAuthRequestEmailVerificationEmail,
 } from "~/hooks/mutations";
-import { useAuthentication } from "~/hooks";
+import { useAuthentication, useRouter } from "~/hooks";
 
 import {
   AuthenticationPage,
   AuthenticationFormContainer,
 } from "~/components/ui";
 
-const useQuery = () => {
-  return new URLSearchParams(useLocation().search);
-};
-
 const EmailConfirmation = () => {
+  const router = useRouter();
+
   const [appUser, { isLoggedIn }] = useAuthentication();
-  const query = useQuery();
-  const token = query.get("token");
+  
+  const token = router.query.token ?? "";
 
   const [verificationMutation, verificationMutationResults] =
     useAuthVerifyEmailMutation();
@@ -43,20 +41,19 @@ const EmailConfirmation = () => {
 
   const confirmingToken = verificationMutationResults.loading;
   const confirmationError = verificationMutationResults.error;
-
-  const history = useHistory();
+  
   useEffect(() => {
     const confirmToken = async () => {
       try {
-        const payload = decode(token ?? "", { json: true });
+        const payload = decode(token, { json: true });
 
         if (!payload || 
             (payload.exp && payload.exp * 1000 < Date.now()) ||
             (!payload?.user?.id))
           throw Error("Incorrect token provided");
 
-        if (decode(token ?? "")) {
-          const { errors } = await verificationMutation(token ?? "");
+        if (decode(token)) {
+          const { errors } = await verificationMutation(token);
           if (!errors) {
             setIsTokenConfirmed(true);
           } else {
@@ -93,7 +90,7 @@ const EmailConfirmation = () => {
   let content = (<Flex height="220" alignItems="center" justify="center" position="relative"><LoadingIcon type="inline" size={90} /></Flex>);
   
   let buttonDashboardLogin = (<Text>
-    <Button onClick={() => history.push(isLoggedIn() ? "/dashboard" : "/login")}>
+    <Button as={RouterLink} to={isLoggedIn() ? "/dashboard" : "/login"}>
       {isLoggedIn()
         ? t(
             "page.emailconfirmation.button_goto_dashboard",

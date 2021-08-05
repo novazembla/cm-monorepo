@@ -54,6 +54,7 @@ export const userRegister = async (
 };
 
 export const userCreate = async (
+  scope: AppScopes,
   data: Prisma.UserCreateInput
 ): Promise<User> => {
   if (!data.acceptedTerms)
@@ -63,6 +64,8 @@ export const userCreate = async (
     );
 
   const user: User = await daoUserCreate(data);
+
+  if (user) await authSendEmailConfirmationEmail(scope, user.id, user.email);
 
   return user;
 };
@@ -89,6 +92,11 @@ export const userUpdate = async (
 
   const user: User = await daoUserUpdate(userId, dbData);
 
+  if (user.userBanned)
+    await daoTokenDeleteMany({
+      userId: user.id,
+    });
+
   if (newEmailAddress)
     await authSendEmailConfirmationEmail(
       scope as AppScopes,
@@ -106,9 +114,18 @@ export const userRead = async (userId: number): Promise<User> => {
   return daoUserGetById(userId);
 };
 
-export const userDelete = async (userId: number): Promise<User> => {
+export const userDelete = async (
+  scope: string,
+  userId: number
+): Promise<User> => {
   if (Number.isNaN(userId))
     throw new ApiError(httpStatus.UNPROCESSABLE_ENTITY, "Invalid input data");
+
+  // TODO: this must more solid,
+  // Also other content will have to be taken over by someone else.
+  await daoTokenDeleteMany({
+    userId,
+  });
 
   return daoUserDelete(userId);
 };

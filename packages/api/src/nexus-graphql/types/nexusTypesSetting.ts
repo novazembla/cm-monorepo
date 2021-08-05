@@ -56,7 +56,7 @@ export const SettingQuery = extendType({
         id: nonNull(intArg()),
       },
 
-      // authorize: (...[, , ctx]) => authorizeApiUser(ctx, "settingUpdate"),
+      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "settingRead"),
 
       // resolve(root, args, ctx, info)
       async resolve(...[, args]) {

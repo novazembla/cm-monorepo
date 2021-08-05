@@ -93,6 +93,7 @@ export interface Roles {
     permissions?: PermissionNames | PermissionNames[]
   ) => void;
   extend: (name: RoleNames, extended: RoleNames | RoleNames[]) => void;
+  getExtendedRoles(roleName: RoleNames): RoleNames[];
   addPermissions: (
     roleName: RoleNames,
     permissions?: PermissionNames | PermissionNames[]
@@ -126,6 +127,12 @@ export const roles: Roles = {
           (this.roles[roleName] as Role).extends.push(role);
       });
     }
+  },
+  getExtendedRoles(roleName: RoleNames): RoleNames[] {
+    if (roleName in this.roles)
+      return [roleName, ...(this.roles[roleName] as Role).extends];
+
+    return [];
   },
   addPermissions(
     roleName: RoleNames,

@@ -1,29 +1,20 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import * as yup from "yup";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import { TextErrorMessage, FormNavigationBlock } from "~/components/forms";
 
-import { UserProfileUpdateValidationSchema } from "~/validation";
-import { useUserProfileUpdateMutation } from "~/hooks/mutations";
+import { ModuleUsersCreateSchema } from "./forms";
+import { useUserCreateMutation } from "./hooks";
 import {
   useAuthentication,
-  useConfig,
-  useTypedDispatch,
   useSuccessfullySavedToast,
+  useRouter,
 } from "~/hooks";
-import { userProfileUpdate } from "~/redux/slices/user";
 
 import { Divider } from "@chakra-ui/react";
-import {
-  userProfileReadQueryGQL,
-  filteredOutputByWhitelist,
-} from "@culturemap/core";
-
-import { useQuery } from "@apollo/client";
 
 import {
   ModuleSubNav,
@@ -33,74 +24,48 @@ import {
 
 import { moduleRootPath } from "./moduleConfig";
 
-import { UpdateForm } from "./forms";
+import { UserForm } from "./forms";
 
-const Update = () => {
-  const config = useConfig();
-  const dispatch = useTypedDispatch();
+const Create = () => {
+  const router = useRouter();
   const [appUser] = useAuthentication();
   const { t } = useTranslation();
   const successToast = useSuccessfullySavedToast();
 
-  const { data, loading, error } = useQuery(userProfileReadQueryGQL, {
-    variables: {
-      userId: appUser?.id ?? 0,
-      scope: config.scope,
-    },
-  });
-
-  const history = useHistory();
-  const [firstMutation, firstMutationResults] = useUserProfileUpdateMutation();
+  const [firstMutation, firstMutationResults] = useUserCreateMutation();
   const [isFormError, setIsFormError] = useState(false);
 
   const disableForm = firstMutationResults.loading;
 
   const formMethods = useForm({
     mode: "onTouched",
-    resolver: yupResolver(UserProfileUpdateValidationSchema),
+    resolver: yupResolver(ModuleUsersCreateSchema),
   });
 
   const {
     handleSubmit,
-    reset,
     formState: { isSubmitting, isDirty },
   } = formMethods;
 
-  useEffect(() => {
-    reset(
-      filteredOutputByWhitelist(data?.userProfileRead, [
-        "firstName",
-        "lastName",
-        "email",
-      ])
-    );
-  }, [reset, data]);
-
   const onSubmit = async (
-    newData: yup.InferType<typeof UserProfileUpdateValidationSchema>
+    newData: yup.InferType<typeof ModuleUsersCreateSchema>
   ) => {
     setIsFormError(false);
     try {
       if (appUser) {
-        const { errors } = await firstMutation(appUser?.id, newData);
+        const { errors } = await firstMutation({
+          ...newData,
+          userBanned: false,
+          acceptedTerms: true,
+          confirmPassword: undefined,
+        });
 
         if (!errors) {
-          dispatch(
-            userProfileUpdate({
-              firstName: newData.firstName,
-              lastName: newData.lastName,
-              emailVerified:
-                data?.userProfileRead?.email &&
-                newData?.email &&
-                data?.userProfileRead?.email !== newData?.email
-                  ? "no"
-                  : undefined,
-            })
-          );
+        
 
           successToast();
 
-          history.push("/profile");
+          router.push("/users");
           
         } else {
           setIsFormError(true);
@@ -116,10 +81,10 @@ const Update = () => {
   const breadcrumb = [
     {
       path: moduleRootPath,
-      title: t("module.profile.title", "Profile"),
+      title: t("module.users.title", "Users"),
     },
     {
-      title: t("module.profile.page.title.updateprofile", "Update profile"),
+      title: t("module.users.page.title.createuser", "Add new user"),
     },
   ];
 
@@ -128,13 +93,13 @@ const Update = () => {
       type: "back",
       to: moduleRootPath,
       label: t("module.button.cancel", "Cancel"),
-      userCan: "profileUpdate",
+      userCan: "userRead",
     },
     {
       type: "submit",
       isLoading: isSubmitting,
-      label: t("module.button.update", "Update"),
-      userCan: "profileUpdate",
+      label: t("module.button.save", "Save"),
+      userCan: "userCreate",
     },
   ];
 
@@ -145,14 +110,14 @@ const Update = () => {
         <form noValidate onSubmit={handleSubmit(onSubmit)}>
           <fieldset disabled={disableForm}>
             <ModuleSubNav breadcrumb={breadcrumb} buttonList={buttonList} />
-            <ModulePage isLoading={loading} isError={!!error}>
+            <ModulePage>
               {isFormError && (
                 <>
                   <TextErrorMessage error="general.writeerror.desc" />
                   <Divider />
                 </>
               )}
-              <UpdateForm data={data?.userProfileRead} />
+              <UserForm action="create" validationSchema={ModuleUsersCreateSchema} />
             </ModulePage>
           </fieldset>
         </form>
@@ -160,4 +125,4 @@ const Update = () => {
     </>
   );
 };
-export default Update;
+export default Create;

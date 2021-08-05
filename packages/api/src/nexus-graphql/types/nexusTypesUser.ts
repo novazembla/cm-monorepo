@@ -20,6 +20,9 @@ import { User as PrismaTypeUser } from "@prisma/client";
 import {
   userRegister,
   userRead,
+  userCreate,
+  userUpdate,
+  userDelete,
   userProfileUpdate,
   userProfilePasswordUpdate,
 } from "../../services/serviceUser";
@@ -29,7 +32,11 @@ import {
 } from "../../services/serviceToken";
 import { GQLJson } from "./nexusTypesShared";
 import { ApiError } from "../../utils";
-import { authorizeApiUser, isCurrentApiUser } from "../helpers";
+import {
+  authorizeApiUser,
+  isCurrentApiUser,
+  isNotCurrentApiUser,
+} from "../helpers";
 import config from "../../config";
 import { daoUserQuery, daoUserQueryCount } from "../../dao";
 
@@ -122,12 +129,23 @@ export const Query = objectType({
         };
       },
     });
-  },
-});
 
-export const UserProfileQuery = extendType({
-  type: "Query",
-  definition(t) {
+    t.nonNull.field("userRead", {
+      type: "User",
+
+      args: {
+        scope: nonNull(stringArg()),
+        userId: nonNull(intArg()),
+      },
+
+      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "userRead"),
+
+      // resolve(root, args, ctx, info)
+      async resolve(...[, args]) {
+        return userRead(args.userId);
+      },
+    });
+
     t.nonNull.field("userProfileRead", {
       type: "ProfileUser",
 
@@ -159,7 +177,39 @@ export const UserSignupInput = inputObjectType({
   },
 });
 
-export const UserSignupMutation = extendType({
+export const UserProfileUpdateInput = inputObjectType({
+  name: "UserProfileUpdateInput",
+  definition(t) {
+    t.nonNull.string("firstName");
+    t.nonNull.string("lastName");
+    t.nonNull.email("email");
+  },
+});
+
+export const UserInsertInput = inputObjectType({
+  name: "UserInsertInput",
+  definition(t) {
+    t.nonNull.string("firstName");
+    t.nonNull.string("lastName");
+    t.nonNull.string("email");
+    t.nonNull.string("password");
+    t.nonNull.string("role");
+    t.nonNull.boolean("userBanned");
+    t.nonNull.boolean("acceptedTerms");
+  },
+});
+export const UserUpdateInput = inputObjectType({
+  name: "UserUpdateInput",
+  definition(t) {
+    t.nonNull.string("firstName");
+    t.nonNull.string("lastName");
+    t.nonNull.string("email");
+    t.nonNull.string("role");
+    t.nonNull.boolean("userBanned");
+  },
+});
+
+export const UserMutations = extendType({
   type: "Mutation",
 
   definition(t) {
@@ -181,22 +231,7 @@ export const UserSignupMutation = extendType({
         return tokenProcessRefreshToken(res, authPayload);
       },
     });
-  },
-});
 
-export const UserProfileUpdateInput = inputObjectType({
-  name: "UserProfileUpdateInput",
-  definition(t) {
-    t.nonNull.string("firstName");
-    t.nonNull.string("lastName");
-    t.nonNull.email("email");
-  },
-});
-
-export const UserProfileUpdateMutation = extendType({
-  type: "Mutation",
-
-  definition(t) {
     t.nonNull.field("userProfileUpdate", {
       type: "User",
 
@@ -223,13 +258,7 @@ export const UserProfileUpdateMutation = extendType({
         return user;
       },
     });
-  },
-});
 
-export const UserProfilePasswordUpdateMutation = extendType({
-  type: "Mutation",
-
-  definition(t) {
     t.nonNull.field("userProfilePasswordUpdate", {
       type: "User",
 
@@ -256,6 +285,79 @@ export const UserProfilePasswordUpdateMutation = extendType({
         tokenClearRefreshToken(res);
 
         return user;
+      },
+    });
+
+    t.nonNull.field("userCreate", {
+      type: "User",
+
+      args: {
+        scope: nonNull(stringArg()),
+        data: nonNull(UserInsertInput),
+      },
+
+      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "userCreate"),
+
+      async resolve(...[, args]) {
+        const user = await userCreate(args.scope as AppScopes, args.data);
+
+        if (!user)
+          throw new ApiError(
+            httpStatus.INTERNAL_SERVER_ERROR,
+            "Creation failed"
+          );
+
+        return user;
+      },
+    });
+
+    t.nonNull.field("userUpdate", {
+      type: "BooleanResult",
+
+      args: {
+        scope: nonNull(stringArg()),
+        userId: nonNull(intArg()),
+        data: nonNull(UserUpdateInput),
+      },
+
+      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "userUpdate"),
+
+      async resolve(...[, args]) {
+        const user = await userUpdate(
+          args.scope as AppScopes,
+          args.userId,
+          args.data
+        );
+
+        if (!user)
+          throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Update failed");
+
+        return { result: true };
+      },
+    });
+
+    t.nonNull.field("userDelete", {
+      type: "BooleanResult",
+
+      args: {
+        scope: nonNull(stringArg()),
+        userId: nonNull(intArg()),
+      },
+
+      authorize: (...[, args, ctx]) =>
+        authorizeApiUser(ctx, "userDelete") &&
+        isNotCurrentApiUser(ctx, args.userId),
+
+      async resolve(...[, args]) {
+        const user = await userDelete(args.scope as AppScopes, args.userId);
+
+        if (!user)
+          throw new ApiError(
+            httpStatus.INTERNAL_SERVER_ERROR,
+            "User delete failed"
+          );
+
+        return { result: true };
       },
     });
   },
