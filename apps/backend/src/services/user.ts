@@ -45,10 +45,10 @@ const refreshToken = async () => {
 
             login(payload.user);
           } else {
-            throw new Error("Unable to fetch new access token");
+            throw new Error("Unable to fetch new access token #1");
           }
         } else {
-          throw new Error("Unable to fetch new access token");
+          throw new Error("Unable to fetch new access token #2");
         }
       })
       .catch((error) => {
@@ -81,7 +81,7 @@ const login = async (u: AuthenticatedAppUserData): Promise<boolean> => new Promi
   if (token) {
     refreshTimeoutId = setTimeout(
       refreshToken,
-      new Date(token.expires).getTime() - Date.now() - 10000
+      (new Date(token.expires).getTime() - Date.now() - 10000)
     );
   }
   store.dispatch(

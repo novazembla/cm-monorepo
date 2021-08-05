@@ -6,6 +6,14 @@ TODO: Is it possible to pause/queue apollo requests until the refresh action has
 TODO: Change to use apollo cache: https://www.apollographql.com/blog/apollo-client/caching/when-to-use-refetch-queries/
 TODO: Study: https://github.com/sindresorhus/type-fest
 
+
+TODO: AdminTable
+- is using (... as any)
+- should be nicely resizing on smaller screens 
+- should be having batch processing
+- should be having a "status" or "role" filter above the table 
+- on pagination table should probably scroll to top, right? 
+
 Installation
 Important to mention to clone src/config/appconfig.example.ts to src/config/appconfig.ts and to fill in the required settings .. 
 

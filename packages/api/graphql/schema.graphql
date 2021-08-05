@@ -78,7 +78,7 @@ type Query {
   setting(id: Int!): [Setting]
   settings: [Setting]
   userProfileRead(scope: String!, userId: Int!): ProfileUser!
-  users(orderBy: JSON, page: Int = 1, pageSize: Int = 50, where: JSON): UsersQueryResult
+  users(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): UsersQueryResult
 }
 
 type Setting {

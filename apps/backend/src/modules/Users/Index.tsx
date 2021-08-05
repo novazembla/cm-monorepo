@@ -10,19 +10,36 @@ import {
 } from "~/components/modules";
 
 import { moduleRootPath } from "./moduleConfig";
-import { AdminTable, AdminTableColumn, AdminTableState } from "~/components/ui";
+import { useLocalStorage } from "~/hooks";
+
+import {
+  AdminTable,
+  AdminTableColumn,
+  AdminTableState,
+  AdminTableQueryVariables,
+  AdminTableQueryStats,
+  AdminTableActionCell,
+} from "~/components/ui";
 import { config } from "~/config";
+import { SortingRule } from "react-table";
 
 const intitalTableState: AdminTableState = {
   pageIndex: 0,
-  pageSize: config.defaultPageSize ?? 30
-} 
+  pageSize: config.defaultPageSize ?? 30,
+  sortBy: [],
+  filterKeyword: "",
+};
+
+let refetchDataCache: any[] = [];
 
 const Index = () => {
-  const [tableState, setTableState] = useState(intitalTableState);
-  const [isRefetching, setIsRefetching] = useState(false);
-  console.log("Index");
+  const [tableState, setTableState] = useLocalStorage(
+    `table${moduleRootPath}`,
+    intitalTableState
+  );
 
+  const [isRefetching, setIsRefetching] = useState(false);
+  
   const { t } = useTranslation();
   const { loading, error, data, refetch } = useQuery(usersQueryGQL, {
     onCompleted: () => {
@@ -31,9 +48,10 @@ const Index = () => {
     onError: () => {
       setIsRefetching(false);
     },
+    notifyOnNetworkStatusChange: true,
     variables: {
-      page: intitalTableState.pageIndex,
-      pageSize: intitalTableState.pageSize,
+      pageIndex: tableState.pageIndex,
+      pageSize: tableState.pageSize,
     },
   });
 
@@ -63,17 +81,14 @@ const Index = () => {
     {
       Header: t("users.fields.label.id", "Id"),
       accessor: "id",
-      isNumedric: false,
     } as AdminTableColumn,
     {
       Header: t("users.fields.label.firstName", "First Name"),
       accessor: "firstName",
-      isNumedric: false,
     } as AdminTableColumn,
     {
       Header: t("users.fields.label.lastName", "Last name"),
       accessor: "lastName",
-      isNumeric: false,
     } as AdminTableColumn,
     {
       Header: t("users.fields.label.email", "Email"),
@@ -83,48 +98,183 @@ const Index = () => {
     {
       Header: t("users.fields.label.role", "Role"),
       accessor: "role",
-      isNumeric: true,
     } as AdminTableColumn,
     {
+      Cell: AdminTableActionCell,
       Header: t("users.fields.label.actions", "Actions"),
+      isCentered: true,
+      showEdit: true,
       allowEdit: true,
+      editPath: `${moduleRootPath}/edit/:id`,
+      editButtonLabel: t("module.users.button.edit", "Edit user"),
+      // editButtonComponent: undefined,
+
+      showDelete: true,
       allowDelete: true,
+      deleteButtonLabel: t("module.users.button.delete", "Delete user"),
+      // deleteButtonComponent?: React.FC<any>;
+      deleteButtonOnClick: () => {console.log("delete")},
+      
     } as AdminTableColumn,
   ];
-  
-  
 
-  const onFetchData = (pageIndex: number, pageSize: number) => {
-    if (tableState.pageIndex !== pageIndex || tableState.pageSize !== pageSize) {
-      console.log("on fetch data", pageIndex, pageSize);
-      setIsRefetching(true);
-      refetch({
-        page: pageIndex,
-        pageSize,
-        
-      });
+  const onFetchData = (
+    pageIndex: number,
+    pageSize: number,
+    sortBy: SortingRule<Object>[],
+    filterKeyword: string
+  ) => {
+    let newTableState = {
+      ...tableState,
+      filterKeyword,
+    };
 
-      setTableState({
-        pageIndex,
-        pageSize,
-      })
+    let variables: AdminTableQueryVariables = {
+      pageSize: tableState.pageSize,
+      pageIndex: tableState.pageIndex,
+      orderBy: undefined,
+      where: undefined,
+    };
+
+    let doRefetch = false;
+
+    if (
+      (!sortBy || (Array.isArray(sortBy) && sortBy.length === 0)) &&
+      tableState.sortBy.length > 0
+    ) {
+      newTableState = {
+        ...newTableState,
+        sortBy: [],
+      };
+      doRefetch = true;
     }
-    
+
+    if (Array.isArray(sortBy) && sortBy.length > 0) {
+      if ( 
+        tableState.sortBy.length === 0 ||
+        tableState?.sortBy[0]?.id !== sortBy[0].id ||
+        tableState?.sortBy[0]?.desc !== sortBy[0].desc
+      ) {
+        variables = {
+          ...variables,
+          orderBy: {
+            [sortBy[0].id]: sortBy[0].desc ? "desc" : "asc",
+          },
+        };
+        newTableState = {
+          ...newTableState,
+          sortBy: [sortBy[0]],
+        };
+        doRefetch = true;
+      }
+    }
+
+    if (tableState.pageIndex !== pageIndex) {
+      variables = {
+        ...variables,
+        pageIndex,
+      };
+      newTableState = {
+        ...newTableState,
+        pageIndex,
+      };
+      doRefetch = true;
+    }
+
+    if (tableState.pageSize !== pageSize) {
+      variables = {
+        ...variables,
+        pageSize,
+      };
+      newTableState = {
+        ...newTableState,
+        pageSize,
+      };
+      doRefetch = true;
+    }
+
+    if (!filterKeyword || filterKeyword.length < 3) {
+      // we need to clear the where clause
+      if (tableState.filterKeyword.length >= 3) doRefetch = true;
+    } else {
+      // a change happened ensure that the refetch is being triggerd
+      if (tableState.filterKeyword !== filterKeyword) doRefetch = true;
+
+      // however in any case we need to set the where clause
+      variables = {
+        ...variables,
+        where: {
+          OR: [
+            {
+              firstName: {
+                contains: filterKeyword,
+              },
+            },
+            {
+              lastName: {
+                contains: filterKeyword,
+              },
+            },
+            {
+              email: {
+                contains: filterKeyword,
+              },
+            },
+          ],
+        },
+      };
+    }
+
+    if (tableState.filterKeyword !== filterKeyword) {
+      if (filterKeyword) {
+        if (filterKeyword.length > 3) {
+        }
+      } else if (tableState.filterKeyword.length > 3) {
+        doRefetch = true;
+      }
+
+      if (
+        (filterKeyword && filterKeyword.length > 3) ||
+        (tableState.filterKeyword.length > 3 &&
+          (!filterKeyword || filterKeyword.length < 3))
+      ) {
+      }
+    }
+    if (filterKeyword && filterKeyword.length > 3) {
+    } else {
+    }
+
+    if (doRefetch) {
+      refetchDataCache = data?.users?.users ?? [];
+      
+      setIsRefetching(true);
+
+      refetch(variables);
+
+      setTableState(newTableState);
+    }
+
+    return doRefetch;
   };
 
-  const queryPageCount = (data?.users?.totalCount ?? 0) > 0 ? Math.ceil((data?.users?.totalCount ?? 0) / tableState.pageSize) : 0;
-
-  console.log(queryPageCount);
-
+  const queryStats: AdminTableQueryStats = {
+    total: data?.users?.totalCount ?? 0,
+    pageCount:
+      (data?.users?.totalCount ?? 0) > 0
+        ? Math.ceil((data?.users?.totalCount ?? 0) / tableState.pageSize)
+        : 0,
+  };
+  
   return (
     <>
       <ModuleSubNav breadcrumb={breadcrumb} buttonList={buttonList} />
       <ModulePage isLoading={loading && !isRefetching} isError={!!error}>
         <AdminTable
           columns={AdminTableColumns}
-          queryPageCount={queryPageCount}
-          data={data?.users?.users ?? []}
-          intitalTableState={intitalTableState}
+          isLoading={loading || isRefetching}
+          queryStats={queryStats}
+          data={isRefetching ? refetchDataCache : data?.users?.users ?? []}
+          intitalTableState={tableState}
           onFetchData={onFetchData}
         />
       </ModulePage>

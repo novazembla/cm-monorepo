@@ -364,7 +364,7 @@ export interface NexusGenArgTypes {
     }
     users: { // args
       orderBy?: NexusGenScalars['JSON'] | null; // JSON
-      page: number | null; // Int
+      pageIndex?: number | null; // Int
       pageSize: number | null; // Int
       where?: NexusGenScalars['JSON'] | null; // JSON
     }

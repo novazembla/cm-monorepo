@@ -86,8 +86,8 @@ export const Query = objectType({
     t.field("users", {
       type: UsersQueryResult,
       args: {
-        page: intArg({
-          default: 1,
+        pageIndex: intArg({
+          default: 0,
         }),
         pageSize: intArg({
           default: config.db.defaultPageSize,
@@ -102,7 +102,7 @@ export const Query = objectType({
         }),
       },
 
-      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "userRead"),
+      // TODO enable authorize: (...[, , ctx]) => authorizeApiUser(ctx, "userRead"),
 
       async resolve(...[, args]) {
         const totalCount = await daoUserQueryCount(args.where);
@@ -112,7 +112,7 @@ export const Query = objectType({
           users = await daoUserQuery(
             args.where,
             args.orderBy,
-            args.page as number,
+            args.pageIndex as number,
             args.pageSize as number
           );
 

@@ -53,13 +53,13 @@ export const daoUserCreate = async (
 export const daoUserQuery = async (
   where: Prisma.UserWhereInput,
   orderBy: Prisma.UserOrderByInput,
-  page: number = 0,
+  pageIndex: number = 0,
   pageSize: number = config.db.defaultPageSize
 ): Promise<User[]> => {
   const users: User[] = await prisma.user.findMany({
     where,
     orderBy,
-    skip: page > 1 ? page * pageSize : 0,
+    skip: pageIndex * pageSize,
     take: Math.min(pageSize, config.db.maxPageSize),
   });
 
