@@ -43,12 +43,7 @@ export const SettingsQuery = extendType({
         return filteredOutputByWhitelist(settings, FIELD_KEYS_SETTING, "value");
       },
     });
-  },
-});
 
-export const SettingQuery = extendType({
-  type: "Query",
-  definition(t) {
     t.list.field("setting", {
       type: Setting,
 
@@ -104,5 +99,3 @@ export const SettingUpdateMutation = extendType({
     });
   },
 });
-
-export default FIELD_KEYS_SETTING;

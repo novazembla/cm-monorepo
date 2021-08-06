@@ -61,7 +61,10 @@ type Mutation {
   authRequestEmailVerificationEmail(scope: String!, userId: Int!): BooleanResult!
   authVerifyEmail(token: String!): BooleanResult!
   settingsUpdate(data: [SettingsUpdateInput!]): BooleanResult!
-  userCreate(data: UserInsertInput!, scope: String!): User!
+  termCreate(data: TermCreateInput!): Term!
+  termDelete(id: Int!): BooleanResult!
+  termUpdate(data: TermUpdateInput!, id: Int!): BooleanResult!
+  userCreate(data: UserCreateInput!, scope: String!): User!
   userDelete(id: Int!, scope: String!): BooleanResult!
   userProfilePasswordUpdate(id: Int!, password: String!, scope: String!): User!
   userProfileUpdate(data: UserProfileUpdateInput!, id: Int!, scope: String!): User!
@@ -80,6 +83,10 @@ type ProfileUser implements UserBaseNode {
 type Query {
   setting(id: Int!): [Setting]
   settings: [Setting]
+  taxonomies(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): TaxonomyQueryResult
+  taxonomyRead(id: Int!): Taxonomy!
+  termRead(id: Int!): Term!
+  terms(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, taxonomyId: Int!, where: JSON): TermQueryResult
   userProfileRead(id: Int!, scope: String!): ProfileUser!
   userRead(id: Int!, scope: String!): User!
   users(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): UsersQueryResult
@@ -96,6 +103,48 @@ type Setting {
 input SettingsUpdateInput {
   key: String!
   value: JSON!
+}
+
+type Taxonomy {
+  createdAt: DateTime
+  id: Int!
+  name: JSON
+  slug: JSON
+  terms: [Term]
+  updatedAt: DateTime
+}
+
+"""List all the taxonomies in the database."""
+type TaxonomyQueryResult {
+  taxonomies: [Taxonomy]
+  totalCount: Int
+}
+
+type Term {
+  createdAt: DateTime
+  id: Int!
+  name: JSON
+  slug: JSON
+  taxonomy: Taxonomy
+  taxonomyId: Int!
+  updatedAt: DateTime
+}
+
+input TermCreateInput {
+  name: JSON!
+  slug: JSON!
+  taxonomyId: Int!
+}
+
+"""List all the available terms of the given taxonomy in the database."""
+type TermQueryResult {
+  terms: [Term]
+  totalCount: Int
+}
+
+input TermUpdateInput {
+  name: JSON!
+  slug: JSON!
 }
 
 type User implements UserBaseNode {
@@ -118,7 +167,7 @@ interface UserBaseNode {
   lastName: String
 }
 
-input UserInsertInput {
+input UserCreateInput {
   acceptedTerms: Boolean!
   email: String!
   firstName: String!

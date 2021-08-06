@@ -7,6 +7,10 @@ TODO: Change to use apollo cache: https://www.apollographql.com/blog/apollo-clie
 TODO: Study: https://github.com/sindresorhus/type-fest
 
 
+TODO: UserProfile
+- User should be able to self delete if registration is switched on 
+
+
 TODO: AdminTable
 - is using (... as any)
 - should be having batch processing
@@ -14,6 +18,10 @@ TODO: AdminTable
 - on pagination table should probably scroll to top, right? 
 - filter input could have a clear button if something has been entered
 - is there a way to return to default if module is loaded via main navigation ... 
+
+
+TODO: Menu/Sidebar
+- if you go smaller the slideout menu default state does not toggle to closed? Why? 
 
 
 Installation

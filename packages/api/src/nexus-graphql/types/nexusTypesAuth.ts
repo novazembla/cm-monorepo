@@ -65,7 +65,7 @@ export const AuthPayload = objectType({
   },
 });
 
-export const AuthLoginMutation = extendType({
+export const AuthMutations = extendType({
   type: "Mutation",
 
   definition(t) {
@@ -96,13 +96,7 @@ export const AuthLoginMutation = extendType({
         }
       },
     });
-  },
-});
 
-export const AuthRefreshMutation = extendType({
-  type: "Mutation",
-
-  definition(t) {
     t.nonNull.field("authRefresh", {
       type: "AuthPayload",
 
@@ -134,13 +128,7 @@ export const AuthRefreshMutation = extendType({
         return tokenProcessRefreshToken(res, authPayload);
       },
     });
-  },
-});
 
-export const AuthLogoutMutation = extendType({
-  type: "Mutation",
-
-  definition(t) {
     t.nonNull.field("authLogout", {
       type: BooleanResult,
       args: {
@@ -165,13 +153,7 @@ export const AuthLogoutMutation = extendType({
         return { result };
       },
     });
-  },
-});
 
-export const AuthPasswordRequestMutation = extendType({
-  type: "Mutation",
-
-  definition(t) {
     t.nonNull.field("authPasswordRequest", {
       type: BooleanResult,
       args: {
@@ -192,13 +174,7 @@ export const AuthPasswordRequestMutation = extendType({
         return { result };
       },
     });
-  },
-});
 
-export const authRequestEmailVerificationEmailMutation = extendType({
-  type: "Mutation",
-
-  definition(t) {
     t.nonNull.field("authRequestEmailVerificationEmail", {
       type: BooleanResult,
       args: {
@@ -219,13 +195,7 @@ export const authRequestEmailVerificationEmailMutation = extendType({
         return { result };
       },
     });
-  },
-});
 
-export const AuthPasswordResetMutation = extendType({
-  type: "Mutation",
-
-  definition(t) {
     t.nonNull.field("authPasswordReset", {
       type: BooleanResult,
       args: {
@@ -242,13 +212,7 @@ export const AuthPasswordResetMutation = extendType({
         return { result };
       },
     });
-  },
-});
 
-export const AuthVerifyEmailMutation = extendType({
-  type: "Mutation",
-
-  definition(t) {
     t.nonNull.field("authVerifyEmail", {
       type: BooleanResult,
       args: {

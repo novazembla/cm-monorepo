@@ -22,8 +22,8 @@ model User {
   password       String
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @default(now()) @updatedAt
-  Location       Location[]
-  Token Token[]
+  locations       Location[]
+  tokens         Token[]
 }
 
 model Location {
@@ -60,4 +60,29 @@ model Setting {
   
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now()) @updatedAt
+}
+
+model Taxonomy {
+  id             Int        @id @default(autoincrement())
+  hash           String     @db.VarChar(64) @unique
+  name           Json     
+  slug           Json     
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @default(now()) @updatedAt
+  terms          Term[]
+}
+
+model Term {
+  id             Int        @id @default(autoincrement())
+  hash           String     @db.VarChar(64) @unique
+  name           Json     
+  slug           Json   
+
+  taxonomyId     Int
+  taxonomy       Taxonomy   @relation(fields: [taxonomyId], references: [id])
+
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @default(now()) @updatedAt
+
+  @@index([taxonomyId], name: "indexTernTaxonomyId")
 }

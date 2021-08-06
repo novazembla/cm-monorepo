@@ -85,11 +85,9 @@ export const UsersQueryResult = objectType({
   },
 });
 
-export const Query = objectType({
-  name: "Query",
+export const UserQueries = extendType({
+  type: "Query",
   definition(t) {
-    // t.field('launches', {})
-    // https://clearbit.com/
     t.field("users", {
       type: UsersQueryResult,
       args: {
@@ -185,8 +183,8 @@ export const UserProfileUpdateInput = inputObjectType({
   },
 });
 
-export const UserInsertInput = inputObjectType({
-  name: "UserInsertInput",
+export const UserCreateInput = inputObjectType({
+  name: "UserCreateInput",
   definition(t) {
     t.nonNull.string("firstName");
     t.nonNull.string("lastName");
@@ -292,7 +290,7 @@ export const UserMutations = extendType({
 
       args: {
         scope: nonNull(stringArg()),
-        data: nonNull(UserInsertInput),
+        data: nonNull(UserCreateInput),
       },
 
       authorize: (...[, , ctx]) => authorizeApiUser(ctx, "userCreate"),
@@ -361,5 +359,3 @@ export const UserMutations = extendType({
     });
   },
 });
-
-export default User;

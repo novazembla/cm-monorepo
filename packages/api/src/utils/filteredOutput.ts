@@ -1,10 +1,7 @@
-import httpStatus from "http-status";
 import {
   filteredOutputByBlacklist,
   filteredOutputByWhitelist,
 } from "@culturemap/core";
-
-import { ApiError } from "./ApiError";
 
 export type FilterableObject<K extends keyof any, T> = {
   [P in K]?: T;
@@ -14,8 +11,7 @@ export const filteredOutputByBlacklistOrNotFound = (
   obj: object | object[] | null,
   keys?: string[] | undefined
 ): any => {
-  if (!obj)
-    throw new ApiError(httpStatus.BAD_REQUEST, "Invalid data in request");
+  if (!obj) return obj;
 
   if (!keys) {
     // TODO: better error logging
@@ -29,8 +25,7 @@ export const filteredOutputByWhitelistOrNotFound = (
   obj: object | object[] | null,
   keys?: string[] | undefined
 ): any => {
-  if (!obj)
-    throw new ApiError(httpStatus.BAD_REQUEST, "Invalid data in request");
+  if (!obj) return obj;
 
   if (!keys) {
     // TODO: better error logging

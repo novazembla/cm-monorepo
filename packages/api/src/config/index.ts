@@ -29,7 +29,9 @@ export type CulturemapScopes =
   | "event"
   | "tour"
   | "user"
-  | "terms";
+  | "taxonomy"
+  | "term"
+  | "page";
 
 export interface ApiConfigDB {
   url: string;
@@ -108,6 +110,9 @@ const db: ApiConfigDB = {
     location: ["createdAt", "updatedAt"],
     event: ["createdAt", "updatedAt"],
     tour: ["createdAt", "updatedAt"],
+    taxonomy: [],
+    term: [],
+    page: [],
     user: ["password"],
   },
 };
