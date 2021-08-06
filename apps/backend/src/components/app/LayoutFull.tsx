@@ -14,7 +14,8 @@ export const LayoutFull = ({ children }: AppProps) => {
     <Grid
       className={loginStatus}
       w="100%"
-      templateColumns={{ base: "1fr", tw: "260px 1fr" }}
+      // templateColumns={{ base: "1fr", tw: "260px 1fr" }}
+      templateColumns={{ base: "100%", tw: "260px calc(100% - 260px - 1em)" }}
       gap="4"
       alignItems="start"
       pt={{ base: "48px", tw: "72px" }}

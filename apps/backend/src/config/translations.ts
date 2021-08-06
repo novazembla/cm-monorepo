@@ -14,31 +14,31 @@ export interface i18nTranslationProps {
 }
 
 export let mixed = {
-  // t('validation.mixed.default', '{{path}} is invalid')
+  // t('validation.mixed.default', 'This field is invalid')
   default: ({ path }: i18nTranslationProps) => ({
     key: "validation.mixed.default",
     values: { path },
   }),
 
-  // t('validation.mixed.required', '{{path}} is a required field')
+  // t('validation.mixed.required', 'This field is required')
   required: ({ path }: i18nTranslationProps) => ({
     key: "validation.mixed.required",
     values: { path },
   }),
 
-  // t('validation.mixed.oneOf', '{{path}} must be one of the following values: {{values}}')
+  // t('validation.mixed.oneOf', 'This field must be one of the following values: {{values}}')
   oneOf: ({ path, values }: i18nTranslationProps) => ({
     key: "validation.mixed.oneOf",
     values: { path, values },
   }),
 
-  // t('validation.mixed.notOneOf', '{{path}} must not be one of the following values: {{values}}')
+  // t('validation.mixed.notOneOf', 'This field must not be one of the following values: {{values}}')
   notOneOf: ({ path, values }: i18nTranslationProps) => ({
     key: "validation.mixed.notOneOf",
     values: { path, values },
   }),
 
-  // t('validation.mixed.defined', '{{path}} must be defined')
+  // t('validation.mixed.defined', 'This field must be defined')
   defined: ({ path }: i18nTranslationProps) => ({
     key: "validation.mixed.defined",
     values: { path },
@@ -46,61 +46,61 @@ export let mixed = {
 };
 
 export let string = {
-  // t('validation.string.length', '{{path}} must be exactly {{length}} characters long')
+  // t('validation.string.length', 'This field must be exactly {{length}} characters long')
   length: ({ path, length }: i18nTranslationProps) => ({
     key: "validation.string.length",
     values: { path, length },
   }),
 
-  // t('validation.string.min', '{{path}} must be at least {{min}} characters long')
+  // t('validation.string.min', 'This field must be at least {{min}} characters long')
   min: ({ path, min }: i18nTranslationProps) => ({
     key: "validation.string.min",
     values: { path, min },
   }),
 
-  // t('validation.string.max', '{{path}} must be at most {{max}} characters long')
+  // t('validation.string.max', 'This field must be at most {{max}} characters long')
   max: ({ path, max }: i18nTranslationProps) => ({
     key: "validation.string.max",
     values: { path, max },
   }),
 
-  // t('validation.string.matches', '{{path}} must match the following: "{{regex}}"')
+  // t('validation.string.matches', 'This field must match the following: "{{regex}}"')
   matches: ({ path, regex }: i18nTranslationProps) => ({
     key: "validation.string.matches",
     values: { path, regex },
   }),
 
-  // t('validation.string.email', '{{path}} must be a valid email address')
+  // t('validation.string.email', 'This field must be a valid email address')
   email: ({ path }: i18nTranslationProps) => ({
     key: "validation.string.email",
     values: { path },
   }),
 
-  // t('validation.string.url', '{{path}} must be a valid URL')
+  // t('validation.string.url', 'This field must be a valid URL')
   url: ({ path }: i18nTranslationProps) => ({
     key: "validation.string.url",
     values: { path },
   }),
 
-  // t('validation.string.uuid', '{{path}} must be a valid UUID')
+  // t('validation.string.uuid', 'This field must be a valid UUID')
   uuid: ({ path }: i18nTranslationProps) => ({
     key: "validation.string.uuid",
     values: { path },
   }),
 
-  // t('validation.string.trim', '{{path}} must be a trimmed string')
+  // t('validation.string.trim', 'This field must be a trimmed string')
   trim: ({ path }: i18nTranslationProps) => ({
     key: "validation.string.trim",
     values: { path },
   }),
 
-  // t('validation.string.lowercase', '{{path}} must be a lowercase string')
+  // t('validation.string.lowercase', 'This field must be written in lower case only')
   lowercase: ({ path }: i18nTranslationProps) => ({
     key: "validation.string.lowercase",
     values: { path },
   }),
 
-  // t('validation.string.uppercase', '{{path}} must be a upper case string')
+  // t('validation.string.uppercase', 'This field must be written in upper case only')
   uppercase: ({ path }: i18nTranslationProps) => ({
     key: "validation.string.uppercase",
     values: { path },
@@ -108,43 +108,43 @@ export let string = {
 };
 
 export let number = {
-  // t('validation.number.min', '{{path}} must be greater than or equal to {{min}}')
+  // t('validation.number.min', 'This field must be greater than or equal to {{min}}')
   min: ({ path, min }: i18nTranslationProps) => ({
     key: "validation.number.min",
     values: { path, min },
   }),
 
-  // t('validation.number.max', '{{path}} must be less than or equal to {{max}}')
+  // t('validation.number.max', 'This field must be less than or equal to {{max}}')
   max: ({ path, max }: i18nTranslationProps) => ({
     key: "validation.number.max",
     values: { path, max },
   }),
 
-  // t('validation.number.lessThan', '{{path}} must be less than {{less}}')
+  // t('validation.number.lessThan', 'This field must be less than {{less}}')
   lessThan: ({ path, less }: i18nTranslationProps) => ({
     key: "validation.number.lessThan",
     values: { path, less },
   }),
 
-  // t('validation.number.moreThan', '{{path}} must be greater than {{more}}')
+  // t('validation.number.moreThan', 'This field must be greater than {{more}}')
   moreThan: ({ path, more }: i18nTranslationProps) => ({
     key: "validation.number.moreThan",
     values: { path, more },
   }),
 
-  // t('validation.number.positive', '{{path}} must be a positive number')
+  // t('validation.number.positive', 'This field must be a positive number')
   positive: ({ path }: i18nTranslationProps) => ({
     key: "validation.number.positive",
     values: { path },
   }),
 
-  // t('validation.number.negative', '{{path}} must be a negative number')
+  // t('validation.number.negative', 'This field must be a negative number')
   negative: ({ path }: i18nTranslationProps) => ({
     key: "validation.number.negative",
     values: { path },
   }),
 
-  // t('validation.number.integer', '{{path}} must be an integer')
+  // t('validation.number.integer', 'This field must be an integer')
   integer: ({ path }: i18nTranslationProps) => ({
     key: "validation.number.integer",
     values: { path },
@@ -152,13 +152,13 @@ export let number = {
 };
 
 export let date = {
-  // t('validation.date.min', '{{path}} field must be later than {{min}}')
+  // t('validation.date.min', 'This field must be later than {{min}}')
   min: ({ path, min }: i18nTranslationProps) => ({
     key: "validation.date.min",
     values: { path, min },
   }),
 
-  // t('validation.date.max', '{{path}} field must be at earlier than {{max}}')
+  // t('validation.date.max', 'This field must be at earlier than {{max}}')
   max: ({ path, max }: i18nTranslationProps) => ({
     key: "validation.date.max",
     values: { path, max },
@@ -166,7 +166,7 @@ export let date = {
 };
 
 export let boolean = {
-  // t('validation.boolean.isValue', '{{path}} field must be {{value}}')
+  // t('validation.boolean.isValue', 'This field must be {{value}}')
   isValue: ({ path, value }: i18nTranslationProps) => ({
     key: "validation.boolean.isValue",
     values: { path, value },
@@ -174,7 +174,7 @@ export let boolean = {
 };
 
 export let object = {
-  // t('validation.object.noUnknown', '{{path}} field has unspecified keys: {{unknown}}')
+  // t('validation.object.noUnknown', 'This field field has unspecified keys: {{unknown}}')
   noUnknown: ({ path, unknown }: i18nTranslationProps) => ({
     key: "validation.object.noUnknown",
     values: { path, unknown },
@@ -182,19 +182,19 @@ export let object = {
 };
 
 export let array = {
-  // t('validation.array.min', '{{path}} field must have at least {{min}} items')
+  // t('validation.array.min', 'This field field must have at least {{min}} items')
   min: ({ path, min }: i18nTranslationProps) => ({
     key: "validation.array.min",
     values: { path, min },
   }),
 
-  // t('validation.array.max', '{{path}} field must have less than or equal to {{max}} items')
+  // t('validation.array.max', 'This field field must have less than or equal to {{max}} items')
   max: ({ path, max }: i18nTranslationProps) => ({
     key: "validation.array.max",
     values: { path, max },
   }),
 
-  // t('validation.array.length', '{{path}} must have {{length}} items')
+  // t('validation.array.length', 'This field must have {{length}} items')
   length: ({ path, length }: i18nTranslationProps) => ({
     key: "validation.array.length",
     values: { path, length },

@@ -8,6 +8,7 @@ import React, {
 import type { AuthenticatedAppUser } from "@culturemap/core";
 import { Link as RouterLink } from "react-router-dom";
 import {
+  Box,
   Table,
   Thead,
   Tr,
@@ -55,6 +56,7 @@ export type AdminTableColumn = {
   accessor?: string;
   isNumeric?: boolean;
   isCentered?: boolean;
+  isStickyToTheRight?: boolean;
 
   isDate?: boolean;
   showEdit?: boolean;
@@ -130,7 +132,9 @@ export const AdminTableActionButtonDelete = (cell: Cell) => {
     <IconButton
       variant="outline"
       colorScheme="red"
-      onClick={() => { column.deleteButtonOnClick.call(null, cell)}}
+      onClick={() => {
+        column.deleteButtonOnClick.call(null, cell);
+      }}
       icon={<HiOutlineTrash />}
       fontSize="xl"
       aria-label={column.deleteButtonLabel}
@@ -278,187 +282,221 @@ export const AdminTable = ({
           />
         </FormLabel>
       </Flex>
-      <Table
-        {...getTableProps()}
-        className={isLoading || triggeredRefetch ? "loading" : ""}
-        opacity="1"
-        trasition="all 0.3s"
-        sx={{
-          "&.loading": {
-            opacity: 0.5,
-            pointerEvents: "none",
-          },
-        }}
-      >
-        <Thead>
-          {headerGroups.map((headerGroup) => (
-            <Tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
-                <Th
-                  {...column.getHeaderProps(column.getSortByToggleProps())}
-                  fontSize="md"
-                  color="gray.800"
-                  borderColor="gray.300"
-                >
-                  <Flex
-                    justifyContent={
-                      (column as any).isCentered ? "center" : "flex-start"
-                    }
-                  >
-                    {column.render("Header")}
-                    <chakra.span w="22" pl="1">
-                      {column.isSorted ? (
-                        column.isSortedDesc ? (
-                          <Icon
-                            as={HiChevronDown}
-                            aria-label={t(
-                              "admintable.sorted.desc",
-                              "Sorted descending"
-                            )}
-                            fontSize="lg"
-                            transform="translateY(-3px)"
-                          />
-                        ) : (
-                          <Icon
-                            as={HiChevronUp}
-                            aria-label={t(
-                              "admintable.sorted.asc",
-                              "Sorted ascending"
-                            )}
-                            fontSize="lg"
-                            transform="translateY(-3px)"
-                          />
-                        )
-                      ) : null}
-                    </chakra.span>
-                  </Flex>
-                </Th>
-              ))}
-            </Tr>
-          ))}
-        </Thead>
-        <Tbody {...getTableBodyProps()}>
-          {(!data || data.length === 0) && (
-            <Tr>
-              <Td borderColor="gray.300" colSpan={20} textAlign="center">
-                {t("admintable.nodata", "No items found")}
-              </Td>
-            </Tr>
-          )}
-          {rows.map((row) => {
-            
-            prepareRow(row);
-            return (
-              <Tr
-                {...row.getRowProps()}
-                _hover={{
-                  bg: "gray.50",
-                }}
-              >
-                {row.cells.map((cell) => (
-                  <Td
-                    {...cell.getCellProps()}
+      <Box className="admin-table-wrapper" w="100%" overflowX="auto">
+        <Table
+          {...getTableProps()}
+          className={
+            isLoading || triggeredRefetch
+              ? "loading admin-table"
+              : "admin-table"
+          }
+          opacity="1"
+          trasition="all 0.3s"
+          sx={{
+            "&.loading": {
+              opacity: 0.5,
+              pointerEvents: "none",
+            },
+          }}
+          w="100%"
+        >
+          <Thead>
+            {headerGroups.map((headerGroup) => (
+              <Tr {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map((column) => (
+                  <Th
+                    {...column.getHeaderProps(column.getSortByToggleProps())}
+                    fontSize="md"
+                    color="gray.800"
                     borderColor="gray.300"
-                    isNumeric={(cell.column as any).isNumeric}
+                    _last={
+                      (column as any).isStickyToTheRight
+                        ? {
+                            bg: "rgba(255, 255, 255, 0.90)",
+                            position: "sticky",
+                            right: 0,
+                          }
+                        : undefined
+                    }
+                    
                   >
-                    {cell.render("Cell")}
-                  </Td>
+                    <Flex
+                      justifyContent={
+                        (column as any).isCentered ? "center" : "flex-start"
+                      }
+                    >
+                      {column.render("Header")}
+                      <chakra.span w="22" pl="1">
+                        {column.isSorted ? (
+                          column.isSortedDesc ? (
+                            <Icon
+                              as={HiChevronDown}
+                              aria-label={t(
+                                "admintable.sorted.desc",
+                                "Sorted descending"
+                              )}
+                              fontSize="lg"
+                              transform="translateY(-3px)"
+                            />
+                          ) : (
+                            <Icon
+                              as={HiChevronUp}
+                              aria-label={t(
+                                "admintable.sorted.asc",
+                                "Sorted ascending"
+                              )}
+                              fontSize="lg"
+                              transform="translateY(-3px)"
+                            />
+                          )
+                        ) : null}
+                      </chakra.span>
+                    </Flex>
+                  </Th>
                 ))}
               </Tr>
-            );
-          })}
-        </Tbody>
-        <Tfoot>
-          <Tr>
-            <Td id="pagination" colSpan={20} borderBottom="none">
-              <Flex justifyContent="center" mt="7" mb="3">
-                <HStack>
-                  <IconButton
-                    icon={<HiChevronDoubleLeft />}
-                    onClick={() => gotoPage(0)}
-                    disabled={!canPreviousPage}
-                    aria-label={t(
-                      "admintable.pagination.gotofirstpage",
-                      "goto first page"
-                    )}
-                  >
-                    {"<<"}
-                  </IconButton>
-                  <IconButton
-                    icon={<HiChevronLeft />}
-                    onClick={() => previousPage()}
-                    disabled={!canPreviousPage}
-                    aria-label={t(
-                      "admintable.pagination.gotopreviouspage",
-                      "goto previous page"
-                    )}
-                  >
-                    {"<"}
-                  </IconButton>
-                  {pageButtonIndexes.map((index) => (
-                    <Button
-                      key={`b-${index}`}
-                      onClick={() => gotoPage(index)}
-                      isActive={pageIndex === index}
-                      // disabled={!canNextPage}
+            ))}
+          </Thead>
+          <Tbody {...getTableBodyProps()} position="relative">
+            {(!data || data.length === 0) && (
+              <Tr>
+                <Td borderColor="gray.300" colSpan={20} textAlign="center">
+                  {t("admintable.nodata", "No items found")}
+                </Td>
+              </Tr>
+            )}
+            {rows.map((row) => {
+              prepareRow(row);
+              return (
+                <Tr
+                  {...row.getRowProps()}
+                  sx={{
+                    _hover:{
+                      "td": {
+                        bg: "gray.50"
+                      }
+                    }
+                  }}
+                >
+                  {row.cells.map((cell) => (
+                    <Td
+                      {...cell.getCellProps()}
+                      borderColor="gray.300"
+                      isNumeric={(cell.column as any).isNumeric}
+                      transition="background-color 0.3s"
+                      _last={
+                        (cell.column as any).isStickyToTheRight
+                          ? {
+                              bg: "rgba(255, 255, 255, 0.85)",
+                              position: "sticky",
+                              right: 0,
+                            }
+                          : undefined
+                      }
+                    >
+                      {cell.render("Cell")}
+                    </Td>
+                  ))}
+                </Tr>
+              );
+            })}
+          </Tbody>
+          <Tfoot>
+            <Tr>
+              <Td id="pagination" colSpan={20} borderBottom="none" px="0">
+                <Flex
+                  justifyContent={{ base: "flex-start", d: "center" }}
+                  mt="7"
+                  mb="3"
+                >
+                  <HStack>
+                    <IconButton
+                      icon={<HiChevronDoubleLeft />}
+                      onClick={() => gotoPage(0)}
+                      disabled={!canPreviousPage}
                       aria-label={t(
-                        "admintable.pagination.gotopage",
-                        "goto page number {{page}}",
-                        { page: index + 1 }
+                        "admintable.pagination.gotofirstpage",
+                        "goto first page"
                       )}
                     >
-                      {index + 1}
-                    </Button>
-                  ))}
-                  <IconButton
-                    icon={<HiChevronRight />}
-                    onClick={() => nextPage()}
-                    disabled={!canNextPage}
-                    aria-label={t(
-                      "admintable.pagination.gotonextpage",
-                      "goto next page"
-                    )}
-                  >
-                    {">"}
-                  </IconButton>
-                  <IconButton
-                    icon={<HiChevronDoubleRight />}
-                    onClick={() => gotoPage(pageCount - 1)}
-                    disabled={!canNextPage}
-                    aria-label={t(
-                      "admintable.pagination.gotolastpage",
-                      "goto last page"
-                    )}
-                  >
-                    {">>"}
-                  </IconButton>
-                  <Select
-                    value={pageSize}
-                    onChange={(e) => {
-                      setPageSize(Number(e.target.value));
-                    }}
-                    onBlur={(e) => {
-                      setPageSize(Number(e.target.value));
-                    }}
-                  >
-                    {[10, 20, 30, 50, 100].map((pageSize) => (
-                      <option key={pageSize} value={pageSize}>
-                        {t(
-                          "admintable.changepagesize",
-                          "{{pageSize}} per page",
-                          {
-                            pageSize,
-                          }
+                      {"<<"}
+                    </IconButton>
+                    <IconButton
+                      icon={<HiChevronLeft />}
+                      onClick={() => previousPage()}
+                      disabled={!canPreviousPage}
+                      aria-label={t(
+                        "admintable.pagination.gotopreviouspage",
+                        "goto previous page"
+                      )}
+                    >
+                      {"<"}
+                    </IconButton>
+                    {pageButtonIndexes.map((index) => (
+                      <Button
+                        key={`b-${index}`}
+                        onClick={() => gotoPage(index)}
+                        isActive={pageIndex === index}
+                        // disabled={!canNextPage}
+                        aria-label={t(
+                          "admintable.pagination.gotopage",
+                          "goto page number {{page}}",
+                          { page: index + 1 }
                         )}
-                      </option>
+                      >
+                        {index + 1}
+                      </Button>
                     ))}
-                  </Select>
-                </HStack>
-              </Flex>
-            </Td>
-          </Tr>
-        </Tfoot>
-      </Table>
+                    <IconButton
+                      icon={<HiChevronRight />}
+                      onClick={() => nextPage()}
+                      disabled={!canNextPage}
+                      aria-label={t(
+                        "admintable.pagination.gotonextpage",
+                        "goto next page"
+                      )}
+                    >
+                      {">"}
+                    </IconButton>
+                    <IconButton
+                      icon={<HiChevronDoubleRight />}
+                      onClick={() => gotoPage(pageCount - 1)}
+                      disabled={!canNextPage}
+                      aria-label={t(
+                        "admintable.pagination.gotolastpage",
+                        "goto last page"
+                      )}
+                    >
+                      {">>"}
+                    </IconButton>
+                    <Select
+                      value={pageSize}
+                      onChange={(e) => {
+                        setPageSize(Number(e.target.value));
+                      }}
+                      onBlur={(e) => {
+                        setPageSize(Number(e.target.value));
+                      }}
+                    >
+                      {[10, 20, 30, 50, 100].map((pageSize) => (
+                        <option key={pageSize} value={pageSize}>
+                          {t(
+                            "admintable.changepagesize",
+                            "{{pageSize}} per page",
+                            {
+                              pageSize,
+                            }
+                          )}
+                        </option>
+                      ))}
+                    </Select>
+                  </HStack>
+                </Flex>
+              </Td>
+            </Tr>
+          </Tfoot>
+        </Table>
+      </Box>
     </>
   );
 };

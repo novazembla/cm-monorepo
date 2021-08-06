@@ -164,8 +164,11 @@ const Index = () => {
     {
       Cell: AdminTableActionCell,
       Header: t("users.fields.label.actions", "Actions"),
+      isStickyToTheRight: true,
+      
       isCentered: true,
       showEdit: true,
+      
       canEdit: (cell, appUser) =>
         appUser?.can("userUpdate") && appUser?.has(cell.row.values.role),
       editPath: `${moduleRootPath}/update/:id`,
