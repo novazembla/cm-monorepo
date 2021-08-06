@@ -9,10 +9,12 @@ TODO: Study: https://github.com/sindresorhus/type-fest
 
 TODO: AdminTable
 - is using (... as any)
-- should be nicely resizing on smaller screens 
 - should be having batch processing
 - should be having a "status" or "role" filter above the table 
 - on pagination table should probably scroll to top, right? 
+- filter input could have a clear button if something has been entered
+- is there a way to return to default if module is loaded via main navigation ... 
+
 
 Installation
 Important to mention to clone src/config/appconfig.example.ts to src/config/appconfig.ts and to fill in the required settings .. 

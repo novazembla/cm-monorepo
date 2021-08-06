@@ -1,8 +1,8 @@
 import gql from "graphql-tag";
 
 export const userDeleteMutationGQL = gql`
-  mutation userDelete($scope: String!, $userId: Int!) {
-    userDelete(scope: $scope, userId: $userId) {
+  mutation userDelete($scope: String!, $id: Int!) {
+    userDelete(scope: $scope, id: $id) {
       result
     }
   }

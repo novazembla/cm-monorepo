@@ -368,18 +368,18 @@ export interface NexusGenArgTypes {
       scope: string; // String!
     }
     userDelete: { // args
+      id: number; // Int!
       scope: string; // String!
-      userId: number; // Int!
     }
     userProfilePasswordUpdate: { // args
+      id: number; // Int!
       password: string; // String!
       scope: string; // String!
-      userId: number; // Int!
     }
     userProfileUpdate: { // args
       data: NexusGenInputs['UserProfileUpdateInput']; // UserProfileUpdateInput!
+      id: number; // Int!
       scope: string; // String!
-      userId: number; // Int!
     }
     userSignup: { // args
       data: NexusGenInputs['UserSignupInput']; // UserSignupInput!
@@ -387,8 +387,8 @@ export interface NexusGenArgTypes {
     }
     userUpdate: { // args
       data: NexusGenInputs['UserUpdateInput']; // UserUpdateInput!
+      id: number; // Int!
       scope: string; // String!
-      userId: number; // Int!
     }
   }
   Query: {
@@ -396,12 +396,12 @@ export interface NexusGenArgTypes {
       id: number; // Int!
     }
     userProfileRead: { // args
+      id: number; // Int!
       scope: string; // String!
-      userId: number; // Int!
     }
     userRead: { // args
+      id: number; // Int!
       scope: string; // String!
-      userId: number; // Int!
     }
     users: { // args
       orderBy?: NexusGenScalars['JSON'] | null; // JSON

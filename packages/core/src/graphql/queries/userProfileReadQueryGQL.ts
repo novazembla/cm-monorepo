@@ -1,8 +1,8 @@
 import gql from "graphql-tag";
 
 export const userProfileReadQueryGQL = gql`
-  query userProfileRead($scope: String!, $userId: Int!) {
-    userProfileRead(scope: $scope, userId: $userId) {
+  query userProfileRead($scope: String!, $id: Int!) {
+    userProfileRead(scope: $scope, id: $id) {
       id
       firstName
       lastName

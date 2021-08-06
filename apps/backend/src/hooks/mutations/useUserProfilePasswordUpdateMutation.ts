@@ -9,11 +9,11 @@ export const useUserProfilePasswordUpdateMutation = () => {
     // onCompleted: (data) => {},
   });
 
-  const execute = (userId: number, password: string) => {
+  const execute = (id: number, password: string) => {
     return mutation({
       variables: {
         scope: config.scope,
-        userId, 
+        id, 
         password,
       }
     });

@@ -27,10 +27,12 @@ import {
   Icon,
   IconButton,
   Input,
+  useWhyDidYouUpdate,
 } from "@chakra-ui/react";
 import {
   usePagination,
   // TODO: enable useRowSelect,
+  useAsyncDebounce,
   useSortBy,
   useTable,
   SortingRule,
@@ -78,11 +80,6 @@ export type AdminTableColumn = {
   Cell?: React.FC<any>;
 };
 
-export type AdminTableQueryStats = {
-  total: number;
-  pageCount: number;
-};
-
 export type AdminTableState = {
   pageIndex: number;
   pageSize: number;
@@ -95,6 +92,117 @@ export type AdminTableQueryVariables = {
   pageIndex?: number | undefined;
   orderBy?: Record<string, "asc" | "desc"> | undefined;
   where?: any;
+};
+
+export const adminTableCreateQueryVariables = (
+  tState: AdminTableState,
+  filterColumnKeys: string[]
+) => {
+  let variables: AdminTableQueryVariables = {
+    pageIndex: tState.pageIndex,
+    pageSize: tState.pageSize,
+  };
+
+  if (tState.sortBy && Array.isArray(tState.sortBy) && tState.sortBy.length) {
+    variables = {
+      ...variables,
+      orderBy: {
+        [tState.sortBy[0].id]: tState.sortBy[0].desc ? "desc" : "asc",
+      },
+    };
+  }
+
+  if (tState.filterKeyword && tState.filterKeyword.length > 2) {
+    // however in any case we need to set the where clause
+    variables = {
+      ...variables,
+      where: {
+        OR: filterColumnKeys.map((key) => ({
+          [key]: {
+            contains: tState.filterKeyword,
+          },
+        })),
+      },
+    };
+  }
+
+  return variables;
+};
+
+export const adminTableCreateNewTableState = (
+  tableState: AdminTableState,
+  pageIndex: number,
+  pageSize: number,
+  sortBy: SortingRule<Object>[],
+  filterKeyword: string
+): [AdminTableState, boolean, number] => {
+  let newTableState = {
+    ...tableState,
+    filterKeyword,
+  };
+
+  let doRefetch = false;
+  
+  let newPageIndex = pageIndex;
+
+  if (
+    (!sortBy || (Array.isArray(sortBy) && sortBy.length === 0)) &&
+    tableState.sortBy.length > 0
+  ) {
+    newTableState = {
+      ...newTableState,
+      sortBy: [],
+    };
+    newPageIndex = 0;
+    doRefetch = true;
+  }
+
+  if (Array.isArray(sortBy) && sortBy.length > 0) {
+    if (
+      tableState.sortBy.length === 0 ||
+      tableState?.sortBy[0]?.id !== sortBy[0].id ||
+      tableState?.sortBy[0]?.desc !== sortBy[0].desc
+    ) {
+      newTableState = {
+        ...newTableState,
+        sortBy: [sortBy[0]],
+      };
+      newPageIndex = 0;
+      doRefetch = true;
+    }
+  }
+
+  if (tableState.pageSize !== pageSize) {
+    newTableState = {
+      ...newTableState,
+      pageSize,
+    };
+    doRefetch = true;
+  }
+
+  if (!filterKeyword || filterKeyword.length < 3) {
+    // we need to clear the where clause
+    if (tableState.filterKeyword.length >= 3) {
+      doRefetch = true;
+      newPageIndex = 0;
+    }
+  } else {
+    // a change happened ensure that the refetch is being triggerd
+    if (tableState.filterKeyword !== filterKeyword) {
+      doRefetch = true;
+      newPageIndex = 0;
+    }
+  }
+
+  if (tableState.pageIndex !== newPageIndex) {
+    newTableState = {
+      ...newTableState,
+      pageIndex: newPageIndex,
+    };
+    doRefetch = true;
+  }
+
+  return [newTableState, doRefetch, newPageIndex];
 };
 
 export const AdminTableActionButtonEdit = (cell: Cell) => {
@@ -168,13 +276,17 @@ export const AdminTable = ({
   data,
   columns,
   isLoading,
+  isRefetching,
   onFetchData,
   intitalTableState,
-  queryStats,
+  tablePageCount,
+  tableTotalCount,
+  refetchPageIndex,
 }: {
   data: any[];
   columns: AdminTableColumn[];
   isLoading: boolean;
+  isRefetching: boolean;
   onFetchData: (
     page: number,
     pageSize: number,
@@ -182,21 +294,20 @@ export const AdminTable = ({
     filterKeyword: string
   ) => boolean;
   intitalTableState: AdminTableState;
-  queryStats: AdminTableQueryStats;
+  tablePageCount: number;
+  tableTotalCount: number;
+  refetchPageIndex: number | undefined;
 }) => {
+  const { t } = useTranslation();
+
+  // TODO: remove
+
   const [triggeredRefetch, setTriggeredRefetch] = useState(false);
   const [filterKeyword, setFilterKeyword] = useState(
     intitalTableState.filterKeyword
   );
 
-  const { t } = useTranslation();
-
-  // https://github.com/tannerlinsley/react-table/issues/2912
-  const columnsMemoized = useMemo<AdminTableColumn[]>(() => columns, [columns]);
-
   const dataMemoized = useMemo(() => data, [data]);
-
-  //https://react-table.tanstack.com/docs/faq
 
   const {
     getTableProps,
@@ -214,45 +325,98 @@ export const AdminTable = ({
     state: { pageIndex, pageSize, sortBy },
   } = useTable(
     {
-      columns: columnsMemoized,
+      columns,
       data: dataMemoized,
       initialState: intitalTableState,
       manualPagination: true,
       manualSortBy: true,
       autoResetPage: false,
-      pageCount: queryStats.pageCount,
+      pageCount: tablePageCount,
     },
     useSortBy,
     usePagination
   );
 
-  // When the these table states changes, fetch new data!
-  useEffect(() => {
-    setTriggeredRefetch(
-      onFetchData(pageIndex, pageSize, sortBy, filterKeyword)
-    );
-  }, [onFetchData, pageIndex, pageSize, sortBy, filterKeyword]);
-
-  const pageButtonCount = Math.min(5, queryStats.pageCount);
-  const pageButtonIndexes = [...Array(pageButtonCount).keys()].map((index) => {
-    return Math.min(
-      Math.max(pageIndex - Math.max(1, Math.floor(pageButtonCount / 2)), 0) +
-        index,
-      Math.max(0, queryStats.pageCount - pageButtonCount + index)
-    );
+  useWhyDidYouUpdate("admintable 1", {
+    data,
+    columns,
+    isLoading,
+    isRefetching,
+    onFetchData,
+    intitalTableState,
+    tablePageCount,
+    tableTotalCount,
+    refetchPageIndex,
+    pageIndex,
+    pageSize,
+    sortBy,
+    filterKeyword,
+    triggeredRefetch,
   });
 
+  // Debounce our onFetchData call for 100ms
+  const onFetchDataDebounced = useAsyncDebounce(
+    (pageIndex, pageSize, sortBy, filterKeyword) => {
+      setTriggeredRefetch(
+        onFetchData(pageIndex, pageSize, sortBy, filterKeyword)
+      );
+    },
+    100
+  );
+
+  // When the these table states changes, fetch potentiall new data using a debounce functione
+  // to not catch the jitter that useTable does react
   useEffect(() => {
-    if (!isLoading) setTriggeredRefetch(false);
-  }, [isLoading]);
+    onFetchDataDebounced(pageIndex, pageSize, sortBy, filterKeyword);
+  }, [onFetchDataDebounced, pageIndex, pageSize, sortBy, filterKeyword]);
+
+  // ... but also set immediately the ui to loading (better to cancel in 100ms) than to have
+  // slow responden fading out of the table
+  useEffect(() => {
+    let mounted = true;
+
+    if (mounted) setTriggeredRefetch(true);
+
+    return () => {
+      mounted = false;
+    };
+  }, [pageIndex, pageSize, sortBy]);
+
+  // and if the new data came in we want to change the state of the table to active
+  useEffect(() => {
+    let mounted = true;
+
+    if (mounted && !isLoading && !isRefetching) {
+      setTriggeredRefetch(false);
+      if (typeof refetchPageIndex !== "undefined")
+        gotoPage(refetchPageIndex ?? 0);
+    }
+
+    return () => {
+      mounted = false;
+    };
+  }, [gotoPage, isLoading, isRefetching, refetchPageIndex]);
+
+  // Debounce our setFilterKeyword call for a few millisecond
+  // to make the filter object not to query too often the db
+  const setFilterKeywordDebounced = useAsyncDebounce(setFilterKeyword, 300);
 
   const onFilterChange: ChangeEventHandler = (
     event: ChangeEvent<HTMLInputElement>
   ) => {
-    setFilterKeyword(event?.target?.value ?? "");
+    setFilterKeywordDebounced(event?.target?.value ?? "");
   };
 
-  // https://github.com/tannerlinsley/react-table/issues/3064
+  // lastly calculate the buttons for the pagination
+  const pageButtonCount = Math.min(5, tablePageCount);
+  const pageButtonIndexes = [...Array(pageButtonCount).keys()].map((index) => {
+    return Math.min(
+      Math.max(pageIndex - Math.max(1, Math.floor(pageButtonCount / 2)), 0) +
+        index,
+      Math.max(0, tablePageCount - pageButtonCount + index)
+    );
+  });
+
   return (
     <>
       <VisuallyHidden>
@@ -318,7 +482,6 @@ export const AdminTable = ({
                           }
                         : undefined
                     }
-                    
                   >
                     <Flex
                       justifyContent={
@@ -371,11 +534,11 @@ export const AdminTable = ({
                 <Tr
                   {...row.getRowProps()}
                   sx={{
-                    _hover:{
-                      "td": {
-                        bg: "gray.50"
-                      }
-                    }
+                    _hover: {
+                      td: {
+                        bg: "gray.50",
+                      },
+                    },
                   }}
                 >
                   {row.cells.map((cell) => (

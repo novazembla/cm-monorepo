@@ -109,7 +109,7 @@ export const Query = objectType({
         }),
       },
 
-      // TODO enable authorize: (...[, , ctx]) => authorizeApiUser(ctx, "userRead"),
+      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "userRead"),
 
       async resolve(...[, args]) {
         const totalCount = await daoUserQueryCount(args.where);
@@ -135,14 +135,14 @@ export const Query = objectType({
 
       args: {
         scope: nonNull(stringArg()),
-        userId: nonNull(intArg()),
+        id: nonNull(intArg()),
       },
 
       authorize: (...[, , ctx]) => authorizeApiUser(ctx, "userRead"),
 
       // resolve(root, args, ctx, info)
       async resolve(...[, args]) {
-        return userRead(args.userId);
+        return userRead(args.id);
       },
     });
 
@@ -151,16 +151,15 @@ export const Query = objectType({
 
       args: {
         scope: nonNull(stringArg()),
-        userId: nonNull(intArg()),
+        id: nonNull(intArg()),
       },
 
       authorize: (...[, args, ctx]) =>
-        authorizeApiUser(ctx, "profileRead") &&
-        isCurrentApiUser(ctx, args.userId),
+        authorizeApiUser(ctx, "profileRead") && isCurrentApiUser(ctx, args.id),
 
       // resolve(root, args, ctx, info)
       async resolve(...[, args]) {
-        return userRead(args.userId);
+        return userRead(args.id);
       },
     });
   },
@@ -237,18 +236,18 @@ export const UserMutations = extendType({
 
       args: {
         scope: nonNull(stringArg()),
-        userId: nonNull(intArg()),
+        id: nonNull(intArg()),
         data: nonNull(UserProfileUpdateInput),
       },
 
       authorize: (...[, args, ctx]) =>
         authorizeApiUser(ctx, "profileUpdate") &&
-        isCurrentApiUser(ctx, args.userId),
+        isCurrentApiUser(ctx, args.id),
 
       async resolve(...[, args]) {
         const user = await userProfileUpdate(
           args.scope as AppScopes,
-          args.userId,
+          args.id,
           args.data
         );
 
@@ -264,18 +263,18 @@ export const UserMutations = extendType({
 
       args: {
         scope: nonNull(stringArg()),
-        userId: nonNull(intArg()),
+        id: nonNull(intArg()),
         password: nonNull(stringArg()),
       },
 
       authorize: (...[, args, ctx]) =>
         authorizeApiUser(ctx, "profileUpdate") &&
-        isCurrentApiUser(ctx, args.userId),
+        isCurrentApiUser(ctx, args.id),
 
       async resolve(...[, args, { res }]) {
         const user = await userProfilePasswordUpdate(
           args.scope as AppScopes,
-          args.userId,
+          args.id,
           args.password
         );
 
@@ -316,7 +315,7 @@ export const UserMutations = extendType({
 
       args: {
         scope: nonNull(stringArg()),
-        userId: nonNull(intArg()),
+        id: nonNull(intArg()),
         data: nonNull(UserUpdateInput),
       },
 
@@ -325,7 +324,7 @@ export const UserMutations = extendType({
       async resolve(...[, args]) {
         const user = await userUpdate(
           args.scope as AppScopes,
-          args.userId,
+          args.id,
           args.data
         );
 
@@ -341,15 +340,15 @@ export const UserMutations = extendType({
 
       args: {
         scope: nonNull(stringArg()),
-        userId: nonNull(intArg()),
+        id: nonNull(intArg()),
       },
 
       authorize: (...[, args, ctx]) =>
         authorizeApiUser(ctx, "userDelete") &&
-        isNotCurrentApiUser(ctx, args.userId),
+        isNotCurrentApiUser(ctx, args.id),
 
       async resolve(...[, args]) {
-        const user = await userDelete(args.scope as AppScopes, args.userId);
+        const user = await userDelete(args.scope as AppScopes, args.id);
 
         if (!user)
           throw new ApiError(

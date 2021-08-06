@@ -62,11 +62,11 @@ type Mutation {
   authVerifyEmail(token: String!): BooleanResult!
   settingsUpdate(data: [SettingsUpdateInput!]): BooleanResult!
   userCreate(data: UserInsertInput!, scope: String!): User!
-  userDelete(scope: String!, userId: Int!): BooleanResult!
-  userProfilePasswordUpdate(password: String!, scope: String!, userId: Int!): User!
-  userProfileUpdate(data: UserProfileUpdateInput!, scope: String!, userId: Int!): User!
+  userDelete(id: Int!, scope: String!): BooleanResult!
+  userProfilePasswordUpdate(id: Int!, password: String!, scope: String!): User!
+  userProfileUpdate(data: UserProfileUpdateInput!, id: Int!, scope: String!): User!
   userSignup(data: UserSignupInput!, scope: String!): AuthPayload!
-  userUpdate(data: UserUpdateInput!, scope: String!, userId: Int!): BooleanResult!
+  userUpdate(data: UserUpdateInput!, id: Int!, scope: String!): BooleanResult!
 }
 
 type ProfileUser implements UserBaseNode {
@@ -80,8 +80,8 @@ type ProfileUser implements UserBaseNode {
 type Query {
   setting(id: Int!): [Setting]
   settings: [Setting]
-  userProfileRead(scope: String!, userId: Int!): ProfileUser!
-  userRead(scope: String!, userId: Int!): User!
+  userProfileRead(id: Int!, scope: String!): ProfileUser!
+  userRead(id: Int!, scope: String!): User!
   users(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): UsersQueryResult
 }
 

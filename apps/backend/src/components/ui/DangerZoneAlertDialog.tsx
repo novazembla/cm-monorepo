@@ -98,6 +98,7 @@ export const DangerZoneAlertDialog = ({
                     )}
                   </VisuallyHidden>
                   <Input
+                    autoComplete="please-confirm"
                     onChange={onFilterChange}
                     onBlur={onFilterChange}
                     textTransform="uppercase"

@@ -3,14 +3,10 @@ import gql from "graphql-tag";
 export const userProfilePasswordUpdateMutationGQL = gql`
   mutation userProfilePasswordUpdate(
     $scope: String!
-    $userId: Int!
+    $id: Int!
     $password: String!
   ) {
-    userProfilePasswordUpdate(
-      scope: $scope
-      userId: $userId
-      password: $password
-    ) {
+    userProfilePasswordUpdate(scope: $scope, id: $id, password: $password) {
       id
       firstName
       lastName

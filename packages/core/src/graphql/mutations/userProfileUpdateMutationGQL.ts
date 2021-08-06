@@ -3,10 +3,10 @@ import gql from "graphql-tag";
 export const userProfileUpdateMutationGQL = gql`
   mutation userProfileUpdate(
     $scope: String!
-    $userId: Int!
+    $id: Int!
     $data: UserProfileUpdateInput!
   ) {
-    userProfileUpdate(scope: $scope, userId: $userId, data: $data) {
+    userProfileUpdate(scope: $scope, id: $id, data: $data) {
       id
       firstName
       lastName

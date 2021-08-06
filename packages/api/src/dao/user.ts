@@ -11,14 +11,17 @@ const prisma = getPrismaClient();
 
 export const daoUserCheckIsEmailTaken = async (
   email: string,
-  userId?: number | undefined
+  id?: number | undefined
 ): Promise<boolean> => {
-  const where: any = {
+  let where: Prisma.UserWhereInput = {
     email,
   };
 
-  if (!Number.isNaN(userId)) {
-    where.id = userId;
+  if (!Number.isNaN(id)) {
+    where = {
+      ...where,
+      id,
+    };
   }
 
   const count = await prisma.user.count({
@@ -104,7 +107,7 @@ export const daoUserGetByLogin = async (
 };
 
 export const daoUserUpdate = async (
-  userId: number,
+  id: number,
   data: Prisma.UserUpdateInput
 ): Promise<User> => {
   let updateData = data;
@@ -118,7 +121,7 @@ export const daoUserUpdate = async (
   const user: User = await prisma.user.update({
     data: updateData,
     where: {
-      id: userId,
+      id,
     },
   });
 
@@ -128,10 +131,10 @@ export const daoUserUpdate = async (
   );
 };
 
-export const daoUserDelete = async (userId: number): Promise<User> => {
+export const daoUserDelete = async (id: number): Promise<User> => {
   const user: User = await prisma.user.delete({
     where: {
-      id: userId,
+      id,
     },
   });
 

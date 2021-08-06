@@ -9,10 +9,10 @@ export const useUserUpdateMutation = () => {
     // onCompleted: (data) => {},
   });
 
-  const execute = (userId: number, data: any) => {
+  const execute = (id: number, data: any) => {
     return mutation({
       variables: {
-        userId, 
+        id, 
         scope: config.scope,
         data,
       }

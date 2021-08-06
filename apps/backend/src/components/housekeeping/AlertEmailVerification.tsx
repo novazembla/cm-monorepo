@@ -16,8 +16,8 @@ import {
 import { useAuthRequestEmailVerificationEmail } from "~/hooks/mutations";
 
 const GET_EMAIL_VERIFICATION_STATUS = gql`
-  query userProfileRead($scope: String!, $userId: Int!) {
-    userProfileRead(scope: $scope, userId: $userId) {
+  query userProfileRead($scope: String!, $id: Int!) {
+    userProfileRead(scope: $scope, id: $id) {
       emailVerified
     }
   }
@@ -47,7 +47,7 @@ export const AlertEmailVerification = () => {
     skip: !isLoggedIn() || emailVerified === "yes",
     variables: {
       scope: config.scope,
-      userId: appUser?.id ?? 0,
+      id: appUser?.id ?? 0,
     },
   });
 
@@ -62,7 +62,7 @@ export const AlertEmailVerification = () => {
     let mounted = true;
     
     if (localEmailVerified !== emailVerified) {
-      if (mounted) 
+      if (mounted)
         wrappedDispatch(localEmailVerified);
     }
 

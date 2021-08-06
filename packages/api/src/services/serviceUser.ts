@@ -72,10 +72,10 @@ export const userCreate = async (
 
 export const userUpdate = async (
   scope: string,
-  userId: number,
+  id: number,
   data: Prisma.UserUpdateInput
 ): Promise<User> => {
-  const userInDb = await daoUserGetById(userId);
+  const userInDb = await daoUserGetById(id);
 
   let newEmailAddress = false;
   let dbData = data;
@@ -86,15 +86,15 @@ export const userUpdate = async (
       ...dbData,
       emailVerified: false,
     };
-    if (await daoUserCheckIsEmailTaken(data.email as string, userId))
+    if (await daoUserCheckIsEmailTaken(data.email as string, id))
       throw new ApiError(httpStatus.BAD_REQUEST, "Email already taken");
   }
 
-  const user: User = await daoUserUpdate(userId, dbData);
+  const user: User = await daoUserUpdate(id, dbData);
 
   if (user.userBanned)
     await daoTokenDeleteMany({
-      userId: user.id,
+      userId: id,
     });
 
   if (newEmailAddress)
@@ -107,45 +107,42 @@ export const userUpdate = async (
   return user;
 };
 
-export const userRead = async (userId: number): Promise<User> => {
-  if (Number.isNaN(userId))
+export const userRead = async (id: number): Promise<User> => {
+  if (Number.isNaN(id))
     throw new ApiError(httpStatus.UNPROCESSABLE_ENTITY, "Invalid input data");
 
-  return daoUserGetById(userId);
+  return daoUserGetById(id);
 };
 
-export const userDelete = async (
-  scope: string,
-  userId: number
-): Promise<User> => {
-  if (Number.isNaN(userId))
+export const userDelete = async (scope: string, id: number): Promise<User> => {
+  if (Number.isNaN(id))
     throw new ApiError(httpStatus.UNPROCESSABLE_ENTITY, "Invalid input data");
 
   // TODO: this must more solid,
   // Also other content will have to be taken over by someone else.
   await daoTokenDeleteMany({
-    userId,
+    userId: id,
   });
 
-  return daoUserDelete(userId);
+  return daoUserDelete(id);
 };
 
 export const userProfileUpdate = async (
   scope: string,
-  userId: number,
+  id: number,
   data: Prisma.UserUpdateInput
-): Promise<User> => userUpdate(scope, userId, data);
+): Promise<User> => userUpdate(scope, id, data);
 
 export const userProfilePasswordUpdate = async (
   scope: string,
-  userId: number,
+  id: number,
   password: string
 ): Promise<User> => {
-  const user = await userUpdate(scope, userId, { password });
+  const user = await userUpdate(scope, id, { password });
 
   if (user && user.id)
     daoTokenDeleteMany({
-      userId: user.id,
+      userId: id,
       type: {
         in: [TokenTypes.RESET_PASSWORD, TokenTypes.ACCESS, TokenTypes.REFRESH],
       },

@@ -45,7 +45,7 @@ const Update = () => {
 
   const { data, loading, error } = useQuery(userReadQueryGQL, {
     variables: {
-      userId: parseInt(router.query.id, 10),
+      id: parseInt(router.query.id, 10),
       scope: config.scope,
     },
   });
