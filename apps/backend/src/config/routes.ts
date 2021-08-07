@@ -7,6 +7,7 @@ import { getAppConfig } from "~/config";
 
 import { moduleAccessRules as dashboadModuleAccessRules } from "~/modules/DashBoard/moduleRoutes";
 import { moduleAccessRules as profileModuleAccessRules } from "~/modules/Profile/moduleRoutes";
+import { moduleAccessRules as taxonomiesModuleAccessRules } from "~/modules/Taxonomies/moduleRoutes";
 import { moduleAccessRules as usersModuleAccessRules } from "~/modules/Users/moduleRoutes";
 import { moduleAccessRules as settingsModuleAccessRules } from "~/modules/Settings/moduleRoutes";
 
@@ -33,6 +34,7 @@ const EmailConfirmation = lazy(
 // Private
 const DashBoard = lazy(() => import("~/modules/DashBoard/DashBoard"));
 const Users = lazy(() => import("~/modules/Users/Users"));
+const Taxonomies = lazy(() => import("~/modules/Taxonomies/Taxonomies"));
 const Settings = lazy(() => import("~/modules/Settings/Settings"));
 
 const config = getAppConfig();
@@ -125,6 +127,13 @@ export const privateRoutes: RoutePrivateParams[] = [
     component: Profile,
     exact: false,
     ...profileModuleAccessRules,
+  },
+  {
+    key: "taxonomies",
+    path: "/taxonomies",
+    component: Taxonomies,
+    exact: false,
+    ...taxonomiesModuleAccessRules,
   },
   {
     key: "users",

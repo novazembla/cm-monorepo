@@ -1,6 +1,6 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import { resources, whitelist, defaultLanguage } from './config/internationalization';
+import { resources, activeLanguages, defaultLanguage } from './config/internationalization';
 
 let config = {
   resources,
@@ -8,7 +8,7 @@ let config = {
 
   lng: defaultLanguage,
   fallbackLng: defaultLanguage,
-  whitelist: whitelist,
+  whitelist: activeLanguages,
 
   interpolation: {
     escapeValue: false, // not needed for react as it escapes by default

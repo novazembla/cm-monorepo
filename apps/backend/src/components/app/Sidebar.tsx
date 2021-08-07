@@ -3,6 +3,7 @@ import {
   HiMenu,
   HiOutlineHome,
   HiOutlineUsers,
+  HiOutlineColorSwatch,
   // HiOutlineMap,
   // HiOutlineLocationMarker,
 } from "react-icons/hi";
@@ -24,6 +25,7 @@ import { InlineLanguageButtons } from "../ui";
 import { moduleAccessRules as dashboadModuleAccessRules } from "~/modules/DashBoard/moduleRoutes";
 import { moduleAccessRules as usersModuleAccessRules } from "~/modules/Users/moduleRoutes";
 import { moduleAccessRules as settingsModuleAccessRules } from "~/modules/Settings/moduleRoutes";
+import { moduleAccessRules as taxonomiesModuleAccessRules } from "~/modules/Taxonomies/moduleRoutes";
 import { useAuthentication } from "~/hooks";
 
 const NavItem = ({
@@ -100,41 +102,48 @@ export const Sidebar = () => {
       ...dashboadModuleAccessRules,
     },
     // {
-    //   title: t("module.title.locations", "Locations"),
+    //   title: t("module.locations.title", "Locations"),
     //   path: "/locations",
     //   exact: false,
     //   icon: HiOutlineLocationMarker,
     //   ...TODO:ModuleAccessRules,
     // },
     // {
-    //   title: t("module.title.events", "Events"),
+    //   title: t("module.events.title", "Events"),
     //   path: "/events",
     //   exact: false,
     //   icon: RiCalendarEventLine,
     //   ...TODO:ModuleAccessRules,
     // },
     // {
-    //   title: t("module.title.tours", "Tours"),
+    //   title: t("module.tours.title", "Tours"),
     //   path: "/tours",
     //   exact: false,
     //   icon: HiOutlineMap,
     // },,
     // {
-    //   title: t("module.title.pages", "pages"),
+    //   title: t("module.pages.title", "pages"),
     //   path: "/pages",
     //   exact: false,
     //   icon: TODO: ,
     //   ...TODO:ModuleAccessRules,
-    // }
+    // },
     {
-      title: t("module.title.users", "Users"),
+        title: t("module.taxonomies.title", "Taxonomies"),
+        path: "/taxonomies",
+        exact: false,
+        icon: HiOutlineColorSwatch,
+        ...taxonomiesModuleAccessRules,
+    },
+    {
+      title: t("module.users.title", "Users"),
       path: "/users",
       exact: false,
       icon: HiOutlineUsers,
       ...usersModuleAccessRules,
     },
     {
-      title: t("module.title.settings", "Settings"),
+      title: t("module.settings.title", "Settings"),
       path: "/settings",
       exact: false,
       icon: IoSettingsOutline,

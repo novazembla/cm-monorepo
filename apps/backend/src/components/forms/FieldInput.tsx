@@ -116,7 +116,7 @@ export const FieldInput = ({
   
   const { ref, onBlur, onChange } = register(id, {required:isRequired});
 
-  let input = <Input name={name} onBlur={onBlur} onChange={(event) => {onChange(event);onChangeHandler(event);}} {...fieldProps} ref={(e: HTMLInputElement) => {
+  let input = <Input name={name} onBlur={(event) => {onBlur(event);onChangeHandler(event);}} onChange={(event) => {onChange(event);onChangeHandler(event);}} {...fieldProps} ref={(e: HTMLInputElement) => {
     ref(e)
     fieldRef.current = e;// you can still assign to ref
   }} />;

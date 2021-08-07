@@ -4,6 +4,7 @@ import { isPlainObject } from 'is-plain-object';
 import { appConfig } from "./appconfig";
 
 import { AppSettingsFieldDefinitions } from "./settings";
+import { activeLanguages, defaultLanguage } from "./internationalization";
 
 export type AppConfig = {
   apiUrl?: string | undefined;
@@ -12,6 +13,8 @@ export type AppConfig = {
   enableRegistration?: boolean;
   settings?: AppSettingsFieldDefinitions;
   defaultPageSize?: number;
+  activeLanguages: string[];
+  defaultLanguage?: string;
 };
 
 // initial state
@@ -21,9 +24,13 @@ const configDefault: AppConfig = {
   scope: "backend",
   enableRegistration: true,
   defaultPageSize: 50,
+  activeLanguages: activeLanguages,
+  defaultLanguage: defaultLanguage,
 };
 
-export let config: AppConfig = {};
+export let config: AppConfig = {
+  activeLanguages: []
+};
 
 try {
   config = merge(configDefault, appConfig, {

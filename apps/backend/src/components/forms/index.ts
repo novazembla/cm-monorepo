@@ -1,6 +1,7 @@
 export * from "./FieldInput";
 export * from "./FieldSelect";
 export * from "./FieldRow";
+export * from "./FieldMultiLang";
 export * from "./FieldErrorMessage";
 export * from "./TextErrorMessage";
 export * from "./FieldCheckbox";

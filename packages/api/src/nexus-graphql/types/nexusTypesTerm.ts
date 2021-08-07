@@ -32,7 +32,7 @@ import {
   daoTermDelete,
   daoTermQueryCount,
   daoTermGetById,
-} from "../../dao/term";
+} from "../../dao";
 
 export const Term = objectType({
   name: "Term",
@@ -164,7 +164,7 @@ export const TermMutations = extendType({
       type: "Term",
 
       args: {
-        data: nonNull(TermCreateInput),
+        data: nonNull("TermCreateInput"),
       },
 
       // TODO: lock down authorize: (...[, , ctx]) => authorizeApiUser(ctx, "termCreate"),
@@ -173,7 +173,6 @@ export const TermMutations = extendType({
         const term = await daoTermCreate({
           name: args.data.name,
           slug: args.data.slug,
-          hash: "xxxxss2",
           taxonomy: {
             connect: { id: args.data.taxonomyId },
           },
@@ -194,7 +193,7 @@ export const TermMutations = extendType({
 
       args: {
         id: nonNull(intArg()),
-        data: nonNull(TermUpdateInput),
+        data: nonNull("TermUpdateInput"),
       },
 
       // TODO: lock down authorize: (...[, , ctx]) => authorizeApiUser(ctx, "termUpdate"),

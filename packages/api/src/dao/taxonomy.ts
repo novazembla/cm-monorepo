@@ -1,22 +1,41 @@
-// import httpStatus from "http-status";
+import httpStatus from "http-status";
 import { Taxonomy, Term, Prisma } from "@prisma/client";
 import { filteredOutputByBlacklist } from "@culturemap/core";
 
-import { /* ApiError, */ filteredOutputByBlacklistOrNotFound } from "../utils";
+import { ApiError, filteredOutputByBlacklistOrNotFound } from "../utils";
 import config from "../config";
 import { getPrismaClient } from "../db/client";
-import { daoTermGetTermsByTaxonomyId } from "./term";
+import {
+  daoTermGetTermsByTaxonomyId,
+  daoTermGetTermsCountByTaxonomyId,
+} from "./term";
+import { daoSharedCheckSlugUnique } from "./shared";
 
 const prisma = getPrismaClient();
+
+export const daoTaxonomyCheckSlugUnique = async (
+  slug: Record<string, string>,
+  id?: number,
+  uniqueInObject?: boolean
+): Promise<{ ok: boolean; errors: Record<string, boolean> }> => {
+  return daoSharedCheckSlugUnique(
+    prisma.taxonomy.findMany,
+    slug,
+    id,
+    uniqueInObject
+  );
+};
 
 export const daoTaxonomyQuery = async (
   where: Prisma.TaxonomyWhereInput,
   orderBy: Prisma.TaxonomyOrderByInput,
+  include: Prisma.TaxonomyInclude | undefined,
   pageIndex: number = 0,
   pageSize: number = config.db.defaultPageSize
 ): Promise<Taxonomy[]> => {
   const taxonomies: Taxonomy[] = await prisma.taxonomy.findMany({
     where,
+    include,
     orderBy,
     skip: pageIndex * pageSize,
     take: Math.min(pageSize, config.db.maxPageSize),
@@ -40,46 +59,6 @@ export const daoTaxonomyGetTerms = async (id: number): Promise<Term[]> => {
   return daoTermGetTermsByTaxonomyId(id);
 };
 
-// export const daoTaxonomyCheckHash = async (
-//   hash: string
-// ): Promise<boolean> => {
-//   console.log("TODO: check for hash", hash);
-
-//   return true;
-
-//   let where: Prisma.TaxonomyWhereInput = {
-//     hash,
-//   };
-
-//   const count = await prisma.taxonomy.count({
-//     where,
-//   });
-
-//   return count > 0;
-// };
-
-// export const daoTaxonomyCreate = async (
-//   data: Prisma.TaxonomyCreateInput
-// ): Promise<Taxonomy> => {
-//   if (await daoTaxonomyCheckHash(data)) {
-//     throw new ApiError(httpStatus.BAD_REQUEST, "Email already taken");
-//   }
-
-//   const taxonomy: Taxonomy = await prisma.taxonomy.create({
-//     data: {
-//       ...data,
-//       ...{
-//         password: await hash(data.password),
-//       },
-//     },
-//   });
-
-//   return filteredOutputByBlacklistOrNotFound(
-//     taxonomy,
-//     config.db.privateJSONDataKeys.taxonomy
-//   );
-// };
-
 export const daoTaxonomyGetById = async (id: number): Promise<Taxonomy> => {
   const taxonomy: Taxonomy | null = await prisma.taxonomy.findUnique({
     where: { id },
@@ -91,50 +70,84 @@ export const daoTaxonomyGetById = async (id: number): Promise<Taxonomy> => {
   );
 };
 
-// export const daoTaxonomyUpdate = async (
-//   id: number,
-//   data: Prisma.TaxonomyUpdateInput
-// ): Promise<Taxonomy> => {
-//   let updateData = data;
+export const daoTaxonomyCreate = async (
+  data: Prisma.TaxonomyCreateInput
+): Promise<Taxonomy> => {
+  const result = await daoSharedCheckSlugUnique(
+    prisma.taxonomy.findMany,
+    data.slug as Record<string, string>
+  );
 
-//   if (data.password)
-//     updateData = {
-//       ...data,
-//       ...{ password: await hash(data.password as string) },
-//     };
+  if (!result.ok)
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      `Slug is not unique in [${Object.keys(result.errors).join(", ")}]`
+    );
 
-//   const taxonomy: Taxonomy = await prisma.taxonomy.update({
-//     data: updateData,
-//     where: {
-//       id,
-//     },
-//   });
+  const taxonomy: Taxonomy = await prisma.taxonomy.create({
+    data,
+  });
 
-//   return filteredOutputByBlacklistOrNotFound(
-//     taxonomy,
-//     config.db.privateJSONDataKeys.taxonomy
-//   );
-// };
+  return filteredOutputByBlacklistOrNotFound(
+    taxonomy,
+    config.db.privateJSONDataKeys.taxonomy
+  );
+};
 
-// export const daoTaxonomyDelete = async (id: number): Promise<Taxonomy> => {
-//   const taxonomy: Taxonomy = await prisma.taxonomy.delete({
-//     where: {
-//       id,
-//     },
-//   });
+export const daoTaxonomyUpdate = async (
+  id: number,
+  data: Prisma.TaxonomyUpdateInput
+): Promise<Taxonomy> => {
+  const result = await daoSharedCheckSlugUnique(
+    prisma.taxonomy.findMany,
+    data.slug as Record<string, string>
+  );
 
-//   return filteredOutputByBlacklistOrNotFound(
-//     taxonomy,
-//     config.db.privateJSONDataKeys.taxonomy
-//   );
-// };
+  if (!result.ok)
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      `Slug is not unique in [${Object.keys(result.errors).join(", ")}]`
+    );
+
+  const taxonomy: Taxonomy = await prisma.taxonomy.update({
+    data,
+    where: {
+      id,
+    },
+  });
+
+  return filteredOutputByBlacklistOrNotFound(
+    taxonomy,
+    config.db.privateJSONDataKeys.taxonomy
+  );
+};
+
+export const daoTaxonomyDelete = async (id: number): Promise<Taxonomy> => {
+  const termCount = await daoTermGetTermsCountByTaxonomyId(id);
+  if (termCount > 0)
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      `You cannot delete the taxonomy as it still has ${termCount} terms`
+    );
+
+  const taxonomy: Taxonomy = await prisma.taxonomy.delete({
+    where: {
+      id,
+    },
+  });
+
+  return filteredOutputByBlacklistOrNotFound(
+    taxonomy,
+    config.db.privateJSONDataKeys.taxonomy
+  );
+};
 
 export default {
   daoTaxonomyQuery,
   daoTaxonomyQueryCount,
   daoTaxonomyGetById,
-  // daoTaxonomyCreate,
-  // daoTaxonomyUpdate,
-  // daoTaxonomyDelete,
-  // daoTaxonomyCheckHash,
+  daoTaxonomyCheckSlugUnique,
+  daoTaxonomyCreate,
+  daoTaxonomyUpdate,
+  daoTaxonomyDelete,
 };

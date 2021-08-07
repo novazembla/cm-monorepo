@@ -1,8 +1,10 @@
 import tranlationEn from "~/locales/en/translation.json";
 import tranlationDe from "~/locales/de/translation.json";
 
+// TODO: this should be configurable via the appconfig.ts
+
 export const defaultLanguage = process.env.REACT_APP_DEFAULT_LANGUAGE ?? "en";
-export const whitelist = ["en", "de"]; // these are the active lanugages in the system
+export const activeLanguages = ["en", "de"]; // these are the active lanugages in the system
 
 export const resources = {
   en: {
@@ -14,7 +16,7 @@ export const resources = {
 };
 const config = {
   defaultLanguage,
-  whitelist,
+  activeLanguages,
   resources,
 };
 export default config;

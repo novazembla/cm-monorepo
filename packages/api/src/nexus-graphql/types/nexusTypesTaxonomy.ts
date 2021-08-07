@@ -5,23 +5,19 @@ import dedent from "dedent";
 import {
   objectType,
   extendType,
-  // inputObjectType,
+  inputObjectType,
   nonNull,
   // stringArg,
   intArg,
   arg,
   list,
 } from "nexus";
-// import httpStatus from "http-status";
-// import { ApiError } from "../../utils";
+import httpStatus from "http-status";
+import { ApiError } from "../../utils";
 
 import { GQLJson } from "./nexusTypesShared";
 
-// import {
-//   authorizeApiUser,
-//   isCurrentApiUser,
-//   isNotCurrentApiUser,
-// } from "../helpers";
+import { authorizeApiUser } from "../helpers";
 
 import config from "../../config";
 
@@ -30,7 +26,10 @@ import {
   daoTaxonomyQueryCount,
   daoTaxonomyGetById,
   daoTaxonomyGetTerms,
-} from "../../dao/taxonomy";
+  daoTaxonomyCreate,
+  daoTaxonomyUpdate,
+  daoTaxonomyDelete,
+} from "../../dao";
 
 export const Taxonomy = objectType({
   name: "Taxonomy",
@@ -40,12 +39,18 @@ export const Taxonomy = objectType({
     t.json("slug");
     t.date("createdAt");
     t.date("updatedAt");
+    t.int("termCount", {
+      resolve(...[parent]) {
+        return (parent as any)?._count?.terms ?? 0;
+      },
+    });
     t.field("terms", {
       type: list("Term"),
 
-      // TODO: add access restrictions
-      async resolve(...[p]) {
-        return daoTaxonomyGetTerms(p.id);
+      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "taxRead"),
+
+      async resolve(...[parent]) {
+        return daoTaxonomyGetTerms(parent.id);
       },
     });
   },
@@ -87,20 +92,14 @@ export const TaxonomyQueries = extendType({
         }),
       },
 
-      // TODO: enable authorize: (...[, , ctx]) => authorizeApiUser(ctx, "userRead"),
-      // {
-      //   [A:API] [NODE]   name: 'taxonomies',
-      //   [A:API] [NODE]   alias: 'taxonomies',
-      //   [A:API] [NODE]   args: { pageIndex: 0, pageSize: 50 },
-      //   [A:API] [NODE]   fieldsByTypeName: {
-      //   [A:API] [NODE]     TaxonomyQueryResult: { totalCount: [Object], taxonomies: [Object] }
-      //   [A:API] [NODE]
+      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "taxRead"),
 
       async resolve(...[, args, , info]) {
         const pRI = parseResolveInfo(info);
 
         let totalCount;
         let taxonomies;
+        let include;
 
         if ((pRI?.fieldsByTypeName?.TaxonomyQueryResult as any)?.totalCount) {
           totalCount = await daoTaxonomyQueryCount(args.where);
@@ -112,10 +111,23 @@ export const TaxonomyQueries = extendType({
             };
         }
 
+        if (
+          (pRI?.fieldsByTypeName?.TaxonomyQueryResult as any)?.taxonomies
+            ?.fieldsByTypeName?.Taxonomy?.termCount
+        )
+          include = {
+            _count: {
+              select: {
+                terms: true,
+              },
+            },
+          };
+
         if ((pRI?.fieldsByTypeName?.TaxonomyQueryResult as any)?.taxonomies)
           taxonomies = await daoTaxonomyQuery(
             args.where,
             args.orderBy,
+            include,
             args.pageIndex as number,
             args.pageSize as number
           );
@@ -134,7 +146,7 @@ export const TaxonomyQueries = extendType({
         id: nonNull(intArg()),
       },
 
-      // TODO: lock down authorize: (...[, , ctx]) => authorizeApiUser(ctx, "userRead"),
+      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "taxRead"),
 
       // resolve(root, args, ctx, info)
       async resolve(...[, args]) {
@@ -144,201 +156,84 @@ export const TaxonomyQueries = extendType({
   },
 });
 
-// export const UserSignupInput = inputObjectType({
-//   name: "UserSignupInput",
-//   definition(t) {
-//     t.nonNull.string("firstName");
-//     t.nonNull.string("lastName");
-//     t.nonNull.email("email");
-//     t.nonNull.string("password");
-//     t.nonNull.boolean("acceptedTerms");
-//   },
-// });
+export const TaxonomyCreateInput = inputObjectType({
+  name: "TaxonomyCreateInput",
+  definition(t) {
+    t.nonNull.json("name");
+    t.nonNull.json("slug");
+  },
+});
+export const TaxonomyUpdateInput = inputObjectType({
+  name: "TaxonomyUpdateInput",
+  definition(t) {
+    t.nonNull.json("name");
+    t.nonNull.json("slug");
+  },
+});
 
-// export const UserProfileUpdateInput = inputObjectType({
-//   name: "UserProfileUpdateInput",
-//   definition(t) {
-//     t.nonNull.string("firstName");
-//     t.nonNull.string("lastName");
-//     t.nonNull.email("email");
-//   },
-// });
+export const TaxonomyMutations = extendType({
+  type: "Mutation",
 
-// export const UserInsertInput = inputObjectType({
-//   name: "UserInsertInput",
-//   definition(t) {
-//     t.nonNull.string("firstName");
-//     t.nonNull.string("lastName");
-//     t.nonNull.string("email");
-//     t.nonNull.string("password");
-//     t.nonNull.string("role");
-//     t.nonNull.boolean("userBanned");
-//     t.nonNull.boolean("acceptedTerms");
-//   },
-// });
-// export const UserUpdateInput = inputObjectType({
-//   name: "UserUpdateInput",
-//   definition(t) {
-//     t.nonNull.string("firstName");
-//     t.nonNull.string("lastName");
-//     t.nonNull.string("email");
-//     t.nonNull.string("role");
-//     t.nonNull.boolean("userBanned");
-//   },
-// });
+  definition(t) {
+    t.nonNull.field("taxonomyCreate", {
+      type: "Taxonomy",
 
-// export const UserMutations = extendType({
-//   type: "Mutation",
+      args: {
+        data: nonNull(TaxonomyCreateInput),
+      },
 
-//   definition(t) {
-//     t.nonNull.field("userSignup", {
-//       type: "AuthPayload",
-//       args: {
-//         scope: nonNull(stringArg()),
-//         data: nonNull(UserSignupInput),
-//       },
-//       async resolve(...[, args, { res }]) {
-//         const authPayload = await userRegister(
-//           args.scope as AppScopes,
-//           args.data
-//         );
+      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "taxCreate"),
 
-//         if (!authPayload)
-//           throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Signup Failed");
+      async resolve(...[, args]) {
+        const taxonomy = await daoTaxonomyCreate(args.data);
 
-//         return tokenProcessRefreshToken(res, authPayload);
-//       },
-//     });
+        if (!taxonomy)
+          throw new ApiError(
+            httpStatus.INTERNAL_SERVER_ERROR,
+            "Creation failed"
+          );
 
-//     t.nonNull.field("userProfileUpdate", {
-//       type: "User",
+        return taxonomy;
+      },
+    });
 
-//       args: {
-//         scope: nonNull(stringArg()),
-//         id: nonNull(intArg()),
-//         data: nonNull(UserProfileUpdateInput),
-//       },
+    t.nonNull.field("taxonomyUpdate", {
+      type: "Taxonomy",
 
-//       authorize: (...[, args, ctx]) =>
-//         authorizeApiUser(ctx, "profileUpdate") &&
-//         isCurrentApiUser(ctx, args.id),
+      args: {
+        id: nonNull(intArg()),
+        data: nonNull(TaxonomyUpdateInput),
+      },
 
-//       async resolve(...[, args]) {
-//         const user = await userProfileUpdate(
-//           args.scope as AppScopes,
-//           args.id,
-//           args.data
-//         );
+      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "taxUpdate"),
 
-//         if (!user)
-//           throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Update failed");
+      async resolve(...[, args]) {
+        const taxonomy = await daoTaxonomyUpdate(args.id, args.data);
 
-//         return user;
-//       },
-//     });
+        if (!taxonomy)
+          throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Update failed");
 
-//     t.nonNull.field("userProfilePasswordUpdate", {
-//       type: "User",
+        return taxonomy;
+      },
+    });
 
-//       args: {
-//         scope: nonNull(stringArg()),
-//         id: nonNull(intArg()),
-//         password: nonNull(stringArg()),
-//       },
+    t.nonNull.field("taxonomyDelete", {
+      type: "BooleanResult",
 
-//       authorize: (...[, args, ctx]) =>
-//         authorizeApiUser(ctx, "profileUpdate") &&
-//         isCurrentApiUser(ctx, args.id),
+      args: {
+        id: nonNull(intArg()),
+      },
 
-//       async resolve(...[, args, { res }]) {
-//         const user = await userProfilePasswordUpdate(
-//           args.scope as AppScopes,
-//           args.id,
-//           args.password
-//         );
+      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "taxDelete"),
 
-//         if (!user)
-//           throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Update failed");
+      async resolve(...[, args]) {
+        const taxonomy = await daoTaxonomyDelete(args.id);
 
-//         tokenClearRefreshToken(res);
+        if (!taxonomy)
+          throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Delete failed");
 
-//         return user;
-//       },
-//     });
-
-//     t.nonNull.field("userCreate", {
-//       type: "User",
-
-//       args: {
-//         scope: nonNull(stringArg()),
-//         data: nonNull(UserInsertInput),
-//       },
-
-//       authorize: (...[, , ctx]) => authorizeApiUser(ctx, "userCreate"),
-
-//       async resolve(...[, args]) {
-//         const user = await userCreate(args.scope as AppScopes, args.data);
-
-//         if (!user)
-//           throw new ApiError(
-//             httpStatus.INTERNAL_SERVER_ERROR,
-//             "Creation failed"
-//           );
-
-//         return user;
-//       },
-//     });
-
-//     t.nonNull.field("userUpdate", {
-//       type: "BooleanResult",
-
-//       args: {
-//         scope: nonNull(stringArg()),
-//         id: nonNull(intArg()),
-//         data: nonNull(UserUpdateInput),
-//       },
-
-//       authorize: (...[, , ctx]) => authorizeApiUser(ctx, "userUpdate"),
-
-//       async resolve(...[, args]) {
-//         const user = await userUpdate(
-//           args.scope as AppScopes,
-//           args.id,
-//           args.data
-//         );
-
-//         if (!user)
-//           throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Update failed");
-
-//         return { result: true };
-//       },
-//     });
-
-//     t.nonNull.field("userDelete", {
-//       type: "BooleanResult",
-
-//       args: {
-//         scope: nonNull(stringArg()),
-//         id: nonNull(intArg()),
-//       },
-
-//       authorize: (...[, args, ctx]) =>
-//         authorizeApiUser(ctx, "userDelete") &&
-//         isNotCurrentApiUser(ctx, args.id),
-
-//       async resolve(...[, args]) {
-//         const user = await userDelete(args.scope as AppScopes, args.id);
-
-//         if (!user)
-//           throw new ApiError(
-//             httpStatus.INTERNAL_SERVER_ERROR,
-//             "User delete failed"
-//           );
-
-//         return { result: true };
-//       },
-//     });
-//   },
-// });
-
-// export default User;
+        return { result: true };
+      },
+    });
+  },
+});

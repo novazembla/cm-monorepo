@@ -1,5 +1,5 @@
 import React, { Context, createContext, ReactNode } from "react";
-import { config } from "~/config";
+import { config, AppConfig } from "~/config";
 
 
 type Props = {
@@ -7,7 +7,7 @@ type Props = {
 };
 
 // create context
-export const ConfigContext: Context<any> = createContext({});
+export const ConfigContext: Context<AppConfig> = createContext({});
 
 // context provider
 export const ConfigContextProvider = ({ children }: Props) => {

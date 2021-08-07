@@ -73,12 +73,24 @@ export const useAdminTableDeleteButton = (
           successfullyDeletedToast();
         } else {
           setIsDeleteError(true);
+          setDZAD({
+            open: false,
+            id: undefined,
+          });
         }
       } else {
         setIsDeleteError(true);
+        setDZAD({
+          open: false,
+          id: undefined,
+        });
       }
     } catch (err) {
       setIsDeleteError(true);
+      setDZAD({
+        open: false,
+        id: undefined,
+      });
     }
   };
 

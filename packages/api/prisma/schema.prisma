@@ -8,6 +8,7 @@ datasource db {
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["filterJson", "selectRelationCount"]
 }
 
 model User {
@@ -64,7 +65,6 @@ model Setting {
 
 model Taxonomy {
   id             Int        @id @default(autoincrement())
-  hash           String     @db.VarChar(64) @unique
   name           Json     
   slug           Json     
   createdAt      DateTime   @default(now())
@@ -74,7 +74,6 @@ model Taxonomy {
 
 model Term {
   id             Int        @id @default(autoincrement())
-  hash           String     @db.VarChar(64) @unique
   name           Json     
   slug           Json   
 
@@ -85,4 +84,14 @@ model Term {
   updatedAt      DateTime   @default(now()) @updatedAt
 
   @@index([taxonomyId], name: "indexTernTaxonomyId")
+}
+
+model Page {
+  id             Int        @id @default(autoincrement())
+  title          Json     
+  slug           Json     
+  content        Json
+  fullText       String     @default("")
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @default(now()) @updatedAt
 }

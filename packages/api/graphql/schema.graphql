@@ -61,6 +61,9 @@ type Mutation {
   authRequestEmailVerificationEmail(scope: String!, userId: Int!): BooleanResult!
   authVerifyEmail(token: String!): BooleanResult!
   settingsUpdate(data: [SettingsUpdateInput!]): BooleanResult!
+  taxonomyCreate(data: TaxonomyCreateInput!): Taxonomy!
+  taxonomyDelete(id: Int!): BooleanResult!
+  taxonomyUpdate(data: TaxonomyUpdateInput!, id: Int!): Taxonomy!
   termCreate(data: TermCreateInput!): Term!
   termDelete(id: Int!): BooleanResult!
   termUpdate(data: TermUpdateInput!, id: Int!): BooleanResult!
@@ -87,6 +90,7 @@ type Query {
   taxonomyRead(id: Int!): Taxonomy!
   termRead(id: Int!): Term!
   terms(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, taxonomyId: Int!, where: JSON): TermQueryResult
+  uniqueSlug(data: UniqueSlugInput!, id: Int!, type: String!): UniqueSlugResult
   userProfileRead(id: Int!, scope: String!): ProfileUser!
   userRead(id: Int!, scope: String!): User!
   users(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): UsersQueryResult
@@ -110,14 +114,25 @@ type Taxonomy {
   id: Int!
   name: JSON
   slug: JSON
+  termCount: Int
   terms: [Term]
   updatedAt: DateTime
+}
+
+input TaxonomyCreateInput {
+  name: JSON!
+  slug: JSON!
 }
 
 """List all the taxonomies in the database."""
 type TaxonomyQueryResult {
   taxonomies: [Taxonomy]
   totalCount: Int
+}
+
+input TaxonomyUpdateInput {
+  name: JSON!
+  slug: JSON!
 }
 
 type Term {
@@ -145,6 +160,15 @@ type TermQueryResult {
 input TermUpdateInput {
   name: JSON!
   slug: JSON!
+}
+
+input UniqueSlugInput {
+  slug: JSON!
+}
+
+type UniqueSlugResult {
+  errors: JSON
+  ok: Boolean!
 }
 
 type User implements UserBaseNode {

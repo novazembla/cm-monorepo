@@ -1,12 +1,26 @@
-// import httpStatus from "http-status";
-import { Term, /* Term, */ Prisma } from "@prisma/client";
+import httpStatus from "http-status";
+import { Term, Prisma } from "@prisma/client";
 import { filteredOutputByBlacklist } from "@culturemap/core";
 
-import { /* ApiError, */ filteredOutputByBlacklistOrNotFound } from "../utils";
+import { ApiError, filteredOutputByBlacklistOrNotFound } from "../utils";
 import config from "../config";
 import { getPrismaClient } from "../db/client";
+import { daoSharedCheckSlugUnique } from "./shared";
 
 const prisma = getPrismaClient();
+
+export const daoTermCheckSlugUnique = async (
+  slug: Record<string, string>,
+  id?: number,
+  uniqueInObject?: boolean
+): Promise<{ ok: boolean; errors: Record<string, boolean> }> => {
+  return daoSharedCheckSlugUnique(
+    prisma.term.findMany,
+    slug,
+    id,
+    uniqueInObject
+  );
+};
 
 export const daoTermQuery = async (
   taxonomyId: number,
@@ -52,22 +66,16 @@ export const daoTermGetTermsByTaxonomyId = async (
   return filteredOutputByBlacklist(terms, config.db.privateJSONDataKeys.term);
 };
 
-export const daoTermCreate = async (
-  data: Prisma.TermCreateInput
-): Promise<Term> => {
-  // TODO: hash check
-  // if (await daoTermCheckIsEmailTaken(data.email)) {
-  //   throw new ApiError(httpStatus.BAD_REQUEST, "Email already taken");
-  // }
-
-  const term: Term = await prisma.term.create({
-    data,
+export const daoTermGetTermsCountByTaxonomyId = async (
+  taxonomyId: number
+): Promise<number> => {
+  const count = await prisma.term.count({
+    where: {
+      taxonomyId,
+    },
   });
 
-  return filteredOutputByBlacklistOrNotFound(
-    term,
-    config.db.privateJSONDataKeys.term
-  );
+  return count;
 };
 
 export const daoTermGetById = async (id: number): Promise<Term> => {
@@ -81,32 +89,44 @@ export const daoTermGetById = async (id: number): Promise<Term> => {
   );
 };
 
-// export const daoTermCheckHash = async (
-//   hash: string
-// ): Promise<boolean> => {
-//   console.log("TODO: check for hash", hash);
+export const daoTermCreate = async (
+  data: Prisma.TermCreateInput
+): Promise<Term> => {
+  const result = await daoSharedCheckSlugUnique(
+    prisma.term.findMany,
+    data.slug as Record<string, string>
+  );
 
-//   return true;
+  if (!result.ok)
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      `Slug is not unique in [${Object.keys(result.errors).join(", ")}]`
+    );
 
-//   let where: Prisma.TermWhereInput = {
-//     hash,
-//   };
+  const term: Term = await prisma.term.create({
+    data,
+  });
 
-//   const count = await prisma.term.count({
-//     where,
-//   });
-
-//   return count > 0;
-// };
+  return filteredOutputByBlacklistOrNotFound(
+    term,
+    config.db.privateJSONDataKeys.term
+  );
+};
 
 export const daoTermUpdate = async (
   id: number,
   data: Prisma.TermUpdateInput
 ): Promise<Term> => {
-  // TODO: hash check
-  // if (await daoTermCheckIsEmailTaken(data.email)) {
-  //   throw new ApiError(httpStatus.BAD_REQUEST, "Email already taken");
-  // }
+  const result = await daoSharedCheckSlugUnique(
+    prisma.term.findMany,
+    data.slug as Record<string, string>
+  );
+
+  if (!result.ok)
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      `Slug is not unique in [${Object.keys(result.errors).join(", ")}]`
+    );
 
   const term: Term = await prisma.term.update({
     data,
@@ -139,8 +159,9 @@ export default {
   daoTermQueryCount,
   daoTermGetById,
   daoTermGetTermsByTaxonomyId,
-  // daoTermCreate,
-  // daoTermUpdate,
-  // daoTermDelete,
-  // daoTermCheckHash,
+  daoTermGetTermsCountByTaxonomyId,
+  daoTermCheckSlugUnique,
+  daoTermCreate,
+  daoTermUpdate,
+  daoTermDelete,
 };

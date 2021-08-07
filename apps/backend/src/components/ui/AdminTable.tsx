@@ -50,8 +50,10 @@ import {
 } from "react-icons/hi";
 
 import { FiEdit } from "react-icons/fi";
+import { BsEye } from "react-icons/bs";
 
 import { useTranslation } from "react-i18next";
+import { MultiLangValue } from ".";
 
 export type AdminTableColumn = {
   Header: string;
@@ -63,11 +65,16 @@ export type AdminTableColumn = {
   isDate?: boolean;
   showEdit?: boolean;
   showDelete?: boolean;
+  showView?: boolean;
   editPath?: string;
+  viewPath?: string;
   editButtonLabel?: string;
+  viewButtonLabel?: string;
   editButtonComponent?: React.FC<any>;
+  viewButtonComponent?: React.FC<any>;
 
   canEdit?: boolean | ((cell: Cell, appUser: AuthenticatedAppUser) => boolean);
+  canView?: boolean | ((cell: Cell, appUser: AuthenticatedAppUser) => boolean);
 
   canDelete?:
     | boolean
@@ -142,7 +149,7 @@ export const adminTableCreateNewTableState = (
   };
 
   let doRefetch = false;
-  
+
   let newPageIndex = pageIndex;
 
   if (
@@ -209,7 +216,7 @@ export const AdminTableActionButtonEdit = (cell: Cell) => {
   const column: any = cell.column;
 
   const hasAccess =
-    !column.canEdit ||
+    typeof column.canEdit === "undefined" ||
     column.canEdit === true ||
     (typeof column.canEdit === "function" &&
       column.canEdit.call(null, cell, column.appUser));
@@ -222,6 +229,31 @@ export const AdminTableActionButtonEdit = (cell: Cell) => {
       icon={<FiEdit />}
       fontSize="lg"
       aria-label={column.editButtonLabel}
+      title={column.editButtonLabel}
+      disabled={!hasAccess}
+    />
+  );
+};
+
+
+export const AdminTableActionButtonView = (cell: Cell) => {
+  const column: any = cell.column;
+
+  const hasAccess =
+  typeof column.canView === "undefined" ||
+    column.canView === true ||
+    (typeof column.canView === "function" &&
+      column.canView.call(null, cell, column.appUser));
+
+  return (
+    <IconButton
+      variant="outline"
+      as={RouterLink}
+      to={`${column.viewPath}`.replace(":id", cell.row.values.id)}
+      icon={<BsEye />}
+      fontSize="lg"
+      aria-label={column.viewButtonLabel}
+      title={column.viewButtonLabel}
       disabled={!hasAccess}
     />
   );
@@ -231,7 +263,7 @@ export const AdminTableActionButtonDelete = (cell: Cell) => {
   const column: any = cell.column;
 
   const hasAccess =
-    !column.canDelete ||
+    typeof column.canDelete === "undefined" ||
     column.canDelete === true ||
     (typeof column.canDelete === "function" &&
       column.canDelete.call(null, cell, column.appUser));
@@ -246,6 +278,7 @@ export const AdminTableActionButtonDelete = (cell: Cell) => {
       icon={<HiOutlineTrash />}
       fontSize="xl"
       aria-label={column.deleteButtonLabel}
+      title={column.deleteButtonLabel}
       disabled={!hasAccess}
     />
   );
@@ -267,10 +300,19 @@ export const AdminTableActionCell = (cell: Cell) => {
             column.editButtonComponent ?? AdminTableActionButtonEdit,
             cell
           )}
+        {column.showView &&
+          React.createElement(
+            column.viewButtonComponent ?? AdminTableActionButtonView,
+            cell
+          )}
       </HStack>
     </Flex>
   );
 };
+
+export const AdminTableMultiLangCell = (cell: Cell) => (
+  <MultiLangValue json={cell.value} />
+);
 
 export const AdminTable = ({
   data,
@@ -473,6 +515,7 @@ export const AdminTable = ({
                     fontSize="md"
                     color="gray.800"
                     borderColor="gray.300"
+                    isNumeric={(column as any).isNumeric}
                     _last={
                       (column as any).isStickyToTheRight
                         ? {
@@ -485,7 +528,11 @@ export const AdminTable = ({
                   >
                     <Flex
                       justifyContent={
-                        (column as any).isCentered ? "center" : "flex-start"
+                        (column as any).isCentered
+                          ? "center"
+                          : (column as any).isNumeric
+                          ? "flex-end"
+                          : "flex-start"
                       }
                     >
                       {column.render("Header")}

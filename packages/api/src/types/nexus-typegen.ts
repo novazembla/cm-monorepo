@@ -58,6 +58,14 @@ export interface NexusGenInputs {
     key: string; // String!
     value: NexusGenScalars['JSON']; // JSON!
   }
+  TaxonomyCreateInput: { // input type
+    name: NexusGenScalars['JSON']; // JSON!
+    slug: NexusGenScalars['JSON']; // JSON!
+  }
+  TaxonomyUpdateInput: { // input type
+    name: NexusGenScalars['JSON']; // JSON!
+    slug: NexusGenScalars['JSON']; // JSON!
+  }
   TermCreateInput: { // input type
     name: NexusGenScalars['JSON']; // JSON!
     slug: NexusGenScalars['JSON']; // JSON!
@@ -65,6 +73,9 @@ export interface NexusGenInputs {
   }
   TermUpdateInput: { // input type
     name: NexusGenScalars['JSON']; // JSON!
+    slug: NexusGenScalars['JSON']; // JSON!
+  }
+  UniqueSlugInput: { // input type
     slug: NexusGenScalars['JSON']; // JSON!
   }
   UserCreateInput: { // input type
@@ -172,6 +183,10 @@ export interface NexusGenObjects {
     terms?: Array<NexusGenRootTypes['Term'] | null> | null; // [Term]
     totalCount?: number | null; // Int
   }
+  UniqueSlugResult: { // root type
+    errors?: NexusGenScalars['JSON'] | null; // JSON
+    ok: boolean; // Boolean!
+  }
   User: { // root type
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
     email?: NexusGenScalars['EmailAddress'] | null; // EmailAddress
@@ -230,6 +245,9 @@ export interface NexusGenFieldTypes {
     authRequestEmailVerificationEmail: NexusGenRootTypes['BooleanResult']; // BooleanResult!
     authVerifyEmail: NexusGenRootTypes['BooleanResult']; // BooleanResult!
     settingsUpdate: NexusGenRootTypes['BooleanResult']; // BooleanResult!
+    taxonomyCreate: NexusGenRootTypes['Taxonomy']; // Taxonomy!
+    taxonomyDelete: NexusGenRootTypes['BooleanResult']; // BooleanResult!
+    taxonomyUpdate: NexusGenRootTypes['Taxonomy']; // Taxonomy!
     termCreate: NexusGenRootTypes['Term']; // Term!
     termDelete: NexusGenRootTypes['BooleanResult']; // BooleanResult!
     termUpdate: NexusGenRootTypes['BooleanResult']; // BooleanResult!
@@ -254,6 +272,7 @@ export interface NexusGenFieldTypes {
     taxonomyRead: NexusGenRootTypes['Taxonomy']; // Taxonomy!
     termRead: NexusGenRootTypes['Term']; // Term!
     terms: NexusGenRootTypes['TermQueryResult'] | null; // TermQueryResult
+    uniqueSlug: NexusGenRootTypes['UniqueSlugResult'] | null; // UniqueSlugResult
     userProfileRead: NexusGenRootTypes['ProfileUser']; // ProfileUser!
     userRead: NexusGenRootTypes['User']; // User!
     users: NexusGenRootTypes['UsersQueryResult'] | null; // UsersQueryResult
@@ -270,6 +289,7 @@ export interface NexusGenFieldTypes {
     id: number; // Int!
     name: NexusGenScalars['JSON'] | null; // JSON
     slug: NexusGenScalars['JSON'] | null; // JSON
+    termCount: number | null; // Int
     terms: Array<NexusGenRootTypes['Term'] | null> | null; // [Term]
     updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
   }
@@ -289,6 +309,10 @@ export interface NexusGenFieldTypes {
   TermQueryResult: { // field return type
     terms: Array<NexusGenRootTypes['Term'] | null> | null; // [Term]
     totalCount: number | null; // Int
+  }
+  UniqueSlugResult: { // field return type
+    errors: NexusGenScalars['JSON'] | null; // JSON
+    ok: boolean; // Boolean!
   }
   User: { // field return type
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
@@ -344,6 +368,9 @@ export interface NexusGenFieldTypeNames {
     authRequestEmailVerificationEmail: 'BooleanResult'
     authVerifyEmail: 'BooleanResult'
     settingsUpdate: 'BooleanResult'
+    taxonomyCreate: 'Taxonomy'
+    taxonomyDelete: 'BooleanResult'
+    taxonomyUpdate: 'Taxonomy'
     termCreate: 'Term'
     termDelete: 'BooleanResult'
     termUpdate: 'BooleanResult'
@@ -368,6 +395,7 @@ export interface NexusGenFieldTypeNames {
     taxonomyRead: 'Taxonomy'
     termRead: 'Term'
     terms: 'TermQueryResult'
+    uniqueSlug: 'UniqueSlugResult'
     userProfileRead: 'ProfileUser'
     userRead: 'User'
     users: 'UsersQueryResult'
@@ -384,6 +412,7 @@ export interface NexusGenFieldTypeNames {
     id: 'Int'
     name: 'JSON'
     slug: 'JSON'
+    termCount: 'Int'
     terms: 'Term'
     updatedAt: 'DateTime'
   }
@@ -403,6 +432,10 @@ export interface NexusGenFieldTypeNames {
   TermQueryResult: { // field return type name
     terms: 'Term'
     totalCount: 'Int'
+  }
+  UniqueSlugResult: { // field return type name
+    errors: 'JSON'
+    ok: 'Boolean'
   }
   User: { // field return type name
     createdAt: 'DateTime'
@@ -458,6 +491,16 @@ export interface NexusGenArgTypes {
     }
     settingsUpdate: { // args
       data?: NexusGenInputs['SettingsUpdateInput'][] | null; // [SettingsUpdateInput!]
+    }
+    taxonomyCreate: { // args
+      data: NexusGenInputs['TaxonomyCreateInput']; // TaxonomyCreateInput!
+    }
+    taxonomyDelete: { // args
+      id: number; // Int!
+    }
+    taxonomyUpdate: { // args
+      data: NexusGenInputs['TaxonomyUpdateInput']; // TaxonomyUpdateInput!
+      id: number; // Int!
     }
     termCreate: { // args
       data: NexusGenInputs['TermCreateInput']; // TermCreateInput!
@@ -519,6 +562,11 @@ export interface NexusGenArgTypes {
       pageSize: number | null; // Int
       taxonomyId: number; // Int!
       where?: NexusGenScalars['JSON'] | null; // JSON
+    }
+    uniqueSlug: { // args
+      data: NexusGenInputs['UniqueSlugInput']; // UniqueSlugInput!
+      id: number; // Int!
+      type: string; // String!
     }
     userProfileRead: { // args
       id: number; // Int!
