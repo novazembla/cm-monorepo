@@ -66,7 +66,7 @@ type Mutation {
   taxonomyUpdate(data: TaxonomyUpdateInput!, id: Int!): Taxonomy!
   termCreate(data: TermCreateInput!): Term!
   termDelete(id: Int!): BooleanResult!
-  termUpdate(data: TermUpdateInput!, id: Int!): BooleanResult!
+  termUpdate(data: TermUpdateInput!, id: Int!): Term!
   userCreate(data: UserCreateInput!, scope: String!): User!
   userDelete(id: Int!, scope: String!): BooleanResult!
   userProfilePasswordUpdate(id: Int!, password: String!, scope: String!): User!

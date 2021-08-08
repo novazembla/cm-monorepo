@@ -17,11 +17,7 @@ import { ApiError } from "../../utils";
 
 import { GQLJson } from "./nexusTypesShared";
 
-// import {
-//   authorizeApiUser,
-//   isCurrentApiUser,
-//   isNotCurrentApiUser,
-// } from "../helpers";
+import { authorizeApiUser } from "../helpers";
 
 import config from "../../config";
 
@@ -45,7 +41,9 @@ export const Term = objectType({
     t.date("updatedAt");
     t.field("taxonomy", {
       type: "Taxonomy",
-      // TODO: add access restrictions
+
+      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "taxRead"),
+
       async resolve(...[parent]) {
         return daoTermGetById(parent.taxonomyId);
       },
@@ -129,7 +127,7 @@ export const TermQueries = extendType({
         id: nonNull(intArg()),
       },
 
-      // TODO: lock down authorize: (...[, , ctx]) => authorizeApiUser(ctx, "termRead"),
+      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "taxRead"),
 
       // resolve(root, args, ctx, info)
       async resolve(...[, args]) {
@@ -167,7 +165,7 @@ export const TermMutations = extendType({
         data: nonNull("TermCreateInput"),
       },
 
-      // TODO: lock down authorize: (...[, , ctx]) => authorizeApiUser(ctx, "termCreate"),
+      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "taxCreate"),
 
       async resolve(...[, args]) {
         const term = await daoTermCreate({
@@ -189,14 +187,14 @@ export const TermMutations = extendType({
     });
 
     t.nonNull.field("termUpdate", {
-      type: "BooleanResult",
+      type: "Term",
 
       args: {
         id: nonNull(intArg()),
         data: nonNull("TermUpdateInput"),
       },
 
-      // TODO: lock down authorize: (...[, , ctx]) => authorizeApiUser(ctx, "termUpdate"),
+      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "taxUpdate"),
 
       async resolve(...[, args]) {
         const term = await daoTermUpdate(args.id, args.data);
@@ -204,7 +202,7 @@ export const TermMutations = extendType({
         if (!term)
           throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Update failed");
 
-        return { result: true };
+        return term;
       },
     });
 
@@ -215,7 +213,7 @@ export const TermMutations = extendType({
         id: nonNull(intArg()),
       },
 
-      // TODO: lock down authorize: (...[, , ctx]) => authorizeApiUser(ctx, "termDelete"),
+      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "taxDelete"),
 
       async resolve(...[, args]) {
         const term = await daoTermDelete(args.id);

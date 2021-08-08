@@ -7,7 +7,7 @@ import App from "./app/App";
 import "./i18n";
 
 ReactDOM.render(
-  //<App/>,
+  // <App/>,
   <React.StrictMode>
     <App/>
   </React.StrictMode>,

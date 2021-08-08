@@ -1,27 +1,45 @@
 import gql from "graphql-tag";
 
-export const taxonomiesQueryGQL = gql`
-  query taxonomies(
+export const termsQueryGQL = gql`
+  query terms(
+    $taxonomyId: Int!
     $where: JSON
     $orderBy: JSON
     $pageIndex: Int
     $pageSize: Int
   ) {
-    taxonomies(
+    taxonomyRead(id: $taxonomyId) {
+      id
+      name
+      slug
+    }
+    terms(
+      taxonomyId: $taxonomyId
       where: $where
       orderBy: $orderBy
       pageIndex: $pageIndex
       pageSize: $pageSize
     ) {
-      taxonomies {
+      terms {
         id
         name
         slug
-        termCount
       }
       totalCount
     }
   }
 `;
 
-export default taxonomiesQueryGQL;
+export const termReadQueryGQL = gql`
+  query termRead($id: Int!) {
+    termRead(id: $id) {
+      id
+      name
+      slug
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export default termsQueryGQL;

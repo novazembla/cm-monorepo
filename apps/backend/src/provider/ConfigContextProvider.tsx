@@ -1,25 +1,18 @@
-import React, { Context, createContext, ReactNode } from "react";
+import React, { Context, createContext } from "react";
 import { config, AppConfig } from "~/config";
 
-
-type Props = {
-  children?: ReactNode;
-};
-
 // create context
-export const ConfigContext: Context<AppConfig> = createContext({});
+export const ConfigContext: Context<AppConfig> = createContext<AppConfig>(config);
 
 // context provider
-export const ConfigContextProvider = ({ children }: Props) => {
+export const ConfigContextProvider = ({ children }: {
+  children: React.ReactNode
+}) => {
   return (
     <ConfigContext.Provider value={config}>
       {children}
     </ConfigContext.Provider>
   );
-};
-
-ConfigContextProvider.defaultProps = {
-  children: null,
 };
 
 const context = { ConfigContext, ConfigContextProvider };

@@ -250,7 +250,7 @@ export interface NexusGenFieldTypes {
     taxonomyUpdate: NexusGenRootTypes['Taxonomy']; // Taxonomy!
     termCreate: NexusGenRootTypes['Term']; // Term!
     termDelete: NexusGenRootTypes['BooleanResult']; // BooleanResult!
-    termUpdate: NexusGenRootTypes['BooleanResult']; // BooleanResult!
+    termUpdate: NexusGenRootTypes['Term']; // Term!
     userCreate: NexusGenRootTypes['User']; // User!
     userDelete: NexusGenRootTypes['BooleanResult']; // BooleanResult!
     userProfilePasswordUpdate: NexusGenRootTypes['User']; // User!
@@ -373,7 +373,7 @@ export interface NexusGenFieldTypeNames {
     taxonomyUpdate: 'Taxonomy'
     termCreate: 'Term'
     termDelete: 'BooleanResult'
-    termUpdate: 'BooleanResult'
+    termUpdate: 'Term'
     userCreate: 'User'
     userDelete: 'BooleanResult'
     userProfilePasswordUpdate: 'User'

@@ -1,8 +1,8 @@
 import { useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { taxonomiesQueryGQL, taxonomyDeleteMutationGQL } from "@culturemap/core";
+import { termsQueryGQL, termDeleteMutationGQL } from "@culturemap/core";
 import { useQuery } from "@apollo/client";
-
+import { BeatLoader } from "react-spinners";
 
 import {
   ModuleSubNav,
@@ -15,6 +15,7 @@ import {
   useAdminTableDeleteButton,
   useAuthentication,
   useLocalStorage,
+  useRouter,
 } from "~/hooks";
 
 import {
@@ -25,6 +26,7 @@ import {
   adminTableCreateNewTableState,
   AdminTableActionCell,
   AdminTableMultiLangCell,
+  MultiLangValue
 } from "~/components/ui";
 import { config } from "~/config";
 import { SortingRule } from "react-table";
@@ -42,17 +44,18 @@ let refetchPageIndex: number | undefined = undefined;
 
 const filterColumnKeys = ["name", "slug"];
 
-const Index = () => {
+const Terms = () => {
+  const router = useRouter();
   const { t } = useTranslation();
   const [appUser] = useAuthentication();
   const [tableState, setTableState] = useLocalStorage(
-    `${moduleRootPath}/Index`,
+    `${moduleRootPath}/Terms/${router.query.taxId}`,
     intitalTableState
   );
 
   const [isRefetching, setIsRefetching] = useState(false);
-  
-  const { loading, error, data, refetch } = useQuery(taxonomiesQueryGQL, {
+
+  const { loading, error, data, refetch } = useQuery(termsQueryGQL, {
     onCompleted: () => {
       setIsRefetching(false);
     },
@@ -60,12 +63,15 @@ const Index = () => {
       setIsRefetching(false);
     },
     notifyOnNetworkStatusChange: true,
-    variables: adminTableCreateQueryVariables(tableState, filterColumnKeys, multiLangFields, config.activeLanguages),
+    variables: {
+      taxonomyId: parseInt(router.query.taxId, 10),
+      ...adminTableCreateQueryVariables(tableState, filterColumnKeys, multiLangFields, config.activeLanguages),
+    },
   });
 
   const [adminTableDeleteButtonOnClick, DeleteAlertDialog, isDeleteError] =
     useAdminTableDeleteButton(
-      taxonomyDeleteMutationGQL,
+      termDeleteMutationGQL,
       () => {
         refetch(tableState);
       },
@@ -77,15 +83,24 @@ const Index = () => {
   const breadcrumb = [
     {
       path: moduleRootPath,
-      title: t("module.taxonomies.title", "Taxonomies"),
+      title: t("module.terms.title", "Taxonomies"),
+    },
+    {
+      title: data && data.taxonomyRead ? <MultiLangValue json={data.taxonomyRead.name} /> : <BeatLoader size="10px" color="#666"/>,
     },
   ];
 
   const buttonList: ButtonListElement[] = [
     {
+      type: "back",
+      to: moduleRootPath,
+      label: t("module.button.back", "Go back"),
+      userCan: "taxRead",
+    },
+    {
       type: "navigation",
-      to: `${moduleRootPath}/create`,
-      label: t("module.taxonomies.button.create", "Add new taxonomy"),
+      to: `${moduleRootPath}/${router.query.taxId}/create`,
+      label: t("module.terms.button.create", "Add new term"),
       userCan: "userCreate",
     },
   ];
@@ -93,52 +108,37 @@ const Index = () => {
   // columns need to be a ref!
   const { current: AdminTableColumns } = useRef([
     {
-      Header: t("taxonomies.fields.label.id", "Id"),
+      Header: t("terms.fields.label.id", "Id"),
       accessor: "id",
     } as AdminTableColumn,
     {
       Cell: AdminTableMultiLangCell,
-      Header: t("taxonomies.fields.label.name", "Name"),
+      Header: t("terms.fields.label.name", "Name"),
       accessor: "name",
     } as AdminTableColumn,
     {
       Cell: AdminTableMultiLangCell,
-      Header: t("taxonomies.fields.label.slug", "Slug"),
+      Header: t("terms.fields.label.slug", "Slug"),
       accessor: "slug",
     } as AdminTableColumn,
     {
-      Header: t("taxonomies.fields.label.termCount", "Number of terms"),
-      accessor: "termCount",
-      isNumeric: true,
-      disableSortBy: true,
-    } as AdminTableColumn,
-    {
       Cell: AdminTableActionCell,
-      Header: t("taxonomies.fields.label.actions", "Actions"),
+      Header: t("terms.fields.label.actions", "Actions"),
       isStickyToTheRight: true,
 
       isCentered: true,
       appUser,
 
       showEdit: true,
-      canEdit: (cell, appUser) =>
-        appUser?.can("taxUpdate"),
-      editPath: `${moduleRootPath}/update/:id`,
-      editButtonLabel: t("module.taxonomies.button.edit", "Edit taxonomy"),
+      canEdit: (cell, appUser) => appUser?.can("taxUpdate"),
+      editPath: `${moduleRootPath}/${router.query.taxId}/update/:id`,
+      editButtonLabel: t("module.terms.button.edit", "Edit term"),
       // editButtonComponent: undefined,
 
-      showView: true,
-      canView: (cell, appUser) =>
-        appUser?.can("taxUpdate"),
-      viewPath: `${moduleRootPath}/:id/terms`,
-      viewButtonLabel: t("module.taxonomies.button.view", "View taxonomy terms"),
-      // viewButtonComponent: undefined,
-      
       showDelete: true,
-      canDelete: (cell, appUser) => {
-        return appUser?.can("taxDelete") && (cell as any).row.values.termCount === 0},
-        
-      deleteButtonLabel: t("module.taxonomies.button.delete", "Delete taxonomy"),
+      canDelete: (cell, appUser) => appUser?.can("taxDelete"),
+
+      deleteButtonLabel: t("module.terms.button.delete", "Delete term"),
       // deleteButtonComponent?: React.FC<any>;
 
       deleteButtonOnClick: (cell) => {
@@ -154,7 +154,7 @@ const Index = () => {
     filterKeyword: string
   ) => {
     refetchPageIndex = undefined;
-
+    
     const [newTableState, doRefetch, newPageIndex] =
       adminTableCreateNewTableState(
         tableState,
@@ -166,11 +166,11 @@ const Index = () => {
 
     if (doRefetch) {
       refetchPageIndex = pageIndex !== newPageIndex ? newPageIndex : undefined;
-      refetchDataCache = data?.taxonomies?.taxonomies ?? [];
-      refetchTotalCount = data?.taxonomies?.totalCount ?? 0;
+      refetchDataCache = data?.terms?.terms ?? [];
+      refetchTotalCount = data?.terms?.totalCount ?? 0;
 
       setIsRefetching(true);
-
+      
       refetch(adminTableCreateQueryVariables(newTableState, filterColumnKeys, multiLangFields, config.activeLanguages));
 
       setTableState(newTableState);
@@ -179,12 +179,12 @@ const Index = () => {
     return doRefetch;
   };
 
-  const tableTotalCount = data?.taxonomies?.totalCount ?? refetchTotalCount;
+  const tableTotalCount = data?.terms?.totalCount ?? refetchTotalCount;
 
   const tablePageCount =
     tableTotalCount > 0
       ? Math.ceil(
-          (data?.taxonomies?.totalCount ?? refetchTotalCount) / tableState.pageSize
+          (data?.terms?.totalCount ?? refetchTotalCount) / tableState.pageSize
         )
       : 0;
 
@@ -205,7 +205,7 @@ const Index = () => {
             onFetchData,
             refetchPageIndex,
           }}
-          data={isRefetching ? refetchDataCache : data?.taxonomies?.taxonomies ?? []}
+          data={isRefetching ? refetchDataCache : data?.terms?.terms ?? []}
           intitalTableState={tableState}
         />
       </ModulePage>
@@ -213,4 +213,4 @@ const Index = () => {
     </>
   );
 };
-export default Index;
+export default Terms;

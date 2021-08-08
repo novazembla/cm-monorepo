@@ -5,8 +5,9 @@ import { appConfig } from "./appconfig";
 
 import { AppSettingsFieldDefinitions } from "./settings";
 import { activeLanguages, defaultLanguage } from "./internationalization";
+import type { Complete } from "../types";
 
-export type AppConfig = {
+export type AppConfigSettings = {
   apiUrl?: string | undefined;
   apiDomain?: string | undefined;
   scope?: string | undefined;
@@ -14,9 +15,10 @@ export type AppConfig = {
   settings?: AppSettingsFieldDefinitions;
   defaultPageSize?: number;
   activeLanguages: string[];
-  defaultLanguage?: string;
+  defaultLanguage: string;
 };
 
+export type AppConfig = Complete<AppConfigSettings>;
 // initial state
 const configDefault: AppConfig = {
   apiUrl: `${process.env.REACT_APP_API_GRAPHQL_URL}`,
@@ -26,11 +28,10 @@ const configDefault: AppConfig = {
   defaultPageSize: 50,
   activeLanguages: activeLanguages,
   defaultLanguage: defaultLanguage,
+  settings: {},
 };
 
-export let config: AppConfig = {
-  activeLanguages: []
-};
+export let config: AppConfig;
 
 try {
   config = merge(configDefault, appConfig, {

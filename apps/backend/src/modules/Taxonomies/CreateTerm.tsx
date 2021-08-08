@@ -3,12 +3,14 @@ import * as yup from "yup";
 import { useTranslation } from "react-i18next";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { filteredOutputByWhitelist } from "@culturemap/core";
+import { useQuery } from "@apollo/client";
+import { BeatLoader } from "react-spinners";
+import { filteredOutputByWhitelist, taxonomyReadQueryGQL } from "@culturemap/core";
 
 import { TextErrorMessage, FormNavigationBlock } from "~/components/forms";
 
 import { ModuleTaxonomySchema } from "./forms";
-import { useTaxonomyCreateMutation } from "./hooks";
+import { useTermCreateMutation } from "./hooks";
 import {
   useAuthentication,
   useSuccessfullySavedToast,
@@ -24,25 +26,33 @@ import {
   ButtonListElement,
 } from "~/components/modules";
 
+import {
+  MultiLangValue
+} from "~/components/ui"
+
 import { moduleRootPath, multiLangFields } from "./moduleConfig";
 
 import { TaxonomyForm } from "./forms";
 import { multiLangRHFormDataToJson, multiLangSlugUniqueError } from "~/utils";
 
-const Create = () => {
+const CreateTerm = () => {
   const config = useConfig();
   const router = useRouter();
   const [appUser] = useAuthentication();
   const { t } = useTranslation();
   const successToast = useSuccessfullySavedToast();
 
-  const [firstMutation, firstMutationResults] = useTaxonomyCreateMutation();
+  const [firstMutation, firstMutationResults] = useTermCreateMutation();
   const [isFormError, setIsFormError] = useState(false);
+
+  const { data } = useQuery(taxonomyReadQueryGQL, {
+    variables: {
+      id: parseInt(router.query.taxId, 10)
+    },
+  });
 
   const disableForm = firstMutationResults.loading;
 
-  console.log(ModuleTaxonomySchema);
-  
   const formMethods = useForm({
     mode: "onTouched",
     resolver: yupResolver(ModuleTaxonomySchema),
@@ -61,21 +71,24 @@ const Create = () => {
     try {
       if (appUser) {
         const { errors } = await firstMutation(
-          filteredOutputByWhitelist(
-            multiLangRHFormDataToJson(
-              newData,
-              multiLangFields,
-              config.activeLanguages
-            ),
-            [],
-            multiLangFields
-          )
+          {
+            taxonomyId: parseInt(router.query.taxId, 10),
+            ...filteredOutputByWhitelist(
+              multiLangRHFormDataToJson(
+                newData,
+                multiLangFields,
+                config.activeLanguages
+              ),
+              [],
+              multiLangFields
+            )
+          },
         );
 
         if (!errors) {
           successToast();
 
-          router.push(moduleRootPath);
+          router.push(`${moduleRootPath}/${router.query.taxId}/terms`);
         } else {
           let slugError = multiLangSlugUniqueError(errors, setError);
 
@@ -95,14 +108,18 @@ const Create = () => {
       title: t("module.taxonomies.title", "Taxonomies"),
     },
     {
-      title: t("module.taxonomies.page.title.createtax", "Add new taxonomy"),
+      path: `${moduleRootPath}/${router.query.taxId}/terms`,
+      title: data && data.taxonomyRead ? <MultiLangValue json={data.taxonomyRead.name} /> : <BeatLoader size="10px" color="#666"/>,
+    },
+    {
+      title: t("module.taxonomies.page.title.createtax", "Add new term"),
     },
   ];
 
   const buttonList: ButtonListElement[] = [
     {
       type: "back",
-      to: moduleRootPath,
+      to: `${moduleRootPath}/${parseInt(router.query.taxId, 10)}/terms`,
       label: t("module.button.cancel", "Cancel"),
       userCan: "taxRead",
     },
@@ -139,4 +156,4 @@ const Create = () => {
     </>
   );
 };
-export default Create;
+export default CreateTerm;

@@ -18,10 +18,16 @@ TODO: AdminTable
 - on pagination table should probably scroll to top, right? 
 - filter input could have a clear button if something has been entered
 - is there a way to return to default if module is loaded via main navigation ... 
-
+- useRef with the table header is caching the AppUser changes to the user will not be reflected by the future evaluation of the permissions
+- Json column filtering is not caseinsensitive: https://github.com/prisma/prisma/issues/7390
 
 TODO: Menu/Sidebar
 - if you go smaller the slideout menu default state does not toggle to closed? Why? 
+- Click on menu items (how could this reset the listing page to start)
+
+
+TODO: CSS
+- Nicer action bar on mobile phones
 
 
 Installation

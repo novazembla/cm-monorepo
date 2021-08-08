@@ -6,7 +6,8 @@ export const ModuleTaxonomySchema = object().shape(
     (acc, lang) => ({
       ...acc,
       [`name_${lang}`]: string().required(),
-      [`slug_${lang}`]: string().required(),
+      // t("validation.slug.invalidcharacters", "You can only use A-Z, -, and numbers")
+      [`slug_${lang}`]: string().lowercase().matches(/^[a-z\-\d]+$/, "validation.slug.invalidcharacters").required(),
     }),
     {}
   )

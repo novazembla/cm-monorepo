@@ -3,7 +3,7 @@ import gql from "graphql-tag";
 export const termCreateMutationGQL = gql`
   mutation termCreate($data: TermCreateInput!) {
     termCreate(data: $data) {
-      it
+      id
       name
       slug
       taxonomyId

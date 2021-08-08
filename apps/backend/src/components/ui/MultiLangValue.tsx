@@ -6,8 +6,9 @@ export const MultiLangValue = ({ json }: { json: Record<string, string> }) => {
   
   const { t, i18n } = useTranslation();
   const config = useConfig();
+  const defVal = json[config.defaultLanguage ?? ""] ? `${json[config.defaultLanguage ?? ""] } *`: undefined;
 
-  let value = json[i18n.language] ?? json[config.defaultLanguage ?? ""] ?? t("translationnotfound", "Trans. not found");
+  let value = json[i18n.language] ?? defVal ?? t("translationnotfound", "Trans. not found");
 
   return <>{value}</>;
 };

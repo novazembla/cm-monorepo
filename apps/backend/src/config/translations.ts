@@ -13,6 +13,8 @@ export interface i18nTranslationProps {
   regex?: RegExp;
 }
 
+// t('validation.notunique', "This valaue is not unique")
+
 export let mixed = {
   // t('validation.mixed.default', 'This field is invalid')
   default: ({ path }: i18nTranslationProps) => ({

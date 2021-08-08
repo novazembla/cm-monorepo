@@ -27,7 +27,6 @@ import {
   Icon,
   IconButton,
   Input,
-  useWhyDidYouUpdate,
 } from "@chakra-ui/react";
 import {
   usePagination,
@@ -103,7 +102,9 @@ export type AdminTableQueryVariables = {
 
 export const adminTableCreateQueryVariables = (
   tState: AdminTableState,
-  filterColumnKeys: string[]
+  filterColumnKeys: string[],
+  jsonColumns?: string[],
+  jsonKeys?: string[]
 ) => {
   let variables: AdminTableQueryVariables = {
     pageIndex: tState.pageIndex,
@@ -121,14 +122,30 @@ export const adminTableCreateQueryVariables = (
 
   if (tState.filterKeyword && tState.filterKeyword.length > 2) {
     // however in any case we need to set the where clause
+
     variables = {
       ...variables,
       where: {
-        OR: filterColumnKeys.map((key) => ({
-          [key]: {
-            contains: tState.filterKeyword,
-          },
-        })),
+        OR: filterColumnKeys.map((key) => {
+          if (jsonColumns && jsonKeys && jsonColumns.includes(key)) {
+            return {
+              OR: jsonKeys.map((jKey) => ({
+                [key]: {
+                  path: jKey,
+                  string_contains: tState.filterKeyword,
+                  // TODO: maybe enable at some point mode: 'insensitive',
+                }
+              })),
+            }
+          } else {
+            return {
+              [key]: {
+                contains: tState.filterKeyword,
+                mode: 'insensitive',
+              },
+            }
+          }
+        }),
       },
     };
   }
@@ -378,23 +395,6 @@ export const AdminTable = ({
     useSortBy,
     usePagination
   );
-
-  useWhyDidYouUpdate("admintable 1", {
-    data,
-    columns,
-    isLoading,
-    isRefetching,
-    onFetchData,
-    intitalTableState,
-    tablePageCount,
-    tableTotalCount,
-    refetchPageIndex,
-    pageIndex,
-    pageSize,
-    sortBy,
-    filterKeyword,
-    triggeredRefetch,
-  });
 
   // Debounce our onFetchData call for 100ms
   const onFetchDataDebounced = useAsyncDebounce(

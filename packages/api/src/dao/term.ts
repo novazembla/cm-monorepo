@@ -100,7 +100,7 @@ export const daoTermCreate = async (
   if (!result.ok)
     throw new ApiError(
       httpStatus.BAD_REQUEST,
-      `Slug is not unique in [${Object.keys(result.errors).join(", ")}]`
+      `Slug is not unique in [${Object.keys(result.errors).join(",")}]`
     );
 
   const term: Term = await prisma.term.create({
@@ -119,13 +119,14 @@ export const daoTermUpdate = async (
 ): Promise<Term> => {
   const result = await daoSharedCheckSlugUnique(
     prisma.term.findMany,
-    data.slug as Record<string, string>
+    data.slug as Record<string, string>,
+    id
   );
 
   if (!result.ok)
     throw new ApiError(
       httpStatus.BAD_REQUEST,
-      `Slug is not unique in [${Object.keys(result.errors).join(", ")}]`
+      `Slug is not unique in [${Object.keys(result.errors).join(",")}]`
     );
 
   const term: Term = await prisma.term.update({

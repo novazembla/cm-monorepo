@@ -81,7 +81,7 @@ export const daoTaxonomyCreate = async (
   if (!result.ok)
     throw new ApiError(
       httpStatus.BAD_REQUEST,
-      `Slug is not unique in [${Object.keys(result.errors).join(", ")}]`
+      `Slug is not unique in [${Object.keys(result.errors).join(",")}]`
     );
 
   const taxonomy: Taxonomy = await prisma.taxonomy.create({
@@ -100,13 +100,14 @@ export const daoTaxonomyUpdate = async (
 ): Promise<Taxonomy> => {
   const result = await daoSharedCheckSlugUnique(
     prisma.taxonomy.findMany,
-    data.slug as Record<string, string>
+    data.slug as Record<string, string>,
+    id,
   );
 
   if (!result.ok)
     throw new ApiError(
       httpStatus.BAD_REQUEST,
-      `Slug is not unique in [${Object.keys(result.errors).join(", ")}]`
+      `Slug is not unique in [${Object.keys(result.errors).join(",")}]`
     );
 
   const taxonomy: Taxonomy = await prisma.taxonomy.update({

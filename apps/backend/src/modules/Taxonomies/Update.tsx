@@ -17,8 +17,8 @@ import {
 
 import { Divider } from "@chakra-ui/react";
 import {
-  taxonomyReadQueryGQL,
   filteredOutputByWhitelist,
+  taxonomyReadQueryGQL,
 } from "@culturemap/core";
 
 import { useQuery } from "@apollo/client";
@@ -29,9 +29,11 @@ import {
   ButtonListElement,
 } from "~/components/modules";
 
-import { moduleRootPath } from "./moduleConfig";
+import { moduleRootPath, multiLangFields } from "./moduleConfig";
 
 import { TaxonomyForm } from "./forms";
+import { multiLangJsonToRHFormData, multiLangRHFormDataToJson, multiLangSlugUniqueError } from "~/utils";
+;
 
 const Update = () => {
   const router = useRouter();
@@ -48,7 +50,7 @@ const Update = () => {
 
   const [firstMutation, firstMutationResults] = useTaxonomyUpdateMutation();
   const [isFormError, setIsFormError] = useState(false);
-
+  
   const disableForm = firstMutationResults.loading;
 
   const formMethods = useForm({
@@ -59,38 +61,21 @@ const Update = () => {
   const {
     handleSubmit,
     reset,
+    setError,
     formState: { isSubmitting, isDirty },
   } = formMethods;
 
   useEffect(() => {
-    if (!data)
-      return;
-    
-    const resetData = config.activeLanguages.reduce(
-      (acc, lang) => {
-        if (!data?.taxonomyRead)
-          return acc;
+    if (!data || !data.taxonomyRead) return;
 
-        if (data.taxonomyRead.name)
-          acc = {
-            ...acc, 
-            [`name_${lang}`]: data.taxonomyRead?.name[lang] ?? ""
-          }
-
-        if (data.taxonomyRead.slug)
-          acc = {
-            ...acc, 
-            [`slug_${lang}`]: data.taxonomyRead?.slug[lang] ?? ""
-          }
-
-        return acc;
-      },
-      {}
+    reset(
+      multiLangJsonToRHFormData(
+        filteredOutputByWhitelist(data.taxonomyRead, [], multiLangFields),
+        multiLangFields,
+        config.activeLanguages
+      )
     );
-
-    reset(resetData);
   }, [reset, data, config.activeLanguages]);
-
 
   const onSubmit = async (
     newData: yup.InferType<typeof ModuleTaxonomySchema>
@@ -98,38 +83,28 @@ const Update = () => {
     setIsFormError(false);
     try {
       if (appUser) {
-        const mutationData = config.activeLanguages.reduce(
-          (acc, lang) => {
-            if (newData[`name_${lang}`])
-              acc.name = {
-                ...acc.name,
-                [lang]: newData[`name_${lang}`],
-              };
-
-            if (newData[`slug_${lang}`])
-              acc.slug = {
-                ...acc.slug,
-                [lang]: newData[`slug_${lang}`],
-              };
-
-            return acc;
-          },
-          {
-            name: {},
-            slug: {},
-          }
+        const { errors } = await firstMutation(
+          parseInt(router.query.id, 10),
+          filteredOutputByWhitelist(
+            multiLangRHFormDataToJson(
+              newData,
+              multiLangFields,
+              config.activeLanguages
+            ),
+            [],
+            multiLangFields
+          )
         );
 
-        const { errors } = await firstMutation(parseInt(router.query.id, 10), mutationData);
-
         if (!errors) {
-          
           successToast();
 
           router.push(moduleRootPath);
-          
         } else {
-          setIsFormError(true);
+          let slugError = multiLangSlugUniqueError(errors, setError);
+          
+          if (!slugError)
+            setIsFormError(true);
         }
       } else {
         setIsFormError(true);
@@ -145,7 +120,7 @@ const Update = () => {
       title: t("module.taxonomies.title", "Taxonomies"),
     },
     {
-      title: t("module.taxonomies.page.title.updatetaxonomy", "Update user"),
+      title: t("module.taxonomies.page.title.updatetaxonomy", "Update taxonomy"),
     },
   ];
 
@@ -166,7 +141,7 @@ const Update = () => {
 
   return (
     <>
-      <FormNavigationBlock shouldBlock={isDirty && !isSubmitting} />     
+      <FormNavigationBlock shouldBlock={isDirty && !isSubmitting} />
       <FormProvider {...formMethods}>
         <form noValidate onSubmit={handleSubmit(onSubmit)}>
           <fieldset disabled={disableForm}>
@@ -178,7 +153,11 @@ const Update = () => {
                   <Divider />
                 </>
               )}
-              <TaxonomyForm action="update" data={data?.taxonomyRead} validationSchema={ModuleTaxonomySchema} />
+              <TaxonomyForm
+                action="update"
+                data={data?.taxonomyRead}
+                validationSchema={ModuleTaxonomySchema}
+              />
             </ModulePage>
           </fieldset>
         </form>

@@ -5,7 +5,7 @@ import { ChevronRightIcon } from "@chakra-ui/icons";
 import { ModuleAccessRules } from "~/config/routes";
 import { useAuthentication } from "~/hooks";
 interface BreadcrumbElement {
-  title: string;
+  title: string | React.ReactNode;
   path?: string;
 }
 

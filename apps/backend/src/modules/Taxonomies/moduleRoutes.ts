@@ -1,8 +1,11 @@
 import type { RoutePrivateParams, ModuleAccessRules } from '~/config/routes';
 
 import Create from "./Create";
+import CreateTerm from "./CreateTerm";
 import Update from "./Update";
+import UpdateTerm from "./UpdateTerm";
 import Index from "./Index";
+import Terms from "./Terms";
 
 import { moduleRootPath } from './moduleConfig';
 
@@ -27,22 +30,22 @@ export const moduleRoutes: RoutePrivateParams[] = [
   },
   {
     key: "terms",
-    path: `${moduleRootPath}/:id/terms`,
-    component: Create,
+    path: `${moduleRootPath}/:taxId/terms`,
+    component: Terms,
     exact: true,
     userCan: "taxCreate",
   },
   {
     key: "termCreate",
-    path: `${moduleRootPath}/:id/create`,
-    component: Create,
+    path: `${moduleRootPath}/:taxId/create`,
+    component: CreateTerm,
     exact: true,
     userCan: "taxCreate",
   },
   {
     key: "termUpdate",
-    path: `${moduleRootPath}/:id/update`,
-    component: Update,
+    path: `${moduleRootPath}/:taxId/update/:id/`,
+    component: UpdateTerm,
     exact: true,
     userCan: "taxUpdate",
   },
