@@ -4,6 +4,7 @@ import {
   HiOutlineHome,
   HiOutlineUsers,
   HiOutlineColorSwatch,
+  HiOutlineDocumentText,
   // HiOutlineMap,
   // HiOutlineLocationMarker,
 } from "react-icons/hi";
@@ -26,6 +27,7 @@ import { moduleAccessRules as dashboadModuleAccessRules } from "~/modules/DashBo
 import { moduleAccessRules as usersModuleAccessRules } from "~/modules/Users/moduleRoutes";
 import { moduleAccessRules as settingsModuleAccessRules } from "~/modules/Settings/moduleRoutes";
 import { moduleAccessRules as taxonomiesModuleAccessRules } from "~/modules/Taxonomies/moduleRoutes";
+import { moduleAccessRules as pagesModuleAccessRules } from "~/modules/Pages/moduleRoutes";
 import { useAuthentication } from "~/hooks";
 
 const NavItem = ({
@@ -121,13 +123,13 @@ export const Sidebar = () => {
     //   exact: false,
     //   icon: HiOutlineMap,
     // },,
-    // {
-    //   title: t("module.pages.title", "pages"),
-    //   path: "/pages",
-    //   exact: false,
-    //   icon: TODO: ,
-    //   ...TODO:ModuleAccessRules,
-    // },
+    {
+      title: t("module.pages.title", "Pages"),
+      path: "/pages",
+      exact: false,
+      icon: HiOutlineDocumentText,
+      ...pagesModuleAccessRules,
+    },
     {
         title: t("module.taxonomies.title", "Taxonomies"),
         path: "/taxonomies",

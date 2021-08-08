@@ -30,6 +30,8 @@ TODO: CSS
 - Nicer action bar on mobile phones
 
 
+TODO: General way to change ownership of content (page authorId)
+
 Installation
 Important to mention to clone src/config/appconfig.example.ts to src/config/appconfig.ts and to fill in the required settings .. 
 

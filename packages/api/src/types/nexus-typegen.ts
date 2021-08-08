@@ -54,6 +54,12 @@ declare global {
 }
 
 export interface NexusGenInputs {
+  PageUpsertInput: { // input type
+    authorId: number; // Int!
+    content: NexusGenScalars['JSON']; // JSON!
+    slug: NexusGenScalars['JSON']; // JSON!
+    title: NexusGenScalars['JSON']; // JSON!
+  }
   SettingsUpdateInput: { // input type
     key: string; // String!
     value: NexusGenScalars['JSON']; // JSON!
@@ -124,6 +130,11 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
+  AdminUser: { // root type
+    firstName?: string | null; // String
+    id?: number | null; // Int
+    lastName?: string | null; // String
+  }
   AuthPayload: { // root type
     tokens?: NexusGenRootTypes['AuthPayloadTokens'] | null; // AuthPayloadTokens
     user?: NexusGenRootTypes['AuthUser'] | null; // AuthUser
@@ -145,6 +156,20 @@ export interface NexusGenObjects {
     result: boolean; // Boolean!
   }
   Mutation: {};
+  Page: { // root type
+    authorId?: number | null; // Int
+    content?: NexusGenScalars['JSON'] | null; // JSON
+    createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
+    fullText?: string | null; // String
+    id: number; // Int!
+    slug?: NexusGenScalars['JSON'] | null; // JSON
+    title?: NexusGenScalars['JSON'] | null; // JSON
+    updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
+  }
+  PageQueryResult: { // root type
+    pages?: Array<NexusGenRootTypes['Page'] | null> | null; // [Page]
+    totalCount?: number | null; // Int
+  }
   ProfileUser: { // root type
     email?: NexusGenScalars['EmailAddress'] | null; // EmailAddress
     emailVerified?: boolean | null; // Boolean
@@ -216,6 +241,11 @@ export type NexusGenRootTypes = NexusGenInterfaces & NexusGenObjects
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
 
 export interface NexusGenFieldTypes {
+  AdminUser: { // field return type
+    firstName: string | null; // String
+    id: number | null; // Int
+    lastName: string | null; // String
+  }
   AuthPayload: { // field return type
     tokens: NexusGenRootTypes['AuthPayloadTokens'] | null; // AuthPayloadTokens
     user: NexusGenRootTypes['AuthUser'] | null; // AuthUser
@@ -244,6 +274,9 @@ export interface NexusGenFieldTypes {
     authRefresh: NexusGenRootTypes['AuthPayload']; // AuthPayload!
     authRequestEmailVerificationEmail: NexusGenRootTypes['BooleanResult']; // BooleanResult!
     authVerifyEmail: NexusGenRootTypes['BooleanResult']; // BooleanResult!
+    pageCreate: NexusGenRootTypes['Page']; // Page!
+    pageDelete: NexusGenRootTypes['BooleanResult']; // BooleanResult!
+    pageUpdate: NexusGenRootTypes['Page']; // Page!
     settingsUpdate: NexusGenRootTypes['BooleanResult']; // BooleanResult!
     taxonomyCreate: NexusGenRootTypes['Taxonomy']; // Taxonomy!
     taxonomyDelete: NexusGenRootTypes['BooleanResult']; // BooleanResult!
@@ -258,6 +291,21 @@ export interface NexusGenFieldTypes {
     userSignup: NexusGenRootTypes['AuthPayload']; // AuthPayload!
     userUpdate: NexusGenRootTypes['BooleanResult']; // BooleanResult!
   }
+  Page: { // field return type
+    author: NexusGenRootTypes['User'] | null; // User
+    authorId: number | null; // Int
+    content: NexusGenScalars['JSON'] | null; // JSON
+    createdAt: NexusGenScalars['DateTime'] | null; // DateTime
+    fullText: string | null; // String
+    id: number; // Int!
+    slug: NexusGenScalars['JSON'] | null; // JSON
+    title: NexusGenScalars['JSON'] | null; // JSON
+    updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
+  }
+  PageQueryResult: { // field return type
+    pages: Array<NexusGenRootTypes['Page'] | null> | null; // [Page]
+    totalCount: number | null; // Int
+  }
   ProfileUser: { // field return type
     email: NexusGenScalars['EmailAddress'] | null; // EmailAddress
     emailVerified: boolean | null; // Boolean
@@ -266,6 +314,9 @@ export interface NexusGenFieldTypes {
     lastName: string | null; // String
   }
   Query: { // field return type
+    adminUsers: Array<NexusGenRootTypes['AdminUser'] | null> | null; // [AdminUser]
+    pageRead: NexusGenRootTypes['Page']; // Page!
+    pages: NexusGenRootTypes['PageQueryResult'] | null; // PageQueryResult
     setting: Array<NexusGenRootTypes['Setting'] | null> | null; // [Setting]
     settings: Array<NexusGenRootTypes['Setting'] | null> | null; // [Setting]
     taxonomies: NexusGenRootTypes['TaxonomyQueryResult'] | null; // TaxonomyQueryResult
@@ -339,6 +390,11 @@ export interface NexusGenFieldTypes {
 }
 
 export interface NexusGenFieldTypeNames {
+  AdminUser: { // field return type name
+    firstName: 'String'
+    id: 'Int'
+    lastName: 'String'
+  }
   AuthPayload: { // field return type name
     tokens: 'AuthPayloadTokens'
     user: 'AuthUser'
@@ -367,6 +423,9 @@ export interface NexusGenFieldTypeNames {
     authRefresh: 'AuthPayload'
     authRequestEmailVerificationEmail: 'BooleanResult'
     authVerifyEmail: 'BooleanResult'
+    pageCreate: 'Page'
+    pageDelete: 'BooleanResult'
+    pageUpdate: 'Page'
     settingsUpdate: 'BooleanResult'
     taxonomyCreate: 'Taxonomy'
     taxonomyDelete: 'BooleanResult'
@@ -381,6 +440,21 @@ export interface NexusGenFieldTypeNames {
     userSignup: 'AuthPayload'
     userUpdate: 'BooleanResult'
   }
+  Page: { // field return type name
+    author: 'User'
+    authorId: 'Int'
+    content: 'JSON'
+    createdAt: 'DateTime'
+    fullText: 'String'
+    id: 'Int'
+    slug: 'JSON'
+    title: 'JSON'
+    updatedAt: 'DateTime'
+  }
+  PageQueryResult: { // field return type name
+    pages: 'Page'
+    totalCount: 'Int'
+  }
   ProfileUser: { // field return type name
     email: 'EmailAddress'
     emailVerified: 'Boolean'
@@ -389,6 +463,9 @@ export interface NexusGenFieldTypeNames {
     lastName: 'String'
   }
   Query: { // field return type name
+    adminUsers: 'AdminUser'
+    pageRead: 'Page'
+    pages: 'PageQueryResult'
     setting: 'Setting'
     settings: 'Setting'
     taxonomies: 'TaxonomyQueryResult'
@@ -489,6 +566,16 @@ export interface NexusGenArgTypes {
     authVerifyEmail: { // args
       token: string; // String!
     }
+    pageCreate: { // args
+      data: NexusGenInputs['PageUpsertInput']; // PageUpsertInput!
+    }
+    pageDelete: { // args
+      id: number; // Int!
+    }
+    pageUpdate: { // args
+      data: NexusGenInputs['PageUpsertInput']; // PageUpsertInput!
+      id: number; // Int!
+    }
     settingsUpdate: { // args
       data?: NexusGenInputs['SettingsUpdateInput'][] | null; // [SettingsUpdateInput!]
     }
@@ -541,6 +628,18 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
+    adminUsers: { // args
+      roles: Array<string | null>; // [String]!
+    }
+    pageRead: { // args
+      id: number; // Int!
+    }
+    pages: { // args
+      orderBy?: NexusGenScalars['JSON'] | null; // JSON
+      pageIndex?: number | null; // Int
+      pageSize: number | null; // Int
+      where?: NexusGenScalars['JSON'] | null; // JSON
+    }
     setting: { // args
       id: number; // Int!
     }

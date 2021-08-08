@@ -2,6 +2,12 @@
 ### Do not make changes to this file directly
 
 
+type AdminUser {
+  firstName: String
+  id: Int
+  lastName: String
+}
+
 type AuthPayload {
   tokens: AuthPayloadTokens
   user: AuthUser
@@ -60,6 +66,9 @@ type Mutation {
   authRefresh(scope: String!): AuthPayload!
   authRequestEmailVerificationEmail(scope: String!, userId: Int!): BooleanResult!
   authVerifyEmail(token: String!): BooleanResult!
+  pageCreate(data: PageUpsertInput!): Page!
+  pageDelete(id: Int!): BooleanResult!
+  pageUpdate(data: PageUpsertInput!, id: Int!): Page!
   settingsUpdate(data: [SettingsUpdateInput!]): BooleanResult!
   taxonomyCreate(data: TaxonomyCreateInput!): Taxonomy!
   taxonomyDelete(id: Int!): BooleanResult!
@@ -75,6 +84,31 @@ type Mutation {
   userUpdate(data: UserUpdateInput!, id: Int!, scope: String!): BooleanResult!
 }
 
+type Page {
+  author: User
+  authorId: Int
+  content: JSON
+  createdAt: DateTime
+  fullText: String
+  id: Int!
+  slug: JSON
+  title: JSON
+  updatedAt: DateTime
+}
+
+"""List all the pages in the database."""
+type PageQueryResult {
+  pages: [Page]
+  totalCount: Int
+}
+
+input PageUpsertInput {
+  authorId: Int!
+  content: JSON!
+  slug: JSON!
+  title: JSON!
+}
+
 type ProfileUser implements UserBaseNode {
   email: EmailAddress
   emailVerified: Boolean
@@ -84,6 +118,9 @@ type ProfileUser implements UserBaseNode {
 }
 
 type Query {
+  adminUsers(roles: [String]!): [AdminUser] @deprecated(reason: "A publicly accessible list Lists all users that have a the given roles")
+  pageRead(id: Int!): Page!
+  pages(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): PageQueryResult
   setting(id: Int!): [Setting]
   settings: [Setting]
   taxonomies(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): TaxonomyQueryResult

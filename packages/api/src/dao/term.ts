@@ -25,7 +25,7 @@ export const daoTermCheckSlugUnique = async (
 export const daoTermQuery = async (
   taxonomyId: number,
   where: Prisma.TermWhereInput,
-  orderBy: Prisma.TermOrderByInput,
+  orderBy: Prisma.TermOrderByInput | Prisma.TermOrderByInput[],
   pageIndex: number = 0,
   pageSize: number = config.db.defaultPageSize
 ): Promise<Term[]> => {

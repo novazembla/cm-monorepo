@@ -13,7 +13,7 @@ import {
   interfaceType,
 } from "nexus";
 import httpStatus from "http-status";
-import { AppScopes } from "@culturemap/core";
+import { AppScopes, filteredOutputByWhitelist } from "@culturemap/core";
 
 import { User as PrismaTypeUser } from "@prisma/client";
 
@@ -61,6 +61,15 @@ export const User = objectType({
     t.boolean("userBanned");
     t.date("createdAt");
     t.date("updatedAt");
+  },
+});
+
+export const AdminUser = objectType({
+  name: "AdminUser",
+  definition(t) {
+    t.int("id");
+    t.string("firstName");
+    t.string("lastName");
   },
 });
 
@@ -125,6 +134,38 @@ export const UserQueries = extendType({
           totalCount,
           users,
         };
+      },
+    });
+
+    t.field("adminUsers", {
+      type: list("AdminUser"),
+      deprecation:
+        "A publicly accessible list Lists all users that have a the given roles",
+
+      args: {
+        roles: nonNull(list(stringArg())),
+      },
+
+      // authorize: (...[, , ctx]) =>
+      //   authorizeApiUser(ctx, "accessAsAuthenticatedUser"),
+
+      async resolve(...[, args]) {
+        const users = await daoUserQuery(
+          {
+            role: {
+              in: args.roles,
+            },
+          },
+          [{ firstName: "asc" }, { lastName: "asc" }],
+          0,
+          10000
+        );
+
+        return filteredOutputByWhitelist(users, [
+          "id",
+          "firstName",
+          "lastName",
+        ]);
       },
     });
 

@@ -7,8 +7,8 @@ import { filteredOutputByWhitelist } from "@culturemap/core";
 
 import { TextErrorMessage, FormNavigationBlock } from "~/components/forms";
 
-import { ModuleTaxonomySchema } from "./forms";
-import { useTaxonomyCreateMutation } from "./hooks";
+import { ModulePageSchema } from "./forms";
+import { usePageCreateMutation } from "./hooks";
 import {
   useAuthentication,
   useSuccessfullySavedToast,
@@ -26,7 +26,7 @@ import {
 
 import { moduleRootPath, multiLangFields } from "./moduleConfig";
 
-import { TaxonomyForm } from "./forms";
+import { PageForm } from "./forms";
 import { multiLangRHFormDataToJson, multiLangSlugUniqueError } from "~/utils";
 
 const Create = () => {
@@ -36,14 +36,14 @@ const Create = () => {
   const { t } = useTranslation();
   const successToast = useSuccessfullySavedToast();
 
-  const [firstMutation, firstMutationResults] = useTaxonomyCreateMutation();
+  const [firstMutation, firstMutationResults] = usePageCreateMutation();
   const [isFormError, setIsFormError] = useState(false);
 
   const disableForm = firstMutationResults.loading;
 
   const formMethods = useForm({
     mode: "onTouched",
-    resolver: yupResolver(ModuleTaxonomySchema),
+    resolver: yupResolver(ModulePageSchema),
   });
 
   const {
@@ -53,21 +53,24 @@ const Create = () => {
   } = formMethods;
 
   const onSubmit = async (
-    newData: yup.InferType<typeof ModuleTaxonomySchema>
+    newData: yup.InferType<typeof ModulePageSchema>
   ) => {
     setIsFormError(false);
     try {
       if (appUser) {
         const { errors } = await firstMutation(
-          filteredOutputByWhitelist(
-            multiLangRHFormDataToJson(
-              newData,
-              multiLangFields,
-              config.activeLanguages
-            ),
-            [],
-            multiLangFields
-          )
+          {
+            authorId: appUser.id,
+            ...filteredOutputByWhitelist(
+              multiLangRHFormDataToJson(
+                newData,
+                multiLangFields,
+                config.activeLanguages
+              ),
+              [],
+              multiLangFields
+            )
+          }
         );
 
         if (!errors) {
@@ -90,10 +93,10 @@ const Create = () => {
   const breadcrumb = [
     {
       path: moduleRootPath,
-      title: t("module.taxonomies.title", "Taxonomies"),
+      title: t("module.pages.title", "Pages"),
     },
     {
-      title: t("module.taxonomies.page.title.createtax", "Add new taxonomy"),
+      title: t("module.pages.page.title.createpage", "Add new page"),
     },
   ];
 
@@ -102,13 +105,13 @@ const Create = () => {
       type: "back",
       to: moduleRootPath,
       label: t("module.button.cancel", "Cancel"),
-      userCan: "taxRead",
+      userCan: "pageRead",
     },
     {
       type: "submit",
       isLoading: isSubmitting,
       label: t("module.button.save", "Save"),
-      userCan: "taxCreate",
+      userCan: "pageCreate",
     },
   ];
 
@@ -126,9 +129,9 @@ const Create = () => {
                   <Divider />
                 </>
               )}
-              <TaxonomyForm
+              <PageForm
                 action="create"
-                validationSchema={ModuleTaxonomySchema}
+                validationSchema={ModulePageSchema}
               />
             </ModulePage>
           </fieldset>

@@ -28,7 +28,7 @@ export const daoTaxonomyCheckSlugUnique = async (
 
 export const daoTaxonomyQuery = async (
   where: Prisma.TaxonomyWhereInput,
-  orderBy: Prisma.TaxonomyOrderByInput,
+  orderBy: Prisma.TaxonomyOrderByInput | Prisma.TaxonomyOrderByInput[],
   include: Prisma.TaxonomyInclude | undefined,
   pageIndex: number = 0,
   pageSize: number = config.db.defaultPageSize
@@ -101,7 +101,7 @@ export const daoTaxonomyUpdate = async (
   const result = await daoSharedCheckSlugUnique(
     prisma.taxonomy.findMany,
     data.slug as Record<string, string>,
-    id,
+    id
   );
 
   if (!result.ok)

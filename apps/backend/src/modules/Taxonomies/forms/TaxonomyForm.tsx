@@ -3,8 +3,6 @@ import {
   FieldMultiLang,
 } from "~/components/forms";
 
-import { yupIsFieldRequired } from "~/validation";
-
 export const TaxonomyForm = ({ data, errors, action, validationSchema }: { data?: any; errors?: any; validationSchema: any; action: "create" | "update" }) => {
   const { t } = useTranslation();
 
@@ -18,10 +16,7 @@ export const TaxonomyForm = ({ data, errors, action, validationSchema }: { data?
           "module.taxonomies.forms.taxonomy.field.label.name",
           "Name"
         )}
-        isRequired={yupIsFieldRequired(
-          "name",
-          validationSchema
-        )}
+        isRequired={true}
         settings={{
           defaultValues: data?.taxonomyRead?.name,
           placeholder: t(
@@ -38,10 +33,7 @@ export const TaxonomyForm = ({ data, errors, action, validationSchema }: { data?
           "module.taxonomies.forms.taxonomy.field.label.slug",
           "Slug"
         )}
-        isRequired={yupIsFieldRequired(
-          "slug",
-          validationSchema
-        )}
+        isRequired={true}
         settings={{
           defaultValues: data?.taxonomyRead?.slug,
           placeholder: t(

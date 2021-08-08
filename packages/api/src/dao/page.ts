@@ -23,9 +23,8 @@ export const daoPageCheckSlugUnique = async (
 };
 
 export const daoPageQuery = async (
-  taxonomyId: number,
   where: Prisma.PageWhereInput,
-  orderBy: Prisma.PageOrderByInput,
+  orderBy: Prisma.PageOrderByInput | Prisma.PageOrderByInput[],
   pageIndex: number = 0,
   pageSize: number = config.db.defaultPageSize
 ): Promise<Page[]> => {
@@ -40,7 +39,6 @@ export const daoPageQuery = async (
 };
 
 export const daoPageQueryCount = async (
-  taxonomyId: number,
   where: Prisma.PageWhereInput
 ): Promise<number> => {
   return prisma.page.count({
@@ -62,23 +60,23 @@ export const daoPageCreate = async (
       `Slug is not unique in [${Object.keys(result.errors).join(",")}]`
     );
 
-  const term: Page = await prisma.page.create({
+  const page: Page = await prisma.page.create({
     data,
   });
 
   return filteredOutputByBlacklistOrNotFound(
-    term,
+    page,
     config.db.privateJSONDataKeys.page
   );
 };
 
 export const daoPageGetById = async (id: number): Promise<Page> => {
-  const term: Page | null = await prisma.page.findUnique({
+  const page: Page | null = await prisma.page.findUnique({
     where: { id },
   });
 
   return filteredOutputByBlacklistOrNotFound(
-    term,
+    page,
     config.db.privateJSONDataKeys.page
   );
 };
