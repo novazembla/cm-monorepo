@@ -1,5 +1,5 @@
 import React, { ChangeEventHandler, ChangeEvent } from "react";
-import { useFormContext } from "react-hook-form";
+import { useFormContext, Controller } from "react-hook-form";
 
 import { FormControl, FormLabel, Select } from "@chakra-ui/react";
 
@@ -17,6 +17,9 @@ export interface FieldSelectSettings {
   valid?: boolean;
   
 }
+
+
+
 
 export const FieldSelect = ({
   settings,
@@ -37,7 +40,7 @@ export const FieldSelect = ({
 }) => {
   const {
     formState: { errors },
-    register,
+    control,
   } = useFormContext();
 
   let fieldProps: FieldSelectSettings = {
@@ -53,8 +56,6 @@ export const FieldSelect = ({
 
   if (errors[name]?.message) fieldProps.valid = undefined;
 
-  const { ref, onBlur, onChange } = register(id, { required: isRequired });
-
   return (
     <FormControl
       id={id}
@@ -64,19 +65,34 @@ export const FieldSelect = ({
       <FormLabel htmlFor={id} mb="0.5">
         {label}
       </FormLabel>
-      <Select
+
+      <Controller
+        control={control}
         name={name}
-        onBlur={onBlur}
-        onChange={(event: ChangeEvent) => {
-          onChange(event);
-          settings?.onChange && settings?.onChange.call(null, event);
-        }}
-        {...fieldProps}
-        ref={ref}
-        size="md"
-      >
-        {options && options.map((option, i) => <option key={`${id}-o-${i}`} value={option.value}>{option.label}</option>)}
-      </Select>
+        render={({
+          field: { onChange, onBlur, value, name, ref },
+          fieldState: { invalid, isTouched, isDirty, error },
+          formState,
+        }) => (
+          <Select
+        
+            onBlur={onBlur}
+            onChange={(event: ChangeEvent) => {
+              onChange(event);
+              settings?.onChange && settings?.onChange.call(null, event);
+            }}
+            {...fieldProps}
+            size="md"
+            ref={ref}
+          >
+            {options && options.map((option, i) => <option key={`${id}-o-${i}`} value={option.value}>{option.label}</option>)}
+          </Select>
+          
+        )}
+      />
+
+
+      
       <FieldErrorMessage error={errors[name]?.message} />
     </FormControl>
   );

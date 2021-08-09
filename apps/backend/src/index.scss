@@ -12,3 +12,81 @@ code {
   position: fixed;
   top: -300px;  
 }
+
+.editor {
+  width: 100%;
+  position: relative;
+  background-color: #fff;
+
+  .menu-bar {
+    top: -1px;
+    left: -1px;
+    width: 100%;
+    padding: var(--chakra-space-1);
+    border-bottom: 1px solid  var(--chakra-colors-gray-400);
+  }
+  
+  &.basic {
+    border-radius: var(--chakra-radii-md);
+    border: 1px solid var(--chakra-colors-gray-400);
+    transition: all 0.25s;
+    
+    .wrapper {
+      min-height: 100px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    &.is-focussed {
+      border-color: var(--chakra-colors-gray-500);
+      box-shadow: 0 0 0 1px var(--chakra-colors-gray-500);
+    }
+
+    .ProseMirror {
+      height: 100%;
+      background-color:#fff;
+      overflow-y: auto;
+      padding: var(--chakra-space-2);
+    }
+  }
+
+  &.has-char-count {
+    .ProseMirror {
+      padding-bottom: var(--chakra-space-8);
+    }
+  }
+  .char-count {
+    position: absolute;
+    bottom: var(--chakra-space-2);
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+.ProseMirror {
+  overflow-y: auto;
+  > * + * {
+    margin-top: 0.75em;
+  } 
+  
+  &:focus {
+    outline: none;
+  }
+}
+
+/* Placeholder (at the top) */
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: var(--chakra-colors-gray-400);
+  pointer-events: none;
+  height: 0;
+}
+
+/* Placeholder (on every new line) */
+.ProseMirror p.is-empty::before {
+  content: "...";
+  float: left;
+  color: var(--chakra-colors-gray-400);
+  pointer-events: none;
+  height: 0;
+}

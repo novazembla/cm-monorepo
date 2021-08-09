@@ -2,7 +2,7 @@ import React, { MouseEventHandler } from "react";
 import { Box, Flex, Heading, Link, HStack, Button } from "@chakra-ui/react";
 import { NavLink } from "react-router-dom";
 import { ChevronRightIcon } from "@chakra-ui/icons";
-import { ModuleAccessRules } from "~/config/routes";
+import type { ModuleAccessRules } from "~/types";
 import { useAuthentication } from "~/hooks";
 interface BreadcrumbElement {
   title: string | React.ReactNode;

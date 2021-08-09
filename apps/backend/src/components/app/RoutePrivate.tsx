@@ -1,6 +1,6 @@
 import { Route, Redirect } from "react-router-dom";
 import { useAuthentication } from "~/hooks";
-import type { AppRouteProps } from "~/config/routes";
+import type { AppRouteProps } from "~/types";
 import { ModulePageAccessDenied } from "~/components/modules";
 
 export const RoutePrivate = (props: AppRouteProps) => {

@@ -1,4 +1,4 @@
-import type { RoutePrivateParams, ModuleAccessRules } from '~/config/routes';
+import type { RoutePrivateParams, ModuleAccessRules } from '~/types';
 
 import Index from "./Index";
 import Password from "./Password";

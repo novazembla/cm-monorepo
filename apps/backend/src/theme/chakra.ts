@@ -39,6 +39,7 @@ const themeConfig = {
         height: "100%",
         bg: "#b5d3ee",
       },
+      "select, option":"font-family: Open Sans, Helvetica, Arial, sans-serif;",
       "#root": {
         height: "100%",
       },

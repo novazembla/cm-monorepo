@@ -20,6 +20,8 @@ TODO: AdminTable
 - is there a way to return to default if module is loaded via main navigation ... 
 - useRef with the table header is caching the AppUser changes to the user will not be reflected by the future evaluation of the permissions
 - Json column filtering is not caseinsensitive: https://github.com/prisma/prisma/issues/7390
+- Mouse over of row does not look too nice in firefox
+
 
 TODO: Menu/Sidebar
 - if you go smaller the slideout menu default state does not toggle to closed? Why? 
@@ -28,9 +30,19 @@ TODO: Menu/Sidebar
 
 TODO: CSS
 - Nicer action bar on mobile phones
+- Select options ugly in FF
+- Expose scroll bar width as a variable 
+
+TextEditor
+- Position bubble position nicer 
 
 
 TODO: General way to change ownership of content (page authorId)
+
+
+TODO: NPM Packages
+- react-icons had missing fonts, for now I've install a clone of the project "@hacknug/react-icons/ri" to use the icons in the editor
+monitor if you can switch back to the original one in a few month https://github.com/react-icons/react-icons/issues/446 
 
 Installation
 Important to mention to clone src/config/appconfig.example.ts to src/config/appconfig.ts and to fill in the required settings .. 

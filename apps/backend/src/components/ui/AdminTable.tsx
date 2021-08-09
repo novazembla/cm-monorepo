@@ -134,16 +134,16 @@ export const adminTableCreateQueryVariables = (
                   path: jKey,
                   string_contains: tState.filterKeyword,
                   // TODO: maybe enable at some point mode: 'insensitive',
-                }
+                },
               })),
-            }
+            };
           } else {
             return {
               [key]: {
                 contains: tState.filterKeyword,
-                mode: 'insensitive',
+                mode: "insensitive",
               },
-            }
+            };
           }
         }),
       },
@@ -252,12 +252,11 @@ export const AdminTableActionButtonEdit = (cell: Cell) => {
   );
 };
 
-
 export const AdminTableActionButtonView = (cell: Cell) => {
   const column: any = cell.column;
 
   const hasAccess =
-  typeof column.canView === "undefined" ||
+    typeof column.canView === "undefined" ||
     column.canView === true ||
     (typeof column.canView === "function" &&
       column.canView.call(null, cell, column.appUser));
@@ -305,7 +304,7 @@ export const AdminTableActionCell = (cell: Cell) => {
   const column: any = cell.column;
 
   return (
-    <Flex justifyContent="center">
+    <Flex justifyContent="center" py="4" bg="rgba(255, 255, 255, 0.8)">
       <HStack>
         {column.showDelete &&
           React.createElement(
@@ -519,9 +518,11 @@ export const AdminTable = ({
                     _last={
                       (column as any).isStickyToTheRight
                         ? {
-                            bg: "rgba(255, 255, 255, 0.90)",
                             position: "sticky",
                             right: 0,
+                            "> div": {
+                              bg: "wine",
+                            },
                           }
                         : undefined
                     }
@@ -584,6 +585,10 @@ export const AdminTable = ({
                     _hover: {
                       td: {
                         bg: "gray.50",
+
+                        "> div": {
+                          bg: "transparent"
+                        }
                       },
                     },
                   }}
@@ -597,9 +602,9 @@ export const AdminTable = ({
                       _last={
                         (cell.column as any).isStickyToTheRight
                           ? {
-                              bg: "rgba(255, 255, 255, 0.85)",
                               position: "sticky",
                               right: 0,
+                              p: 0,
                             }
                           : undefined
                       }

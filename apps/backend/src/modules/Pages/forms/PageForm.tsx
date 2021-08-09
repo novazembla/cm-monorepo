@@ -1,6 +1,11 @@
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { FieldMultiLang, FieldSelect, FieldRow } from "~/components/forms";
+import {
+  FieldMultiLangInput,
+  FieldMultiLangTextEditor,
+  FieldSelect,
+  FieldRow,
+} from "~/components/forms";
 
 export const PageForm = ({
   data,
@@ -21,24 +26,27 @@ export const PageForm = ({
   if (action === "update") {
     if (data.adminUsers) {
       updateActions = (
-        <FieldRow><FieldSelect
-          id="authorId"
-          label={t("module.pages.forms.field.label.author", "Page author")}
-          isRequired={true}
-          options={data.adminUsers.map((auth) => ({
-            value: auth.id,
-            label: `${auth.firstName} ${auth.lastName}`,
-          }))}
-          settings={{
-            defaultValue: data.pageRead.authorId,
-            placeholder: t(
-              "module.pages.forms.field.placeholder.author",
-              "Please choose the pages's author"
-            ),
-          }}
-          {...register("authorId")}
-
-        /></FieldRow>
+        <FieldRow>
+          <FieldSelect
+            name="authorId"
+            id="authorId"
+            label={t("module.pages.forms.field.label.author", "Page author")}
+            isRequired={true}
+            options={data.adminUsers.map(
+              (authUser: any) => ({
+                value: authUser.id,
+                label: `${authUser.firstName} ${authUser.lastName}`,
+              })
+            )}
+            settings={{
+              defaultValue: data.pageRead.authorId,
+              placeholder: t(
+                "module.pages.forms.field.placeholder.author",
+                "Please choose the pages's author"
+              ),
+            }}
+          />
+        </FieldRow>
       );
     } else {
       updateActions = (
@@ -48,7 +56,7 @@ export const PageForm = ({
   }
   return (
     <>
-      <FieldMultiLang
+      <FieldMultiLangInput
         name="title"
         id="title"
         type="text"
@@ -62,7 +70,7 @@ export const PageForm = ({
           ),
         }}
       />
-      <FieldMultiLang
+      <FieldMultiLangInput
         name="slug"
         id="slug"
         type="text"
@@ -76,15 +84,16 @@ export const PageForm = ({
           ),
         }}
       />
-      <FieldMultiLang
+      <FieldMultiLangTextEditor
         name="content"
         id="content"
-        type="text"
+        type="basic"
         label={t("module.pages.forms.page.field.label.content", "Content")}
         isRequired={false}
         settings={{
           defaultRequired: true,
           defaultValues: data?.pageRead?.content,
+          maxLength: 5000,
           placeholder: t(
             "module.pages.forms.page.field.placeholder.content",
             "Page content"

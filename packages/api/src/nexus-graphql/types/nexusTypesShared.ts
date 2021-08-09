@@ -59,15 +59,11 @@ export const SharedQueries = extendType({
         data: nonNull(arg({ type: "UniqueSlugInput" })),
       },
 
-      // // TODO: enable
-      // authorize: (...[, args, ctx]) => {
-      //   console.log(
-      //     authorizeApiUser(ctx, `${args.type}Read` as PermissionNames)
-      //   );
-      //   return true;
-      // },
+      // TODO: enable
+      authorize: (...[, args, ctx]) =>
+        authorizeApiUser(ctx, `${args.type}Read` as PermissionNames),
 
-      async resolve(...[, args, ctx]) {
+      async resolve(...[, args]) {
         let errors;
         let ok = false;
         let result;

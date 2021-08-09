@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import {
-  FieldMultiLang,
+  FieldMultiLangInput,
 } from "~/components/forms";
 
 export const TaxonomyForm = ({ data, errors, action, validationSchema }: { data?: any; errors?: any; validationSchema: any; action: "create" | "update" }) => {
@@ -8,7 +8,7 @@ export const TaxonomyForm = ({ data, errors, action, validationSchema }: { data?
 
   return (
     <> 
-      <FieldMultiLang
+      <FieldMultiLangInput
         name="name"
         id="name"
         type="text"
@@ -25,7 +25,7 @@ export const TaxonomyForm = ({ data, errors, action, validationSchema }: { data?
           ),
         }}
       />
-      <FieldMultiLang
+      <FieldMultiLangInput
         name="slug"
         id="slug"
         type="text"

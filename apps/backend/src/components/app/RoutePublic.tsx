@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
 import { useAuthentication } from "~/hooks";
-import type { AppRouteProps } from "~/config/routes";
+import type { AppRouteProps } from "~/types";
 
 export const RoutePublic = (props: AppRouteProps) => {
   const [, { isLoggedIn } ] = useAuthentication();

@@ -8,7 +8,7 @@ import TwoColFieldRow from "./TwoColFieldRow";
 import { useConfig } from "~/hooks";
 import FieldRow from "./FieldRow";
 
-export interface FieldMultiLangSettings {
+export interface FieldMultiLangInputSettings {
   onChange?: ChangeEventHandler;
   required?: boolean;
   defaultRequired?: boolean;
@@ -19,7 +19,7 @@ export interface FieldMultiLangSettings {
   valid?: boolean;
 }
 
-export interface FieldMultiLangFieldProps {
+export interface FieldMultiLangInputFieldProps {
   required?: boolean;
   autoComplete?: string;
   name?: string;
@@ -30,7 +30,7 @@ export interface FieldMultiLangFieldProps {
   valid?: boolean;
 }
 
-export const FieldMultiLang = ({
+export const FieldMultiLangInput = ({
   settings,
   id,
   label,
@@ -39,7 +39,7 @@ export const FieldMultiLang = ({
   isRequired,
   isDisabled,
 }: {
-  settings?: FieldMultiLangSettings;
+  settings?: FieldMultiLangInputSettings;
   id: string;
   isRequired?: boolean;
   isDisabled?: boolean;
@@ -54,7 +54,7 @@ export const FieldMultiLang = ({
     register
   } = useFormContext();
 
-  let fieldProps: FieldMultiLangFieldProps = {
+  let fieldProps: FieldMultiLangInputFieldProps = {
     type: type,
     autoComplete: "new-password",
   };
@@ -125,4 +125,4 @@ export const FieldMultiLang = ({
   );
 };
 
-export default FieldMultiLang;
+export default FieldMultiLangInput;
