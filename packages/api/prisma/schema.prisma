@@ -23,9 +23,10 @@ model User {
   password       String
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @default(now()) @updatedAt
-  locations       Location[]
+  locations      Location[]
   tokens         Token[]
   pages          Page[]
+  images         Image[]
 }
 
 model Location {
@@ -95,9 +96,26 @@ model Page {
   fullText       String    @default("")
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @default(now()) @updatedAt
-
-  authorId     Int
-  author       User   @relation(fields: [authorId], references: [id])
-
-  @@index([authorId], name: "indexPageAuthorId")
+  ownerId     Int    
+  owner       User   @relation(fields: [ownerId], references: [id])
+  
+  @@index([ownerId], name: "indexPageOwnerId")
 }
+
+model Image {
+  id             Int        @id @default(autoincrement())
+  uuid           String     @db.VarChar(48) @unique
+  thumbUrl       String     @db.VarChar(128)
+  meta           Json
+  status         String     @db.VarChar(16)
+  type           String     @db.VarChar(16) @default("image")
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @default(now()) @updatedAt
+  ownerId        Int           
+  owner          User   @relation(fields: [ownerId], references: [id])
+
+  @@index([ownerId], name: "indexImageOwnerId")
+  @@index([ownerId, type], name: "indexImageOwnerIdType")
+  @@index([status], name: "indexImageStatus")
+}
+

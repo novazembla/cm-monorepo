@@ -48,6 +48,21 @@ export const userProfileUpdateMutationGQL = gql`
   }
 `;
 
+export const userProfileImageUpdateMutationGQL = gql`
+  mutation userProfileImageUpdate(
+    $scope: String!
+    $id: Int!
+    $data: UserProfileImageUpdateInput!
+  ) {
+    userProfileImageUpdate(scope: $scope, id: $id, data: $data) {
+      id
+      firstName
+      lastName
+      email
+    }
+  }
+`;
+
 export const userSignupMutationGQL = gql`
   mutation userSignup(
     $scope: String!

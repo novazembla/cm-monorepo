@@ -39,7 +39,8 @@ export type PermissionsOfEditor =
   | "taxCreate"
   | "taxRead"
   | "taxUpdate"
-  | "taxDelete";
+  | "taxDelete"
+  | "imageDelete";
 
 // !!! Also add new permissions to the constructing arrays on the bottom
 export type PermissionsOfContributor =
@@ -55,6 +56,10 @@ export type PermissionsOfContributor =
   | "tourCreate"
   | "tourUpdate"
   | "tourDeleteOwn"
+  | "imageRead"
+  | "imageUpdate"
+  | "imageCreate"
+  | "imageDeleteOwn"
   | "pageRead"
   | "pageCreate"
   | "pageUpdate"

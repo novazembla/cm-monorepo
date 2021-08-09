@@ -40,7 +40,7 @@ export const pageReadAndContentAuthorsQueryGQL = gql`
       title
       slug
       content
-      authorId
+      ownerId
       createdAt
       updatedAt
     }
@@ -87,7 +87,7 @@ const Update = () => {
 
     reset(
       multiLangJsonToRHFormData(
-        filteredOutputByWhitelist(data.pageRead, ["authorId"], multiLangFields),
+        filteredOutputByWhitelist(data.pageRead, ["ownerId"], multiLangFields),
         multiLangFields,
         config.activeLanguages
       )
@@ -103,7 +103,7 @@ const Update = () => {
         const { errors } = await firstMutation(
           parseInt(router.query.id, 10),
           { 
-            authorId: parseInt(newData.authorId, 10),
+            ownerId: parseInt(newData.ownerId, 10),
             ...filteredOutputByWhitelist(
               multiLangRHFormDataToJson(
                 newData,

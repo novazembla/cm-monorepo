@@ -6,6 +6,7 @@ import {
   ApolloLink,
   Observable,
 } from "@apollo/client";
+import { createUploadLink } from 'apollo-upload-client';
 import { authRefreshMutationGQL } from "@culturemap/core";
 import { onError } from "@apollo/client/link/error";
 import { RetryLink } from "@apollo/client/link/retry";
@@ -155,10 +156,14 @@ const createApolloClient = (settings: AppConfig) => {
         },
       }),
       errorLink,
-      new HttpLink({
+      createUploadLink({
         uri: settings.apiUrl, // Server URL (must be absolute)
         credentials: "include", // Additional fetch() options like `credentials` or `headers`
       }),
+      // new HttpLink({
+      //   uri: settings.apiUrl, // Server URL (must be absolute)
+      //   credentials: "include", // Additional fetch() options like `credentials` or `headers`
+      // }),
     ]),
     // TODO: find generic ways to manage the chache ...
     // HOW TO ENSURE deletion/updates are reflected in the cache ...

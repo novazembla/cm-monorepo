@@ -41,6 +41,10 @@ export const startApi = async () => {
             name: "dbExpireTokens",
             interval: "1m",
           },
+          {
+            name: "dbConvertImages",
+            interval: "10s",
+          },
         ],
       });
       bree.start();

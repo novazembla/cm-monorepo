@@ -4,6 +4,7 @@
 import express, { Application } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import { graphqlUploadExpress } from "graphql-upload";
 import config from "./config";
 import {
   errorConvert404ToApiError,
@@ -20,9 +21,10 @@ export const initializeExpressApp = () => {
 
   // eslint-disable-next-line import/no-named-as-default-member
   app.use(cors(config.corsOptions));
-
+  app.use(express.static("public"));
   app.use(morganSuccessHandler);
   app.use(morganErrorHandler);
+  app.use(graphqlUploadExpress());
 };
 
 export const addTerminatingErrorHandlingToApp = () => {

@@ -7,7 +7,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { TextErrorMessage, FormNavigationBlock } from "~/components/forms";
 
 import { PasswordResetValidationSchema } from "~/validation";
-import { useUserProfilePasswordUpdateMutation } from "~/hooks/mutations";
+import { useUserProfilePasswordUpdateMutation } from "./hooks";
 import { useAuthentication } from "~/hooks";
 
 import { Divider } from "@chakra-ui/react";

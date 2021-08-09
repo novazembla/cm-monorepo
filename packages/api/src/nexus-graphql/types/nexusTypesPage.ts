@@ -40,14 +40,14 @@ export const Page = objectType({
     t.json("slug");
     t.json("content");
     t.string("fullText");
-    t.int("authorId");
+    t.int("ownerId");
     t.field("author", {
       type: "User",
 
       // resolve(root, args, ctx, info)
       async resolve(...[p]) {
-        if (p.authorId) {
-          const user = await daoUserGetById(p.authorId);
+        if (p.ownerId) {
+          const user = await daoUserGetById(p.ownerId);
           if (user)
             return filteredOutputByWhitelist(user, [
               "id",
@@ -155,7 +155,7 @@ export const PageCreateInput = inputObjectType({
     t.nonNull.json("title");
     t.nonNull.json("slug");
     t.nonNull.json("content");
-    t.nonNull.int("authorId");
+    t.nonNull.int("ownerId");
   },
 });
 
@@ -177,8 +177,8 @@ export const PageMutations = extendType({
           title: args.data.title,
           slug: args.data.slug,
           content: args.data.content,
-          author: {
-            connect: { id: args.data.authorId },
+          owner: {
+            connect: { id: args.data.ownerId },
           },
         });
 

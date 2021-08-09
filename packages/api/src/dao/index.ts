@@ -4,4 +4,5 @@ export * from "./user";
 export * from "./taxonomy";
 export * from "./term";
 export * from "./page";
+export * from "./image";
 export * from "./setting";

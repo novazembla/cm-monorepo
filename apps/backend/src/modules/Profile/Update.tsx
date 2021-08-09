@@ -8,7 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { TextErrorMessage, FormNavigationBlock } from "~/components/forms";
 
 import { UserProfileUpdateValidationSchema } from "~/validation";
-import { useUserProfileUpdateMutation } from "~/hooks/mutations";
+import { useUserProfileUpdateMutation } from "./hooks";
 import {
   useAuthentication,
   useConfig,

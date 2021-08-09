@@ -10,6 +10,7 @@ import {
   arg,
   nonNull,
 } from "nexus";
+import { GraphQLUpload } from "graphql-upload";
 import { PermissionNames } from "@culturemap/core";
 import {
   GraphQLDateTime,
@@ -24,6 +25,7 @@ export const GQLDateTime = asNexusMethod(GraphQLDateTime, "date");
 export const GQLJson = asNexusMethod(GraphQLJSON, "json");
 export const GQLJwt = asNexusMethod(GraphQLJWT, "jwt");
 export const GQLEmailAddress = asNexusMethod(GraphQLEmailAddress, "email");
+export const GQLUpload = asNexusMethod(GraphQLUpload, "upload");
 
 export const BooleanResult = objectType({
   name: "BooleanResult",
@@ -67,8 +69,6 @@ export const SharedQueries = extendType({
         let errors;
         let ok = false;
         let result;
-
-        console.log(`${args.type}Read`);
 
         switch (args.type) {
           case "taxonomy":

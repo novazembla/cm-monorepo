@@ -221,7 +221,7 @@ export const TermMutations = extendType({
         if (!term)
           throw new ApiError(
             httpStatus.INTERNAL_SERVER_ERROR,
-            "User delete failed"
+            "Term deletion failed"
           );
 
         return { result: true };

@@ -60,7 +60,7 @@ const Create = () => {
       if (appUser) {
         const { errors } = await firstMutation(
           {
-            authorId: appUser.id,
+            ownerId: appUser.id,
             ...filteredOutputByWhitelist(
               multiLangRHFormDataToJson(
                 newData,

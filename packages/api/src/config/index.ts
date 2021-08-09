@@ -31,6 +31,7 @@ export type CulturemapScopes =
   | "user"
   | "taxonomy"
   | "term"
+  | "image"
   | "page";
 
 export interface ApiConfigDB {
@@ -72,6 +73,8 @@ export interface ApiConfigJwt {
 
 export interface ApiConfig {
   baseDir: string;
+  publicDir: string;
+  uploadDir: string;
   packageBaseDir: string;
   appName: string;
   baseUrl: PartialRecord<AppScopes, Array<string>>;
@@ -85,6 +88,8 @@ export interface ApiConfig {
 
 export interface ApiConfigOverwrite {
   baseDir?: string;
+  uploadDir?: string;
+  publicDir?: string;
   packageBaseDir?: string;
   appName?: string;
   baseUrl?: PartialRecord<AppScopes, Array<string>>;
@@ -113,6 +118,7 @@ const db: ApiConfigDB = {
     taxonomy: [],
     term: [],
     page: [],
+    image: [],
     user: ["password"],
   },
 };
@@ -122,6 +128,8 @@ const trimTrailingSlash = (str: string) =>
 
 export const apiConfig = {
   baseDir: resolve(dirname("")),
+  publicDir: "public",
+  uploadDir: "img",
   packageBaseDir: join(resolve(dirname(""), "packages/api")),
   db,
   env: process.env,

@@ -1,6 +1,12 @@
 /// <reference path="../../types/nexus-typegen.ts" />
 
+import { finished } from "stream";
 import dedent from "dedent";
+import path from "path";
+import fs from "fs";
+import { promisify } from "util";
+import { Prisma, User as PrismaTypeUser } from "@prisma/client";
+
 import {
   objectType,
   extendType,
@@ -14,8 +20,6 @@ import {
 } from "nexus";
 import httpStatus from "http-status";
 import { AppScopes, filteredOutputByWhitelist } from "@culturemap/core";
-
-import { User as PrismaTypeUser } from "@prisma/client";
 
 import {
   userRegister,
@@ -39,6 +43,9 @@ import {
 } from "../helpers";
 import config from "../../config";
 import { daoUserQuery, daoUserQueryCount } from "../../dao";
+
+import { imageCreate, imageGetUploadInfo } from "../../services/serviceImage";
+import { logger } from "../../services/serviceLogging";
 
 const UserBaseNode = interfaceType({
   name: "UserBaseNode",
@@ -153,7 +160,7 @@ export const UserQueries = extendType({
         const users = await daoUserQuery(
           {
             role: {
-              in: args.roles,
+              in: (args.roles ?? []) as Prisma.Enumerable<string>,
             },
           },
           [{ firstName: "asc" }, { lastName: "asc" }],
@@ -221,6 +228,13 @@ export const UserProfileUpdateInput = inputObjectType({
     t.nonNull.string("firstName");
     t.nonNull.string("lastName");
     t.nonNull.email("email");
+  },
+});
+
+export const UserProfileImageUpdateInput = inputObjectType({
+  name: "UserProfileImageUpdateInput",
+  definition(t) {
+    t.nonNull.upload("image");
   },
 });
 
@@ -294,6 +308,60 @@ export const UserMutations = extendType({
           throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Update failed");
 
         return user;
+      },
+    });
+
+    t.nonNull.field("userProfileImageUpdate", {
+      type: "User",
+
+      args: {
+        scope: nonNull(stringArg()),
+        id: nonNull(intArg()),
+        data: nonNull(UserProfileImageUpdateInput),
+      },
+
+      authorize: (...[, args, ctx]) =>
+        authorizeApiUser(ctx, "profileUpdate") &&
+        isCurrentApiUser(ctx, args.id),
+
+      async resolve(...[, args]) {
+        const uploadInfo = await imageGetUploadInfo();
+
+        const { createReadStream, filename, mimetype, encoding } = await args
+          ?.data?.image;
+
+        try {
+          const extension = path.extname(filename);
+          const imagePath = `${uploadInfo.path}/${uploadInfo.uuid}${extension}`;
+          const stream = createReadStream();
+          const out = fs.createWriteStream(imagePath);
+          stream.pipe(out);
+
+          // TODO: do we really have to use promisify here????
+          await promisify(finished)(out);
+
+          const image = await imageCreate(
+            args.id,
+            uploadInfo.uuid,
+            {
+              uploadFolder: uploadInfo.uploadFolder,
+              originalFileName: filename,
+              originalFileUrl: `${uploadInfo.baseUrl}/${uploadInfo.uuid}${extension}`,
+              originalFilePath: imagePath,
+              mimeType: mimetype,
+              encoding,
+            },
+            "profile"
+          );
+
+          return image;
+        } catch (err) {
+          logger.error(err);
+          throw new ApiError(
+            httpStatus.INTERNAL_SERVER_ERROR,
+            "Profile image upload failed #1"
+          );
+        }
       },
     });
 

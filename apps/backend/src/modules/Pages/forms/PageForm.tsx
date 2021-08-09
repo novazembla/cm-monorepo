@@ -28,8 +28,8 @@ export const PageForm = ({
       updateActions = (
         <FieldRow>
           <FieldSelect
-            name="authorId"
-            id="authorId"
+            name="ownerId"
+            id="ownerId"
             label={t("module.pages.forms.field.label.author", "Page author")}
             isRequired={true}
             options={data.adminUsers.map(
@@ -39,7 +39,7 @@ export const PageForm = ({
               })
             )}
             settings={{
-              defaultValue: data.pageRead.authorId,
+              defaultValue: data.pageRead.ownerId,
               placeholder: t(
                 "module.pages.forms.field.placeholder.author",
                 "Please choose the pages's author"
@@ -50,7 +50,7 @@ export const PageForm = ({
       );
     } else {
       updateActions = (
-        <input value={data.pageRead.authorId} {...register("authorId")} />
+        <input value={data.pageRead.ownerId} {...register("ownerId")} />
       );
     }
   }
