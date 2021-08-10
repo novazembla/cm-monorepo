@@ -25,10 +25,6 @@ declare global {
      * A field whose value is a JSON Web Token (JWT): https://jwt.io/introduction.
      */
     jwt<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "JWT";
-    /**
-     * The `Upload` scalar type represents a file upload.
-     */
-    upload<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "Upload";
   }
 }
 declare global {
@@ -49,10 +45,6 @@ declare global {
      * A field whose value is a JSON Web Token (JWT): https://jwt.io/introduction.
      */
     jwt<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "JWT";
-    /**
-     * The `Upload` scalar type represents a file upload.
-     */
-    upload<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "Upload";
   }
 }
 
@@ -62,10 +54,6 @@ declare global {
 }
 
 export interface NexusGenInputs {
-  ImageCreateInput: { // input type
-    image: NexusGenScalars['Upload']; // Upload!
-    ownerId: number; // Int!
-  }
   ImageUpdateInput: { // input type
     meta: NexusGenScalars['JSON']; // JSON!
     ownerId: number; // Int!
@@ -109,9 +97,6 @@ export interface NexusGenInputs {
     role: string; // String!
     userBanned: boolean; // Boolean!
   }
-  UserProfileImageUpdateInput: { // input type
-    image: NexusGenScalars['Upload']; // Upload!
-  }
   UserProfileUpdateInput: { // input type
     email: NexusGenScalars['EmailAddress']; // EmailAddress!
     firstName: string; // String!
@@ -146,7 +131,6 @@ export interface NexusGenScalars {
   EmailAddress: any
   JSON: any
   JWT: any
-  Upload: any
 }
 
 export interface NexusGenObjects {
@@ -180,14 +164,18 @@ export interface NexusGenObjects {
     id: number; // Int!
     meta?: NexusGenScalars['JSON'] | null; // JSON
     ownerId: number; // Int!
-    status?: string | null; // String
-    thumbUrl?: string | null; // String
+    status?: number | null; // Int
     updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
     uuid?: string | null; // String
   }
   ImageQueryResult: { // root type
     images?: Array<NexusGenRootTypes['Image'] | null> | null; // [Image]
     totalCount?: number | null; // Int
+  }
+  ImageStatus: { // root type
+    id: number; // Int!
+    sizes?: NexusGenScalars['JSON'] | null; // JSON
+    status: string; // String!
   }
   Mutation: {};
   Page: { // root type
@@ -210,6 +198,7 @@ export interface NexusGenObjects {
     firstName?: string | null; // String
     id: number; // Int!
     lastName?: string | null; // String
+    profileImageId?: number | null; // Int
   }
   Query: {};
   Setting: { // root type
@@ -253,6 +242,7 @@ export interface NexusGenObjects {
     firstName?: string | null; // String
     id: number; // Int!
     lastName?: string | null; // String
+    profileImageId?: number | null; // Int
     role?: string | null; // String
     updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
     userBanned?: boolean | null; // Boolean
@@ -305,14 +295,18 @@ export interface NexusGenFieldTypes {
     id: number; // Int!
     meta: NexusGenScalars['JSON'] | null; // JSON
     ownerId: number; // Int!
-    status: string | null; // String
-    thumbUrl: string | null; // String
+    status: number | null; // Int
     updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
     uuid: string | null; // String
   }
   ImageQueryResult: { // field return type
     images: Array<NexusGenRootTypes['Image'] | null> | null; // [Image]
     totalCount: number | null; // Int
+  }
+  ImageStatus: { // field return type
+    id: number; // Int!
+    sizes: NexusGenScalars['JSON'] | null; // JSON
+    status: string; // String!
   }
   Mutation: { // field return type
     authLogin: NexusGenRootTypes['AuthPayload']; // AuthPayload!
@@ -322,7 +316,6 @@ export interface NexusGenFieldTypes {
     authRefresh: NexusGenRootTypes['AuthPayload']; // AuthPayload!
     authRequestEmailVerificationEmail: NexusGenRootTypes['BooleanResult']; // BooleanResult!
     authVerifyEmail: NexusGenRootTypes['BooleanResult']; // BooleanResult!
-    imageCreate: NexusGenRootTypes['Image']; // Image!
     imageDelete: NexusGenRootTypes['BooleanResult']; // BooleanResult!
     imageUpdate: NexusGenRootTypes['Image']; // Image!
     pageCreate: NexusGenRootTypes['Page']; // Page!
@@ -337,7 +330,7 @@ export interface NexusGenFieldTypes {
     termUpdate: NexusGenRootTypes['Term']; // Term!
     userCreate: NexusGenRootTypes['User']; // User!
     userDelete: NexusGenRootTypes['BooleanResult']; // BooleanResult!
-    userProfileImageUpdate: NexusGenRootTypes['User']; // User!
+    userProfileImageDelete: NexusGenRootTypes['BooleanResult']; // BooleanResult!
     userProfilePasswordUpdate: NexusGenRootTypes['User']; // User!
     userProfileUpdate: NexusGenRootTypes['User']; // User!
     userSignup: NexusGenRootTypes['AuthPayload']; // AuthPayload!
@@ -364,10 +357,13 @@ export interface NexusGenFieldTypes {
     firstName: string | null; // String
     id: number; // Int!
     lastName: string | null; // String
+    profileImage: NexusGenRootTypes['Image'] | null; // Image
+    profileImageId: number | null; // Int
   }
   Query: { // field return type
     adminUsers: Array<NexusGenRootTypes['AdminUser'] | null> | null; // [AdminUser]
     imageRead: NexusGenRootTypes['Image']; // Image!
+    imageStatus: NexusGenRootTypes['ImageStatus']; // ImageStatus!
     images: NexusGenRootTypes['ImageQueryResult'] | null; // ImageQueryResult
     pageRead: NexusGenRootTypes['Page']; // Page!
     pages: NexusGenRootTypes['PageQueryResult'] | null; // PageQueryResult
@@ -426,6 +422,7 @@ export interface NexusGenFieldTypes {
     firstName: string | null; // String
     id: number; // Int!
     lastName: string | null; // String
+    profileImageId: number | null; // Int
     role: string | null; // String
     updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
     userBanned: boolean | null; // Boolean
@@ -440,6 +437,7 @@ export interface NexusGenFieldTypes {
     firstName: string | null; // String
     id: number; // Int!
     lastName: string | null; // String
+    profileImageId: number | null; // Int
   }
 }
 
@@ -474,14 +472,18 @@ export interface NexusGenFieldTypeNames {
     id: 'Int'
     meta: 'JSON'
     ownerId: 'Int'
-    status: 'String'
-    thumbUrl: 'String'
+    status: 'Int'
     updatedAt: 'DateTime'
     uuid: 'String'
   }
   ImageQueryResult: { // field return type name
     images: 'Image'
     totalCount: 'Int'
+  }
+  ImageStatus: { // field return type name
+    id: 'Int'
+    sizes: 'JSON'
+    status: 'String'
   }
   Mutation: { // field return type name
     authLogin: 'AuthPayload'
@@ -491,7 +493,6 @@ export interface NexusGenFieldTypeNames {
     authRefresh: 'AuthPayload'
     authRequestEmailVerificationEmail: 'BooleanResult'
     authVerifyEmail: 'BooleanResult'
-    imageCreate: 'Image'
     imageDelete: 'BooleanResult'
     imageUpdate: 'Image'
     pageCreate: 'Page'
@@ -506,7 +507,7 @@ export interface NexusGenFieldTypeNames {
     termUpdate: 'Term'
     userCreate: 'User'
     userDelete: 'BooleanResult'
-    userProfileImageUpdate: 'User'
+    userProfileImageDelete: 'BooleanResult'
     userProfilePasswordUpdate: 'User'
     userProfileUpdate: 'User'
     userSignup: 'AuthPayload'
@@ -533,10 +534,13 @@ export interface NexusGenFieldTypeNames {
     firstName: 'String'
     id: 'Int'
     lastName: 'String'
+    profileImage: 'Image'
+    profileImageId: 'Int'
   }
   Query: { // field return type name
     adminUsers: 'AdminUser'
     imageRead: 'Image'
+    imageStatus: 'ImageStatus'
     images: 'ImageQueryResult'
     pageRead: 'Page'
     pages: 'PageQueryResult'
@@ -595,6 +599,7 @@ export interface NexusGenFieldTypeNames {
     firstName: 'String'
     id: 'Int'
     lastName: 'String'
+    profileImageId: 'Int'
     role: 'String'
     updatedAt: 'DateTime'
     userBanned: 'Boolean'
@@ -609,6 +614,7 @@ export interface NexusGenFieldTypeNames {
     firstName: 'String'
     id: 'Int'
     lastName: 'String'
+    profileImageId: 'Int'
   }
 }
 
@@ -639,9 +645,6 @@ export interface NexusGenArgTypes {
     }
     authVerifyEmail: { // args
       token: string; // String!
-    }
-    imageCreate: { // args
-      data: NexusGenInputs['ImageCreateInput']; // ImageCreateInput!
     }
     imageDelete: { // args
       id: number; // Int!
@@ -691,8 +694,7 @@ export interface NexusGenArgTypes {
       id: number; // Int!
       scope: string; // String!
     }
-    userProfileImageUpdate: { // args
-      data: NexusGenInputs['UserProfileImageUpdateInput']; // UserProfileImageUpdateInput!
+    userProfileImageDelete: { // args
       id: number; // Int!
       scope: string; // String!
     }
@@ -721,6 +723,9 @@ export interface NexusGenArgTypes {
       roles: Array<string | null>; // [String]!
     }
     imageRead: { // args
+      id: number; // Int!
+    }
+    imageStatus: { // args
       id: number; // Int!
     }
     images: { // args

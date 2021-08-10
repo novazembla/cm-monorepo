@@ -10,10 +10,11 @@ import { Response } from "express";
 
 import config from "../config";
 import { AuthPayload } from "../types/auth";
-import { daoTokenCreate, TokenTypes, daoTokenFindFirst } from "../dao/token";
+import { daoTokenCreate, daoTokenFindFirst } from "../dao/token";
 import { daoUserGetByEmail } from "../dao/user";
 
-import { ApiError } from "../utils";
+import { ApiError, TokenTypes } from "../utils";
+
 import { logger } from "./serviceLogging";
 
 export const generateToken = (

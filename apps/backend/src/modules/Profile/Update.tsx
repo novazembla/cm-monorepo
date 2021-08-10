@@ -7,7 +7,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import { TextErrorMessage, FormNavigationBlock } from "~/components/forms";
 
-import { UserProfileUpdateValidationSchema } from "~/validation";
+import { UserProfileUpdateValidationSchema } from "./forms";
 import { useUserProfileUpdateMutation } from "./hooks";
 import {
   useAuthentication,
@@ -41,6 +41,7 @@ const Update = () => {
   const [appUser] = useAuthentication();
   const { t } = useTranslation();
   const successToast = useSuccessfullySavedToast();
+  const [disableNavigation, setDisableNavigation] = useState(false);
 
   const { data, loading, error } = useQuery(userProfileReadQueryGQL, {
     variables: {
@@ -82,7 +83,11 @@ const Update = () => {
     setIsFormError(false);
     try {
       if (appUser) {
-        const { errors } = await firstMutation(appUser?.id, newData);
+        const { errors } = await firstMutation(appUser?.id, filteredOutputByWhitelist(newData, [
+          "firstName",
+          "lastName",
+          "email",
+        ]));
 
         if (!errors) {
           dispatch(
@@ -129,12 +134,14 @@ const Update = () => {
       to: moduleRootPath,
       label: t("module.button.cancel", "Cancel"),
       userCan: "profileUpdate",
+      isDisabled: disableNavigation
     },
     {
       type: "submit",
       isLoading: isSubmitting,
       label: t("module.button.update", "Update"),
       userCan: "profileUpdate",
+      isDisabled: disableNavigation,
     },
   ];
 
@@ -152,7 +159,7 @@ const Update = () => {
                   <Divider />
                 </>
               )}
-              <UpdateForm data={data?.userProfileRead} />
+              <UpdateForm data={data?.userProfileRead} disableNavigation={setDisableNavigation} />
             </ModulePage>
           </fieldset>
         </form>

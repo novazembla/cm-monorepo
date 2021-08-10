@@ -58,11 +58,6 @@ const start = async () => {
     res.send("ok");
   });
 
-  // remove TODO: remove
-  app.get("/err", function () {
-    throw Error("dasfdsffdsa");
-  });
-
   // app.use(errorToApiErrorConverter);
   // app.use(errorDisplayInResponse);
 
@@ -75,3 +70,8 @@ const start = async () => {
 };
 
 start();
+
+process.on("unhandledRejection", (reason: any, promise) => {
+  // eslint-disable-next-line no-console
+  console.error("Error: Unhandled Rejection at:", reason.stack || reason);
+});

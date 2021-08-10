@@ -11,3 +11,4 @@ export * from "./FormNavigationBlock";
 export * from "./LocationPicker";
 export * from "./TwoColFieldRow"
 export * from "./TextEditor"
+export * from "./ImageUploader"

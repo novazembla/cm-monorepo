@@ -8,6 +8,12 @@ export const userProfileReadQueryGQL = gql`
       lastName
       email
       emailVerified
+      profileImageId
+      profileImage {
+        id
+        meta
+        status
+      }
     }
   }
 `;

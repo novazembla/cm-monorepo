@@ -12,7 +12,7 @@ import {
 
 import { moduleRootPath, multiLangFields } from "./moduleConfig";
 import {
-  useAdminTableDeleteButton,
+  useDeleteByIdButton,
   useAuthentication,
   useLocalStorage,
   useRouter,
@@ -70,7 +70,7 @@ const Terms = () => {
   });
 
   const [adminTableDeleteButtonOnClick, DeleteAlertDialog, isDeleteError] =
-    useAdminTableDeleteButton(
+    useDeleteByIdButton(
       termDeleteMutationGQL,
       () => {
         refetch(tableState);

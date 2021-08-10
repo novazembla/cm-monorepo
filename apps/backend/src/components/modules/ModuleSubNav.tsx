@@ -13,18 +13,22 @@ export interface ButtonListElementLink extends ModuleAccessRules {
   label: string;
   to?: string;
   as?: React.ReactNode;
+  isDisabled?: boolean;
   type: "back" | "navigation";
 }
 
 export interface ButtonListElementSubmit extends ModuleAccessRules {
   label: string;
   isLoading: boolean;
+  isDisabled?: boolean;
   type: "submit";
+  
 }
 
 export interface ButtonListElementButton extends ModuleAccessRules {
   label: string;
   isLoading: boolean;
+  isDisabled?: boolean;
   onClick: MouseEventHandler;
   type: "button";
 }
@@ -35,6 +39,7 @@ export interface ButtonListRenderElement extends ModuleAccessRules {
   as?: any;
   onClick?: MouseEventHandler | undefined;
   isLoading?: boolean | undefined;
+  isDisabled?: boolean | undefined;
   colorScheme?: string | undefined;
   type?: "submit";
 }
@@ -78,6 +83,7 @@ export const ModuleSubNav = ({
             ...buttonProps,
             to: button.to,
             as: NavLink,
+            isDisabled: button.isDisabled,
           };
           break;
 
@@ -87,6 +93,7 @@ export const ModuleSubNav = ({
             to: button.to,
             as: NavLink,
             colorScheme: "gray",
+            isDisabled: button.isDisabled,
           };
           break;
 
@@ -95,6 +102,7 @@ export const ModuleSubNav = ({
             ...buttonProps,
             type: "submit",
             isLoading: button.isLoading,
+            isDisabled: button.isDisabled,
           };
           break;
 
@@ -103,6 +111,7 @@ export const ModuleSubNav = ({
             ...buttonProps,
             onClick: button.onClick,
             isLoading: button.isLoading,
+            isDisabled: button.isDisabled,
           };
           break;
       }

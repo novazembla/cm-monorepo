@@ -1,4 +1,3 @@
-export { GraphQLUpload } from "graphql-upload";
 export * from "./nexusTypesShared";
 export * from "./nexusTypesAuth";
 export * from "./nexusTypesUser";

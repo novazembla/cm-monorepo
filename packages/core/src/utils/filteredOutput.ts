@@ -5,10 +5,12 @@ export type FilterableObject<K extends keyof any, T> = {
 };
 
 export const filteredOutputByBlacklist = (
-  obj: object | object[],
+  obj: object | object[] | null | undefined,
   keys?: string[] | undefined,
   skipKeys?: string | string[]
 ): any => {
+  if (!obj) return obj;
+
   if (!keys) {
     // TODO: better error logging
     return obj;
@@ -40,10 +42,12 @@ export const filteredOutputByBlacklist = (
 };
 
 export const filteredOutputByWhitelist = (
-  obj: object | object[],
+  obj: object | object[] | null | undefined,
   keys?: string[] | undefined,
   skipKeys?: string | string[]
 ): any => {
+  if (!obj) return obj;
+
   if (!keys) {
     // TODO: better error logging
     return obj;

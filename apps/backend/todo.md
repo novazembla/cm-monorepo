@@ -50,6 +50,8 @@ Important to mention to clone src/config/appconfig.example.ts to src/config/appc
 
 monmitor is dirty and block back if data has been added ... 
 
+TODO: GraphQL Cancellation
+https://opensourcelibs.com/lib/jaydenseric-graphql-upload
 
 Choc UI 
 

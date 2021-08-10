@@ -4,7 +4,8 @@
 import express, { Application } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import { graphqlUploadExpress } from "graphql-upload";
+import bodyParser from "body-parser";
+
 import config from "./config";
 import {
   errorConvert404ToApiError,
@@ -13,18 +14,22 @@ import {
 } from "./middlewares/error";
 
 import { morganErrorHandler, morganSuccessHandler } from "./middlewares/morgan";
+import { postImage, postProfileImage, postImageUpload } from "./routes";
 
 export const app: Application = express();
 
 export const initializeExpressApp = () => {
   app.use(cookieParser());
+  app.use(bodyParser.urlencoded({ extended: false }));
 
   // eslint-disable-next-line import/no-named-as-default-member
   app.use(cors(config.corsOptions));
   app.use(express.static("public"));
   app.use(morganSuccessHandler);
   app.use(morganErrorHandler);
-  app.use(graphqlUploadExpress());
+
+  app.post("/profileImage", postImageUpload.single("image"), postProfileImage);
+  app.post("/image", postImageUpload.single("image"), postImage);
 };
 
 export const addTerminatingErrorHandlingToApp = () => {

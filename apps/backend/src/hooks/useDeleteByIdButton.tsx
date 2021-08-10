@@ -13,16 +13,16 @@ type dZADState = {
   id: number | undefined;
 };
 
-type useAdminTableDeleteButtonOptions = {
+type useDeleteByIdButtonOptions = {
   requireTextualConfirmation?: boolean;
   title?: string;
   message?: string;
 };
 
-export const useAdminTableDeleteButton = (
+export const useDeleteByIdButton = (
   deleteMutationGQL: DocumentNode,
   refetch: () => void,
-  options?: useAdminTableDeleteButtonOptions
+  options?: useDeleteByIdButtonOptions
 ) => {
   const { requireTextualConfirmation = false, title, message } = options ?? {};
 

@@ -53,21 +53,21 @@ type Image {
   id: Int!
   meta: JSON
   ownerId: Int!
-  status: String
-  thumbUrl: String
+  status: Int
   updatedAt: DateTime
   uuid: String
-}
-
-input ImageCreateInput {
-  image: Upload!
-  ownerId: Int!
 }
 
 """List all the available images in the database."""
 type ImageQueryResult {
   images: [Image]
   totalCount: Int
+}
+
+type ImageStatus {
+  id: Int!
+  sizes: JSON
+  status: String!
 }
 
 input ImageUpdateInput {
@@ -93,7 +93,6 @@ type Mutation {
   authRefresh(scope: String!): AuthPayload!
   authRequestEmailVerificationEmail(scope: String!, userId: Int!): BooleanResult!
   authVerifyEmail(token: String!): BooleanResult!
-  imageCreate(data: ImageCreateInput!): Image!
   imageDelete(id: Int!): BooleanResult!
   imageUpdate(data: ImageUpdateInput!, id: Int!): Image!
   pageCreate(data: PageUpsertInput!): Page!
@@ -108,7 +107,7 @@ type Mutation {
   termUpdate(data: TermUpdateInput!, id: Int!): Term!
   userCreate(data: UserCreateInput!, scope: String!): User!
   userDelete(id: Int!, scope: String!): BooleanResult!
-  userProfileImageUpdate(data: UserProfileImageUpdateInput!, id: Int!, scope: String!): User!
+  userProfileImageDelete(id: Int!, scope: String!): BooleanResult!
   userProfilePasswordUpdate(id: Int!, password: String!, scope: String!): User!
   userProfileUpdate(data: UserProfileUpdateInput!, id: Int!, scope: String!): User!
   userSignup(data: UserSignupInput!, scope: String!): AuthPayload!
@@ -146,11 +145,14 @@ type ProfileUser implements UserBaseNode {
   firstName: String
   id: Int!
   lastName: String
+  profileImage: Image
+  profileImageId: Int
 }
 
 type Query {
   adminUsers(roles: [String]!): [AdminUser] @deprecated(reason: "A publicly accessible list Lists all users that have a the given roles")
   imageRead(id: Int!): Image!
+  imageStatus(id: Int!): ImageStatus!
   images(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, taxonomyId: Int!, where: JSON): ImageQueryResult
   pageRead(id: Int!): Page!
   pages(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): PageQueryResult
@@ -241,9 +243,6 @@ type UniqueSlugResult {
   ok: Boolean!
 }
 
-"""The `Upload` scalar type represents a file upload."""
-scalar Upload
-
 type User implements UserBaseNode {
   createdAt: DateTime
   email: EmailAddress
@@ -251,6 +250,7 @@ type User implements UserBaseNode {
   firstName: String
   id: Int!
   lastName: String
+  profileImageId: Int
   role: String
   updatedAt: DateTime
   userBanned: Boolean
@@ -262,6 +262,7 @@ interface UserBaseNode {
   firstName: String
   id: Int!
   lastName: String
+  profileImageId: Int
 }
 
 input UserCreateInput {
@@ -272,10 +273,6 @@ input UserCreateInput {
   password: String!
   role: String!
   userBanned: Boolean!
-}
-
-input UserProfileImageUpdateInput {
-  image: Upload!
 }
 
 input UserProfileUpdateInput {

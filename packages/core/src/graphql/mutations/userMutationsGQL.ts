@@ -63,6 +63,14 @@ export const userProfileImageUpdateMutationGQL = gql`
   }
 `;
 
+export const userProfileImageDeleteMutationGQL = gql`
+  mutation userProfileImageDelete($scope: String!, $id: Int!) {
+    userProfileImageDelete(scope: $scope, id: $id) {
+      result
+    }
+  }
+`;
+
 export const userSignupMutationGQL = gql`
   mutation userSignup(
     $scope: String!

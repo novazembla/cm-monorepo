@@ -10,12 +10,13 @@ import {
   daoUserCheckIsEmailTaken,
 } from "../dao/user";
 
-import { daoTokenDeleteMany, TokenTypes } from "../dao/token";
+import { daoTokenDeleteMany } from "../dao/token";
 
 import { AuthPayload } from "../types/auth";
-import { ApiError } from "../utils";
+
 import { tokenGenerateAuthTokens } from "./serviceToken";
 import { authSendEmailConfirmationEmail } from "./serviceAuth";
+import { ApiError, TokenTypes } from "../utils";
 
 export const userRegister = async (
   scope: AppScopes,

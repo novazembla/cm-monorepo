@@ -36,7 +36,7 @@
     "@tiptap/extension-placeholder": "^2.0.0-beta.26",
     "@tiptap/extension-text": "^2.0.0-beta.13",
     "@tiptap/react": "^2.0.0-beta.55",
-    "apollo-upload-client": "^16.0.0",
+    "axios": "^0.21.1",
     "babel-jest": "^26.6.3",
     "framer-motion": "^4.1.17",
     "i18next": "^20.2.4",

@@ -23,15 +23,33 @@ model User {
   password       String
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @default(now()) @updatedAt
+  
   locations      Location[]
+  
   tokens         Token[]
+  
   pages          Page[]
-  images         Image[]
+  
+  events      Event[]
+
+  images         Image[]    @relation("images")
+  
+  profileImageId Int?           
+  profileImage   Image?  @relation(fields: [profileImageId], references: [id], name: "profileImage")
 }
 
 model Location {
-  id          Int    @id @default(autoincrement())
-  description String
+  id            Int    @id @default(autoincrement())
+  description   String
+  address       String
+  contactInfo   String
+  offers        String
+
+  lat         Float
+  lng         Float
+
+  events      Event[]
+  images      Image[]
 
   userId Int
   user   User @relation(fields: [userId], references: [id])
@@ -40,6 +58,26 @@ model Location {
   updatedAt DateTime @default(now()) @updatedAt
 
   @@index([userId], name: "indexLocationUserId")
+}
+
+
+model Event {
+  id            Int    @id @default(autoincrement())
+  description   String
+  eventLocation String
+  
+  locationId    Int
+  location      Location @relation(fields: [locationId], references: [id])
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  images   Image[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@index([userId], name: "indexEventUserId")
 }
 
 model Token {
@@ -102,20 +140,25 @@ model Page {
   @@index([ownerId], name: "indexPageOwnerId")
 }
 
+// TODO: add a retry mechanism 
 model Image {
   id             Int        @id @default(autoincrement())
   uuid           String     @db.VarChar(48) @unique
-  thumbUrl       String     @db.VarChar(128)
   meta           Json
-  status         String     @db.VarChar(16)
+  status         Int        @default(1)
+  retryCount     Int        @default(0)
   type           String     @db.VarChar(16) @default("image")
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @default(now()) @updatedAt
   ownerId        Int           
-  owner          User   @relation(fields: [ownerId], references: [id])
+  owner          User   @relation(fields: [ownerId], references: [id], name: "images")
+
+  events         Event[]
+  locations      Location[]
+
+  profileImageUsers  User[]  @relation("profileImage")
 
   @@index([ownerId], name: "indexImageOwnerId")
   @@index([ownerId, type], name: "indexImageOwnerIdType")
   @@index([status], name: "indexImageStatus")
 }
-

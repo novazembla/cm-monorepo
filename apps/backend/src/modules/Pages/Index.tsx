@@ -12,7 +12,7 @@ import {
 
 import { moduleRootPath, multiLangFields } from "./moduleConfig";
 import {
-  useAdminTableDeleteButton,
+  useDeleteByIdButton,
   useAuthentication,
   useLocalStorage,
 } from "~/hooks";
@@ -64,7 +64,7 @@ const Index = () => {
   });
 
   const [adminTableDeleteButtonOnClick, DeleteAlertDialog, isDeleteError] =
-    useAdminTableDeleteButton(
+    useDeleteByIdButton(
       pageDeleteMutationGQL,
       () => {
         refetch(tableState);

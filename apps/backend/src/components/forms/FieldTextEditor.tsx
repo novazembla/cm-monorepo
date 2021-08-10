@@ -63,7 +63,7 @@ export const FieldTextEditor = ({
           maxLength={settings?.maxLength}
         />
         <input
-          {...{ valid: !errors[name]?.message }}
+          {...{ valid: !errors[name]?.message ? "valid":undefined }}
           type="hidden"
           value={settings?.defaultValue}
           {...register(name, {

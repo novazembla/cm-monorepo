@@ -69,6 +69,16 @@ export const daoUserQuery = async (
   return filteredOutputByBlacklist(users, config.db.privateJSONDataKeys.user);
 };
 
+export const daoUserFindFirst = async (
+  where: Prisma.UserWhereInput
+): Promise<User | null> => {
+  const user: User | null = await prisma.user.findFirst({
+    where,
+  });
+
+  return filteredOutputByBlacklist(user, config.db.privateJSONDataKeys.user);
+};
+
 export const daoUserQueryCount = async (
   where: Prisma.UserWhereInput
 ): Promise<number> => {
@@ -144,6 +154,24 @@ export const daoUserDelete = async (id: number): Promise<User> => {
   );
 };
 
+export const daoUserProfileImageDelete = async (id: number): Promise<User> => {
+  const user: User = await prisma.user.update({
+    data: {
+      profileImage: {
+        disconnect: true,
+      },
+    },
+    where: {
+      id,
+    },
+  });
+
+  return filteredOutputByBlacklistOrNotFound(
+    user,
+    config.db.privateJSONDataKeys.user
+  );
+};
+
 export default {
   daoUserCreate,
   daoUserQuery,
@@ -153,5 +181,7 @@ export default {
   daoUserGetByEmail,
   daoUserUpdate,
   daoUserDelete,
+  daoUserFindFirst,
+  daoUserProfileImageDelete,
   daoUserCheckIsEmailTaken,
 };

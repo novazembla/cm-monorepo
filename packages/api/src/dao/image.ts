@@ -1,18 +1,35 @@
 import { Image, Prisma } from "@prisma/client";
 import { filteredOutputByBlacklist } from "@culturemap/core";
 
-import { filteredOutputByBlacklistOrNotFound } from "../utils";
+import { filteredOutputByBlacklistOrNotFound, ImageStatusEnum } from "../utils";
 import config from "../config";
+
+import type { ApiConfigImageFormatType } from "../config";
+
 import { getPrismaClient } from "../db/client";
 
-export enum ImageStatus {
-  UPLOADED = "uploaded",
-  PROCESSING = "processing",
-  ERROR = "error",
-  READY = "ready",
-}
-
 const prisma = getPrismaClient();
+
+export type ImageMetaInformation = {
+  uploadFolder: string;
+  originalFileName: string;
+  originalFileUrl: string;
+  originalFilePath: string;
+  imageType: ApiConfigImageFormatType;
+  mimeType: any;
+  encoding: any;
+  size: number;
+  availableSizes?: Record<
+    string,
+    {
+      width: number;
+      height: number;
+      url: string;
+      isJpg: boolean;
+      isWebP: boolean;
+    }
+  >;
+};
 
 export const daoImageQuery = async (
   where: Prisma.ImageWhereInput,
@@ -41,6 +58,24 @@ export const daoImageQueryCount = async (
 export const daoImageGetById = async (id: number): Promise<Image> => {
   const image: Image | null = await prisma.image.findUnique({
     where: { id },
+  });
+
+  return filteredOutputByBlacklistOrNotFound(
+    image,
+    config.db.privateJSONDataKeys.image
+  );
+};
+
+export const daoImageGetStatusById = async (
+  id: number
+): Promise<ImageStatusEnum> => {
+  const image = await prisma.image.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      status: true,
+      meta: true,
+    },
   });
 
   return filteredOutputByBlacklistOrNotFound(
@@ -99,4 +134,5 @@ export default {
   daoImageCreate,
   daoImageUpdate,
   daoImageDelete,
+  daoImageGetStatusById,
 };

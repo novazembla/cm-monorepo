@@ -10,7 +10,7 @@ import { createAuthenticatedApiUser } from "@culturemap/core";
 import { AuthenticationError } from "apollo-server-express";
 
 import { AuthPayload } from "../types/auth";
-import { TokenTypes, daoTokenDeleteMany } from "../dao/token";
+import { daoTokenDeleteMany } from "../dao/token";
 
 import {
   daoUserGetByLogin,
@@ -18,7 +18,7 @@ import {
   daoUserUpdate,
   daoUserGetByEmail,
 } from "../dao/user";
-import { ApiError } from "../utils";
+import { ApiError, TokenTypes } from "../utils";
 import {
   tokenVerify,
   tokenGenerateResetPasswordToken,

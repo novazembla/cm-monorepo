@@ -1,12 +1,14 @@
 import { parentPort } from "worker_threads";
 
 // !!!! Attention main thread also has to import "sharp" to ensure that the C libraries are always available
-
 import sharp from "sharp";
 
 // !!!! ALWAY REMEMBER TO CLOSE YOU DB CONNECTION !!!
-import { createPrismaClient } from "../db/client.js";
+import Prisma from "@prisma/client";
+
 import config from "../config/index.js";
+
+import { ImageStatusEnum } from "../utils";
 
 import type { ImageMetaInformation } from "../services/serviceImage";
 
@@ -86,13 +88,22 @@ const createImageSizeJpg = async (size: any, uuid: string, imageMeta: any) =>
   });
 
 const doChores = async () => {
-  const prisma = createPrismaClient();
+  // !!!! ALWAY REMEMBER TO CLOSE YOU DB CONNECTION !!!
+  postMessage("Creating prisma client");
+  const { PrismaClient } = Prisma;
+  const prisma = new PrismaClient({
+    datasources: {
+      db: {
+        url: config.db.url,
+      },
+    },
+  });
 
   try {
     let count = 0;
     const images = await prisma.image.findMany({
       where: {
-        status: "uploaded",
+        status: ImageStatusEnum.UPLOADED,
       },
       take: 10,
       select: {
@@ -107,7 +118,7 @@ const doChores = async () => {
       postMessage(`Found ${images.length} to process`);
       await prisma.image.updateMany({
         data: {
-          status: "processing",
+          status: ImageStatusEnum.PROCESSING,
         },
         where: {
           id: {
@@ -177,7 +188,7 @@ const doChores = async () => {
             await prisma.image.update({
               data: {
                 meta: newMeta,
-                status: "ready",
+                status: ImageStatusEnum.READY,
               },
               where: {
                 id: image.id,

@@ -13,7 +13,7 @@ import {
   list,
 } from "nexus";
 import httpStatus from "http-status";
-import { ApiError } from "../../utils";
+import { ApiError, ImageStatusEnum } from "../../utils";
 
 import { GQLJson } from "./nexusTypesShared";
 
@@ -28,9 +28,9 @@ import {
   daoImageDelete,
   daoImageQueryCount,
   daoImageGetById,
+  daoImageGetStatusById,
+  ImageMetaInformation,
 } from "../../dao";
-
-import { imageGetUploadInfo } from "../../services/serviceImage";
 
 export const Image = objectType({
   name: "Image",
@@ -38,11 +38,19 @@ export const Image = objectType({
     t.nonNull.int("id");
     t.nonNull.int("ownerId");
     t.string("uuid");
-    t.string("thumbUrl");
-    t.string("status");
+    t.int("status");
     t.json("meta");
     t.date("createdAt");
     t.date("updatedAt");
+  },
+});
+
+export const ImageStatus = objectType({
+  name: "ImageStatus",
+  definition(t) {
+    t.nonNull.int("id");
+    t.nonNull.string("status");
+    t.json("sizes");
   },
 });
 
@@ -128,14 +136,46 @@ export const ImageQueries = extendType({
         return daoImageGetById(args.id);
       },
     });
-  },
-});
 
-export const ImageCreateInput = inputObjectType({
-  name: "ImageCreateInput",
-  definition(t) {
-    t.nonNull.upload("image");
-    t.nonNull.int("ownerId");
+    t.nonNull.field("imageStatus", {
+      type: "ImageStatus",
+
+      args: {
+        id: nonNull(intArg()),
+      },
+
+      // resolve(root, args, ctx, info)
+      async resolve(...[, args]) {
+        const image: any = await daoImageGetStatusById(args.id);
+
+        let status;
+        switch (image.status) {
+          case ImageStatusEnum.UPLOADED:
+            status = "uploaded";
+            break;
+
+          case ImageStatusEnum.PROCESSING:
+            status = "processing";
+            break;
+
+          case ImageStatusEnum.ERROR:
+            status = "error";
+            break;
+
+          case ImageStatusEnum.READY:
+            status = "ready";
+            break;
+
+          default:
+            status = "unknown";
+        }
+        return {
+          id: image.id,
+          status,
+          sizes: (image.meta as ImageMetaInformation).availableSizes,
+        };
+      },
+    });
   },
 });
 
@@ -151,59 +191,6 @@ export const ImageMutations = extendType({
   type: "Mutation",
 
   definition(t) {
-    t.nonNull.field("imageCreate", {
-      type: "Image",
-
-      args: {
-        data: nonNull("ImageCreateInput"),
-      },
-
-      // TODO: enable later authorize: (...[, , ctx]) => authorizeApiUser(ctx, "imageCreate"),
-
-      async resolve(...[, args]) {
-        const uploadInfo = await imageGetUploadInfo();
-
-        console.log(uploadInfo);
-        // const { createReadStream, filename, mimetype, encoding } = await args
-        //   ?.data?.image;
-
-        // try {
-        //   const { path, uuid } = imageGet
-        // }
-        // // Invoking the `createReadStream` will return a Readable Stream.
-        // // See https://nodejs.org/api/stream.html#stream_readable_streams
-        // const stream = createReadStream();
-
-        // // This is purely for demonstration purposes and will overwrite the
-        // // local-file-output.txt in the current working directory on EACH upload.
-        // const out = require('fs').createWriteStream('local-file-output.txt');
-        // stream.pipe(out);
-        // await finished(out);
-
-        // imageCreate(filename, mimetype, encoding, args.data.ownerId);
-
-        // const image = await daoImageCreate({
-        //   meta: args.meta,
-        //   owner: {
-        //     connect: { id: args.data.ownerId },
-        //   },
-        // });
-
-        // if (!image)
-        //   throw new ApiError(
-        //     httpStatus.INTERNAL_SERVER_ERROR,
-        //     "Creation failed"
-        //   );
-
-        return {
-          id: 1,
-          ownerId: 1,
-          meta: {},
-          status: "uploaded",
-        };
-      },
-    });
-
     t.nonNull.field("imageUpdate", {
       type: "Image",
 

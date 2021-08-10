@@ -12,4 +12,4 @@ export * from "./useAsync";
 export * from "./useRouter";
 export * from "./useWhyDidYouUpdate";
 export * from "./useLocalStorage";
-export * from "./useAdminTableDeleteButton";
+export * from "./useDeleteByIdButton";

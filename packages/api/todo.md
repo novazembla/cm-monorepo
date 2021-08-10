@@ -8,3 +8,6 @@ TODO: DB/Psql
 
 TODO: Users
 - User delete which user will take over content of deleted user? 
+
+TODO: GraphQL Upload Crashes node if cancelled while stream is being parsed .. 
+https://github.com/jaydenseric/apollo-upload-client/issues/149

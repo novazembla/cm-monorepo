@@ -3,35 +3,13 @@ import httpStatus from "http-status";
 import { mkdir } from "fs/promises";
 import uuid from "uuid";
 
-import { ApiError } from "../utils";
+import { ApiError, ImageStatusEnum } from "../utils";
 import config from "../config";
-import type { ApiConfigImageFormatType } from "../config";
-import { daoImageCreate } from "../dao";
+
+import { daoImageCreate, ImageMetaInformation } from "../dao";
 import { logger } from "./serviceLogging";
 
 const { v4: uuidv4 } = uuid;
-
-// TODO: use https://github.com/image-size/image-size;
-
-export type ImageMetaInformation = {
-  uploadFolder: string;
-  originalFileName: string;
-  originalFileUrl: string;
-  originalFilePath: string;
-  imageType: ApiConfigImageFormatType;
-  mimeType: any;
-  encoding: any;
-  availableSizes?: Record<
-    string,
-    {
-      width: number;
-      height: number;
-      url: string;
-      isJpg: boolean;
-      isWebP: boolean;
-    }
-  >;
-};
 
 export const imageGetUploadInfo = async (): Promise<{
   path: string;
@@ -72,11 +50,15 @@ export const imageCreate = async (
         id: ownerId,
       },
     },
-    thumbUrl: "",
+    profileImageUsers: {
+      connect: {
+        id: ownerId,
+      },
+    },
     uuid: imageUuid,
     meta,
     type,
-    status: "uploaded",
+    status: ImageStatusEnum.UPLOADED,
   });
 
   if (!image)

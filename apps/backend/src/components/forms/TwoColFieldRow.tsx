@@ -24,7 +24,7 @@ export const TwoColFieldRow = ({
     }
   }
 
-  return <SimpleGrid {...props} sx={{
+  return <SimpleGrid {...props} _first={{mt:0}} sx={{
     "> div:nth-of-type(2n)": {
       mt:"0"
     }

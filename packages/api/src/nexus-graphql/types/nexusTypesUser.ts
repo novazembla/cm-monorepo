@@ -1,10 +1,6 @@
 /// <reference path="../../types/nexus-typegen.ts" />
 
-import { finished } from "stream";
 import dedent from "dedent";
-import path from "path";
-import fs from "fs";
-import { promisify } from "util";
 import { Prisma, User as PrismaTypeUser } from "@prisma/client";
 
 import {
@@ -42,10 +38,13 @@ import {
   isNotCurrentApiUser,
 } from "../helpers";
 import config from "../../config";
-import { daoUserQuery, daoUserQueryCount } from "../../dao";
-
-import { imageCreate, imageGetUploadInfo } from "../../services/serviceImage";
-import { logger } from "../../services/serviceLogging";
+import {
+  daoUserQuery,
+  daoUserQueryCount,
+  daoUserFindFirst,
+  daoImageGetById,
+  daoUserProfileImageDelete,
+} from "../../dao";
 
 const UserBaseNode = interfaceType({
   name: "UserBaseNode",
@@ -53,6 +52,7 @@ const UserBaseNode = interfaceType({
     typeof (data as any).role !== "undefined" ? "User" : "ProfileUser",
   definition(t) {
     t.nonNull.int("id");
+    t.int("profileImageId");
     t.string("firstName");
     t.string("lastName");
     t.email("email");
@@ -84,6 +84,16 @@ export const ProfileUser = objectType({
   name: "ProfileUser",
   definition(t) {
     t.implements(UserBaseNode);
+    t.field("profileImage", {
+      type: "Image",
+
+      async resolve(...[parent]) {
+        if (parent?.profileImageId)
+          return daoImageGetById(parent.profileImageId);
+
+        return null;
+      },
+    });
   },
 });
 
@@ -231,13 +241,6 @@ export const UserProfileUpdateInput = inputObjectType({
   },
 });
 
-export const UserProfileImageUpdateInput = inputObjectType({
-  name: "UserProfileImageUpdateInput",
-  definition(t) {
-    t.nonNull.upload("image");
-  },
-});
-
 export const UserCreateInput = inputObjectType({
   name: "UserCreateInput",
   definition(t) {
@@ -308,61 +311,6 @@ export const UserMutations = extendType({
           throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Update failed");
 
         return user;
-      },
-    });
-
-    t.nonNull.field("userProfileImageUpdate", {
-      type: "User",
-
-      args: {
-        scope: nonNull(stringArg()),
-        id: nonNull(intArg()),
-        data: nonNull(UserProfileImageUpdateInput),
-      },
-
-      authorize: (...[, args, ctx]) =>
-        authorizeApiUser(ctx, "profileUpdate") &&
-        isCurrentApiUser(ctx, args.id),
-
-      async resolve(...[, args]) {
-        const uploadInfo = await imageGetUploadInfo();
-
-        const { createReadStream, filename, mimetype, encoding } = await args
-          ?.data?.image;
-
-        try {
-          const extension = path.extname(filename);
-          const imagePath = `${uploadInfo.path}/${uploadInfo.uuid}${extension}`;
-          const stream = createReadStream();
-          const out = fs.createWriteStream(imagePath);
-          stream.pipe(out);
-
-          // TODO: do we really have to use promisify here????
-          await promisify(finished)(out);
-
-          const image = await imageCreate(
-            args.id,
-            uploadInfo.uuid,
-            {
-              uploadFolder: uploadInfo.uploadFolder,
-              originalFileName: filename,
-              originalFileUrl: `${uploadInfo.baseUrl}/${uploadInfo.uuid}${extension}`,
-              originalFilePath: imagePath,
-              mimeType: mimetype,
-              encoding,
-              imageType: "square",
-            },
-            "profile"
-          );
-
-          return image;
-        } catch (err) {
-          logger.error(err);
-          throw new ApiError(
-            httpStatus.INTERNAL_SERVER_ERROR,
-            "Profile image upload failed #1"
-          );
-        }
       },
     });
 
@@ -438,6 +386,40 @@ export const UserMutations = extendType({
 
         if (!user)
           throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Update failed");
+
+        return { result: true };
+      },
+    });
+
+    t.nonNull.field("userProfileImageDelete", {
+      type: "BooleanResult",
+
+      args: {
+        scope: nonNull(stringArg()),
+        id: nonNull(intArg()),
+      },
+
+      authorize: async (...[, args, ctx]) => {
+        const user = await daoUserFindFirst({ profileImageId: args.id });
+
+        if (user) {
+          return (
+            authorizeApiUser(ctx, "profileUpdate") &&
+            isCurrentApiUser(ctx, user.id)
+          );
+        }
+
+        return false;
+      },
+
+      async resolve(...[, args, ctx]) {
+        const user = await daoUserProfileImageDelete(ctx?.apiUser?.id ?? 0);
+
+        if (!user)
+          throw new ApiError(
+            httpStatus.INTERNAL_SERVER_ERROR,
+            "Profile image delete failed"
+          );
 
         return { result: true };
       },

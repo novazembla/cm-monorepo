@@ -1,14 +1,9 @@
 import { Prisma, Token } from "@prisma/client";
 import { getPrismaClient } from "../db/client";
 
-const prisma = getPrismaClient();
+import { TokenTypes } from "../utils";
 
-export enum TokenTypes {
-  ACCESS = "access",
-  REFRESH = "refresh",
-  RESET_PASSWORD = "resetPassword",
-  VERIFY_EMAIL = "verifyEmail",
-}
+const prisma = getPrismaClient();
 
 export const daoTokenDeleteMany = async (
   where: Prisma.TokenWhereInput
