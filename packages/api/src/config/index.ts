@@ -49,6 +49,16 @@ export interface ApiConfigSmtp {
   password: string;
 }
 
+export type ApiConfigImageFormatType = "square" | "normal";
+
+export interface ApiConfigImageFormat {
+  width: number;
+  height: number;
+  crop: boolean;
+  asWebP: boolean;
+  asJpg: boolean;
+}
+
 export interface ApiConfigBaseUrls {
   subjectPrefix: string;
   from: string;
@@ -84,6 +94,7 @@ export interface ApiConfig {
   env: typeof process.env;
   corsOptions: CorsOptions;
   jwt: ApiConfigJwt;
+  imageFormats: Record<ApiConfigImageFormatType, ApiConfigImageFormat[]>;
 }
 
 export interface ApiConfigOverwrite {
@@ -96,6 +107,10 @@ export interface ApiConfigOverwrite {
   db?: Partial<ApiConfigDB>;
   smtp?: Partial<ApiConfigSmtp>;
   email?: Partial<ApiConfigEmail>;
+  imageFormats?: PartialRecord<
+    ApiConfigImageFormatType,
+    ApiConfigImageFormat[]
+  >;
   corsOptions: CorsOptions;
   jwt: Partial<ApiConfigJwt>;
 }
@@ -169,6 +184,82 @@ export const apiConfig = {
         "Error: missing/wrong .env config: BASE_URL_API"
       )
     ),
+  },
+  imageFormats: {
+    normal: [
+      {
+        width: 480,
+        heigth: 480,
+        crop: false,
+        asWebP: true,
+        asJpg: true,
+      },
+      {
+        width: 720,
+        heigth: 720,
+        crop: false,
+        asWebP: true,
+        asJpg: false,
+      },
+      {
+        width: 1080,
+        heigth: 1080,
+        crop: false,
+        asWebP: true,
+        asJpg: true,
+      },
+      {
+        width: 1700,
+        heigth: 1700,
+        crop: false,
+        asWebP: true,
+        asJpg: false,
+      },
+      {
+        width: 2048,
+        heigth: 2048,
+        crop: false,
+        asWebP: true,
+        asJpg: true,
+      },
+      {
+        width: 3000,
+        heigth: 3000,
+        crop: false,
+        asWebP: true,
+        asJpg: false,
+      },
+    ],
+    square: [
+      {
+        width: 480,
+        heigth: 480,
+        crop: true,
+        asWebP: true,
+        asJpg: false,
+      },
+      {
+        width: 720,
+        heigth: 720,
+        crop: true,
+        asWebP: true,
+        asJpg: true,
+      },
+      {
+        width: 1080,
+        heigth: 1080,
+        crop: true,
+        asWebP: true,
+        asJpg: false,
+      },
+      {
+        width: 1700,
+        heigth: 1700,
+        crop: true,
+        asWebP: true,
+        asJpg: true,
+      },
+    ],
   },
   email: {
     subjectPrefix: safeGuardVariable(

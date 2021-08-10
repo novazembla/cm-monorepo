@@ -11,7 +11,7 @@ declare const global: {
 
 let instance: Prisma.PrismaClient | undefined;
 
-const createNewInstance = function (): Prisma.PrismaClient {
+export const createPrismaClient = (): Prisma.PrismaClient => {
   logger.info("Creating new prisma client instance");
   return new PrismaClient({
     datasources: {
@@ -22,7 +22,7 @@ const createNewInstance = function (): Prisma.PrismaClient {
   });
 };
 
-export const setPrismaClient = function (pClient: Prisma.PrismaClient) {
+export const setPrismaClient = (pClient: Prisma.PrismaClient) => {
   if (process.env.NODE_ENV === "production") {
     instance = pClient;
   } else {
@@ -30,8 +30,8 @@ export const setPrismaClient = function (pClient: Prisma.PrismaClient) {
   }
 };
 
-export const getPrismaClient = function (): Prisma.PrismaClient {
-  instance = global.prisma || createNewInstance();
+export const getPrismaClient = (): Prisma.PrismaClient => {
+  instance = global.prisma || createPrismaClient();
 
   if (process.env.NODE_ENV === "development" && !global.prisma)
     global.prisma = instance;

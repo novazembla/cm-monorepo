@@ -105,7 +105,8 @@
     "plugins/*"
   ],
   "dependencies": {
-    "dotenv": "^10.0.0"
+    "dotenv": "^10.0.0",
+    "from": "^0.1.7"
   },
   "prisma": {
     "schema": "./packages/api/prisma/schema.prisma"

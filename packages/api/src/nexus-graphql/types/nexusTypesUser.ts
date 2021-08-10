@@ -350,6 +350,7 @@ export const UserMutations = extendType({
               originalFilePath: imagePath,
               mimeType: mimetype,
               encoding,
+              imageType: "square",
             },
             "profile"
           );

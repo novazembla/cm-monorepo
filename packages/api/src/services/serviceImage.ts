@@ -5,6 +5,7 @@ import uuid from "uuid";
 
 import { ApiError } from "../utils";
 import config from "../config";
+import type { ApiConfigImageFormatType } from "../config";
 import { daoImageCreate } from "../dao";
 import { logger } from "./serviceLogging";
 
@@ -17,8 +18,19 @@ export type ImageMetaInformation = {
   originalFileName: string;
   originalFileUrl: string;
   originalFilePath: string;
+  imageType: ApiConfigImageFormatType;
   mimeType: any;
   encoding: any;
+  availableSizes?: Record<
+    string,
+    {
+      width: number;
+      height: number;
+      url: string;
+      isJpg: boolean;
+      isWebP: boolean;
+    }
+  >;
 };
 
 export const imageGetUploadInfo = async (): Promise<{

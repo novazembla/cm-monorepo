@@ -37,7 +37,6 @@ const themeConfig = {
         margin: 0,
         padding: 0,
         height: "100%",
-        bg: "#b5d3ee",
       },
       "select, option":"font-family: Open Sans, Helvetica, Arial, sans-serif;",
       "#root": {
@@ -184,7 +183,7 @@ export const chakraTheme = extendTheme(
   withDefaultColorScheme({
     colorScheme: "wine",
     components: ["Button", "Badge", "Checkbox", "Switch"],
-  }),
+  }), 
   withDefaultVariant({
     variant: "solid",
     components: ["Button","IconButton"],

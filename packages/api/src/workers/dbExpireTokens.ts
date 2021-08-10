@@ -1,7 +1,6 @@
 import { parentPort } from "worker_threads";
 import { prismaDisconnect } from "../db";
 import { daoTokenDeleteExpired } from "../dao/token";
-import { logger } from "../services/serviceLogging";
 
 // ALWAY REMEMBER TO CLOSE YOU DB CONNECTION !!!
 
@@ -17,22 +16,35 @@ import { logger } from "../services/serviceLogging";
 //     if (message === "cancel") isCancelled = true;
 //   });
 
+const postMessage = (msg: string) => {
+  if (parentPort) parentPort.postMessage(msg);
+  // eslint-disable-next-line no-console
+  else console.log(msg);
+};
+
 const doChores = async () => {
   try {
     const count = await daoTokenDeleteExpired();
-    logger.debug(`[WORKER:DbExpireTokens]: Deleted ${count} expired token`);
-    await prismaDisconnect();
+    postMessage(`[WORKER:DbExpireTokens]: Deleted ${count} expired token`);
   } catch (Err) {
-    logger.warn(
+    postMessage(
       `[WORKER:DbExpireTokens]: Failed to run worker. ${Err.name} ${Err.message}`
     );
   }
 };
 
-(async () => {
+const main = async () => {
   await doChores();
+};
 
-  // signal to parent that the job is done
-  if (parentPort) parentPort.postMessage("done");
-  else process.exit(0);
-})();
+main()
+  .then(async () => {
+    await prismaDisconnect();
+    if (parentPort) postMessage("done");
+    else process.exit(0);
+  })
+  .catch(async (Err) => {
+    await prismaDisconnect();
+    postMessage(JSON.stringify(Err));
+    process.exit(1);
+  });

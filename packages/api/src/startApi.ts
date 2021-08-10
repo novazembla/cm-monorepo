@@ -1,4 +1,8 @@
 import Graceful from "@ladjs/graceful";
+
+// !!!! Attention main thread also has to import "sharp" to ensure that the C libraries are always available in worker threads
+import "sharp";
+
 import Bree from "bree";
 import { join } from "path";
 
