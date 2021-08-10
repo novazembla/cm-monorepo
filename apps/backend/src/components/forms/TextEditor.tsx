@@ -1,4 +1,4 @@
-import { useState, MouseEventHandler, FormEvent, useEffect } from "react";
+import React, { useState, MouseEventHandler, FormEvent, useEffect } from "react";
 import {
   Box,
   IconButton,
@@ -105,11 +105,18 @@ const EditorMenuBar = ({
 }) => {
   const [showLinkEditScreen, setShowLinkEditScreen] = useState(false);
   const [linkValue, setLinkValue] = useState("");
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
   const { t } = useTranslation();
 
   useEffect(() => {
-    if (editorIsFocussed && showLinkEditScreen) setShowLinkEditScreen(false);
+    if (editorIsFocussed && showLinkEditScreen) {
+      setShowLinkEditScreen(false);
+    } else if (showLinkEditScreen) {
+      if (inputRef?.current)
+        inputRef?.current.focus();
+    }
+
   }, [editorIsFocussed, showLinkEditScreen]);
 
   const save = t("editor.button.save", "Save");
@@ -150,6 +157,7 @@ const EditorMenuBar = ({
               name={linkFieldId}
               id={linkFieldId}
               pl="1"
+              ref={inputRef}
               onChange={(event) => setLinkValue(event?.target?.value ?? "")}
               onKeyDown={(event) => {
                 if (event.key === "Enter") {
