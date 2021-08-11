@@ -4,10 +4,10 @@ import path from "path";
 import multer from "multer";
 import { mkdirSync } from "fs";
 import uuid from "uuid";
+import type { ApiImageMetaInformation } from "@culturemap/core";
 
 import { logger } from "../services/serviceLogging";
 import { imageCreate } from "../services/serviceImage";
-import { ImageMetaInformation } from "../dao";
 
 import config from "../config";
 import { ApiError } from "../utils";
@@ -48,7 +48,7 @@ const createImageMetaInfo = (
   file: Express.Multer.File
 ): {
   fileUuid: string;
-  metainfo: ImageMetaInformation;
+  metainfo: ApiImageMetaInformation;
 } => {
   const extension = path.extname(file.originalname);
 
@@ -59,7 +59,7 @@ const createImageMetaInfo = (
 
   const fileUuid = file.filename.replace(extension, "");
 
-  const metainfo: ImageMetaInformation = {
+  const metainfo: ApiImageMetaInformation = {
     uploadFolder,
     originalFileName: file.originalname,
     originalFileUrl: `${config.baseUrl.api}/${uploadFolder}/${file.filename}`,

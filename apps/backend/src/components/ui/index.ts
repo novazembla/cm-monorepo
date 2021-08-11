@@ -6,5 +6,6 @@ export * from './LoadingIcon';
 export * from './AlertBox'; 
 export * from './Map'; 
 export * from './AdminTable'; 
+export * from './ApiImage'; 
 export * from './MultiLangValue'; 
 export * from './DangerZoneAlertDialog'; 

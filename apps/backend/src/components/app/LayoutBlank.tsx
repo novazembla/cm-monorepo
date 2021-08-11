@@ -4,7 +4,7 @@ import { Container, Flex, Heading } from "@chakra-ui/react";
 
 import { useAuthTabWideLogInOutReload } from "~/hooks";
 import type { AppProps } from "~/types";
-import { FixedLanguageButtons } from "../ui";
+import { FixedLanguageButtons } from "../ui/FixedLanguageButtons";
 
 export const LayoutBlank = ({ children }: AppProps) => {
   const [loginStatus] = useAuthTabWideLogInOutReload();

@@ -13,7 +13,8 @@ import {
   list,
 } from "nexus";
 import httpStatus from "http-status";
-import { ApiError, ImageStatusEnum } from "../../utils";
+
+import { ApiError } from "../../utils";
 
 import { GQLJson } from "./nexusTypesShared";
 
@@ -29,7 +30,6 @@ import {
   daoImageQueryCount,
   daoImageGetById,
   daoImageGetStatusById,
-  ImageMetaInformation,
 } from "../../dao";
 
 export const Image = objectType({
@@ -49,8 +49,8 @@ export const ImageStatus = objectType({
   name: "ImageStatus",
   definition(t) {
     t.nonNull.int("id");
-    t.nonNull.string("status");
-    t.json("sizes");
+    t.nonNull.int("status");
+    t.json("meta");
   },
 });
 
@@ -148,31 +148,32 @@ export const ImageQueries = extendType({
       async resolve(...[, args]) {
         const image: any = await daoImageGetStatusById(args.id);
 
-        let status;
-        switch (image.status) {
-          case ImageStatusEnum.UPLOADED:
-            status = "uploaded";
-            break;
+        // let status;
+        // switch (image.status) {
+        //   case ImageStatusEnum.UPLOADED:
+        //     status = "uploaded";
+        //     break;
 
-          case ImageStatusEnum.PROCESSING:
-            status = "processing";
-            break;
+        //   case ImageStatusEnum.PROCESSING:
+        //   case ImageStatusEnum.FAILEDRETRY:
+        //     status = "processing";
+        //     break;
 
-          case ImageStatusEnum.ERROR:
-            status = "error";
-            break;
+        //   case ImageStatusEnum.ERROR:
+        //     status = "error";
+        //     break;
 
-          case ImageStatusEnum.READY:
-            status = "ready";
-            break;
+        //   case ImageStatusEnum.READY:
+        //     status = "ready";
+        //     break;
 
-          default:
-            status = "unknown";
-        }
+        //   default:
+        //     status = "unknown";
+        // }
         return {
           id: image.id,
-          status,
-          sizes: (image.meta as ImageMetaInformation).availableSizes,
+          status: image.status,
+          meta: image.meta,
         };
       },
     });

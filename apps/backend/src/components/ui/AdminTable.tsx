@@ -516,12 +516,16 @@ export const AdminTable = ({
                     borderColor="gray.300"
                     isNumeric={(column as any).isNumeric}
                     _last={
+                      
                       (column as any).isStickyToTheRight
                         ? {
                             position: "sticky",
                             right: 0,
+                            p: 0,
                             "> div": {
-                              bg: "wine",
+                              p: 4,
+                              h: "100%",
+                              bg: "rgba(255,255,255,0.9)",
                             },
                           }
                         : undefined

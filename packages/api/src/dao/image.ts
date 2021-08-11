@@ -1,35 +1,12 @@
 import { Image, Prisma } from "@prisma/client";
-import { filteredOutputByBlacklist } from "@culturemap/core";
+import { filteredOutputByBlacklist, ImageStatusEnum } from "@culturemap/core";
 
-import { filteredOutputByBlacklistOrNotFound, ImageStatusEnum } from "../utils";
+import { filteredOutputByBlacklistOrNotFound } from "../utils";
 import config from "../config";
-
-import type { ApiConfigImageFormatType } from "../config";
 
 import { getPrismaClient } from "../db/client";
 
 const prisma = getPrismaClient();
-
-export type ImageMetaInformation = {
-  uploadFolder: string;
-  originalFileName: string;
-  originalFileUrl: string;
-  originalFilePath: string;
-  imageType: ApiConfigImageFormatType;
-  mimeType: any;
-  encoding: any;
-  size: number;
-  availableSizes?: Record<
-    string,
-    {
-      width: number;
-      height: number;
-      url: string;
-      isJpg: boolean;
-      isWebP: boolean;
-    }
-  >;
-};
 
 export const daoImageQuery = async (
   where: Prisma.ImageWhereInput,
@@ -121,6 +98,7 @@ export const daoImageDelete = async (id: number): Promise<Image> => {
     },
   });
 
+  // TODO: schedule task to wipe file off the disk
   return filteredOutputByBlacklistOrNotFound(
     image,
     config.db.privateJSONDataKeys.image

@@ -1,21 +1,16 @@
 import { userProfileImageDeleteMutationGQL } from "@culturemap/core";
 
-import { Box, IconButton, Grid } from "@chakra-ui/react";
+import { Box, Grid } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import {
   FieldInput,
   FieldRow,
   TwoColFieldRow,
-  ImageUploader,
+  FieldImageUploader,
 } from "~/components/forms";
 
-import { HiOutlineTrash } from "react-icons/hi";
-
 import { yupIsFieldRequired } from "~/validation";
-import { useDeleteByIdButton } from "~/hooks";
-
 import { UserProfileUpdateValidationSchema } from ".";
-import { useState } from "react";
 
 export const UpdateForm = ({
   data,
@@ -28,47 +23,7 @@ export const UpdateForm = ({
 }) => {
   const { t } = useTranslation();
 
-  const [imageDeleted, setImageDeleted] = useState(false);
-  const { profileImageId, firstName, lastName, profileImage } = data ?? {};
-
-  let profileImageTag;
-  if (
-    profileImage &&
-    profileImage.status === 3 &&
-    profileImage?.meta?.availableSizes
-  ) {
-    const originalUrl = profileImage?.meta?.availableSizes?.original?.url ?? "";
-
-    const srcset = Object.keys(profileImage?.meta?.availableSizes).reduce(
-      (acc: any, key: any) => {
-        const size = profileImage?.meta?.availableSizes[key];
-        if (!size.isJpg) return acc;
-
-        acc.push(`${size.url} ${size.width}w`);
-
-        return acc;
-      },
-      [] as string[]
-    );
-    profileImageTag = (
-      <img
-        src={originalUrl}
-        srcSet={srcset.join(",")}
-        alt={`${firstName} ${lastName}`}
-      />
-    );
-  }
-
-  const [deleteButtonOnClick, DeleteAlertDialog, isDeleteError] =
-    useDeleteByIdButton(
-      userProfileImageDeleteMutationGQL,
-      () => {
-        setImageDeleted(true);
-      },
-      {
-        requireTextualConfirmation: false,
-      }
-    );
+  const { firstName, lastName, profileImage } = data ?? {};
 
   return (
     <Grid
@@ -76,8 +31,8 @@ export const UpdateForm = ({
       templateRows={{ base: "200px 1fr", t: "100%" }}
       gap="8"
     >
-      {(!profileImageTag || imageDeleted) && (
-        <ImageUploader
+      <Box>
+        <FieldImageUploader
           id="profileImage"
           name="profileImage"
           label={t("page.register.profileimage", "Profile Image")}
@@ -85,42 +40,25 @@ export const UpdateForm = ({
             "profileImage",
             UserProfileUpdateValidationSchema
           )}
+          deleteButtonGQL={userProfileImageDeleteMutationGQL}
           settings={{
-            defaultValue: 0,
             minFileSize: 1024 * 1024 * 0.05,
             maxFileSize: 1024 * 1024 * 2,
             aspectRatioPB: 133.33, // % bottom padding
+            
+            image: {
+              status: profileImage?.status,
+              id: profileImage?.id,
+              meta: profileImage?.meta,
+              alt: `${firstName} ${lastName}`,
+              forceAspectRatioPB: 133.33,
+              showPlaceholder: true,
+              sizes: "(min-width: 45em) 20v, 95vw",
+            }
           }}
         />
-      )}
-      {!imageDeleted && profileImageTag && (
-        <Box position="relative">
-          {profileImageTag}
-          <IconButton
-            position="absolute"
-            top="3"
-            right="3"
-            fontSize="xl"
-            icon={<HiOutlineTrash />}
-            onClick={() => deleteButtonOnClick(profileImageId)}
-            aria-label={t(
-              "module.profile.button.deleteimage",
-              "Delete profile image"
-            )}
-          >
-            {t("module.profile.button.deleteimage", "Delete profile image")}
-          </IconButton>
-        </Box>
-      )}
-      {isDeleteError && (
-        <p color="red.500">
-          {t(
-            "module.profile.deleteimage.error",
-            "Unfortunately, we could not process you deletion request please try again later"
-          )}
-        </p>
-      )}
-      {DeleteAlertDialog}
+
+      </Box>
       <Box>
         <TwoColFieldRow>
           <FieldRow>

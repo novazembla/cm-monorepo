@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import { CorsOptions } from "cors";
 import { PartialRecord, AppScopes, safeGuardVariable } from "@culturemap/core";
+import type { ApiConfigImageFormatType } from "@culturemap/core";
 import { join, resolve, dirname } from "path";
 
 import { logger } from "../services/serviceLogging";
@@ -48,8 +49,6 @@ export interface ApiConfigSmtp {
   user: string;
   password: string;
 }
-
-export type ApiConfigImageFormatType = "square" | "normal";
 
 export interface ApiConfigImageFormat {
   width: number;

@@ -12,6 +12,7 @@ import {
 
 import { moduleRootPath } from "./moduleConfig";
 import { useAuthentication, useConfig } from "~/hooks";
+import { ApiImage } from "~/components/ui";
 
 const Index = () => {
   const config = useConfig();
@@ -50,26 +51,6 @@ const Index = () => {
   const { firstName, lastName, email, emailVerified, profileImage } =
     data?.userProfileRead ?? {};
 
-  let profileImageTag;
-  if (profileImage && profileImage.status === 3 && profileImage?.meta?.availableSizes) {
-    const originalUrl = profileImage?.meta?.availableSizes?.original?.url ?? "";
-
-    const srcset = Object.keys(profileImage?.meta?.availableSizes).reduce((acc: any, key: any) => {
-      const size = profileImage?.meta?.availableSizes[key];
-      if (!size.isJpg) 
-        return acc;
-
-      acc.push(`${size.url} ${size.width}w`)
-
-      return acc;
-
-    }, [] as string[])
-
-    profileImageTag = <img src={originalUrl} srcSet={srcset.join(",")} alt={`${firstName} ${lastName}`} />;
-
-  }
-
-  // TODO: bring the image.status Enum to @core 
   return (
     <>
       <ModuleSubNav breadcrumb={breadcrumb} buttonList={buttonList} />
@@ -77,11 +58,23 @@ const Index = () => {
         {firstName && (
           <Grid
             templateColumns={{ base: "100%", t: "max(20%, 250px) 1fr" }}
-            templateRows={{ base: "200px 1fr", t: "100%" }}
-            gap="8"
+            templateRows={{ base: "auto 1fr", t: "auto" }}
+            gap={{ base: "6", s: "8" }}
           >
             <Box>
-              {profileImageTag}
+              <ApiImage
+                id={profileImage?.id}
+                status={profileImage?.status}
+                meta={profileImage?.meta}
+                forceAspectRatioPB={133.33}
+                showPlaceholder
+                alt={`${firstName} ${lastName}`}
+                sizes="(min-width: 45em) 20v, 95vw"
+                placeholder={t(
+                  "module.profile.image.placeholder",
+                  "No profile picture uploaded"
+                )}
+              />
             </Box>
             <Box>
               <Stat mb="4">

@@ -33,8 +33,6 @@ const configDefault: AppConfig = {
   settings: {},
 };
 
-console.log(configDefault)
-
 export let config: AppConfig;
 
 try {

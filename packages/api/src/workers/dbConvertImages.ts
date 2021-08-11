@@ -5,12 +5,10 @@ import sharp from "sharp";
 
 // !!!! ALWAY REMEMBER TO CLOSE YOU DB CONNECTION !!!
 import Prisma from "@prisma/client";
+import type { ApiImageMetaInformation } from "@culturemap/core";
+import { ImageStatusEnum } from "@culturemap/core";
 
 import config from "../config/index.js";
-
-import { ImageStatusEnum } from "../utils";
-
-import type { ImageMetaInformation } from "../services/serviceImage";
 
 // https://github.com/breejs/bree#long-running-jobs
 // Or use https://threads.js.org/usage for a queing experience .. .
@@ -130,7 +128,7 @@ const doChores = async () => {
         images.map(async (image) => {
           if (!image.meta) throw Error("Faulty meta data (no meta)");
 
-          const meta = image.meta as ImageMetaInformation;
+          const meta = image.meta as ApiImageMetaInformation;
 
           if (!meta.originalFilePath)
             throw Error("Faulty meta data (no originalFileName)");

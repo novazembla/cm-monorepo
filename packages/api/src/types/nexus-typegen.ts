@@ -174,8 +174,8 @@ export interface NexusGenObjects {
   }
   ImageStatus: { // root type
     id: number; // Int!
-    sizes?: NexusGenScalars['JSON'] | null; // JSON
-    status: string; // String!
+    meta?: NexusGenScalars['JSON'] | null; // JSON
+    status: number; // Int!
   }
   Mutation: {};
   Page: { // root type
@@ -305,8 +305,8 @@ export interface NexusGenFieldTypes {
   }
   ImageStatus: { // field return type
     id: number; // Int!
-    sizes: NexusGenScalars['JSON'] | null; // JSON
-    status: string; // String!
+    meta: NexusGenScalars['JSON'] | null; // JSON
+    status: number; // Int!
   }
   Mutation: { // field return type
     authLogin: NexusGenRootTypes['AuthPayload']; // AuthPayload!
@@ -482,8 +482,8 @@ export interface NexusGenFieldTypeNames {
   }
   ImageStatus: { // field return type name
     id: 'Int'
-    sizes: 'JSON'
-    status: 'String'
+    meta: 'JSON'
+    status: 'Int'
   }
   Mutation: { // field return type name
     authLogin: 'AuthPayload'

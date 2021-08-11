@@ -27,6 +27,7 @@ export const ModulePage = ({
       <Box
         layerStyle="pageContainerWhite"
         minH={{ base: 300, tw: "calc(100vh - 238px)" }}
+        h="auto"
         position="relative"
       >
         {(isLoading) && <LoadingIcon type="inline" />}

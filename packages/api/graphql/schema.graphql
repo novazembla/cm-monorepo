@@ -66,8 +66,8 @@ type ImageQueryResult {
 
 type ImageStatus {
   id: Int!
-  sizes: JSON
-  status: String!
+  meta: JSON
+  status: Int!
 }
 
 input ImageUpdateInput {

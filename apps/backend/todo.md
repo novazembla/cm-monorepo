@@ -36,6 +36,8 @@ TODO: CSS
 TextEditor
 - Position bubble position nicer 
 
+TODO: Image Uloader 
+- Needs better UI for rejection of large images ... 
 
 TODO: General way to change ownership of content (page authorId)
 

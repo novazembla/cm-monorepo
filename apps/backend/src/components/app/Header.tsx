@@ -82,8 +82,8 @@ export const Header = (/* props */) => {
             </Link>
           </Heading>
         </Box>
-        <Box w="200px" h="32px" bg="gray.400">
-          Search
+        <Box w="200px" h="32px" >
+          {/* Search  TODO: create admin search */}
         </Box>
 
         <Menu
