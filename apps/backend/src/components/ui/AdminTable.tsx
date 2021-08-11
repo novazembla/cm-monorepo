@@ -6,6 +6,7 @@ import React, {
   ChangeEventHandler,
 } from "react";
 import type { AuthenticatedAppUser } from "@culturemap/core";
+import { PublishStatus } from "@culturemap/core";
 import { Link as RouterLink } from "react-router-dom";
 import {
   Box,
@@ -27,6 +28,7 @@ import {
   Icon,
   IconButton,
   Input,
+  Badge
 } from "@chakra-ui/react";
 import {
   usePagination,
@@ -324,6 +326,58 @@ export const AdminTableActionCell = (cell: Cell) => {
       </HStack>
     </Flex>
   );
+};
+
+export const AdminTablePublishStatusCell = (cell: Cell) => {
+  const {t} = useTranslation();
+  let color = "gray";
+  let variant = "subtle";
+  let label = t("publish.status.unknown", "Unknown")
+
+  if (cell.value === PublishStatus.AUTODRAFT) {
+    color = "gray";
+    label = t("publish.status.autodraft", "Draft")
+  }
+
+  if (cell.value === PublishStatus.DRAFT) {
+    color = "gray";
+    label = t("publish.status.draft", "Draft")
+  }
+    
+
+  if (cell.value === PublishStatus.FORREVIEW) {
+    color = "cyan";
+    label = t("publish.status.forreview", "For review")
+  }
+
+  if (cell.value === PublishStatus.REJECTED) {
+    color = "orange";
+    label = t("publish.status.rejected", "Rejected")
+  }
+
+  if (cell.value === PublishStatus.PUBLISHED) {
+    color = "green";
+    label = t("publish.status.published", "Published")
+  }
+
+  if (cell.value === PublishStatus.TRASHED) {
+    color = "red";
+    label = t("publish.status.trashed", "Trashed")
+  }
+
+  return (
+    <Badge
+      w="120px"
+      variant={variant}
+      textAlign="center"
+      colorScheme={color}
+      p="2"
+      borderRadius="lg"
+    >
+      {label}
+    </Badge>
+  );
+
 };
 
 export const AdminTableMultiLangCell = (cell: Cell) => (

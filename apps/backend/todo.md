@@ -33,8 +33,9 @@ TODO: CSS
 - Select options ugly in FF
 - Expose scroll bar width as a variable 
 
-TextEditor
+TODO: TextEditor
 - Position bubble position nicer 
+- OnTouch should clear red invalid frame of the editor
 
 TODO: Image Uloader 
 - Needs better UI for rejection of large images ... 

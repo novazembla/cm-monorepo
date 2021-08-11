@@ -11,3 +11,5 @@ TODO: Users
 
 TODO: GraphQL Upload Crashes node if cancelled while stream is being parsed .. 
 https://github.com/jaydenseric/apollo-upload-client/issues/149
+
+TODO: fullText index creation

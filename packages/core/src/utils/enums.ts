@@ -8,4 +8,14 @@ export enum ImageStatusEnum {
   DELETED,
 }
 
+export enum PublishStatus {
+  AUTODRAFT,
+  DRAFT,
+  FORREVIEW,
+  REJECTED,
+  PUBLISHED,
+  TRASHED,
+  DELETED,
+}
+
 export default ImageStatusEnum;

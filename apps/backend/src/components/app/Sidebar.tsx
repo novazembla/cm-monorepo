@@ -6,7 +6,7 @@ import {
   HiOutlineColorSwatch,
   HiOutlineDocumentText,
   // HiOutlineMap,
-  // HiOutlineLocationMarker,
+  HiOutlineLocationMarker,
 } from "react-icons/hi";
 // import { RiCalendarEventLine } from "react-icons/ri";
 import { IoSettingsOutline } from "react-icons/io5";
@@ -28,6 +28,7 @@ import { moduleAccessRules as usersModuleAccessRules } from "~/modules/Users/mod
 import { moduleAccessRules as settingsModuleAccessRules } from "~/modules/Settings/moduleRoutes";
 import { moduleAccessRules as taxonomiesModuleAccessRules } from "~/modules/Taxonomies/moduleRoutes";
 import { moduleAccessRules as pagesModuleAccessRules } from "~/modules/Pages/moduleRoutes";
+import { moduleAccessRules as locationsModuleAccessRules } from "~/modules/Locations/moduleRoutes";
 import { useAuthentication } from "~/hooks";
 
 const NavItem = ({
@@ -103,13 +104,13 @@ export const Sidebar = () => {
       icon: HiOutlineHome,
       ...dashboadModuleAccessRules,
     },
-    // {
-    //   title: t("module.locations.title", "Locations"),
-    //   path: "/locations",
-    //   exact: false,
-    //   icon: HiOutlineLocationMarker,
-    //   ...TODO:ModuleAccessRules,
-    // },
+    {
+      title: t("module.locations.title", "Locations"),
+      path: "/locations",
+      exact: false,
+      icon: HiOutlineLocationMarker,
+      ...locationsModuleAccessRules,
+    },
     // {
     //   title: t("module.events.title", "Events"),
     //   path: "/events",

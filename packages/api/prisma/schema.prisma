@@ -40,44 +40,57 @@ model User {
 
 model Location {
   id            Int    @id @default(autoincrement())
-  description   String
-  address       String
-  contactInfo   String
-  offers        String
+  title           Json     
+  slug           Json    
+  description   Json   @default("{}")
+  address       Json?  @default("{}")
+  contactInfo   Json?  @default("{}")
+  offers        Json?  @default("{}")
 
-  lat         Float
-  lng         Float
+  status      Int  
+
+  lat         Float?
+  lng         Float?
 
   events      Event[]
   images      Image[]
+  terms       Term[]
 
-  userId Int
-  user   User @relation(fields: [userId], references: [id])
+  fullText      String? @default("")
+
+  ownerId     Int    
+  owner       User   @relation(fields: [ownerId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
-  @@index([userId], name: "indexLocationUserId")
+  @@index([ownerId], name: "indexLocationOwnerId")
 }
 
 
 model Event {
   id            Int    @id @default(autoincrement())
-  description   String
-  eventLocation String
+  title           Json     
+  slug           Json    
+  description   Json?  @default("{}")
+  eventLocation Json?  @default("{}")
   
   locationId    Int
   location      Location @relation(fields: [locationId], references: [id])
 
-  userId Int
-  user   User @relation(fields: [userId], references: [id])
+  ownerId     Int    
+  owner       User   @relation(fields: [ownerId], references: [id])
 
+  status      Int  
+  
   images   Image[]
+
+  fullText      String? @default("")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
-  @@index([userId], name: "indexEventUserId")
+  @@index([ownerId], name: "indexEventOwnerId")
 }
 
 model Token {
@@ -120,6 +133,8 @@ model Term {
   taxonomyId     Int
   taxonomy       Taxonomy   @relation(fields: [taxonomyId], references: [id])
 
+  locations      Location[]
+
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @default(now()) @updatedAt
 
@@ -131,6 +146,9 @@ model Page {
   title          Json     
   slug           Json     
   content        Json
+
+  status      Int  
+
   fullText       String    @default("")
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @default(now()) @updatedAt

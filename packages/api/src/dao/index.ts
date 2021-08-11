@@ -6,3 +6,4 @@ export * from "./term";
 export * from "./page";
 export * from "./image";
 export * from "./setting";
+export * from "./location";

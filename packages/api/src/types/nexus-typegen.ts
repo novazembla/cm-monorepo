@@ -58,10 +58,23 @@ export interface NexusGenInputs {
     meta: NexusGenScalars['JSON']; // JSON!
     ownerId: number; // Int!
   }
+  LocationUpsertInput: { // input type
+    address?: NexusGenScalars['JSON'] | null; // JSON
+    contactInfo?: NexusGenScalars['JSON'] | null; // JSON
+    description?: NexusGenScalars['JSON'] | null; // JSON
+    lat?: number | null; // Float
+    lng?: number | null; // Float
+    offers?: NexusGenScalars['JSON'] | null; // JSON
+    ownerId: number; // Int!
+    slug: NexusGenScalars['JSON']; // JSON!
+    status: number; // Int!
+    title: NexusGenScalars['JSON']; // JSON!
+  }
   PageUpsertInput: { // input type
     content: NexusGenScalars['JSON']; // JSON!
     ownerId: number; // Int!
     slug: NexusGenScalars['JSON']; // JSON!
+    status: number; // Int!
     title: NexusGenScalars['JSON']; // JSON!
   }
   SettingsUpdateInput: { // input type
@@ -177,14 +190,34 @@ export interface NexusGenObjects {
     meta?: NexusGenScalars['JSON'] | null; // JSON
     status: number; // Int!
   }
+  Location: { // root type
+    address?: NexusGenScalars['JSON'] | null; // JSON
+    contactInfo?: NexusGenScalars['JSON'] | null; // JSON
+    createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
+    description?: NexusGenScalars['JSON'] | null; // JSON
+    id: number; // Int!
+    lat?: number | null; // Float
+    lng?: number | null; // Float
+    offers?: NexusGenScalars['JSON'] | null; // JSON
+    ownerId: number; // Int!
+    slug?: NexusGenScalars['JSON'] | null; // JSON
+    status: number; // Int!
+    title?: NexusGenScalars['JSON'] | null; // JSON
+    updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
+  }
+  LocationQueryResult: { // root type
+    locations?: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
+    totalCount?: number | null; // Int
+  }
   Mutation: {};
   Page: { // root type
     content?: NexusGenScalars['JSON'] | null; // JSON
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
     fullText?: string | null; // String
     id: number; // Int!
-    ownerId?: number | null; // Int
+    ownerId: number; // Int!
     slug?: NexusGenScalars['JSON'] | null; // JSON
+    status: number; // Int!
     title?: NexusGenScalars['JSON'] | null; // JSON
     updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
   }
@@ -308,6 +341,26 @@ export interface NexusGenFieldTypes {
     meta: NexusGenScalars['JSON'] | null; // JSON
     status: number; // Int!
   }
+  Location: { // field return type
+    address: NexusGenScalars['JSON'] | null; // JSON
+    author: NexusGenRootTypes['User'] | null; // User
+    contactInfo: NexusGenScalars['JSON'] | null; // JSON
+    createdAt: NexusGenScalars['DateTime'] | null; // DateTime
+    description: NexusGenScalars['JSON'] | null; // JSON
+    id: number; // Int!
+    lat: number | null; // Float
+    lng: number | null; // Float
+    offers: NexusGenScalars['JSON'] | null; // JSON
+    ownerId: number; // Int!
+    slug: NexusGenScalars['JSON'] | null; // JSON
+    status: number; // Int!
+    title: NexusGenScalars['JSON'] | null; // JSON
+    updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
+  }
+  LocationQueryResult: { // field return type
+    locations: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
+    totalCount: number | null; // Int
+  }
   Mutation: { // field return type
     authLogin: NexusGenRootTypes['AuthPayload']; // AuthPayload!
     authLogout: NexusGenRootTypes['BooleanResult']; // BooleanResult!
@@ -318,6 +371,9 @@ export interface NexusGenFieldTypes {
     authVerifyEmail: NexusGenRootTypes['BooleanResult']; // BooleanResult!
     imageDelete: NexusGenRootTypes['BooleanResult']; // BooleanResult!
     imageUpdate: NexusGenRootTypes['Image']; // Image!
+    locationCreate: NexusGenRootTypes['Location']; // Location!
+    locationDelete: NexusGenRootTypes['BooleanResult']; // BooleanResult!
+    locationUpdate: NexusGenRootTypes['Location']; // Location!
     pageCreate: NexusGenRootTypes['Page']; // Page!
     pageDelete: NexusGenRootTypes['BooleanResult']; // BooleanResult!
     pageUpdate: NexusGenRootTypes['Page']; // Page!
@@ -342,8 +398,9 @@ export interface NexusGenFieldTypes {
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
     fullText: string | null; // String
     id: number; // Int!
-    ownerId: number | null; // Int
+    ownerId: number; // Int!
     slug: NexusGenScalars['JSON'] | null; // JSON
+    status: number; // Int!
     title: NexusGenScalars['JSON'] | null; // JSON
     updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
   }
@@ -365,6 +422,8 @@ export interface NexusGenFieldTypes {
     imageRead: NexusGenRootTypes['Image']; // Image!
     imageStatus: NexusGenRootTypes['ImageStatus']; // ImageStatus!
     images: NexusGenRootTypes['ImageQueryResult'] | null; // ImageQueryResult
+    locationRead: NexusGenRootTypes['Location']; // Location!
+    locations: NexusGenRootTypes['LocationQueryResult'] | null; // LocationQueryResult
     pageRead: NexusGenRootTypes['Page']; // Page!
     pages: NexusGenRootTypes['PageQueryResult'] | null; // PageQueryResult
     setting: Array<NexusGenRootTypes['Setting'] | null> | null; // [Setting]
@@ -485,6 +544,26 @@ export interface NexusGenFieldTypeNames {
     meta: 'JSON'
     status: 'Int'
   }
+  Location: { // field return type name
+    address: 'JSON'
+    author: 'User'
+    contactInfo: 'JSON'
+    createdAt: 'DateTime'
+    description: 'JSON'
+    id: 'Int'
+    lat: 'Float'
+    lng: 'Float'
+    offers: 'JSON'
+    ownerId: 'Int'
+    slug: 'JSON'
+    status: 'Int'
+    title: 'JSON'
+    updatedAt: 'DateTime'
+  }
+  LocationQueryResult: { // field return type name
+    locations: 'Location'
+    totalCount: 'Int'
+  }
   Mutation: { // field return type name
     authLogin: 'AuthPayload'
     authLogout: 'BooleanResult'
@@ -495,6 +574,9 @@ export interface NexusGenFieldTypeNames {
     authVerifyEmail: 'BooleanResult'
     imageDelete: 'BooleanResult'
     imageUpdate: 'Image'
+    locationCreate: 'Location'
+    locationDelete: 'BooleanResult'
+    locationUpdate: 'Location'
     pageCreate: 'Page'
     pageDelete: 'BooleanResult'
     pageUpdate: 'Page'
@@ -521,6 +603,7 @@ export interface NexusGenFieldTypeNames {
     id: 'Int'
     ownerId: 'Int'
     slug: 'JSON'
+    status: 'Int'
     title: 'JSON'
     updatedAt: 'DateTime'
   }
@@ -542,6 +625,8 @@ export interface NexusGenFieldTypeNames {
     imageRead: 'Image'
     imageStatus: 'ImageStatus'
     images: 'ImageQueryResult'
+    locationRead: 'Location'
+    locations: 'LocationQueryResult'
     pageRead: 'Page'
     pages: 'PageQueryResult'
     setting: 'Setting'
@@ -653,6 +738,16 @@ export interface NexusGenArgTypes {
       data: NexusGenInputs['ImageUpdateInput']; // ImageUpdateInput!
       id: number; // Int!
     }
+    locationCreate: { // args
+      data: NexusGenInputs['LocationUpsertInput']; // LocationUpsertInput!
+    }
+    locationDelete: { // args
+      id: number; // Int!
+    }
+    locationUpdate: { // args
+      data: NexusGenInputs['LocationUpsertInput']; // LocationUpsertInput!
+      id: number; // Int!
+    }
     pageCreate: { // args
       data: NexusGenInputs['PageUpsertInput']; // PageUpsertInput!
     }
@@ -733,6 +828,15 @@ export interface NexusGenArgTypes {
       pageIndex?: number | null; // Int
       pageSize: number | null; // Int
       taxonomyId: number; // Int!
+      where?: NexusGenScalars['JSON'] | null; // JSON
+    }
+    locationRead: { // args
+      id: number; // Int!
+    }
+    locations: { // args
+      orderBy?: NexusGenScalars['JSON'] | null; // JSON
+      pageIndex?: number | null; // Int
+      pageSize: number | null; // Int
       where?: NexusGenScalars['JSON'] | null; // JSON
     }
     pageRead: { // args

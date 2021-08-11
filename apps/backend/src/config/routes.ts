@@ -9,6 +9,7 @@ import { moduleAccessRules as taxonomiesModuleAccessRules } from "~/modules/Taxo
 import { moduleAccessRules as usersModuleAccessRules } from "~/modules/Users/moduleRoutes";
 import { moduleAccessRules as pagesModuleAccessRules } from "~/modules/Pages/moduleRoutes";
 import { moduleAccessRules as settingsModuleAccessRules } from "~/modules/Settings/moduleRoutes";
+import { moduleAccessRules as locationsModuleAccessRules } from "~/modules/Locations/moduleRoutes";
 
 // Public
 const Login = lazy(() => import("~/pages/Login/Login"));
@@ -35,6 +36,7 @@ const DashBoard = lazy(() => import("~/modules/DashBoard/DashBoard"));
 const Users = lazy(() => import("~/modules/Users/Users"));
 const Taxonomies = lazy(() => import("~/modules/Taxonomies/Taxonomies"));
 const Pages = lazy(() => import("~/modules/Pages/Pages"));
+const Locations = lazy(() => import("~/modules/Locations/Locations"));
 const Settings = lazy(() => import("~/modules/Settings/Settings"));
 
 const config = getAppConfig();
@@ -93,6 +95,13 @@ export const privateRoutes: RoutePrivateParams[] = [
     component: DashBoard,
     exact: true,
     ...dashboadModuleAccessRules,
+  },
+  {
+    key: "locations",
+    path: "/locations",
+    component: Locations,
+    exact: false,
+    ...locationsModuleAccessRules,
   },
   {
     key: "profile",

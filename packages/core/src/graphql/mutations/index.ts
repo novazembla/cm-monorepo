@@ -5,3 +5,4 @@ export * from "./settingMutationsGQL";
 export * from "./userMutationsGQL";
 export * from "./pageMutationsGQL";
 export * from "./imageMutationsGQL";
+export * from "./locationMutationsGQL";

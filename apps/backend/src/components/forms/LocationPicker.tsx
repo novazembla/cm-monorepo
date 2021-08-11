@@ -11,8 +11,8 @@ export const LocationPicker = ({
   lat: number;
   lng: number;
   required: boolean;
-  fieldNameLat: string;
-  fieldNameLng: string;
+  fieldNameLat?: string;
+  fieldNameLng?: string;
 }) => {
   const {t} = useTranslation();
   

@@ -1,23 +1,28 @@
 import gql from "graphql-tag";
 
-export const pagesQueryGQL = gql`
-  query pages($where: JSON, $orderBy: JSON, $pageIndex: Int, $pageSize: Int) {
-    pages(
+export const locationsQueryGQL = gql`
+  query locations(
+    $where: JSON
+    $orderBy: JSON
+    $pageIndex: Int
+    $pageSize: Int
+  ) {
+    locations(
       where: $where
       orderBy: $orderBy
       pageIndex: $pageIndex
       pageSize: $pageSize
     ) {
-      pages {
+      locations {
         id
         title
         slug
         status
-        content
+        description
       }
       totalCount
     }
   }
 `;
 
-export default pagesQueryGQL;
+export default locationsQueryGQL;

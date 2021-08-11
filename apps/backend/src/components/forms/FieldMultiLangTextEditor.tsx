@@ -55,7 +55,7 @@ export const FieldMultiLangTextEditor = ({
             (lang === config.defaultLanguage &&
               settings?.defaultRequired === true);
 
-          let defaultValue = settings?.defaultValues[lang] ?? "undefined";
+          let defaultValue = settings?.defaultValues && typeof settings?.defaultValues === "object" && lang in settings.defaultValues ? settings.defaultValues[lang] : undefined;
 
           return (
             <FieldRow key={field_id}>
@@ -63,6 +63,7 @@ export const FieldMultiLangTextEditor = ({
                 id={field_id}
                 type={type}
                 name={field_name}
+                
                 label={
                   <chakra.span>
                     {label} (
@@ -72,6 +73,7 @@ export const FieldMultiLangTextEditor = ({
                 isRequired={field_required}
                 settings={{
                   className: settings?.className,
+                  maxLength: settings?.maxLength,
                   defaultValue,
                 }}
               />

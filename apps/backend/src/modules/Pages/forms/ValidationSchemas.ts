@@ -1,4 +1,5 @@
-import { addMethod, string, object, BaseSchema } from "yup";
+import { addMethod, string, object, BaseSchema, number } from "yup";
+
 import { AnyObject, Maybe } from "yup/lib/types";
 
 import { activeLanguages, defaultLanguage } from "~/config";
@@ -24,7 +25,6 @@ addMethod(string, "nonEmptyHtml", function(options?: {
   return this.test("nonEmptyHtml", msg, function(value) {
       // const { path, createError } = this;
       // const { charCount, wordCount } = options;
-      console.log(value)
       try {
         const dom = new DOMParser().parseFromString(value ?? "", 'text/html');
         console.log(dom.body.textContent)
@@ -46,6 +46,9 @@ export const ModulePageSchema = object().shape(
       [`slug_${lang}`]: string().lowercase().matches(/^[a-z\-\d]+$/, "validation.slug.invalidcharacters").required(),
       [`content_${lang}`]: (lang === defaultLanguage)? string().nonEmptyHtml().required() : string(),
     }),
-    {}
+    {
+      ownerId: number(),
+      status: number(),
+    }
   )
 );

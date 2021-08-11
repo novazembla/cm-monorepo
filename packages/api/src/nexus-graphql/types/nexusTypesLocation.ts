@@ -23,23 +23,22 @@ import { authorizeApiUser } from "../helpers";
 import config from "../../config";
 
 import {
-  daoPageQuery,
-  daoPageQueryCount,
-  daoPageGetById,
-  daoPageCreate,
-  daoPageUpdate,
-  daoPageDelete,
+  daoLocationQuery,
+  daoLocationQueryCount,
+  daoLocationGetById,
+  daoLocationCreate,
+  daoLocationUpdate,
+  daoLocationDelete,
   daoUserGetById,
 } from "../../dao";
 
-export const Page = objectType({
-  name: "Page",
+export const Location = objectType({
+  name: "Location",
   definition(t) {
     t.nonNull.int("id");
     t.json("title");
     t.json("slug");
-    t.json("content");
-    t.string("fullText");
+
     t.nonNull.int("ownerId");
     t.nonNull.int("status");
     t.field("author", {
@@ -59,29 +58,38 @@ export const Page = objectType({
         return null;
       },
     });
+
+    t.json("description");
+    t.json("address");
+    t.json("contactInfo");
+    t.json("offers");
+
+    t.float("lat");
+    t.float("lng");
+
     t.date("createdAt");
     t.date("updatedAt");
   },
 });
 
-export const PageQueryResult = objectType({
-  name: "PageQueryResult",
+export const LocationQueryResult = objectType({
+  name: "LocationQueryResult",
   description: dedent`
-    List all the pages in the database.     
+    List all the locations in the database.     
   `,
   definition: (t) => {
     t.int("totalCount");
-    t.field("pages", {
-      type: list("Page"),
+    t.field("locations", {
+      type: list("Location"),
     });
   },
 });
 
-export const PageQueries = extendType({
+export const LocationQueries = extendType({
   type: "Query",
   definition(t) {
-    t.field("pages", {
-      type: PageQueryResult,
+    t.field("locations", {
+      type: LocationQueryResult,
 
       args: {
         pageIndex: intArg({
@@ -100,26 +108,26 @@ export const PageQueries = extendType({
         }),
       },
 
-      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "pageRead"),
+      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "locationRead"),
 
       async resolve(...[, args, , info]) {
         const pRI = parseResolveInfo(info);
 
         let totalCount;
-        let pages;
+        let locations;
 
-        if ((pRI?.fieldsByTypeName?.PageQueryResult as any)?.totalCount) {
-          totalCount = await daoPageQueryCount(args.where);
+        if ((pRI?.fieldsByTypeName?.LocationQueryResult as any)?.totalCount) {
+          totalCount = await daoLocationQueryCount(args.where);
 
           if (totalCount === 0)
             return {
               totalCount,
-              pages: [],
+              locations: [],
             };
         }
 
-        if ((pRI?.fieldsByTypeName?.PageQueryResult as any)?.pages)
-          pages = await daoPageQuery(
+        if ((pRI?.fieldsByTypeName?.LocationQueryResult as any)?.locations)
+          locations = await daoLocationQuery(
             args.where,
             args.orderBy,
             args.pageIndex as number,
@@ -128,106 +136,116 @@ export const PageQueries = extendType({
 
         return {
           totalCount,
-          pages,
+          locations,
         };
       },
     });
 
-    t.nonNull.field("pageRead", {
-      type: "Page",
+    t.nonNull.field("locationRead", {
+      type: "Location",
 
       args: {
         id: nonNull(intArg()),
       },
 
-      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "pageRead"),
+      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "locationRead"),
 
       // resolve(root, args, ctx, info)
       async resolve(...[, args]) {
-        return daoPageGetById(args.id);
+        return daoLocationGetById(args.id);
       },
     });
   },
 });
 
-export const PageCreateInput = inputObjectType({
-  name: "PageUpsertInput",
+export const LocationCreateInput = inputObjectType({
+  name: "LocationUpsertInput",
   definition(t) {
     t.nonNull.json("title");
     t.nonNull.json("slug");
-    t.nonNull.json("content");
-    t.nonNull.int("ownerId");
     t.nonNull.int("status");
+    t.json("description");
+    t.json("address");
+    t.json("contactInfo");
+    t.json("offers");
+    t.nonNull.int("ownerId");
+    t.float("lat");
+    t.float("lng");
   },
 });
 
-export const PageMutations = extendType({
+export const LocationMutations = extendType({
   type: "Mutation",
 
   definition(t) {
-    t.nonNull.field("pageCreate", {
-      type: "Page",
+    t.nonNull.field("locationCreate", {
+      type: "Location",
 
       args: {
-        data: nonNull("PageUpsertInput"),
+        data: nonNull("LocationUpsertInput"),
       },
 
-      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "pageCreate"),
+      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "locationCreate"),
 
       async resolve(...[, args]) {
-        const page = await daoPageCreate({
+        const location = await daoLocationCreate({
           title: args.data.title,
           slug: args.data.slug,
-          content: args.data.content,
+          description: args.data.description,
+          address: args.data.address,
+          contactInfo: args.data.contactInfo,
+          offers: args.data.offers,
+          lat: args.data.lat,
+          lng: args.data.lng,
           status: args.data.status,
           owner: {
             connect: { id: args.data.ownerId },
           },
         });
 
-        if (!page)
+        if (!location)
           throw new ApiError(
             httpStatus.INTERNAL_SERVER_ERROR,
             "Creation failed"
           );
 
-        return page;
+        return location;
       },
     });
 
-    t.nonNull.field("pageUpdate", {
-      type: "Page",
+    t.nonNull.field("locationUpdate", {
+      type: "Location",
 
       args: {
         id: nonNull(intArg()),
-        data: nonNull("PageUpsertInput"),
+        data: nonNull("LocationUpsertInput"),
       },
 
-      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "pageUpdate"),
+      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "locationUpdate"),
 
       async resolve(...[, args]) {
-        const page = await daoPageUpdate(args.id, args.data);
+        const location = await daoLocationUpdate(args.id, args.data);
 
-        if (!page)
+        if (!location)
           throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Update failed");
 
-        return page;
+        return location;
       },
     });
 
-    t.nonNull.field("pageDelete", {
+    t.nonNull.field("locationDelete", {
       type: "BooleanResult",
 
       args: {
         id: nonNull(intArg()),
       },
 
-      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "pageDelete"),
+      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "locationDelete"),
 
       async resolve(...[, args]) {
-        const page = await daoPageDelete(args.id);
+        const location = await daoLocationDelete(args.id);
 
-        if (!page)
+        if (!location)
           throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Delete failed");
 
         return { result: true };

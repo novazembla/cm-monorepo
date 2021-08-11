@@ -25,6 +25,7 @@ import {
   adminTableCreateNewTableState,
   AdminTableActionCell,
   AdminTableMultiLangCell,
+  AdminTablePublishStatusCell
 } from "~/components/ui";
 import { config } from "~/config";
 import { SortingRule } from "react-table";
@@ -86,7 +87,7 @@ const Index = () => {
       type: "navigation",
       to: `${moduleRootPath}/create`,
       label: t("module.pages.button.create", "Add new page"),
-      userCan: "userCreate",
+      userCan: "taxCreate",
     },
   ];
 
@@ -95,6 +96,11 @@ const Index = () => {
     {
       Header: t("pages.fields.label.id", "Id"),
       accessor: "id",
+    } as AdminTableColumn,
+    {
+      Cell: AdminTablePublishStatusCell,
+      Header: t("locations.fields.label.status", "status"),
+      accessor: "status",
     } as AdminTableColumn,
     {
       Cell: AdminTableMultiLangCell,

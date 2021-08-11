@@ -7,9 +7,7 @@ const DashBoard = () => {
     <AlertEmailVerification />
     <Box layerStyle="pageContainerWhite">
       <h2>Page Dashboard</h2>
-      <p>
-        HERE SHOULD an alert be shown if the user has not cofirmed her email...
-      </p>
+
 
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse a

@@ -5,4 +5,5 @@ export * from "./nexusTypesSetting";
 export * from "./nexusTypesTaxonomy";
 export * from "./nexusTypesTerm";
 export * from "./nexusTypesPage";
+export * from "./nexusTypesLocation";
 export * from "./nexusTypesImage";

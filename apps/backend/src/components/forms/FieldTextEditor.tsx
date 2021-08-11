@@ -60,6 +60,7 @@ export const FieldTextEditor = ({
           onChange={(content) => {
             setValue(name, content);
           }}
+          isInvalid={errors[name]?.message}
           maxLength={settings?.maxLength}
         />
         <input

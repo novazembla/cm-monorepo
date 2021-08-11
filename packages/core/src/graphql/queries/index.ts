@@ -6,3 +6,4 @@ export * from "./taxonomyQueriesGQL";
 export * from "./termQueriesGQL";
 export * from "./pageQueriesGQL";
 export * from "./imageQueriesGQL";
+export * from "./locationQueriesGQL";

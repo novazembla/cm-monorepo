@@ -3,12 +3,12 @@ import * as yup from "yup";
 import { useTranslation } from "react-i18next";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { filteredOutputByWhitelist, PublishStatus} from "@culturemap/core";
+import { filteredOutputByWhitelist, PublishStatus } from "@culturemap/core";
 
 import { TextErrorMessage, FormNavigationBlock } from "~/components/forms";
 
-import { ModulePageSchema } from "./forms";
-import { usePageCreateMutation } from "./hooks";
+import { ModuleLocationValidationSchema } from "./forms";
+import { useLocationCreateMutation } from "./hooks";
 import {
   useAuthentication,
   useSuccessfullySavedToast,
@@ -26,7 +26,7 @@ import {
 
 import { moduleRootPath, multiLangFields } from "./moduleConfig";
 
-import { PageForm } from "./forms";
+import { ModuleForm } from "./forms";
 import { multiLangRHFormDataToJson, multiLangSlugUniqueError } from "~/utils";
 
 const Create = () => {
@@ -36,14 +36,14 @@ const Create = () => {
   const { t } = useTranslation();
   const successToast = useSuccessfullySavedToast();
 
-  const [firstMutation, firstMutationResults] = usePageCreateMutation();
+  const [firstMutation, firstMutationResults] = useLocationCreateMutation();
   const [isFormError, setIsFormError] = useState(false);
 
   const disableForm = firstMutationResults.loading;
 
   const formMethods = useForm({
     mode: "onTouched",
-    resolver: yupResolver(ModulePageSchema),
+    resolver: yupResolver(ModuleLocationValidationSchema),
   });
 
   const {
@@ -53,7 +53,7 @@ const Create = () => {
   } = formMethods;
 
   const onSubmit = async (
-    newData: yup.InferType<typeof ModulePageSchema>
+    newData: yup.InferType<typeof ModuleLocationValidationSchema>
   ) => {
     setIsFormError(false);
     try {
@@ -61,6 +61,8 @@ const Create = () => {
         const { errors } = await firstMutation(
           {
             ownerId: appUser.id,
+            lat: newData.lat,
+            lng: newData.lng,
             status: PublishStatus.DRAFT,
             ...filteredOutputByWhitelist(
               multiLangRHFormDataToJson(
@@ -94,10 +96,10 @@ const Create = () => {
   const breadcrumb = [
     {
       path: moduleRootPath,
-      title: t("module.pages.title", "Pages"),
+      title: t("module.locations.title", "Locations"),
     },
     {
-      title: t("module.pages.page.title.createpage", "Add new page"),
+      title: t("module.locations.mneuitem.createlocation", "Add new location"),
     },
   ];
 
@@ -106,13 +108,13 @@ const Create = () => {
       type: "back",
       to: moduleRootPath,
       label: t("module.button.cancel", "Cancel"),
-      userCan: "pageRead",
+      userCan: "locationRead",
     },
     {
       type: "submit",
       isLoading: isSubmitting,
       label: t("module.button.save", "Save"),
-      userCan: "pageCreate",
+      userCan: "locationCreate",
     },
   ];
 
@@ -130,9 +132,9 @@ const Create = () => {
                   <Divider />
                 </>
               )}
-              <PageForm
+              <ModuleForm
                 action="create"
-                validationSchema={ModulePageSchema}
+                validationSchema={ModuleLocationValidationSchema}
               />
             </ModulePage>
           </fieldset>

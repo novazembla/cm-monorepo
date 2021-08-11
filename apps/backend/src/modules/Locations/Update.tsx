@@ -1,22 +1,26 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import * as yup from "yup";
 import { useTranslation } from "react-i18next";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { filteredOutputByWhitelist, PublishStatus} from "@culturemap/core";
 
 import { TextErrorMessage, FormNavigationBlock } from "~/components/forms";
 
-import { ModulePageSchema } from "./forms";
-import { usePageCreateMutation } from "./hooks";
+import { ModuleLocationValidationSchema } from "./forms";
+import { useLocationUpdateMutation } from "./hooks";
 import {
   useAuthentication,
+  useConfig,
   useSuccessfullySavedToast,
   useRouter,
-  useConfig,
 } from "~/hooks";
 
 import { Divider } from "@chakra-ui/react";
+import {
+  filteredOutputByWhitelist,
+} from "@culturemap/core";
+
+import { useQuery, gql } from "@apollo/client";
 
 import {
   ModuleSubNav,
@@ -26,42 +30,89 @@ import {
 
 import { moduleRootPath, multiLangFields } from "./moduleConfig";
 
-import { PageForm } from "./forms";
-import { multiLangRHFormDataToJson, multiLangSlugUniqueError } from "~/utils";
+import { ModuleForm } from "./forms";
+import { multiLangJsonToRHFormData, multiLangRHFormDataToJson, multiLangSlugUniqueError } from "~/utils";
 
-const Create = () => {
-  const config = useConfig();
+export const locationReadAndContentAuthorsQueryGQL = gql`
+  query locationRead($id: Int!) {
+    locationRead(id: $id) {
+      id
+      title
+      slug
+      description
+      address
+      contactInfo
+      offers
+      lat
+      lng
+      status
+      ownerId
+      createdAt
+      updatedAt
+    }
+    adminUsers(roles:["administrator","editor","contributor"]) {
+      id
+      firstName
+      lastName
+    }
+  }
+`;
+
+const Update = () => {
   const router = useRouter();
+  const config = useConfig();
   const [appUser] = useAuthentication();
   const { t } = useTranslation();
   const successToast = useSuccessfullySavedToast();
 
-  const [firstMutation, firstMutationResults] = usePageCreateMutation();
-  const [isFormError, setIsFormError] = useState(false);
+  const { data, loading, error } = useQuery(locationReadAndContentAuthorsQueryGQL, {
+    variables: {
+      id: parseInt(router.query.id, 10),
+    },
+  });
 
+  const [firstMutation, firstMutationResults] = useLocationUpdateMutation();
+  const [isFormError, setIsFormError] = useState(false);
+  
   const disableForm = firstMutationResults.loading;
 
   const formMethods = useForm({
     mode: "onTouched",
-    resolver: yupResolver(ModulePageSchema),
+    resolver: yupResolver(ModuleLocationValidationSchema),
   });
 
   const {
     handleSubmit,
+    reset,
     setError,
     formState: { isSubmitting, isDirty },
   } = formMethods;
 
+  useEffect(() => {
+    if (!data || !data.locationRead) return;
+
+    reset(
+      multiLangJsonToRHFormData(
+        filteredOutputByWhitelist(data.locationRead, ["ownerId","lat","lng","status"], multiLangFields),
+        multiLangFields,
+        config.activeLanguages
+      )
+    );
+  }, [reset, data, config.activeLanguages]);
+
   const onSubmit = async (
-    newData: yup.InferType<typeof ModulePageSchema>
+    newData: yup.InferType<typeof ModuleLocationValidationSchema>
   ) => {
     setIsFormError(false);
     try {
       if (appUser) {
         const { errors } = await firstMutation(
-          {
-            ownerId: appUser.id,
-            status: PublishStatus.DRAFT,
+          parseInt(router.query.id, 10),
+          { 
+            ownerId: newData.ownerId,
+            status: newData.status,
+            lat: newData.lat,
+            lng: newData.lng,
             ...filteredOutputByWhitelist(
               multiLangRHFormDataToJson(
                 newData,
@@ -72,6 +123,7 @@ const Create = () => {
               multiLangFields
             )
           }
+          
         );
 
         if (!errors) {
@@ -80,8 +132,9 @@ const Create = () => {
           router.push(moduleRootPath);
         } else {
           let slugError = multiLangSlugUniqueError(errors, setError);
-
-          if (!slugError) setIsFormError(true);
+          
+          if (!slugError)
+            setIsFormError(true);
         }
       } else {
         setIsFormError(true);
@@ -94,10 +147,10 @@ const Create = () => {
   const breadcrumb = [
     {
       path: moduleRootPath,
-      title: t("module.pages.title", "Pages"),
+      title: t("module.locations.title", "Locations"),
     },
     {
-      title: t("module.pages.page.title.createpage", "Add new page"),
+      title: t("module.locations.location.title.updatepage", "Update location"),
     },
   ];
 
@@ -106,13 +159,13 @@ const Create = () => {
       type: "back",
       to: moduleRootPath,
       label: t("module.button.cancel", "Cancel"),
-      userCan: "pageRead",
+      userCan: "locationRead",
     },
     {
       type: "submit",
       isLoading: isSubmitting,
-      label: t("module.button.save", "Save"),
-      userCan: "pageCreate",
+      label: t("module.button.update", "Update"),
+      userCan: "locationUpdate",
     },
   ];
 
@@ -123,16 +176,17 @@ const Create = () => {
         <form noValidate onSubmit={handleSubmit(onSubmit)}>
           <fieldset disabled={disableForm}>
             <ModuleSubNav breadcrumb={breadcrumb} buttonList={buttonList} />
-            <ModulePage>
+            <ModulePage isLoading={loading} isError={!!error}>
               {isFormError && (
                 <>
                   <TextErrorMessage error="general.writeerror.desc" />
                   <Divider />
                 </>
               )}
-              <PageForm
-                action="create"
-                validationSchema={ModulePageSchema}
+              <ModuleForm
+                action="update"
+                data={data}
+                validationSchema={ModuleLocationValidationSchema}
               />
             </ModulePage>
           </fieldset>
@@ -141,4 +195,4 @@ const Create = () => {
     </>
   );
 };
-export default Create;
+export default Update;

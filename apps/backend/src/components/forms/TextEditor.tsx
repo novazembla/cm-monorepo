@@ -54,6 +54,7 @@ const EditorMenuBarButton = ({
   label,
   isActive,
   isDisabled,
+  
   onClick,
 }: {
   icon: React.ReactElement;
@@ -61,6 +62,7 @@ const EditorMenuBarButton = ({
   isFlashing?: boolean;
   isActive?: boolean;
   isDisabled?: boolean;
+  
   onClick: MouseEventHandler<HTMLButtonElement>;
 }) => (
   <IconButton
@@ -317,6 +319,7 @@ export const TextEditor = ({
   content,
   contentType = "html",
   maxLength,
+  isInvalid,
 }: {
   name: string;
   type: TextEditorTypes;
@@ -325,6 +328,7 @@ export const TextEditor = ({
   contentType?: "html" | "json";
   placeholder?: string;
   maxLength?: number;
+  isInvalid?: boolean;
 }) => {
   const { t } = useTranslation();
   const [isFocussed, setIsFocussed] = useState(false);
@@ -366,7 +370,7 @@ export const TextEditor = ({
     <Box
       className={`editor ${type} ${isFocussed ? "is-focussed" : ""} ${
         maxLength && maxLength > 0 ? "has-char-count" : ""
-      }`}
+      } ${isInvalid ? "is-error": ""}`}
     >
       <EditorMenuBar
         {...{ type, editor, name, editorIsFocussed: isFocussed }}

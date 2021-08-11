@@ -39,7 +39,8 @@ code {
   width: 100%;
   position: relative;
   background-color: #fff;
-
+  
+  
   .menu-bar {
     top: -1px;
     left: -1px;
@@ -57,6 +58,7 @@ code {
       min-height: 100px;
       max-height: 200px;
       overflow-y: auto;
+
     }
     &.is-focussed {
       border-color: var(--chakra-colors-gray-500);
@@ -65,9 +67,17 @@ code {
 
     .ProseMirror {
       height: 100%;
+      min-height: 100px;
       background-color:#fff;
       overflow-y: auto;
       padding: var(--chakra-space-2);
+    }
+  }
+
+  &.is-error { 
+    &.basic {
+      border: 1px solid var(--chakra-colors-red-400);
+      box-shadow: 0 0 0 1px var(--chakra-colors-red-400);
     }
   }
 
@@ -90,6 +100,7 @@ code {
     margin-top: 0.75em;
   } 
   
+  min-height: 100px;
   &:focus {
     outline: none;
   }

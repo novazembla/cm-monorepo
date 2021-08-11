@@ -86,7 +86,7 @@ const Index = () => {
       type: "navigation",
       to: `${moduleRootPath}/create`,
       label: t("module.taxonomies.button.create", "Add new taxonomy"),
-      userCan: "userCreate",
+      userCan: "taxCreate",
     },
   ];
 

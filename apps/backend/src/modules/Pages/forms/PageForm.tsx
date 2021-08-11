@@ -1,3 +1,4 @@
+import { Divider } from "@chakra-ui/react";
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import {
@@ -5,6 +6,8 @@ import {
   FieldMultiLangTextEditor,
   FieldSelect,
   FieldRow,
+  FieldPublishStatusSelect,
+  TwoColFieldRow
 } from "~/components/forms";
 
 export const PageForm = ({
@@ -25,7 +28,13 @@ export const PageForm = ({
 
   if (action === "update") {
     if (data.adminUsers) {
-      updateActions = (
+      updateActions = <>
+        
+        <Divider mt="10"/>
+        <TwoColFieldRow>
+        <FieldRow>
+          <FieldPublishStatusSelect status={ data?.pageRead?.status} />
+        </FieldRow>
         <FieldRow>
           <FieldSelect
             name="ownerId"
@@ -47,7 +56,8 @@ export const PageForm = ({
             }}
           />
         </FieldRow>
-      );
+        </TwoColFieldRow>
+      </>;
     } else {
       updateActions = (
         <input value={data.pageRead.ownerId} {...register("ownerId")} />
@@ -84,6 +94,8 @@ export const PageForm = ({
           ),
         }}
       />
+      {updateActions}
+      <Divider mt="10"/>
       <FieldMultiLangTextEditor
         name="content"
         id="content"
@@ -101,7 +113,7 @@ export const PageForm = ({
         }}
       />
 
-      {updateActions}
+      
     </>
   );
 };
