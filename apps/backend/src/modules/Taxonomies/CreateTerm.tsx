@@ -112,7 +112,7 @@ const CreateTerm = () => {
       title: data && data.taxonomyRead ? <MultiLangValue json={data.taxonomyRead.name} /> : <BeatLoader size="10px" color="#666"/>,
     },
     {
-      title: t("module.taxonomies.page.title.createtax", "Add new term"),
+      title: t("module.taxonomies.page.title.createterm", "Add new term"),
     },
   ];
 

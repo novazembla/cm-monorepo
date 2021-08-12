@@ -87,19 +87,19 @@ export const UserForm = ({ data, errors, action, validationSchema }: { data?: an
           options={[
             {
               value: "user",
-              label: t("role.", "User"),
+              label: t("role.user", "User"),
             },
             {
               value: "contributor",
-              label: t("role.", "Contributor"),
+              label: t("role.contributor", "Contributor"),
             },
             {
               value: "editor",
-              label: t("role.", "Editor"),
+              label: t("role.editor", "Editor"),
             },
             {
               value: "administrator",
-              label: t("role.", "Administrator"),
+              label: t("role.administrator", "Administrator"),
             },
           ]}
           settings={{

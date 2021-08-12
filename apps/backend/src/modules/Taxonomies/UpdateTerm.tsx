@@ -134,7 +134,7 @@ const UpdateTerm = () => {
       title: taxonomyQueryResults.data && taxonomyQueryResults.data.taxonomyRead ? <MultiLangValue json={taxonomyQueryResults.data.taxonomyRead.name} /> : <BeatLoader size="10px" color="#666"/>,
     },
     {
-      title: t("module.taxonomies.page.title.createtax", "Update term"),
+      title: t("module.taxonomies.page.title.updatetax", "Update term"),
     },
   ];
 

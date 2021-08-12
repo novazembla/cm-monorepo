@@ -82,7 +82,7 @@ export const DangerZoneAlertDialog = ({
             
               <Text mt="3" pb="1">
                 {t(
-                "dangerzonealertdialog.writedeletelabel",
+                "dangerzonealertdialog.writedeletetask",
                 "Please enter \"{{token}}\" into the field below to unlock the action",
                 { token }
               )}

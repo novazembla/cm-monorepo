@@ -96,7 +96,7 @@ const Index = () => {
               <Stat mb="4">
                 <StatLabel fontSize="md">
                   {t(
-                    "module.profile.data.title.emailverificationstatus",
+                    "module.profile.data.title.emailverificationstatus.status",
                     "Email verification status"
                   )}
                 </StatLabel>

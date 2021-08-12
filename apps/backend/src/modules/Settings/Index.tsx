@@ -59,7 +59,7 @@ const Setting = ({
   return (
     <Stat mb="4">
       <StatLabel fontSize="md">
-        {t(settingsFieldDefinitions[setting]?.label ?? "settings.error.label")}
+        {settingsFieldDefinitions[setting]?.label ? t(`${settingsFieldDefinitions[setting]?.label}`) : t("settings.error.label")}
       </StatLabel>
       <StatNumber mt="-1">{print}</StatNumber>
     </Stat>
@@ -75,7 +75,7 @@ const Index = () => {
   const breadcrumb = [
     {
       path: moduleRootPath,
-      title: t("module.settings.title", "Setting"),
+      title: t("module.settings.title", "Settings"),
     },
   ];
 

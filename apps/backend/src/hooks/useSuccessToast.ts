@@ -45,7 +45,7 @@ export const useSuccessfullyDeletedToast = () => {
   const { t } = useTranslation();
 
   const defaultTitle = t("toast.title.success", "Success!");
-  const defaultMsg = t("toast.info.datasaved", "The data has been deleted");
+  const defaultMsg = t("toast.info.datadeleted", "The data has been deleted");
 
   const toast = useSuccessToast(defaultTitle, defaultTitle);
 

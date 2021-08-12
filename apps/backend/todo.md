@@ -27,6 +27,9 @@ TODO: Menu/Sidebar
 - if you go smaller the slideout menu default state does not toggle to closed? Why? 
 - Click on menu items (how could this reset the listing page to start)
 
+TODO: Taxonomy
+- Change of taxonomy to module relations need also to remove connected terms to items ... 
+
 
 TODO: CSS
 - Nicer action bar on mobile phones

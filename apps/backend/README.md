@@ -1,3 +1,8 @@
+i18next translation extraction. Don't run it from the root folder! 
+
+### `cd ./apps/backend`
+### `i18next 'src/**/*.{ts,tsx,js,jsx}'`
+
 
 # Caveats
 

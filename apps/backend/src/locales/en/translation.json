@@ -1,25 +1,432 @@
 {
-  "page": {
-    "login": {
-      "title": "Login",
-      "form_field_login_label": "Email Address",
-      "form_field_login_placeholder": "Please enter your email address",
-      "form_field_password_label": "Your password",
-      "form_field_password_placeholder": "Please enter your password",
-      "forgot_your_password": "Forgot your password?",
-      "form_button_login": "Login"
+  "footer": {
+    "contactLink": {
+      "title": "Contact"
+    }
+  },
+  "avatar": {
+    "menu": {
+      "myprofile": "My profile",
+      "logout": "Logout"
+    }
+  },
+  "mainnav": {
+    "dashboard": {
+      "title": "Dashboard"
     },
-    "passwordreset": {
-      "title": "Forgot your password?"
+    "locations": {
+      "title": "Locations"
+    },
+    "events": {
+      "title": "Events"
+    },
+    "tours": {
+      "title": "Tours"
+    },
+    "pages": {
+      "title": "Pages"
+    },
+    "taxonomies": {
+      "title": "Taxonomies"
+    },
+    "users": {
+      "title": "Users"
+    },
+    "settings": {
+      "title": "Settings"
+    }
+  },
+  "menu": {
+    "close": "Close menu",
+    "open": "Open menu"
+  },
+  "module": {
+    "profile": {
+      "button": {
+        "deleteimage": "Delete profile image",
+        "update": "Update profile",
+        "updatepassword": "Update password"
+      },
+      "deleteimage": {
+        "error": "Unfortunately, we could not process you deletion request please try again later"
+      },
+      "title": "Profile",
+      "image": {
+        "placeholder": "No profile picture uploaded"
+      },
+      "data": {
+        "title": {
+          "fullname": "Name",
+          "email": "Email address",
+          "emailverificationstatus": {
+            "status": "Email verification status",
+            "verified": "You've verified your email address",
+            "notverified": "You've not verified your email address. Check your inbox!"
+          }
+        }
+      },
+      "page": {
+        "title": {
+          "updateprofile": "Update profile"
+        }
+      }
+    },
+    "button": {
+      "cancel": "Cancel",
+      "update": "Update",
+      "save": "Save",
+      "back": "Go back"
+    },
+    "users": {
+      "deletealter": {
+        "title": "Please confirm",
+        "message": "Do you really want to delete the user? Once done we cannot revert this action!"
+      },
+      "title": "Users",
+      "page": {
+        "title": {
+          "createuser": "Add new user",
+          "updateuser": "Update user"
+        }
+      },
+      "forms": {
+        "update": {
+          "field": {
+            "label": {
+              "firstName": "First Name",
+              "lastName": "Last Name",
+              "email": "Email Address",
+              "role": "User role",
+              "userBanned": "Ban user on the platform"
+            },
+            "placeholder": {
+              "firstName": "The user's first name",
+              "lastName": "The user's last name",
+              "email": "The user's email address",
+              "role": "Please choose the user's role"
+            }
+          }
+        },
+        "create": {
+          "field": {
+            "label": {
+              "password": "Password",
+              "passwordConfirmation": "Password confirmation"
+            },
+            "placeholder": {
+              "password": "Please enter the user's initial password",
+              "passwordConfirmation": "Please confirm the user's initial password"
+            }
+          }
+        },
+        "messageUserBanned": "The user is/will be banned on the platform"
+      },
+      "button": {
+        "create": "Add user",
+        "edit": "Edit user",
+        "delete": "Delete user"
+      }
+    },
+    "locations": {
+      "title": "Locations",
+      "mneuitem": {
+        "createlocation": "Add new location"
+      },
+      "forms": {
+        "field": {
+          "label": {
+            "author": "Author"
+          },
+          "placeholder": {
+            "author": "Please choose the location's author"
+          }
+        },
+        "location": {
+          "field": {
+            "label": {
+              "title": "Title",
+              "slug": "Slug",
+              "address": "Address",
+              "description": "Description",
+              "contactInfo": "Contact Information",
+              "offers": "Offers"
+            },
+            "placeholder": {
+              "title": "Location title",
+              "slug": "Slug / URL part",
+              "address": "Location address",
+              "description": "Location description",
+              "contactInfo": "Location contactInfo",
+              "offers": "Location offers"
+            }
+          }
+        }
+      },
+      "button": {
+        "create": "Add new location",
+        "edit": "Edit location",
+        "delete": "Delete location"
+      },
+      "location": {
+        "title": {
+          "updatepage": "Update location"
+        }
+      }
+    },
+    "pages": {
+      "title": "Pages",
+      "page": {
+        "title": {
+          "createpage": "Add new page",
+          "updatepage": "Update page"
+        }
+      },
+      "forms": {
+        "field": {
+          "label": {
+            "author": "Page author"
+          },
+          "placeholder": {
+            "author": "Please choose the pages's author"
+          }
+        },
+        "page": {
+          "field": {
+            "label": {
+              "title": "Title",
+              "slug": "Slug",
+              "content": "Content"
+            },
+            "placeholder": {
+              "title": "Page title",
+              "slug": "Slug / URL part",
+              "content": "Page content"
+            }
+          }
+        }
+      },
+      "button": {
+        "create": "Add new page",
+        "edit": "Edit page",
+        "delete": "Delete page"
+      }
+    },
+    "settings": {
+      "title": "Settings",
+      "button": {
+        "update": "Update settings"
+      },
+      "page": {
+        "title": {
+          "updatesettings": "Update settings"
+        }
+      }
+    },
+    "taxonomies": {
+      "title": "Taxonomies",
+      "page": {
+        "title": {
+          "createtax": "Update term",
+          "createterm": "Add new term",
+          "updatetaxonomy": "Update taxonomy",
+          "updatetax": "Update term"
+        }
+      },
+      "forms": {
+        "taxonomy": {
+          "field": {
+            "label": {
+              "name": "Name",
+              "slug": "Slug"
+            },
+            "placeholder": {
+              "name": "Taxonomy name",
+              "slug": "Slug / URL part"
+            }
+          }
+        },
+        "field": {
+          "modules": {
+            "label": "Active for the following Modules"
+          }
+        }
+      },
+      "button": {
+        "create": "Add new taxonomy",
+        "edit": "Edit taxonomy",
+        "view": "View taxonomy terms",
+        "delete": "Delete taxonomy"
+      }
+    },
+    "terms": {
+      "title": "Taxonomies",
+      "button": {
+        "create": "Add new term",
+        "edit": "Edit term",
+        "delete": "Delete term"
+      }
+    }
+  },
+  "imagedropzone": {
+    "pleasedroporclick": "Drag & drop an image here, or click to select files",
+    "uploading": "Uploading",
+    "filetypenotaccepted": "You can't upload this file"
+  },
+  "imageuploader": {
+    "cancelupload": "Cancel upload",
+    "error": "Unfortunately, we could not finish you upload please try again later"
+  },
+  "ui": {
+    "button": {
+      "label": {
+        "show": "Show",
+        "hide": "Hide"
+      }
+    }
+  },
+  "PublishStatus": {
+    "select": {
+      "label": "Publish status",
+      "placeholder": "Please choose a publish status"
+    }
+  },
+  "publish": {
+    "status": {
+      "draft": "Draft",
+      "forreview": "For review",
+      "rejected": "Rejected",
+      "published": "Published",
+      "trashed": "Trashed",
+      "unknown": "Unknown",
+      "autodraft": "Draft"
+    }
+  },
+  "form": {
+    "unsavedchanges": "It looks like you've unsaved changes. Leave without saving?",
+    "geolocation": {
+      "lat": {
+        "label": "Latitude"
+      },
+      "lng": {
+        "label": "Longitude"
+      }
+    },
+    "error": {
+      "notCorrectLatitude": "This seems not to be a latitiude value",
+      "notCorrectLongitude": "This seems not to be a longitude value"
+    }
+  },
+  "editor": {
+    "button": {
+      "save": "Save",
+      "cancel": "Cancel",
+      "unbold": "Remove bold text format",
+      "bold": "Format text bold",
+      "unitalic": "Remove italic text format",
+      "italic": "Format text italic",
+      "addNewLine": "Add a new line",
+      "clearFormatting": "Clear Formatting",
+      "undo": "Undo",
+      "redo": "Redo",
+      "link": "Add link",
+      "unlink": "Remove link"
+    },
+    "link": {
+      "label": {
+        "url": "Url"
+      },
+      "url": "https://..."
+    },
+    "count": {
+      "characters": "{{count}}/{{maxLength}} characters",
+      "characters_plural": "{{count}}/{{maxLength}} characters"
+    }
+  },
+  "alert": {
+    "emailnotverfied": {
+      "title": "You have not confirmed your email address, yet. ",
+      "info": "Please check your inbox and follow the link provided in the email. In case the email didn't come through you can request another email by clicking the button.",
+      "requresterrorinfo": "Something went wrong. Please try again in a little bit.",
+      "requrestsuccessinfo": "We've sent you another email. Please check your inbox.",
+      "button": "Request verification email"
+    }
+  },
+  "general": {
+    "error": {
+      "title": "We are sorry",
+      "requestfailed": "The request has failed. Please try again."
+    },
+    "success": {
+      "title": "Thank you!"
+    },
+    "readerror": {
+      "desc": "Something went wrong and the needed information could not be loaded. Please try again later"
+    },
+    "writeerror": {
+      "desc": "Something went wrong and the needed information could not be processed. Please try again later"
+    }
+  },
+  "http": {
+    "error": {
+      "403": {
+        "title": "Access denied",
+        "explanation": "You don't have permission to see this page."
+      },
+      "404": {
+        "title": "Not found",
+        "explanation": "The requested URL could not be found.",
+        "backtohome": "Go back to home screen"
+      }
+    }
+  },
+  "admintable": {
+    "gotopagination": "Skip to pagination",
+    "search": "Keyword search",
+    "sorted": {
+      "desc": "Sorted descending",
+      "asc": "Sorted ascending"
+    },
+    "nodata": "No items found",
+    "pagination": {
+      "gotofirstpage": "goto first page",
+      "gotopreviouspage": "goto previous page",
+      "gotopage": "goto page number {{page}}",
+      "gotonextpage": "goto next page",
+      "gotolastpage": "goto last page"
+    },
+    "changepagesize": "{{pageSize}} per page"
+  },
+  "apiimage": {
+    "errormsg": "The image could unfortunately not be processed. Please try uploading again.",
+    "processsing": "Image successful uploaded. We are processing it now",
+    "placeholder": "Image"
+  },
+  "dangerzonealertdialog": {
+    "writedeletetoken": "DELETE",
+    "writedeletetask": "Please enter \"{{token}}\" into the field below to unlock the action",
+    "writedeletelabel": "Written delete confirmation.",
+    "placeholder": "{{token}}"
+  },
+  "translationnotfound": "Trans. not found",
+  "settings": {
+    "error": {
+      "label": "No label translation key has been defined"
+    },
+    "contactEmail": {
+      "label": "Contact email address"
+    },
+    "adminMapApiKey": {
+      "label": "Backend Map Api Key"
+    },
+    "centerOfGravity": {
+      "label": "Center of map (geo referencing)"
+    },
+    "empty": {
+      "defaultvalue": "Empty! Please update the settings"
     }
   },
   "validation": {
-    "page": {
-      "login": {
-        "emailRequiredError": "Please enter your email address",
-        "passwordRequiredError": "Please enter your password"
-      }
-    },
+    "notunique": "This valaue is not unique",
     "mixed": {
       "default": "This field is invalid",
       "required": "This field is a required field",
@@ -46,7 +453,9 @@
       "moreThan": "This field must be greater than {{more}}",
       "positive": "This field must be a positive number",
       "negative": "This field must be a negative number",
-      "integer": "This field must be an integer"
+      "integer": "This field must be an integer",
+      "nolatitude": "Longitudes are numbers between -90.00 and 90.00",
+      "nolongitude": "Longitudes are numbers between -180.00 and 180.00"
     },
     "date": {
       "min": "This field must be later than {{min}}",
@@ -61,7 +470,169 @@
     "array": {
       "min": "This field must have at least {{min}} items",
       "max": "This field must have less than or equal to {{max}} items",
-      "length": "This field must have {{length}} items"
+      "length": "This field must have {{length}} items",
+      "minOneItem": "Please select at least one item"
+    },
+    "slug": {
+      "invalidcharacters": "You can only use A-Z, -, and numbers"
+    },
+    "page": {
+      "login": {
+        "emailRequiredError": "Please enter your email address",
+        "passwordRequiredError": "Please enter your password",
+        "acceptedTermsRequiredError": "Please accep t out terms & conditions"
+      },
+      "passwordrequest": {
+        "emailRequiredError": "Please enter your email address"
+      },
+      "passwordreset": {
+        "pleaseProvideYourNewPassword": "Please enter your new password",
+        "pleaseConfirmYourNewPassword": "Please confirm your new password"
+      }
+    }
+  },
+  "toast": {
+    "title": {
+      "success": "Success!"
+    },
+    "info": {
+      "datasaved": "The data has been deleted",
+      "datadeleted": "The data has been deleted"
+    }
+  },
+  "locations": {
+    "fields": {
+      "label": {
+        "id": "Id",
+        "status": "status",
+        "title": "title",
+        "slug": "Slug",
+        "actions": "Actions"
+      }
+    }
+  },
+  "pages": {
+    "fields": {
+      "label": {
+        "id": "Id",
+        "title": "title",
+        "slug": "Slug",
+        "actions": "Actions"
+      }
+    }
+  },
+  "page": {
+    "passwordreset": {
+      "form_field_password_label": "New Password",
+      "form_field_password_placeholder": "Please enter your password",
+      "form_field_password_confirmation_label": "Confirm your new password",
+      "form_field_password_confirm_placeholder": "Please confirm your password",
+      "youPasswordHasBeenResetPleaseReauthenticate": "Your password has been changed. Please login again.",
+      "button_goto_login": "Goto login",
+      "youCanNowLogin": "Your password has been reset.",
+      "title": "Forgot your password?",
+      "info": "Enter your new password and confirm it in the second field.",
+      "back_to_login": "Back to login",
+      "form_button_submit": "Change password"
+    },
+    "register": {
+      "profileimage": "Profile Image",
+      "form_field_firstName_label": "First Name",
+      "form_field_firstName_placeholder": "Your first name",
+      "form_field_lastName_label": "Last Name",
+      "form_field_lastName_placeholder": "Your last name",
+      "form_field_registration_label": "Email Address",
+      "form_field_registration_placeholder": "Please enter your email address",
+      "error": "We're sorry something went wrong. Please check your data and try again.",
+      "title": "Register as new User",
+      "prompt": "Please fill in the form to register as a new user.",
+      "form_field_password_label": "Your password",
+      "form_field_password_placeholder": "Please enter your password",
+      "accpt_terms_and_conditions": "I do accept the terms and conditions",
+      "form_button_submit": "Register"
+    },
+    "passwordrequest": {
+      "thankyou": "Thank you!",
+      "requestInYourEmail": "We've sent you an email with a password request link. Please click the link provided to reset your password.",
+      "title": "Forgot your password?",
+      "info": "Enter your registered email to request a password reset link via email.",
+      "error": "The reset request has failed. Please try again.",
+      "form_field_email_label": "Email Address",
+      "form_field_email_placeholder": "Please enter your email address",
+      "back_to_login": "Back to login",
+      "form_button_submit": "Request reset link"
+    },
+    "emailconfirmation": {
+      "button_goto_dashboard": "Goto dashboard",
+      "button_goto_login": "Goto login",
+      "requestsuccesstitles": "Thanky you",
+      "errorExplanation": "We could not verify your email address based on the information provided.",
+      "requestsuccessexplanation": "We've send you another email. Please check your inbox.",
+      "logintoproceed": "Please login to request another verification email.",
+      "requestanotheremail": "Request a new verification email.",
+      "youCanNowLogin": "Your email has been confirmed."
+    },
+    "login": {
+      "error": "The login failed. Please try again.",
+      "title": "Login",
+      "prompt": "Please login to access the administration tool.",
+      "no_account_prompt": "Don't have an account?",
+      "register_link": "Register as new user",
+      "form_field_login_label": "Email Address",
+      "form_field_login_placeholder": "Please enter your email address",
+      "form_field_password_label": "Your password",
+      "form_field_password_placeholder": "Please enter your password",
+      "forgot_your_password": "Forgot your password?",
+      "form_button_login": "Login"
+    },
+    "signup": {
+      "back_to_login": "Back to login"
+    }
+  },
+  "taxonomies": {
+    "fields": {
+      "label": {
+        "id": "Id",
+        "name": "Name",
+        "slug": "Slug",
+        "termCount": "Number of terms",
+        "actions": "Actions"
+      }
+    }
+  },
+  "terms": {
+    "fields": {
+      "label": {
+        "id": "Id",
+        "name": "Name",
+        "slug": "Slug",
+        "actions": "Actions"
+      }
+    }
+  },
+  "role": {
+    "user": "User",
+    "contributor": "Contributor",
+    "editor": "Editor",
+    "administrator": "Administrator"
+  },
+  "users": {
+    "fields": {
+      "label": {
+        "id": "Id",
+        "firstName": "First Name",
+        "lastName": "Last name",
+        "email": "Email",
+        "email verified": "Email verified",
+        "role": "Role",
+        "actions": "Actions"
+      }
+    },
+    "field": {
+      "emailverification": {
+        "verified": "Verified",
+        "notverified": "Not verified"
+      }
     }
   }
 }

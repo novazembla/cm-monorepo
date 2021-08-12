@@ -1,7 +1,7 @@
 import { Image } from "@prisma/client";
 import httpStatus from "http-status";
 import { mkdir } from "fs/promises";
-import uuid from "uuid";
+import { v4 as uuidv4 } from "uuid";
 import type { ApiImageMetaInformation } from "@culturemap/core";
 import { ImageStatusEnum } from "@culturemap/core";
 import { ApiError } from "../utils";
@@ -9,8 +9,6 @@ import config from "../config";
 
 import { daoImageCreate } from "../dao";
 import { logger } from "./serviceLogging";
-
-const { v4: uuidv4 } = uuid;
 
 export const imageGetUploadInfo = async (): Promise<{
   path: string;

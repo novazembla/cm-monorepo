@@ -11,7 +11,7 @@ export const ModuleTaxonomySchema = object().shape(
       [`slug_${lang}`]: string().lowercase().matches(/^[a-z\-\d]+$/, "validation.slug.invalidcharacters").required(),
     }),
     {
-      // t("vvalidation.array.minOneItem", "Please select at least one item")
+      // t("validation.array.minOneItem", "Please select at least one item")
       modules: array().test(
         'at-least-one',
         'validation.array.minOneItem',

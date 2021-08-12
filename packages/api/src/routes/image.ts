@@ -3,7 +3,7 @@ import httpStatus from "http-status";
 import path from "path";
 import multer from "multer";
 import { mkdirSync } from "fs";
-import uuid from "uuid";
+import { v4 as uuidv4 } from "uuid";
 import type { ApiImageMetaInformation } from "@culturemap/core";
 
 import { logger } from "../services/serviceLogging";
@@ -11,8 +11,6 @@ import { imageCreate } from "../services/serviceImage";
 
 import config from "../config";
 import { ApiError } from "../utils";
-
-const { v4: uuidv4 } = uuid;
 
 const storage = multer.diskStorage({
   destination: async (req: Request, file, cb) => {

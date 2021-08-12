@@ -1,0 +1,21 @@
+{
+  "module": {
+    "title": {
+      "dashboard": "Dashboard"
+    },
+    "dashboard": {
+      "title": "Dashboard"
+    },
+    "events": {
+      "title": "Events"
+    },
+    "tours": {
+      "title": "Tours"
+    }
+  },
+  "vvalidation": {
+    "array": {
+      "minOneItem": "Please select at least one item"
+    }
+  }
+}

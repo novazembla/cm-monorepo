@@ -23,7 +23,7 @@ export const PasswordUpdateForm = ({
           name="newPassword"
           id="newPassword"
           type="password"
-          label={t("page.passwordreset.form_field_password_label", "Password")}
+          label={t("page.passwordreset.form_field_password_label", "New Password")}
           isRequired={yupIsFieldRequired(
             "newPassword",
             PasswordResetValidationSchema
@@ -45,7 +45,7 @@ export const PasswordUpdateForm = ({
           type="password"
           label={t(
             "page.passwordreset.form_field_password_confirmation_label",
-            "Password confirmation"
+            "Confirm your new password"
           )}
           isRequired={yupIsFieldRequired(
             "confirmPassword",

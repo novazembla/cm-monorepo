@@ -149,7 +149,7 @@ const EditorMenuBar = ({
           <FormControl id={linkFieldId} isRequired={true}>
             <VisuallyHidden>
               <FormLabel htmlFor={linkFieldId} mb="0.5">
-                {t("editor.link.url", "Url")}
+                {t("editor.link.label.url", "Url")}
               </FormLabel>
             </VisuallyHidden>
             <Input
