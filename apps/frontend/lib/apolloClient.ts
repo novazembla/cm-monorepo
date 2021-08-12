@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
-import { concatPagination } from "@apollo/client/utilities";
 
 import merge from "deepmerge";
 import isEqual from "lodash/isEqual";
@@ -12,19 +11,25 @@ let apolloClient: ApolloClient<any>;
 function createApolloClient(settings: AppConfig) {
   return new ApolloClient({
     ssrMode: typeof window === "undefined",
+    defaultOptions: {
+      watchQuery: {
+        fetchPolicy: "cache-and-network",
+        errorPolicy: "ignore",
+      },
+      query: {
+        // TODO: revist better caching at some point
+        fetchPolicy: "network-only",
+        errorPolicy: "all",
+      },
+      mutate: {
+        errorPolicy: "all",
+      },
+    },
     link: new HttpLink({
       uri: settings.apiUrl, // Server URL (must be absolute)
       // credentials: "same-origin", // Additional fetch() options like `credentials` or `headers`
     }),
-    cache: new InMemoryCache({
-      typePolicies: {
-        Query: {
-          fields: {
-            allPosts: concatPagination(), // TODO: adjust to useful results ...
-          },
-        },
-      },
-    }),
+    cache: new InMemoryCache({}),
   });
 }
 

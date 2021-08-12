@@ -97,6 +97,7 @@
     "@types/react-redux": "^7.1.18",
     "@types/react-router-dom": "^5.1.8",
     "@types/react-table": "^7.7.2",
+    "autoprefixer": "^9.8.6",
     "babel-jest": "^27.0.6",
     "craco-alias": "^3.0.1",
     "i18next-parser": "^4.4.0",

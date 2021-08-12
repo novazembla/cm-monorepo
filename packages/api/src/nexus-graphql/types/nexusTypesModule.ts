@@ -48,7 +48,6 @@ export const ModuleQuery = extendType({
 
       // resolve(root, args, ctx, info)
       async resolve(...[, args]) {
-
         // TODO:, you can't really sort JSON fields
         // So how to fake that here?
         const module = await daoModuleGetWithTaxonomiesByKey(

@@ -1,4 +1,4 @@
-import type { RoutePrivateParams, ModuleAccessRules } from '~/types';
+import type { RoutePrivateParams } from '~/types';
 
 import Index from "./Index";
 import Update from "./Update";
