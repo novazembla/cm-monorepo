@@ -185,7 +185,6 @@ export const FieldImageUploader = ({
             .then(({ data }) => {
               if (getCancelToken()) {
                 setIsUploading(false);
-                setimageIsDeleted(false);
                 if (data?.id) {
                   setUploadedImgId(data?.id ?? undefined);
                   setValue(name, data?.id);
@@ -255,7 +254,7 @@ export const FieldImageUploader = ({
         {showImage && (
           <Box position="relative">
             <ApiImage
-              id={currentImage?.id ?? uploadedImgId ?? undefined}
+              id={uploadedImgId ?? currentImage?.id ?? undefined}
               status={currentImage?.status ?? 0}
               meta={currentImage?.meta}
               forceAspectRatioPB={settings?.image?.forceAspectRatioPB}
