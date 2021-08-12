@@ -9,7 +9,7 @@ import { filteredOutputByWhitelist, taxonomyReadQueryGQL } from "@culturemap/cor
 
 import { TextErrorMessage, FormNavigationBlock } from "~/components/forms";
 
-import { ModuleTaxonomySchema } from "./forms";
+import { ModuleTermSchema } from "./forms";
 import { useTermCreateMutation } from "./hooks";
 import {
   useAuthentication,
@@ -55,7 +55,7 @@ const CreateTerm = () => {
 
   const formMethods = useForm({
     mode: "onTouched",
-    resolver: yupResolver(ModuleTaxonomySchema),
+    resolver: yupResolver(ModuleTermSchema),
   });
 
   const {
@@ -65,7 +65,7 @@ const CreateTerm = () => {
   } = formMethods;
 
   const onSubmit = async (
-    newData: yup.InferType<typeof ModuleTaxonomySchema>
+    newData: yup.InferType<typeof ModuleTermSchema>
   ) => {
     setIsFormError(false);
     try {
@@ -146,8 +146,9 @@ const CreateTerm = () => {
                 </>
               )}
               <TaxonomyForm
+                type="term"
                 action="create"
-                validationSchema={ModuleTaxonomySchema}
+                validationSchema={ModuleTermSchema}
               />
             </ModulePage>
           </fieldset>

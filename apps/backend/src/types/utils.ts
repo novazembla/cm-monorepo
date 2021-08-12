@@ -8,3 +8,10 @@ export type MutationProgressInfo = {
   loaded: number;
   percent: string;
 }
+
+export type AppModule = {
+  key: string;
+  name: Record<string, string>
+  withTaxonomies: boolean;
+}
+

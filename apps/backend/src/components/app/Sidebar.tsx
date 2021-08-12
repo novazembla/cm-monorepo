@@ -18,17 +18,20 @@ import {
   Icon,
   useDisclosure,
   useMediaQuery,
-  IconButton
+  IconButton,
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { InlineLanguageButtons } from "../ui";
 
-import { moduleAccessRules as dashboadModuleAccessRules } from "~/modules/DashBoard/moduleRoutes";
-import { moduleAccessRules as usersModuleAccessRules } from "~/modules/Users/moduleRoutes";
-import { moduleAccessRules as settingsModuleAccessRules } from "~/modules/Settings/moduleRoutes";
-import { moduleAccessRules as taxonomiesModuleAccessRules } from "~/modules/Taxonomies/moduleRoutes";
-import { moduleAccessRules as pagesModuleAccessRules } from "~/modules/Pages/moduleRoutes";
-import { moduleAccessRules as locationsModuleAccessRules } from "~/modules/Locations/moduleRoutes";
+import {
+  dashboadModuleAccessRules,
+  taxonomiesModuleAccessRules,
+  usersModuleAccessRules,
+  pagesModuleAccessRules,
+  settingsModuleAccessRules,
+  locationsModuleAccessRules,
+} from "~/config/moduleaccessrules";
+
 import { useAuthentication } from "~/hooks";
 
 const NavItem = ({
@@ -84,17 +87,16 @@ const NavItem = ({
 export const Sidebar = () => {
   const [appUser] = useAuthentication();
   const { t } = useTranslation();
-  
+
   const [tw] = useMediaQuery("(min-width: 55em)");
 
   const menuState = tw ? false : true;
 
   const { isOpen, onToggle } = useDisclosure();
 
-  if (!appUser)
-    return <></>
+  if (!appUser) return <></>;
 
-  // TODO: use useEffect ot monitor tw, close menu when change ... 
+  // TODO: use useEffect ot monitor tw, close menu when change ...
 
   const mainNavLinks = [
     {
@@ -132,11 +134,11 @@ export const Sidebar = () => {
       ...pagesModuleAccessRules,
     },
     {
-        title: t("module.taxonomies.title", "Taxonomies"),
-        path: "/taxonomies",
-        exact: false,
-        icon: HiOutlineColorSwatch,
-        ...taxonomiesModuleAccessRules,
+      title: t("module.taxonomies.title", "Taxonomies"),
+      path: "/taxonomies",
+      exact: false,
+      icon: HiOutlineColorSwatch,
+      ...taxonomiesModuleAccessRules,
     },
     {
       title: t("module.users.title", "Users"),
@@ -189,7 +191,7 @@ export const Sidebar = () => {
         pl={{ base: 3, tw: 4 }}
         pb={{ base: 3, tw: 4 }}
         position="sticky"
-        top={{ base: "48px", tw: "72px"}}
+        top={{ base: "48px", tw: "72px" }}
         sx={{
           "&.active": {
             position: "fixed",
@@ -210,17 +212,15 @@ export const Sidebar = () => {
       >
         <Box
           layerStyle="pageContainerWhite"
-          mt={{ base: 12, tw: 4}}
+          mt={{ base: 12, tw: 4 }}
           w={{ base: "100%", tw: "260px" }}
         >
           {mainNavLinks.map((link) => {
-            if (link.userIs && !appUser?.has(link.userIs))
-              return null;
-        
-            if (link.userCan && !appUser?.can(link.userCan))
-              return null;
-            
-            return <NavItem key={link.path} {...link} onClick={onToggle} />
+            if (link.userIs && !appUser?.has(link.userIs)) return null;
+
+            if (link.userCan && !appUser?.can(link.userCan)) return null;
+
+            return <NavItem key={link.path} {...link} onClick={onToggle} />;
           })}
 
           <Box mt="8">

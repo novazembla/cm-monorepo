@@ -13,6 +13,7 @@ import {
   useConfig,
   useSuccessfullySavedToast,
   useRouter,
+  useModules,
 } from "~/hooks";
 
 import { Divider } from "@chakra-ui/react";
@@ -32,8 +33,15 @@ import {
 import { moduleRootPath, multiLangFields } from "./moduleConfig";
 
 import { TaxonomyForm } from "./forms";
-import { multiLangJsonToRHFormData, multiLangRHFormDataToJson, multiLangSlugUniqueError } from "~/utils";
-;
+import {
+  multiLangJsonToRHFormData,
+  multiLangRHFormDataToJson,
+  multiLangSlugUniqueError,
+} from "~/utils";
+
+import { 
+  mapModulesCheckboxSelectionToData
+} from "./helpers";
 
 const Update = () => {
   const router = useRouter();
@@ -41,6 +49,8 @@ const Update = () => {
   const [appUser] = useAuthentication();
   const { t } = useTranslation();
   const successToast = useSuccessfullySavedToast();
+
+  const modules = useModules();
 
   const { data, loading, error } = useQuery(taxonomyReadQueryGQL, {
     variables: {
@@ -50,7 +60,7 @@ const Update = () => {
 
   const [firstMutation, firstMutationResults] = useTaxonomyUpdateMutation();
   const [isFormError, setIsFormError] = useState(false);
-  
+
   const disableForm = firstMutationResults.loading;
 
   const formMethods = useForm({
@@ -68,14 +78,33 @@ const Update = () => {
   useEffect(() => {
     if (!data || !data.taxonomyRead) return;
 
-    reset(
-      multiLangJsonToRHFormData(
+    const currentModuleSelection = Object.keys(modules).reduce((acc, key) => {
+      if (!modules[key].withTaxonomies) return acc;
+
+      let flag;
+      if (
+        !data.taxonomyRead?.modules ||
+        data.taxonomyRead?.modules.length === 0
+      ) {
+        flag = false;
+      } else {
+        flag =
+          data.taxonomyRead?.modules.findIndex((m: any) => m.key === key) > -1;
+      }
+
+      acc.push(flag);
+      return acc;
+    }, [] as boolean[]);
+
+    reset({
+      ...multiLangJsonToRHFormData(
         filteredOutputByWhitelist(data.taxonomyRead, [], multiLangFields),
         multiLangFields,
         config.activeLanguages
-      )
-    );
-  }, [reset, data, config.activeLanguages]);
+      ),
+      modules: currentModuleSelection,
+    });
+  }, [reset, data, config.activeLanguages, modules]);
 
   const onSubmit = async (
     newData: yup.InferType<typeof ModuleTaxonomySchema>
@@ -85,15 +114,21 @@ const Update = () => {
       if (appUser) {
         const { errors } = await firstMutation(
           parseInt(router.query.id, 10),
-          filteredOutputByWhitelist(
-            multiLangRHFormDataToJson(
-              newData,
-              multiLangFields,
-              config.activeLanguages
+          {
+            ...filteredOutputByWhitelist(
+              multiLangRHFormDataToJson(
+                newData,
+                multiLangFields,
+                config.activeLanguages
+              ),
+              [],
+              multiLangFields
             ),
-            [],
-            multiLangFields
-          )
+            modules: {
+              set: mapModulesCheckboxSelectionToData(newData, modules)
+            }
+          }
+          
         );
 
         if (!errors) {
@@ -102,9 +137,8 @@ const Update = () => {
           router.push(moduleRootPath);
         } else {
           let slugError = multiLangSlugUniqueError(errors, setError);
-          
-          if (!slugError)
-            setIsFormError(true);
+
+          if (!slugError) setIsFormError(true);
         }
       } else {
         setIsFormError(true);
@@ -120,7 +154,10 @@ const Update = () => {
       title: t("module.taxonomies.title", "Taxonomies"),
     },
     {
-      title: t("module.taxonomies.page.title.updatetaxonomy", "Update taxonomy"),
+      title: t(
+        "module.taxonomies.page.title.updatetaxonomy",
+        "Update taxonomy"
+      ),
     },
   ];
 
@@ -154,6 +191,7 @@ const Update = () => {
                 </>
               )}
               <TaxonomyForm
+                type="taxonomy"
                 action="update"
                 data={data?.taxonomyRead}
                 validationSchema={ModuleTaxonomySchema}

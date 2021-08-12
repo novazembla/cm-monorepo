@@ -31,6 +31,9 @@ export const taxonomyReadQueryGQL = gql`
       name
       slug
       termCount
+      modules {
+        key
+      }
       createdAt
       updatedAt
     }

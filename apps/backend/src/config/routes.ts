@@ -1,15 +1,15 @@
 import { lazy } from "react";
 
-import { getAppConfig } from "~/config";
+import { getAppConfig } from "~/config/config";
 import { RouteParams, RoutePrivateParams} from "~/types";
+import { dashboadModuleAccessRules,
+  profileModuleAccessRules,
+  taxonomiesModuleAccessRules,
+  usersModuleAccessRules,
+  pagesModuleAccessRules,
+  settingsModuleAccessRules,
+  locationsModuleAccessRules } from "./moduleaccessrules";
 
-import { moduleAccessRules as dashboadModuleAccessRules } from "~/modules/DashBoard/moduleRoutes";
-import { moduleAccessRules as profileModuleAccessRules } from "~/modules/Profile/moduleRoutes";
-import { moduleAccessRules as taxonomiesModuleAccessRules } from "~/modules/Taxonomies/moduleRoutes";
-import { moduleAccessRules as usersModuleAccessRules } from "~/modules/Users/moduleRoutes";
-import { moduleAccessRules as pagesModuleAccessRules } from "~/modules/Pages/moduleRoutes";
-import { moduleAccessRules as settingsModuleAccessRules } from "~/modules/Settings/moduleRoutes";
-import { moduleAccessRules as locationsModuleAccessRules } from "~/modules/Locations/moduleRoutes";
 
 // Public
 const Login = lazy(() => import("~/pages/Login/Login"));

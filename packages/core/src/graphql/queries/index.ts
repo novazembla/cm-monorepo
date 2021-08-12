@@ -1,6 +1,7 @@
 export * from "./userReadQueryGQL";
 export * from "./userProfileReadQueryGQL";
 export * from "./settingsQueriesGQL";
+export * from "./modulesQueriesGQL";
 export * from "./usersQueryGQL";
 export * from "./taxonomyQueriesGQL";
 export * from "./termQueriesGQL";

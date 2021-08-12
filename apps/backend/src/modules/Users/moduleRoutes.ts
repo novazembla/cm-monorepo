@@ -1,14 +1,10 @@
-import type { RoutePrivateParams, ModuleAccessRules } from '~/types';
+import type { RoutePrivateParams } from '~/types';
 
 import Create from "./Create";
 import Update from "./Update";
 import Index from "./Index";
 
 import { moduleRootPath } from './moduleConfig';
-
-export const moduleAccessRules: ModuleAccessRules = {
-  userCan: "userRead"
-}
 
 export const moduleRoutes: RoutePrivateParams[] = [
   {

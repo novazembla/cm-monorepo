@@ -28,8 +28,8 @@ export const daoTaxonomyCheckSlugUnique = async (
 
 export const daoTaxonomyQuery = async (
   where: Prisma.TaxonomyWhereInput,
-  orderBy: Prisma.TaxonomyOrderByInput | Prisma.TaxonomyOrderByInput[],
   include: Prisma.TaxonomyInclude | undefined,
+  orderBy: Prisma.TaxonomyOrderByInput | Prisma.TaxonomyOrderByInput[],
   pageIndex: number = 0,
   pageSize: number = config.db.defaultPageSize
 ): Promise<Taxonomy[]> => {
@@ -43,6 +43,30 @@ export const daoTaxonomyQuery = async (
 
   return filteredOutputByBlacklist(
     taxonomies,
+    config.db.privateJSONDataKeys.taxonomy
+  );
+};
+
+export const daoTaxonomyQueryFirst = async (
+  where: Prisma.TaxonomyWhereInput,
+  include?: Prisma.TaxonomyInclude | undefined,
+  orderBy?: Prisma.TaxonomyOrderByInput | Prisma.TaxonomyOrderByInput[],
+  pageIndex?: number,
+  pageSize?: number
+): Promise<Taxonomy> => {
+  const taxonomy = await prisma.taxonomy.findFirst({
+    where,
+    include,
+    orderBy,
+    skip: (pageIndex ?? 0) * (pageSize ?? config.db.defaultPageSize),
+    take: Math.min(
+      pageSize ?? config.db.defaultPageSize,
+      config.db.maxPageSize
+    ),
+  });
+
+  return filteredOutputByBlacklistOrNotFound(
+    taxonomy,
     config.db.privateJSONDataKeys.taxonomy
   );
 };
@@ -145,6 +169,7 @@ export const daoTaxonomyDelete = async (id: number): Promise<Taxonomy> => {
 
 export default {
   daoTaxonomyQuery,
+  daoTaxonomyQueryFirst,
   daoTaxonomyQueryCount,
   daoTaxonomyGetById,
   daoTaxonomyCheckSlugUnique,

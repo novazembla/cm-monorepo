@@ -3,6 +3,7 @@ import { getSettingsDefaultSettings, AppSetting, AppSettings } from "~/config";
 import { useTypedDispatch } from "~/hooks";
 
 import { settingsSet } from "~/redux/slices/settings";
+import { modulesSet } from "~/redux/slices/modules";
 
 const QUERY_SETTINGS = gql`
   query settings {
@@ -10,6 +11,11 @@ const QUERY_SETTINGS = gql`
       id
       key
       value
+    }
+    modules {
+      key
+      name
+      withTaxonomies
     }
   }
 `;
@@ -33,6 +39,20 @@ export const SettingsLoader = ({ type = "full" }: { type?: string }) => {
           defaultSettings
         );
         dispatch(settingsSet(settings));
+      }
+      if (Array.isArray(data?.modules)) {
+        const modules = data.modules.reduce(
+          (acc: any, mod: any) => ({
+            ...acc,
+            [mod.key]: {
+              key: mod.key,
+              name: mod.name,
+              withTaxonomies: !!mod.withTaxonomies,
+            },
+          }),
+          {}
+        );
+        dispatch(modulesSet(modules));
       }
     },
   });

@@ -9,6 +9,10 @@ export const settingsQueryGQL = gql`
       createdAt
       updatedAt
     }
+    modules {
+      key
+      withTaxonomies
+    }
   }
 `;
 

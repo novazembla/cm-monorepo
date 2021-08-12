@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { filteredOutputByWhitelist, PublishStatus } from "@culturemap/core";
+import { useQuery, gql } from "@apollo/client";
 
 import { TextErrorMessage, FormNavigationBlock } from "~/components/forms";
 
@@ -28,6 +29,20 @@ import { moduleRootPath, multiLangFields } from "./moduleConfig";
 
 import { ModuleForm } from "./forms";
 import { multiLangRHFormDataToJson, multiLangSlugUniqueError } from "~/utils";
+import { mapModulesCheckboxArrayToData } from "./helpers"
+
+export const locationReadGetTaxonomies = gql`
+  query locationRead {
+    moduleTaxonomies(key: "location") {
+      id
+      name
+      terms {
+        id
+        name
+      }
+    }
+  }
+`;
 
 const Create = () => {
   const config = useConfig();
@@ -46,6 +61,16 @@ const Create = () => {
     resolver: yupResolver(ModuleLocationValidationSchema),
   });
 
+  const { data, loading, error } = useQuery(
+    locationReadGetTaxonomies,
+    {
+      variables: {
+        id: parseInt(router.query.id, 10),
+      },
+    }
+  );
+
+
   const {
     handleSubmit,
     setError,
@@ -60,10 +85,20 @@ const Create = () => {
       if (appUser) {
         const { errors } = await firstMutation(
           {
-            ownerId: appUser.id,
+            owner: {
+              connect: {
+                id: appUser.id
+              }
+            },
             lat: newData.lat,
             lng: newData.lng,
             status: PublishStatus.DRAFT,
+            terms: {
+              connect: mapModulesCheckboxArrayToData(
+                newData,
+                data?.moduleTaxonomies
+              ),
+            },
             ...filteredOutputByWhitelist(
               multiLangRHFormDataToJson(
                 newData,
@@ -125,7 +160,7 @@ const Create = () => {
         <form noValidate onSubmit={handleSubmit(onSubmit)}>
           <fieldset disabled={disableForm}>
             <ModuleSubNav breadcrumb={breadcrumb} buttonList={buttonList} />
-            <ModulePage>
+            <ModulePage isLoading={loading} isError={!!error}>
               {isFormError && (
                 <>
                   <TextErrorMessage error="general.writeerror.desc" />
@@ -134,6 +169,7 @@ const Create = () => {
               )}
               <ModuleForm
                 action="create"
+                data={data}
                 validationSchema={ModuleLocationValidationSchema}
               />
             </ModulePage>

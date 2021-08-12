@@ -1,4 +1,4 @@
-import type { RoutePrivateParams, ModuleAccessRules } from '~/types';
+import type { RoutePrivateParams } from '~/types';
 
 import Create from "./Create";
 import CreateTerm from "./CreateTerm";
@@ -8,10 +8,6 @@ import Index from "./Index";
 import Terms from "./Terms";
 
 import { moduleRootPath } from './moduleConfig';
-
-export const moduleAccessRules: ModuleAccessRules = {
-  userCan: "taxRead"
-}
 
 export const moduleRoutes: RoutePrivateParams[] = [
   {

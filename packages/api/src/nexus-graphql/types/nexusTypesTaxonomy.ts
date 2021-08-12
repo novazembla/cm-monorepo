@@ -24,7 +24,7 @@ import config from "../../config";
 import {
   daoTaxonomyQuery,
   daoTaxonomyQueryCount,
-  daoTaxonomyGetById,
+  daoTaxonomyQueryFirst,
   daoTaxonomyGetTerms,
   daoTaxonomyCreate,
   daoTaxonomyUpdate,
@@ -52,6 +52,10 @@ export const Taxonomy = objectType({
       async resolve(...[parent]) {
         return daoTaxonomyGetTerms(parent.id);
       },
+    });
+
+    t.list.field("modules", {
+      type: "Module",
     });
   },
 });
@@ -126,8 +130,8 @@ export const TaxonomyQueries = extendType({
         if ((pRI?.fieldsByTypeName?.TaxonomyQueryResult as any)?.taxonomies)
           taxonomies = await daoTaxonomyQuery(
             args.where,
-            args.orderBy,
             include,
+            args.orderBy,
             args.pageIndex as number,
             args.pageSize as number
           );
@@ -149,25 +153,36 @@ export const TaxonomyQueries = extendType({
       authorize: (...[, , ctx]) => authorizeApiUser(ctx, "taxRead"),
 
       // resolve(root, args, ctx, info)
-      async resolve(...[, args]) {
-        return daoTaxonomyGetById(args.id);
+      async resolve(...[, args, , info]) {
+        const pRI = parseResolveInfo(info);
+
+        let include;
+
+        if ((pRI?.fieldsByTypeName?.Taxonomy as any)?.modules) {
+          include = {
+            modules: true,
+          };
+        }
+
+        const taxonomy = await daoTaxonomyQueryFirst(
+          {
+            id: args.id,
+          },
+          include
+        );
+
+        return taxonomy;
       },
     });
   },
 });
 
-export const TaxonomyCreateInput = inputObjectType({
-  name: "TaxonomyCreateInput",
+export const TaxonomyUpsertInput = inputObjectType({
+  name: "TaxonomyUpsertInput",
   definition(t) {
     t.nonNull.json("name");
     t.nonNull.json("slug");
-  },
-});
-export const TaxonomyUpdateInput = inputObjectType({
-  name: "TaxonomyUpdateInput",
-  definition(t) {
-    t.nonNull.json("name");
-    t.nonNull.json("slug");
+    t.nonNull.json("modules");
   },
 });
 
@@ -179,7 +194,7 @@ export const TaxonomyMutations = extendType({
       type: "Taxonomy",
 
       args: {
-        data: nonNull(TaxonomyCreateInput),
+        data: nonNull("TaxonomyUpsertInput"),
       },
 
       authorize: (...[, , ctx]) => authorizeApiUser(ctx, "taxCreate"),
@@ -202,7 +217,7 @@ export const TaxonomyMutations = extendType({
 
       args: {
         id: nonNull(intArg()),
-        data: nonNull(TaxonomyUpdateInput),
+        data: nonNull("TaxonomyUpsertInput"),
       },
 
       authorize: (...[, , ctx]) => authorizeApiUser(ctx, "taxUpdate"),

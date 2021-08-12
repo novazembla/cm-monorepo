@@ -7,7 +7,7 @@ import { BeatLoader } from "react-spinners";
 
 import { TextErrorMessage, FormNavigationBlock } from "~/components/forms";
 
-import { ModuleTaxonomySchema } from "./forms";
+import { ModuleTermSchema } from "./forms";
 import { useTermUpdateMutation } from "./hooks";
 import {
   useAuthentication,
@@ -65,7 +65,7 @@ const UpdateTerm = () => {
 
   const formMethods = useForm({
     mode: "onTouched",
-    resolver: yupResolver(ModuleTaxonomySchema),
+    resolver: yupResolver(ModuleTermSchema),
   });
 
   const {
@@ -88,7 +88,7 @@ const UpdateTerm = () => {
   }, [reset, data, config.activeLanguages]);
 
   const onSubmit = async (
-    newData: yup.InferType<typeof ModuleTaxonomySchema>
+    newData: yup.InferType<typeof ModuleTermSchema>
   ) => {
     setIsFormError(false);
     try {
@@ -168,9 +168,10 @@ const UpdateTerm = () => {
                 </>
               )}
               <TaxonomyForm
+                type="term"
                 action="update"
                 data={data?.termRead}
-                validationSchema={ModuleTaxonomySchema}
+                validationSchema={ModuleTermSchema}
               />
             </ModulePage>
           </fieldset>

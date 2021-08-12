@@ -5,6 +5,15 @@ import "./App.scss";
 
 import AppProviders from "./AppProviders";
 
+import {
+  routes,
+  privateRoutes,
+  publicOnlyRoutes,
+  getPrivateRoutesPathsArray,
+  getPublicOnlyRoutesPathsArray,
+  getRoutesPathsArray,
+} from "~/config/routes";
+
 import NotFound from "~/pages/NotFound/NotFound";
 
 import {
@@ -16,14 +25,6 @@ import {
   SettingsLoader,
 } from "~/components/app";
 
-import {
-  routes,
-  privateRoutes,
-  publicOnlyRoutes,
-  getPrivateRoutesPathsArray,
-  getPublicOnlyRoutesPathsArray,
-  getRoutesPathsArray,
-} from "~/config/routes";
 
 import { LoadingIcon } from "~/components/ui";
 

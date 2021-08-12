@@ -9,7 +9,9 @@ import {
   FieldRow,
   LocationPicker,
   TwoColFieldRow,
+  FieldRadioOrCheckboxGroup,
 } from "~/components/forms";
+import { MultiLangValue } from "~/components/ui";
 
 export const ModuleForm = ({
   data,
@@ -27,41 +29,40 @@ export const ModuleForm = ({
 
   let updateActions;
 
+  console.log(data);
+
   if (action === "update") {
     if (data.adminUsers) {
-      updateActions = <>
-        <Divider mt="10"/>
-        <TwoColFieldRow>
-        <FieldRow>
-          <FieldPublishStatusSelect status={ data?.locationRead?.status} />
+      updateActions = (
+        <>
+          <Divider mt="10" />
+          <TwoColFieldRow>
+            <FieldRow>
+              <FieldPublishStatusSelect status={data?.locationRead?.status} />
+            </FieldRow>
 
-            
-        </FieldRow>
-
-        <FieldRow>
-          <FieldSelect
-            name="ownerId"
-            id="ownerId"
-            label={t(
-              "module.locations.forms.field.label.author",
-              "Author"
-            )}
-            isRequired={true}
-            options={data.adminUsers.map((authUser: any) => ({
-              value: authUser.id,
-              label: `${authUser.firstName} ${authUser.lastName}`,
-            }))}
-            settings={{
-              defaultValue: data.locationRead.ownerId,
-              placeholder: t(
-                "module.locations.forms.field.placeholder.author",
-                "Please choose the location's author"
-              ),
-            }}
-          />
-        </FieldRow>
-        </TwoColFieldRow>
-      </>;
+            <FieldRow>
+              <FieldSelect
+                name="ownerId"
+                id="ownerId"
+                label={t("module.locations.forms.field.label.author", "Author")}
+                isRequired={true}
+                options={data.adminUsers.map((authUser: any) => ({
+                  value: authUser.id,
+                  label: `${authUser.firstName} ${authUser.lastName}`,
+                }))}
+                settings={{
+                  defaultValue: data.locationRead.ownerId,
+                  placeholder: t(
+                    "module.locations.forms.field.placeholder.author",
+                    "Please choose the location's author"
+                  ),
+                }}
+              />
+            </FieldRow>
+          </TwoColFieldRow>
+        </>
+      );
     } else {
       updateActions = (
         <input value={data.locationRead.ownerId} {...register("ownerId")} />
@@ -99,14 +100,34 @@ export const ModuleForm = ({
         }}
       />
       {updateActions}
-      <Divider mt="10"/>
+      <Divider mt="10" />
       <LocationPicker
         lat={data?.locationRead?.lat}
         lng={data?.locationRead?.lng}
         required
       />
 
-      <Divider mt="10"/>
+      {data && data?.moduleTaxonomies && (
+        <>
+          <Divider mt="10" />
+          {data?.moduleTaxonomies.map((taxonomy: any) => (
+            <FieldRow key={`tax_${taxonomy.id}`}>
+              <FieldRadioOrCheckboxGroup
+                id={`tax_${taxonomy.id}`}
+                name={`tax_${taxonomy.id}`}
+                isRequired
+                label={<MultiLangValue json={taxonomy.name} />}
+                type="checkbox"
+                options={taxonomy.terms.map((term: any) => ({
+                  label: term.name,
+                  key: term.id,
+                }))}
+              />
+            </FieldRow>
+          ))}
+        </>
+      )}
+      <Divider mt="10" />
 
       <FieldMultiLangTextEditor
         name="address"
@@ -148,7 +169,6 @@ export const ModuleForm = ({
         }}
       />
 
-      
       <FieldMultiLangTextEditor
         name="contactInfo"
         id="contactInfo"
@@ -177,7 +197,6 @@ export const ModuleForm = ({
         )}
         isRequired={false}
         settings={{
-          defaultRequired: true,
           defaultValues: data?.locationRead?.offers,
           maxLength: 500,
           placeholder: t(
@@ -186,8 +205,6 @@ export const ModuleForm = ({
           ),
         }}
       />
-      
-      
     </>
   );
 };

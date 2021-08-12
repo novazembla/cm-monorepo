@@ -16,9 +16,7 @@ import {
 } from "~/hooks";
 
 import { Divider } from "@chakra-ui/react";
-import {
-  filteredOutputByWhitelist,
-} from "@culturemap/core";
+import { filteredOutputByWhitelist } from "@culturemap/core";
 
 import { useQuery, gql } from "@apollo/client";
 
@@ -31,7 +29,13 @@ import {
 import { moduleRootPath, multiLangFields } from "./moduleConfig";
 
 import { ModuleForm } from "./forms";
-import { multiLangJsonToRHFormData, multiLangRHFormDataToJson, multiLangSlugUniqueError } from "~/utils";
+import {
+  multiLangJsonToRHFormData,
+  multiLangRHFormDataToJson,
+  multiLangSlugUniqueError,
+} from "~/utils";
+
+import { mapModulesCheckboxArrayToData, mapDataToModulesCheckboxArray } from "./helpers";
 
 export const locationReadAndContentAuthorsQueryGQL = gql`
   query locationRead($id: Int!) {
@@ -49,11 +53,24 @@ export const locationReadAndContentAuthorsQueryGQL = gql`
       ownerId
       createdAt
       updatedAt
+      terms {
+        id
+        name
+        slug
+      }
     }
-    adminUsers(roles:["administrator","editor","contributor"]) {
+    adminUsers(roles: ["administrator", "editor", "contributor"]) {
       id
       firstName
       lastName
+    }
+    moduleTaxonomies(key: "location") {
+      id
+      name
+      terms {
+        id
+        name
+      }
     }
   }
 `;
@@ -65,15 +82,18 @@ const Update = () => {
   const { t } = useTranslation();
   const successToast = useSuccessfullySavedToast();
 
-  const { data, loading, error } = useQuery(locationReadAndContentAuthorsQueryGQL, {
-    variables: {
-      id: parseInt(router.query.id, 10),
-    },
-  });
+  const { data, loading, error } = useQuery(
+    locationReadAndContentAuthorsQueryGQL,
+    {
+      variables: {
+        id: parseInt(router.query.id, 10),
+      },
+    }
+  );
 
   const [firstMutation, firstMutationResults] = useLocationUpdateMutation();
   const [isFormError, setIsFormError] = useState(false);
-  
+
   const disableForm = firstMutationResults.loading;
 
   const formMethods = useForm({
@@ -90,14 +110,19 @@ const Update = () => {
 
   useEffect(() => {
     if (!data || !data.locationRead) return;
-
-    reset(
-      multiLangJsonToRHFormData(
-        filteredOutputByWhitelist(data.locationRead, ["ownerId","lat","lng","status"], multiLangFields),
+    
+    reset({
+      ...multiLangJsonToRHFormData(
+        filteredOutputByWhitelist(
+          data.locationRead,
+          ["ownerId", "lat", "lng", "status"],
+          multiLangFields
+        ),
         multiLangFields,
         config.activeLanguages
-      )
-    );
+      ),
+      ...mapDataToModulesCheckboxArray(data.locationRead.terms, data.moduleTaxonomies),
+    });
   }, [reset, data, config.activeLanguages]);
 
   const onSubmit = async (
@@ -106,25 +131,31 @@ const Update = () => {
     setIsFormError(false);
     try {
       if (appUser) {
-        const { errors } = await firstMutation(
-          parseInt(router.query.id, 10),
-          { 
-            ownerId: newData.ownerId,
-            status: newData.status,
-            lat: newData.lat,
-            lng: newData.lng,
-            ...filteredOutputByWhitelist(
-              multiLangRHFormDataToJson(
-                newData,
-                multiLangFields,
-                config.activeLanguages
-              ),
-              [],
-              multiLangFields
-            )
-          }
-          
-        );
+        const { errors } = await firstMutation(parseInt(router.query.id, 10), {
+          owner: {
+            connect: {
+              id: newData.ownerId,
+            },
+          },
+          status: newData.status,
+          lat: newData.lat,
+          lng: newData.lng,
+          terms: {
+            set: mapModulesCheckboxArrayToData(
+              newData,
+              data?.moduleTaxonomies
+            ),
+          },
+          ...filteredOutputByWhitelist(
+            multiLangRHFormDataToJson(
+              newData,
+              multiLangFields,
+              config.activeLanguages
+            ),
+            [],
+            multiLangFields
+          ),
+        });
 
         if (!errors) {
           successToast();
@@ -132,9 +163,8 @@ const Update = () => {
           router.push(moduleRootPath);
         } else {
           let slugError = multiLangSlugUniqueError(errors, setError);
-          
-          if (!slugError)
-            setIsFormError(true);
+
+          if (!slugError) setIsFormError(true);
         }
       } else {
         setIsFormError(true);

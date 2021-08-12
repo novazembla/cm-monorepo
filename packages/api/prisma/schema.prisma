@@ -116,13 +116,28 @@ model Setting {
   updatedAt   DateTime @default(now()) @updatedAt
 }
 
+
+
+model Module {
+  id             Int        @id @default(autoincrement())
+  key            String     @db.VarChar(12) @unique
+  name           Json
+  withTaxonomies Boolean    @default(false)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @default(now()) @updatedAt
+  taxonomies     Taxonomy[]
+}
+
 model Taxonomy {
   id             Int        @id @default(autoincrement())
   name           Json     
   slug           Json     
+  multiTerm      Boolean    @default(false)
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @default(now()) @updatedAt
   terms          Term[]
+  modules        Module[]
+
 }
 
 model Term {

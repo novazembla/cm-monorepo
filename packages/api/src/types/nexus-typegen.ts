@@ -65,9 +65,10 @@ export interface NexusGenInputs {
     lat?: number | null; // Float
     lng?: number | null; // Float
     offers?: NexusGenScalars['JSON'] | null; // JSON
-    ownerId: number; // Int!
+    owner: NexusGenScalars['JSON']; // JSON!
     slug: NexusGenScalars['JSON']; // JSON!
     status: number; // Int!
+    terms?: NexusGenScalars['JSON'] | null; // JSON
     title: NexusGenScalars['JSON']; // JSON!
   }
   PageUpsertInput: { // input type
@@ -81,11 +82,8 @@ export interface NexusGenInputs {
     key: string; // String!
     value: NexusGenScalars['JSON']; // JSON!
   }
-  TaxonomyCreateInput: { // input type
-    name: NexusGenScalars['JSON']; // JSON!
-    slug: NexusGenScalars['JSON']; // JSON!
-  }
-  TaxonomyUpdateInput: { // input type
+  TaxonomyUpsertInput: { // input type
+    modules: NexusGenScalars['JSON']; // JSON!
     name: NexusGenScalars['JSON']; // JSON!
     slug: NexusGenScalars['JSON']; // JSON!
   }
@@ -202,12 +200,19 @@ export interface NexusGenObjects {
     ownerId: number; // Int!
     slug?: NexusGenScalars['JSON'] | null; // JSON
     status: number; // Int!
+    terms?: Array<NexusGenRootTypes['Term'] | null> | null; // [Term]
     title?: NexusGenScalars['JSON'] | null; // JSON
     updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
   }
   LocationQueryResult: { // root type
     locations?: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
     totalCount?: number | null; // Int
+  }
+  Module: { // root type
+    id: number; // Int!
+    key?: string | null; // String
+    name?: NexusGenScalars['JSON'] | null; // JSON
+    withTaxonomies?: boolean | null; // Boolean
   }
   Mutation: {};
   Page: { // root type
@@ -244,6 +249,7 @@ export interface NexusGenObjects {
   Taxonomy: { // root type
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
     id: number; // Int!
+    modules?: Array<NexusGenRootTypes['Module'] | null> | null; // [Module]
     name?: NexusGenScalars['JSON'] | null; // JSON
     slug?: NexusGenScalars['JSON'] | null; // JSON
     updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
@@ -354,12 +360,19 @@ export interface NexusGenFieldTypes {
     ownerId: number; // Int!
     slug: NexusGenScalars['JSON'] | null; // JSON
     status: number; // Int!
+    terms: Array<NexusGenRootTypes['Term'] | null> | null; // [Term]
     title: NexusGenScalars['JSON'] | null; // JSON
     updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
   }
   LocationQueryResult: { // field return type
     locations: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
     totalCount: number | null; // Int
+  }
+  Module: { // field return type
+    id: number; // Int!
+    key: string | null; // String
+    name: NexusGenScalars['JSON'] | null; // JSON
+    withTaxonomies: boolean | null; // Boolean
   }
   Mutation: { // field return type
     authLogin: NexusGenRootTypes['AuthPayload']; // AuthPayload!
@@ -424,6 +437,8 @@ export interface NexusGenFieldTypes {
     images: NexusGenRootTypes['ImageQueryResult'] | null; // ImageQueryResult
     locationRead: NexusGenRootTypes['Location']; // Location!
     locations: NexusGenRootTypes['LocationQueryResult'] | null; // LocationQueryResult
+    moduleTaxonomies: Array<NexusGenRootTypes['Taxonomy'] | null> | null; // [Taxonomy]
+    modules: Array<NexusGenRootTypes['Module'] | null> | null; // [Module]
     pageRead: NexusGenRootTypes['Page']; // Page!
     pages: NexusGenRootTypes['PageQueryResult'] | null; // PageQueryResult
     setting: Array<NexusGenRootTypes['Setting'] | null> | null; // [Setting]
@@ -447,6 +462,7 @@ export interface NexusGenFieldTypes {
   Taxonomy: { // field return type
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
     id: number; // Int!
+    modules: Array<NexusGenRootTypes['Module'] | null> | null; // [Module]
     name: NexusGenScalars['JSON'] | null; // JSON
     slug: NexusGenScalars['JSON'] | null; // JSON
     termCount: number | null; // Int
@@ -557,12 +573,19 @@ export interface NexusGenFieldTypeNames {
     ownerId: 'Int'
     slug: 'JSON'
     status: 'Int'
+    terms: 'Term'
     title: 'JSON'
     updatedAt: 'DateTime'
   }
   LocationQueryResult: { // field return type name
     locations: 'Location'
     totalCount: 'Int'
+  }
+  Module: { // field return type name
+    id: 'Int'
+    key: 'String'
+    name: 'JSON'
+    withTaxonomies: 'Boolean'
   }
   Mutation: { // field return type name
     authLogin: 'AuthPayload'
@@ -627,6 +650,8 @@ export interface NexusGenFieldTypeNames {
     images: 'ImageQueryResult'
     locationRead: 'Location'
     locations: 'LocationQueryResult'
+    moduleTaxonomies: 'Taxonomy'
+    modules: 'Module'
     pageRead: 'Page'
     pages: 'PageQueryResult'
     setting: 'Setting'
@@ -650,6 +675,7 @@ export interface NexusGenFieldTypeNames {
   Taxonomy: { // field return type name
     createdAt: 'DateTime'
     id: 'Int'
+    modules: 'Module'
     name: 'JSON'
     slug: 'JSON'
     termCount: 'Int'
@@ -762,13 +788,13 @@ export interface NexusGenArgTypes {
       data?: NexusGenInputs['SettingsUpdateInput'][] | null; // [SettingsUpdateInput!]
     }
     taxonomyCreate: { // args
-      data: NexusGenInputs['TaxonomyCreateInput']; // TaxonomyCreateInput!
+      data: NexusGenInputs['TaxonomyUpsertInput']; // TaxonomyUpsertInput!
     }
     taxonomyDelete: { // args
       id: number; // Int!
     }
     taxonomyUpdate: { // args
-      data: NexusGenInputs['TaxonomyUpdateInput']; // TaxonomyUpdateInput!
+      data: NexusGenInputs['TaxonomyUpsertInput']; // TaxonomyUpsertInput!
       id: number; // Int!
     }
     termCreate: { // args
@@ -838,6 +864,9 @@ export interface NexusGenArgTypes {
       pageIndex?: number | null; // Int
       pageSize: number | null; // Int
       where?: NexusGenScalars['JSON'] | null; // JSON
+    }
+    moduleTaxonomies: { // args
+      key: string; // String!
     }
     pageRead: { // args
       id: number; // Int!

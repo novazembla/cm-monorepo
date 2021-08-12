@@ -123,41 +123,51 @@ const upsertUser = async (
   }
 };
 
-const upsertTaxonomy = async (
-  email: string,
-  role: string,
-  password: string,
-  i: number,
-  emailVerified: boolean = false
-) => {
-  try {
-    const data = {
-      email,
-      role,
-      firstName: role,
-      lastName: `${i}`,
-      emailVerified,
-      password: await argon2.hash(password),
-    };
-
-    const user = await prisma.user.upsert({
-      where: { email },
-      update: data,
-      create: data,
-      select: {
-        id: true,
-        email: true,
-      },
-    });
-    return user;
-  } catch (err) {
-    console.log(err);
-  }
-};
-
 async function main() {
+  const clearDb = true;
+
+  if (clearDb) {
+    await prisma.module.deleteMany();
+    await prisma.token.deleteMany();
+    await prisma.term.deleteMany();
+    await prisma.taxonomy.deleteMany();
+    await prisma.image.deleteMany();
+    await prisma.event.deleteMany();
+    await prisma.location.deleteMany();
+    await prisma.page.deleteMany();
+    await prisma.user.deleteMany();
+  }
+
+  console.log("Create modules");
+
   // eslint-disable-next-line no-console
-  console.log("Running scripts ...");
+
+  await Promise.all(
+    [
+      { key: "location", name: { de: "Kartenpunkte", en: "Locations" } },
+      { key: "event", name: { de: "Veranstaltungen", en: "Events" } },
+      { key: "tour", name: { de: "Touren", en: "Tours" } },
+      { key: "page", name: { de: "Seiten", en: "Pages" } },
+      { key: "users", name: { de: "Users", en: "User" } },
+      { key: "settings", name: { de: "Einstellungen", en: "Settings" } },
+    ].map(async (m) => {
+      await prisma.module.upsert({
+        create: {
+          key: m.key,
+          name: m.name,
+          withTaxonomies: ["location", "event", "tour"].includes(m.key),
+        },
+        update: {
+          key: m.key,
+          name: m.name,
+          withTaxonomies: ["location", "event", "tour"].includes(m.key),
+        },
+        where: {
+          key: m.key,
+        },
+      });
+    })
+  );
 
   await Promise.all(
     ["administrator", "editor", "contributor", "user"].map(async (role) => {
@@ -170,15 +180,16 @@ async function main() {
 
   await Promise.all(
     [...Array(100).keys()].map(async (i) => {
+      const id = i + 1;
       const user = await upsertUser(
-        `user${i}@user.com`,
-        "user",
-        "user",
-        i + 1,
-        i % 2 == 0
+        `user${id}@user.com`,
+        `User`,
+        `${id} User`,
+        id,
+        i % 2 === 0
       );
 
-      console.log(`Seeded: user${i + 1}@user.com`);
+      console.log(`Seeded: user${id}@user.com`);
       return user;
     })
   );
@@ -220,12 +231,16 @@ async function main() {
             de: "Kategorien",
             en: "Categories",
           },
-
+          multiTerm: true,
           slug: {
             de: "kategorien",
             en: "categories",
           },
-
+          modules: {
+            connect: {
+              key: "location",
+            },
+          },
           terms: {
             createMany: {
               data: categories.map((term) => ({
@@ -262,10 +277,15 @@ async function main() {
             de: "Veranstaltungsart",
             en: "Event Categories",
           },
-
+          multiTerm: true,
           slug: {
             de: "veranstaltungsarten",
             en: "event-categories",
+          },
+          modules: {
+            connect: {
+              key: "event",
+            },
           },
 
           terms: {
@@ -288,49 +308,6 @@ async function main() {
   }
 
   if (contributor && editor && administrator) {
-    console.log("Create pages if needed");
-    await Promise.all(
-      pages.map(async (page) => {
-        const pageTest = await prisma.page.findFirst({
-          where: {
-            slug: {
-              path: ["de"],
-              string_contains: slugify(page[0]),
-            },
-          },
-        });
-
-        if (!pageTest) {
-          await prisma.page.create({
-            data: {
-              status: rndBetween(1, 4),
-              title: {
-                de: page[0],
-                en: page[1],
-              },
-              slug: {
-                de: slugify(page[0]),
-                en: slugify(page[1]),
-              },
-              content: {
-                de: lorem
-                  .generateParagraphs(rndBetween(5, 10))
-                  .replace(/(\r\n|\n|\r)/g, "<br/><br/>"),
-                en: lorem
-                  .generateParagraphs(rndBetween(5, 10))
-                  .replace(/(\r\n|\n|\r)/g, "<br/><br/>"),
-              },
-              owner: {
-                connect: {
-                  id: Math.random() > 0.5 ? contributor.id : editor.id,
-                },
-              },
-            },
-          });
-        }
-      })
-    );
-
     const taxCategories = await prisma.taxonomy.findFirst({
       where: {
         slug: {
@@ -447,16 +424,63 @@ async function main() {
         );
       }
     }
+
+    console.log("Create pages if needed");
+    await Promise.all(
+      pages.map(async (page) => {
+        const pageTest = await prisma.page.findFirst({
+          where: {
+            slug: {
+              path: ["de"],
+              string_contains: slugify(page[0]),
+            },
+          },
+        });
+
+        if (!pageTest) {
+          await prisma.page.create({
+            data: {
+              status: rndBetween(1, 4),
+              title: {
+                de: page[0],
+                en: page[1],
+              },
+              slug: {
+                de: slugify(page[0]),
+                en: slugify(page[1]),
+              },
+              content: {
+                de: lorem
+                  .generateParagraphs(rndBetween(5, 10))
+                  .replace(/(\r\n|\n|\r)/g, "<br/><br/>"),
+                en: lorem
+                  .generateParagraphs(rndBetween(5, 10))
+                  .replace(/(\r\n|\n|\r)/g, "<br/><br/>"),
+              },
+              owner: {
+                connect: {
+                  id: Math.random() > 0.5 ? contributor.id : editor.id,
+                },
+              },
+            },
+          });
+        }
+      })
+    );
   }
+
+  prisma.$disconnect();
 }
 
 main()
   .then(async () => {
     console.log("🎉  Seed successful");
+    prisma.$disconnect();
     process.exit(0);
   })
   .catch((e) => {
     console.error(e);
     console.error("\n❌  Seed failed. See above.");
+    prisma.$disconnect();
     process.exit(1);
   });

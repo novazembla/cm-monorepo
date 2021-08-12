@@ -27,8 +27,6 @@ addMethod(string, "nonEmptyHtml", function(options?: {
       // const { charCount, wordCount } = options;
       try {
         const dom = new DOMParser().parseFromString(value ?? "", 'text/html');
-        console.log(dom.body.textContent)
-
         return (dom?.body?.textContent ?? "").length > 0;
 
       } catch (err) {

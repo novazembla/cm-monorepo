@@ -5,17 +5,13 @@ import Update from "./Update";
 
 import { moduleRootPath } from './moduleConfig';
 
-export const moduleAccessRules: ModuleAccessRules = {
-  userCan: "settingRead"
-}
-
 export const moduleRoutes: RoutePrivateParams[] = [
   {
     key: "index",
     path: `${moduleRootPath}`,
     component: Index,
     exact: true,
-    ...moduleAccessRules,
+    userCan: "settingRead"
   },
   {
     key: "update",

@@ -38,8 +38,6 @@ addMethod(
       // const { charCount, wordCount } = options;
       try {
         const dom = new DOMParser().parseFromString(value ?? "", "text/html");
-        console.log(dom.body.textContent);
-
         return (dom?.body?.textContent ?? "").length > 0;
       } catch (err) {
         return false;
@@ -103,6 +101,9 @@ export const ModuleLocationValidationSchema = object().shape(
         lang === defaultLanguage
           ? string().nonEmptyHtml().required().max(1000)
           : string().max(1000),
+      [`offers_${lang}`]: string().max(500),
+      [`contactInfo_${lang}`]: string().max(500),
+        
     }),
     {
       lat: number().latitude().required(),

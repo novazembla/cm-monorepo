@@ -45,9 +45,7 @@ export const FieldPublishStatusSelect = ({
       label: t("publish.status.trashed", "Trashed"),
     },
   ];
-
-  console.log(status)
-
+  
   return (
     <FormControl id={id} isInvalid={errors[name]?.message} isRequired>
       <FormLabel htmlFor={id} mb="0.5">

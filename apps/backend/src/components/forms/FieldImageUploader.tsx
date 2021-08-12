@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useMemo, ChangeEventHandler } from "react";
-import axios, { Canceler } from "axios";
+import React, { useState, useMemo, ChangeEventHandler } from "react";
+import axios from "axios";
 import { DocumentNode } from "@apollo/client";
 import { useDropzone } from "react-dropzone";
 import {

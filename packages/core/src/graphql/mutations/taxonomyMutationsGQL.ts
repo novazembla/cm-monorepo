@@ -1,7 +1,7 @@
 import gql from "graphql-tag";
 
 export const taxonomyCreateMutationGQL = gql`
-  mutation taxonomyCreate($data: TaxonomyCreateInput!) {
+  mutation taxonomyCreate($data: TaxonomyUpsertInput!) {
     taxonomyCreate(data: $data) {
       id
       name
@@ -11,7 +11,7 @@ export const taxonomyCreateMutationGQL = gql`
 `;
 
 export const taxonomyUpdateMutationGQL = gql`
-  mutation taxonomyUpdate($id: Int!, $data: TaxonomyUpdateInput!) {
+  mutation taxonomyUpdate($id: Int!, $data: TaxonomyUpsertInput!) {
     taxonomyUpdate(id: $id, data: $data) {
       id
       name

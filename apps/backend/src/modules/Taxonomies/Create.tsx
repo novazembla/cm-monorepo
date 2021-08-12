@@ -14,6 +14,7 @@ import {
   useSuccessfullySavedToast,
   useRouter,
   useConfig,
+  useModules,
 } from "~/hooks";
 
 import { Divider } from "@chakra-ui/react";
@@ -29,6 +30,8 @@ import { moduleRootPath, multiLangFields } from "./moduleConfig";
 import { TaxonomyForm } from "./forms";
 import { multiLangRHFormDataToJson, multiLangSlugUniqueError } from "~/utils";
 
+import { mapModulesCheckboxSelectionToData } from "./helpers";
+
 const Create = () => {
   const config = useConfig();
   const router = useRouter();
@@ -38,6 +41,8 @@ const Create = () => {
 
   const [firstMutation, firstMutationResults] = useTaxonomyCreateMutation();
   const [isFormError, setIsFormError] = useState(false);
+
+  const modules = useModules();
 
   const disableForm = firstMutationResults.loading;
 
@@ -58,8 +63,8 @@ const Create = () => {
     setIsFormError(false);
     try {
       if (appUser) {
-        const { errors } = await firstMutation(
-          filteredOutputByWhitelist(
+        const { errors } = await firstMutation({
+          ...filteredOutputByWhitelist(
             multiLangRHFormDataToJson(
               newData,
               multiLangFields,
@@ -67,8 +72,11 @@ const Create = () => {
             ),
             [],
             multiLangFields
-          )
-        );
+          ),
+          modules: {
+            connect: mapModulesCheckboxSelectionToData(newData, modules),
+          },
+        });
 
         if (!errors) {
           successToast();
@@ -127,6 +135,7 @@ const Create = () => {
                 </>
               )}
               <TaxonomyForm
+                type="taxonomy"
                 action="create"
                 validationSchema={ModuleTaxonomySchema}
               />

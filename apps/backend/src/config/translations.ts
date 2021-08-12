@@ -184,19 +184,19 @@ export let object = {
 };
 
 export let array = {
-  // t('validation.array.min', 'This field field must have at least {{min}} items')
+  // t('validation.array.min', 'Please select at least {{min}} item')
   min: ({ path, min }: i18nTranslationProps) => ({
     key: "validation.array.min",
     values: { path, min },
   }),
 
-  // t('validation.array.max', 'This field field must have less than or equal to {{max}} items')
+  // t('validation.array.max', 'You can only select less than or equal to {{max}} items')
   max: ({ path, max }: i18nTranslationProps) => ({
     key: "validation.array.max",
     values: { path, max },
   }),
 
-  // t('validation.array.length', 'This field must have {{length}} items')
+  // t('validation.array.length', 'Please select {{length}} item(s)')
   length: ({ path, length }: i18nTranslationProps) => ({
     key: "validation.array.length",
     values: { path, length },

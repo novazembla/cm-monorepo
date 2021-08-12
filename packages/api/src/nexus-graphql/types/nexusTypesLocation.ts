@@ -25,7 +25,7 @@ import config from "../../config";
 import {
   daoLocationQuery,
   daoLocationQueryCount,
-  daoLocationGetById,
+  daoLocationQueryFirst,
   daoLocationCreate,
   daoLocationUpdate,
   daoLocationDelete,
@@ -58,11 +58,14 @@ export const Location = objectType({
         return null;
       },
     });
-
     t.json("description");
     t.json("address");
     t.json("contactInfo");
     t.json("offers");
+
+    t.list.field("terms", {
+      type: "Term",
+    });
 
     t.float("lat");
     t.float("lng");
@@ -108,13 +111,14 @@ export const LocationQueries = extendType({
         }),
       },
 
-      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "locationRead"),
+      // TODO: enable! authorize: (...[, , ctx]) => authorizeApiUser(ctx, "locationRead"),
 
       async resolve(...[, args, , info]) {
         const pRI = parseResolveInfo(info);
 
         let totalCount;
         let locations;
+        let include;
 
         if ((pRI?.fieldsByTypeName?.LocationQueryResult as any)?.totalCount) {
           totalCount = await daoLocationQueryCount(args.where);
@@ -126,9 +130,25 @@ export const LocationQueries = extendType({
             };
         }
 
+        if (
+          (pRI?.fieldsByTypeName?.LocationQueryResult as any)?.locations
+            ?.fieldsByTypeName?.Location?.terms
+        ) {
+          include = {
+            terms: {
+              select: {
+                id: true,
+                name: true,
+                slug: true,
+              },
+            },
+          };
+        }
+
         if ((pRI?.fieldsByTypeName?.LocationQueryResult as any)?.locations)
           locations = await daoLocationQuery(
             args.where,
+            include,
             args.orderBy,
             args.pageIndex as number,
             args.pageSize as number
@@ -151,14 +171,34 @@ export const LocationQueries = extendType({
       authorize: (...[, , ctx]) => authorizeApiUser(ctx, "locationRead"),
 
       // resolve(root, args, ctx, info)
-      async resolve(...[, args]) {
-        return daoLocationGetById(args.id);
+      async resolve(...[, args, , info]) {
+        const pRI = parseResolveInfo(info);
+
+        let include;
+
+        if ((pRI?.fieldsByTypeName?.Location as any)?.terms)
+          include = {
+            terms: {
+              select: {
+                id: true,
+                name: true,
+                slug: true,
+              },
+            },
+          };
+
+        return daoLocationQueryFirst(
+          {
+            id: args.id,
+          },
+          include
+        );
       },
     });
   },
 });
 
-export const LocationCreateInput = inputObjectType({
+export const LocationUpsertInput = inputObjectType({
   name: "LocationUpsertInput",
   definition(t) {
     t.nonNull.json("title");
@@ -168,9 +208,10 @@ export const LocationCreateInput = inputObjectType({
     t.json("address");
     t.json("contactInfo");
     t.json("offers");
-    t.nonNull.int("ownerId");
+    t.nonNull.json("owner");
     t.float("lat");
     t.float("lng");
+    t.json("terms");
   },
 });
 
@@ -188,20 +229,7 @@ export const LocationMutations = extendType({
       authorize: (...[, , ctx]) => authorizeApiUser(ctx, "locationCreate"),
 
       async resolve(...[, args]) {
-        const location = await daoLocationCreate({
-          title: args.data.title,
-          slug: args.data.slug,
-          description: args.data.description,
-          address: args.data.address,
-          contactInfo: args.data.contactInfo,
-          offers: args.data.offers,
-          lat: args.data.lat,
-          lng: args.data.lng,
-          status: args.data.status,
-          owner: {
-            connect: { id: args.data.ownerId },
-          },
-        });
+        const location = await daoLocationCreate(args.data);
 
         if (!location)
           throw new ApiError(

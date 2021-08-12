@@ -98,6 +98,7 @@ type Location {
   ownerId: Int!
   slug: JSON
   status: Int!
+  terms: [Term]
   title: JSON
   updatedAt: DateTime
 }
@@ -115,10 +116,18 @@ input LocationUpsertInput {
   lat: Float
   lng: Float
   offers: JSON
-  ownerId: Int!
+  owner: JSON!
   slug: JSON!
   status: Int!
+  terms: JSON
   title: JSON!
+}
+
+type Module {
+  id: Int!
+  key: String
+  name: JSON
+  withTaxonomies: Boolean
 }
 
 type Mutation {
@@ -138,9 +147,9 @@ type Mutation {
   pageDelete(id: Int!): BooleanResult!
   pageUpdate(data: PageUpsertInput!, id: Int!): Page!
   settingsUpdate(data: [SettingsUpdateInput!]): BooleanResult!
-  taxonomyCreate(data: TaxonomyCreateInput!): Taxonomy!
+  taxonomyCreate(data: TaxonomyUpsertInput!): Taxonomy!
   taxonomyDelete(id: Int!): BooleanResult!
-  taxonomyUpdate(data: TaxonomyUpdateInput!, id: Int!): Taxonomy!
+  taxonomyUpdate(data: TaxonomyUpsertInput!, id: Int!): Taxonomy!
   termCreate(data: TermCreateInput!): Term!
   termDelete(id: Int!): BooleanResult!
   termUpdate(data: TermUpdateInput!, id: Int!): Term!
@@ -197,6 +206,8 @@ type Query {
   images(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, taxonomyId: Int!, where: JSON): ImageQueryResult
   locationRead(id: Int!): Location!
   locations(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): LocationQueryResult
+  moduleTaxonomies(key: String!): [Taxonomy]
+  modules: [Module]
   pageRead(id: Int!): Page!
   pages(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): PageQueryResult
   setting(id: Int!): [Setting]
@@ -227,16 +238,12 @@ input SettingsUpdateInput {
 type Taxonomy {
   createdAt: DateTime
   id: Int!
+  modules: [Module]
   name: JSON
   slug: JSON
   termCount: Int
   terms: [Term]
   updatedAt: DateTime
-}
-
-input TaxonomyCreateInput {
-  name: JSON!
-  slug: JSON!
 }
 
 """List all the taxonomies in the database."""
@@ -245,7 +252,8 @@ type TaxonomyQueryResult {
   totalCount: Int
 }
 
-input TaxonomyUpdateInput {
+input TaxonomyUpsertInput {
+  modules: JSON!
   name: JSON!
   slug: JSON!
 }

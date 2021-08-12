@@ -24,12 +24,14 @@ export const daoLocationCheckSlugUnique = async (
 
 export const daoLocationQuery = async (
   where: Prisma.LocationWhereInput,
+  include: Prisma.LocationInclude | undefined,
   orderBy: Prisma.LocationOrderByInput | Prisma.LocationOrderByInput[],
   pageIndex: number = 0,
   pageSize: number = config.db.defaultPageSize
 ): Promise<Location[]> => {
   const locations: Location[] = await prisma.location.findMany({
     where,
+    include,
     orderBy,
     skip: pageIndex * pageSize,
     take: Math.min(pageSize, config.db.maxPageSize),
@@ -37,6 +39,21 @@ export const daoLocationQuery = async (
 
   return filteredOutputByBlacklist(
     locations,
+    config.db.privateJSONDataKeys.location
+  );
+};
+
+export const daoLocationQueryFirst = async (
+  where: Prisma.LocationWhereInput,
+  include: Prisma.LocationInclude | undefined
+): Promise<Location> => {
+  const location = await prisma.location.findFirst({
+    where,
+    include,
+  });
+
+  return filteredOutputByBlacklist(
+    location,
     config.db.privateJSONDataKeys.location
   );
 };
@@ -128,6 +145,7 @@ export const daoLocationDelete = async (id: number): Promise<Location> => {
 
 export default {
   daoLocationQuery,
+  daoLocationQueryFirst,
   daoLocationQueryCount,
   daoLocationGetById,
   daoLocationCheckSlugUnique,
