@@ -321,7 +321,7 @@ export const apiConfig = {
     ),
   },
   security: {
-    saltRoungs: 10,
+    saltRounds: 10,
   },
   jwt: {
     secret: safeGuardVariable(
