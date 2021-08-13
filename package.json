@@ -9,9 +9,7 @@
   },
   "scripts": {
     "install": "npx husky install",
-    
     "build:api": "NODE_ENV=production npm run package:core:build && npm run package:api:build && npm run app:api:build",
-    
     "dev": "NODE_ENV=development npx concurrently -k -p \"[{name}]\" -n \"P:CORE,P:API,A:API,A:FRONTEND,A:BACKEND,P:EXAMPLE\" -c \"#d531f5,#4d5ffa,#09e3b4,#f41788,#f1610a,#61f10a\" \"npm run package:core:dev\" \"npm run package:api:dev\" \"npm run app:api:dev\" \"npm run app:frontend:dev\"  \"npm run app:backend:dev\" \"npm run plugin:example:dev\"",
     "dev:api": "NODE_ENV=development npx concurrently -k -p \"[{name}]\" -n \"P:CORE,P:API,A:API,P:EXAMPLE\" -c \"#d531f5,#4d5ffa,#09e3b4,#f41788,#f1610a,#61f10a\" \"npm run package:core:dev\" \"npm run package:api:dev\" \"npm run app:api:dev\" \"npm run plugin:example:dev\"",
     "dev:backend": "NODE_ENV=development npx concurrently -k -p \"[{name}]\" -n \"P:CORE,P:API,A:API,A:BACKEND\" -c \"#d531f5,#4d5ffa,#09e3b4,#f41788,#f1610a,#61f10a\" \"npm run package:core:dev\" \"npm run package:api:dev\" \"npm run app:api:dev\" \"npm run app:backend:dev\"",
@@ -75,7 +73,6 @@
     "@babel/core": "^7.14.6",
     "@babel/preset-env": "^7.14.7",
     "@babel/preset-typescript": "^7.14.5",
-    "@types/jest": "^27.0.0",
     "@typescript-eslint/eslint-plugin": "^4.28.1",
     "babel-plugin-add-import-extension": "^1.5.1",
     "concurrently": "^6.2.0",
