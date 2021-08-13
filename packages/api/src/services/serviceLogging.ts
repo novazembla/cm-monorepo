@@ -1,4 +1,5 @@
 import winston from "winston";
+import { resolve, dirname } from "path";
 import { ApiError } from "../utils";
 
 const levels = {
@@ -51,17 +52,19 @@ const transports: Array<winston.transport> = [new winston.transports.Console()];
 if (process.env.NODE_ENV && process.env.NODE_ENV !== "production") {
   transports.push(
     new winston.transports.File({
-      filename: "./logs/error.log",
+      filename: `${resolve(dirname(""))}/logs/error.log`,
       level: "error",
       handleExceptions: true,
-      maxsize: 5242880, // 5MB
-      maxFiles: 5,
+      maxsize: 1048576, // 1MB
+      maxFiles: 2,
     })
   );
   transports.push(
     new winston.transports.File({
-      filename: "./logs/all.log",
+      filename: `${resolve(dirname(""))}/logs/debug.log`,
       level: "debug",
+      maxsize: 1048576, // 1MB
+      maxFiles: 1,
     })
   );
 }

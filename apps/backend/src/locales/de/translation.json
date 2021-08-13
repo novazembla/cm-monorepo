@@ -530,7 +530,7 @@
       "youPasswordHasBeenResetPleaseReauthenticate": "Your password has been changed. Please login again.",
       "button_goto_login": "Goto login",
       "youCanNowLogin": "Your password has been reset.",
-      "title": "Forgot your password?",
+      "title": "Reset your password",
       "info": "Enter your new password and confirm it in the second field.",
       "back_to_login": "Back to login",
       "form_button_submit": "Change password"
