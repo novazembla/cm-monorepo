@@ -29,13 +29,12 @@ export const startApi = async () => {
       // make sure that any unprocessed errors are displayed in a nice and (data) safe way
       addTerminatingErrorHandlingToApp();
 
-      const port = process.env.API_PORT ?? process.env.DEV_API_PORT ?? process.env.PORT;
+      const port =
+        process.env.API_PORT ?? process.env.DEV_API_PORT ?? process.env.PORT;
 
       // eslint-disable-next-line no-console
       console.log(`🔨 Attempting to run app.listen on port: ${port}`);
 
-
-      
       // finally listen to the configured port
       const expressServer = app.listen({ port }, () => {
         // eslint-disable-next-line no-console
@@ -45,7 +44,7 @@ export const startApi = async () => {
           }`
         );
       });
-      
+
       const bree = new Bree({
         logger,
         root: join(config.packageBaseDir, "dist", "workers"),

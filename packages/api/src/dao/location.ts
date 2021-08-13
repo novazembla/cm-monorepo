@@ -29,10 +29,6 @@ export const daoLocationQuery = async (
   pageIndex: number = 0,
   pageSize: number = config.db.defaultPageSize
 ): Promise<Location[]> => {
-
-
-  Location.
-  
   const locations: Location[] = await prisma.location.findMany({
     where,
     include,
