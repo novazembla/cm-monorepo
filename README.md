@@ -30,7 +30,15 @@ foo@bar:~$ npm run package:api:test:db:push
 
 
 
+ln -s /opt/plesk/node/v14.17.5/bin/node /usr/bin/node
+ln -s /opt/plesk/node/v14.17.5/bin/npm /usr/bin/npm
+ln -s /opt/plesk/node/v14.17.5/bin/npx /usr/bin/npx
 
+psql -d "postgresql://culturemap:culturemap@localhost/culturemap" -c "select now();"
+
+alter user culturemap with encrypted password 'culturemap';
+
+Granting privileges on database
 
 
 ```

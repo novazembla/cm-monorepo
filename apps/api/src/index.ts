@@ -72,7 +72,7 @@ const start = async () => {
 
 start();
 
-process.on("unhandledRejection", (reason: any, promise) => {
+process.on("unhandledRejection", (reason: any) => {
   // eslint-disable-next-line no-console
   console.error("Error: Unhandled Rejection at:", reason.stack || reason);
 });
