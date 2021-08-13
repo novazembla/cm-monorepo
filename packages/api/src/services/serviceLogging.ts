@@ -52,7 +52,7 @@ const transports: Array<winston.transport> = [new winston.transports.Console()];
 if (process.env.NODE_ENV && process.env.NODE_ENV !== "production") {
   transports.push(
     new winston.transports.File({
-      filename: `${resolve(dirname(""))}/logs/error.log`,
+      filename: `./logs/error.log`,
       level: "error",
       handleExceptions: true,
       maxsize: 1048576, // 1MB
@@ -61,7 +61,7 @@ if (process.env.NODE_ENV && process.env.NODE_ENV !== "production") {
   );
   transports.push(
     new winston.transports.File({
-      filename: `${resolve(dirname(""))}/logs/debug.log`,
+      filename: `./logs/debug.log`,
       level: "debug",
       maxsize: 1048576, // 1MB
       maxFiles: 1,

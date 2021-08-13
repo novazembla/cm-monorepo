@@ -47,10 +47,13 @@ hooks:
 # application container. The 'source_path' specifies the subdirectory
 # from within the source that the mount should point at. 
 mounts:
-  'web/uploads':
+  'log':
+    source: local
+    source_path: log
+  'public/img':
     source: service
     service: files
-    source_path: uploads
+    source_path: img
     
 
 # The relationships of the application with services or other applications.
