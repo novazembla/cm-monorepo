@@ -47,7 +47,7 @@ hooks:
 # application container. The 'source_path' specifies the subdirectory
 # from within the source that the mount should point at. 
 mounts:
-  'log':
+  'logs':
     source: local
     source_path: log
   'public/img':
