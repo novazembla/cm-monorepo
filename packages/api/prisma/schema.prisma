@@ -146,6 +146,7 @@ model Taxonomy {
   multiTerm      Boolean    @default(false)
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @default(now()) @updatedAt
+
   terms          Term[]
   modules        Module[]
 
@@ -179,6 +180,7 @@ model Page {
   status      Int  
 
   fullText       String    @default("")
+
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @default(now()) @updatedAt
   ownerId     Int    
