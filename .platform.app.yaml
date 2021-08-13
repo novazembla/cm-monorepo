@@ -10,12 +10,11 @@ name: app
 # to find the supported versions for the 'nodejs' type.
 type: 'nodejs:14'
       
-
 disk: 512
 
 build:
     # Automatically run `npm install` on every build.
-    flavor: npm
+    flavor: default
 
 hooks:
     # The build hook runs after Composer to finish preparing up your code.
