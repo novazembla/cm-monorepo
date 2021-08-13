@@ -8,7 +8,7 @@ import {
   extendType,
   inputObjectType,
   nonNull,
-  // stringArg,
+  stringArg,
   intArg,
   arg,
   list,
@@ -30,6 +30,7 @@ import {
   daoPageUpdate,
   daoPageDelete,
   daoUserGetById,
+  daoPageGetBySlug,
 } from "../../dao";
 
 export const Page = objectType({
@@ -145,6 +146,19 @@ export const PageQueries = extendType({
       // resolve(root, args, ctx, info)
       async resolve(...[, args]) {
         return daoPageGetById(args.id);
+      },
+    });
+
+    t.nonNull.field("page", {
+      type: "Page",
+
+      args: {
+        slug: nonNull(stringArg()),
+      },
+
+      // resolve(root, args, ctx, info)
+      async resolve(...[, args]) {
+        return daoPageGetBySlug(args.slug);
       },
     });
   },

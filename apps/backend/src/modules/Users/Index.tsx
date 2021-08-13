@@ -182,10 +182,22 @@ const Index = () => {
       // editButtonComponent: undefined,
       appUser,
       showDelete: true,
-      canDelete: (cell, appUser) =>
-        appUser?.can("userDelete") &&
-        appUser?.has(cell.row.values.role) &&
-        appUser.id !== cell.row.values.id,
+      canDelete: (cell, appUser) => {
+        console.log(
+          appUser,
+          cell.row.values.id,
+          appUser?.can("userDelete"),
+          appUser?.has(cell.row.values.role),
+          cell.row.values.role,
+          appUser.id !== cell.row.values.id
+        );
+        return (
+          appUser?.can("userDelete") &&
+          appUser?.has(cell.row.values.role) &&
+          appUser.id !== cell.row.values.id
+        );
+      },
+
       deleteButtonLabel: t("module.users.button.delete", "Delete user"),
       // deleteButtonComponent?: React.FC<any>;
       deleteButtonOnClick: (cell) => {

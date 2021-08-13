@@ -9,6 +9,9 @@
   },
   "scripts": {
     "install": "npx husky install",
+    
+    "build:api": "NODE_ENV=production npm run package:core:build && npm run package:api:build && npm run app:api:build",
+    
     "dev": "NODE_ENV=development npx concurrently -k -p \"[{name}]\" -n \"P:CORE,P:API,A:API,A:FRONTEND,A:BACKEND,P:EXAMPLE\" -c \"#d531f5,#4d5ffa,#09e3b4,#f41788,#f1610a,#61f10a\" \"npm run package:core:dev\" \"npm run package:api:dev\" \"npm run app:api:dev\" \"npm run app:frontend:dev\"  \"npm run app:backend:dev\" \"npm run plugin:example:dev\"",
     "dev:api": "NODE_ENV=development npx concurrently -k -p \"[{name}]\" -n \"P:CORE,P:API,A:API,P:EXAMPLE\" -c \"#d531f5,#4d5ffa,#09e3b4,#f41788,#f1610a,#61f10a\" \"npm run package:core:dev\" \"npm run package:api:dev\" \"npm run app:api:dev\" \"npm run plugin:example:dev\"",
     "dev:backend": "NODE_ENV=development npx concurrently -k -p \"[{name}]\" -n \"P:CORE,P:API,A:API,A:BACKEND\" -c \"#d531f5,#4d5ffa,#09e3b4,#f41788,#f1610a,#61f10a\" \"npm run package:core:dev\" \"npm run package:api:dev\" \"npm run app:api:dev\" \"npm run app:backend:dev\"",
@@ -21,12 +24,12 @@
     "app:api:watch:babel": "npx babel ./apps/api/src --watch --out-dir ./apps/api/build --extensions .ts",
     "app:api:watch:node": "env-cmd -f ./.env nodemon --watch ./apps/api/build --watch ./packages/api/dist --watch ./packages/core/dist --watch ./plugins/example/dist ./apps/api/build/index.js",
     "app:api:lint": "eslint ./apps/api/src --ext .js,.ts",
-    "app:backend:build": "PORT=$(grep BACKEND_PORT .env | cut -d '=' -f2) REACT_APP_API_URL=$(grep '^BASE_URL_API' .env | cut -d '=' -f2) REACT_APP_API_DOMAIN=$(grep '^REACT_APP_API_DOMAIN' .env | cut -d '=' -f2) SKIP_PREFLIGHT_CHECK=true npm run build -w backend",
-    "app:backend:dev": "PORT=$(grep BACKEND_PORT .env | cut -d '=' -f2) REACT_APP_API_URL=$(grep '^BASE_URL_API' .env | cut -d '=' -f2) SKIP_PREFLIGHT_CHECK=true npm run start -w backend",
+    "app:backend:build": "REACT_APP_API_URL=$(grep '^BASE_URL_API' .env | cut -d '=' -f2) REACT_APP_API_DOMAIN=$(grep '^REACT_APP_API_DOMAIN' .env | cut -d '=' -f2) SKIP_PREFLIGHT_CHECK=true npm run build -w backend",
+    "app:backend:dev": "PORT=$(grep DEV_BACKEND_PORT .env | cut -d '=' -f2) REACT_APP_API_URL=$(grep '^BASE_URL_API' .env | cut -d '=' -f2) SKIP_PREFLIGHT_CHECK=true npm run start -w backend",
     "app:backend:lint": "eslint ./apps/backend/ --ext .js,.jsx,.ts,.tsx",
     "app:backend:translations": "eslint ./apps/backend/ --ext .js,.jsx,.ts,.tsx",
     "app:frontend:build": "npm run build -w frontend",
-    "app:frontend:dev": "PORT=$(grep FRONTEND_PORT .env | cut -d '=' -f2) NEXT_PUBLIC_API_URL=$(grep '^API_GRAPHQL_URL' .env | cut -d '=' -f2) npm run dev -w frontend",
+    "app:frontend:dev": "PORT=$(grep DEV_FRONTEND_PORT .env | cut -d '=' -f2) NEXT_PUBLIC_API_URL=$(grep '^DEV_API_GRAPHQL_URL' .env | cut -d '=' -f2) npm run dev -w frontend",
     "app:frontend:lint": "eslint ./apps/frontend/ --ext .js,.jsx,.ts,.tsx",
     "package:api:dev": "npx concurrently -k -p \"[{name}]\" -n \"BABEL,TYPINGS\" -c \"#dddddd,#aaaaaa,#777777\" \"npm run package:api:watch:babel\" \"npm run package:api:watch:typings\"",
     "package:api:build": "npx rimraf ./packages/api/dist && npm run package:api:nexus && npm run package:api:babel && npm run package:api:typings",

@@ -208,6 +208,7 @@ type Query {
   locations(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): LocationQueryResult
   moduleTaxonomies(key: String!): [Taxonomy]
   modules: [Module]
+  page(slug: String!): Page!
   pageRead(id: Int!): Page!
   pages(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): PageQueryResult
   setting(id: Int!): [Setting]

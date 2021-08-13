@@ -29,11 +29,14 @@ export const startApi = async () => {
       // make sure that any unprocessed errors are displayed in a nice and (data) safe way
       addTerminatingErrorHandlingToApp();
 
+      const port = process.env.API_PORT ?? process.env.DEV_API_PORT;
       // finally listen to the configured port
-      const expressServer = app.listen({ port: process.env.API_PORT }, () => {
+      const expressServer = app.listen({ port }, () => {
         // eslint-disable-next-line no-console
         console.log(
-          `🚀 Server ready at http://localhost:${process.env.API_PORT}${server?.graphqlPath}`
+          `🚀 Server ready at http://localhost${port ? `:${port}` : ""}${
+            server?.graphqlPath
+          }`
         );
       });
 

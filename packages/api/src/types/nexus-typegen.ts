@@ -439,6 +439,7 @@ export interface NexusGenFieldTypes {
     locations: NexusGenRootTypes['LocationQueryResult'] | null; // LocationQueryResult
     moduleTaxonomies: Array<NexusGenRootTypes['Taxonomy'] | null> | null; // [Taxonomy]
     modules: Array<NexusGenRootTypes['Module'] | null> | null; // [Module]
+    page: NexusGenRootTypes['Page']; // Page!
     pageRead: NexusGenRootTypes['Page']; // Page!
     pages: NexusGenRootTypes['PageQueryResult'] | null; // PageQueryResult
     setting: Array<NexusGenRootTypes['Setting'] | null> | null; // [Setting]
@@ -652,6 +653,7 @@ export interface NexusGenFieldTypeNames {
     locations: 'LocationQueryResult'
     moduleTaxonomies: 'Taxonomy'
     modules: 'Module'
+    page: 'Page'
     pageRead: 'Page'
     pages: 'PageQueryResult'
     setting: 'Setting'
@@ -867,6 +869,9 @@ export interface NexusGenArgTypes {
     }
     moduleTaxonomies: { // args
       key: string; // String!
+    }
+    page: { // args
+      slug: string; // String!
     }
     pageRead: { // args
       id: number; // Int!

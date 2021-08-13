@@ -88,6 +88,7 @@ const pages = [
   ["Kultur in Lichtenberg", "Culture Map Project"],
   ["Nutzungshinweiser", "How to use"],
   ["Impressum", "Imprint"],
+  ["Über uns", "About Us"],
   ["Datenschutz", "Privacy information"],
 ];
 
@@ -101,7 +102,7 @@ const upsertUser = async (
   try {
     const data = {
       email,
-      role,
+      role: role.toLowerCase(),
       firstName: role,
       lastName: `${i}`,
       emailVerified,
@@ -183,7 +184,7 @@ async function main() {
       const id = i + 1;
       const user = await upsertUser(
         `user${id}@user.com`,
-        `User`,
+        `user`,
         `${id} User`,
         id,
         i % 2 === 0

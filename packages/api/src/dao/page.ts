@@ -81,6 +81,32 @@ export const daoPageGetById = async (id: number): Promise<Page> => {
   );
 };
 
+export const daoPageGetBySlug = async (slug: string): Promise<Page> => {
+  const page: Page | null = await prisma.page.findFirst({
+    where: {
+      OR: [
+        {
+          slug: {
+            path: ["en"],
+            equals: slug,
+          },
+        },
+        {
+          slug: {
+            path: ["de"],
+            equals: slug,
+          },
+        },
+      ],
+    },
+  });
+
+  return filteredOutputByBlacklistOrNotFound(
+    page,
+    config.db.privateJSONDataKeys.page
+  );
+};
+
 export const daoPageUpdate = async (
   id: number,
   data: Prisma.PageUpdateInput
@@ -131,4 +157,5 @@ export default {
   daoPageCreate,
   daoPageUpdate,
   daoPageDelete,
+  daoPageGetBySlug,
 };
