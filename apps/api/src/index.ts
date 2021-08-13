@@ -5,17 +5,18 @@ import {
   initializeApolloServer,
   config,
 } from "@culturemap/api";
-import { plugins } from "@culturemap/core";
+// #ENABLE FOR PLUGIN USE import { plugins } from "@culturemap/core";
 
-import examplePlugins from "plugin-example";
+// #ENABLE FOR PLUGIN USE import examplePlugins from "plugin-example";
 
 // @ts-ignore (CMSetting is JS file)
 import CMSettings from "../culturemap";
 
 const start = async () => {
+  // #ENABLE FOR PLUGIN USE
   // you can register additional plugins that provide hooks that will be called at
   // appropriate places (aka "hooks") to extend the core functionality
-  plugins.register(examplePlugins);
+  // plugins.register(examplePlugins);
 
   // The api makes use of the default prisma.schema found in
   // ./packages/api/prisma/ you can run your own schema  by extending/changing
