@@ -85,12 +85,22 @@ model Event {
   
   images   Image[]
 
+  heroImageId    Int?
+  heroImage      Image?    @relation(fields: [heroImageId], references: [id], name: "eventHeroImage")
+
   fullText      String? @default("")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
   @@index([ownerId], name: "indexEventOwnerId")
+}
+
+model EventDate {
+  id      Int    @id @default(autoincrement())
+  date    DateTime 
+  begin   DateTime
+  end     DateTime
 }
 
 model Token {
@@ -115,8 +125,6 @@ model Setting {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now()) @updatedAt
 }
-
-
 
 model Module {
   id             Int        @id @default(autoincrement())
@@ -162,6 +170,9 @@ model Page {
   slug           Json     
   content        Json
 
+  heroImageId    Int?
+  heroImage      Image?    @relation(fields: [heroImageId], references: [id], name: "pageHeroImage")
+
   status      Int  
 
   fullText       String    @default("")
@@ -189,7 +200,9 @@ model Image {
   events         Event[]
   locations      Location[]
 
-  profileImageUsers  User[]  @relation("profileImage")
+  profileImageUsers   User[]  @relation("profileImage")
+  heroImagePages      Page[]  @relation("pageHeroImage")
+  heroImageEvents     Event[]  @relation("eventHeroImage")
 
   @@index([ownerId], name: "indexImageOwnerId")
   @@index([ownerId, type], name: "indexImageOwnerIdType")
