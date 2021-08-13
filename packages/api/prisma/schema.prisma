@@ -61,6 +61,9 @@ model Location {
   ownerId     Int    
   owner       User   @relation(fields: [ownerId], references: [id])
 
+  heroImageId    Int?
+  heroImage      Image?    @relation(fields: [heroImageId], references: [id], name: "locationHeroImage")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
@@ -203,6 +206,7 @@ model Image {
   profileImageUsers   User[]  @relation("profileImage")
   heroImagePages      Page[]  @relation("pageHeroImage")
   heroImageEvents     Event[]  @relation("eventHeroImage")
+  heroImageLocations  Location[]  @relation("locationHeroImage")
 
   @@index([ownerId], name: "indexImageOwnerId")
   @@index([ownerId, type], name: "indexImageOwnerIdType")

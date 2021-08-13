@@ -11,7 +11,32 @@ name: app
 type: 'nodejs:14'
       
 
-disk: 1024
+disk: 512
+
+build:
+    # Automatically run `npm install` on every build.
+    flavor: npm
+
+hooks:
+    # The build hook runs after Composer to finish preparing up your code.
+    # No services are available but the disk is writeable.
+    build: |
+        set -e    
+        npx prisma generate
+        npm run build:api
+
+    # The deploy hook runs after your application has been deployed and started.
+    # Code cannot be modified at this point but the database is available.
+    # The site is not accepting requests while this script runs so keep it
+    # fast.
+    deploy: |
+        set -e
+        npx prisma migrate deploy
+
+    # post_deploy: |
+    #     set -e
+    #     import_new_content.sh
+    #     clear_cache.sh      
 
 # The following block defines a single writable directory, 'web/uploads'
 # The 'source' specifies where the writable mount is. The 'local' source
@@ -32,9 +57,7 @@ mounts:
 # side is in the form <service name>:<endpoint name>.
 relationships:
     postgresdatabase: 'dbpostgres:postgresql'
-    null: 'files:something'
-
 
 web:
   commands: 
-    start: "node index.js"
+    start: "node apps/api/build/index.js"
