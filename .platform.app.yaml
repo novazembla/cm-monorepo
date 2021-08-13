@@ -25,7 +25,6 @@ hooks:
     # No services are available but the disk is writeable.
     build: |
         set -e
-        npm i @prisma/client
         npx prisma generate
         npm run build:api
 
