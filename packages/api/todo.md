@@ -13,3 +13,6 @@ TODO: GraphQL Upload Crashes node if cancelled while stream is being parsed ..
 https://github.com/jaydenseric/apollo-upload-client/issues/149
 
 TODO: fullText index creation
+
+
+TODO: Maybe switch from Bcrypt to Argon2 (if the hosting platform does support it)

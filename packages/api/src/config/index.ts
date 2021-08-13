@@ -58,10 +58,8 @@ export interface ApiConfigImageFormat {
   asJpg: boolean;
 }
 
-export interface ApiConfigBaseUrls {
-  subjectPrefix: string;
-  from: string;
-  formName: string;
+export interface ApiConfigSecurity {
+  saltRounds: number;
 }
 
 export interface ApiConfigEmail {
@@ -93,6 +91,7 @@ export interface ApiConfig {
   env: typeof process.env;
   corsOptions: CorsOptions;
   jwt: ApiConfigJwt;
+  security: ApiConfigSecurity;
   imageFormats: Record<ApiConfigImageFormatType, ApiConfigImageFormat[]>;
 }
 
@@ -111,6 +110,7 @@ export interface ApiConfigOverwrite {
     ApiConfigImageFormat[]
   >;
   corsOptions: CorsOptions;
+  security?: Partial<ApiConfigSecurity>;
   jwt: Partial<ApiConfigJwt>;
 }
 
@@ -319,6 +319,9 @@ export const apiConfig = {
       "",
       "Error: missing/wrong .env config: MAIL_PASSWORD"
     ),
+  },
+  security: {
+    saltRounds: 10,
   },
   jwt: {
     secret: safeGuardVariable(

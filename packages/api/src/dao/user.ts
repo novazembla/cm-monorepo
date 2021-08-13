@@ -1,4 +1,4 @@
-import { hash, verify } from "argon2";
+import bcrypt from "bcrypt";
 import httpStatus from "http-status";
 import { User, Prisma } from "@prisma/client";
 import { filteredOutputByBlacklist } from "@culturemap/core";
@@ -42,7 +42,7 @@ export const daoUserCreate = async (
     data: {
       ...data,
       ...{
-        password: await hash(data.password),
+        password: await bcrypt.hash(data.password, config.security.saltRounds),
       },
     },
   });
@@ -111,7 +111,7 @@ export const daoUserGetByLogin = async (
 ): Promise<User | null> => {
   const user: User | null = await prisma.user.findUnique({ where: { email } });
 
-  if (!user || !(await verify(user.password, password))) return null;
+  if (!user || !(await bcrypt.compare(password, user.password))) return null;
 
   return filteredOutputByBlacklist(user, config.db.privateJSONDataKeys.user);
 };
@@ -125,7 +125,12 @@ export const daoUserUpdate = async (
   if (data.password)
     updateData = {
       ...data,
-      ...{ password: await hash(data.password as string) },
+      ...{
+        password: await bcrypt.hash(
+          data.password as string,
+          config.security.saltRounds
+        ),
+      },
     };
 
   const user: User = await prisma.user.update({

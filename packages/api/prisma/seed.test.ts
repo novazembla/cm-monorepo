@@ -1,5 +1,5 @@
 import Prisma from "@prisma/client";
-import argon2 from "argon2";
+import bcrypt from "bcrypt";
 
 const { PrismaClient } = Prisma;
 
@@ -20,7 +20,7 @@ async function main() {
         email,
         firstName: "Test",
         lastName: "Administrator",
-        password: await argon2.hash(password),
+        password: await bcrypt.hash(password, 10),
       },
     });
 

@@ -1,6 +1,5 @@
 import Prisma from "@prisma/client";
-import argon2 from "argon2";
-import { match } from "assert/strict";
+import bcrypt from "bcrypt";
 
 import { LoremIpsum } from "lorem-ipsum";
 
@@ -22,15 +21,22 @@ const lorem = new LoremIpsum({
 });
 
 const getRandomElements = (arr: any[], n: number) => {
-  var result = new Array(n),
-    len = arr.length,
-    taken = new Array(len);
+  const result = new Array(n);
+  let len = arr.length;
+  const taken = new Array(len);
+
   if (n > len)
     throw new RangeError("getRandom: more elements taken than available");
-  while (n--) {
-    var x = Math.floor(Math.random() * len);
-    result[n] = arr[x in taken ? taken[x] : x];
-    taken[x] = --len in taken ? taken[len] : len;
+
+  let count = n;
+  while (count) {
+    const x = Math.floor(Math.random() * len);
+    result[count] = arr[x in taken ? taken[x] : x];
+
+    len -= 1;
+
+    taken[x] = len in taken ? taken[len] : len;
+    count -= 1;
   }
   return result;
 };
@@ -106,7 +112,7 @@ const upsertUser = async (
       firstName: role,
       lastName: `${i}`,
       emailVerified,
-      password: await argon2.hash(password),
+      password: await bcrypt.hash(password, 10),
     };
 
     const user = await prisma.user.upsert({
