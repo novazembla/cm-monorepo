@@ -32,6 +32,14 @@ export const BooleanResult = objectType({
   },
 });
 
+export const GeoPoint = objectType({
+  name: "GeoPoint",
+  definition(t) {
+    t.nonNull.float("lat");
+    t.nonNull.float("lng");
+  },
+});
+
 export const UniqueSlugResult = objectType({
   name: "UniqueSlugResult",
   definition(t) {

@@ -88,4 +88,19 @@ export const daoSharedCheckSlugUnique = async (
   return { ok, errors };
 };
 
-export default daoSharedCheckSlugUnique;
+export const daoSharedGenerateFullText = (data: any, keys: string[]) => {
+  return keys.reduce((fullText: string, key) => {
+    if (!(key in data)) return fullText;
+
+    if (typeof data[key] !== "object") return fullText;
+
+    return `${fullText} ${Object.keys(data[key])
+      .map((oKey) => data[key][oKey])
+      .join("\n")}`;
+  }, "");
+};
+
+export default {
+  daoSharedGenerateFullText,
+  daoSharedCheckSlugUnique,
+};

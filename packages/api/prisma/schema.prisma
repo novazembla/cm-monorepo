@@ -78,8 +78,7 @@ model Event {
   description   Json?  @default("{}")
   eventLocation Json?  @default("{}")
   
-  locationId    Int
-  location      Location @relation(fields: [locationId], references: [id])
+  locations      Location[]
 
   ownerId     Int    
   owner       User   @relation(fields: [ownerId], references: [id])
@@ -87,6 +86,8 @@ model Event {
   status      Int  
   
   images   Image[]
+  dates  EventDate[]
+  terms       Term[]
 
   heroImageId    Int?
   heroImage      Image?    @relation(fields: [heroImageId], references: [id], name: "eventHeroImage")
@@ -104,6 +105,8 @@ model EventDate {
   date    DateTime 
   begin   DateTime
   end     DateTime
+  eventId    Int?
+  event      Event?    @relation(fields: [eventId], references: [id])
 }
 
 model Token {
@@ -161,6 +164,7 @@ model Term {
   taxonomy       Taxonomy   @relation(fields: [taxonomyId], references: [id])
 
   locations      Location[]
+  events         Event[]
 
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @default(now()) @updatedAt
@@ -170,6 +174,8 @@ model Term {
 
 model Page {
   id             Int        @id @default(autoincrement())
+  objectTypeId   Int        @default(2)
+
   title          Json     
   slug           Json     
   content        Json
@@ -177,7 +183,9 @@ model Page {
   heroImageId    Int?
   heroImage      Image?    @relation(fields: [heroImageId], references: [id], name: "pageHeroImage")
 
-  status      Int  
+  status         Int  
+
+  translations   Translation[]
 
   fullText       String    @default("")
 
@@ -186,15 +194,19 @@ model Page {
   ownerId     Int    
   owner       User   @relation(fields: [ownerId], references: [id])
   
+  @@unique([id,objectTypeId])
   @@index([ownerId], name: "indexPageOwnerId")
 }
 
 // TODO: add a retry mechanism 
 model Image {
   id             Int        @id @default(autoincrement())
+  objectTypeId   Int        @default(1)
+
   uuid           String     @db.VarChar(48) @unique
   meta           Json
-  status         Int        @default(1)
+  status         Int        @default(0)
+  
   retryCount     Int        @default(0)
   type           String     @db.VarChar(16) @default("image")
   createdAt      DateTime   @default(now())
@@ -204,13 +216,36 @@ model Image {
 
   events         Event[]
   locations      Location[]
+  translations   Translation[]
 
   profileImageUsers   User[]  @relation("profileImage")
   heroImagePages      Page[]  @relation("pageHeroImage")
   heroImageEvents     Event[]  @relation("eventHeroImage")
   heroImageLocations  Location[]  @relation("locationHeroImage")
 
+  @@unique([id,objectTypeId])
   @@index([ownerId], name: "indexImageOwnerId")
   @@index([ownerId, type], name: "indexImageOwnerIdType")
   @@index([status], name: "indexImageStatus")
 }
+
+model Translation {
+  id              Int        @id @default(autoincrement())
+  key             String     @db.VarChar(24)
+  lang            String     @db.VarChar(4)
+  translation     String
+  
+  objectTypeId    Int     
+  objectId        Int
+  image           Image?     @relation(fields: [objectId, objectTypeId], references: [id, objectTypeId])
+  page            Page?      @relation(fields: [objectId, objectTypeId], references: [id, objectTypeId])
+}
+
+// model Translation {
+//   id              Int        @id @default(autoincrement())
+//   t               String     @db.VarChar(4)
+//   lang            String     
+//   translations   ObjectTranslation[] 
+
+//   object          User   
+// }

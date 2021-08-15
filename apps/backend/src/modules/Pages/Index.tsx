@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import { pagesQueryGQL, pageDeleteMutationGQL } from "@culturemap/core";
 import { useQuery } from "@apollo/client";
 
-
 import {
   ModuleSubNav,
   ButtonListElement,
@@ -25,7 +24,7 @@ import {
   adminTableCreateNewTableState,
   AdminTableActionCell,
   AdminTableMultiLangCell,
-  AdminTablePublishStatusCell
+  AdminTablePublishStatusCell,
 } from "~/components/ui";
 import { config } from "~/config";
 import { SortingRule } from "react-table";
@@ -52,7 +51,7 @@ const Index = () => {
   );
 
   const [isRefetching, setIsRefetching] = useState(false);
-  
+
   const { loading, error, data, refetch } = useQuery(pagesQueryGQL, {
     onCompleted: () => {
       setIsRefetching(false);
@@ -61,7 +60,12 @@ const Index = () => {
       setIsRefetching(false);
     },
     notifyOnNetworkStatusChange: true,
-    variables: adminTableCreateQueryVariables(tableState, filterColumnKeys, multiLangFields, config.activeLanguages),
+    variables: adminTableCreateQueryVariables(
+      tableState,
+      filterColumnKeys,
+      multiLangFields,
+      config.activeLanguages
+    ),
   });
 
   const [adminTableDeleteButtonOnClick, DeleteAlertDialog, isDeleteError] =
@@ -87,7 +91,7 @@ const Index = () => {
       type: "navigation",
       to: `${moduleRootPath}/create`,
       label: t("module.pages.button.create", "Add new page"),
-      userCan: "taxCreate",
+      userCan: "pageCreate",
     },
   ];
 
@@ -121,15 +125,17 @@ const Index = () => {
       appUser,
 
       showEdit: true,
-      canEdit: (cell, appUser) =>
-        appUser?.can("pageUpdate"),
+      canEdit: (cell, appUser) => appUser?.can("pageUpdate"),
       editPath: `${moduleRootPath}/update/:id`,
       editButtonLabel: t("module.pages.button.edit", "Edit page"),
       // editButtonComponent: undefined,
 
       showDelete: true,
-      canDelete: (cell, appUser) => appUser?.can("pageDelete"),
-        
+      canDelete: (cell, appUser) =>
+        appUser?.can("pageDelete") ||
+        (appUser.can("pageDeleteOwn") &&
+          appUser.id === (cell?.row?.original as any)?.ownerId),
+          
       deleteButtonLabel: t("module.pages.button.delete", "Delete page"),
       // deleteButtonComponent?: React.FC<any>;
 
@@ -163,7 +169,14 @@ const Index = () => {
 
       setIsRefetching(true);
 
-      refetch(adminTableCreateQueryVariables(newTableState, filterColumnKeys, multiLangFields, config.activeLanguages));
+      refetch(
+        adminTableCreateQueryVariables(
+          newTableState,
+          filterColumnKeys,
+          multiLangFields,
+          config.activeLanguages
+        )
+      );
 
       setTableState(newTableState);
     }

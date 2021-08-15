@@ -8,7 +8,8 @@ import { dashboadModuleAccessRules,
   usersModuleAccessRules,
   pagesModuleAccessRules,
   settingsModuleAccessRules,
-  locationsModuleAccessRules } from "./moduleaccessrules";
+  locationsModuleAccessRules,
+  eventsModuleAccessRules } from "./moduleaccessrules";
 
 
 // Public
@@ -37,6 +38,7 @@ const Users = lazy(() => import("~/modules/Users/Users"));
 const Taxonomies = lazy(() => import("~/modules/Taxonomies/Taxonomies"));
 const Pages = lazy(() => import("~/modules/Pages/Pages"));
 const Locations = lazy(() => import("~/modules/Locations/Locations"));
+const Events = lazy(() => import("~/modules/Events/Events"));
 const Settings = lazy(() => import("~/modules/Settings/Settings"));
 
 const config = getAppConfig();
@@ -102,6 +104,13 @@ export const privateRoutes: RoutePrivateParams[] = [
     component: Locations,
     exact: false,
     ...locationsModuleAccessRules,
+  },
+  {
+    key: "events",
+    path: "/events",
+    component: Events,
+    exact: false,
+    ...eventsModuleAccessRules,
   },
   {
     key: "profile",

@@ -128,7 +128,9 @@ const Index = () => {
       // editButtonComponent: undefined,
 
       showDelete: true,
-      canDelete: (cell, appUser) => appUser?.can("locationDelete"),
+      canDelete: (cell, appUser) => appUser?.can("locationDelete") ||
+      (appUser.can("locationDeleteOwn") &&
+        appUser.id === (cell?.row?.original as any)?.ownerId),
         
       deleteButtonLabel: t("module.locations.button.delete", "Delete location"),
       // deleteButtonComponent?: React.FC<any>;

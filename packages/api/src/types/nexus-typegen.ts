@@ -54,6 +54,16 @@ declare global {
 }
 
 export interface NexusGenInputs {
+  EventUpsertInput: { // input type
+    dates?: NexusGenScalars['JSON'] | null; // JSON
+    description?: NexusGenScalars['JSON'] | null; // JSON
+    eventLocation?: NexusGenScalars['JSON'] | null; // JSON
+    owner: NexusGenScalars['JSON']; // JSON!
+    slug: NexusGenScalars['JSON']; // JSON!
+    status: number; // Int!
+    terms?: NexusGenScalars['JSON'] | null; // JSON
+    title: NexusGenScalars['JSON']; // JSON!
+  }
   ImageUpdateInput: { // input type
     meta: NexusGenScalars['JSON']; // JSON!
     ownerId: number; // Int!
@@ -170,6 +180,35 @@ export interface NexusGenObjects {
   BooleanResult: { // root type
     result: boolean; // Boolean!
   }
+  Event: { // root type
+    createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
+    dates?: Array<NexusGenRootTypes['EventDate'] | null> | null; // [EventDate]
+    description?: NexusGenScalars['JSON'] | null; // JSON
+    eventLocation?: NexusGenScalars['JSON'] | null; // JSON
+    id: number; // Int!
+    ownerId: number; // Int!
+    slug?: NexusGenScalars['JSON'] | null; // JSON
+    status: number; // Int!
+    terms?: Array<NexusGenRootTypes['Term'] | null> | null; // [Term]
+    title?: NexusGenScalars['JSON'] | null; // JSON
+    updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
+  }
+  EventDate: { // root type
+    begin?: NexusGenScalars['DateTime'] | null; // DateTime
+    createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
+    date?: NexusGenScalars['DateTime'] | null; // DateTime
+    end?: NexusGenScalars['DateTime'] | null; // DateTime
+    id: number; // Int!
+    updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
+  }
+  EventQueryResult: { // root type
+    events?: Array<NexusGenRootTypes['Event'] | null> | null; // [Event]
+    totalCount?: number | null; // Int
+  }
+  GeoPoint: { // root type
+    lat: number; // Float!
+    lng: number; // Float!
+  }
   Image: { // root type
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
     id: number; // Int!
@@ -239,6 +278,19 @@ export interface NexusGenObjects {
     profileImageId?: number | null; // Int
   }
   Query: {};
+  SearchResult: { // root type
+    items?: Array<NexusGenRootTypes['SearchResultItem'] | null> | null; // [SearchResultItem]
+    module: string; // String!
+    totalCount: number; // Int!
+  }
+  SearchResultItem: { // root type
+    excerpt: NexusGenScalars['JSON']; // JSON!
+    geopoint?: NexusGenRootTypes['GeoPoint'] | null; // GeoPoint
+    id: number; // Int!
+    slug: NexusGenScalars['JSON']; // JSON!
+    title: NexusGenScalars['JSON']; // JSON!
+    type: string; // String!
+  }
   Setting: { // root type
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
     id: number; // Int!
@@ -329,6 +381,36 @@ export interface NexusGenFieldTypes {
   BooleanResult: { // field return type
     result: boolean; // Boolean!
   }
+  Event: { // field return type
+    author: NexusGenRootTypes['User'] | null; // User
+    createdAt: NexusGenScalars['DateTime'] | null; // DateTime
+    dates: Array<NexusGenRootTypes['EventDate'] | null> | null; // [EventDate]
+    description: NexusGenScalars['JSON'] | null; // JSON
+    eventLocation: NexusGenScalars['JSON'] | null; // JSON
+    id: number; // Int!
+    ownerId: number; // Int!
+    slug: NexusGenScalars['JSON'] | null; // JSON
+    status: number; // Int!
+    terms: Array<NexusGenRootTypes['Term'] | null> | null; // [Term]
+    title: NexusGenScalars['JSON'] | null; // JSON
+    updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
+  }
+  EventDate: { // field return type
+    begin: NexusGenScalars['DateTime'] | null; // DateTime
+    createdAt: NexusGenScalars['DateTime'] | null; // DateTime
+    date: NexusGenScalars['DateTime'] | null; // DateTime
+    end: NexusGenScalars['DateTime'] | null; // DateTime
+    id: number; // Int!
+    updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
+  }
+  EventQueryResult: { // field return type
+    events: Array<NexusGenRootTypes['Event'] | null> | null; // [Event]
+    totalCount: number | null; // Int
+  }
+  GeoPoint: { // field return type
+    lat: number; // Float!
+    lng: number; // Float!
+  }
   Image: { // field return type
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
     id: number; // Int!
@@ -382,6 +464,9 @@ export interface NexusGenFieldTypes {
     authRefresh: NexusGenRootTypes['AuthPayload']; // AuthPayload!
     authRequestEmailVerificationEmail: NexusGenRootTypes['BooleanResult']; // BooleanResult!
     authVerifyEmail: NexusGenRootTypes['BooleanResult']; // BooleanResult!
+    eventCreate: NexusGenRootTypes['Event']; // Event!
+    eventDelete: NexusGenRootTypes['BooleanResult']; // BooleanResult!
+    eventUpdate: NexusGenRootTypes['Event']; // Event!
     imageDelete: NexusGenRootTypes['BooleanResult']; // BooleanResult!
     imageUpdate: NexusGenRootTypes['Image']; // Image!
     locationCreate: NexusGenRootTypes['Location']; // Location!
@@ -432,6 +517,8 @@ export interface NexusGenFieldTypes {
   }
   Query: { // field return type
     adminUsers: Array<NexusGenRootTypes['AdminUser'] | null> | null; // [AdminUser]
+    eventRead: NexusGenRootTypes['Event']; // Event!
+    events: NexusGenRootTypes['EventQueryResult'] | null; // EventQueryResult
     imageRead: NexusGenRootTypes['Image']; // Image!
     imageStatus: NexusGenRootTypes['ImageStatus']; // ImageStatus!
     images: NexusGenRootTypes['ImageQueryResult'] | null; // ImageQueryResult
@@ -442,6 +529,7 @@ export interface NexusGenFieldTypes {
     page: NexusGenRootTypes['Page']; // Page!
     pageRead: NexusGenRootTypes['Page']; // Page!
     pages: NexusGenRootTypes['PageQueryResult'] | null; // PageQueryResult
+    quickSearch: Array<NexusGenRootTypes['SearchResult'] | null> | null; // [SearchResult]
     setting: Array<NexusGenRootTypes['Setting'] | null> | null; // [Setting]
     settings: Array<NexusGenRootTypes['Setting'] | null> | null; // [Setting]
     taxonomies: NexusGenRootTypes['TaxonomyQueryResult'] | null; // TaxonomyQueryResult
@@ -452,6 +540,19 @@ export interface NexusGenFieldTypes {
     userProfileRead: NexusGenRootTypes['ProfileUser']; // ProfileUser!
     userRead: NexusGenRootTypes['User']; // User!
     users: NexusGenRootTypes['UsersQueryResult'] | null; // UsersQueryResult
+  }
+  SearchResult: { // field return type
+    items: Array<NexusGenRootTypes['SearchResultItem'] | null> | null; // [SearchResultItem]
+    module: string; // String!
+    totalCount: number; // Int!
+  }
+  SearchResultItem: { // field return type
+    excerpt: NexusGenScalars['JSON']; // JSON!
+    geopoint: NexusGenRootTypes['GeoPoint'] | null; // GeoPoint
+    id: number; // Int!
+    slug: NexusGenScalars['JSON']; // JSON!
+    title: NexusGenScalars['JSON']; // JSON!
+    type: string; // String!
   }
   Setting: { // field return type
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
@@ -543,6 +644,36 @@ export interface NexusGenFieldTypeNames {
   BooleanResult: { // field return type name
     result: 'Boolean'
   }
+  Event: { // field return type name
+    author: 'User'
+    createdAt: 'DateTime'
+    dates: 'EventDate'
+    description: 'JSON'
+    eventLocation: 'JSON'
+    id: 'Int'
+    ownerId: 'Int'
+    slug: 'JSON'
+    status: 'Int'
+    terms: 'Term'
+    title: 'JSON'
+    updatedAt: 'DateTime'
+  }
+  EventDate: { // field return type name
+    begin: 'DateTime'
+    createdAt: 'DateTime'
+    date: 'DateTime'
+    end: 'DateTime'
+    id: 'Int'
+    updatedAt: 'DateTime'
+  }
+  EventQueryResult: { // field return type name
+    events: 'Event'
+    totalCount: 'Int'
+  }
+  GeoPoint: { // field return type name
+    lat: 'Float'
+    lng: 'Float'
+  }
   Image: { // field return type name
     createdAt: 'DateTime'
     id: 'Int'
@@ -596,6 +727,9 @@ export interface NexusGenFieldTypeNames {
     authRefresh: 'AuthPayload'
     authRequestEmailVerificationEmail: 'BooleanResult'
     authVerifyEmail: 'BooleanResult'
+    eventCreate: 'Event'
+    eventDelete: 'BooleanResult'
+    eventUpdate: 'Event'
     imageDelete: 'BooleanResult'
     imageUpdate: 'Image'
     locationCreate: 'Location'
@@ -646,6 +780,8 @@ export interface NexusGenFieldTypeNames {
   }
   Query: { // field return type name
     adminUsers: 'AdminUser'
+    eventRead: 'Event'
+    events: 'EventQueryResult'
     imageRead: 'Image'
     imageStatus: 'ImageStatus'
     images: 'ImageQueryResult'
@@ -656,6 +792,7 @@ export interface NexusGenFieldTypeNames {
     page: 'Page'
     pageRead: 'Page'
     pages: 'PageQueryResult'
+    quickSearch: 'SearchResult'
     setting: 'Setting'
     settings: 'Setting'
     taxonomies: 'TaxonomyQueryResult'
@@ -666,6 +803,19 @@ export interface NexusGenFieldTypeNames {
     userProfileRead: 'ProfileUser'
     userRead: 'User'
     users: 'UsersQueryResult'
+  }
+  SearchResult: { // field return type name
+    items: 'SearchResultItem'
+    module: 'String'
+    totalCount: 'Int'
+  }
+  SearchResultItem: { // field return type name
+    excerpt: 'JSON'
+    geopoint: 'GeoPoint'
+    id: 'Int'
+    slug: 'JSON'
+    title: 'JSON'
+    type: 'String'
   }
   Setting: { // field return type name
     createdAt: 'DateTime'
@@ -759,6 +909,16 @@ export interface NexusGenArgTypes {
     authVerifyEmail: { // args
       token: string; // String!
     }
+    eventCreate: { // args
+      data: NexusGenInputs['EventUpsertInput']; // EventUpsertInput!
+    }
+    eventDelete: { // args
+      id: number; // Int!
+    }
+    eventUpdate: { // args
+      data: NexusGenInputs['EventUpsertInput']; // EventUpsertInput!
+      id: number; // Int!
+    }
     imageDelete: { // args
       id: number; // Int!
     }
@@ -845,6 +1005,15 @@ export interface NexusGenArgTypes {
     adminUsers: { // args
       roles: Array<string | null>; // [String]!
     }
+    eventRead: { // args
+      id: number; // Int!
+    }
+    events: { // args
+      orderBy?: NexusGenScalars['JSON'] | null; // JSON
+      pageIndex?: number | null; // Int
+      pageSize: number | null; // Int
+      where?: NexusGenScalars['JSON'] | null; // JSON
+    }
     imageRead: { // args
       id: number; // Int!
     }
@@ -881,6 +1050,11 @@ export interface NexusGenArgTypes {
       pageIndex?: number | null; // Int
       pageSize: number | null; // Int
       where?: NexusGenScalars['JSON'] | null; // JSON
+    }
+    quickSearch: { // args
+      modules?: Array<string | null> | null; // [String]
+      search: string; // String!
+      termIds?: Array<number | null> | null; // [Int]
     }
     setting: { // args
       id: number; // Int!

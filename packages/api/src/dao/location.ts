@@ -5,9 +5,18 @@ import { filteredOutputByBlacklist } from "@culturemap/core";
 import { ApiError, filteredOutputByBlacklistOrNotFound } from "../utils";
 import config from "../config";
 import { getPrismaClient } from "../db/client";
-import { daoSharedCheckSlugUnique } from "./shared";
+import { daoSharedCheckSlugUnique, daoSharedGenerateFullText } from "./shared";
 
 const prisma = getPrismaClient();
+
+const locationFullTextKeys = [
+  "title",
+  "slug",
+  "description",
+  "address",
+  "contactInfo",
+  "offers",
+];
 
 export const daoLocationCheckSlugUnique = async (
   slug: Record<string, string>,
@@ -33,6 +42,31 @@ export const daoLocationQuery = async (
     where,
     include,
     orderBy,
+    skip: pageIndex * pageSize,
+    take: Math.min(pageSize, config.db.maxPageSize),
+  });
+
+  return filteredOutputByBlacklist(
+    locations,
+    config.db.privateJSONDataKeys.location
+  );
+};
+
+export const daoLocationSearchQuery = async (
+  where: Prisma.LocationWhereInput,
+  pageIndex: number = 0,
+  pageSize: number = config.db.defaultPageSize * 3
+): Promise<Location[]> => {
+  const locations = await prisma.location.findMany({
+    where,
+    select: {
+      id: true,
+      title: true,
+      slug: true,
+      description: true,
+      lat: true,
+      lng: true,
+    },
     skip: pageIndex * pageSize,
     take: Math.min(pageSize, config.db.maxPageSize),
   });
@@ -81,7 +115,10 @@ export const daoLocationCreate = async (
     );
 
   const location: Location = await prisma.location.create({
-    data,
+    data: {
+      ...data,
+      fullText: daoSharedGenerateFullText(data, locationFullTextKeys),
+    },
   });
 
   return filteredOutputByBlacklistOrNotFound(
@@ -118,7 +155,10 @@ export const daoLocationUpdate = async (
     );
 
   const term: Location = await prisma.location.update({
-    data,
+    data: {
+      ...data,
+      fullText: daoSharedGenerateFullText(data, locationFullTextKeys),
+    },
     where: {
       id,
     },
@@ -152,4 +192,5 @@ export default {
   daoLocationCreate,
   daoLocationUpdate,
   daoLocationDelete,
+  daoLocationSearchQuery,
 };

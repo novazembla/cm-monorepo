@@ -7,7 +7,7 @@ import {
   FieldSelect,
   FieldRow,
   FieldPublishStatusSelect,
-  TwoColFieldRow
+  TwoColFieldRow,
 } from "~/components/forms";
 
 export const PageForm = ({
@@ -28,36 +28,43 @@ export const PageForm = ({
 
   if (action === "update") {
     if (data.adminUsers) {
-      updateActions = <>
-        
-        <Divider mt="10"/>
-        <TwoColFieldRow>
-        <FieldRow>
-          <FieldPublishStatusSelect status={ data?.pageRead?.status} />
-        </FieldRow>
-        <FieldRow>
-          <FieldSelect
-            name="ownerId"
-            id="ownerId"
-            label={t("module.pages.forms.field.label.author", "Page author")}
-            isRequired={true}
-            options={data.adminUsers.map(
-              (authUser: any) => ({
-                value: authUser.id,
-                label: `${authUser.firstName} ${authUser.lastName}`,
-              })
-            )}
-            settings={{
-              defaultValue: data.pageRead.ownerId,
-              placeholder: t(
-                "module.pages.forms.field.placeholder.author",
-                "Please choose the pages's author"
-              ),
-            }}
-          />
-        </FieldRow>
-        </TwoColFieldRow>
-      </>;
+      updateActions = (
+        <>
+          <Divider mt="10" />
+          <TwoColFieldRow>
+            <FieldRow>
+              <FieldPublishStatusSelect
+                ownerId={data.pageRead.ownerId}
+                module="page"
+                status={data?.pageRead?.status}
+              />
+            </FieldRow>
+            <FieldRow>
+              <FieldSelect
+                name="ownerId"
+                id="ownerId"
+                label={t(
+                  "module.pages.forms.field.label.author",
+                  "Page author"
+                )}
+                isDisabled={true}
+                isRequired={true}
+                options={data.adminUsers.map((authUser: any) => ({
+                  value: authUser.id,
+                  label: `${authUser.firstName} ${authUser.lastName}`,
+                }))}
+                settings={{
+                  defaultValue: data.pageRead.ownerId,
+                  placeholder: t(
+                    "module.pages.forms.field.placeholder.author",
+                    "Please choose the pages's author"
+                  ),
+                }}
+              />
+            </FieldRow>
+          </TwoColFieldRow>
+        </>
+      );
     } else {
       updateActions = (
         <input value={data.pageRead.ownerId} {...register("ownerId")} />
@@ -95,7 +102,7 @@ export const PageForm = ({
         }}
       />
       {updateActions}
-      <Divider mt="10"/>
+      <Divider mt="10" />
       <FieldMultiLangTextEditor
         name="content"
         id="content"
@@ -105,15 +112,12 @@ export const PageForm = ({
         settings={{
           defaultRequired: true,
           defaultValues: data?.pageRead?.content,
-          maxLength: 5000,
           placeholder: t(
             "module.pages.forms.page.field.placeholder.content",
             "Page content"
           ),
         }}
       />
-
-      
     </>
   );
 };

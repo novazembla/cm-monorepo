@@ -2,10 +2,10 @@ import {
   extendTheme,
   withDefaultVariant,
   withDefaultSize,
-  withDefaultColorScheme
+  withDefaultColorScheme,
 } from "@chakra-ui/react";
-import { createBreakpoints } from "@chakra-ui/theme-tools"
-import { components } from "./components";
+import { createBreakpoints } from "@chakra-ui/theme-tools";
+import { components } from "./chakra.components";
 
 // https://smart-swatch.netlify.app/#b248bb
 
@@ -19,7 +19,7 @@ const themeConfig = {
     // 16px default font size * ...em
     mn: "0em", // 0px - aka "Mobile Narrow"
     sm: "22em", // ~360px < Chakra requirement don't use
-    m: "22em", // ~360px - aka "Mobile"    
+    m: "22em", // ~360px - aka "Mobile"
     md: "30em", // ~480px < Chakra requirement don't use
     mw: "30em", // ~480px - aka "Mobile wide"
     lg: "45em", // 720px < Chakra requirement don't use
@@ -38,7 +38,6 @@ const themeConfig = {
         padding: 0,
         height: "100%",
       },
-      "select, option":"font-family: Open Sans, Helvetica, Arial, sans-serif;",
       "#root": {
         height: "100%",
       },
@@ -47,55 +46,55 @@ const themeConfig = {
         bgGradient: "linear(-45deg, rgb(222,240,244), rgb(148,187,233)) fixed",
         bgAttachment: "fixed",
       },
-      "a": {
+      a: {
         transitionProperty: "common",
         transitionDuration: "fast",
         cursor: "pointer",
         textDecoration: "none",
         outline: "none",
         _hover: {
-          textDecoration: "none"
-        }
+          textDecoration: "none",
+        },
       },
       "a:not(.chakra-button)": {
         color: "wine.600",
         _hover: {
-          color: "wine.800"
+          color: "wine.800",
         },
         _focus: {
-          "boxShadow": "outline"
-        }
+          boxShadow: "outline",
+        },
       },
       "p a": {
-        textDecoration: "underline"
+        textDecoration: "underline",
       },
-      "p": {
+      p: {
         mb: "0.6em",
         _last: {
-          mb: "0"
-        }
-
+          mb: "0",
+        },
       },
       "p + p > button": {
-        mt: 2
-      }
+        mt: 2,
+      },
+      "select,option": {
+        fontFamily: "Open Sans, Helvetica, Arial, sans-serif",
+      },
     },
-
-    
   },
   colors: {
     wine: {
-      50: '#fde9ff',
-      100: '#ebc6ed',
-      200: '#d9a1de',
-      300: '#c97dd0',
-      400: '#b958c1',
-      500: '#9f3ea7',
-      600: '#7d2f83',
-      700: '#59225e',
-      800: '#37133a',
-      900: '#170418',
-    }
+      50: "#fde9ff",
+      100: "#ebc6ed",
+      200: "#d9a1de",
+      300: "#c97dd0",
+      400: "#b958c1",
+      500: "#9f3ea7",
+      600: "#7d2f83",
+      700: "#59225e",
+      800: "#37133a",
+      900: "#170418",
+    },
   },
   shadows: {
     xs: "0 0 0 1px rgba(0, 0, 0, 0.05)",
@@ -133,7 +132,7 @@ const themeConfig = {
       bg: "white",
       borderRadius: "lg",
       shadow: "md",
-      p:{ base: 4, tw: 5 },
+      p: { base: 4, tw: 5 },
     },
   },
   textStyles: {
@@ -149,7 +148,7 @@ const themeConfig = {
       fontWeight: "semibold",
       lineHeight: "110%",
       letterSpacing: "-1%",
-    }
+    },
   },
 };
 
@@ -183,10 +182,10 @@ export const chakraTheme = extendTheme(
   withDefaultColorScheme({
     colorScheme: "wine",
     components: ["Button", "Badge", "Checkbox", "Switch"],
-  }), 
+  }),
   withDefaultVariant({
     variant: "solid",
-    components: ["Button","IconButton"],
+    components: ["Button", "IconButton"],
   }),
   withDefaultVariant({
     variant: "outline",
@@ -194,8 +193,30 @@ export const chakraTheme = extendTheme(
   }),
   withDefaultSize({
     size: "md",
-    components: ["Input", "NumberInput", "PinInput","Button","Select"],
-  })
+    components: ["Input", "NumberInput", "PinInput", "Button", "Select"],
+  }),
+  {
+    reactDatepicker: {
+      daySize: [100, 40],
+      fontFamily: "system-ui, -apple-system",
+      colors: {
+        accessibility: "#D80249",
+        selectedDay: "#f7518b",
+        selectedDayHover: "#F75D95",
+        primaryColor: "#d8366f",
+      },
+    },
+  },
+  { 
+    components: {
+      reactDatepicker: {
+        baseStyle: {
+          color: "wine.600"
+        }
+        
+      },
+    }
+  }
 );
 
 console.log(chakraTheme);

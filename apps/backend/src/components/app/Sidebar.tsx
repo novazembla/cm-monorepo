@@ -8,7 +8,7 @@ import {
   // HiOutlineMap,
   HiOutlineLocationMarker,
 } from "react-icons/hi";
-// import { RiCalendarEventLine } from "react-icons/ri";
+import { RiCalendarEventLine } from "react-icons/ri";
 import { IoSettingsOutline } from "react-icons/io5";
 import { MdClose } from "react-icons/md";
 import { NavLink } from "react-router-dom";
@@ -30,6 +30,7 @@ import {
   pagesModuleAccessRules,
   settingsModuleAccessRules,
   locationsModuleAccessRules,
+  eventsModuleAccessRules,
 } from "~/config/moduleaccessrules";
 
 import { useAuthentication } from "~/hooks";
@@ -113,13 +114,13 @@ export const Sidebar = () => {
       icon: HiOutlineLocationMarker,
       ...locationsModuleAccessRules,
     },
-    // {
-    //   title: t("mainnav.events.title", "Events"),
-    //   path: "/events",
-    //   exact: false,
-    //   icon: RiCalendarEventLine,
-    //   ...TODO:ModuleAccessRules,
-    // },
+    {
+      title: t("mainnav.events.title", "Events"),
+      path: "/events",
+      exact: false,
+      icon: RiCalendarEventLine,
+      ...eventsModuleAccessRules,
+    },
     // {
     //   title: t("mainnav.tours.title", "Tours"),
     //   path: "/tours",

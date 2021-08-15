@@ -12,6 +12,7 @@ import {
   FieldRadioOrCheckboxGroup,
 } from "~/components/forms";
 import { MultiLangValue } from "~/components/ui";
+import { useAuthentication } from "~/hooks";
 
 export const ModuleForm = ({
   data,
@@ -24,12 +25,12 @@ export const ModuleForm = ({
   validationSchema: any;
   action: "create" | "update";
 }) => {
+  const [appUser] = useAuthentication();
+
   const { t } = useTranslation();
   const { register } = useFormContext();
 
   let updateActions;
-
-  console.log(data);
 
   if (action === "update") {
     if (data.adminUsers) {
@@ -38,11 +39,14 @@ export const ModuleForm = ({
           <Divider mt="10" />
           <TwoColFieldRow>
             <FieldRow>
-              <FieldPublishStatusSelect status={data?.locationRead?.status} />
+              <FieldPublishStatusSelect
+                ownerId={data.locationRead.ownerId}
+                module="location"
+                status={data?.locationRead?.status}
+              />
             </FieldRow>
-
             <FieldRow>
-              <FieldSelect
+            <FieldSelect
                 name="ownerId"
                 id="ownerId"
                 label={t("module.locations.forms.field.label.author", "Author")}
@@ -51,6 +55,7 @@ export const ModuleForm = ({
                   value: authUser.id,
                   label: `${authUser.firstName} ${authUser.lastName}`,
                 }))}
+                isDisabled={!(appUser?.has("editor") || appUser?.id === data?.locationRead.ownerId)}
                 settings={{
                   defaultValue: data.locationRead.ownerId,
                   placeholder: t(
@@ -59,6 +64,7 @@ export const ModuleForm = ({
                   ),
                 }}
               />
+              
             </FieldRow>
           </TwoColFieldRow>
         </>

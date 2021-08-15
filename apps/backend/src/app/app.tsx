@@ -1,7 +1,13 @@
 import React, { Suspense, useEffect, lazy } from "react";
 import { BrowserRouter, Route, Switch, useLocation } from "react-router-dom";
 
-import "./App.scss";
+import "@fontsource/raleway/400.css";
+import "@fontsource/raleway/700.css";
+import "@fontsource/open-sans/400.css";
+import "@fontsource/open-sans/400-italic.css";
+import "@fontsource/open-sans/700.css";
+import "@fontsource/open-sans/700-italic.css";
+
 
 import AppProviders from "./AppProviders";
 

@@ -48,6 +48,52 @@ A field whose value conforms to the standard internet email address format as sp
 """
 scalar EmailAddress @specifiedBy(url: "https://www.w3.org/Protocols/rfc822/")
 
+type Event {
+  author: User
+  createdAt: DateTime
+  dates: [EventDate]
+  description: JSON
+  eventLocation: JSON
+  id: Int!
+  ownerId: Int!
+  slug: JSON
+  status: Int!
+  terms: [Term]
+  title: JSON
+  updatedAt: DateTime
+}
+
+type EventDate {
+  begin: DateTime
+  createdAt: DateTime
+  date: DateTime
+  end: DateTime
+  id: Int!
+  updatedAt: DateTime
+}
+
+"""List all the events in the database."""
+type EventQueryResult {
+  events: [Event]
+  totalCount: Int
+}
+
+input EventUpsertInput {
+  dates: JSON
+  description: JSON
+  eventLocation: JSON
+  owner: JSON!
+  slug: JSON!
+  status: Int!
+  terms: JSON
+  title: JSON!
+}
+
+type GeoPoint {
+  lat: Float!
+  lng: Float!
+}
+
 type Image {
   createdAt: DateTime
   id: Int!
@@ -138,6 +184,9 @@ type Mutation {
   authRefresh(scope: String!): AuthPayload!
   authRequestEmailVerificationEmail(scope: String!, userId: Int!): BooleanResult!
   authVerifyEmail(token: String!): BooleanResult!
+  eventCreate(data: EventUpsertInput!): Event!
+  eventDelete(id: Int!): BooleanResult!
+  eventUpdate(data: EventUpsertInput!, id: Int!): Event!
   imageDelete(id: Int!): BooleanResult!
   imageUpdate(data: ImageUpdateInput!, id: Int!): Image!
   locationCreate(data: LocationUpsertInput!): Location!
@@ -201,6 +250,8 @@ type ProfileUser implements UserBaseNode {
 
 type Query {
   adminUsers(roles: [String]!): [AdminUser] @deprecated(reason: "A publicly accessible list Lists all users that have a the given roles")
+  eventRead(id: Int!): Event!
+  events(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): EventQueryResult
   imageRead(id: Int!): Image!
   imageStatus(id: Int!): ImageStatus!
   images(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, taxonomyId: Int!, where: JSON): ImageQueryResult
@@ -211,6 +262,7 @@ type Query {
   page(slug: String!): Page!
   pageRead(id: Int!): Page!
   pages(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): PageQueryResult
+  quickSearch(modules: [String], search: String!, termIds: [Int]): [SearchResult]
   setting(id: Int!): [Setting]
   settings: [Setting]
   taxonomies(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): TaxonomyQueryResult
@@ -221,6 +273,21 @@ type Query {
   userProfileRead(id: Int!, scope: String!): ProfileUser!
   userRead(id: Int!, scope: String!): User!
   users(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): UsersQueryResult
+}
+
+type SearchResult {
+  items: [SearchResultItem]
+  module: String!
+  totalCount: Int!
+}
+
+type SearchResultItem {
+  excerpt: JSON!
+  geopoint: GeoPoint
+  id: Int!
+  slug: JSON!
+  title: JSON!
+  type: String!
 }
 
 type Setting {

@@ -9,6 +9,7 @@
     "@choc-ui/paginator": "^3.2.0",
     "@craco/craco": "^6.2.0",
     "@culturemap/api": "^0.0.1",
+    "@datepicker-react/styled": "^2.8.0",
     "@emotion/react": "^11.4.0",
     "@emotion/styled": "^11.3.0",
     "@fontsource/open-sans": "^4.5.0",
@@ -58,6 +59,7 @@
     "react-table": "^7.7.0",
     "react-use": "^17.2.4",
     "redux-localstorage-simple": "^2.4.0",
+    "styled-components": "^5.3.0",
     "universal-cookie": "^4.0.4",
     "yup": "^0.32.9"
   },
@@ -97,6 +99,7 @@
     "@types/react-redux": "^7.1.18",
     "@types/react-router-dom": "^5.1.8",
     "@types/react-table": "^7.7.2",
+    "@types/styled-components": "^5.1.12",
     "autoprefixer": "^9.8.6",
     "babel-jest": "^27.0.6",
     "craco-alias": "^3.0.1",

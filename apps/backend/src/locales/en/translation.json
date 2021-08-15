@@ -436,8 +436,8 @@
     },
     "string": {
       "length": "This field must be exactly {{length}} characters",
-      "min": "This field must be at least {{min}} characters",
-      "max": "This field must be at most {{max}} characters",
+      "min": "This field must be at least {{min}} characters long",
+      "max": "This field must be at most {{max}} characters long",
       "matches": "This field must match the following: \"{{regex}}\"",
       "email": "This field must be a valid email address",
       "url": "This field must be a valid URL",

@@ -10,6 +10,7 @@ export const pagesQueryGQL = gql`
     ) {
       pages {
         id
+        ownerId
         title
         slug
         status

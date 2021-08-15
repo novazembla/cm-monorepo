@@ -6,3 +6,4 @@ export * from "./userMutationsGQL";
 export * from "./pageMutationsGQL";
 export * from "./imageMutationsGQL";
 export * from "./locationMutationsGQL";
+export * from "./eventMutationsGQL";

@@ -1,16 +1,22 @@
 import { useFormContext, Controller } from "react-hook-form";
-import { PublishStatus } from "@culturemap/core";
+import { PublishStatus, PermissionNames } from "@culturemap/core";
 import { useTranslation } from "react-i18next";
 
 import { FormControl, FormLabel, Select } from "@chakra-ui/react";
 
 import FieldErrorMessage from "./FieldErrorMessage";
+import { useAuthentication } from "~/hooks";
 
 export const FieldPublishStatusSelect = ({
   status,
+  module,
+  ownerId,
 }: {
   status: PublishStatus;
+  module: string;
+  ownerId: number;
 }) => {
+  const [appUser] = useAuthentication();
   const { t } = useTranslation();
 
   const name = "status";
@@ -35,17 +41,25 @@ export const FieldPublishStatusSelect = ({
     {
       value: PublishStatus.REJECTED,
       label: t("publish.status.rejected", "Rejected"),
+      disabled: !appUser?.has("editor"),
     },
     {
       value: PublishStatus.PUBLISHED,
       label: t("publish.status.published", "Published"),
+      disabled: !appUser?.has("editor"),
     },
     {
       value: PublishStatus.TRASHED,
       label: t("publish.status.trashed", "Trashed"),
+      disabled: !(
+        appUser?.has("editor") ||
+        (appUser?.is("contributor") &&
+          appUser?.can(`${module}DeleteOwn` as PermissionNames) &&
+          ownerId === appUser.id)
+      ),
     },
   ];
-  
+
   return (
     <FormControl id={id} isInvalid={errors[name]?.message} isRequired>
       <FormLabel htmlFor={id} mb="0.5">
@@ -55,7 +69,6 @@ export const FieldPublishStatusSelect = ({
       <Controller
         control={control}
         name={name}
-        
         render={({
           field: { onChange, onBlur, value, name, ref },
           fieldState: { invalid, isTouched, isDirty, error },
@@ -65,7 +78,9 @@ export const FieldPublishStatusSelect = ({
             onBlur={onBlur}
             onChange={onChange}
             isRequired
-            defaultValue={status === PublishStatus.AUTODRAFT ? PublishStatus.DRAFT : status}
+            defaultValue={
+              status === PublishStatus.AUTODRAFT ? PublishStatus.DRAFT : status
+            }
             valid={!errors[name]?.message ? "valid" : undefined}
             placeholder={t(
               "PublishStatus.select.placeholder",
@@ -76,7 +91,11 @@ export const FieldPublishStatusSelect = ({
           >
             {options &&
               options.map((option, i) => (
-                <option key={`${id}-o-${i}`} value={option.value}>
+                <option
+                  key={`${id}-o-${i}`}
+                  value={option.value}
+                  disabled={option.disabled}
+                >
                   {option.label}
                 </option>
               ))}

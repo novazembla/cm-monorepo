@@ -43,7 +43,9 @@ TODO: TextEditor
 TODO: Image Uloader 
 - Needs better UI for rejection of large images ... 
 
-TODO: General way to change ownership of content (page authorId)
+TODO: Form Validation, should show char count in html too long exception 
+
+
 
 
 TODO: NPM Packages

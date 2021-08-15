@@ -21,3 +21,6 @@ export const settingsModuleAccessRules: ModuleAccessRules = {
 export const locationsModuleAccessRules: ModuleAccessRules = {
   userCan: "locationRead"
 }
+export const eventsModuleAccessRules: ModuleAccessRules = {
+  userCan: "eventRead"
+}

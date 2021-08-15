@@ -68,6 +68,7 @@ export const authAuthenticateUserByToken = (
 
         return createAuthenticatedApiUser(
           (tokenPayload as JwtPayload).user.id,
+          (tokenPayload as JwtPayload).user.role,
           (tokenPayload as JwtPayload).user.roles,
           (tokenPayload as JwtPayload).user.permissions,
           (tokenPayload as JwtPayload).user.scope

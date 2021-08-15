@@ -8,3 +8,5 @@ export * from "./nexusTypesTerm";
 export * from "./nexusTypesPage";
 export * from "./nexusTypesLocation";
 export * from "./nexusTypesImage";
+export * from "./nexusTypesSearch";
+export * from "./nexusTypesEvent";

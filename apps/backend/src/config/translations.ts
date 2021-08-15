@@ -2,6 +2,7 @@ import { setLocale } from "yup";
 
 export interface i18nTranslationProps {
   path: string;
+  type: string;
   value?: boolean;
   values?: any;
   unknown?: any;
@@ -38,6 +39,12 @@ export let mixed = {
   notOneOf: ({ path, values }: i18nTranslationProps) => ({
     key: "validation.mixed.notOneOf",
     values: { path, values },
+  }),
+
+  // t('validation.mixed.notType', 'This field must not be of the type: {{type}}')
+  notType: ({ path, type }: i18nTranslationProps) => ({
+    key: "validation.mixed.notType",
+    values: { path, type },
   }),
 
   // t('validation.mixed.defined', 'This field must be defined')

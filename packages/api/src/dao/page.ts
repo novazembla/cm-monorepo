@@ -5,7 +5,7 @@ import { filteredOutputByBlacklist } from "@culturemap/core";
 import { ApiError, filteredOutputByBlacklistOrNotFound } from "../utils";
 import config from "../config";
 import { getPrismaClient } from "../db/client";
-import { daoSharedCheckSlugUnique } from "./shared";
+import { daoSharedCheckSlugUnique, daoSharedGenerateFullText } from "./shared";
 
 const prisma = getPrismaClient();
 
@@ -61,7 +61,10 @@ export const daoPageCreate = async (
     );
 
   const page: Page = await prisma.page.create({
-    data,
+    data: {
+      ...data,
+      fullText: daoSharedGenerateFullText(data, ["title", "slug", "content"]),
+    },
   });
 
   return filteredOutputByBlacklistOrNotFound(
@@ -124,7 +127,10 @@ export const daoPageUpdate = async (
     );
 
   const term: Page = await prisma.page.update({
-    data,
+    data: {
+      ...data,
+      fullText: daoSharedGenerateFullText(data, ["title", "slug", "content"]),
+    },
     where: {
       id,
     },

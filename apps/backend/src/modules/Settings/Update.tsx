@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import * as yup from "yup";
+import type * as yup from "yup";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { useForm, FormProvider } from "react-hook-form";

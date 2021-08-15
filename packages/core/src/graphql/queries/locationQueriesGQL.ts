@@ -15,6 +15,7 @@ export const locationsQueryGQL = gql`
     ) {
       locations {
         id
+        ownerId
         title
         slug
         status

@@ -47,6 +47,7 @@ export const generateToken = (
       user = {
         ...user,
         ...{
+          role,
           roles: role ? roles.getExtendedRoles(role) : [],
           permissions: role ? roles.getExtendedPermissions(role) : [],
         },

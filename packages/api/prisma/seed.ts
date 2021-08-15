@@ -41,14 +41,28 @@ const getRandomElements = (arr: any[], n: number) => {
   return result;
 };
 
+export const daoSharedGenerateFullText = (data: any, keys: string[]) => {
+  return keys.reduce((fullText: string, key) => {
+    if (!(key in data)) return fullText;
+
+    if (typeof data[key] !== "object") return fullText;
+
+    return `${fullText} ${Object.keys(data[key])
+      .map((oKey) => data[key][oKey])
+      .join("\n")}`;
+  }, "");
+};
+
 const lat = [
-  52.536821, 52.522971, 52.517696, 52.529969, 52.522971, 52.510593, 52.506675,
-  52.519315, 52.55175, 52.547888,
+  52.536821, 52.522971, 52.517696, 52.529969, 52.622971, 52.510593, 52.506675,
+  52.519315, 52.51175, 52.497888, 52.556821, 52.502971, 52.537696, 52.49999,
+  52.622971, 52.510593, 51.88976, 51.99999, 52.502971, 52.53696, 52.588969,
 ];
 
 const lng = [
   13.514006, 13.492928, 13.479444, 13.491897, 13.471944, 13.498654, 13.47827,
-  13.472438, 13.437911, 13.472609,
+  13.472438, 13.437911, 13.472609, 13.481897, 13.500944, 13.458654, 13.49227,
+  13.482438, 13.427911, 13.4982609, 13.521897, 13.500944, 13.51154, 13.48827,
 ];
 
 const slugify = (text: string) => {
@@ -96,6 +110,23 @@ const pages = [
   ["Impressum", "Imprint"],
   ["Über uns", "About Us"],
   ["Datenschutz", "Privacy information"],
+];
+
+const keywords = [
+  "Kunst",
+  "Architektur",
+  "Tanz",
+  "Musik",
+  "Lesung",
+  "Literatur",
+  "Entspannung",
+  "Nacht",
+  "Tag",
+  "Veranstaltung",
+  "Party",
+  "Eröffnung",
+  "Kultur",
+  "Gedenken",
 ];
 
 const upsertUser = async (
@@ -362,65 +393,72 @@ async function main() {
               console.log(`Create location: L(${id}) EN ${name}`);
 
               try {
+                const keywordSelection = getRandomElements(
+                  keywords,
+                  rndBetween(2, 5)
+                ).join(" ");
+
+                const data = {
+                  status: rndBetween(1, 5),
+                  title: {
+                    en: `L(${id}) EN ${name}`,
+                    de: `L(${id}) DE ${name}`,
+                  },
+                  slug: {
+                    en: `location-en-${id}`,
+                    de: `location-de-${id}`,
+                  },
+                  description: {
+                    en: `Description EN: ${keywordSelection} ${lorem.generateWords(
+                      rndBetween(5, 40)
+                    )}`,
+                    de: `Beschreibung DE: ${lorem.generateWords(
+                      rndBetween(5, 40)
+                    )}`,
+                  },
+                  address: {
+                    en: `Adress EN: ${lorem.generateWords(rndBetween(5, 40))}`,
+                    de: `Adresse DE: ${lorem.generateWords(rndBetween(5, 40))}`,
+                  },
+                  offers: {
+                    en: `Offering EN: ${lorem.generateWords(
+                      rndBetween(5, 40)
+                    )}`,
+                    de: `Angebot DE: ${lorem.generateWords(rndBetween(5, 40))}`,
+                  },
+                  contactInfo: {
+                    en: `Contact EN: ${lorem.generateWords(rndBetween(5, 15))}`,
+                    de: `Kontaktinformation DE: ${lorem.generateWords(
+                      rndBetween(5, 15)
+                    )}`,
+                  },
+
+                  lat: lat[Math.floor(Math.random() * lat.length)],
+                  lng: lng[Math.floor(Math.random() * lng.length)],
+
+                  terms: {
+                    connect: getRandomElements(catTerms, rndBetween(1, 3)).map(
+                      (term) => ({ id: term.id })
+                    ),
+                  },
+
+                  owner: {
+                    connect: {
+                      id: ownerId,
+                    },
+                  },
+                };
                 await prisma.location.create({
                   data: {
-                    status: rndBetween(1, 5),
-                    title: {
-                      en: `L(${id}) EN ${name}`,
-                      de: `L(${id}) DE ${name}`,
-                    },
-                    slug: {
-                      en: `location-en-${id}`,
-                      de: `location-de-${id}`,
-                    },
-                    description: {
-                      en: `Description EN: ${lorem.generateWords(
-                        rndBetween(5, 40)
-                      )}`,
-                      de: `Beschreibung DE: ${lorem.generateWords(
-                        rndBetween(5, 40)
-                      )}`,
-                    },
-                    address: {
-                      en: `Adress EN: ${lorem.generateWords(
-                        rndBetween(5, 40)
-                      )}`,
-                      de: `Adresse DE: ${lorem.generateWords(
-                        rndBetween(5, 40)
-                      )}`,
-                    },
-                    offers: {
-                      en: `Offering EN: ${lorem.generateWords(
-                        rndBetween(5, 40)
-                      )}`,
-                      de: `Angebot DE: ${lorem.generateWords(
-                        rndBetween(5, 40)
-                      )}`,
-                    },
-                    contactInfo: {
-                      en: `Contact EN: ${lorem.generateWords(
-                        rndBetween(5, 15)
-                      )}`,
-                      de: `Kontaktinformation DE: ${lorem.generateWords(
-                        rndBetween(5, 15)
-                      )}`,
-                    },
-
-                    lat: lat[Math.floor(Math.random() * lat.length)],
-                    lng: lng[Math.floor(Math.random() * lng.length)],
-
-                    terms: {
-                      connect: getRandomElements(
-                        catTerms,
-                        rndBetween(1, 3)
-                      ).map((term) => ({ id: term.id })),
-                    },
-
-                    owner: {
-                      connect: {
-                        id: ownerId,
-                      },
-                    },
+                    ...data,
+                    fullText: daoSharedGenerateFullText(data, [
+                      "title",
+                      "slug",
+                      "description",
+                      "address",
+                      "contactInfo",
+                      "offers",
+                    ]),
                   },
                 });
               } catch (err) {
@@ -445,30 +483,42 @@ async function main() {
         });
 
         if (!pageTest) {
+          const keywordSelection = getRandomElements(
+            keywords,
+            rndBetween(2, 5)
+          ).join(" ");
+          const data = {
+            status: rndBetween(1, 4),
+            title: {
+              de: page[0],
+              en: page[1],
+            },
+            slug: {
+              de: slugify(page[0]),
+              en: slugify(page[1]),
+            },
+            content: {
+              de: `${keywordSelection} ${lorem
+                .generateParagraphs(rndBetween(5, 10))
+                .replace(/(\r\n|\n|\r)/g, "<br/><br/>")}`,
+              en: lorem
+                .generateParagraphs(rndBetween(5, 10))
+                .replace(/(\r\n|\n|\r)/g, "<br/><br/>"),
+            },
+            owner: {
+              connect: {
+                id: Math.random() > 0.5 ? contributor.id : editor.id,
+              },
+            },
+          };
           await prisma.page.create({
             data: {
-              status: rndBetween(1, 4),
-              title: {
-                de: page[0],
-                en: page[1],
-              },
-              slug: {
-                de: slugify(page[0]),
-                en: slugify(page[1]),
-              },
-              content: {
-                de: lorem
-                  .generateParagraphs(rndBetween(5, 10))
-                  .replace(/(\r\n|\n|\r)/g, "<br/><br/>"),
-                en: lorem
-                  .generateParagraphs(rndBetween(5, 10))
-                  .replace(/(\r\n|\n|\r)/g, "<br/><br/>"),
-              },
-              owner: {
-                connect: {
-                  id: Math.random() > 0.5 ? contributor.id : editor.id,
-                },
-              },
+              ...data,
+              fullText: daoSharedGenerateFullText(data, [
+                "title",
+                "slug",
+                "content",
+              ]),
             },
           });
         }

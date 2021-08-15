@@ -15,11 +15,13 @@ export interface FieldSelectSettings {
   placeholder?: string;
   defaultValue?: any;
   valid?: boolean;
-  
 }
 
-
-
+export interface FieldSelectOption {
+  value: string;
+  label: string;
+  disabled?: boolean;
+}
 
 export const FieldSelect = ({
   settings,
@@ -36,7 +38,7 @@ export const FieldSelect = ({
   isDisabled?: boolean;
   label: string;
   name: string;
-  options: {value:string;label:string}[];
+  options: FieldSelectOption[];
 }) => {
   const {
     formState: { errors },
@@ -75,7 +77,6 @@ export const FieldSelect = ({
           formState,
         }) => (
           <Select
-        
             onBlur={onBlur}
             onChange={(event: ChangeEvent) => {
               onChange(event);
@@ -84,18 +85,22 @@ export const FieldSelect = ({
             {...fieldProps}
             size="md"
             ref={ref}
+            defaultValue={settings?.defaultValue}
           >
-            {options && options.map((option, i) => <option key={`${id}-o-${i}`} value={option.value}>{option.label}</option>)}
+
+            {options &&
+              options.map((option, i) => (
+                <option key={`${id}-o-${i}`} value={option.value} disabled={option.disabled}>
+                  {option.label}
+                </option>
+              ))}
           </Select>
-          
         )}
       />
 
-
-      
       <FieldErrorMessage error={errors[name]?.message} />
     </FormControl>
-  );
+  ); 
 };
 
 export default FieldSelect;
