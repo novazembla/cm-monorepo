@@ -2,7 +2,7 @@ import { object, string, number, SchemaOf } from "yup";
 import { PartialRecord } from "@culturemap/core";
 
 import { getAppConfig } from "./config";
-import { AppConfigSettingsFiledKeys } from "./appconfig";
+import { AppConfigSettingsFiledKeys } from "./tmpappconfig";
 
 import { Map } from "~/components/ui";
 import { LocationPicker } from "~/components/forms";
