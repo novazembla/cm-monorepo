@@ -53,8 +53,9 @@ type Event {
   createdAt: DateTime
   dates: [EventDate]
   description: JSON
-  eventLocation: JSON
+  descriptionLocation: JSON
   id: Int!
+  locations: [Location]
   ownerId: Int!
   slug: JSON
   status: Int!
@@ -81,7 +82,8 @@ type EventQueryResult {
 input EventUpsertInput {
   dates: JSON
   description: JSON
-  eventLocation: JSON
+  descriptionLocation: JSON
+  locations: JSON
   owner: JSON!
   slug: JSON!
   status: Int!
@@ -137,6 +139,7 @@ type Location {
   contactInfo: JSON
   createdAt: DateTime
   description: JSON
+  events: [Event]
   id: Int!
   lat: Float
   lng: Float

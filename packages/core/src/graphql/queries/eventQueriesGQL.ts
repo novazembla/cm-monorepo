@@ -15,7 +15,7 @@ export const eventsQueryGQL = gql`
         slug
         status
         description
-        eventLocation
+        descriptionLocation
         dates {
           id
           date
@@ -37,12 +37,19 @@ export const eventReadGQL = gql`
       slug
       status
       description
-      eventLocation
+      descriptionLocation
       dates {
         id
         date
         begin
         end
+      }
+      locations {
+        id
+        title
+        description
+        lat
+        lng
       }
       totalCount
     }

@@ -73,7 +73,7 @@ export const Event = objectType({
       },
     });
     t.json("description");
-    t.json("eventLocation");
+    t.json("descriptionLocation");
 
     t.list.field("dates", {
       type: "EventDate",
@@ -81,6 +81,10 @@ export const Event = objectType({
 
     t.list.field("terms", {
       type: "Term",
+    });
+
+    t.list.field("locations", {
+      type: "Location",
     });
 
     t.date("createdAt");
@@ -176,6 +180,24 @@ export const EventQueries = extendType({
           };
         }
 
+        if (
+          (pRI?.fieldsByTypeName?.EventQueryResult as any)?.events
+            ?.fieldsByTypeName?.Event?.locations
+        ) {
+          include = {
+            ...include,
+            locations: {
+              select: {
+                id: true,
+                title: true,
+                description: true,
+                lat: true,
+                lng: true,
+              },
+            },
+          };
+        }
+
         if ((pRI?.fieldsByTypeName?.EventQueryResult as any)?.events)
           events = await daoEventQuery(
             args.where,
@@ -236,6 +258,24 @@ export const EventQueries = extendType({
           };
         }
 
+        if ((pRI?.fieldsByTypeName?.Event as any)?.locations) {
+          include = {
+            ...include,
+            locations: {
+              select: {
+                id: true,
+                title: true,
+                description: true,
+                lat: true,
+                lng: true,
+              },
+              orderBy: {
+                title: "asc",
+              },
+            },
+          };
+        }
+
         return daoEventQueryFirst(
           {
             id: args.id,
@@ -254,10 +294,11 @@ export const EventUpsertInput = inputObjectType({
     t.nonNull.json("slug");
     t.nonNull.int("status");
     t.json("description");
-    t.json("eventLocation");
+    t.json("descriptionLocation");
     t.nonNull.json("owner");
     t.json("terms");
     t.json("dates");
+    t.json("locations");
   },
 });
 

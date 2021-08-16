@@ -27,6 +27,7 @@ import {
 } from "~/components/ui";
 import { config } from "~/config";
 import { SortingRule } from "react-table";
+import { filterColumnKeys } from "./moduleConfig";
 
 const intitalTableState: AdminTableState = {
   pageIndex: 0,
@@ -38,8 +39,6 @@ const intitalTableState: AdminTableState = {
 let refetchDataCache: any[] = [];
 let refetchTotalCount = 0;
 let refetchPageIndex: number | undefined = undefined;
-
-const filterColumnKeys = ["firstName", "lastName", "email"];
 
 const Index = () => {
   const { t } = useTranslation();
@@ -183,14 +182,6 @@ const Index = () => {
       appUser,
       showDelete: true,
       canDelete: (cell, appUser) => {
-        console.log(
-          appUser,
-          cell.row.values.id,
-          appUser?.can("userDelete"),
-          appUser?.has(cell.row.values.role),
-          cell.row.values.role,
-          appUser.id !== cell.row.values.id
-        );
         return (
           appUser?.can("userDelete") &&
           appUser?.has(cell.row.values.role) &&

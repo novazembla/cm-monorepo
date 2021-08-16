@@ -16,12 +16,13 @@ export const ModuleEventValidationSchema = object().shape(
         lang === defaultLanguage
           ? string().nonEmptyHtml({ max: 1000 }).required()
           : string().html({ max: 1000 }),
-      [`eventLocation_${lang}`]: string().html({max: 500}),
+      [`descriptionLocation_${lang}`]: string().html({max: 500}),
       
         
     }),
     {
       ownerId: number(),
+      locationId: number().required(),
       status: number(),
     }
   )

@@ -57,7 +57,8 @@ export interface NexusGenInputs {
   EventUpsertInput: { // input type
     dates?: NexusGenScalars['JSON'] | null; // JSON
     description?: NexusGenScalars['JSON'] | null; // JSON
-    eventLocation?: NexusGenScalars['JSON'] | null; // JSON
+    descriptionLocation?: NexusGenScalars['JSON'] | null; // JSON
+    locations?: NexusGenScalars['JSON'] | null; // JSON
     owner: NexusGenScalars['JSON']; // JSON!
     slug: NexusGenScalars['JSON']; // JSON!
     status: number; // Int!
@@ -184,8 +185,9 @@ export interface NexusGenObjects {
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
     dates?: Array<NexusGenRootTypes['EventDate'] | null> | null; // [EventDate]
     description?: NexusGenScalars['JSON'] | null; // JSON
-    eventLocation?: NexusGenScalars['JSON'] | null; // JSON
+    descriptionLocation?: NexusGenScalars['JSON'] | null; // JSON
     id: number; // Int!
+    locations?: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
     ownerId: number; // Int!
     slug?: NexusGenScalars['JSON'] | null; // JSON
     status: number; // Int!
@@ -232,6 +234,7 @@ export interface NexusGenObjects {
     contactInfo?: NexusGenScalars['JSON'] | null; // JSON
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
     description?: NexusGenScalars['JSON'] | null; // JSON
+    events?: Array<NexusGenRootTypes['Event'] | null> | null; // [Event]
     id: number; // Int!
     lat?: number | null; // Float
     lng?: number | null; // Float
@@ -386,8 +389,9 @@ export interface NexusGenFieldTypes {
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
     dates: Array<NexusGenRootTypes['EventDate'] | null> | null; // [EventDate]
     description: NexusGenScalars['JSON'] | null; // JSON
-    eventLocation: NexusGenScalars['JSON'] | null; // JSON
+    descriptionLocation: NexusGenScalars['JSON'] | null; // JSON
     id: number; // Int!
+    locations: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
     ownerId: number; // Int!
     slug: NexusGenScalars['JSON'] | null; // JSON
     status: number; // Int!
@@ -435,6 +439,7 @@ export interface NexusGenFieldTypes {
     contactInfo: NexusGenScalars['JSON'] | null; // JSON
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
     description: NexusGenScalars['JSON'] | null; // JSON
+    events: Array<NexusGenRootTypes['Event'] | null> | null; // [Event]
     id: number; // Int!
     lat: number | null; // Float
     lng: number | null; // Float
@@ -649,8 +654,9 @@ export interface NexusGenFieldTypeNames {
     createdAt: 'DateTime'
     dates: 'EventDate'
     description: 'JSON'
-    eventLocation: 'JSON'
+    descriptionLocation: 'JSON'
     id: 'Int'
+    locations: 'Location'
     ownerId: 'Int'
     slug: 'JSON'
     status: 'Int'
@@ -698,6 +704,7 @@ export interface NexusGenFieldTypeNames {
     contactInfo: 'JSON'
     createdAt: 'DateTime'
     description: 'JSON'
+    events: 'Event'
     id: 'Int'
     lat: 'Float'
     lng: 'Float'

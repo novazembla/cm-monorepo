@@ -9,7 +9,12 @@ import { daoSharedCheckSlugUnique, daoSharedGenerateFullText } from "./shared";
 
 const prisma = getPrismaClient();
 
-const eventFullTextKeys = ["title", "slug", "description", "eventLocation"];
+const eventFullTextKeys = [
+  "title",
+  "slug",
+  "description",
+  "descriptionLocation",
+];
 
 export const daoEventCheckSlugUnique = async (
   slug: Record<string, string>,
@@ -54,8 +59,16 @@ export const daoEventSearchQuery = async (
       title: true,
       slug: true,
       description: true,
+      dates: {
+        select: {
+          date: true,
+          begin: true,
+          end: true,
+        },
+      },
       locations: {
         select: {
+          id: true,
           title: true,
           slug: true,
           lng: true,
@@ -77,6 +90,7 @@ export const daoEventQueryFirst = async (
   const event = await prisma.event.findFirst({
     where,
     include,
+    take: 1000,
   });
 
   return filteredOutputByBlacklist(event, config.db.privateJSONDataKeys.event);

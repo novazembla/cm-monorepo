@@ -30,6 +30,8 @@ import {
 import { config } from "~/config";
 import { SortingRule } from "react-table";
 
+import {filterColumnKeys} from "./moduleConfig";
+
 const intitalTableState: AdminTableState = {
   pageIndex: 0,
   pageSize: config.defaultPageSize ?? 30,
@@ -41,7 +43,7 @@ let refetchDataCache: any[] = [];
 let refetchTotalCount = 0;
 let refetchPageIndex: number | undefined = undefined;
 
-const filterColumnKeys = ["name", "slug"];
+
 
 const Index = () => {
   const { t } = useTranslation();

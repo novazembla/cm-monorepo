@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import type * as yup from "yup";
+import { Link as RouterLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -14,8 +15,19 @@ import {
   useSuccessfullySavedToast,
   useRouter,
 } from "~/hooks";
-
-import { Divider } from "@chakra-ui/react";
+import { BsEye } from "react-icons/bs";
+import {
+  Divider,
+  Heading,
+  Table,
+  Thead,
+  Th,
+  Box,
+  Td,
+  IconButton,
+  Flex,
+  HStack,
+} from "@chakra-ui/react";
 import { filteredOutputByWhitelist } from "@culturemap/core";
 
 import { useQuery, gql } from "@apollo/client";
@@ -35,7 +47,11 @@ import {
   multiLangSlugUniqueError,
 } from "~/utils";
 
-import { mapModulesCheckboxArrayToData, mapDataToModulesCheckboxArray } from "./helpers";
+import {
+  mapModulesCheckboxArrayToData,
+  mapDataToModulesCheckboxArray,
+} from "./helpers";
+import { MultiLangValue } from "~/components/ui";
 
 export const locationReadAndContentAuthorsQueryGQL = gql`
   query locationRead($id: Int!) {
@@ -57,6 +73,10 @@ export const locationReadAndContentAuthorsQueryGQL = gql`
         id
         name
         slug
+      }
+      events {
+        id
+        title
       }
     }
     adminUsers(roles: ["administrator", "editor", "contributor"]) {
@@ -110,7 +130,7 @@ const Update = () => {
 
   useEffect(() => {
     if (!data || !data.locationRead) return;
-    
+
     reset({
       ...multiLangJsonToRHFormData(
         filteredOutputByWhitelist(
@@ -121,7 +141,10 @@ const Update = () => {
         multiLangFields,
         config.activeLanguages
       ),
-      ...mapDataToModulesCheckboxArray(data.locationRead.terms, data.moduleTaxonomies),
+      ...mapDataToModulesCheckboxArray(
+        data.locationRead.terms,
+        data.moduleTaxonomies
+      ),
     });
   }, [reset, data, config.activeLanguages]);
 
@@ -141,10 +164,7 @@ const Update = () => {
           lat: newData.lat,
           lng: newData.lng,
           terms: {
-            set: mapModulesCheckboxArrayToData(
-              newData,
-              data?.moduleTaxonomies
-            ),
+            set: mapModulesCheckboxArrayToData(newData, data?.moduleTaxonomies),
           },
           ...filteredOutputByWhitelist(
             multiLangRHFormDataToJson(
@@ -218,6 +238,97 @@ const Update = () => {
                 data={data}
                 validationSchema={ModuleLocationValidationSchema}
               />
+
+              {data && data.locationRead.events && (
+                <Box mt="6">
+                  <Heading as="h2" mb="3">
+                    {t("module.locations.title.events", "Associated events")}
+                  </Heading>
+                  <Table position="relative" mb="400px" w="100%">
+                    <Thead>
+                      <tr>
+                        <Th
+                          pl="0"
+                          borderColor="gray.300"
+                          fontSize="md"
+                          color="gray.800"
+                        >
+                          {t("module.locations.events.title", "Title")}
+                        </Th>
+                        <Th
+                          textAlign="center"
+                          px="0"
+                          borderColor="gray.300"
+                          fontSize="md"
+                          color="gray.800"
+                          _last={{
+                            position: "sticky",
+                            right: 0,
+                            p: 0,
+                            "> div": {
+                              p: 4,
+                              h: "100%",
+                              bg: "rgba(255,255,255,0.9)",
+                            },
+                          }}
+                        >
+                          {t(
+                            "module.locations.fields.label.actions",
+                            "Actions"
+                          )}
+                        </Th>
+                      </tr>
+                    </Thead>
+                    <tbody>
+                      {data.locationRead.events.map((event: any) => (
+                        <tr key={`event-${event.id}`}>
+                          <Td pl="0" borderColor="gray.300">
+                          <MultiLangValue json={event.title} />
+                          </Td>
+
+                          <Td
+                            px="0"
+                            borderColor="gray.300"
+                            _last={{
+                              position: "sticky",
+                              right: 0,
+                              p: 0,
+                              "> div": {
+                                p: 4,
+                                h: "100%",
+                                bg: "rgba(255,255,255,0.9)",
+                              },
+                            }}
+                          >
+                            <Flex justifyContent="center">
+                              <HStack mx="auto">
+                                <IconButton
+                                  variant="outline"
+                                  as={RouterLink}
+                                  to={`/events/update/${event.id}`}
+                                  icon={<BsEye />}
+                                  fontSize="lg"
+                                  aria-label={t(
+                                    "module.locations.fields.label.viewevent",
+                                    "View event"
+                                  )}
+                                  title={t(
+                                    "module.locations.fields.label.viewevent",
+                                    "View event"
+                                  )}
+                                  disabled={
+                                    !(appUser && appUser.can("eventUpdate"))
+                                  }
+                                />
+                              </HStack>
+                            </Flex>
+                          </Td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
+                </Box>
+              )}
             </ModulePage>
           </fieldset>
         </form>

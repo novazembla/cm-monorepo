@@ -34,6 +34,7 @@ import { MdPlusOne } from "react-icons/md";
 
 import { MultiLangValue } from "~/components/ui";
 import { useAuthentication } from "~/hooks";
+import { getMultilangValue } from "~/utils";
 
 const isValidDate = (d: any) => {
   if (Object.prototype.toString.call(d) === "[object Date]") {
@@ -86,7 +87,9 @@ export const ModuleForm = ({
     name: "dates",
     keyName: "fieldId",
   });
-  
+
+  console.log(errors);
+
   if (action === "update") {
     if (data.adminUsers) {
       updateActions = (
@@ -186,6 +189,35 @@ export const ModuleForm = ({
           ))}
         </>
       )}
+
+      {data?.locations?.locations && (
+        <>
+          <Divider mt="10" />
+          <FieldRow>
+            <FieldSelect
+              name="locationId"
+              id="locationId"
+              label={t("module.events.forms.field.label.location", "Location")}
+              isRequired={true}
+              options={data.locations.locations.map((loc: any) => ({
+                value: loc.id,
+                label: getMultilangValue(loc.title),
+              }))}
+              settings={{
+                defaultValue:
+                  data?.eventRead?.locations &&
+                  data?.eventRead?.locations.length
+                    ? data?.eventRead?.locations[0].id
+                    : undefined,
+                placeholder: t(
+                  "module.events.forms.field.placeholder.location",
+                  "Please choose the event's location"
+                ),
+              }}
+            />
+          </FieldRow>
+        </>
+      )}
       <Divider mt="10" />
 
       <FieldMultiLangTextEditor
@@ -209,19 +241,19 @@ export const ModuleForm = ({
       />
 
       <FieldMultiLangTextEditor
-        name="eventLocation"
-        id="eventLocation"
+        name="descriptionLocation"
+        id="descriptionLocation"
         type="basic"
         label={t(
-          "module.events.forms.event.field.label.eventLocation",
+          "module.events.forms.event.field.label.descriptionLocation",
           "Event location Information"
         )}
         isRequired={false}
         settings={{
-          defaultValues: data?.eventRead?.eventLocation,
+          defaultValues: data?.eventRead?.descriptionLocation,
           maxLength: 500,
           placeholder: t(
-            "module.events.forms.event.field.placeholder.eventLocation",
+            "module.events.forms.event.field.placeholder.descriptionLocation",
             "Event loaction information (room, access, address, directions, ...)"
           ),
         }}
@@ -479,7 +511,7 @@ export const ModuleForm = ({
                           )}
                           variant="outline"
                           icon={<MdPlusOne />}
-                          fontSize="2xl"
+                          fontSize="xl"
                           onClick={() => {
                             const values = getValues(`dates[${index}]`);
                             const oneDayInMs = 60 * 60 * 24 * 1000;
@@ -490,10 +522,10 @@ export const ModuleForm = ({
                                 : new Date(),
                               begin: isValidDate(values.begin)
                                 ? new Date(values.begin.getTime() + oneDayInMs)
-                                : new Date(new Date().setHours(10,0,0)),
+                                : new Date(new Date().setHours(10, 0, 0)),
                               end: isValidDate(values.end)
                                 ? new Date(values.end.getTime() + oneDayInMs)
-                                : new Date(new Date().setHours(18,0,0)),
+                                : new Date(new Date().setHours(18, 0, 0)),
                             });
                           }}
                         />

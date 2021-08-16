@@ -30,6 +30,7 @@ import {
 } from "~/components/ui";
 import { config } from "~/config";
 import { SortingRule } from "react-table";
+import { termFilterColumnKeys } from "./moduleConfig";
 
 const intitalTableState: AdminTableState = {
   pageIndex: 0,
@@ -41,8 +42,6 @@ const intitalTableState: AdminTableState = {
 let refetchDataCache: any[] = [];
 let refetchTotalCount = 0;
 let refetchPageIndex: number | undefined = undefined;
-
-const filterColumnKeys = ["name", "slug"];
 
 const Terms = () => {
   const router = useRouter();
@@ -65,7 +64,7 @@ const Terms = () => {
     notifyOnNetworkStatusChange: true,
     variables: {
       taxonomyId: parseInt(router.query.taxId, 10),
-      ...adminTableCreateQueryVariables(tableState, filterColumnKeys, multiLangFields, config.activeLanguages),
+      ...adminTableCreateQueryVariables(tableState, termFilterColumnKeys, multiLangFields, config.activeLanguages),
     },
   });
 
@@ -171,7 +170,7 @@ const Terms = () => {
 
       setIsRefetching(true);
       
-      refetch(adminTableCreateQueryVariables(newTableState, filterColumnKeys, multiLangFields, config.activeLanguages));
+      refetch(adminTableCreateQueryVariables(newTableState, termFilterColumnKeys, multiLangFields, config.activeLanguages));
 
       setTableState(newTableState);
     }

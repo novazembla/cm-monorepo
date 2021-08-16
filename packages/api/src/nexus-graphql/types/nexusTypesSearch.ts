@@ -1,5 +1,4 @@
 /// <reference path="../../types/nexus-typegen.ts" />
-import Prisma from "@prisma/client";
 import {
   objectType,
   extendType,
@@ -17,6 +16,7 @@ import {
 
 import {
   daoLocationSearchQuery,
+  daoEventSearchQuery,
   // daoImageQuery,
   // daoImageCreate,
   // daoImageQueryCount,
@@ -60,7 +60,7 @@ export const SearchQueries = extendType({
         modules: list(stringArg()),
       },
 
-      async resolve(...[, args, , info]) {
+      async resolve(...[, args]) {
         const parsedQuery = args.search.trim().split(" ");
         const result = [];
 
@@ -100,6 +100,34 @@ export const SearchQueries = extendType({
             totalCount: items.length,
           });
         }
+
+
+        const events = await daoEventSearchQuery({
+          fullText: query,
+        });
+
+        if (events && events.length > 0) {
+          const items = events.map((evnt) => ({
+            id: evnt.id,
+            type: "event",
+            title: evnt.title,
+            excerpt: evnt.description,
+            slug: evnt.slug,
+            dates: evnt.dates,
+            locations: evnt?.locations,
+            geopoints: evnt?.locations ? evnt.locations.map((loc) => ({
+              lat: loc.lat,
+              lng: loc.lng,
+            })),
+          }));
+
+          result.push({
+            module: "location",
+            items,
+            totalCount: items.length,
+          });
+        }
+
 
         return result;
       },

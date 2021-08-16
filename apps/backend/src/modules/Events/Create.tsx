@@ -41,6 +41,13 @@ export const eventReadGetTaxonomies = gql`
         name
       }
     }
+
+    locations(pageSize: 1000) {
+      locations {
+        id
+        title
+      }
+    }
   }
 `;
 
@@ -80,6 +87,7 @@ const Create = () => {
 
   const {
     handleSubmit,
+    getValues,
     setError,
     formState: { isSubmitting, isDirty },
   } = formMethods;
@@ -87,8 +95,7 @@ const Create = () => {
   const onSubmit = async (
     newData: yup.InferType<typeof ModuleEventValidationSchema>
   ) => {
-    console.log(newData);
-
+    
     setIsFormError(false);
     try {
       if (appUser) {
@@ -97,6 +104,11 @@ const Create = () => {
             connect: {
               id: appUser.id,
             },
+          },
+          locations: {
+            connect: {
+              id: newData.locationId,
+            }
           },
           dates: {
             create: newData.dates,

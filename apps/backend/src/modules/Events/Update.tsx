@@ -35,8 +35,12 @@ import {
   multiLangSlugUniqueError,
 } from "~/utils";
 
-import { mapModulesCheckboxArrayToData, mapDataToModulesCheckboxArray } from "./helpers";
+import {
+  mapModulesCheckboxArrayToData,
+  mapDataToModulesCheckboxArray,
+} from "./helpers";
 
+// TODO
 export const eventReadAndContentAuthorsQueryGQL = gql`
   query eventRead($id: Int!) {
     eventRead(id: $id) {
@@ -44,7 +48,7 @@ export const eventReadAndContentAuthorsQueryGQL = gql`
       title
       slug
       description
-      eventLocation
+      descriptionLocation
       status
       ownerId
       createdAt
@@ -60,6 +64,9 @@ export const eventReadAndContentAuthorsQueryGQL = gql`
         begin
         end
       }
+      locations {
+        id
+      }
     }
     adminUsers(roles: ["administrator", "editor", "contributor"]) {
       id
@@ -72,6 +79,13 @@ export const eventReadAndContentAuthorsQueryGQL = gql`
       terms {
         id
         name
+      }
+    }
+
+    locations(pageSize: 1000) {
+      locations {
+        id
+        title
       }
     }
   }
@@ -102,8 +116,8 @@ const Update = () => {
     mode: "onTouched",
     resolver: yupResolver(ModuleEventValidationSchema),
     defaultValues: {
-      dates: []
-    }
+      dates: [],
+    },
   });
 
   const {
@@ -113,10 +127,8 @@ const Update = () => {
     formState: { isSubmitting, isDirty },
   } = formMethods;
 
-  
   const parseIncomingDates = (dates: any) => {
-    if (!dates)
-      return [];
+    if (!dates) return [];
 
     if (Array.isArray(dates))
       return dates.reduce((acc, date) => {
@@ -124,19 +136,19 @@ const Update = () => {
           acc.push({
             id: date.id,
             date: new Date(date.date),
-            begin: new Date(date.begin), 
-            end: new Date(date.end)
-          })
+            begin: new Date(date.begin),
+            end: new Date(date.end),
+          });
         } catch (err) {}
         return acc;
-      }, [])
-    
+      }, []);
+
     return [];
-  }
+  };
 
   useEffect(() => {
     if (!data || !data.eventRead) return;
-    
+
     reset({
       ...multiLangJsonToRHFormData(
         filteredOutputByWhitelist(
@@ -147,9 +159,13 @@ const Update = () => {
         multiLangFields,
         config.activeLanguages
       ),
-      ...mapDataToModulesCheckboxArray(data.eventRead.terms, data.moduleTaxonomies),
+      ...mapDataToModulesCheckboxArray(
+        data.eventRead.terms,
+        data.moduleTaxonomies
+      ),
       date: new Date("12/20/2021"),
       dates: parseIncomingDates(data?.eventRead?.dates),
+      locationId: data?.eventRead?.locations && data?.eventRead?.locations.length ? data?.eventRead?.locations[0].id : undefined,
     });
   }, [reset, data, config.activeLanguages]);
 
@@ -166,13 +182,17 @@ const Update = () => {
               id: newData.ownerId,
             },
           },
+          locations: {
+            set: [
+              {
+                id: newData.locationId,
+              },
+            ],
+          },
           dates: newData.dates,
           status: newData.status,
           terms: {
-            set: mapModulesCheckboxArrayToData(
-              newData,
-              data?.moduleTaxonomies
-            ),
+            set: mapModulesCheckboxArrayToData(newData, data?.moduleTaxonomies),
           },
           ...filteredOutputByWhitelist(
             multiLangRHFormDataToJson(

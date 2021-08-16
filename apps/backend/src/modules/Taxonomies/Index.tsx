@@ -28,6 +28,7 @@ import {
 } from "~/components/ui";
 import { config } from "~/config";
 import { SortingRule } from "react-table";
+import { taxonomyFilterColumnKeys } from "./moduleConfig";
 
 const intitalTableState: AdminTableState = {
   pageIndex: 0,
@@ -40,7 +41,7 @@ let refetchDataCache: any[] = [];
 let refetchTotalCount = 0;
 let refetchPageIndex: number | undefined = undefined;
 
-const filterColumnKeys = ["name", "slug"];
+
 
 const Index = () => {
   const { t } = useTranslation();
@@ -60,7 +61,7 @@ const Index = () => {
       setIsRefetching(false);
     },
     notifyOnNetworkStatusChange: true,
-    variables: adminTableCreateQueryVariables(tableState, filterColumnKeys, multiLangFields, config.activeLanguages),
+    variables: adminTableCreateQueryVariables(tableState, taxonomyFilterColumnKeys, multiLangFields, config.activeLanguages),
   });
 
   const [adminTableDeleteButtonOnClick, DeleteAlertDialog, isDeleteError] =
@@ -171,7 +172,7 @@ const Index = () => {
 
       setIsRefetching(true);
 
-      refetch(adminTableCreateQueryVariables(newTableState, filterColumnKeys, multiLangFields, config.activeLanguages));
+      refetch(adminTableCreateQueryVariables(newTableState, taxonomyFilterColumnKeys, multiLangFields, config.activeLanguages));
 
       setTableState(newTableState);
     }

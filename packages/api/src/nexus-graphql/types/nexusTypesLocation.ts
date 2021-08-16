@@ -67,6 +67,10 @@ export const Location = objectType({
       type: "Term",
     });
 
+    t.list.field("events", {
+      type: "Event",
+    });
+
     t.float("lat");
     t.float("lng");
 
@@ -182,6 +186,17 @@ export const LocationQueries = extendType({
               select: {
                 id: true,
                 name: true,
+                slug: true,
+              },
+            },
+          };
+
+        if ((pRI?.fieldsByTypeName?.Location as any)?.events)
+          include = {
+            events: {
+              select: {
+                id: true,
+                title: true,
                 slug: true,
               },
             },

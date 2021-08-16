@@ -76,7 +76,7 @@ model Event {
   title           Json     
   slug           Json    
   description   Json?  @default("{}")
-  eventLocation Json?  @default("{}")
+  descriptionLocation Json?  @default("{}")
   
   locations      Location[]
 

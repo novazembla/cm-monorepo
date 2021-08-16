@@ -42,7 +42,7 @@ CREATE TABLE "Event" (
     "title" JSONB NOT NULL,
     "slug" JSONB NOT NULL,
     "description" JSONB DEFAULT E'{}',
-    "eventLocation" JSONB DEFAULT E'{}',
+    "descriptionLocation" JSONB DEFAULT E'{}',
     "locationId" INTEGER NOT NULL,
     "ownerId" INTEGER NOT NULL,
     "status" INTEGER NOT NULL,

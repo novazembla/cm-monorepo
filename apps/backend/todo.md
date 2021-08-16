@@ -57,6 +57,8 @@ monitor if you can switch back to the original one in a few month https://github
 Installation
 Important to mention to clone src/config/appconfig.example.ts to src/config/appconfig.ts and to fill in the required settings .. 
 
+TODO: N-M 1-N Connection (autocomplete, or modal)
+No select box on events and locations ...
 
 monmitor is dirty and block back if data has been added ... 
 
