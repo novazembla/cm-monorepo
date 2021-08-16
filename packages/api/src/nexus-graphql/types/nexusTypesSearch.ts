@@ -8,6 +8,8 @@ import {
   list,
 } from "nexus";
 
+import type { NexusGenObjects } from "../../types/nexus-typegen";
+
 // import httpStatus from "http-status";
 // import { ApiError } from "../../utils";
 
@@ -24,13 +26,19 @@ import {
 
 export const SearchResultItem = objectType({
   name: "SearchResultItem",
+
   definition(t) {
     t.nonNull.int("id");
     t.nonNull.string("type");
     t.nonNull.json("title");
     t.nonNull.json("excerpt");
     t.nonNull.json("slug");
-
+    t.list.field("dates", {
+      type: "EventDate",
+    });
+    t.list.field("locations", {
+      type: "Location",
+    });
     t.field("geopoint", {
       type: "GeoPoint",
     });
@@ -62,7 +70,7 @@ export const SearchQueries = extendType({
 
       async resolve(...[, args]) {
         const parsedQuery = args.search.trim().split(" ");
-        const result = [];
+        const result: NexusGenObjects["SearchResult"][] = [];
 
         const query =
           parsedQuery.length === 1
@@ -89,8 +97,8 @@ export const SearchQueries = extendType({
             excerpt: loc.description,
             slug: loc.slug,
             geopoint: {
-              lng: loc.lng,
-              lat: loc.lat,
+              lng: loc.lng ?? 0,
+              lat: loc.lng ?? 0,
             },
           }));
 
@@ -101,13 +109,12 @@ export const SearchQueries = extendType({
           });
         }
 
-
         const events = await daoEventSearchQuery({
           fullText: query,
         });
 
         if (events && events.length > 0) {
-          const items = events.map((evnt) => ({
+          const items = events.map((evnt: any) => ({
             id: evnt.id,
             type: "event",
             title: evnt.title,
@@ -115,10 +122,7 @@ export const SearchQueries = extendType({
             slug: evnt.slug,
             dates: evnt.dates,
             locations: evnt?.locations,
-            geopoints: evnt?.locations ? evnt.locations.map((loc) => ({
-              lat: loc.lat,
-              lng: loc.lng,
-            })),
+            geopoint: null,
           }));
 
           result.push({
@@ -127,7 +131,6 @@ export const SearchQueries = extendType({
             totalCount: items.length,
           });
         }
-
 
         return result;
       },

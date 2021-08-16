@@ -92,8 +92,8 @@ input EventUpsertInput {
 }
 
 type GeoPoint {
-  lat: Float!
-  lng: Float!
+  lat: Float
+  lng: Float
 }
 
 type Image {
@@ -285,9 +285,11 @@ type SearchResult {
 }
 
 type SearchResultItem {
+  dates: [EventDate]
   excerpt: JSON!
   geopoint: GeoPoint
   id: Int!
+  locations: [Location]
   slug: JSON!
   title: JSON!
   type: String!

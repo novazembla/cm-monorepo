@@ -208,8 +208,8 @@ export interface NexusGenObjects {
     totalCount?: number | null; // Int
   }
   GeoPoint: { // root type
-    lat: number; // Float!
-    lng: number; // Float!
+    lat?: number | null; // Float
+    lng?: number | null; // Float
   }
   Image: { // root type
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
@@ -287,9 +287,11 @@ export interface NexusGenObjects {
     totalCount: number; // Int!
   }
   SearchResultItem: { // root type
+    dates?: Array<NexusGenRootTypes['EventDate'] | null> | null; // [EventDate]
     excerpt: NexusGenScalars['JSON']; // JSON!
     geopoint?: NexusGenRootTypes['GeoPoint'] | null; // GeoPoint
     id: number; // Int!
+    locations?: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
     slug: NexusGenScalars['JSON']; // JSON!
     title: NexusGenScalars['JSON']; // JSON!
     type: string; // String!
@@ -412,8 +414,8 @@ export interface NexusGenFieldTypes {
     totalCount: number | null; // Int
   }
   GeoPoint: { // field return type
-    lat: number; // Float!
-    lng: number; // Float!
+    lat: number | null; // Float
+    lng: number | null; // Float
   }
   Image: { // field return type
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
@@ -552,9 +554,11 @@ export interface NexusGenFieldTypes {
     totalCount: number; // Int!
   }
   SearchResultItem: { // field return type
+    dates: Array<NexusGenRootTypes['EventDate'] | null> | null; // [EventDate]
     excerpt: NexusGenScalars['JSON']; // JSON!
     geopoint: NexusGenRootTypes['GeoPoint'] | null; // GeoPoint
     id: number; // Int!
+    locations: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
     slug: NexusGenScalars['JSON']; // JSON!
     title: NexusGenScalars['JSON']; // JSON!
     type: string; // String!
@@ -817,9 +821,11 @@ export interface NexusGenFieldTypeNames {
     totalCount: 'Int'
   }
   SearchResultItem: { // field return type name
+    dates: 'EventDate'
     excerpt: 'JSON'
     geopoint: 'GeoPoint'
     id: 'Int'
+    locations: 'Location'
     slug: 'JSON'
     title: 'JSON'
     type: 'String'
