@@ -30,7 +30,7 @@
     "app:frontend:dev": "PORT=$(grep DEV_FRONTEND_PORT .env | cut -d '=' -f2) NEXT_PUBLIC_API_URL=$(grep '^DEV_API_GRAPHQL_URL' .env | cut -d '=' -f2) npm run dev -w frontend",
     "app:frontend:lint": "eslint ./apps/frontend/ --ext .js,.jsx,.ts,.tsx",
     "package:api:dev": "npx concurrently -k -p \"[{name}]\" -n \"BABEL,TYPINGS\" -c \"#dddddd,#aaaaaa,#777777\" \"npm run package:api:watch:babel\" \"npm run package:api:watch:typings\"",
-    "package:api:build": "npx rimraf ./packages/api/dist && npm run package:api:db:migrate && npm run package:api:db:generate && npm run package:api:nexus && npm run package:api:babel && npm run package:api:typings",
+    "package:api:build": "npx rimraf ./packages/api/dist && npm run package:api:db:generate && npm run package:api:nexus && npm run package:api:babel && npm run package:api:typings",
     "package:api:babel": "npx babel ./packages/api/src --out-dir ./packages/api/dist --extensions .ts",
     "package:api:typings": "npx tsc ./packages/api/src/*.ts --target 'es2018' --moduleResolution 'node' --declaration --esModuleInterop  --emitDeclarationOnly --outDir ./packages/api/dist",
     "package:api:watch:babel": "npx babel ./packages/api/src --watch --out-dir ./packages/api/dist --extensions .ts",

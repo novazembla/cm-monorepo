@@ -33,13 +33,7 @@ hooks:
     # The site is not accepting requests while this script runs so keep it
     # fast.
     deploy: |
-        echo "123"
-        echo $DATABASE_URL
-        echo "222"
         set -e
-        echo "333"
-        echo $DATABASE_URL
-        echo "444"
         npx prisma migrate deploy
 
     # post_deploy: |
