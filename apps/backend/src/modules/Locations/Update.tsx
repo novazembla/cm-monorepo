@@ -246,7 +246,7 @@ const Update = () => {
               {data && Array.isArray(data.locationRead.events) && (
                 <Box mt="6">
                   <Heading as="h2" mb="3">
-                    {t("module.locations.title.events", "Associated events")}
+                    {t("module.locations.associatedevents.title", "Associated events")}
                   </Heading>
                   <Table position="relative" mb="400px" w="100%">
                     <Thead>

@@ -1,13 +1,13 @@
 {
   "footer": {
     "contactLink": {
-      "title": "Contact"
+      "title": "Kontak"
     }
   },
   "avatar": {
     "menu": {
-      "myprofile": "My profile",
-      "logout": "Logout"
+      "myprofile": "Mein Profil",
+      "logout": "Abmelden"
     }
   },
   "mainnav": {
@@ -37,8 +37,8 @@
     }
   },
   "menu": {
-    "close": "Close menu",
-    "open": "Open menu"
+    "close": "Menü schließen",
+    "open": "Menü öffnen"
   },
   "module": {
     "profile": {
@@ -93,7 +93,7 @@
         "update": {
           "field": {
             "label": {
-              "firstName": "First Name",
+              "firstName": "Vorname",
               "lastName": "Last Name",
               "email": "Email Address",
               "role": "User role",
@@ -125,6 +125,86 @@
         "create": "Add user",
         "edit": "Edit user",
         "delete": "Delete user"
+      }
+    },
+    "events": {
+      "title": "Events",
+      "mneuitem": {
+        "createevent": "Add new event"
+      },
+      "forms": {
+        "field": {
+          "label": {
+            "author": "Author",
+            "location": "Location"
+          },
+          "placeholder": {
+            "author": "Please choose the event's author",
+            "location": "Please choose the event's location"
+          }
+        },
+        "event": {
+          "field": {
+            "label": {
+              "title": "Title",
+              "slug": "Slug",
+              "description": "Description",
+              "descriptionLocation": "Event location Information"
+            },
+            "placeholder": {
+              "title": "Event title",
+              "slug": "Slug / URL part",
+              "description": "Event description",
+              "descriptionLocation": "Event loaction information (room, access, address, directions, ...)"
+            },
+            "date": {
+              "placeholder": "Date"
+            },
+            "begin": {
+              "label": "Begin"
+            },
+            "end": {
+              "label": "End"
+            },
+            "dates": {
+              "removedate": "Remove",
+              "clone": "Clone current line"
+            }
+          },
+          "table": {
+            "column": {
+              "begin": {
+                "label": "Begin"
+              },
+              "end": {
+                "label": "End"
+              }
+            }
+          },
+          "title": {
+            "actions": "Aktionen"
+          }
+        },
+        "eventdates": {
+          "heading": "Event date(s)",
+          "table": {
+            "column": {
+              "date": {
+                "label": "Date"
+              }
+            }
+          }
+        }
+      },
+      "button": {
+        "create": "Add new event",
+        "edit": "Edit event",
+        "delete": "Delete event"
+      },
+      "event": {
+        "title": {
+          "updatepage": "Update event"
+        }
       }
     },
     "locations": {
@@ -171,7 +251,20 @@
         "title": {
           "updatepage": "Update location"
         }
-      }
+      },
+      "associatedevents": {
+        "title": "Associated events"
+      },
+      "events": {
+        "title": "Title"
+      },
+      "fields": {
+        "label": {
+          "actions": "Aktionen",
+          "viewevent": "View event"
+        }
+      },
+      "noasscoiatedevents": "No associated events"
     },
     "pages": {
       "title": "Pages",
@@ -302,6 +395,9 @@
     }
   },
   "form": {
+    "datepicker": {
+      "close": "close"
+    },
     "unsavedchanges": "It looks like you've unsaved changes. Leave without saving?",
     "geolocation": {
       "lat": {
@@ -432,6 +528,7 @@
       "required": "{{path}} ist ein notwendiges Feld",
       "oneOf": "{{path}} must be one of the following values: {{values}}",
       "notOneOf": "{{path}} must not be one of the following values: {{values}}",
+      "notType": "This field must not be of the type: {{type}}",
       "defined": "{{path}} must be defined"
     },
     "string": {
@@ -500,6 +597,17 @@
       "datadeleted": "The data has been deleted"
     }
   },
+  "events": {
+    "fields": {
+      "label": {
+        "id": "Id",
+        "status": "status",
+        "title": "title",
+        "slug": "Slug",
+        "actions": "Aktionen"
+      }
+    }
+  },
   "locations": {
     "fields": {
       "label": {
@@ -507,7 +615,7 @@
         "status": "status",
         "title": "title",
         "slug": "Slug",
-        "actions": "Actions"
+        "actions": "Aktionen"
       }
     }
   },
@@ -517,7 +625,7 @@
         "id": "Id",
         "title": "title",
         "slug": "Slug",
-        "actions": "Actions"
+        "actions": "Aktionen"
       }
     }
   },
@@ -537,7 +645,7 @@
     },
     "register": {
       "profileimage": "Profile Image",
-      "form_field_firstName_label": "First Name",
+      "form_field_firstName_label": "Vorname",
       "form_field_firstName_placeholder": "Your first name",
       "form_field_lastName_label": "Last Name",
       "form_field_lastName_placeholder": "Your last name",
@@ -586,7 +694,7 @@
       "form_button_login": "Login"
     },
     "signup": {
-      "back_to_login": "Back to login"
+      "back_to_login": "Zurück zum Login"
     }
   },
   "taxonomies": {
@@ -595,8 +703,8 @@
         "id": "Id",
         "name": "Name",
         "slug": "Slug",
-        "termCount": "Number of terms",
-        "actions": "Actions"
+        "termCount": "Anzahl Begriffe",
+        "actions": "Aktionen"
       }
     }
   },
@@ -606,32 +714,32 @@
         "id": "Id",
         "name": "Name",
         "slug": "Slug",
-        "actions": "Actions"
+        "actions": "Aktionen"
       }
     }
   },
   "role": {
-    "user": "User",
-    "contributor": "Contributor",
-    "editor": "Editor",
-    "administrator": "Administrator"
+    "user": "BenutzerIn",
+    "contributor": "Beitragende",
+    "editor": "LektorIn",
+    "administrator": "AdministratorIn"
   },
   "users": {
     "fields": {
       "label": {
         "id": "Id",
-        "firstName": "First Name",
-        "lastName": "Last name",
-        "email": "Email",
-        "email verified": "Email verified",
-        "role": "Role",
-        "actions": "Actions"
+        "firstName": "Vorname",
+        "lastName": "Nachname",
+        "email": "Emailadresse",
+        "email verified": "Emailadresse bestätigt",
+        "role": "Rolle",
+        "actions": "Aktionen"
       }
     },
     "field": {
       "emailverification": {
-        "verified": "Verified",
-        "notverified": "Not verified"
+        "verified": "Bestätigt",
+        "notverified": "Noch nicht bestätigt"
       }
     }
   }

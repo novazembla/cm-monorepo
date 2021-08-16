@@ -127,6 +127,86 @@
         "delete": "Delete user"
       }
     },
+    "events": {
+      "title": "Events",
+      "mneuitem": {
+        "createevent": "Add new event"
+      },
+      "forms": {
+        "field": {
+          "label": {
+            "author": "Author",
+            "location": "Location"
+          },
+          "placeholder": {
+            "author": "Please choose the event's author",
+            "location": "Please choose the event's location"
+          }
+        },
+        "event": {
+          "field": {
+            "label": {
+              "title": "Title",
+              "slug": "Slug",
+              "description": "Description",
+              "descriptionLocation": "Event location Information"
+            },
+            "placeholder": {
+              "title": "Event title",
+              "slug": "Slug / URL part",
+              "description": "Event description",
+              "descriptionLocation": "Event loaction information (room, access, address, directions, ...)"
+            },
+            "date": {
+              "placeholder": "Date"
+            },
+            "begin": {
+              "label": "Begin"
+            },
+            "end": {
+              "label": "End"
+            },
+            "dates": {
+              "removedate": "Remove",
+              "clone": "Clone current line"
+            }
+          },
+          "table": {
+            "column": {
+              "begin": {
+                "label": "Begin"
+              },
+              "end": {
+                "label": "End"
+              }
+            }
+          },
+          "title": {
+            "actions": "Actions"
+          }
+        },
+        "eventdates": {
+          "heading": "Event date(s)",
+          "table": {
+            "column": {
+              "date": {
+                "label": "Date"
+              }
+            }
+          }
+        }
+      },
+      "button": {
+        "create": "Add new event",
+        "edit": "Edit event",
+        "delete": "Delete event"
+      },
+      "event": {
+        "title": {
+          "updatepage": "Update event"
+        }
+      }
+    },
     "locations": {
       "title": "Locations",
       "mneuitem": {
@@ -171,7 +251,20 @@
         "title": {
           "updatepage": "Update location"
         }
-      }
+      },
+      "associatedevents": {
+        "title": "Associated events"
+      },
+      "events": {
+        "title": "Title"
+      },
+      "fields": {
+        "label": {
+          "actions": "Actions",
+          "viewevent": "View event"
+        }
+      },
+      "noasscoiatedevents": "No associated events"
     },
     "pages": {
       "title": "Pages",
@@ -302,6 +395,9 @@
     }
   },
   "form": {
+    "datepicker": {
+      "close": "close"
+    },
     "unsavedchanges": "It looks like you've unsaved changes. Leave without saving?",
     "geolocation": {
       "lat": {
@@ -432,6 +528,7 @@
       "required": "This field is a required field",
       "oneOf": "This field must be one of the following values: {{values}}",
       "notOneOf": "This field must not be one of the following values: {{values}}",
+      "notType": "This field must not be of the type: {{type}}",
       "defined": "This field must be defined"
     },
     "string": {
@@ -498,6 +595,17 @@
     "info": {
       "datasaved": "The data has been deleted",
       "datadeleted": "The data has been deleted"
+    }
+  },
+  "events": {
+    "fields": {
+      "label": {
+        "id": "Id",
+        "status": "status",
+        "title": "title",
+        "slug": "Slug",
+        "actions": "Actions"
+      }
     }
   },
   "locations": {

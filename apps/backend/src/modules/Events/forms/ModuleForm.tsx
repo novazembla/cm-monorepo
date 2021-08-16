@@ -263,19 +263,19 @@ export const ModuleForm = ({
 
       <Box>
         <Heading as="h2" mb="3">
-          {t("module.events.forms", "Event date(s)")}
+          {t("module.events.forms.eventdates.heading", "Event date(s)")}
         </Heading>
         <Table position="relative" mb="400px" w="100%">
           <Thead>
             <tr>
               <Th pl="0" borderColor="gray.300" fontSize="md" color="gray.800">
-                {t("module.events.forms.event.field.date.label", "Date")}
+                {t("module.events.forms.eventdates.table.column.date.label", "Date")}
               </Th>
               <Th pl="0" borderColor="gray.300" fontSize="md" color="gray.800">
-                {t("module.events.forms.event.field.begin.label", "Begin")}
+                {t("module.events.forms.event.table.column.begin.label", "Begin")}
               </Th>
               <Th pl="0" borderColor="gray.300" fontSize="md" color="gray.800">
-                {t("module.events.forms.event.field.end.label", "End")}
+                {t("module.events.forms.event.table.column.end.label", "End")}
               </Th>
               <Th
                 textAlign="center"
