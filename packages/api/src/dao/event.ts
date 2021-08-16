@@ -93,7 +93,10 @@ export const daoEventQueryFirst = async (
     take: 1000,
   });
 
-  return filteredOutputByBlacklist(event, config.db.privateJSONDataKeys.event);
+  return filteredOutputByBlacklistOrNotFound(
+    event,
+    config.db.privateJSONDataKeys.event
+  );
 };
 
 export const daoEventQueryCount = async (

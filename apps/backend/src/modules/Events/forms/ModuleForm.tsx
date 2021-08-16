@@ -92,7 +92,7 @@ export const ModuleForm = ({
   console.log(errors);
 
   if (action === "update") {
-    if (data.adminUsers) {
+    if (data?.adminUsers) {
       updateActions = (
         <>
           <Divider mt="10" />
@@ -134,7 +134,7 @@ export const ModuleForm = ({
       );
     } else {
       updateActions = (
-        <input value={data.eventRead.ownerId} {...register("ownerId")} />
+        <input value={data?.eventRead?.ownerId} {...register("ownerId")} />
       );
     }
   }

@@ -21,8 +21,11 @@ export const imageGetUploadInfo = async (): Promise<{
   const uploadFolder = `${config.uploadDir}/${date.getUTCFullYear()}/${
     date.getUTCMonth() + 1
   }`;
-  const path = `${config.baseDir}/${config.publicDir}/${uploadFolder}`;
-  const baseUrl = `${config.baseUrl.api}/${uploadFolder}`;
+  const path = `${config.baseDir}/${config.publicDir}/${uploadFolder}`.replace(
+    /\/\//g,
+    "/"
+  );
+  const baseUrl = `${config.baseUrl.api}/${uploadFolder}`.replace(/\/\//g, "/");
 
   try {
     await mkdir(path, { recursive: true });

@@ -76,7 +76,10 @@ export const daoUserFindFirst = async (
     where,
   });
 
-  return filteredOutputByBlacklist(user, config.db.privateJSONDataKeys.user);
+  return filteredOutputByBlacklistOrNotFound(
+    user,
+    config.db.privateJSONDataKeys.user
+  );
 };
 
 export const daoUserQueryCount = async (

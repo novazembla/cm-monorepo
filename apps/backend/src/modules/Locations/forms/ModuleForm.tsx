@@ -33,7 +33,7 @@ export const ModuleForm = ({
   let updateActions;
 
   if (action === "update") {
-    if (data.adminUsers) {
+    if (data?.adminUsers) {
       updateActions = (
         <>
           <Divider mt="10" />

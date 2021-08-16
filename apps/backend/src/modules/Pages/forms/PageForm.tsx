@@ -27,7 +27,7 @@ export const PageForm = ({
   let updateActions;
 
   if (action === "update") {
-    if (data.adminUsers) {
+    if (data?.adminUsers) {
       updateActions = (
         <>
           <Divider mt="10" />
@@ -67,7 +67,7 @@ export const PageForm = ({
       );
     } else {
       updateActions = (
-        <input value={data.pageRead.ownerId} {...register("ownerId")} />
+        <input value={data?.pageRead?.ownerId} {...register("ownerId")} />
       );
     }
   }

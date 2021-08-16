@@ -31,8 +31,16 @@ const postMessage = (msg: string) => {
 const createImageSizeWebP = async (size: any, uuid: string, imageMeta: any) =>
   new Promise((resolve, reject) => {
     const newImgFileName = `${uuid}-${size.width}-${size.heigth}.webp`;
-    const newImgUrl = `${config.baseUrl.api}/${imageMeta.uploadFolder}/${newImgFileName}`;
-    const newImgPath = `${config.baseDir}/${config.publicDir}/${imageMeta.uploadFolder}/${newImgFileName}`;
+    const newImgUrl =
+      `${config.baseUrl.api}/${imageMeta.uploadFolder}/${newImgFileName}`.replace(
+        /\/\//g,
+        "/"
+      );
+    const newImgPath =
+      `${config.baseDir}/${config.publicDir}/${imageMeta.uploadFolder}/${newImgFileName}`.replace(
+        /\/\//g,
+        "/"
+      );
 
     sharp(imageMeta.originalFilePath)
       .resize(size.width, size.heigth, {

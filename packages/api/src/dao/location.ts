@@ -86,7 +86,7 @@ export const daoLocationQueryFirst = async (
     include,
   });
 
-  return filteredOutputByBlacklist(
+  return filteredOutputByBlacklistOrNotFound(
     location,
     config.db.privateJSONDataKeys.location
   );
