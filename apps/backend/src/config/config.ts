@@ -1,7 +1,7 @@
 import merge from "deepmerge";
 import { isPlainObject } from 'is-plain-object';
 
-import { appConfig } from "./appconfig";
+import { appConfig } from "./tmpappconfig";
 
 import { AppSettingsFieldDefinitions } from "./settings";
 import { activeLanguages, defaultLanguage } from "./internationalization";
