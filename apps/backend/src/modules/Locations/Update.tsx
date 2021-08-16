@@ -239,7 +239,7 @@ const Update = () => {
                 validationSchema={ModuleLocationValidationSchema}
               />
 
-              {data && data.locationRead.events && (
+              {data && Array.isArray(data.locationRead.events) && (
                 <Box mt="6">
                   <Heading as="h2" mb="3">
                     {t("module.locations.title.events", "Associated events")}
@@ -280,51 +280,62 @@ const Update = () => {
                       </tr>
                     </Thead>
                     <tbody>
-                      {data.locationRead.events.map((event: any) => (
-                        <tr key={`event-${event.id}`}>
-                          <Td pl="0" borderColor="gray.300">
-                          <MultiLangValue json={event.title} />
-                          </Td>
-
-                          <Td
-                            px="0"
-                            borderColor="gray.300"
-                            _last={{
-                              position: "sticky",
-                              right: 0,
-                              p: 0,
-                              "> div": {
-                                p: 4,
-                                h: "100%",
-                                bg: "rgba(255,255,255,0.9)",
-                              },
-                            }}
-                          >
-                            <Flex justifyContent="center">
-                              <HStack mx="auto">
-                                <IconButton
-                                  variant="outline"
-                                  as={RouterLink}
-                                  to={`/events/update/${event.id}`}
-                                  icon={<BsEye />}
-                                  fontSize="lg"
-                                  aria-label={t(
-                                    "module.locations.fields.label.viewevent",
-                                    "View event"
-                                  )}
-                                  title={t(
-                                    "module.locations.fields.label.viewevent",
-                                    "View event"
-                                  )}
-                                  disabled={
-                                    !(appUser && appUser.can("eventUpdate"))
-                                  }
-                                />
-                              </HStack>
-                            </Flex>
+                      {data.locationRead.events.length === 0 && (
+                        <tr key={`event-no-event`}>
+                          <Td pl="0" borderColor="gray.300" colspan>
+                            {t("module.locations.noasscoiatedevents", "No associated events")}
                           </Td>
                         </tr>
-                      ))}
+                      )}
+                      {data.locationRead.events.length  > 0 && (
+                        <>
+                          {data.locationRead.events.map((event: any) => (
+                            <tr key={`event-${event.id}`}>
+                              <Td pl="0" borderColor="gray.300">
+                                <MultiLangValue json={event.title} />
+                              </Td>
+
+                              <Td
+                                px="0"
+                                borderColor="gray.300"
+                                _last={{
+                                  position: "sticky",
+                                  right: 0,
+                                  p: 0,
+                                  "> div": {
+                                    p: 4,
+                                    h: "100%",
+                                    bg: "rgba(255,255,255,0.9)",
+                                  },
+                                }}
+                              >
+                                <Flex justifyContent="center">
+                                  <HStack mx="auto">
+                                    <IconButton
+                                      variant="outline"
+                                      as={RouterLink}
+                                      to={`/events/update/${event.id}`}
+                                      icon={<BsEye />}
+                                      fontSize="lg"
+                                      aria-label={t(
+                                        "module.locations.fields.label.viewevent",
+                                        "View event"
+                                      )}
+                                      title={t(
+                                        "module.locations.fields.label.viewevent",
+                                        "View event"
+                                      )}
+                                      disabled={
+                                        !(appUser && appUser.can("eventUpdate"))
+                                      }
+                                    />
+                                  </HStack>
+                                </Flex>
+                              </Td>
+                            </tr>
+                          ))}
+                        </>
+                      )}
                     </tbody>
                   </Table>
                 </Box>
