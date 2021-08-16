@@ -99,7 +99,7 @@ export const SearchQueries = extendType({
             slug: loc.slug,
             geopoint: {
               lng: loc.lng ?? 0,
-              lat: loc.lng ?? 0,
+              lat: loc.lat ?? 0,
             },
           }));
 
