@@ -1,4 +1,4 @@
-import { string, object, number, date } from "yup";
+import { string, object, number } from "yup";
 
 import { activeLanguages, defaultLanguage } from "~/config";
 

@@ -45,7 +45,9 @@ TODO: Image Uloader
 
 TODO: Form Validation, should show char count in html too long exception 
 
-
+TODO: Events
+- Optimize Event Date Table on Mobile CSS
+- Validation of event dates, begin needs to be < than end
 
 
 TODO: NPM Packages

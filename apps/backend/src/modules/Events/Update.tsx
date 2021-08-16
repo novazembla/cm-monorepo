@@ -158,33 +158,6 @@ const Update = () => {
   ) => {
     setIsFormError(false);
 
-    const createDatesUpsert = (dates: any) => {
-      return dates.reduce((acc: any, date: any) => {
-
-        // if (date.id) {
-        //   acc.update.push({
-        //     data: {
-        //       date: date.date,
-        //       begin: date.begin,
-        //       end: date.end,
-        //     },
-        //     where: {
-        //       id: date.id
-        //     }
-        //   });
-        // } else {
-          acc.create.push({
-            date: date.date,
-            begin: date.begin,
-            end: date.end,
-          });
-        //}
-        return acc;
-      },{set:[],create:[]})
-    }
-
-    console.log(createDatesUpsert(newData.dates));
-
     try {
       if (appUser) {
         const { errors } = await firstMutation(parseInt(router.query.id, 10), {
@@ -193,7 +166,7 @@ const Update = () => {
               id: newData.ownerId,
             },
           },
-          dates: createDatesUpsert(newData.dates),
+          dates: newData.dates,
           status: newData.status,
           terms: {
             set: mapModulesCheckboxArrayToData(

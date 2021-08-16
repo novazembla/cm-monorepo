@@ -8,7 +8,10 @@ import {
   Table,
   Td,
   Th,
-  Thead
+  Thead,
+  HStack,
+  VisuallyHidden,
+  Flex,
 } from "@chakra-ui/react";
 import { useFormContext, useFieldArray, Controller } from "react-hook-form";
 import { DateSingleInput } from "@datepicker-react/styled";
@@ -78,14 +81,12 @@ export const ModuleForm = ({
     getValues,
   } = useFormContext();
 
-  const { fields, remove, append, insert } = useFieldArray(
-    {
-      control,
-      name: "dates",
-      keyName: "fieldId"
-    }
-  );
-
+  const { fields, remove, append, insert } = useFieldArray({
+    control,
+    name: "dates",
+    keyName: "fieldId",
+  });
+  
   if (action === "update") {
     if (data.adminUsers) {
       updateActions = (
@@ -226,94 +227,130 @@ export const ModuleForm = ({
         }}
       />
       <Divider mt="10" />
-      
-        <Box>
-          <Heading as="h2" mb="3">
-            {t("module.events.forms", "Event date(s)")}
-          </Heading>
-          <Table position="relative" mb="400px" w="100%">
-            <Thead>
-              <tr>
-              <Th>Date</Th>
-              <Th>Begin</Th>
-              <Th>End</Th>
-              <Th>Actions</Th>
-              </tr>
-            </Thead>
-            <tbody>
-              {fields.map((f, index) => {
-                const field = f as any;
-                return (
-                  <tr key={f.fieldId}>
-                    <Td>
-                      <Controller
-                        control={control}
-                        name={`dates[${index}].date`}
-                        defaultValue={field.date}
-                        render={({
-                          field: { onChange, onBlur, value, name, ref },
-                        }) => {
-                          const date = isValidDate(value) ? value : field.date;
-                          return (
-                            <DateSingleInput
-                              onDateChange={(date) => {
-                                onChange(date.date);
-                                setIsOpenFieldArray({
-                                  ...isOpenFieldArray,
-                                  [`dates[${index}].date`]: false,
-                                });
-                              }}
-                              onFocusChange={(focusedInput) => {
-                                setIsOpenFieldArray({
-                                  ...isOpenFieldArray,
-                                  [`dates[${index}].date`]: focusedInput,
-                                });
-                              }}
-                              displayFormat="dd/MM/yy"
-                              showCalendarIcon={true}
-                              showClose={false}
-                              showDatepicker={
-                                `dates[${index}].date` in isOpenFieldArray &&
-                                isOpenFieldArray[`dates[${index}].date`]
-                              }
-                              showResetDate={false}
-                              phrases={{
-                                dateAriaLabel: t(
-                                  "module.events.forms.event.field.date.placeholder",
-                                  "Date"
-                                ),
-                                datePlaceholder: t(
-                                  "module.events.forms.event.field.date.placeholder",
-                                  "Date"
-                                ),
-                                datepickerStartDatePlaceholder: "",
-                                datepickerStartDateLabel: "",
-                                datepickerEndDateLabel: "",
-                                datepickerEndDatePlaceholder: "",
-                                resetDates: "",
-                                close: t("form.datepicker.close", "close"),
-                              }}
-                              date={date}
-                              weekdayLabelFormat={(date: Date) =>
-                                date.toLocaleString(i18n.language, {
-                                  weekday: "short",
-                                })
-                              }
-                              monthLabelFormat={(date: Date) =>
-                                date.toLocaleString(i18n.language, {
-                                  month: "long",
-                                })
-                              }
-                            />
-                          );
-                        }}
-                      />
-                    </Td>
-                    <Td>
+
+      <Box>
+        <Heading as="h2" mb="3">
+          {t("module.events.forms", "Event date(s)")}
+        </Heading>
+        <Table position="relative" mb="400px" w="100%">
+          <Thead>
+            <tr>
+              <Th pl="0" borderColor="gray.300" fontSize="md" color="gray.800">
+                {t("module.events.forms.event.field.date.label", "Date")}
+              </Th>
+              <Th pl="0" borderColor="gray.300" fontSize="md" color="gray.800">
+                {t("module.events.forms.event.field.begin.label", "Begin")}
+              </Th>
+              <Th pl="0" borderColor="gray.300" fontSize="md" color="gray.800">
+                {t("module.events.forms.event.field.end.label", "End")}
+              </Th>
+              <Th
+                textAlign="center"
+                px="0"
+                borderColor="gray.300"
+                fontSize="md"
+                color="gray.800"
+                _last={{
+                  position: "sticky",
+                  right: 0,
+                  p: 0,
+                  "> div": {
+                    p: 4,
+                    h: "100%",
+                    bg: "rgba(255,255,255,0.9)",
+                  },
+                }}
+              >
+                {t("module.events.forms.event.title.actions", "Actions")}
+              </Th>
+            </tr>
+          </Thead>
+          <tbody>
+            {fields.map((f, index) => {
+              const field = f as any;
+              return (
+                <tr key={f.fieldId}>
+                  <Td pl="0" borderColor="gray.300">
+                    <Controller
+                      control={control}
+                      name={`dates[${index}].date`}
+                      defaultValue={field.date}
+                      render={({
+                        field: { onChange, onBlur, value, name, ref },
+                      }) => {
+                        const date = isValidDate(value) ? value : field.date;
+                        return (
+                          <DateSingleInput
+                            onDateChange={(date) => {
+                              onChange(date.date);
+                              setIsOpenFieldArray({
+                                ...isOpenFieldArray,
+                                [`dates[${index}].date`]: false,
+                              });
+                            }}
+                            onFocusChange={(focusedInput) => {
+                              setIsOpenFieldArray({
+                                ...isOpenFieldArray,
+                                [`dates[${index}].date`]: focusedInput,
+                              });
+                            }}
+                            displayFormat="dd/MM/yy"
+                            showCalendarIcon={true}
+                            showClose={false}
+                            showDatepicker={
+                              `dates[${index}].date` in isOpenFieldArray &&
+                              isOpenFieldArray[`dates[${index}].date`]
+                            }
+                            showResetDate={false}
+                            phrases={{
+                              dateAriaLabel: t(
+                                "module.events.forms.event.field.date.placeholder",
+                                "Date"
+                              ),
+                              datePlaceholder: t(
+                                "module.events.forms.event.field.date.placeholder",
+                                "Date"
+                              ),
+                              datepickerStartDatePlaceholder: "",
+                              datepickerStartDateLabel: "",
+                              datepickerEndDateLabel: "",
+                              datepickerEndDatePlaceholder: "",
+                              resetDates: "",
+                              close: t("form.datepicker.close", "close"),
+                            }}
+                            date={date}
+                            weekdayLabelFormat={(date: Date) =>
+                              date.toLocaleString(i18n.language, {
+                                weekday: "short",
+                              })
+                            }
+                            monthLabelFormat={(date: Date) =>
+                              date.toLocaleString(i18n.language, {
+                                month: "long",
+                              })
+                            }
+                          />
+                        );
+                      }}
+                    />
+                  </Td>
+                  <Td pl="0" borderColor="gray.300">
+                    {/* eslint-disable-next-line jsx-a11y/label-has-for */}
+                    <label htmlFor={`dates${index}begin`}>
+                      <VisuallyHidden>
+                        {t(
+                          "module.events.forms.event.field.begin.label",
+                          "Begin"
+                        )}
+                      </VisuallyHidden>
                       <Controller
                         control={control}
                         name={`dates[${index}].begin`}
-                        defaultValue={isValidDate(field.begin)? field.begin : new Date(new Date().setHours(10, 0))}
+                        defaultValue={
+                          isValidDate(field.begin)
+                            ? field.begin
+                            : new Date(new Date().setHours(10, 0, 0))
+                        }
                         render={({
                           field: { onChange, onBlur, value, name, ref },
                         }) => {
@@ -324,23 +361,49 @@ export const ModuleForm = ({
                                 const date = getValues(`dates[${index}].date`);
                                 const hm = time.split(":");
                                 if (isValidDate(date)) {
-                                  onChange(new Date(date.setHours(parseInt(hm[0]), parseInt(hm[1]))));
+                                  onChange(
+                                    new Date(
+                                      date.setHours(
+                                        parseInt(hm[0]),
+                                        parseInt(hm[1]),
+                                        0
+                                      )
+                                    )
+                                  );
                                 } else {
-                                  onChange(new Date(new Date().setHours(parseInt(hm[0]), parseInt(hm[1]))));
+                                  onChange(
+                                    new Date(
+                                      new Date().setHours(
+                                        parseInt(hm[0]),
+                                        parseInt(hm[1]),
+                                        0
+                                      )
+                                    )
+                                  );
                                 }
                               }}
-                              input={<Input />}
+                              input={<Input id={`dates${index}end`} />}
                               value={time}
                             />
                           );
                         }}
                       />
-                    </Td>
-                    <Td>
+                    </label>
+                  </Td>
+                  <Td pl="0" borderColor="gray.300">
+                    {/* eslint-disable-next-line jsx-a11y/label-has-for */}
+                    <label htmlFor={`dates${index}end`}>
+                      <VisuallyHidden>
+                        {t("module.events.forms.event.field.end.label", "End")}
+                      </VisuallyHidden>
                       <Controller
                         control={control}
                         name={`dates[${index}].end`}
-                        defaultValue={isValidDate(field.end)? field.end : new Date(new Date().setHours(18, 0))}
+                        defaultValue={
+                          isValidDate(field.end)
+                            ? field.end
+                            : new Date(new Date().setHours(18, 0, 0))
+                        }
                         render={({
                           field: { onChange, onBlur, value, name, ref },
                         }) => {
@@ -351,63 +414,101 @@ export const ModuleForm = ({
                                 const date = getValues(`dates[${index}].date`);
                                 const hm = time.split(":");
                                 if (isValidDate(date)) {
-                                  onChange(new Date(date.setHours(parseInt(hm[0]), parseInt(hm[1]))));
+                                  onChange(
+                                    new Date(
+                                      date.setHours(
+                                        parseInt(hm[0]),
+                                        parseInt(hm[1]),
+                                        0
+                                      )
+                                    )
+                                  );
                                 } else {
-                                  onChange(new Date(new Date().setHours(parseInt(hm[0]), parseInt(hm[1]))));
+                                  onChange(
+                                    new Date(
+                                      new Date().setHours(
+                                        parseInt(hm[0]),
+                                        parseInt(hm[1]),
+                                        0
+                                      )
+                                    )
+                                  );
                                 }
                               }}
-                              input={<Input />}
+                              input={<Input id={`dates${index}end`} />}
                               value={time}
                             />
                           );
                         }}
                       />
-                    </Td>
-                    <Td>
-                      <IconButton
-                        aria-label={t(
-                          "module.events.forms.event.field.dates.removedate",
-                          "Remove"
-                        )}
-                        fontSize="xl"
-                        colorScheme="red"
-                        variant="outline"
-                        icon={<HiOutlineTrash />}
-                        onClick={() => remove(index)}
-                        isDisabled={fields.length === 1}
-                      />
-                   
-                      <IconButton
-                        aria-label={t(
-                          "module.events.forms.event.field.dates.clone",
-                          "Clone current line"
-                        )}
-                        variant="outline"
-                        icon={<MdPlusOne />}
-                        fontSize="2xl"
-                        onClick={() => {
-                          const values = getValues(`dates[${index}]`);
-                          const oneDayInMs = 60 * 60 * 24 * 1000;
+                    </label>
+                  </Td>
+                  <Td
+                    px="0"
+                    borderColor="gray.300"
+                    _last={{
+                      position: "sticky",
+                      right: 0,
+                      p: 0,
+                      "> div": {
+                        p: 4,
+                        h: "100%",
+                        bg: "rgba(255,255,255,0.9)",
+                      },
+                    }}
+                  >
+                    <Flex justifyContent="center">
+                      <HStack mx="auto">
+                        <IconButton
+                          aria-label={t(
+                            "module.events.forms.event.field.dates.removedate",
+                            "Remove"
+                          )}
+                          fontSize="xl"
+                          colorScheme="red"
+                          variant="outline"
+                          icon={<HiOutlineTrash />}
+                          onClick={() => remove(index)}
+                          isDisabled={fields.length === 1}
+                        />
 
-                          insert(index + 1, {
-                            date: isValidDate(values.date)? new Date(values.date.getTime() + oneDayInMs) : new Date(),
-                            begin: isValidDate(values.begin)? new Date(values.begin.getTime() + oneDayInMs) : new Date("10:00"),
-                            end: isValidDate(values.end)? new Date(values.end.getTime() + oneDayInMs) : new Date("18:00"),
-                          });
-                          
-                        }}
-                      />
-                    </Td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </Table>
-        </Box>
+                        <IconButton
+                          aria-label={t(
+                            "module.events.forms.event.field.dates.clone",
+                            "Clone current line"
+                          )}
+                          variant="outline"
+                          icon={<MdPlusOne />}
+                          fontSize="2xl"
+                          onClick={() => {
+                            const values = getValues(`dates[${index}]`);
+                            const oneDayInMs = 60 * 60 * 24 * 1000;
+
+                            insert(index + 1, {
+                              date: isValidDate(values.date)
+                                ? new Date(values.date.getTime() + oneDayInMs)
+                                : new Date(),
+                              begin: isValidDate(values.begin)
+                                ? new Date(values.begin.getTime() + oneDayInMs)
+                                : new Date(new Date().setHours(10,0,0)),
+                              end: isValidDate(values.end)
+                                ? new Date(values.end.getTime() + oneDayInMs)
+                                : new Date(new Date().setHours(18,0,0)),
+                            });
+                          }}
+                        />
+                      </HStack>
+                    </Flex>
+                  </Td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </Table>
+      </Box>
     </>
   );
 };
 export default ModuleForm;
-
 
 // TOOD: the event list should be empty on start/ be required, and have an add first date button or something like that.

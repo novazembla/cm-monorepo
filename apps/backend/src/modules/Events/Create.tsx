@@ -65,8 +65,8 @@ const Create = () => {
       dates: [
         {
           date: new Date(),
-          begin: new Date(new Date().setHours(10, 0)),
-          end: new Date(new Date().setHours(18)),
+          begin: new Date(new Date().setHours(10, 0, 0)),
+          end: new Date(new Date().setHours(18, 0, 0)),
         },
       ],
     },

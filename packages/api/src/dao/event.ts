@@ -1,5 +1,5 @@
 import httpStatus from "http-status";
-import { Event, Prisma } from "@prisma/client";
+import { Event, EventDate, Prisma } from "@prisma/client";
 import { filteredOutputByBlacklist } from "@culturemap/core";
 
 import { ApiError, filteredOutputByBlacklistOrNotFound } from "../utils";
@@ -161,6 +161,14 @@ export const daoEventUpdate = async (
 };
 
 export const daoEventDelete = async (id: number): Promise<Event> => {
+  await prisma.eventDate.deleteMany({
+    where: {
+      event: {
+        id,
+      },
+    },
+  });
+
   const term: Event = await prisma.event.delete({
     where: {
       id,
@@ -173,6 +181,40 @@ export const daoEventDelete = async (id: number): Promise<Event> => {
   );
 };
 
+export const daoEventGetDatesById = async (
+  id: number
+): Promise<EventDate[]> => {
+  const eventDates: EventDate[] = await prisma.eventDate.findMany({
+    where: {
+      event: {
+        id,
+      },
+    },
+  });
+
+  return filteredOutputByBlacklistOrNotFound(
+    eventDates,
+    config.db.privateJSONDataKeys.event
+  );
+};
+
+export const daoEventDeleteDatesByIds = async (
+  dateId: number,
+  ids: number[]
+): Promise<number> => {
+  const { count } = await prisma.eventDate.deleteMany({
+    where: {
+      event: {
+        id: dateId,
+      },
+      id: {
+        in: ids,
+      },
+    },
+  });
+
+  return count;
+};
 export default {
   daoEventQuery,
   daoEventQueryFirst,
@@ -183,4 +225,5 @@ export default {
   daoEventUpdate,
   daoEventDelete,
   daoEventSearchQuery,
+  daoEventGetDatesById,
 };

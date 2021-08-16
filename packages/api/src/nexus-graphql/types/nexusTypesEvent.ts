@@ -27,10 +27,11 @@ import {
   daoEventQueryCount,
   daoEventQueryFirst,
   daoEventCreate,
-  daoEventUpdate,
   daoEventDelete,
   daoUserGetById,
 } from "../../dao";
+
+import { eventUpdate } from "../../services/serviceEvent";
 
 export const EventDate = objectType({
   name: "EventDate",
@@ -228,6 +229,9 @@ export const EventQueries = extendType({
                 begin: true,
                 end: true,
               },
+              orderBy: {
+                date: "asc",
+              },
             },
           };
         }
@@ -271,8 +275,6 @@ export const EventMutations = extendType({
       authorize: (...[, , ctx]) => authorizeApiUser(ctx, "eventCreate"),
 
       async resolve(...[, args]) {
-
-        console.log(args.data.dates);
         const event = await daoEventCreate(args.data);
 
         if (!event)
@@ -296,7 +298,7 @@ export const EventMutations = extendType({
       authorize: (...[, , ctx]) => authorizeApiUser(ctx, "eventUpdate"),
 
       async resolve(...[, args]) {
-        const event = await daoEventUpdate(args.id, args.data);
+        const event = await eventUpdate(args.id, args.data);
 
         if (!event)
           throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Update failed");
