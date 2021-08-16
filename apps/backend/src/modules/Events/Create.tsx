@@ -87,7 +87,6 @@ const Create = () => {
 
   const {
     handleSubmit,
-    getValues,
     setError,
     formState: { isSubmitting, isDirty },
   } = formMethods;
