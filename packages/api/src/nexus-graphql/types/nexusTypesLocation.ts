@@ -8,7 +8,7 @@ import {
   extendType,
   inputObjectType,
   nonNull,
-  // stringArg,
+  stringArg,
   intArg,
   arg,
   list,
@@ -30,6 +30,7 @@ import {
   daoLocationUpdate,
   daoLocationDelete,
   daoUserGetById,
+  daoLocationGetBySlug,
 } from "../../dao";
 
 export const Location = objectType({
@@ -122,7 +123,7 @@ export const LocationQueries = extendType({
 
         let totalCount;
         let locations;
-        let include;
+        let include = {};
 
         if ((pRI?.fieldsByTypeName?.LocationQueryResult as any)?.totalCount) {
           totalCount = await daoLocationQueryCount(args.where);
@@ -139,6 +140,7 @@ export const LocationQueries = extendType({
             ?.fieldsByTypeName?.Location?.terms
         ) {
           include = {
+            ...include,
             terms: {
               select: {
                 id: true,
@@ -152,7 +154,7 @@ export const LocationQueries = extendType({
         if ((pRI?.fieldsByTypeName?.LocationQueryResult as any)?.locations)
           locations = await daoLocationQuery(
             args.where,
-            include,
+            Object.keys(include).length > 0 ? include : undefined,
             args.orderBy,
             args.pageIndex as number,
             args.pageSize as number
@@ -162,6 +164,19 @@ export const LocationQueries = extendType({
           totalCount,
           locations,
         };
+      },
+    });
+
+    t.nonNull.field("location", {
+      type: "Location",
+
+      args: {
+        slug: nonNull(stringArg()),
+      },
+
+      // resolve(root, args, ctx, info)
+      async resolve(...[, args]) {
+        return daoLocationGetBySlug(args.slug);
       },
     });
 
@@ -178,10 +193,11 @@ export const LocationQueries = extendType({
       async resolve(...[, args, , info]) {
         const pRI = parseResolveInfo(info);
 
-        let include;
+        let include = {};
 
         if ((pRI?.fieldsByTypeName?.Location as any)?.terms)
           include = {
+            ...include,
             terms: {
               select: {
                 id: true,
@@ -193,6 +209,7 @@ export const LocationQueries = extendType({
 
         if ((pRI?.fieldsByTypeName?.Location as any)?.events)
           include = {
+            ...include,
             events: {
               select: {
                 id: true,

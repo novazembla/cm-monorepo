@@ -253,11 +253,13 @@ type ProfileUser implements UserBaseNode {
 
 type Query {
   adminUsers(roles: [String]!): [AdminUser] @deprecated(reason: "A publicly accessible list Lists all users that have a the given roles")
+  event(slug: String!): Event!
   eventRead(id: Int!): Event!
   events(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): EventQueryResult
   imageRead(id: Int!): Image!
   imageStatus(id: Int!): ImageStatus!
   images(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, taxonomyId: Int!, where: JSON): ImageQueryResult
+  location(slug: String!): Location!
   locationRead(id: Int!): Location!
   locations(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): LocationQueryResult
   moduleTaxonomies(key: String!): [Taxonomy]
@@ -286,7 +288,7 @@ type SearchResult {
 
 type SearchResultItem {
   dates: [EventDate]
-  excerpt: JSON!
+  excerpt: JSON
   geopoint: GeoPoint
   id: Int!
   locations: [Location]

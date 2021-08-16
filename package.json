@@ -42,7 +42,7 @@
     "package:api:db:generate": "npx prisma generate",
     "package:api:db:studio": "npx prisma studio",
     "package:api:db:seed": "node --loader ts-node/esm ./packages/api/prisma/manually.seed.ts",
-    "package:api:dev:db:seed": "NODE_ENV=development dotenv -e .env -- node --loader ts-node/esm ./packages/api/prisma/manually.seed.ts",
+    "package:api:db:dev:seed": "NODE_ENV=development dotenv -e .env -- node --loader ts-node/esm ./packages/api/prisma/manually.seed.ts",
     "package:api:test:start": "NODE_ENV=test dotenv -c test -- node ./apps/api/build/index.js",
     "package:api:test:db:push": "NODE_ENV=test dotenv -c test -- npx prisma db push --force-reset",
     "package:api:test:db:studio": "NODE_ENV=test dotenv -c test -- npx prisma studio",

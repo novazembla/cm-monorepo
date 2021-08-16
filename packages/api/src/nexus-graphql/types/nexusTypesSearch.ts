@@ -19,6 +19,7 @@ import type { NexusGenObjects } from "../../types/nexus-typegen";
 import {
   daoLocationSearchQuery,
   daoEventSearchQuery,
+  daoPageSearchQuery,
   // daoImageQuery,
   // daoImageCreate,
   // daoImageQueryCount,
@@ -31,8 +32,8 @@ export const SearchResultItem = objectType({
     t.nonNull.int("id");
     t.nonNull.string("type");
     t.nonNull.json("title");
-    t.nonNull.json("excerpt");
     t.nonNull.json("slug");
+    t.json("excerpt");
     t.list.field("dates", {
       type: "EventDate",
     });
@@ -126,7 +127,26 @@ export const SearchQueries = extendType({
           }));
 
           result.push({
-            module: "location",
+            module: "event",
+            items,
+            totalCount: items.length,
+          });
+        }
+
+        const pages = await daoPageSearchQuery({
+          fullText: query,
+        });
+
+        if (pages && pages.length > 0) {
+          const items = pages.map((page: any) => ({
+            id: page.id,
+            type: "page",
+            title: page.title,
+            slug: page.slug,
+          }));
+
+          result.push({
+            module: "page",
             items,
             totalCount: items.length,
           });

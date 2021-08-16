@@ -41,7 +41,7 @@ const getRandomElements = (arr: any[], n: number) => {
   return result;
 };
 
-export const daoSharedGenerateFullText = (data: any, keys: string[]) => {
+const daoSharedGenerateFullText = (data: any, keys: string[]) => {
   return keys.reduce((fullText: string, key) => {
     if (!(key in data)) return fullText;
 
@@ -127,6 +127,52 @@ const keywords = [
   "Eröffnung",
   "Kultur",
   "Gedenken",
+];
+
+const months = [
+  "01",
+  "02",
+  "03",
+  "04",
+  "05",
+  "06",
+  "07",
+  "08",
+  "09",
+  "10",
+  "11",
+  "12",
+];
+
+const days = [
+  "01",
+  "02",
+  "03",
+  "04",
+  "05",
+  "06",
+  "07",
+  "08",
+  "09",
+  "10",
+  "11",
+  "12",
+  "13",
+  "14",
+  "15",
+  "16",
+  "17",
+  "18",
+  "19",
+  "20",
+  "21",
+  "22",
+  "23",
+  "24",
+  "25",
+  "26",
+  "27",
+  "28",
 ];
 
 const upsertUser = async (
@@ -346,6 +392,14 @@ async function main() {
   }
 
   if (contributor && editor && administrator) {
+    const taxEvntCategories = await prisma.taxonomy.findFirst({
+      where: {
+        slug: {
+          path: ["de"],
+          string_contains: "veranstaltungsarten",
+        },
+      },
+    });
     const taxCategories = await prisma.taxonomy.findFirst({
       where: {
         slug: {
@@ -399,7 +453,7 @@ async function main() {
                 ).join(" ");
 
                 const data = {
-                  status: rndBetween(1, 5),
+                  status: Math.random() > 0.3 ? 4 : rndBetween(1, 5),
                   title: {
                     en: `L(${id}) EN ${name}`,
                     de: `L(${id}) DE ${name}`,
@@ -410,21 +464,25 @@ async function main() {
                   },
                   description: {
                     en: `Description EN: ${keywordSelection} ${lorem.generateWords(
-                      rndBetween(5, 40)
+                      rndBetween(15, 50)
                     )}`,
                     de: `Beschreibung DE: ${lorem.generateWords(
-                      rndBetween(5, 40)
+                      rndBetween(15, 50)
                     )}`,
                   },
                   address: {
-                    en: `Adress EN: ${lorem.generateWords(rndBetween(5, 40))}`,
-                    de: `Adresse DE: ${lorem.generateWords(rndBetween(5, 40))}`,
+                    en: `Adress EN: ${lorem.generateWords(rndBetween(15, 50))}`,
+                    de: `Adresse DE: ${lorem.generateWords(
+                      rndBetween(15, 50)
+                    )}`,
                   },
                   offers: {
                     en: `Offering EN: ${lorem.generateWords(
-                      rndBetween(5, 40)
+                      rndBetween(15, 50)
                     )}`,
-                    de: `Angebot DE: ${lorem.generateWords(rndBetween(5, 40))}`,
+                    de: `Angebot DE: ${lorem.generateWords(
+                      rndBetween(15, 50)
+                    )}`,
                   },
                   contactInfo: {
                     en: `Contact EN: ${lorem.generateWords(rndBetween(5, 15))}`,
@@ -470,6 +528,143 @@ async function main() {
       }
     }
 
+    if (taxEvntCategories) {
+      const evntCatTerms = await prisma.term.findMany({
+        where: {
+          taxonomyId: taxEvntCategories.id,
+        },
+      });
+
+      const locationIds = await prisma.location.findMany({
+        select: {
+          id: true,
+        },
+      });
+
+      if (evntCatTerms && locationIds) {
+        console.log("Create events if needed");
+
+        await Promise.all(
+          [...Array(55).keys()].map(async (i) => {
+            const id = i + 1;
+            console.log(`test event-en-${id}`);
+
+            const tL = await prisma.event.findFirst({
+              where: {
+                slug: {
+                  path: ["en"],
+                  string_contains: `event-en-${id}`,
+                },
+              },
+            });
+
+            if (!tL) {
+              const name = lorem.generateWords(rndBetween(1, 4));
+
+              let ownerId;
+
+              if (Math.random() > 0.2) {
+                ownerId = Math.random() > 0.3 ? editor.id : administrator.id;
+              } else {
+                ownerId = contributor.id;
+              }
+
+              console.log(`Create event: E(${id}) EN ${name}`);
+
+              try {
+                const keywordSelection = getRandomElements(
+                  keywords,
+                  rndBetween(2, 5)
+                ).join(" ");
+
+                const data = {
+                  status: Math.random() > 0.3 ? 4 : rndBetween(1, 5),
+                  title: {
+                    en: `E(${id}) EN ${name}`,
+                    de: `E(${id}) DE ${name}`,
+                  },
+                  slug: {
+                    en: `event-en-${id}`,
+                    de: `event-de-${id}`,
+                  },
+                  description: {
+                    en: `Description EN: Event ${id} event ${id} ${keywordSelection} ${lorem.generateWords(
+                      rndBetween(15, 50)
+                    )}`,
+                    de: `Beschreibung DE: Veranstaltung ${id} veranstaltung ${id} ${lorem.generateWords(
+                      rndBetween(15, 50)
+                    )}`,
+                  },
+                  descriptionLocation: {
+                    en: `Location Desription EN: ${keywordSelection} ${lorem.generateWords(
+                      rndBetween(15, 50)
+                    )}`,
+                    de: `Genauere Ortsbeschreibung DE: ${lorem.generateWords(
+                      rndBetween(15, 50)
+                    )}`,
+                  },
+
+                  locations: {
+                    connect: getRandomElements(locationIds, rndBetween(1, 3)),
+                  },
+
+                  terms: {
+                    connect: getRandomElements(
+                      evntCatTerms,
+                      rndBetween(1, 3)
+                    ).map((term) => ({ id: term.id })),
+                  },
+
+                  owner: {
+                    connect: {
+                      id: ownerId,
+                    },
+                  },
+
+                  dates: {
+                    // so to have a bit variety select 1 element from this very uneven array
+                    // expand the array to the selected number of items and loop over them ...
+                    create: [...Array([1, 2, 3, 5, 10][rndBetween(0, 4)])].map(
+                      () => ({
+                        date: new Date(
+                          `${getRandomElements(
+                            [2020, 2021, 2022],
+                            1
+                          )}-${getRandomElements(
+                            months,
+                            1
+                          )}-${getRandomElements(days, 1)} 12:00`
+                        ),
+                        begin: new Date(
+                          new Date().setHours(rndBetween(8, 14), 0, 0)
+                        ),
+                        end: new Date(
+                          new Date().setHours(rndBetween(15, 22), 0, 0)
+                        ),
+                      })
+                    ),
+                  },
+                };
+                await prisma.event.create({
+                  data: {
+                    ...data,
+                    fullText: daoSharedGenerateFullText(data, [
+                      "title",
+                      "slug",
+                      "description",
+                      "descriptionLocation",
+                    ]),
+                  },
+                });
+              } catch (err) {
+                console.log(err);
+              }
+            }
+          })
+        );
+      }
+    }
+
     console.log("Create pages if needed");
     await Promise.all(
       pages.map(async (page) => {
@@ -488,7 +683,7 @@ async function main() {
             rndBetween(2, 5)
           ).join(" ");
           const data = {
-            status: rndBetween(1, 4),
+            status: Math.random() > 0.3 ? 4 : rndBetween(1, 4),
             title: {
               de: page[0],
               en: page[1],

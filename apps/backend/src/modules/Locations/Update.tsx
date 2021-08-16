@@ -27,6 +27,7 @@ import {
   IconButton,
   Flex,
   HStack,
+  chakra,
 } from "@chakra-ui/react";
 import { filteredOutputByWhitelist } from "@culturemap/core";
 
@@ -127,6 +128,9 @@ const Update = () => {
     setError,
     formState: { isSubmitting, isDirty },
   } = formMethods;
+
+
+  console.log(data);
 
   useEffect(() => {
     if (!data || !data.locationRead) return;
@@ -282,9 +286,9 @@ const Update = () => {
                     <tbody>
                       {data.locationRead.events.length === 0 && (
                         <tr key={`event-no-event`}>
-                          <Td pl="0" borderColor="gray.300" colspan>
+                          <chakra.td pl="0" borderColor="gray.300" colSpan={2}>
                             {t("module.locations.noasscoiatedevents", "No associated events")}
-                          </Td>
+                          </chakra.td>
                         </tr>
                       )}
                       {data.locationRead.events.length  > 0 && (

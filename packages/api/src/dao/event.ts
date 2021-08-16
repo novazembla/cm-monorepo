@@ -232,11 +232,75 @@ export const daoEventDeleteDatesByIds = async (
 
   return count;
 };
+
+export const daoEventGetBySlug = async (slug: string): Promise<Event> => {
+  const event = await prisma.event.findFirst({
+    where: {
+      OR: [
+        {
+          slug: {
+            path: ["en"],
+            equals: slug,
+          },
+        },
+        {
+          slug: {
+            path: ["de"],
+            equals: slug,
+          },
+        },
+      ],
+    },
+
+    include: {
+      terms: {
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+        },
+        orderBy: {
+          name: "asc",
+        },
+      },
+      dates: {
+        select: {
+          date: true,
+          begin: true,
+          end: true,
+        },
+        orderBy: {
+          date: "asc",
+        },
+      },
+
+      locations: {
+        select: {
+          id: true,
+          slug: true,
+          title: true,
+          lat: true,
+          lng: true,
+        },
+        orderBy: {
+          title: "asc",
+        },
+      },
+    },
+  });
+
+  return filteredOutputByBlacklistOrNotFound(
+    event,
+    config.db.privateJSONDataKeys.event
+  );
+};
+
 export default {
   daoEventQuery,
   daoEventQueryFirst,
   daoEventQueryCount,
   daoEventGetById,
+  daoEventGetBySlug,
   daoEventCheckSlugUnique,
   daoEventCreate,
   daoEventUpdate,

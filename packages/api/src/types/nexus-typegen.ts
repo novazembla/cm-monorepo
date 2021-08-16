@@ -288,7 +288,7 @@ export interface NexusGenObjects {
   }
   SearchResultItem: { // root type
     dates?: Array<NexusGenRootTypes['EventDate'] | null> | null; // [EventDate]
-    excerpt: NexusGenScalars['JSON']; // JSON!
+    excerpt?: NexusGenScalars['JSON'] | null; // JSON
     geopoint?: NexusGenRootTypes['GeoPoint'] | null; // GeoPoint
     id: number; // Int!
     locations?: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
@@ -524,11 +524,13 @@ export interface NexusGenFieldTypes {
   }
   Query: { // field return type
     adminUsers: Array<NexusGenRootTypes['AdminUser'] | null> | null; // [AdminUser]
+    event: NexusGenRootTypes['Event']; // Event!
     eventRead: NexusGenRootTypes['Event']; // Event!
     events: NexusGenRootTypes['EventQueryResult'] | null; // EventQueryResult
     imageRead: NexusGenRootTypes['Image']; // Image!
     imageStatus: NexusGenRootTypes['ImageStatus']; // ImageStatus!
     images: NexusGenRootTypes['ImageQueryResult'] | null; // ImageQueryResult
+    location: NexusGenRootTypes['Location']; // Location!
     locationRead: NexusGenRootTypes['Location']; // Location!
     locations: NexusGenRootTypes['LocationQueryResult'] | null; // LocationQueryResult
     moduleTaxonomies: Array<NexusGenRootTypes['Taxonomy'] | null> | null; // [Taxonomy]
@@ -555,7 +557,7 @@ export interface NexusGenFieldTypes {
   }
   SearchResultItem: { // field return type
     dates: Array<NexusGenRootTypes['EventDate'] | null> | null; // [EventDate]
-    excerpt: NexusGenScalars['JSON']; // JSON!
+    excerpt: NexusGenScalars['JSON'] | null; // JSON
     geopoint: NexusGenRootTypes['GeoPoint'] | null; // GeoPoint
     id: number; // Int!
     locations: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
@@ -791,11 +793,13 @@ export interface NexusGenFieldTypeNames {
   }
   Query: { // field return type name
     adminUsers: 'AdminUser'
+    event: 'Event'
     eventRead: 'Event'
     events: 'EventQueryResult'
     imageRead: 'Image'
     imageStatus: 'ImageStatus'
     images: 'ImageQueryResult'
+    location: 'Location'
     locationRead: 'Location'
     locations: 'LocationQueryResult'
     moduleTaxonomies: 'Taxonomy'
@@ -1018,6 +1022,9 @@ export interface NexusGenArgTypes {
     adminUsers: { // args
       roles: Array<string | null>; // [String]!
     }
+    event: { // args
+      slug: string; // String!
+    }
     eventRead: { // args
       id: number; // Int!
     }
@@ -1039,6 +1046,9 @@ export interface NexusGenArgTypes {
       pageSize: number | null; // Int
       taxonomyId: number; // Int!
       where?: NexusGenScalars['JSON'] | null; // JSON
+    }
+    location: { // args
+      slug: string; // String!
     }
     locationRead: { // args
       id: number; // Int!

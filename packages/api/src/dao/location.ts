@@ -183,6 +183,67 @@ export const daoLocationDelete = async (id: number): Promise<Location> => {
   );
 };
 
+export const daoLocationGetBySlug = async (slug: string): Promise<Location> => {
+  const location = await prisma.location.findFirst({
+    where: {
+      OR: [
+        {
+          slug: {
+            path: ["en"],
+            equals: slug,
+          },
+        },
+        {
+          slug: {
+            path: ["de"],
+            equals: slug,
+          },
+        },
+      ],
+    },
+
+    include: {
+      terms: {
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+        },
+        orderBy: {
+          name: "asc",
+        },
+      },
+      events: {
+        select: {
+          id: true,
+          slug: true,
+          title: true,
+
+          dates: {
+            select: {
+              date: true,
+              begin: true,
+              end: true,
+            },
+            orderBy: {
+              date: "asc",
+            },
+            take: 3,
+          },
+        },
+        orderBy: {
+          title: "asc",
+        },
+      },
+    },
+  });
+
+  return filteredOutputByBlacklistOrNotFound(
+    location,
+    config.db.privateJSONDataKeys.location
+  );
+};
+
 export default {
   daoLocationQuery,
   daoLocationQueryFirst,
@@ -193,4 +254,5 @@ export default {
   daoLocationUpdate,
   daoLocationDelete,
   daoLocationSearchQuery,
+  daoLocationGetBySlug,
 };

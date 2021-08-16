@@ -84,6 +84,25 @@ export const daoPageGetById = async (id: number): Promise<Page> => {
   );
 };
 
+export const daoPageSearchQuery = async (
+  where: Prisma.PageWhereInput,
+  pageIndex: number = 0,
+  pageSize: number = config.db.defaultPageSize * 3
+): Promise<Page[]> => {
+  const pages = await prisma.page.findMany({
+    where,
+    select: {
+      id: true,
+      title: true,
+      slug: true,
+    },
+    skip: pageIndex * pageSize,
+    take: Math.min(pageSize, config.db.maxPageSize),
+  });
+
+  return filteredOutputByBlacklist(pages, config.db.privateJSONDataKeys.page);
+};
+
 export const daoPageGetBySlug = async (slug: string): Promise<Page> => {
   const page: Page | null = await prisma.page.findFirst({
     where: {

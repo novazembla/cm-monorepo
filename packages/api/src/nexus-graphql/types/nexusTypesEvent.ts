@@ -8,7 +8,7 @@ import {
   extendType,
   inputObjectType,
   nonNull,
-  // stringArg,
+  stringArg,
   intArg,
   arg,
   list,
@@ -29,6 +29,7 @@ import {
   daoEventCreate,
   daoEventDelete,
   daoUserGetById,
+  daoEventGetBySlug,
 } from "../../dao";
 
 import { eventUpdate } from "../../services/serviceEvent";
@@ -201,7 +202,7 @@ export const EventQueries = extendType({
         if ((pRI?.fieldsByTypeName?.EventQueryResult as any)?.events)
           events = await daoEventQuery(
             args.where,
-            include,
+            Object.keys(include).length > 0 ? include : undefined,
             args.orderBy,
             args.pageIndex as number,
             args.pageSize as number
@@ -211,6 +212,19 @@ export const EventQueries = extendType({
           totalCount,
           events,
         };
+      },
+    });
+
+    t.nonNull.field("event", {
+      type: "Event",
+
+      args: {
+        slug: nonNull(stringArg()),
+      },
+
+      // resolve(root, args, ctx, info)
+      async resolve(...[, args]) {
+        return daoEventGetBySlug(args.slug);
       },
     });
 
@@ -280,7 +294,7 @@ export const EventQueries = extendType({
           {
             id: args.id,
           },
-          include
+          Object.keys(include).length > 0 ? include : undefined
         );
       },
     });

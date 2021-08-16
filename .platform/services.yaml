@@ -18,5 +18,5 @@ files:
     # the CLI will return an error.
     type: network-storage:1.0
     # The disk attribute is the size of the persistent disk (in MB) allocated to the service.
-    disk: 3072
+    disk: 2560
 

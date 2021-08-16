@@ -103,7 +103,7 @@ export const TaxonomyQueries = extendType({
 
         let totalCount;
         let taxonomies;
-        let include;
+        let include = {};
 
         if ((pRI?.fieldsByTypeName?.TaxonomyQueryResult as any)?.totalCount) {
           totalCount = await daoTaxonomyQueryCount(args.where);
@@ -120,6 +120,7 @@ export const TaxonomyQueries = extendType({
             ?.fieldsByTypeName?.Taxonomy?.termCount
         )
           include = {
+            ...include,
             _count: {
               select: {
                 terms: true,
@@ -130,7 +131,7 @@ export const TaxonomyQueries = extendType({
         if ((pRI?.fieldsByTypeName?.TaxonomyQueryResult as any)?.taxonomies)
           taxonomies = await daoTaxonomyQuery(
             args.where,
-            include,
+            Object.keys(include).length > 0 ? include : undefined,
             args.orderBy,
             args.pageIndex as number,
             args.pageSize as number
@@ -156,10 +157,11 @@ export const TaxonomyQueries = extendType({
       async resolve(...[, args, , info]) {
         const pRI = parseResolveInfo(info);
 
-        let include;
+        let include = {};
 
         if ((pRI?.fieldsByTypeName?.Taxonomy as any)?.modules) {
           include = {
+            ...include,
             modules: true,
           };
         }
@@ -168,7 +170,7 @@ export const TaxonomyQueries = extendType({
           {
             id: args.id,
           },
-          include
+          Object.keys(include).length > 0 ? include : undefined
         );
 
         return taxonomy;

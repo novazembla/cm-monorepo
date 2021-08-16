@@ -60,11 +60,7 @@ const createImageMetaInfo = (
   const metainfo: ApiImageMetaInformation = {
     uploadFolder,
     originalFileName: file.originalname,
-    originalFileUrl:
-      `${config.baseUrl.api}/${uploadFolder}/${file.filename}`.replace(
-        /\/\//g,
-        "/"
-      ),
+    originalFileUrl: `${config.baseUrl.api}${uploadFolder}/${file.filename}`,
     originalFilePath: file.path,
     mimeType: file.mimetype,
     encoding: file.encoding,
