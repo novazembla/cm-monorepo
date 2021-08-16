@@ -17,4 +17,3 @@ if [ "$PLATFORM_BRANCH" != "master" ] ; then
 else
     export NODE_ENV='production'
 fi
-
