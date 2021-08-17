@@ -55,7 +55,7 @@ export const ModuleForm = ({
                   value: authUser.id,
                   label: `${authUser.firstName} ${authUser.lastName}`,
                 }))}
-                isDisabled={!(appUser?.has("editor") || appUser?.id === data?.locationRead.ownerId)}
+                isDisabled={!(appUser && (appUser.has("editor") || data.locationRead.ownerId === appUser.id))}
                 settings={{
                   defaultValue: data.locationRead.ownerId,
                   placeholder: t(

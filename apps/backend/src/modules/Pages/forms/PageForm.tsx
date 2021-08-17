@@ -9,6 +9,7 @@ import {
   FieldPublishStatusSelect,
   TwoColFieldRow,
 } from "~/components/forms";
+import { useAuthentication } from "~/hooks";
 
 export const PageForm = ({
   data,
@@ -21,6 +22,7 @@ export const PageForm = ({
   validationSchema: any;
   action: "create" | "update";
 }) => {
+  const [appUser] = useAuthentication();
   const { t } = useTranslation();
   const { register } = useFormContext();
 
@@ -47,7 +49,7 @@ export const PageForm = ({
                   "module.pages.forms.field.label.author",
                   "Page author"
                 )}
-                isDisabled={true}
+                isDisabled={!(appUser && (appUser.has("editor") || data.pageRead.ownerId === appUser.id))}
                 isRequired={true}
                 options={data.adminUsers.map((authUser: any) => ({
                   value: authUser.id,

@@ -89,8 +89,6 @@ export const ModuleForm = ({
     keyName: "fieldId",
   });
 
-  console.log(errors);
-
   if (action === "update") {
     if (data?.adminUsers) {
       updateActions = (
@@ -116,8 +114,9 @@ export const ModuleForm = ({
                 }))}
                 isDisabled={
                   !(
-                    appUser?.has("editor") ||
-                    appUser?.id === data?.eventRead.ownerId
+                    appUser &&
+                    (appUser.has("editor") ||
+                      data.eventRead.ownerId === appUser.id)
                   )
                 }
                 settings={{
@@ -269,10 +268,16 @@ export const ModuleForm = ({
           <Thead>
             <tr>
               <Th pl="0" borderColor="gray.300" fontSize="md" color="gray.800">
-                {t("module.events.forms.eventdates.table.column.date.label", "Date")}
+                {t(
+                  "module.events.forms.eventdates.table.column.date.label",
+                  "Date"
+                )}
               </Th>
               <Th pl="0" borderColor="gray.300" fontSize="md" color="gray.800">
-                {t("module.events.forms.event.table.column.begin.label", "Begin")}
+                {t(
+                  "module.events.forms.event.table.column.begin.label",
+                  "Begin"
+                )}
               </Th>
               <Th pl="0" borderColor="gray.300" fontSize="md" color="gray.800">
                 {t("module.events.forms.event.table.column.end.label", "End")}

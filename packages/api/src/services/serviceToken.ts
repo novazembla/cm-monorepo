@@ -259,9 +259,10 @@ export const tokenProcessRefreshToken = (
   res: any, // TODO: this should be properly typed
   authPayload: AuthPayload
 ): AuthPayload => {
+  const secureCookie = config.baseUrl.api.indexOf("localhost") === -1;
   res.cookie("refreshToken", (authPayload as any).tokens.refresh.token, {
-    sameSite: config.env.NODE_ENV === "development" ? "lax" : "none",
-    secure: config.env.NODE_ENV !== "development",
+    sameSite: secureCookie ? "none" : "lax",
+    secure: secureCookie,
     httpOnly: true,
     maxAge:
       new Date((authPayload as any).tokens.refresh.expires).getTime() -
@@ -275,9 +276,10 @@ export const tokenProcessRefreshToken = (
 };
 
 export const tokenClearRefreshToken = (res: Response): void => {
+  const secureCookie = config.baseUrl.api.indexOf("localhost") === -1;
   res.cookie("refreshToken", "", {
-    sameSite: config.env.NODE_ENV === "development" ? "lax" : "none",
-    secure: config.env.NODE_ENV !== "development",
+    sameSite: secureCookie ? "none" : "lax",
+    secure: secureCookie,
     httpOnly: true,
     maxAge: 0,
   });
