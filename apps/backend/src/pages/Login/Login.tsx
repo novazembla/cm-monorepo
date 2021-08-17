@@ -68,7 +68,7 @@ const Login = () => {
               "page.login.prompt",
               "Please login to access the administration tool."
             )}
-            {config.enableRegistration && (
+            {config.enableOpenRegistration && (
               <>
                 <br />
                 {t(

@@ -576,8 +576,7 @@
     "page": {
       "login": {
         "emailRequiredError": "Please enter your email address",
-        "passwordRequiredError": "Please enter your password",
-        "acceptedTermsRequiredError": "Please accep t out terms & conditions"
+        "passwordRequiredError": "Please enter your password"
       },
       "passwordrequest": {
         "emailRequiredError": "Please enter your email address"
@@ -585,6 +584,14 @@
       "passwordreset": {
         "pleaseProvideYourNewPassword": "Please enter your new password",
         "pleaseConfirmYourNewPassword": "Please confirm your new password"
+      },
+      "register": {
+        "firstNameRequiredError": "Please enter your first name",
+        "lastNameRequiredError": "Please enter your last name",
+        "emailRequiredError": "Please enter your email address",
+        "passwordRequiredError": "Please enter your password",
+        "pleaseConfirmYourPassword": "Please confirm your password",
+        "acceptedTermsRequiredError": "Please accept out terms & conditions"
       }
     }
   },
@@ -652,6 +659,7 @@
       "form_field_registration_label": "Email Address",
       "form_field_registration_placeholder": "Please enter your email address",
       "error": "We're sorry something went wrong. Please check your data and try again.",
+      "emailtaken": "The given email address is already in use. Maybe you did forget your password?",
       "title": "Register as new User",
       "prompt": "Please fill in the form to register as a new user.",
       "form_field_password_label": "Your password",

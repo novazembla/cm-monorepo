@@ -81,7 +81,7 @@ export const publicOnlyRoutes: RouteParams[] = [
   },
 ];
 
-if (config.enableRegistration) {
+if (config.enableOpenRegistration) {
   publicOnlyRoutes.push({
     key: "register",
     path: "/register",

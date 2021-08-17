@@ -12,7 +12,7 @@ export type AppConfigSettings = {
   apiGraphQLUrl?: string | undefined;
   apiDomain?: string | undefined;
   scope?: string | undefined;
-  enableRegistration?: boolean;
+  enableOpenRegistration?: boolean;
   settings?: AppSettingsFieldDefinitions;
   defaultPageSize?: number;
   activeLanguages: string[];
@@ -26,7 +26,7 @@ const configDefault: AppConfig = {
   apiGraphQLUrl: `${process.env.REACT_APP_API_URL}/graphql`,
   apiDomain: `${process.env.REACT_APP_API_DOMAIN}`,
   scope: "backend",
-  enableRegistration: true,
+  enableOpenRegistration: true,
   defaultPageSize: 50,
   activeLanguages: activeLanguages,
   defaultLanguage: defaultLanguage,

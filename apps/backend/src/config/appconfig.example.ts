@@ -9,7 +9,7 @@ import { AppConfigSettings } from "./config";
 
 export const appConfig: AppConfigSettings = {
   scope: "backend", // Used throughout the site and the API to identify a client/scope
-  enableRegistration: true, // If true new users can register via the website
+  enableOpenRegistration: true, // If true new users can register via the website
   defaultPageSize: 50,
   defaultLanguage: "en",
   activeLanguages: ["en","de"],

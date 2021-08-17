@@ -98,5 +98,12 @@
     "array": {
       "minOneItem": "Please select at least one item"
     }
+  },
+  "validation": {
+    "page": {
+      "login": {
+        "acceptedTermsRequiredError": "Please accep t out terms & conditions"
+      }
+    }
   }
 }
