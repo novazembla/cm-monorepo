@@ -3,7 +3,7 @@ import { Taxonomy, Term, Prisma } from "@prisma/client";
 import { filteredOutputByBlacklist } from "@culturemap/core";
 
 import { ApiError, filteredOutputByBlacklistOrNotFound } from "../utils";
-import config from "../config";
+import { apiConfig } from "../config";
 import { getPrismaClient } from "../db/client";
 import {
   daoTermGetTermsByTaxonomyId,
@@ -31,19 +31,19 @@ export const daoTaxonomyQuery = async (
   include: Prisma.TaxonomyInclude | undefined,
   orderBy: Prisma.TaxonomyOrderByInput | Prisma.TaxonomyOrderByInput[],
   pageIndex: number = 0,
-  pageSize: number = config.db.defaultPageSize
+  pageSize: number = apiConfig.db.defaultPageSize
 ): Promise<Taxonomy[]> => {
   const taxonomies: Taxonomy[] = await prisma.taxonomy.findMany({
     where,
     include,
     orderBy,
     skip: pageIndex * pageSize,
-    take: Math.min(pageSize, config.db.maxPageSize),
+    take: Math.min(pageSize, apiConfig.db.maxPageSize),
   });
 
   return filteredOutputByBlacklist(
     taxonomies,
-    config.db.privateJSONDataKeys.taxonomy
+    apiConfig.db.privateJSONDataKeys.taxonomy
   );
 };
 
@@ -58,16 +58,16 @@ export const daoTaxonomyQueryFirst = async (
     where,
     include,
     orderBy,
-    skip: (pageIndex ?? 0) * (pageSize ?? config.db.defaultPageSize),
+    skip: (pageIndex ?? 0) * (pageSize ?? apiConfig.db.defaultPageSize),
     take: Math.min(
-      pageSize ?? config.db.defaultPageSize,
-      config.db.maxPageSize
+      pageSize ?? apiConfig.db.defaultPageSize,
+      apiConfig.db.maxPageSize
     ),
   });
 
   return filteredOutputByBlacklistOrNotFound(
     taxonomy,
-    config.db.privateJSONDataKeys.taxonomy
+    apiConfig.db.privateJSONDataKeys.taxonomy
   );
 };
 
@@ -90,7 +90,7 @@ export const daoTaxonomyGetById = async (id: number): Promise<Taxonomy> => {
 
   return filteredOutputByBlacklistOrNotFound(
     taxonomy,
-    config.db.privateJSONDataKeys.taxonomy
+    apiConfig.db.privateJSONDataKeys.taxonomy
   );
 };
 
@@ -114,7 +114,7 @@ export const daoTaxonomyCreate = async (
 
   return filteredOutputByBlacklistOrNotFound(
     taxonomy,
-    config.db.privateJSONDataKeys.taxonomy
+    apiConfig.db.privateJSONDataKeys.taxonomy
   );
 };
 
@@ -143,7 +143,7 @@ export const daoTaxonomyUpdate = async (
 
   return filteredOutputByBlacklistOrNotFound(
     taxonomy,
-    config.db.privateJSONDataKeys.taxonomy
+    apiConfig.db.privateJSONDataKeys.taxonomy
   );
 };
 
@@ -163,7 +163,7 @@ export const daoTaxonomyDelete = async (id: number): Promise<Taxonomy> => {
 
   return filteredOutputByBlacklistOrNotFound(
     taxonomy,
-    config.db.privateJSONDataKeys.taxonomy
+    apiConfig.db.privateJSONDataKeys.taxonomy
   );
 };
 

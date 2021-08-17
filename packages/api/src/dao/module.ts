@@ -1,6 +1,6 @@
 import { Module, Prisma } from "@prisma/client";
 import { filteredOutputByBlacklist } from "@culturemap/core";
-import config from "../config";
+import { apiConfig } from "../config";
 import { getPrismaClient } from "../db/client";
 
 const prisma = getPrismaClient();
@@ -8,7 +8,7 @@ const prisma = getPrismaClient();
 export const daoModuleQueryAll = async (): Promise<Module[]> => {
   const modules: Module[] = await prisma.module.findMany();
 
-  return filteredOutputByBlacklist(modules, config.db.privateJSONDataKeys.all);
+  return filteredOutputByBlacklist(modules, apiConfig.db.privateJSONDataKeys.all);
 };
 
 export const daoModuleGetWithTaxonomiesByKey = async (
@@ -20,7 +20,7 @@ export const daoModuleGetWithTaxonomiesByKey = async (
     include,
   });
 
-  return filteredOutputByBlacklist(module, config.db.privateJSONDataKeys.all);
+  return filteredOutputByBlacklist(module, apiConfig.db.privateJSONDataKeys.all);
 };
 
 export default {

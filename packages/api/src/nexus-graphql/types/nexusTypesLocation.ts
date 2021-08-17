@@ -20,7 +20,7 @@ import { GQLJson } from "./nexusTypesShared";
 
 import { authorizeApiUser } from "../helpers";
 
-import config from "../../config";
+import { apiConfig } from "../../config";
 
 import {
   daoLocationQuery,
@@ -104,7 +104,7 @@ export const LocationQueries = extendType({
           default: 0,
         }),
         pageSize: intArg({
-          default: config.db.defaultPageSize,
+          default: apiConfig.db.defaultPageSize,
         }),
         orderBy: arg({
           type: GQLJson,

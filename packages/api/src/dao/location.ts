@@ -3,7 +3,7 @@ import { Location, Prisma } from "@prisma/client";
 import { filteredOutputByBlacklist } from "@culturemap/core";
 
 import { ApiError, filteredOutputByBlacklistOrNotFound } from "../utils";
-import config from "../config";
+import { apiConfig } from "../config";
 import { getPrismaClient } from "../db/client";
 import { daoSharedCheckSlugUnique, daoSharedGenerateFullText } from "./shared";
 
@@ -36,26 +36,26 @@ export const daoLocationQuery = async (
   include: Prisma.LocationInclude | undefined,
   orderBy: Prisma.LocationOrderByInput | Prisma.LocationOrderByInput[],
   pageIndex: number = 0,
-  pageSize: number = config.db.defaultPageSize
+  pageSize: number = apiConfig.db.defaultPageSize
 ): Promise<Location[]> => {
   const locations: Location[] = await prisma.location.findMany({
     where,
     include,
     orderBy,
     skip: pageIndex * pageSize,
-    take: Math.min(pageSize, config.db.maxPageSize),
+    take: Math.min(pageSize, apiConfig.db.maxPageSize),
   });
 
   return filteredOutputByBlacklist(
     locations,
-    config.db.privateJSONDataKeys.location
+    apiConfig.db.privateJSONDataKeys.location
   );
 };
 
 export const daoLocationSearchQuery = async (
   where: Prisma.LocationWhereInput,
   pageIndex: number = 0,
-  pageSize: number = config.db.defaultPageSize * 3
+  pageSize: number = apiConfig.db.defaultPageSize * 3
 ): Promise<Location[]> => {
   const locations = await prisma.location.findMany({
     where,
@@ -68,12 +68,12 @@ export const daoLocationSearchQuery = async (
       lng: true,
     },
     skip: pageIndex * pageSize,
-    take: Math.min(pageSize, config.db.maxPageSize),
+    take: Math.min(pageSize, apiConfig.db.maxPageSize),
   });
 
   return filteredOutputByBlacklist(
     locations,
-    config.db.privateJSONDataKeys.location
+    apiConfig.db.privateJSONDataKeys.location
   );
 };
 
@@ -88,7 +88,7 @@ export const daoLocationQueryFirst = async (
 
   return filteredOutputByBlacklistOrNotFound(
     location,
-    config.db.privateJSONDataKeys.location
+    apiConfig.db.privateJSONDataKeys.location
   );
 };
 
@@ -123,7 +123,7 @@ export const daoLocationCreate = async (
 
   return filteredOutputByBlacklistOrNotFound(
     location,
-    config.db.privateJSONDataKeys.location
+    apiConfig.db.privateJSONDataKeys.location
   );
 };
 
@@ -134,7 +134,7 @@ export const daoLocationGetById = async (id: number): Promise<Location> => {
 
   return filteredOutputByBlacklistOrNotFound(
     location,
-    config.db.privateJSONDataKeys.location
+    apiConfig.db.privateJSONDataKeys.location
   );
 };
 
@@ -166,7 +166,7 @@ export const daoLocationUpdate = async (
 
   return filteredOutputByBlacklistOrNotFound(
     term,
-    config.db.privateJSONDataKeys.location
+    apiConfig.db.privateJSONDataKeys.location
   );
 };
 
@@ -179,7 +179,7 @@ export const daoLocationDelete = async (id: number): Promise<Location> => {
 
   return filteredOutputByBlacklistOrNotFound(
     term,
-    config.db.privateJSONDataKeys.location
+    apiConfig.db.privateJSONDataKeys.location
   );
 };
 
@@ -240,7 +240,7 @@ export const daoLocationGetBySlug = async (slug: string): Promise<Location> => {
 
   return filteredOutputByBlacklistOrNotFound(
     location,
-    config.db.privateJSONDataKeys.location
+    apiConfig.db.privateJSONDataKeys.location
   );
 };
 

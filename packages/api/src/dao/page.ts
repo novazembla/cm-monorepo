@@ -3,7 +3,7 @@ import { Page, Prisma } from "@prisma/client";
 import { filteredOutputByBlacklist } from "@culturemap/core";
 
 import { ApiError, filteredOutputByBlacklistOrNotFound } from "../utils";
-import config from "../config";
+import { apiConfig } from "../config";
 import { getPrismaClient } from "../db/client";
 import { daoSharedCheckSlugUnique, daoSharedGenerateFullText } from "./shared";
 
@@ -26,16 +26,16 @@ export const daoPageQuery = async (
   where: Prisma.PageWhereInput,
   orderBy: Prisma.PageOrderByInput | Prisma.PageOrderByInput[],
   pageIndex: number = 0,
-  pageSize: number = config.db.defaultPageSize
+  pageSize: number = apiConfig.db.defaultPageSize
 ): Promise<Page[]> => {
   const pages: Page[] = await prisma.page.findMany({
     where,
     orderBy,
     skip: pageIndex * pageSize,
-    take: Math.min(pageSize, config.db.maxPageSize),
+    take: Math.min(pageSize, apiConfig.db.maxPageSize),
   });
 
-  return filteredOutputByBlacklist(pages, config.db.privateJSONDataKeys.page);
+  return filteredOutputByBlacklist(pages, apiConfig.db.privateJSONDataKeys.page);
 };
 
 export const daoPageQueryCount = async (
@@ -69,7 +69,7 @@ export const daoPageCreate = async (
 
   return filteredOutputByBlacklistOrNotFound(
     page,
-    config.db.privateJSONDataKeys.page
+    apiConfig.db.privateJSONDataKeys.page
   );
 };
 
@@ -80,14 +80,14 @@ export const daoPageGetById = async (id: number): Promise<Page> => {
 
   return filteredOutputByBlacklistOrNotFound(
     page,
-    config.db.privateJSONDataKeys.page
+    apiConfig.db.privateJSONDataKeys.page
   );
 };
 
 export const daoPageSearchQuery = async (
   where: Prisma.PageWhereInput,
   pageIndex: number = 0,
-  pageSize: number = config.db.defaultPageSize * 3
+  pageSize: number = apiConfig.db.defaultPageSize * 3
 ): Promise<Page[]> => {
   const pages = await prisma.page.findMany({
     where,
@@ -97,10 +97,10 @@ export const daoPageSearchQuery = async (
       slug: true,
     },
     skip: pageIndex * pageSize,
-    take: Math.min(pageSize, config.db.maxPageSize),
+    take: Math.min(pageSize, apiConfig.db.maxPageSize),
   });
 
-  return filteredOutputByBlacklist(pages, config.db.privateJSONDataKeys.page);
+  return filteredOutputByBlacklist(pages, apiConfig.db.privateJSONDataKeys.page);
 };
 
 export const daoPageGetBySlug = async (slug: string): Promise<Page> => {
@@ -125,7 +125,7 @@ export const daoPageGetBySlug = async (slug: string): Promise<Page> => {
 
   return filteredOutputByBlacklistOrNotFound(
     page,
-    config.db.privateJSONDataKeys.page
+    apiConfig.db.privateJSONDataKeys.page
   );
 };
 
@@ -157,7 +157,7 @@ export const daoPageUpdate = async (
 
   return filteredOutputByBlacklistOrNotFound(
     term,
-    config.db.privateJSONDataKeys.page
+    apiConfig.db.privateJSONDataKeys.page
   );
 };
 
@@ -170,7 +170,7 @@ export const daoPageDelete = async (id: number): Promise<Page> => {
 
   return filteredOutputByBlacklistOrNotFound(
     term,
-    config.db.privateJSONDataKeys.page
+    apiConfig.db.privateJSONDataKeys.page
   );
 };
 

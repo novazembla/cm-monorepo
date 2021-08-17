@@ -3,7 +3,7 @@ import { Event, EventDate, Prisma } from "@prisma/client";
 import { filteredOutputByBlacklist } from "@culturemap/core";
 
 import { ApiError, filteredOutputByBlacklistOrNotFound } from "../utils";
-import config from "../config";
+import { apiConfig } from "../config";
 import { getPrismaClient } from "../db/client";
 import { daoSharedCheckSlugUnique, daoSharedGenerateFullText } from "./shared";
 
@@ -34,23 +34,23 @@ export const daoEventQuery = async (
   include: Prisma.EventInclude | undefined,
   orderBy: Prisma.EventOrderByInput | Prisma.EventOrderByInput[],
   pageIndex: number = 0,
-  pageSize: number = config.db.defaultPageSize
+  pageSize: number = apiConfig.db.defaultPageSize
 ): Promise<Event[]> => {
   const events: Event[] = await prisma.event.findMany({
     where,
     include,
     orderBy,
     skip: pageIndex * pageSize,
-    take: Math.min(pageSize, config.db.maxPageSize),
+    take: Math.min(pageSize, apiConfig.db.maxPageSize),
   });
 
-  return filteredOutputByBlacklist(events, config.db.privateJSONDataKeys.event);
+  return filteredOutputByBlacklist(events, apiConfig.db.privateJSONDataKeys.event);
 };
 
 export const daoEventSearchQuery = async (
   where: Prisma.EventWhereInput,
   pageIndex: number = 0,
-  pageSize: number = config.db.defaultPageSize * 3
+  pageSize: number = apiConfig.db.defaultPageSize * 3
 ): Promise<Event[]> => {
   const events = await prisma.event.findMany({
     where,
@@ -77,10 +77,10 @@ export const daoEventSearchQuery = async (
       },
     },
     skip: pageIndex * pageSize,
-    take: Math.min(pageSize, config.db.maxPageSize),
+    take: Math.min(pageSize, apiConfig.db.maxPageSize),
   });
 
-  return filteredOutputByBlacklist(events, config.db.privateJSONDataKeys.event);
+  return filteredOutputByBlacklist(events, apiConfig.db.privateJSONDataKeys.event);
 };
 
 export const daoEventQueryFirst = async (
@@ -95,7 +95,7 @@ export const daoEventQueryFirst = async (
 
   return filteredOutputByBlacklistOrNotFound(
     event,
-    config.db.privateJSONDataKeys.event
+    apiConfig.db.privateJSONDataKeys.event
   );
 };
 
@@ -130,7 +130,7 @@ export const daoEventCreate = async (
 
   return filteredOutputByBlacklistOrNotFound(
     event,
-    config.db.privateJSONDataKeys.event
+    apiConfig.db.privateJSONDataKeys.event
   );
 };
 
@@ -141,7 +141,7 @@ export const daoEventGetById = async (id: number): Promise<Event> => {
 
   return filteredOutputByBlacklistOrNotFound(
     event,
-    config.db.privateJSONDataKeys.event
+    apiConfig.db.privateJSONDataKeys.event
   );
 };
 
@@ -173,7 +173,7 @@ export const daoEventUpdate = async (
 
   return filteredOutputByBlacklistOrNotFound(
     term,
-    config.db.privateJSONDataKeys.event
+    apiConfig.db.privateJSONDataKeys.event
   );
 };
 
@@ -194,7 +194,7 @@ export const daoEventDelete = async (id: number): Promise<Event> => {
 
   return filteredOutputByBlacklistOrNotFound(
     term,
-    config.db.privateJSONDataKeys.event
+    apiConfig.db.privateJSONDataKeys.event
   );
 };
 
@@ -211,7 +211,7 @@ export const daoEventGetDatesById = async (
 
   return filteredOutputByBlacklistOrNotFound(
     eventDates,
-    config.db.privateJSONDataKeys.event
+    apiConfig.db.privateJSONDataKeys.event
   );
 };
 
@@ -291,7 +291,7 @@ export const daoEventGetBySlug = async (slug: string): Promise<Event> => {
 
   return filteredOutputByBlacklistOrNotFound(
     event,
-    config.db.privateJSONDataKeys.event
+    apiConfig.db.privateJSONDataKeys.event
   );
 };
 

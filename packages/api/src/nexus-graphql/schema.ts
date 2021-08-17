@@ -5,7 +5,7 @@ import type { core } from "nexus";
 
 import { join } from "path";
 
-import config from "../config";
+import { apiConfig } from "../config";
 
 import * as types from "./types";
 
@@ -25,11 +25,11 @@ if (process.env.NODE_ENV !== "production")
     ...schemaConfig,
     ...{
       outputs: {
-        typegen: join(config.packageBaseDir, "src/types/nexus-typegen.ts"),
-        schema: join(config.packageBaseDir, "graphql/schema.graphql"),
+        typegen: join(apiConfig.packageBaseDir, "src/types/nexus-typegen.ts"),
+        schema: join(apiConfig.packageBaseDir, "graphql/schema.graphql"),
       },
       contextType: {
-        module: join(config.packageBaseDir, "src/nexus-graphql/context.ts"),
+        module: join(apiConfig.packageBaseDir, "src/nexus-graphql/context.ts"),
         export: "NexusResolverContext",
       },
     },

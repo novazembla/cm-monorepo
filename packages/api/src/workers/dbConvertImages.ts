@@ -8,7 +8,7 @@ import Prisma from "@prisma/client";
 import type { ApiImageMetaInformation } from "@culturemap/core";
 import { ImageStatusEnum } from "@culturemap/core";
 
-import config from "../config/index.js";
+import { apiConfig } from "../config/index.js";
 
 // https://github.com/breejs/bree#long-running-jobs
 // Or use https://threads.js.org/usage for a queing experience .. .
@@ -31,9 +31,9 @@ const postMessage = (msg: string) => {
 const createImageSizeWebP = async (size: any, uuid: string, imageMeta: any) =>
   new Promise((resolve, reject) => {
     const newImgFileName = `${uuid}-${size.width}-${size.heigth}.webp`;
-    const newImgUrl = `${config.baseUrl.api}/${imageMeta.uploadFolder}/${newImgFileName}`;
+    const newImgUrl = `${apiConfig.baseUrl.api}/${imageMeta.uploadFolder}/${newImgFileName}`;
     const newImgPath =
-      `${config.baseDir}/${config.publicDir}/${imageMeta.uploadFolder}/${newImgFileName}`.replace(
+      `${apiConfig.baseDir}/${apiConfig.publicDir}/${imageMeta.uploadFolder}/${newImgFileName}`.replace(
         /\/\//g,
         "/"
       );
@@ -62,8 +62,8 @@ const createImageSizeWebP = async (size: any, uuid: string, imageMeta: any) =>
 const createImageSizeJpg = async (size: any, uuid: string, imageMeta: any) =>
   new Promise((resolve, reject) => {
     const newImgFileName = `${uuid}-${size.width}-${size.heigth}.jpg`;
-    const newImgUrl = `${config.baseUrl.api}/${imageMeta.uploadFolder}/${newImgFileName}`;
-    const newImgPath = `${config.baseDir}/${config.publicDir}/${imageMeta.uploadFolder}/${newImgFileName}`;
+    const newImgUrl = `${apiConfig.baseUrl.api}/${imageMeta.uploadFolder}/${newImgFileName}`;
+    const newImgPath = `${apiConfig.baseDir}/${apiConfig.publicDir}/${imageMeta.uploadFolder}/${newImgFileName}`;
 
     sharp(imageMeta.originalFilePath)
       .resize(size.width, size.heigth, {
@@ -96,7 +96,7 @@ const doChores = async () => {
   const prisma = new PrismaClient({
     datasources: {
       db: {
-        url: config.db.url,
+        url: apiConfig.db.url,
       },
     },
   });
@@ -145,7 +145,7 @@ const doChores = async () => {
             throw Error("Original image meta data read error");
 
           const processedSizesMetaInfo = await Promise.all(
-            config.imageFormats[meta.imageType].reduce((acc, size) => {
+            apiConfig.imageFormats[meta.imageType].reduce((acc, size) => {
               if (
                 size.width > (originalImageMetaData?.width ?? 0) &&
                 size.heigth > (originalImageMetaData?.height ?? 0)

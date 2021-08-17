@@ -37,7 +37,7 @@ import {
   isCurrentApiUser,
   isNotCurrentApiUser,
 } from "../helpers";
-import config from "../../config";
+import { apiConfig } from "../../config";
 import {
   daoUserQuery,
   daoUserQueryCount,
@@ -121,7 +121,7 @@ export const UserQueries = extendType({
           default: 0,
         }),
         pageSize: intArg({
-          default: config.db.defaultPageSize,
+          default: apiConfig.db.defaultPageSize,
         }),
         orderBy: arg({
           type: GQLJson,
@@ -274,6 +274,9 @@ export const UserMutations = extendType({
         scope: nonNull(stringArg()),
         data: nonNull(UserSignupInput),
       },
+
+      authorize: () => apiConfig.enablePublicRegistration,
+
       async resolve(...[, args, { res }]) {
         const authPayload = await userRegister(
           args.scope as AppScopes,

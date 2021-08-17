@@ -1,4 +1,5 @@
 const settings = {
+  enablePublicRegistration: true, // TODO: complete the example
   defaultPageSize: 50,
   privateJSONDataKeys: {
     all: ["password", "test1"],

@@ -1,6 +1,6 @@
 import Prisma from "@prisma/client";
 
-import config from "../config";
+import { apiConfig } from "../config";
 import { logger } from "../services/serviceLogging";
 
 const { PrismaClient } = Prisma;
@@ -16,7 +16,7 @@ export const createPrismaClient = (): Prisma.PrismaClient => {
   return new PrismaClient({
     datasources: {
       db: {
-        url: config.db.url,
+        url: apiConfig.db.url,
       },
     },
   });

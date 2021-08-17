@@ -4,7 +4,7 @@ import {
   InMemoryCache,
   ApolloLink,
   Observable,
-  HttpLink
+  HttpLink,
 } from "@apollo/client";
 import { authRefreshMutationGQL } from "@culturemap/core";
 import { onError } from "@apollo/client/link/error";
@@ -38,79 +38,94 @@ const authLink = new ApolloLink((operation, forward) => {
 // Log any GraphQL errors or network error that occurred
 const retryWithRefreshTokenLink = onError(
   ({ graphQLErrors, networkError, operation, forward }) => {
+    
     if (graphQLErrors) {
       const observables: Observable<any>[] = graphQLErrors.reduce(
         (observables, graphQLError) => {
-          const { extensions } = graphQLError;
+          const { message, extensions } = graphQLError;
           if (
-            graphQLError.message === "Authentication failed (maybe refresh)" &&
-            extensions &&
-            extensions.code &&
-            extensions.code === "UNAUTHENTICATED"
+            message === "Access Denied" &&
+            extensions?.code === "FORBIDDEN"
+          ) {
+            const observableForbidden = new Observable((observer) => {
+              new Promise(async (resolve) => {
+                console.log("logout() ApolloClient.retryWithRefreshTokenLink: FORBIDDEN");
+                await user.logout();
+                observer.error(new Error("Access Denied - FORBIDDEN "));
+              });
+            });
+            observables.push(observableForbidden);
+          } else if (
+            message === "Authentication failed (maybe refresh)" &&
+            extensions?.code === "UNAUTHENTICATED"
           ) {
             const observable = new Observable((observer) => {
-              if (client && user.canRefresh() && authentication.getRefreshCookie()) {
+              if (
+                client &&
+                user.canRefresh() &&
+                authentication.getRefreshCookie()
+              ) {
                 user.setAllowRefresh(false);
                 user.setRefreshing(true);
-                client.mutate({
-                  fetchPolicy: "no-cache",
-                  mutation: authRefreshMutationGQL,
-                  variables: {
-                    scope: config.scope
-                  }
-                })//     // TODO: is there a way to get a typed query here?
-                .then(({ data }: any) => {
-                  if (
-                    data?.authRefresh?.tokens?.access &&
-                    data?.authRefresh?.tokens?.refresh
-                  ) {
-                    const payload = authentication.getTokenPayload(
-                      data.authRefresh.tokens.access
-                    );
-
-                    if (payload) {
-                      authentication.setAuthToken(
+                client
+                  .mutate({
+                    fetchPolicy: "no-cache",
+                    mutation: authRefreshMutationGQL,
+                    variables: {
+                      scope: config.scope,
+                    },
+                  }) // TODO: is there a way to get a typed query here?
+                  .then(({ data }: any) => {
+                    if (
+                      data?.authRefresh?.tokens?.access &&
+                      data?.authRefresh?.tokens?.refresh
+                    ) {
+                      const payload = authentication.getTokenPayload(
                         data.authRefresh.tokens.access
                       );
-                      authentication.setRefreshCookie(
-                        data.authRefresh.tokens.refresh
-                      );
 
-                      user.setAllowRefresh(true);
-                      user.login(payload.user);
+                      if (payload) {
+                        authentication.setAuthToken(
+                          data.authRefresh.tokens.access
+                        );
+                        authentication.setRefreshCookie(
+                          data.authRefresh.tokens.refresh
+                        );
 
-                      operation.setContext(({ headers = {} }) => ({
-                        headers: {
-                          ...headers,
-                          authorization: `Bearer ${data.authRefresh.tokens.access.token}`,
-                        },
-                      }));
+                        user.setAllowRefresh(true);
+                        user.login(payload.user);
+
+                        operation.setContext(({ headers = {} }) => ({
+                          headers: {
+                            ...headers,
+                            authorization: `Bearer ${data.authRefresh.tokens.access.token}`,
+                          },
+                        }));
+                      } else {
+                        throw new Error("Unable to fetch new access token (1)");
+                      }
                     } else {
-                      throw new Error("Unable to fetch new access token (1)");
+                      throw new Error("Unable to fetch new access token (2)");
                     }
-                  } else {
-                    throw new Error("Unable to fetch new access token (2)");
-                  }
-                })
-                .then(() => {
-                  const subscriber = {
-                    next: observer.next.bind(observer),
-                    error: observer.error.bind(observer),
-                    complete: observer.complete.bind(observer),
-                  };
+                  })
+                  .then(() => {
+                    const subscriber = {
+                      next: observer.next.bind(observer),
+                      error: observer.error.bind(observer),
+                      complete: observer.complete.bind(observer),
+                    };
 
-                  forward(operation).subscribe(subscriber);
-                })
-                .catch(async (error) => {
-                  console.log("logout() ApolloClient");
-                  await user.logout();
-                  
-                  observer.error(error);
-                });
+                    forward(operation).subscribe(subscriber);
+                  })
+                  .catch(async (error) => {
+                    console.log("logout() ApolloClient.retryWithRefreshTokenLink: refresh error");
+                    await user.logout();
+
+                    observer.error(error);
+                  });
               } else {
                 observer.error(Error("Can't refresh session"));
               }
-              
             });
             observables.push(observable);
           }
@@ -126,9 +141,12 @@ const retryWithRefreshTokenLink = onError(
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors)
-    // TODO: remove? 
+    // TODO: remove?
     graphQLErrors.forEach((err) =>
-      console.log(err, `[GQLError error]: ${err.message} ${err?.extensions?.code ?? ''}`)
+      console.log(
+        err,
+        `[GQLError error]: ${err.message} ${err?.extensions?.code ?? ""}`
+      )
     );
 
   if (networkError) console.log(`[Network error]: ${networkError}`);
@@ -149,8 +167,17 @@ const createApolloClient = (settings: AppConfig) => {
         attempts: {
           max: 3,
           retryIf: (error, _operation) => {
-            console.log(error, `Will retry C:${parseInt(error.statusCode, 10)} ${!!error && ![400,403,404].includes(parseInt(error.statusCode, 10))}`);
-            return !!error && ![400,403,404].includes(parseInt(error.statusCode, 10));
+            console.log(
+              error,
+              `Will retry C:${parseInt(error.statusCode, 10)} ${
+                !!error &&
+                ![400, 403, 404].includes(parseInt(error.statusCode, 10))
+              }`
+            );
+            return (
+              !!error &&
+              ![400, 403, 404].includes(parseInt(error.statusCode, 10))
+            );
           },
         },
       }),
@@ -158,7 +185,7 @@ const createApolloClient = (settings: AppConfig) => {
       new HttpLink({
         uri: settings.apiGraphQLUrl, // Server URL (must be absolute)
         credentials: "include", // Additional fetch() options like `credentials` or `headers`
-      }),      
+      }),
     ]),
     // TODO: find generic ways to manage the chache ...
     // HOW TO ENSURE deletion/updates are reflected in the cache ...
@@ -174,18 +201,18 @@ const createApolloClient = (settings: AppConfig) => {
     }),
     defaultOptions: {
       watchQuery: {
-        fetchPolicy: 'cache-and-network',
-        errorPolicy: 'ignore',
+        fetchPolicy: "cache-and-network",
+        errorPolicy: "ignore",
       },
       query: {
         // TODO: revist better caching at some point
-        fetchPolicy: 'network-only',
-        errorPolicy: 'all',
+        fetchPolicy: "network-only",
+        errorPolicy: "all",
       },
       mutate: {
-        errorPolicy: 'all',
+        errorPolicy: "all",
       },
-    }
+    },
   });
 };
 

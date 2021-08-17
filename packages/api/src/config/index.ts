@@ -1,4 +1,6 @@
 import dotenv from "dotenv";
+import merge from "deepmerge";
+import { isPlainObject } from 'is-plain-object';
 import { CorsOptions } from "cors";
 import { PartialRecord, AppScopes, safeGuardVariable } from "@culturemap/core";
 import type { ApiConfigImageFormatType } from "@culturemap/core";
@@ -79,6 +81,7 @@ export interface ApiConfigJwt {
 }
 
 export interface ApiConfig {
+  enablePublicRegistration: boolean;
   baseDir: string;
   publicDir: string;
   uploadDir: string;
@@ -96,6 +99,7 @@ export interface ApiConfig {
 }
 
 export interface ApiConfigOverwrite {
+  enablePublicRegistration?: boolean;
   baseDir?: string;
   uploadDir?: string;
   publicDir?: string;
@@ -140,7 +144,8 @@ const db: ApiConfigDB = {
 const trimTrailingSlash = (str: string) =>
   str.endsWith("/") ? str.slice(0, -1) : str;
 
-export const apiConfig = {
+export let apiConfig = {
+  enablePublicRegistration: true,
   baseDir: resolve(dirname("")),
   publicDir: "public",
   uploadDir: "img",
@@ -366,26 +371,15 @@ export const apiConfig = {
 
 export const update = (aCfg: ApiConfigOverwrite) => {
   if (typeof aCfg !== "object")
-    throw Error("Plase just pass objects to the config.update function");
+    throw Error("Plase just pass objects to the apiConfig.update function");
 
-  if ("db" in aCfg) {
-    if ("privateJSONDataKeys" in (aCfg.db as ApiConfigDB)) {
-      Object.keys(apiConfig.db.privateJSONDataKeys).forEach((key) => {
-        if (key in (aCfg?.db?.privateJSONDataKeys ?? {})) {
-          const newKeys = (aCfg?.db?.privateJSONDataKeys ?? {})[
-            key as CulturemapScopes
-          ];
-          if (Array.isArray(newKeys)) {
-            (apiConfig?.db?.privateJSONDataKeys ?? {})[
-              key as CulturemapScopes
-            ] = newKeys;
-          }
-        }
-      });
-    }
-
-    apiConfig.db.defaultPageSize =
-      aCfg?.db?.defaultPageSize ?? apiConfig.db.defaultPageSize;
+  try {
+    apiConfig = merge(apiConfig, aCfg, {
+      isMergeableObject: isPlainObject
+    });
+  } catch (Err) {
+    // eslint-disable-next-line no-console
+    console.error(Err);
   }
 };
 
@@ -393,4 +387,3 @@ export const updateCors = (newCorsSettings: CorsOptions) => {
   apiConfig.corsOptions = newCorsSettings;
 };
 
-export default apiConfig;

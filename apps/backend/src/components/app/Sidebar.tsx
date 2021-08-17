@@ -192,7 +192,7 @@ export const Sidebar = () => {
         pl={{ base: 3, tw: 4 }}
         pb={{ base: 3, tw: 4 }}
         position="sticky"
-        top={{ base: "48px", tw: "72px" }}
+        top={{ base: "3rem", tw: "4.5rem" }}
         sx={{
           "&.active": {
             position: "fixed",

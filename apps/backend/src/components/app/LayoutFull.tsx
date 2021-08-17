@@ -18,7 +18,7 @@ export const LayoutFull = ({ children }: AppProps) => {
       templateColumns={{ base: "100%", tw: "260px calc(100% - 260px - 1em)" }}
       gap="4"
       alignItems="start"
-      pt={{ base: "48px", tw: "72px" }}
+      pt={{ base: "3rem", tw: "4.5rem" }}
     >
       <Header />
 

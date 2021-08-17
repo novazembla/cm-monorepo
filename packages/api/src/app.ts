@@ -6,7 +6,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 
-import config from "./config";
+import { apiConfig } from "./config";
 import {
   errorConvert404ToApiError,
   errorDisplayInResponse,
@@ -23,7 +23,7 @@ export const initializeExpressApp = () => {
   app.use(bodyParser.urlencoded({ extended: false }));
 
   // eslint-disable-next-line import/no-named-as-default-member
-  app.use(cors(config.corsOptions));
+  app.use(cors(apiConfig.corsOptions));
   app.use(express.static("public"));
   app.use(morganSuccessHandler);
   app.use(morganErrorHandler);

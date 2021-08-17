@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import type { ApiImageMetaInformation } from "@culturemap/core";
 import { ImageStatusEnum } from "@culturemap/core";
 import { ApiError } from "../utils";
-import config from "../config";
+import { apiConfig } from "../config";
 
 import { daoImageCreate } from "../dao";
 import { logger } from "./serviceLogging";
@@ -18,14 +18,14 @@ export const imageGetUploadInfo = async (): Promise<{
 }> => {
   const date = new Date();
 
-  const uploadFolder = `${config.uploadDir}/${date.getUTCFullYear()}/${
+  const uploadFolder = `${apiConfig.uploadDir}/${date.getUTCFullYear()}/${
     date.getUTCMonth() + 1
   }`;
-  const path = `${config.baseDir}/${config.publicDir}/${uploadFolder}`.replace(
+  const path = `${apiConfig.baseDir}/${apiConfig.publicDir}/${uploadFolder}`.replace(
     /\/\//g,
     "/"
   );
-  const baseUrl = `${config.baseUrl.api}${uploadFolder}`;
+  const baseUrl = `${apiConfig.baseUrl.api}${uploadFolder}`;
 
   try {
     await mkdir(path, { recursive: true });

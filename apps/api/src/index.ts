@@ -33,6 +33,7 @@ const start = async () => {
   // additional customization and plugin initialization that might
   // have been done in ./culturemap.js
   // This is all done by clalling config.update() and passing the imported settings
+  
   config.update(CMSettings);
 
   // cors settings do need to be set twice for the express app (serving everything)

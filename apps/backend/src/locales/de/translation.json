@@ -385,12 +385,12 @@
   },
   "publish": {
     "status": {
-      "draft": "Draft",
-      "forreview": "For review",
-      "rejected": "Rejected",
-      "published": "Published",
-      "trashed": "Trashed",
-      "unknown": "Unknown",
+      "draft": "Entwurf",
+      "forreview": "Zur Kontrolle",
+      "rejected": "Zurückgewiesen",
+      "published": "Publiziert",
+      "trashed": "Gelöscht",
+      "unknown": "Unbekannt",
       "autodraft": "Draft"
     }
   },
@@ -739,7 +739,7 @@
     "field": {
       "emailverification": {
         "verified": "Bestätigt",
-        "notverified": "Noch nicht bestätigt"
+        "notverified": "Nicht bestätigt"
       }
     }
   }

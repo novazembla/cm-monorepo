@@ -14,7 +14,7 @@ import type { NexusGenObjects } from "../../types/nexus-typegen";
 // import { ApiError } from "../../utils";
 
 // import { authorizeApiUser } from "../helpers";
-// import config from "../../config";
+// import { apiConfig } from "../../config";
 
 import {
   daoLocationSearchQuery,

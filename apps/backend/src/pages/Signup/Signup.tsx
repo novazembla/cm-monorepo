@@ -35,6 +35,7 @@ import {
 const Signup = () => {
   const [firstMutation, firstMutationResults] = useUserSignupMutation();
   const [isFormError, setIsFormError] = useState(false);
+  const [isFormEmailError, setIsFormEmailError] = useState(false);
 
   const { t } = useTranslation();
   const history = useHistory();
@@ -55,11 +56,14 @@ const Signup = () => {
     data: yup.InferType<typeof UserSignupValidationSchema>
   ) => {
     setIsFormError(false); // TODO: how to have this clear set on form change, also how to set the form fields to not valid to make them red...
+    setIsFormEmailError(false);
     try {
       const { errors } = await firstMutation(data);
       if (!errors) {
         history.push("/");
       } else {
+        if (errors[0].message === "Email already taken")
+          setIsFormEmailError(true);
         setIsFormError(true);
       }
     } catch (err) {
@@ -68,6 +72,7 @@ const Signup = () => {
   };
 
   // t("page.register.error", "We're sorry something went wrong. Please check your data and try again.")
+  // t("page.register.emailtaken", "The given email address is already in use. Maybe you did forget your password?")
   return (
     <>
       <AuthenticationPage>
@@ -89,7 +94,7 @@ const Signup = () => {
             <form noValidate onSubmit={handleSubmit(onSubmit)}>
               <fieldset disabled={disableForm}>
                 {isFormError && (
-                  <TextErrorMessage error="page.register.error" />
+                  <TextErrorMessage error={`page.register.${isFormEmailError ? "emailtaken":"error"}`} />
                 )}
 
                 <TwoColFieldRow>

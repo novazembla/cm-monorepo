@@ -69,7 +69,7 @@ export const Header = (/* props */) => {
         p={{ base: 2, tw: 3 }}
       >
         <Box>
-          <Heading as="h2" ml="2">
+          <Heading as="h2" ml="2" fontSize="38px">
             <Link
               display={showLogo}
               as={NavLink}

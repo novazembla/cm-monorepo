@@ -8,7 +8,7 @@ import { join } from "path";
 
 import { server } from "./server";
 import { app, addTerminatingErrorHandlingToApp } from "./app";
-import config from "./config";
+import { apiConfig } from "./config";
 import { logger } from "./services/serviceLogging";
 import { getPrismaClient } from "./db/client";
 
@@ -23,7 +23,7 @@ export const startApi = async () => {
       // and attach it to the express app
       server.applyMiddleware({
         app,
-        cors: config.corsOptions as any,
+        cors: apiConfig.corsOptions as any,
       });
 
       // make sure that any unprocessed errors are displayed in a nice and (data) safe way
@@ -39,7 +39,7 @@ export const startApi = async () => {
       const expressServer = app.listen({ port }, () => {
         // eslint-disable-next-line no-console
         console.log(
-          `🚀 Server ready at ${config.baseUrl.api}${port ? `:${port}` : ""}${
+          `🚀 Server ready at ${apiConfig.baseUrl.api}${port ? `:${port}` : ""}${
             server?.graphqlPath
           }`
         );
@@ -47,7 +47,7 @@ export const startApi = async () => {
 
       const bree = new Bree({
         logger,
-        root: join(config.packageBaseDir, "dist", "workers"),
+        root: join(apiConfig.packageBaseDir, "dist", "workers"),
         jobs: [
           {
             name: "dbExpireTokens",

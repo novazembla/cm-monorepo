@@ -2,7 +2,7 @@ import { Image, Prisma } from "@prisma/client";
 import { filteredOutputByBlacklist, ImageStatusEnum } from "@culturemap/core";
 
 import { filteredOutputByBlacklistOrNotFound } from "../utils";
-import config from "../config";
+import { apiConfig } from "../config";
 
 import { getPrismaClient } from "../db/client";
 
@@ -12,16 +12,16 @@ export const daoImageQuery = async (
   where: Prisma.ImageWhereInput,
   orderBy: Prisma.ImageOrderByInput | Prisma.ImageOrderByInput[],
   pageIndex: number = 0,
-  pageSize: number = config.db.defaultPageSize
+  pageSize: number = apiConfig.db.defaultPageSize
 ): Promise<Image[]> => {
   const images: Image[] = await prisma.image.findMany({
     where,
     orderBy,
     skip: pageIndex * pageSize,
-    take: Math.min(pageSize, config.db.maxPageSize),
+    take: Math.min(pageSize, apiConfig.db.maxPageSize),
   });
 
-  return filteredOutputByBlacklist(images, config.db.privateJSONDataKeys.image);
+  return filteredOutputByBlacklist(images, apiConfig.db.privateJSONDataKeys.image);
 };
 
 export const daoImageQueryCount = async (
@@ -39,7 +39,7 @@ export const daoImageGetById = async (id: number): Promise<Image> => {
 
   return filteredOutputByBlacklistOrNotFound(
     image,
-    config.db.privateJSONDataKeys.image
+    apiConfig.db.privateJSONDataKeys.image
   );
 };
 
@@ -57,7 +57,7 @@ export const daoImageGetStatusById = async (
 
   return filteredOutputByBlacklistOrNotFound(
     image,
-    config.db.privateJSONDataKeys.image
+    apiConfig.db.privateJSONDataKeys.image
   );
 };
 
@@ -70,7 +70,7 @@ export const daoImageCreate = async (
 
   return filteredOutputByBlacklistOrNotFound(
     image,
-    config.db.privateJSONDataKeys.image
+    apiConfig.db.privateJSONDataKeys.image
   );
 };
 
@@ -87,7 +87,7 @@ export const daoImageUpdate = async (
 
   return filteredOutputByBlacklistOrNotFound(
     image,
-    config.db.privateJSONDataKeys.image
+    apiConfig.db.privateJSONDataKeys.image
   );
 };
 
@@ -101,7 +101,7 @@ export const daoImageDelete = async (id: number): Promise<Image> => {
   // TODO: schedule task to wipe file off the disk
   return filteredOutputByBlacklistOrNotFound(
     image,
-    config.db.privateJSONDataKeys.image
+    apiConfig.db.privateJSONDataKeys.image
   );
 };
 

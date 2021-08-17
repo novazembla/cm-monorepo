@@ -103,6 +103,7 @@ export const UserForm = ({ data, errors, action, validationSchema }: { data?: an
             },
           ]}
           settings={{
+            defaultValue: data?.role,
             placeholder: t(
               "module.users.forms.update.field.placeholder.role",
               "Please choose the user's role"

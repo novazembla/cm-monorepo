@@ -76,7 +76,7 @@ export const ModuleForm = ({
   let updateActions;
 
   const {
-    formState: { errors },
+    // formState: { errors },
     register,
     control,
     getValues,

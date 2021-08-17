@@ -4,7 +4,7 @@ import { User, Prisma } from "@prisma/client";
 import { filteredOutputByBlacklist } from "@culturemap/core";
 
 import { ApiError, filteredOutputByBlacklistOrNotFound } from "../utils";
-import config from "../config";
+import { apiConfig } from "../config";
 import { getPrismaClient } from "../db/client";
 
 const prisma = getPrismaClient();
@@ -42,14 +42,14 @@ export const daoUserCreate = async (
     data: {
       ...data,
       ...{
-        password: await bcrypt.hash(data.password, config.security.saltRounds),
+        password: await bcrypt.hash(data.password, apiConfig.security.saltRounds),
       },
     },
   });
 
   return filteredOutputByBlacklistOrNotFound(
     user,
-    config.db.privateJSONDataKeys.user
+    apiConfig.db.privateJSONDataKeys.user
   );
 };
 
@@ -57,16 +57,16 @@ export const daoUserQuery = async (
   where: Prisma.UserWhereInput,
   orderBy: Prisma.UserOrderByInput | Prisma.UserOrderByInput[],
   pageIndex: number = 0,
-  pageSize: number = config.db.defaultPageSize
+  pageSize: number = apiConfig.db.defaultPageSize
 ): Promise<User[]> => {
   const users: User[] = await prisma.user.findMany({
     where,
     orderBy,
     skip: pageIndex * pageSize,
-    take: Math.min(pageSize, config.db.maxPageSize),
+    take: Math.min(pageSize, apiConfig.db.maxPageSize),
   });
 
-  return filteredOutputByBlacklist(users, config.db.privateJSONDataKeys.user);
+  return filteredOutputByBlacklist(users, apiConfig.db.privateJSONDataKeys.user);
 };
 
 export const daoUserFindFirst = async (
@@ -78,7 +78,7 @@ export const daoUserFindFirst = async (
 
   return filteredOutputByBlacklistOrNotFound(
     user,
-    config.db.privateJSONDataKeys.user
+    apiConfig.db.privateJSONDataKeys.user
   );
 };
 
@@ -95,7 +95,7 @@ export const daoUserGetById = async (id: number): Promise<User> => {
 
   return filteredOutputByBlacklistOrNotFound(
     user,
-    config.db.privateJSONDataKeys.user
+    apiConfig.db.privateJSONDataKeys.user
   );
 };
 
@@ -104,7 +104,7 @@ export const daoUserGetByEmail = async (email: string): Promise<User> => {
 
   return filteredOutputByBlacklistOrNotFound(
     user,
-    config.db.privateJSONDataKeys.user
+    apiConfig.db.privateJSONDataKeys.user
   );
 };
 
@@ -116,7 +116,7 @@ export const daoUserGetByLogin = async (
 
   if (!user || !(await bcrypt.compare(password, user.password))) return null;
 
-  return filteredOutputByBlacklist(user, config.db.privateJSONDataKeys.user);
+  return filteredOutputByBlacklist(user, apiConfig.db.privateJSONDataKeys.user);
 };
 
 export const daoUserUpdate = async (
@@ -131,7 +131,7 @@ export const daoUserUpdate = async (
       ...{
         password: await bcrypt.hash(
           data.password as string,
-          config.security.saltRounds
+          apiConfig.security.saltRounds
         ),
       },
     };
@@ -145,7 +145,7 @@ export const daoUserUpdate = async (
 
   return filteredOutputByBlacklistOrNotFound(
     user,
-    config.db.privateJSONDataKeys.user
+    apiConfig.db.privateJSONDataKeys.user
   );
 };
 
@@ -158,7 +158,7 @@ export const daoUserDelete = async (id: number): Promise<User> => {
 
   return filteredOutputByBlacklistOrNotFound(
     user,
-    config.db.privateJSONDataKeys.user
+    apiConfig.db.privateJSONDataKeys.user
   );
 };
 
@@ -176,7 +176,7 @@ export const daoUserProfileImageDelete = async (id: number): Promise<User> => {
 
   return filteredOutputByBlacklistOrNotFound(
     user,
-    config.db.privateJSONDataKeys.user
+    apiConfig.db.privateJSONDataKeys.user
   );
 };
 

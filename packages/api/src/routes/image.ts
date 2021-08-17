@@ -9,17 +9,17 @@ import type { ApiImageMetaInformation } from "@culturemap/core";
 import { logger } from "../services/serviceLogging";
 import { imageCreate } from "../services/serviceImage";
 
-import config from "../config";
+import { apiConfig } from "../config";
 import { ApiError } from "../utils";
 
 const storage = multer.diskStorage({
   destination: async (req: Request, file, cb) => {
     const date = new Date();
 
-    const uploadFolder = `${config.uploadDir}/${date.getUTCFullYear()}/${
+    const uploadFolder = `${apiConfig.uploadDir}/${date.getUTCFullYear()}/${
       date.getUTCMonth() + 1
     }`;
-    const uploadPath = `${config.baseDir}/${config.publicDir}/${uploadFolder}`;
+    const uploadPath = `${apiConfig.baseDir}/${apiConfig.publicDir}/${uploadFolder}`;
 
     try {
       // TODO: how to make this non blocking?
@@ -51,7 +51,7 @@ const createImageMetaInfo = (
   const extension = path.extname(file.originalname);
 
   const uploadFolder = file.destination.replace(
-    `${config.baseDir}/${config.publicDir}`,
+    `${apiConfig.baseDir}/${apiConfig.publicDir}`,
     ""
   );
 
@@ -60,7 +60,7 @@ const createImageMetaInfo = (
   const metainfo: ApiImageMetaInformation = {
     uploadFolder,
     originalFileName: file.originalname,
-    originalFileUrl: `${config.baseUrl.api}${uploadFolder}/${file.filename}`,
+    originalFileUrl: `${apiConfig.baseUrl.api}${uploadFolder}/${file.filename}`,
     originalFilePath: file.path,
     mimeType: file.mimetype,
     encoding: file.encoding,

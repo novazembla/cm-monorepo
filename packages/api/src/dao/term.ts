@@ -3,7 +3,7 @@ import { Term, Prisma } from "@prisma/client";
 import { filteredOutputByBlacklist } from "@culturemap/core";
 
 import { ApiError, filteredOutputByBlacklistOrNotFound } from "../utils";
-import config from "../config";
+import { apiConfig } from "../config";
 import { getPrismaClient } from "../db/client";
 import { daoSharedCheckSlugUnique } from "./shared";
 
@@ -27,7 +27,7 @@ export const daoTermQuery = async (
   where: Prisma.TermWhereInput,
   orderBy: Prisma.TermOrderByInput | Prisma.TermOrderByInput[],
   pageIndex: number = 0,
-  pageSize: number = config.db.defaultPageSize
+  pageSize: number = apiConfig.db.defaultPageSize
 ): Promise<Term[]> => {
   const terms: Term[] = await prisma.term.findMany({
     where: {
@@ -36,10 +36,10 @@ export const daoTermQuery = async (
     },
     orderBy,
     skip: pageIndex * pageSize,
-    take: Math.min(pageSize, config.db.maxPageSize),
+    take: Math.min(pageSize, apiConfig.db.maxPageSize),
   });
 
-  return filteredOutputByBlacklist(terms, config.db.privateJSONDataKeys.term);
+  return filteredOutputByBlacklist(terms, apiConfig.db.privateJSONDataKeys.term);
 };
 
 export const daoTermQueryCount = async (
@@ -63,7 +63,7 @@ export const daoTermGetTermsByTaxonomyId = async (
     },
   });
 
-  return filteredOutputByBlacklist(terms, config.db.privateJSONDataKeys.term);
+  return filteredOutputByBlacklist(terms, apiConfig.db.privateJSONDataKeys.term);
 };
 
 export const daoTermGetTermsCountByTaxonomyId = async (
@@ -85,7 +85,7 @@ export const daoTermGetById = async (id: number): Promise<Term> => {
 
   return filteredOutputByBlacklistOrNotFound(
     term,
-    config.db.privateJSONDataKeys.term
+    apiConfig.db.privateJSONDataKeys.term
   );
 };
 
@@ -109,7 +109,7 @@ export const daoTermCreate = async (
 
   return filteredOutputByBlacklistOrNotFound(
     term,
-    config.db.privateJSONDataKeys.term
+    apiConfig.db.privateJSONDataKeys.term
   );
 };
 
@@ -138,7 +138,7 @@ export const daoTermUpdate = async (
 
   return filteredOutputByBlacklistOrNotFound(
     term,
-    config.db.privateJSONDataKeys.term
+    apiConfig.db.privateJSONDataKeys.term
   );
 };
 
@@ -151,7 +151,7 @@ export const daoTermDelete = async (id: number): Promise<Term> => {
 
   return filteredOutputByBlacklistOrNotFound(
     term,
-    config.db.privateJSONDataKeys.term
+    apiConfig.db.privateJSONDataKeys.term
   );
 };
 

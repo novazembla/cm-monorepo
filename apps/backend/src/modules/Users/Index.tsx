@@ -116,7 +116,7 @@ const Index = () => {
           : t("users.field.emailverification.notverified", "Not verified");
         return (
           <Badge
-            w="120px"
+            minW="8rem"
             variant="subtle"
             textAlign="center"
             colorScheme={color}
@@ -154,7 +154,7 @@ const Index = () => {
         }
         return (
           <Badge
-            w="120px"
+            minW="8rem"
             variant={variant}
             textAlign="center"
             colorScheme={color}

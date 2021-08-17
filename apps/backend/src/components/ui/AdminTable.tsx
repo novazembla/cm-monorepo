@@ -367,7 +367,7 @@ export const AdminTablePublishStatusCell = (cell: Cell) => {
 
   return (
     <Badge
-      w="120px"
+      minW="8rem"
       variant={variant}
       textAlign="center"
       colorScheme={color}

@@ -1,5 +1,6 @@
 // TODO: make better that that
 const settings = {
+  enablePublicRegistration: true,
   defaultPageSize: 50,
   privateJSONDataKeys: {
     all: ["password", "test1"],
