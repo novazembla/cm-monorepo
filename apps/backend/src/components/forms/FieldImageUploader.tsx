@@ -171,7 +171,7 @@ export const FieldImageUploader = ({
                   : {}),
               },
               cancelToken,
-
+              withCredentials: true,
               data: formData,
               onUploadProgress: (ev) => {
                 if (getCancelToken())
