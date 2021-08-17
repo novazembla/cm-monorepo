@@ -262,7 +262,7 @@ export const tokenProcessRefreshToken = (
   const secureCookie = config.baseUrl.api.indexOf("localhost") === -1;
   res.cookie("refreshToken", (authPayload as any).tokens.refresh.token, {
     sameSite: secureCookie ? "none" : "lax",
-    secure: secureCookie,
+    secure: secureCookie ?? undefined,
     httpOnly: true,
     maxAge:
       new Date((authPayload as any).tokens.refresh.expires).getTime() -
@@ -279,7 +279,7 @@ export const tokenClearRefreshToken = (res: Response): void => {
   const secureCookie = config.baseUrl.api.indexOf("localhost") === -1;
   res.cookie("refreshToken", "", {
     sameSite: secureCookie ? "none" : "lax",
-    secure: secureCookie,
+    secure: secureCookie ?? undefined,
     httpOnly: true,
     maxAge: 0,
   });
