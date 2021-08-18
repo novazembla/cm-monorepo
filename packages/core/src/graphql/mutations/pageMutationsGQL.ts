@@ -12,8 +12,12 @@ export const pageCreateMutationGQL = gql`
 `;
 
 export const pageUpdateMutationGQL = gql`
-  mutation pageUpdate($id: Int!, $data: PageUpsertInput!) {
-    pageUpdate(id: $id, data: $data) {
+  mutation pageUpdate(
+    $id: Int!
+    $data: PageUpsertInput!
+    $imagesTranslations: [ImageTranslationInput]
+  ) {
+    pageUpdate(id: $id, data: $data, imagesTranslations: $imagesTranslations) {
       id
       title
       slug

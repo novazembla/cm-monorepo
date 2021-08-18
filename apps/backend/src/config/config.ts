@@ -13,6 +13,7 @@ export type AppConfigSettings = {
   apiDomain?: string | undefined;
   scope?: string | undefined;
   enableOpenRegistration?: boolean;
+  enableProfilePicture?: boolean;
   settings?: AppSettingsFieldDefinitions;
   defaultPageSize?: number;
   activeLanguages: string[];
@@ -27,6 +28,7 @@ const configDefault: AppConfig = {
   apiDomain: `${process.env.REACT_APP_API_DOMAIN}`,
   scope: "backend",
   enableOpenRegistration: true,
+  enableProfilePicture: true,
   defaultPageSize: 50,
   activeLanguages: activeLanguages,
   defaultLanguage: defaultLanguage,

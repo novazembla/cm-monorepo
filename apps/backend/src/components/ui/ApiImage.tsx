@@ -134,19 +134,19 @@ export const ApiImage = ({
         justifyContent="center"
         alignItems="center"
         direction="column"
-        fontSize="lg"
+        fontSize="md"
         color="gray.800"
         border="2px solid"
         bg="green.200"
         borderColor="green.200"
-        minH="200px"
+        minH="100%"
         p="4"
         textAlign="center"
       >
         <Text pb="4">
           {t(
             "apiimage.processsing",
-            "Image successful uploaded. We are processing it now"
+            "Image successfuly uploaded. We are processing it now"
           )}
         </Text>
 

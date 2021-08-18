@@ -416,7 +416,7 @@ export const UserMutations = extendType({
       },
 
       async resolve(...[, args, ctx]) {
-        const user = await daoUserProfileImageDelete(ctx?.apiUser?.id ?? 0);
+        const user = await daoUserProfileImageDelete(args.id, ctx?.apiUser?.id ?? 0);
 
         if (!user)
           throw new ApiError(

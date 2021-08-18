@@ -10,6 +10,7 @@ export type AppConfigSettingsFiledKeys = "none";
 export const appConfig: AppConfigSettings = {
   scope: "backend", // Used throughout the site and the API to identify a client/scope
   enableOpenRegistration: false,
+  enableProfilePicture: true,
   defaultPageSize: 30,
   defaultLanguage: "en",
   activeLanguages: ["en","de"],

@@ -597,11 +597,11 @@
   },
   "toast": {
     "title": {
-      "success": "Success!"
+      "success": "Okay!"
     },
     "info": {
-      "datasaved": "The data has been deleted",
-      "datadeleted": "The data has been deleted"
+      "datasaved": "Die Daten wurden gespeichert",
+      "datadeleted": "Die gewünschten Daten wurden gelöscht"
     }
   },
   "events": {

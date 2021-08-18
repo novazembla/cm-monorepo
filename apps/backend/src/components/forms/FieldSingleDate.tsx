@@ -61,11 +61,9 @@ export const FieldSingleDate = ({
           return (
             <DateSingleInput
               onDateChange={(date) => {
-                console.log(date, getValues());
                 onChange(date.date);
               }}
               onFocusChange={(focusedInput) => {
-                console.log(focusedInput);
                 setIsOpen(focusedInput);
               }}
               displayFormat={displayFormat}

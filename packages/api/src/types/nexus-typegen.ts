@@ -65,6 +65,10 @@ export interface NexusGenInputs {
     terms?: NexusGenScalars['JSON'] | null; // JSON
     title: NexusGenScalars['JSON']; // JSON!
   }
+  ImageTranslationInput: { // input type
+    id: number; // Int!
+    translations: NexusGenScalars['JSON']; // JSON!
+  }
   ImageUpdateInput: { // input type
     meta: NexusGenScalars['JSON']; // JSON!
     ownerId: number; // Int!
@@ -84,7 +88,8 @@ export interface NexusGenInputs {
   }
   PageUpsertInput: { // input type
     content: NexusGenScalars['JSON']; // JSON!
-    ownerId: number; // Int!
+    heroImage?: NexusGenScalars['JSON'] | null; // JSON
+    owner: NexusGenScalars['JSON']; // JSON!
     slug: NexusGenScalars['JSON']; // JSON!
     status: number; // Int!
     title: NexusGenScalars['JSON']; // JSON!
@@ -212,7 +217,9 @@ export interface NexusGenObjects {
     lng?: number | null; // Float
   }
   Image: { // root type
+    alt?: NexusGenScalars['JSON'] | null; // JSON
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
+    credits?: NexusGenScalars['JSON'] | null; // JSON
     id: number; // Int!
     meta?: NexusGenScalars['JSON'] | null; // JSON
     ownerId: number; // Int!
@@ -261,6 +268,7 @@ export interface NexusGenObjects {
     content?: NexusGenScalars['JSON'] | null; // JSON
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
     fullText?: string | null; // String
+    heroImage?: NexusGenRootTypes['Image'] | null; // Image
     id: number; // Int!
     ownerId: number; // Int!
     slug?: NexusGenScalars['JSON'] | null; // JSON
@@ -418,7 +426,9 @@ export interface NexusGenFieldTypes {
     lng: number | null; // Float
   }
   Image: { // field return type
+    alt: NexusGenScalars['JSON'] | null; // JSON
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
+    credits: NexusGenScalars['JSON'] | null; // JSON
     id: number; // Int!
     meta: NexusGenScalars['JSON'] | null; // JSON
     ownerId: number; // Int!
@@ -502,6 +512,7 @@ export interface NexusGenFieldTypes {
     content: NexusGenScalars['JSON'] | null; // JSON
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
     fullText: string | null; // String
+    heroImage: NexusGenRootTypes['Image'] | null; // Image
     id: number; // Int!
     ownerId: number; // Int!
     slug: NexusGenScalars['JSON'] | null; // JSON
@@ -687,7 +698,9 @@ export interface NexusGenFieldTypeNames {
     lng: 'Float'
   }
   Image: { // field return type name
+    alt: 'JSON'
     createdAt: 'DateTime'
+    credits: 'JSON'
     id: 'Int'
     meta: 'JSON'
     ownerId: 'Int'
@@ -771,6 +784,7 @@ export interface NexusGenFieldTypeNames {
     content: 'JSON'
     createdAt: 'DateTime'
     fullText: 'String'
+    heroImage: 'Image'
     id: 'Int'
     ownerId: 'Int'
     slug: 'JSON'
@@ -962,6 +976,7 @@ export interface NexusGenArgTypes {
     pageUpdate: { // args
       data: NexusGenInputs['PageUpsertInput']; // PageUpsertInput!
       id: number; // Int!
+      imagesTranslations?: Array<NexusGenInputs['ImageTranslationInput'] | null> | null; // [ImageTranslationInput]
     }
     settingsUpdate: { // args
       data?: NexusGenInputs['SettingsUpdateInput'][] | null; // [SettingsUpdateInput!]
@@ -1044,7 +1059,7 @@ export interface NexusGenArgTypes {
       orderBy?: NexusGenScalars['JSON'] | null; // JSON
       pageIndex?: number | null; // Int
       pageSize: number | null; // Int
-      taxonomyId: number; // Int!
+      taxonomyId?: number | null; // Int
       where?: NexusGenScalars['JSON'] | null; // JSON
     }
     location: { // args

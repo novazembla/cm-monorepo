@@ -6,7 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import { TextErrorMessage, FormNavigationBlock } from "~/components/forms";
 
-import { ModulePageSchema } from "./forms";
+import { ModulePageUpdateSchema } from "./forms";
 import { usePageUpdateMutation } from "./hooks";
 import {
   useAuthentication,
@@ -31,7 +31,7 @@ import {
 import { moduleRootPath, multiLangFields } from "./moduleConfig";
 
 import { PageForm } from "./forms";
-import { multiLangJsonToRHFormData, multiLangRHFormDataToJson, multiLangSlugUniqueError } from "~/utils";
+import { multiLangJsonToRHFormData, multiLangRHFormDataToJson, multiLangSlugUniqueError, multiLangImageTranslationsRHFormDataToJson, multiLangImageTranslationsJsonRHFormData } from "~/utils";
 
 export const pageReadAndContentAuthorsQueryGQL = gql`
   query pageRead($id: Int!) {
@@ -42,6 +42,14 @@ export const pageReadAndContentAuthorsQueryGQL = gql`
       content
       status
       ownerId
+
+      heroImage {
+        id
+        meta
+        status
+        alt
+        credits
+      }
       createdAt
       updatedAt
     }
@@ -73,7 +81,7 @@ const Update = () => {
 
   const formMethods = useForm({
     mode: "onTouched",
-    resolver: yupResolver(ModulePageSchema),
+    resolver: yupResolver(ModulePageUpdateSchema),
   });
 
   const {
@@ -86,25 +94,43 @@ const Update = () => {
   useEffect(() => {
     if (!data || !data.pageRead) return;
 
-    reset(
-      multiLangJsonToRHFormData(
+    reset({
+      ...multiLangJsonToRHFormData(
         filteredOutputByWhitelist(data.pageRead, ["ownerId","status"], multiLangFields),
         multiLangFields,
         config.activeLanguages
+      ),
+      heroImage: data.pageRead.heroImage?.id,
+      ...multiLangImageTranslationsJsonRHFormData(
+        data.pageRead,
+        ["heroImage"],
+        ["alt", "credits"],
+        config.activeLanguages
       )
-    );
-  }, [reset, data, config.activeLanguages]);
+    });
 
+  }, [reset, data, config.activeLanguages]);
+  
   const onSubmit = async (
-    newData: yup.InferType<typeof ModulePageSchema>
+    newData: yup.InferType<typeof ModulePageUpdateSchema>
   ) => {
     setIsFormError(false);
+
+    const heroImage =  (newData.heroImage && !isNaN(newData.heroImage) && newData.heroImage > 0) ?
+      {
+        heroImage: {
+          connect:{
+            id: newData.heroImage
+          },          
+        }
+      }
+      : undefined;
+
     try {
       if (appUser) {
         const { errors } = await firstMutation(
           parseInt(router.query.id, 10),
           { 
-            ownerId: newData.ownerId,
             status: newData.status,
             ...filteredOutputByWhitelist(
               multiLangRHFormDataToJson(
@@ -114,9 +140,23 @@ const Update = () => {
               ),
               [],
               multiLangFields
-            )
-          }
-          
+            ), 
+            ...heroImage,
+            owner: {
+              connect: {
+                id: newData.ownerId,            
+              }
+            },            
+          },  
+          multiLangImageTranslationsRHFormDataToJson(
+            newData, 
+            [{
+              name: "heroImage",
+              id: newData.heroImage
+            }],
+            ["alt", "credits"],
+            config.activeLanguages
+          ),        
         );
 
         if (!errors) {
@@ -179,7 +219,7 @@ const Update = () => {
               <PageForm
                 action="update"
                 data={data}
-                validationSchema={ModulePageSchema}
+                validationSchema={ModulePageUpdateSchema}
               />
             </ModulePage>
           </fieldset>

@@ -30,6 +30,7 @@ import {
   daoImageQueryCount,
   daoImageGetById,
   daoImageGetStatusById,
+  daoImageSetToDelete
 } from "../../dao";
 
 export const Image = objectType({
@@ -40,6 +41,8 @@ export const Image = objectType({
     t.string("uuid");
     t.int("status");
     t.json("meta");
+    t.json("alt");
+    t.json("credits");
     t.date("createdAt");
     t.date("updatedAt");
   },
@@ -74,7 +77,7 @@ export const ImageQueries = extendType({
       type: "ImageQueryResult",
 
       args: {
-        taxonomyId: nonNull(intArg()),
+        taxonomyId: intArg(),
         pageIndex: intArg({
           default: 0,
         }),
@@ -114,7 +117,7 @@ export const ImageQueries = extendType({
             args.pageIndex as number,
             args.pageSize as number
           );
-
+       
         return {
           totalCount,
           images,
@@ -180,6 +183,15 @@ export const ImageQueries = extendType({
   },
 });
 
+export const ImageTranslationInput = inputObjectType({
+  name: "ImageTranslationInput",
+  definition(t) {
+    t.nonNull.json("translations");
+    t.nonNull.int("id");
+  },
+});
+
+
 export const ImageUpdateInput = inputObjectType({
   name: "ImageUpdateInput",
   definition(t) {
@@ -222,7 +234,7 @@ export const ImageMutations = extendType({
       // TODO enable later also check if user owns if not full access ... authorize: (...[, , ctx]) => authorizeApiUser(ctx, "imageDelete"),
 
       async resolve(...[, args]) {
-        const image = await daoImageDelete(args.id);
+        const image = await daoImageSetToDelete(args.id);
 
         if (!image)
           throw new ApiError(

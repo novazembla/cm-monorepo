@@ -51,17 +51,19 @@ const Index = () => {
   const { firstName, lastName, email, emailVerified, profileImage } =
     data?.userProfileRead ?? {};
 
+  const columns = config.enableProfilePicture ? { base: "100%", t: "max(20%, 250px) 1fr" } : "100%";
+  const rows = config.enableProfilePicture ? { base: "auto 1fr", t: "auto" } : "auto";
   return (
     <>
       <ModuleSubNav breadcrumb={breadcrumb} buttonList={buttonList} />
       <ModulePage isLoading={loading} isError={!!error}>
         {firstName && (
           <Grid
-            templateColumns={{ base: "100%", t: "max(20%, 250px) 1fr" }}
-            templateRows={{ base: "auto 1fr", t: "auto" }}
+            templateColumns={columns}
+            templateRows={rows}
             gap={{ base: "6", s: "8" }}
           >
-            <Box>
+            {config.enableProfilePicture && <Box w={{ base: "50%", t: "auto" }}>
               <ApiImage
                 id={profileImage?.id}
                 status={profileImage?.status}
@@ -75,7 +77,7 @@ const Index = () => {
                   "No profile picture uploaded"
                 )}
               />
-            </Box>
+            </Box>}
             <Box>
               <Stat mb="4">
                 <StatLabel fontSize="md">

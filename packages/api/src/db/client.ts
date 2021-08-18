@@ -19,6 +19,10 @@ export const createPrismaClient = (): Prisma.PrismaClient => {
         url: apiConfig.db.url,
       },
     },
+    log:
+      apiConfig.env.NODE_ENV === "development"
+        ? ["query", "error", "info", "warn"]
+        : [],
   });
 };
 

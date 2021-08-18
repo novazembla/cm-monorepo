@@ -14,5 +14,8 @@ https://github.com/jaydenseric/apollo-upload-client/issues/149
 
 TODO: fullText index creation
 
-
 TODO: Maybe switch from Bcrypt to Argon2 (if the hosting platform does support it)
+
+TODO:
+- Image File Delete, Cleanup of image table of image with status deleted.
+- Also ensure that the translations are gone 

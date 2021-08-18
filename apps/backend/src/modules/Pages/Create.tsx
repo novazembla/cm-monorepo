@@ -3,11 +3,11 @@ import type * as yup from "yup";
 import { useTranslation } from "react-i18next";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { filteredOutputByWhitelist, PublishStatus} from "@culturemap/core";
+import { filteredOutputByWhitelist, PublishStatus } from "@culturemap/core";
 
 import { TextErrorMessage, FormNavigationBlock } from "~/components/forms";
 
-import { ModulePageSchema } from "./forms";
+import { ModulePageCreateSchema } from "./forms";
 import { usePageCreateMutation } from "./hooks";
 import {
   useAuthentication,
@@ -43,7 +43,7 @@ const Create = () => {
 
   const formMethods = useForm({
     mode: "onTouched",
-    resolver: yupResolver(ModulePageSchema),
+    resolver: yupResolver(ModulePageCreateSchema),
   });
 
   const {
@@ -53,31 +53,31 @@ const Create = () => {
   } = formMethods;
 
   const onSubmit = async (
-    newData: yup.InferType<typeof ModulePageSchema>
+    newData: yup.InferType<typeof ModulePageCreateSchema>
   ) => {
     setIsFormError(false);
     try {
       if (appUser) {
-        const { errors } = await firstMutation(
-          {
-            ownerId: appUser.id,
-            status: PublishStatus.DRAFT,
-            ...filteredOutputByWhitelist(
-              multiLangRHFormDataToJson(
-                newData,
-                multiLangFields,
-                config.activeLanguages
-              ),
-              [],
-              multiLangFields
-            )
-          }
-        );
+        const { data, errors } = await firstMutation({
+          owner: {
+            connect: { id: appUser.id },
+          },
+          status: PublishStatus.DRAFT,
+          ...filteredOutputByWhitelist(
+            multiLangRHFormDataToJson(
+              newData,
+              multiLangFields,
+              config.activeLanguages
+            ),
+            [],
+            multiLangFields
+          ),
+        });
 
         if (!errors) {
           successToast();
 
-          router.push(moduleRootPath);
+          router.push(`${moduleRootPath}/update/${data?.pageCreate?.id}`);
         } else {
           let slugError = multiLangSlugUniqueError(errors, setError);
 
@@ -111,7 +111,7 @@ const Create = () => {
     {
       type: "submit",
       isLoading: isSubmitting,
-      label: t("module.button.save", "Save"),
+      label: t("module.button.savedraft", "Save draft"),
       userCan: "pageCreate",
     },
   ];
@@ -132,7 +132,7 @@ const Create = () => {
               )}
               <PageForm
                 action="create"
-                validationSchema={ModulePageSchema}
+                validationSchema={ModulePageCreateSchema}
               />
             </ModulePage>
           </fieldset>

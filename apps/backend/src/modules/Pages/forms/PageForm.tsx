@@ -1,4 +1,4 @@
-import { Divider } from "@chakra-ui/react";
+import { Box, Divider, Alert, AlertIcon } from "@chakra-ui/react";
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import {
@@ -8,6 +8,7 @@ import {
   FieldRow,
   FieldPublishStatusSelect,
   TwoColFieldRow,
+  FieldSingleImage,
 } from "~/components/forms";
 import { useAuthentication } from "~/hooks";
 
@@ -28,6 +29,7 @@ export const PageForm = ({
 
   let updateActions;
 
+  
   if (action === "update") {
     if (data?.adminUsers) {
       updateActions = (
@@ -49,7 +51,13 @@ export const PageForm = ({
                   "module.pages.forms.field.label.author",
                   "Page author"
                 )}
-                isDisabled={!(appUser && (appUser.has("editor") || data.pageRead.ownerId === appUser.id))}
+                isDisabled={
+                  !(
+                    appUser &&
+                    (appUser.has("editor") ||
+                      data.pageRead.ownerId === appUser.id)
+                  )
+                }
                 isRequired={true}
                 options={data.adminUsers.map((authUser: any) => ({
                   value: authUser.id,
@@ -65,6 +73,25 @@ export const PageForm = ({
               />
             </FieldRow>
           </TwoColFieldRow>
+          <Divider mt="10" />
+          <FieldSingleImage
+            id="heroImage"
+            name="heroImage"
+            label={t("forms.heroImage.label", "Featured image")}
+            currentImage={data?.pageRead?.heroImage}
+            settings={{
+              imageRequired: false,
+              altRequired: false,
+              creditsRequired: false,
+            }}
+            connectWith={{
+              heroImagePages: {
+                connect: {
+                  id: data?.pageRead?.id,            
+                }
+              }
+            }}
+          />
         </>
       );
     } else {
@@ -74,7 +101,15 @@ export const PageForm = ({
     }
   }
   return (
-    <>
+    <Box w="100%">
+      {action === "create" && <>
+      
+      <Alert borderRadius="lg">
+      <AlertIcon />
+  {t("form.info.pleasesafedraft", "Please save a draft to unlock further functionality")}
+      </Alert>
+    </>}
+
       <FieldMultiLangInput
         name="title"
         id="title"
@@ -104,6 +139,7 @@ export const PageForm = ({
         }}
       />
       {updateActions}
+      
       <Divider mt="10" />
       <FieldMultiLangTextEditor
         name="content"
@@ -120,7 +156,7 @@ export const PageForm = ({
           ),
         }}
       />
-    </>
+    </Box>
   );
 };
 export default PageForm;

@@ -7,7 +7,6 @@ import FieldErrorMessage from "./FieldErrorMessage";
 
 export interface FieldSelectSettings {
   onChange?: ChangeEventHandler;
-  rows?: number;
   required?: boolean;
   key?: string;
   name?: string;

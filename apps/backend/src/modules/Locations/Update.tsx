@@ -129,9 +129,6 @@ const Update = () => {
     formState: { isSubmitting, isDirty },
   } = formMethods;
 
-
-  console.log(data);
-
   useEffect(() => {
     if (!data || !data.locationRead) return;
 

@@ -6,6 +6,7 @@ import { filteredOutputByBlacklist } from "@culturemap/core";
 import { ApiError, filteredOutputByBlacklistOrNotFound } from "../utils";
 import { apiConfig } from "../config";
 import { getPrismaClient } from "../db/client";
+import { daoImageSetToDelete } from ".";
 
 const prisma = getPrismaClient();
 
@@ -42,7 +43,10 @@ export const daoUserCreate = async (
     data: {
       ...data,
       ...{
-        password: await bcrypt.hash(data.password, apiConfig.security.saltRounds),
+        password: await bcrypt.hash(
+          data.password,
+          apiConfig.security.saltRounds
+        ),
       },
     },
   });
@@ -66,7 +70,10 @@ export const daoUserQuery = async (
     take: Math.min(pageSize, apiConfig.db.maxPageSize),
   });
 
-  return filteredOutputByBlacklist(users, apiConfig.db.privateJSONDataKeys.user);
+  return filteredOutputByBlacklist(
+    users,
+    apiConfig.db.privateJSONDataKeys.user
+  );
 };
 
 export const daoUserFindFirst = async (
@@ -162,7 +169,10 @@ export const daoUserDelete = async (id: number): Promise<User> => {
   );
 };
 
-export const daoUserProfileImageDelete = async (id: number): Promise<User> => {
+export const daoUserProfileImageDelete = async (
+  imageId: number,
+  userId: number
+): Promise<User> => {
   const user: User = await prisma.user.update({
     data: {
       profileImage: {
@@ -170,9 +180,11 @@ export const daoUserProfileImageDelete = async (id: number): Promise<User> => {
       },
     },
     where: {
-      id,
+      id: userId,
     },
   });
+
+  await daoImageSetToDelete(imageId);
 
   return filteredOutputByBlacklistOrNotFound(
     user,

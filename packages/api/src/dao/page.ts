@@ -5,9 +5,16 @@ import { filteredOutputByBlacklist } from "@culturemap/core";
 import { ApiError, filteredOutputByBlacklistOrNotFound } from "../utils";
 import { apiConfig } from "../config";
 import { getPrismaClient } from "../db/client";
-import { daoSharedCheckSlugUnique, daoSharedGenerateFullText } from "./shared";
+import {
+  daoSharedCheckSlugUnique,
+  daoSharedGenerateFullText,
+  daoSharedWrapImageWithTranslationImage,
+  daoImageTranlatedColumns,
+} from ".";
 
 const prisma = getPrismaClient();
+
+export const daoPageTranlatedColumns = ["title", "slug", "content"];
 
 export const daoPageCheckSlugUnique = async (
   slug: Record<string, string>,
@@ -35,7 +42,10 @@ export const daoPageQuery = async (
     take: Math.min(pageSize, apiConfig.db.maxPageSize),
   });
 
-  return filteredOutputByBlacklist(pages, apiConfig.db.privateJSONDataKeys.page);
+  return filteredOutputByBlacklist(
+    pages,
+    apiConfig.db.privateJSONDataKeys.page
+  );
 };
 
 export const daoPageQueryCount = async (
@@ -73,13 +83,21 @@ export const daoPageCreate = async (
   );
 };
 
-export const daoPageGetById = async (id: number): Promise<Page> => {
+export const daoPageGetById = async (
+  id: number,
+  include?: Prisma.PageInclude | undefined
+): Promise<Page> => {
   const page: Page | null = await prisma.page.findUnique({
     where: { id },
+    include,
   });
 
   return filteredOutputByBlacklistOrNotFound(
-    page,
+    daoSharedWrapImageWithTranslationImage(
+      "heroImage",
+      page,
+      daoImageTranlatedColumns
+    ),
     apiConfig.db.privateJSONDataKeys.page
   );
 };
@@ -100,10 +118,16 @@ export const daoPageSearchQuery = async (
     take: Math.min(pageSize, apiConfig.db.maxPageSize),
   });
 
-  return filteredOutputByBlacklist(pages, apiConfig.db.privateJSONDataKeys.page);
+  return filteredOutputByBlacklist(
+    pages,
+    apiConfig.db.privateJSONDataKeys.page
+  );
 };
 
-export const daoPageGetBySlug = async (slug: string): Promise<Page> => {
+export const daoPageGetBySlug = async (
+  slug: string,
+  include?: Prisma.PageInclude | undefined
+): Promise<Page> => {
   const page: Page | null = await prisma.page.findFirst({
     where: {
       OR: [
@@ -121,10 +145,15 @@ export const daoPageGetBySlug = async (slug: string): Promise<Page> => {
         },
       ],
     },
+    include,
   });
 
   return filteredOutputByBlacklistOrNotFound(
-    page,
+    daoSharedWrapImageWithTranslationImage(
+      "heroImage",
+      page,
+      daoImageTranlatedColumns
+    ),
     apiConfig.db.privateJSONDataKeys.page
   );
 };
@@ -145,7 +174,7 @@ export const daoPageUpdate = async (
       `Slug is not unique in [${Object.keys(result.errors).join(",")}]`
     );
 
-  const term: Page = await prisma.page.update({
+  const page: Page = await prisma.page.update({
     data: {
       ...data,
       fullText: daoSharedGenerateFullText(data, ["title", "slug", "content"]),
@@ -156,20 +185,20 @@ export const daoPageUpdate = async (
   });
 
   return filteredOutputByBlacklistOrNotFound(
-    term,
+    page,
     apiConfig.db.privateJSONDataKeys.page
   );
 };
 
 export const daoPageDelete = async (id: number): Promise<Page> => {
-  const term: Page = await prisma.page.delete({
+  const page: Page = await prisma.page.delete({
     where: {
       id,
     },
   });
 
   return filteredOutputByBlacklistOrNotFound(
-    term,
+    page,
     apiConfig.db.privateJSONDataKeys.page
   );
 };

@@ -44,7 +44,8 @@ export const imageCreate = async (
   ownerId: number,
   imageUuid: string,
   meta: ApiImageMetaInformation,
-  type: "image" | "profile" = "image"
+  type: "image" | "profile" = "image",
+  connectWith?: any,
 ): Promise<Image> => {
   const image: Image = await daoImageCreate({
     owner: {
@@ -52,15 +53,19 @@ export const imageCreate = async (
         id: ownerId,
       },
     },
-    profileImageUsers: {
-      connect: {
-        id: ownerId,
-      },
-    },
+      
     uuid: imageUuid,
     meta,
     type,
     status: ImageStatusEnum.UPLOADED,
+    ...connectWith,
+    ...(type === "profile"? {
+      profileImageUsers: {
+        connect: {
+          id: ownerId,
+        },
+      }
+    } : {}),  
   });
 
   if (!image)

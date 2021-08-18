@@ -31,6 +31,7 @@ import {
   daoPageDelete,
   daoUserGetById,
   daoPageGetBySlug,
+  daoImageSaveImageTranslations,
 } from "../../dao";
 
 export const Page = objectType({
@@ -59,6 +60,9 @@ export const Page = objectType({
         }
         return null;
       },
+    });
+    t.field("heroImage", {
+      type: "Image",
     });
     t.date("createdAt");
     t.date("updatedAt");
@@ -144,8 +148,24 @@ export const PageQueries = extendType({
       authorize: (...[, , ctx]) => authorizeApiUser(ctx, "pageRead"),
 
       // resolve(root, args, ctx, info)
-      async resolve(...[, args]) {
-        return daoPageGetById(args.id);
+      async resolve(...[, args, , info]) {
+        const pRI = parseResolveInfo(info);
+
+        let include = {};
+        if ((pRI?.fieldsByTypeName?.Page as any)?.heroImage)
+          include = {
+            ...include,
+            heroImage: {
+              include: {
+                translations: true,
+              },
+            },
+          };
+
+        return daoPageGetById(
+          args.id,
+          Object.keys(include).length > 0 ? include : undefined
+        );
       },
     });
 
@@ -157,8 +177,24 @@ export const PageQueries = extendType({
       },
 
       // resolve(root, args, ctx, info)
-      async resolve(...[, args]) {
-        return daoPageGetBySlug(args.slug);
+      async resolve(...[, args, , info]) {
+        const pRI = parseResolveInfo(info);
+
+        let include = {};
+        if ((pRI?.fieldsByTypeName?.Page as any)?.heroImage)
+          include = {
+            ...include,
+            heroImage: {
+              include: {
+                translations: true,
+              },
+            },
+          };
+
+        return daoPageGetBySlug(
+          args.slug,
+          Object.keys(include).length > 0 ? include : undefined
+        );
       },
     });
   },
@@ -169,8 +205,9 @@ export const PageCreateInput = inputObjectType({
   definition(t) {
     t.nonNull.json("title");
     t.nonNull.json("slug");
+    t.json("heroImage");
     t.nonNull.json("content");
-    t.nonNull.int("ownerId");
+    t.nonNull.json("owner");
     t.nonNull.int("status");
   },
 });
@@ -189,15 +226,7 @@ export const PageMutations = extendType({
       authorize: (...[, , ctx]) => authorizeApiUser(ctx, "pageCreate"),
 
       async resolve(...[, args]) {
-        const page = await daoPageCreate({
-          title: args.data.title,
-          slug: args.data.slug,
-          content: args.data.content,
-          status: args.data.status,
-          owner: {
-            connect: { id: args.data.ownerId },
-          },
-        });
+        const page = await daoPageCreate(args.data);
 
         if (!page)
           throw new ApiError(
@@ -215,6 +244,7 @@ export const PageMutations = extendType({
       args: {
         id: nonNull(intArg()),
         data: nonNull("PageUpsertInput"),
+        imagesTranslations: list(arg({ type: "ImageTranslationInput" })),
       },
 
       authorize: (...[, , ctx]) => authorizeApiUser(ctx, "pageUpdate"),
@@ -225,8 +255,15 @@ export const PageMutations = extendType({
         if (!page)
           throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Update failed");
 
+        console.log(args.data, args.imagesTranslations);
+
+        if (Array.isArray(args.imagesTranslations)) {
+          const totalCount = await daoImageSaveImageTranslations(args.imagesTranslations);
+          console.log("dsklafdksfk Tita", totalCount);
+        }
+
         return page;
-      },
+      }
     });
 
     t.nonNull.field("pageDelete", {

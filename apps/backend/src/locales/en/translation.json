@@ -528,7 +528,7 @@
       "required": "This field is a required field",
       "oneOf": "This field must be one of the following values: {{values}}",
       "notOneOf": "This field must not be one of the following values: {{values}}",
-      "notType": "This field must not be of the type: {{type}}",
+      "notType": "This field must be of the type: {{type}}",
       "defined": "This field must be defined"
     },
     "string": {
@@ -600,7 +600,7 @@
       "success": "Success!"
     },
     "info": {
-      "datasaved": "The data has been deleted",
+      "datasaved": "The data has been saved",
       "datadeleted": "The data has been deleted"
     }
   },

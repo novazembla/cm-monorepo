@@ -71,6 +71,8 @@ export const useDeleteByIdButton = (
 
           setIsDeleteError(false);
           successfullyDeletedToast();
+
+
         } else {
           setIsDeleteError(true);
           setDZAD({

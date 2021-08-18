@@ -10,6 +10,7 @@ import {
   FormErrorMessage,
   chakra,
   IconButton,
+  Text,
 } from "@chakra-ui/react";
 
 import { HiOutlineTrash } from "react-icons/hi";
@@ -102,6 +103,10 @@ export const FieldImageUploader = ({
   isRequired,
   isDisabled,
   deleteButtonGQL,
+  onDelete, 
+  onUpload,
+  connectWith,
+  route = "image"
 }: {
   settings?: FieldImageUploaderSettings;
   id: string;
@@ -110,6 +115,10 @@ export const FieldImageUploader = ({
   label: string;
   name: string;
   deleteButtonGQL: DocumentNode;
+  onDelete?: (id?: number) => void;
+  onUpload?: (id?: number) => void;
+  connectWith?: any;
+  route?: string;
 }) => {
   const [appUser] = useAuthentication();
   const { t } = useTranslation();
@@ -153,17 +162,19 @@ export const FieldImageUploader = ({
       try {
         if (appUser) {
           setIsUploading(true);
+          setIsUploadError(false);
 
           const formData = new FormData();
           formData.append("image", files[0]);
           formData.append("ownerId", `${appUser.id}`);
+          formData.append("connectWith", JSON.stringify(connectWith));
 
           const cancelToken = createNewCancelToken();
           
           await axios
             .request({
               method: "post",
-              url: `${config.apiUrl}/profileImage`,
+              url: `${config.apiUrl}/${route}`,
               headers: {
                 "Content-Type": "multipart/form-data",
                 ...(authentication.getAuthToken()
@@ -187,7 +198,9 @@ export const FieldImageUploader = ({
                 setIsUploading(false);
                 if (data?.id) {
                   setUploadedImgId(data?.id ?? undefined);
-                  setValue(name, data?.id);
+                  setValue(name, data?.id, { shouldDirty: true });
+                  if (typeof onUpload === "function")
+                    onUpload.call(this, data?.id)
                 }
               }
             })
@@ -225,6 +238,9 @@ export const FieldImageUploader = ({
         setUploadedImgId(undefined);
         setimageIsDeleted(true);
         setIsUploading(false);
+        setValue(name, undefined, { shouldDirty: true });
+        if (typeof onDelete === "function")
+          onDelete.call(null);
       },
       {
         requireTextualConfirmation: false,
@@ -237,7 +253,7 @@ export const FieldImageUploader = ({
   if (imageIsDeleted) currentImage = {};
 
   const showImage = (currentImage && currentImage?.id) || !!uploadedImgId;
-
+  
   return (
     <>
       <FormNavigationBlock shouldBlock={isUploading} />
@@ -285,12 +301,12 @@ export const FieldImageUploader = ({
           </Box>
         )}
         {isDeleteError && (
-          <p color="red.500">
+          <Text fontSize="sm" mt="0.5" color="red.500">
             {t(
               "module.profile.deleteimage.error",
               "Unfortunately, we could not process you deletion request please try again later"
             )}
-          </p>
+          </Text>
         )}
         {DeleteAlertDialog}
 
@@ -367,18 +383,18 @@ export const FieldImageUploader = ({
           
         )}
         {isUploadError && (
-          <p color="red.500">
+          <Text fontSize="sm" mt="0.5" color="red.500">
             {t(
               "imageuploader.error",
               "Unfortunately, we could not finish you upload please try again later"
             )}
-          </p>
+          </Text>
         )}
 
         <input
           {...{ valid: !errors[name]?.message ? "valid" : undefined }}
           type="hidden"
-          defaultValue={settings?.currentImage?.id}
+          defaultValue={currentImage?.id}
           {...register(name, {
             required: isRequired,
           })}

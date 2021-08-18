@@ -15,7 +15,7 @@ export const FieldRow = ({
       {children}
     </Flex>
 
-  return <Flex mt="4" _first={{mt:0}}>{children}</Flex>;
+  return <Flex mt="4" _first={{mt:0}} w="100%">{children}</Flex>;
 };
 
 export default FieldRow;

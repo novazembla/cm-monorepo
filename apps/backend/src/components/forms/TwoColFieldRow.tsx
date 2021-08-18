@@ -28,7 +28,7 @@ export const TwoColFieldRow = ({
     "> div:nth-of-type(2n)": {
       mt:"0"
     }
-  }}>{children}</SimpleGrid>;
+  }} w="100%">{children}</SimpleGrid>;
 };
 
 export default TwoColFieldRow;

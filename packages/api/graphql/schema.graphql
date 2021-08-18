@@ -97,7 +97,9 @@ type GeoPoint {
 }
 
 type Image {
+  alt: JSON
   createdAt: DateTime
+  credits: JSON
   id: Int!
   meta: JSON
   ownerId: Int!
@@ -116,6 +118,11 @@ type ImageStatus {
   id: Int!
   meta: JSON
   status: Int!
+}
+
+input ImageTranslationInput {
+  id: Int!
+  translations: JSON!
 }
 
 input ImageUpdateInput {
@@ -197,7 +204,7 @@ type Mutation {
   locationUpdate(data: LocationUpsertInput!, id: Int!): Location!
   pageCreate(data: PageUpsertInput!): Page!
   pageDelete(id: Int!): BooleanResult!
-  pageUpdate(data: PageUpsertInput!, id: Int!): Page!
+  pageUpdate(data: PageUpsertInput!, id: Int!, imagesTranslations: [ImageTranslationInput]): Page!
   settingsUpdate(data: [SettingsUpdateInput!]): BooleanResult!
   taxonomyCreate(data: TaxonomyUpsertInput!): Taxonomy!
   taxonomyDelete(id: Int!): BooleanResult!
@@ -219,6 +226,7 @@ type Page {
   content: JSON
   createdAt: DateTime
   fullText: String
+  heroImage: Image
   id: Int!
   ownerId: Int!
   slug: JSON
@@ -235,7 +243,8 @@ type PageQueryResult {
 
 input PageUpsertInput {
   content: JSON!
-  ownerId: Int!
+  heroImage: JSON
+  owner: JSON!
   slug: JSON!
   status: Int!
   title: JSON!
@@ -258,7 +267,7 @@ type Query {
   events(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): EventQueryResult
   imageRead(id: Int!): Image!
   imageStatus(id: Int!): ImageStatus!
-  images(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, taxonomyId: Int!, where: JSON): ImageQueryResult
+  images(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, taxonomyId: Int, where: JSON): ImageQueryResult
   location(slug: String!): Location!
   locationRead(id: Int!): Location!
   locations(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): LocationQueryResult

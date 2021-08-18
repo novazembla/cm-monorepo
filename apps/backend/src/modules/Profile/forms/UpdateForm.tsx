@@ -11,6 +11,7 @@ import {
 
 import { yupIsFieldRequired } from "~/validation";
 import { UserProfileUpdateValidationSchema } from ".";
+import { useConfig } from "~/hooks";
 
 export const UpdateForm = ({
   data,
@@ -21,44 +22,49 @@ export const UpdateForm = ({
   errors?: any;
   disableNavigation?: Function;
 }) => {
+  const config = useConfig();
   const { t } = useTranslation();
 
   const { firstName, lastName, profileImage } = data ?? {};
+  const columns = config.enableProfilePicture
+    ? { base: "100%", t: "max(20%, 250px) 1fr" }
+    : "100%";
+  const rows = config.enableProfilePicture
+    ? { base: "auto 1fr", t: "auto" }
+    : "auto";
 
   return (
-    <Grid
-      templateColumns={{ base: "100%", t: "max(20%, 250px) 1fr" }}
-      templateRows={{ base: "200px 1fr", t: "100%" }}
-      gap="8"
-    >
-      <Box>
-        <FieldImageUploader
-          id="profileImage"
-          name="profileImage"
-          label={t("page.register.profileimage", "Profile Image")}
-          isRequired={yupIsFieldRequired(
-            "profileImage",
-            UserProfileUpdateValidationSchema
-          )}
-          deleteButtonGQL={userProfileImageDeleteMutationGQL}
-          settings={{
-            minFileSize: 1024 * 1024 * 0.05,
-            maxFileSize: 1024 * 1024 * 2,
-            aspectRatioPB: 133.33, // % bottom padding
-            
-            image: {
-              status: profileImage?.status,
-              id: profileImage?.id,
-              meta: profileImage?.meta,
-              alt: `${firstName} ${lastName}`,
-              forceAspectRatioPB: 133.33,
-              showPlaceholder: true,
-              sizes: "(min-width: 45em) 20v, 95vw",
-            }
-          }}
-        />
+    <Grid templateColumns={columns} templateRows={rows} gap="8">
+      {config.enableProfilePicture && (
+        <Box w={{ base: "50%", t: "100%" }}>
+          <FieldImageUploader
+            route="profileImage"
+            id="profileImage"
+            name="profileImage"
+            label={t("page.register.profileimage", "Profile Image")}
+            isRequired={yupIsFieldRequired(
+              "profileImage",
+              UserProfileUpdateValidationSchema
+            )}
+            deleteButtonGQL={userProfileImageDeleteMutationGQL}
+            settings={{
+              minFileSize: 1024 * 1024 * 0.05,
+              maxFileSize: 1024 * 1024 * 2,
+              aspectRatioPB: 133.33, // % bottom padding
 
-      </Box>
+              image: {
+                status: profileImage?.status,
+                id: profileImage?.id,
+                meta: profileImage?.meta,
+                alt: `${firstName} ${lastName}`,
+                forceAspectRatioPB: 133.33,
+                showPlaceholder: true,
+                sizes: "(min-width: 45em) 20v, 95vw",
+              },
+            }}
+          />
+        </Box>
+      )}
       <Box>
         <TwoColFieldRow>
           <FieldRow>

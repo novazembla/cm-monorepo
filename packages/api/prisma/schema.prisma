@@ -174,8 +174,7 @@ model Term {
 
 model Page {
   id             Int        @id @default(autoincrement())
-  objectTypeId   Int        @default(2)
-
+  
   title          Json     
   slug           Json     
   content        Json
@@ -185,8 +184,6 @@ model Page {
 
   status         Int  
 
-  translations   Translation[]
-
   fullText       String    @default("")
 
   createdAt      DateTime   @default(now())
@@ -194,15 +191,13 @@ model Page {
   ownerId     Int    
   owner       User   @relation(fields: [ownerId], references: [id])
   
-  @@unique([id,objectTypeId])
   @@index([ownerId], name: "indexPageOwnerId")
 }
 
 // TODO: add a retry mechanism 
 model Image {
   id             Int        @id @default(autoincrement())
-  objectTypeId   Int        @default(1)
-
+  
   uuid           String     @db.VarChar(48) @unique
   meta           Json
   status         Int        @default(0)
@@ -216,36 +211,26 @@ model Image {
 
   events         Event[]
   locations      Location[]
-  translations   Translation[]
+  translations   ImageTranslation[]
 
   profileImageUsers   User[]  @relation("profileImage")
   heroImagePages      Page[]  @relation("pageHeroImage")
   heroImageEvents     Event[]  @relation("eventHeroImage")
   heroImageLocations  Location[]  @relation("locationHeroImage")
 
-  @@unique([id,objectTypeId])
   @@index([ownerId], name: "indexImageOwnerId")
   @@index([ownerId, type], name: "indexImageOwnerIdType")
   @@index([status], name: "indexImageStatus")
 }
 
-model Translation {
+model ImageTranslation {
   id              Int        @id @default(autoincrement())
   key             String     @db.VarChar(24)
   lang            String     @db.VarChar(4)
   translation     String
   
-  objectTypeId    Int     
-  objectId        Int
-  image           Image?     @relation(fields: [objectId, objectTypeId], references: [id, objectTypeId])
-  page            Page?      @relation(fields: [objectId, objectTypeId], references: [id, objectTypeId])
+  imageId    Int     
+  image           Image?     @relation(fields: [imageId], references: [id])
+
+  @@unique([imageId, key, lang], name: "uniqueTransKeys")
 }
-
-// model Translation {
-//   id              Int        @id @default(autoincrement())
-//   t               String     @db.VarChar(4)
-//   lang            String     
-//   translations   ObjectTranslation[] 
-
-//   object          User   
-// }

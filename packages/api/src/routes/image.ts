@@ -81,11 +81,14 @@ export const postImage = async (req: Request, res: Response) => {
       if (req.file) {
         const { fileUuid, metainfo } = createImageMetaInfo(req.file);
 
+        const connectWith = req?.body?.connectWith ? JSON.parse(req?.body?.connectWith) : {};
+
         const image = await imageCreate(
           parseInt(req.body.ownerId, 10),
           fileUuid,
           metainfo,
-          "image"
+          "image",
+          connectWith
         );
 
         res.json(image);

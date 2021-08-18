@@ -6,7 +6,11 @@ import { apiConfig } from "../config";
 
 import { getPrismaClient } from "../db/client";
 
+import { daoSharedMapTranslations } from ".";
+
 const prisma = getPrismaClient();
+
+export const daoImageTranlatedColumns = ["alt", "credits"];
 
 export const daoImageQuery = async (
   where: Prisma.ImageWhereInput,
@@ -17,11 +21,17 @@ export const daoImageQuery = async (
   const images: Image[] = await prisma.image.findMany({
     where,
     orderBy,
+    include: {
+      translations: true,
+    },
     skip: pageIndex * pageSize,
     take: Math.min(pageSize, apiConfig.db.maxPageSize),
   });
 
-  return filteredOutputByBlacklist(images, apiConfig.db.privateJSONDataKeys.image);
+  return filteredOutputByBlacklist(
+    daoSharedMapTranslations(images, daoImageTranlatedColumns),
+    apiConfig.db.privateJSONDataKeys.image
+  );
 };
 
 export const daoImageQueryCount = async (
@@ -105,6 +115,90 @@ export const daoImageDelete = async (id: number): Promise<Image> => {
   );
 };
 
+export const daoImageSetToDelete = async (id: number): Promise<Image> => {
+  const image: Image = await prisma.image.update({
+    data: {
+      status: ImageStatusEnum.DELETED,
+      events: {
+        set: [],
+      },
+      // TODO: tours?
+      locations: {
+        set: [],
+      },
+      profileImageUsers: {
+        set: [],
+      },
+      // TODO: tours?
+      heroImagePages: {
+        set: [],
+      },
+      heroImageEvents: {
+        set: [],
+      },
+      heroImageLocations: {
+        set: [],
+      }
+    },
+    where: {
+      id,
+    },
+  });
+
+  // TODO: schedule task to wipe file off the disk
+  return filteredOutputByBlacklistOrNotFound(
+    image,
+    apiConfig.db.privateJSONDataKeys.image
+  );
+};
+
+export const daoImageSaveImageTranslations = async (
+  translations: any
+): Promise<number> => {
+  if (!Array.isArray(translations) || translations.length === 0) return 0;
+
+  const totals: any[] = await prisma.$transaction(
+    translations.map((imageTranslation) =>
+      prisma.image.update({
+        data: {
+          translations: {
+            upsert: Object.keys(imageTranslation.translations).reduce(
+              (upserts: any[], key: any) => {
+                return [
+                  ...upserts,
+                  ...Object.keys(imageTranslation.translations[key]).map((lang: any) => {
+                    return {
+                      create: {
+                        lang: lang,
+                        key: key,
+                        translation: imageTranslation.translations[key][lang],
+                      },
+                      update: {
+                        translation: imageTranslation.translations[key][lang],
+                      },
+                      where: {
+                        uniqueTransKeys: {
+                          lang: lang,
+                          key: key,
+                          imageId: imageTranslation.id,
+                        },
+                      },
+                    };
+                  }),
+                ];
+              },
+              []
+            ),
+          },
+        },
+        where: { id: imageTranslation.id },
+      })
+    )
+  );
+
+  return totals.reduce((acc, total) => acc + total, 0);
+};
+
 export default {
   daoImageQuery,
   daoImageQueryCount,
@@ -112,5 +206,7 @@ export default {
   daoImageCreate,
   daoImageUpdate,
   daoImageDelete,
+  daoImageSetToDelete,
   daoImageGetStatusById,
+  daoImageSaveImageTranslations,
 };

@@ -1,6 +1,5 @@
 import { filteredOutputByBlacklist } from "@culturemap/core";
-import i18n from 'i18next';
-
+import i18n from "i18next";
 
 export const multiLangJsonToRHFormData = (
   data: any,
@@ -64,10 +63,101 @@ export const multiLangRHFormDataToJson = (
   const filterNamesAndLang = multiLangFields.reduce(
     (acc: string[], fieldName) => {
       return [...acc, ...activeLanguages.map((lang) => `${fieldName}_${lang}`)];
-    }
-  , []);
+    },
+    []
+  );
 
   return filteredOutputByBlacklist(changedData, filterNamesAndLang);
+};
+
+export const multiLangImageTranslationsRHFormDataToJson = (
+  data: any,
+  imageFields: [
+    {
+      id: number;
+      name: string;
+    }
+  ],
+  imageMultiLangFields: string[],
+  activeLanguages: string[]
+) => {
+  
+
+  return imageFields.reduce((acc: any[], imageField: any) => {
+    if (!(imageField.name in data)) return acc;
+
+    if (isNaN(data[imageField.name]) || !isFinite(data[imageField.name]) || !data[imageField.name]) return acc;
+
+    const imageTranslations = {
+      id: imageField.id,
+      translations: imageMultiLangFields.reduce((accFields, key) => {
+        return {
+          ...accFields,
+          [key]: activeLanguages.reduce((accLangs, lang) => {
+            return {
+              ...accLangs,
+              [lang]: data[`${imageField.name}_${key}_${lang}`] ?? "",
+            };
+          }, {}),
+        };
+      }, {}),
+    };
+
+    acc.push(imageTranslations);
+
+    return acc;
+  }, []);
+};
+
+export const multiLangImageTranslationsJsonRHFormData = (
+  data: any,
+  imageFields: string[],
+  imageMultiLangFields: string[],
+  activeLanguages: string[]
+) => {
+  if (!data) return {};
+  
+ 
+  return imageFields.reduce((acc: any, imgFieldName: any) => {
+    // if no data is given we still want to return the fields to ensure that they are also correctly reset.
+    if (!(imgFieldName in data) || !data[imgFieldName])
+      return {
+        ...acc,
+        ...imageMultiLangFields.reduce((accFields, fieldName) => {
+          return {
+            ...acc,
+            ...activeLanguages.reduce((accLangs, lang) => {
+              const key = `${imgFieldName}_${fieldName}_${lang}`;
+              return {
+                ...accLangs,
+                [key]: "",
+              };
+            }, accFields),
+          };
+        }, acc),
+      }; 
+    
+    return {
+      ...acc,
+      ...imageMultiLangFields.reduce((accFields, fieldName) => {
+        if (!data[imgFieldName] || !(fieldName in data[imgFieldName])) return accFields;
+
+        return {
+          ...acc,
+          ...activeLanguages.reduce((accLangs, lang) => {
+            if (!data[imgFieldName][fieldName] || !(lang in data[imgFieldName][fieldName])) return accLangs;
+
+            const key = `${imgFieldName}_${fieldName}_${lang}`;
+
+            return {
+              ...accLangs,
+              [key]: data[imgFieldName][fieldName][lang],
+            };
+          }, accFields),
+        };
+      }, acc),
+    };
+  }, {} as any);
 };
 
 export const multiLangSlugUniqueError = (
@@ -75,14 +165,20 @@ export const multiLangSlugUniqueError = (
   setError: Function
 ): boolean => {
   if (Array.isArray(errors) && errors.length) {
-    if (errors[0].message && errors[0].message.indexOf("Slug is not unique") > -1) {
+    if (
+      errors[0].message &&
+      errors[0].message.indexOf("Slug is not unique") > -1
+    ) {
       const regex = /\[(.*?)\]/;
       const result = errors[0].message.match(regex);
       if (result && result.length >= 2) {
         result[1].split(",").forEach((lang: string) => {
           setError(`slug_${lang}`, {
             type: "manual",
-            message: i18n.t('validation.notunique', "This valaue is not unique"),
+            message: i18n.t(
+              "validation.notunique",
+              "This valaue is not unique"
+            ),
           });
         });
       }
