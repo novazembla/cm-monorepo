@@ -1,7 +1,7 @@
 // TODO: Make use of https://github.com/godaddy/terminus https://stackoverflow.com/questions/43003870/how-do-i-shut-down-my-express-server-gracefully-when-its-process-is-killed
 //
 
-import express, { Application } from "express";
+import express, { Application, urlencoded } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
@@ -20,7 +20,7 @@ export const app: Application = express();
 
 export const initializeExpressApp = () => {
   app.use(cookieParser());
-  app.use(bodyParser.urlencoded({ extended: false }));
+  app.use(urlencoded({ extended: false }));
 
   // eslint-disable-next-line import/no-named-as-default-member
   app.use(cors(apiConfig.corsOptions));
