@@ -136,9 +136,11 @@ export const daoLocationCreate = async (
   );
 };
 
-export const daoLocationGetById = async (id: number): Promise<Location> => {
+export const daoLocationGetById = async (id: number,
+  include?: Prisma.LocationInclude | undefined): Promise<Location> => {
   const location: Location | null = await prisma.location.findUnique({
     where: { id },
+    include
   });
 
   return filteredOutputByBlacklistOrNotFound(

@@ -16,8 +16,12 @@ export const eventCreateMutationGQL = gql`
 // TODO::more rows in return.
 
 export const eventUpdateMutationGQL = gql`
-  mutation eventUpdate($id: Int!, $data: EventUpsertInput!) {
-    eventUpdate(id: $id, data: $data) {
+  mutation eventUpdate(
+    $id: Int!
+    $data: EventUpsertInput!
+    $imagesTranslations: [ImageTranslationInput]
+  ) {
+    eventUpdate(id: $id, data: $data, imagesTranslations: $imagesTranslations) {
       id
       ownerId
       title

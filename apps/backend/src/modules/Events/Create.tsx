@@ -8,7 +8,7 @@ import { useQuery, gql } from "@apollo/client";
 
 import { TextErrorMessage, FormNavigationBlock } from "~/components/forms";
 
-import { ModuleEventValidationSchema } from "./forms";
+import { ModuleEventCreateSchema } from "./forms";
 import { useEventCreateMutation } from "./hooks";
 import {
   useAuthentication,
@@ -67,7 +67,7 @@ const Create = () => {
 
   const formMethods = useForm({
     mode: "onTouched",
-    resolver: yupResolver(ModuleEventValidationSchema),
+    resolver: yupResolver(ModuleEventCreateSchema),
     defaultValues: {
       dates: [
         {
@@ -92,7 +92,7 @@ const Create = () => {
   } = formMethods;
 
   const onSubmit = async (
-    newData: yup.InferType<typeof ModuleEventValidationSchema>
+    newData: yup.InferType<typeof ModuleEventCreateSchema>
   ) => {
     
     setIsFormError(false);
@@ -191,7 +191,7 @@ const Create = () => {
               <ModuleForm
                 action="create"
                 data={data}
-                validationSchema={ModuleEventValidationSchema}
+                validationSchema={ModuleEventCreateSchema}
               />
             </ModulePage>
           </fieldset>

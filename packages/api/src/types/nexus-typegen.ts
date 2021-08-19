@@ -58,6 +58,7 @@ export interface NexusGenInputs {
     dates?: NexusGenScalars['JSON'] | null; // JSON
     description?: NexusGenScalars['JSON'] | null; // JSON
     descriptionLocation?: NexusGenScalars['JSON'] | null; // JSON
+    heroImage?: NexusGenScalars['JSON'] | null; // JSON
     locations?: NexusGenScalars['JSON'] | null; // JSON
     owner: NexusGenScalars['JSON']; // JSON!
     slug: NexusGenScalars['JSON']; // JSON!
@@ -192,6 +193,7 @@ export interface NexusGenObjects {
     dates?: Array<NexusGenRootTypes['EventDate'] | null> | null; // [EventDate]
     description?: NexusGenScalars['JSON'] | null; // JSON
     descriptionLocation?: NexusGenScalars['JSON'] | null; // JSON
+    heroImage?: NexusGenRootTypes['Image'] | null; // Image
     id: number; // Int!
     locations?: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
     ownerId: number; // Int!
@@ -402,6 +404,7 @@ export interface NexusGenFieldTypes {
     dates: Array<NexusGenRootTypes['EventDate'] | null> | null; // [EventDate]
     description: NexusGenScalars['JSON'] | null; // JSON
     descriptionLocation: NexusGenScalars['JSON'] | null; // JSON
+    heroImage: NexusGenRootTypes['Image'] | null; // Image
     id: number; // Int!
     locations: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
     ownerId: number; // Int!
@@ -675,6 +678,7 @@ export interface NexusGenFieldTypeNames {
     dates: 'EventDate'
     description: 'JSON'
     descriptionLocation: 'JSON'
+    heroImage: 'Image'
     id: 'Int'
     locations: 'Location'
     ownerId: 'Int'
@@ -953,6 +957,7 @@ export interface NexusGenArgTypes {
     eventUpdate: { // args
       data: NexusGenInputs['EventUpsertInput']; // EventUpsertInput!
       id: number; // Int!
+      imagesTranslations?: Array<NexusGenInputs['ImageTranslationInput'] | null> | null; // [ImageTranslationInput]
     }
     imageDelete: { // args
       id: number; // Int!

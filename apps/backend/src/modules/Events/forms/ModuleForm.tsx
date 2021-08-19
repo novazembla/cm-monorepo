@@ -24,6 +24,7 @@ import {
   FieldSelect,
   FieldPublishStatusSelect,
   FieldRow,
+  FieldSingleImage,
   TwoColFieldRow,
   FieldRadioOrCheckboxGroup,
   TimeField,
@@ -129,6 +130,25 @@ export const ModuleForm = ({
               />
             </FieldRow>
           </TwoColFieldRow>
+          <Divider mt="10" />
+          <FieldSingleImage
+            id="heroImage"
+            name="heroImage"
+            label={t("forms.heroImage.label", "Featured image")}
+            currentImage={data?.eventRead?.heroImage}
+            settings={{
+              imageRequired: false,
+              altRequired: false,
+              creditsRequired: false,
+            }}
+            connectWith={{
+              heroImageEvents: {
+                connect: {
+                  id: data?.eventRead?.id,            
+                }
+              }
+            }}
+          />
         </>
       );
     } else {
@@ -137,6 +157,8 @@ export const ModuleForm = ({
       );
     }
   }
+
+  // TODO: allow taxonomies to be required (And validated accordingly)
   return (
     <>
       <FieldMultiLangInput
@@ -177,7 +199,7 @@ export const ModuleForm = ({
               <FieldRadioOrCheckboxGroup
                 id={`tax_${taxonomy.id}`}
                 name={`tax_${taxonomy.id}`}
-                isRequired
+                isRequired={false}
                 label={<MultiLangValue json={taxonomy.name} />}
                 type="checkbox"
                 options={taxonomy.terms.map((term: any) => ({

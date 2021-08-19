@@ -141,7 +141,7 @@ export const ModuleForm = ({
               <FieldRadioOrCheckboxGroup
                 id={`tax_${taxonomy.id}`}
                 name={`tax_${taxonomy.id}`}
-                isRequired
+                isRequired={false}
                 label={<MultiLangValue json={taxonomy.name} />}
                 type="checkbox"
                 options={taxonomy.terms.map((term: any) => ({

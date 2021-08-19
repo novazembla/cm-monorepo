@@ -6,11 +6,12 @@ export const useEventUpdateMutation = () => {
     // onCompleted: (data) => {},
   });
 
-  const execute = (id: number, data: any) => {
+  const execute = (id: number, data: any, imagesTranslations: any) => {
     return mutation({
       variables: {
         id, 
         data,
+        imagesTranslations,
       }
     });
   };

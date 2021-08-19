@@ -30,6 +30,7 @@ import {
   daoEventDelete,
   daoUserGetById,
   daoEventGetBySlug,
+  daoImageSaveImageTranslations
 } from "../../dao";
 
 import { eventUpdate } from "../../services/serviceEvent";
@@ -86,6 +87,10 @@ export const Event = objectType({
 
     t.list.field("locations", {
       type: "Location",
+    });
+
+    t.field("heroImage", {
+      type: "Image",
     });
 
     t.date("createdAt");
@@ -223,8 +228,22 @@ export const EventQueries = extendType({
       },
 
       // resolve(root, args, ctx, info)
-      async resolve(...[, args]) {
-        return daoEventGetBySlug(args.slug);
+      async resolve(...[, args, , info]) {
+        const pRI = parseResolveInfo(info);
+        
+        let include = {};
+
+        if ((pRI?.fieldsByTypeName?.Event as any)?.heroImage)
+          include = {
+            ...include,
+            heroImage: {
+              include: {
+                translations: true,
+              },
+            },
+          };
+
+        return daoEventGetBySlug(args.slug, include);
       },
     });
 
@@ -255,7 +274,7 @@ export const EventQueries = extendType({
             },
           };
 
-        if ((pRI?.fieldsByTypeName?.Event as any)?.dates) {
+        if ((pRI?.fieldsByTypeName?.Event as any)?.dates)
           include = {
             ...include,
             dates: {
@@ -270,9 +289,8 @@ export const EventQueries = extendType({
               },
             },
           };
-        }
-
-        if ((pRI?.fieldsByTypeName?.Event as any)?.locations) {
+        
+        if ((pRI?.fieldsByTypeName?.Event as any)?.locations)
           include = {
             ...include,
             locations: {
@@ -288,7 +306,16 @@ export const EventQueries = extendType({
               },
             },
           };
-        }
+        
+        if ((pRI?.fieldsByTypeName?.Event as any)?.heroImage)
+          include = {
+            ...include,
+            heroImage: {
+              include: {
+                translations: true,
+              },
+            },
+          };
 
         return daoEventQueryFirst(
           {
@@ -313,6 +340,7 @@ export const EventUpsertInput = inputObjectType({
     t.json("terms");
     t.json("dates");
     t.json("locations");
+    t.json("heroImage");
   },
 });
 
@@ -348,6 +376,7 @@ export const EventMutations = extendType({
       args: {
         id: nonNull(intArg()),
         data: nonNull("EventUpsertInput"),
+        imagesTranslations: list(arg({ type: "ImageTranslationInput" })),
       },
 
       authorize: (...[, , ctx]) => authorizeApiUser(ctx, "eventUpdate"),
@@ -357,6 +386,9 @@ export const EventMutations = extendType({
 
         if (!event)
           throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Update failed");
+
+        if (Array.isArray(args.imagesTranslations))
+          await daoImageSaveImageTranslations(args.imagesTranslations);
 
         return event;
       },

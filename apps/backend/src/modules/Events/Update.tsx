@@ -6,7 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import { TextErrorMessage, FormNavigationBlock } from "~/components/forms";
 
-import { ModuleEventValidationSchema } from "./forms";
+import { ModuleEventUpdateSchema } from "./forms";
 import { useEventUpdateMutation } from "./hooks";
 import {
   useAuthentication,
@@ -33,6 +33,8 @@ import {
   multiLangJsonToRHFormData,
   multiLangRHFormDataToJson,
   multiLangSlugUniqueError,
+  multiLangImageTranslationsRHFormDataToJson,
+  multiLangImageTranslationsJsonRHFormData,
 } from "~/utils";
 
 import {
@@ -66,6 +68,13 @@ export const eventReadAndContentAuthorsQueryGQL = gql`
       }
       locations {
         id
+      }
+      heroImage {
+        id
+        meta
+        status
+        alt
+        credits
       }
     }
     adminUsers(roles: ["administrator", "editor", "contributor"]) {
@@ -114,7 +123,7 @@ const Update = () => {
 
   const formMethods = useForm({
     mode: "onTouched",
-    resolver: yupResolver(ModuleEventValidationSchema),
+    resolver: yupResolver(ModuleEventUpdateSchema),
     defaultValues: {
       dates: [],
     },
@@ -165,45 +174,86 @@ const Update = () => {
       ),
       date: new Date("12/20/2021"),
       dates: parseIncomingDates(data?.eventRead?.dates),
-      locationId: data?.eventRead?.locations && data?.eventRead?.locations.length ? data?.eventRead?.locations[0].id : undefined,
+      locationId:
+        data?.eventRead?.locations && data?.eventRead?.locations.length
+          ? data?.eventRead?.locations[0].id
+          : undefined,
+      heroImage: data.eventRead.heroImage?.id,
+      ...multiLangImageTranslationsJsonRHFormData(
+        data.eventRead,
+        ["heroImage"],
+        ["alt", "credits"],
+        config.activeLanguages
+      ),
     });
   }, [reset, data, config.activeLanguages]);
 
   const onSubmit = async (
-    newData: yup.InferType<typeof ModuleEventValidationSchema>
+    newData: yup.InferType<typeof ModuleEventUpdateSchema>
   ) => {
     setIsFormError(false);
 
     try {
       if (appUser) {
-        const { errors } = await firstMutation(parseInt(router.query.id, 10), {
-          owner: {
-            connect: {
-              id: newData.ownerId,
+        const heroImage =
+          newData.heroImage &&
+          !isNaN(newData.heroImage) &&
+          newData.heroImage > 0
+            ? {
+                heroImage: {
+                  connect: {
+                    id: newData.heroImage,
+                  },
+                },
+              }
+            : undefined;
+
+        const { errors } = await firstMutation(
+          parseInt(router.query.id, 10),
+          {
+            owner: {
+              connect: {
+                id: newData.ownerId,
+              },
             },
+            locations: {
+              set: [
+                {
+                  id: newData.locationId,
+                },
+              ],
+            },
+            dates: newData.dates,
+            status: newData.status,
+            terms: {
+              set: mapModulesCheckboxArrayToData(
+                newData,
+                data?.moduleTaxonomies
+              ),
+            },
+            ...heroImage,
+            ...filteredOutputByWhitelist(
+              multiLangRHFormDataToJson(
+                newData,
+                multiLangFields,
+                config.activeLanguages
+              ),
+              [],
+              multiLangFields
+            ),
           },
-          locations: {
-            set: [
+          multiLangImageTranslationsRHFormDataToJson(
+            newData,
+            [
               {
-                id: newData.locationId,
+                name: "heroImage",
+                id: newData.heroImage,
               },
             ],
-          },
-          dates: newData.dates,
-          status: newData.status,
-          terms: {
-            set: mapModulesCheckboxArrayToData(newData, data?.moduleTaxonomies),
-          },
-          ...filteredOutputByWhitelist(
-            multiLangRHFormDataToJson(
-              newData,
-              multiLangFields,
-              config.activeLanguages
-            ),
-            [],
-            multiLangFields
-          ),
-        });
+            ["alt", "credits"],
+            config.activeLanguages
+          )
+        );
 
         if (!errors) {
           successToast();
@@ -264,7 +314,7 @@ const Update = () => {
               <ModuleForm
                 action="update"
                 data={data}
-                validationSchema={ModuleEventValidationSchema}
+                validationSchema={ModuleEventUpdateSchema}
               />
             </ModulePage>
           </fieldset>

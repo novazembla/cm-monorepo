@@ -5,7 +5,12 @@ import { filteredOutputByBlacklist } from "@culturemap/core";
 import { ApiError, filteredOutputByBlacklistOrNotFound } from "../utils";
 import { apiConfig } from "../config";
 import { getPrismaClient } from "../db/client";
-import { daoSharedCheckSlugUnique, daoSharedGenerateFullText } from "./shared";
+import {
+  daoSharedCheckSlugUnique,
+  daoSharedGenerateFullText,
+  daoSharedWrapImageWithTranslationImage,
+  daoImageTranslatedColumns,
+} from ".";
 
 const prisma = getPrismaClient();
 
@@ -44,7 +49,10 @@ export const daoEventQuery = async (
     take: Math.min(pageSize, apiConfig.db.maxPageSize),
   });
 
-  return filteredOutputByBlacklist(events, apiConfig.db.privateJSONDataKeys.event);
+  return filteredOutputByBlacklist(
+    events,
+    apiConfig.db.privateJSONDataKeys.event
+  );
 };
 
 export const daoEventSearchQuery = async (
@@ -80,7 +88,10 @@ export const daoEventSearchQuery = async (
     take: Math.min(pageSize, apiConfig.db.maxPageSize),
   });
 
-  return filteredOutputByBlacklist(events, apiConfig.db.privateJSONDataKeys.event);
+  return filteredOutputByBlacklist(
+    events,
+    apiConfig.db.privateJSONDataKeys.event
+  );
 };
 
 export const daoEventQueryFirst = async (
@@ -94,7 +105,11 @@ export const daoEventQueryFirst = async (
   });
 
   return filteredOutputByBlacklistOrNotFound(
-    event,
+    daoSharedWrapImageWithTranslationImage(
+      "heroImage",
+      event,
+      daoImageTranslatedColumns
+    ),
     apiConfig.db.privateJSONDataKeys.event
   );
 };
@@ -134,13 +149,20 @@ export const daoEventCreate = async (
   );
 };
 
-export const daoEventGetById = async (id: number): Promise<Event> => {
+export const daoEventGetById = async (
+  id: number,
+  include?: Prisma.EventInclude | undefined
+): Promise<Event> => {
   const event: Event | null = await prisma.event.findUnique({
     where: { id },
   });
 
   return filteredOutputByBlacklistOrNotFound(
-    event,
+    daoSharedWrapImageWithTranslationImage(
+      "heroImage",
+      event,
+      daoImageTranslatedColumns
+    ),
     apiConfig.db.privateJSONDataKeys.event
   );
 };
@@ -233,7 +255,10 @@ export const daoEventDeleteDatesByIds = async (
   return count;
 };
 
-export const daoEventGetBySlug = async (slug: string): Promise<Event> => {
+export const daoEventGetBySlug = async (
+  slug: string,
+  include?: Prisma.EventInclude | undefined
+): Promise<Event> => {
   const event = await prisma.event.findFirst({
     where: {
       OR: [
@@ -253,6 +278,7 @@ export const daoEventGetBySlug = async (slug: string): Promise<Event> => {
     },
 
     include: {
+      ...include,
       terms: {
         select: {
           id: true,
@@ -290,7 +316,11 @@ export const daoEventGetBySlug = async (slug: string): Promise<Event> => {
   });
 
   return filteredOutputByBlacklistOrNotFound(
-    event,
+    daoSharedWrapImageWithTranslationImage(
+      "heroImage",
+      event,
+      daoImageTranslatedColumns
+    ),
     apiConfig.db.privateJSONDataKeys.event
   );
 };
