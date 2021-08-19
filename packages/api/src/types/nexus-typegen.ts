@@ -77,6 +77,7 @@ export interface NexusGenInputs {
     address?: NexusGenScalars['JSON'] | null; // JSON
     contactInfo?: NexusGenScalars['JSON'] | null; // JSON
     description?: NexusGenScalars['JSON'] | null; // JSON
+    heroImage?: NexusGenScalars['JSON'] | null; // JSON
     lat?: number | null; // Float
     lng?: number | null; // Float
     offers?: NexusGenScalars['JSON'] | null; // JSON
@@ -242,6 +243,7 @@ export interface NexusGenObjects {
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
     description?: NexusGenScalars['JSON'] | null; // JSON
     events?: Array<NexusGenRootTypes['Event'] | null> | null; // [Event]
+    heroImage?: NexusGenRootTypes['Image'] | null; // Image
     id: number; // Int!
     lat?: number | null; // Float
     lng?: number | null; // Float
@@ -452,6 +454,7 @@ export interface NexusGenFieldTypes {
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
     description: NexusGenScalars['JSON'] | null; // JSON
     events: Array<NexusGenRootTypes['Event'] | null> | null; // [Event]
+    heroImage: NexusGenRootTypes['Image'] | null; // Image
     id: number; // Int!
     lat: number | null; // Float
     lng: number | null; // Float
@@ -724,6 +727,7 @@ export interface NexusGenFieldTypeNames {
     createdAt: 'DateTime'
     description: 'JSON'
     events: 'Event'
+    heroImage: 'Image'
     id: 'Int'
     lat: 'Float'
     lng: 'Float'
@@ -966,6 +970,7 @@ export interface NexusGenArgTypes {
     locationUpdate: { // args
       data: NexusGenInputs['LocationUpsertInput']; // LocationUpsertInput!
       id: number; // Int!
+      imagesTranslations?: Array<NexusGenInputs['ImageTranslationInput'] | null> | null; // [ImageTranslationInput]
     }
     pageCreate: { // args
       data: NexusGenInputs['PageUpsertInput']; // PageUpsertInput!

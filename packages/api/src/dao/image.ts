@@ -10,7 +10,7 @@ import { daoSharedMapTranslations } from ".";
 
 const prisma = getPrismaClient();
 
-export const daoImageTranlatedColumns = ["alt", "credits"];
+export const daoImageTranslatedColumns = ["alt", "credits"];
 
 export const daoImageQuery = async (
   where: Prisma.ImageWhereInput,
@@ -29,7 +29,7 @@ export const daoImageQuery = async (
   });
 
   return filteredOutputByBlacklist(
-    daoSharedMapTranslations(images, daoImageTranlatedColumns),
+    daoSharedMapTranslations(images, daoImageTranslatedColumns),
     apiConfig.db.privateJSONDataKeys.image
   );
 };
@@ -208,5 +208,6 @@ export default {
   daoImageDelete,
   daoImageSetToDelete,
   daoImageGetStatusById,
+  daoImageTranslatedColumns,
   daoImageSaveImageTranslations,
 };

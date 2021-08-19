@@ -31,6 +31,7 @@ import {
   daoLocationDelete,
   daoUserGetById,
   daoLocationGetBySlug,
+  daoImageSaveImageTranslations
 } from "../../dao";
 
 export const Location = objectType({
@@ -63,10 +64,13 @@ export const Location = objectType({
     t.json("address");
     t.json("contactInfo");
     t.json("offers");
+    t.field("heroImage", {
+      type: "Image",
+    });
 
     t.list.field("terms", {
       type: "Term",
-    });
+    }); 
 
     t.list.field("events", {
       type: "Event",
@@ -175,8 +179,58 @@ export const LocationQueries = extendType({
       },
 
       // resolve(root, args, ctx, info)
-      async resolve(...[, args]) {
-        return daoLocationGetBySlug(args.slug);
+      async resolve(...[, args, , info]) {
+        const pRI = parseResolveInfo(info);
+        
+        let include: any = {
+          terms: {
+            select: {
+              id: true,
+              name: true,
+              slug: true,
+            },
+            orderBy: {
+              name: "asc",
+            },
+          },
+          events: {
+            select: {
+              id: true,
+              slug: true,
+              title: true,
+    
+              dates: {
+                select: {
+                  date: true,
+                  begin: true,
+                  end: true,
+                },
+                orderBy: {
+                  date: "asc",
+                },
+                take: 3,
+              },
+            },
+            orderBy: {
+              title: "asc",
+            },
+          },
+        };
+
+        if ((pRI?.fieldsByTypeName?.Page as any)?.heroImage)
+          include = {
+            ...include,
+            heroImage: {
+              include: {
+                translations: true,
+              },
+            },
+          };
+
+        return daoLocationGetBySlug(
+          args.slug,
+          Object.keys(include).length > 0 ? include : undefined
+        );
       },
     });
 
@@ -218,6 +272,16 @@ export const LocationQueries = extendType({
               },
             },
           };
+        
+        if ((pRI?.fieldsByTypeName?.Location as any)?.heroImage)
+          include = {
+            ...include,
+            heroImage: {
+              include: {
+                translations: true,
+              },
+            },
+          };
 
         return daoLocationQueryFirst(
           {
@@ -244,6 +308,8 @@ export const LocationUpsertInput = inputObjectType({
     t.float("lat");
     t.float("lng");
     t.json("terms");
+    t.json("heroImage");
+
   },
 });
 
@@ -279,6 +345,7 @@ export const LocationMutations = extendType({
       args: {
         id: nonNull(intArg()),
         data: nonNull("LocationUpsertInput"),
+        imagesTranslations: list(arg({ type: "ImageTranslationInput" })),
       },
 
       authorize: (...[, , ctx]) => authorizeApiUser(ctx, "locationUpdate"),
@@ -288,6 +355,10 @@ export const LocationMutations = extendType({
 
         if (!location)
           throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Update failed");
+
+        if (Array.isArray(args.imagesTranslations))
+          await daoImageSaveImageTranslations(args.imagesTranslations);
+        
 
         return location;
       },

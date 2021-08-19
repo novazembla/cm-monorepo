@@ -60,7 +60,7 @@ export const FieldSingleImage = ({
         <chakra.span px="2">{label}</chakra.span>
       </legend>
       <Grid
-        templateColumns={{ base: "100%", t: "20% 1fr" }}
+        templateColumns={{ base: "100%", t: "max(20%,300px) 1fr" }}
         templateRows={{ base: "auto 1fr", t: "auto" }}
         gap={{ base: "4", s: "6" }}
       >
@@ -81,8 +81,8 @@ export const FieldSingleImage = ({
                 });
               }}
               settings={{
-                minFileSize: settings?.minFileSize ?? 1024 * 1024 * 0.05,
-                maxFileSize: settings?.maxFileSize ?? 1024 * 1024 * 2,
+                minFileSize: settings?.minFileSize ?? 1024 * 1024 * 0.0977,
+                maxFileSize: settings?.maxFileSize ?? 1024 * 1024 * 3,
                 aspectRatioPB: settings?.aspectRatio ?? 75, // % bottom padding
 
                 image: {

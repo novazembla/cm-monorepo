@@ -9,7 +9,7 @@ import {
   daoSharedCheckSlugUnique,
   daoSharedGenerateFullText,
   daoSharedWrapImageWithTranslationImage,
-  daoImageTranlatedColumns,
+  daoImageTranslatedColumns,
 } from ".";
 
 const prisma = getPrismaClient();
@@ -96,7 +96,7 @@ export const daoPageGetById = async (
     daoSharedWrapImageWithTranslationImage(
       "heroImage",
       page,
-      daoImageTranlatedColumns
+      daoImageTranslatedColumns
     ),
     apiConfig.db.privateJSONDataKeys.page
   );
@@ -152,7 +152,7 @@ export const daoPageGetBySlug = async (
     daoSharedWrapImageWithTranslationImage(
       "heroImage",
       page,
-      daoImageTranlatedColumns
+      daoImageTranslatedColumns
     ),
     apiConfig.db.privateJSONDataKeys.page
   );
@@ -185,7 +185,11 @@ export const daoPageUpdate = async (
   });
 
   return filteredOutputByBlacklistOrNotFound(
-    page,
+    daoSharedWrapImageWithTranslationImage(
+      "heroImage",
+      page,
+      daoImageTranslatedColumns
+    ),
     apiConfig.db.privateJSONDataKeys.page
   );
 };

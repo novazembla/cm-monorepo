@@ -16,9 +16,7 @@ import {
 } from "~/hooks";
 
 import { Divider } from "@chakra-ui/react";
-import {
-  filteredOutputByWhitelist,
-} from "@culturemap/core";
+import { filteredOutputByWhitelist } from "@culturemap/core";
 
 import { useQuery, gql } from "@apollo/client";
 
@@ -31,7 +29,13 @@ import {
 import { moduleRootPath, multiLangFields } from "./moduleConfig";
 
 import { PageForm } from "./forms";
-import { multiLangJsonToRHFormData, multiLangRHFormDataToJson, multiLangSlugUniqueError, multiLangImageTranslationsRHFormDataToJson, multiLangImageTranslationsJsonRHFormData } from "~/utils";
+import {
+  multiLangJsonToRHFormData,
+  multiLangRHFormDataToJson,
+  multiLangSlugUniqueError,
+  multiLangImageTranslationsRHFormDataToJson,
+  multiLangImageTranslationsJsonRHFormData,
+} from "~/utils";
 
 export const pageReadAndContentAuthorsQueryGQL = gql`
   query pageRead($id: Int!) {
@@ -53,7 +57,7 @@ export const pageReadAndContentAuthorsQueryGQL = gql`
       createdAt
       updatedAt
     }
-    adminUsers(roles:["administrator","editor","contributor"]) {
+    adminUsers(roles: ["administrator", "editor", "contributor"]) {
       id
       firstName
       lastName
@@ -76,7 +80,7 @@ const Update = () => {
 
   const [firstMutation, firstMutationResults] = usePageUpdateMutation();
   const [isFormError, setIsFormError] = useState(false);
-  
+
   const disableForm = firstMutationResults.loading;
 
   const formMethods = useForm({
@@ -96,7 +100,11 @@ const Update = () => {
 
     reset({
       ...multiLangJsonToRHFormData(
-        filteredOutputByWhitelist(data.pageRead, ["ownerId","status"], multiLangFields),
+        filteredOutputByWhitelist(
+          data.pageRead,
+          ["ownerId", "status"],
+          multiLangFields
+        ),
         multiLangFields,
         config.activeLanguages
       ),
@@ -106,31 +114,31 @@ const Update = () => {
         ["heroImage"],
         ["alt", "credits"],
         config.activeLanguages
-      )
+      ),
     });
-
   }, [reset, data, config.activeLanguages]);
-  
+
   const onSubmit = async (
     newData: yup.InferType<typeof ModulePageUpdateSchema>
   ) => {
     setIsFormError(false);
 
-    const heroImage =  (newData.heroImage && !isNaN(newData.heroImage) && newData.heroImage > 0) ?
-      {
-        heroImage: {
-          connect:{
-            id: newData.heroImage
-          },          
-        }
-      }
-      : undefined;
+    const heroImage =
+      newData.heroImage && !isNaN(newData.heroImage) && newData.heroImage > 0
+        ? {
+            heroImage: {
+              connect: {
+                id: newData.heroImage,
+              },
+            },
+          }
+        : undefined;
 
     try {
       if (appUser) {
         const { errors } = await firstMutation(
           parseInt(router.query.id, 10),
-          { 
+          {
             status: newData.status,
             ...filteredOutputByWhitelist(
               multiLangRHFormDataToJson(
@@ -140,23 +148,25 @@ const Update = () => {
               ),
               [],
               multiLangFields
-            ), 
+            ),
             ...heroImage,
             owner: {
               connect: {
-                id: newData.ownerId,            
-              }
-            },            
-          },  
+                id: newData.ownerId,
+              },
+            },
+          },
           multiLangImageTranslationsRHFormDataToJson(
-            newData, 
-            [{
-              name: "heroImage",
-              id: newData.heroImage
-            }],
+            newData,
+            [
+              {
+                name: "heroImage",
+                id: newData.heroImage,
+              },
+            ],
             ["alt", "credits"],
             config.activeLanguages
-          ),        
+          )
         );
 
         if (!errors) {
@@ -165,9 +175,8 @@ const Update = () => {
           router.push(moduleRootPath);
         } else {
           let slugError = multiLangSlugUniqueError(errors, setError);
-          
-          if (!slugError)
-            setIsFormError(true);
+
+          if (!slugError) setIsFormError(true);
         }
       } else {
         setIsFormError(true);

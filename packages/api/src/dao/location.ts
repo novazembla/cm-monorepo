@@ -5,7 +5,12 @@ import { filteredOutputByBlacklist } from "@culturemap/core";
 import { ApiError, filteredOutputByBlacklistOrNotFound } from "../utils";
 import { apiConfig } from "../config";
 import { getPrismaClient } from "../db/client";
-import { daoSharedCheckSlugUnique, daoSharedGenerateFullText } from "./shared";
+import {
+  daoSharedCheckSlugUnique,
+  daoSharedGenerateFullText,
+  daoSharedWrapImageWithTranslationImage,
+  daoImageTranslatedColumns,
+} from ".";
 
 const prisma = getPrismaClient();
 
@@ -87,7 +92,11 @@ export const daoLocationQueryFirst = async (
   });
 
   return filteredOutputByBlacklistOrNotFound(
-    location,
+    daoSharedWrapImageWithTranslationImage(
+      "heroImage",
+      location,
+      daoImageTranslatedColumns
+    ),
     apiConfig.db.privateJSONDataKeys.location
   );
 };
@@ -133,7 +142,11 @@ export const daoLocationGetById = async (id: number): Promise<Location> => {
   });
 
   return filteredOutputByBlacklistOrNotFound(
-    location,
+    daoSharedWrapImageWithTranslationImage(
+      "heroImage",
+      location,
+      daoImageTranslatedColumns
+    ),
     apiConfig.db.privateJSONDataKeys.location
   );
 };
@@ -183,7 +196,10 @@ export const daoLocationDelete = async (id: number): Promise<Location> => {
   );
 };
 
-export const daoLocationGetBySlug = async (slug: string): Promise<Location> => {
+export const daoLocationGetBySlug = async (
+  slug: string,
+  include?: Prisma.LocationInclude | undefined
+): Promise<Location> => {
   const location = await prisma.location.findFirst({
     where: {
       OR: [
@@ -201,45 +217,15 @@ export const daoLocationGetBySlug = async (slug: string): Promise<Location> => {
         },
       ],
     },
-
-    include: {
-      terms: {
-        select: {
-          id: true,
-          name: true,
-          slug: true,
-        },
-        orderBy: {
-          name: "asc",
-        },
-      },
-      events: {
-        select: {
-          id: true,
-          slug: true,
-          title: true,
-
-          dates: {
-            select: {
-              date: true,
-              begin: true,
-              end: true,
-            },
-            orderBy: {
-              date: "asc",
-            },
-            take: 3,
-          },
-        },
-        orderBy: {
-          title: "asc",
-        },
-      },
-    },
+    include,
   });
 
   return filteredOutputByBlacklistOrNotFound(
-    location,
+    daoSharedWrapImageWithTranslationImage(
+      "heroImage",
+      location,
+      daoImageTranslatedColumns
+    ),
     apiConfig.db.privateJSONDataKeys.location
   );
 };

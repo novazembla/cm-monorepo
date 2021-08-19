@@ -16,8 +16,16 @@ export const locationCreateMutationGQL = gql`
 // TODO::more rows in return.
 
 export const locationUpdateMutationGQL = gql`
-  mutation locationUpdate($id: Int!, $data: LocationUpsertInput!) {
-    locationUpdate(id: $id, data: $data) {
+  mutation locationUpdate(
+    $id: Int!
+    $data: LocationUpsertInput!
+    $imagesTranslations: [ImageTranslationInput]
+  ) {
+    locationUpdate(
+      id: $id
+      data: $data
+      imagesTranslations: $imagesTranslations
+    ) {
       id
       ownerId
       title

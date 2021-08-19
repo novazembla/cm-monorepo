@@ -143,10 +143,10 @@ export const ApiImage = ({
         p="4"
         textAlign="center"
       >
-        <Text pb="4">
+        <Text pb="4" w="90%">
           {t(
             "apiimage.processsing",
-            "Image successfuly uploaded. We are processing it now"
+            "Image uploaded. We are processing it now"
           )}
         </Text>
 

@@ -7,7 +7,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import { TextErrorMessage, FormNavigationBlock } from "~/components/forms";
 
-import { ModuleLocationValidationSchema } from "./forms";
+import { ModuleLocationUpdateSchema } from "./forms";
 import { useLocationUpdateMutation } from "./hooks";
 import {
   useAuthentication,
@@ -46,6 +46,8 @@ import {
   multiLangJsonToRHFormData,
   multiLangRHFormDataToJson,
   multiLangSlugUniqueError,
+  multiLangImageTranslationsRHFormDataToJson,
+  multiLangImageTranslationsJsonRHFormData,
 } from "~/utils";
 
 import {
@@ -78,6 +80,13 @@ export const locationReadAndContentAuthorsQueryGQL = gql`
       events {
         id
         title
+      }
+      heroImage {
+        id
+        meta
+        status
+        alt
+        credits
       }
     }
     adminUsers(roles: ["administrator", "editor", "contributor"]) {
@@ -119,7 +128,7 @@ const Update = () => {
 
   const formMethods = useForm({
     mode: "onTouched",
-    resolver: yupResolver(ModuleLocationValidationSchema),
+    resolver: yupResolver(ModuleLocationUpdateSchema),
   });
 
   const {
@@ -146,37 +155,73 @@ const Update = () => {
         data.locationRead.terms,
         data.moduleTaxonomies
       ),
+      heroImage: data.locationRead.heroImage?.id,
+      ...multiLangImageTranslationsJsonRHFormData(
+        data.locationRead,
+        ["heroImage"],
+        ["alt", "credits"],
+        config.activeLanguages
+      ),
     });
   }, [reset, data, config.activeLanguages]);
 
   const onSubmit = async (
-    newData: yup.InferType<typeof ModuleLocationValidationSchema>
+    newData: yup.InferType<typeof ModuleLocationUpdateSchema>
   ) => {
     setIsFormError(false);
     try {
       if (appUser) {
-        const { errors } = await firstMutation(parseInt(router.query.id, 10), {
-          owner: {
-            connect: {
-              id: newData.ownerId,
+        const heroImage =
+        newData.heroImage && !isNaN(newData.heroImage) && newData.heroImage > 0
+          ? {
+              heroImage: {
+                connect: {
+                  id: newData.heroImage,
+                },
+              },
+            }
+          : undefined;
+          
+        const { errors } = await firstMutation(
+          parseInt(router.query.id, 10),
+          {
+            owner: {
+              connect: {
+                id: newData.ownerId,
+              },
             },
-          },
-          status: newData.status,
-          lat: newData.lat,
-          lng: newData.lng,
-          terms: {
-            set: mapModulesCheckboxArrayToData(newData, data?.moduleTaxonomies),
-          },
-          ...filteredOutputByWhitelist(
-            multiLangRHFormDataToJson(
-              newData,
-              multiLangFields,
-              config.activeLanguages
+            status: newData.status,
+            lat: newData.lat,
+            lng: newData.lng,
+            terms: {
+              set: mapModulesCheckboxArrayToData(
+                newData,
+                data?.moduleTaxonomies
+              ),
+            },
+            ...heroImage,
+            ...filteredOutputByWhitelist(
+              multiLangRHFormDataToJson(
+                newData,
+                multiLangFields,
+                config.activeLanguages
+              ),
+              [],
+              multiLangFields
             ),
-            [],
-            multiLangFields
-          ),
-        });
+          },
+          multiLangImageTranslationsRHFormDataToJson(
+            newData,
+            [
+              {
+                name: "heroImage",
+                id: newData.heroImage,
+              },
+            ],
+            ["alt", "credits"],
+            config.activeLanguages
+          )
+        );
 
         if (!errors) {
           successToast();
@@ -237,13 +282,16 @@ const Update = () => {
               <ModuleForm
                 action="update"
                 data={data}
-                validationSchema={ModuleLocationValidationSchema}
+                validationSchema={ModuleLocationUpdateSchema}
               />
 
               {data && Array.isArray(data.locationRead.events) && (
                 <Box mt="6">
                   <Heading as="h2" mb="3">
-                    {t("module.locations.associatedevents.title", "Associated events")}
+                    {t(
+                      "module.locations.associatedevents.title",
+                      "Associated events"
+                    )}
                   </Heading>
                   <Table position="relative" mb="400px" w="100%">
                     <Thead>
@@ -284,11 +332,14 @@ const Update = () => {
                       {data.locationRead.events.length === 0 && (
                         <tr key={`event-no-event`}>
                           <chakra.td pl="0" borderColor="gray.300" colSpan={2}>
-                            {t("module.locations.noasscoiatedevents", "No associated events")}
+                            {t(
+                              "module.locations.noasscoiatedevents",
+                              "No associated events"
+                            )}
                           </chakra.td>
                         </tr>
                       )}
-                      {data.locationRead.events.length  > 0 && (
+                      {data.locationRead.events.length > 0 && (
                         <>
                           {data.locationRead.events.map((event: any) => (
                             <tr key={`event-${event.id}`}>

@@ -9,6 +9,7 @@ import {
   FieldRow,
   LocationPicker,
   TwoColFieldRow,
+  FieldSingleImage,
   FieldRadioOrCheckboxGroup,
 } from "~/components/forms";
 import { MultiLangValue } from "~/components/ui";
@@ -67,6 +68,25 @@ export const ModuleForm = ({
               
             </FieldRow>
           </TwoColFieldRow>
+          <Divider mt="10" />
+          <FieldSingleImage
+            id="heroImage"
+            name="heroImage"
+            label={t("forms.heroImage.label", "Featured image")}
+            currentImage={data?.locationRead?.heroImage}
+            settings={{
+              imageRequired: false,
+              altRequired: false,
+              creditsRequired: false,
+            }}
+            connectWith={{
+              heroImageLocations: {
+                connect: {
+                  id: data?.locationRead?.id,            
+                }
+              }
+            }}
+          />
         </>
       );
     } else {

@@ -1,4 +1,4 @@
-import React, { useState, useMemo, ChangeEventHandler } from "react";
+import React, { useState, useMemo, ChangeEventHandler, useEffect } from "react";
 import axios from "axios";
 import { DocumentNode } from "@apollo/client";
 import { useDropzone } from "react-dropzone";
@@ -7,7 +7,6 @@ import {
   Flex,
   FormControl,
   FormLabel,
-  FormErrorMessage,
   chakra,
   IconButton,
   Text,
@@ -17,13 +16,29 @@ import { HiOutlineTrash } from "react-icons/hi";
 import { ImCancelCircle } from "react-icons/im";
 
 import { useTranslation } from "react-i18next";
-import { useAuthentication, useConfig, useDeleteByIdButton, useAxiosCancelToken } from "~/hooks";
+import {
+  useAuthentication,
+  useConfig,
+  useDeleteByIdButton,
+  useAxiosCancelToken,
+} from "~/hooks";
 import { useFormContext } from "react-hook-form";
 
 import { FormNavigationBlock, FieldErrorMessage } from ".";
 import { ApiImage, ApiImageProps } from "~/components/ui";
 
 import { authentication } from "~/services";
+
+const humanFileSize = (
+  size: number | undefined,
+  decimalPlaces: number = 0
+): string => {
+  if (!size || size === 0) return "0";
+  const i: number = Math.floor(Math.log(size) / Math.log(1024));
+  return `${(size / Math.pow(1024, i)).toFixed(decimalPlaces)} ${
+    ["B", "KB", "MB", "GB", "TB"][i]
+  }`;
+};
 
 const baseStyle = {
   boxSizing: "border-box",
@@ -45,7 +60,7 @@ const baseStyle = {
   _hover: {
     boderColor: "gray.600",
     bg: "orange.200",
-  },
+  }
 };
 
 const activeStyle = {
@@ -62,6 +77,7 @@ const acceptStyle = {
 
 const rejectStyle = {
   borderColor: "red.400",
+  color: "#fff !important",
   bg: "red.400",
   _hover: {
     bg: "red.400",
@@ -103,10 +119,10 @@ export const FieldImageUploader = ({
   isRequired,
   isDisabled,
   deleteButtonGQL,
-  onDelete, 
+  onDelete,
   onUpload,
   connectWith,
-  route = "image"
+  route = "image",
 }: {
   settings?: FieldImageUploaderSettings;
   id: string;
@@ -123,41 +139,44 @@ export const FieldImageUploader = ({
   const [appUser] = useAuthentication();
   const { t } = useTranslation();
   const config = useConfig();
-  const { createNewCancelToken, isCancel, getCancelToken, getCanceler } = useAxiosCancelToken();
+  const { createNewCancelToken, isCancel, getCancelToken, getCanceler } =
+    useAxiosCancelToken();
   const [progressInfo, setProgressInfo] =
     useState<FieldImageUploaderProgessInfo>(initialProgressInfo);
   const [isUploading, setIsUploading] = useState(false);
   const [isUploadError, setIsUploadError] = useState(false);
   const [uploadedImgId, setUploadedImgId] = useState();
   const [imageIsDeleted, setimageIsDeleted] = useState(false);
+
+  const [showFileDropError, setShowFileDropError] = useState(false);
+  const [fileDropError, setFileDropError] = useState("");
+
   const {
     formState: { errors },
     register,
     setValue,
   } = useFormContext();
 
-  // TODO:
-  // Better UI for filesize rejections ... 
-  
   const {
-    // TODO: Needed? acceptedFiles,
-    // TODO: Needed? rejectedFiles,
     getRootProps,
     getInputProps,
     isDragActive,
     isDragAccept,
     isDragReject,
   } = useDropzone({
-    maxSize: settings?.maxFileSize ?? 1024 * 1024 * 100,
-    //minSize: settings?.minFileSize ?? undefined,
+    maxSize: settings?.maxFileSize ?? 1024 * 1024 * 2,
+    minSize: settings?.minFileSize ?? undefined,
     disabled: isDisabled,
     multiple: false,
     accept: settings?.accept ?? "image/*",
-    // onDropRejected: async (files) => {
-    //   // TODO: better handle rejections
-    //   // Especially files too large rejections
+    onDropRejected: async (files) => {
+      const file = files.shift();
 
-    // },
+      if (!file || file.errors.length === 0) return;
+
+      setShowFileDropError(true);
+      setFileDropError(file.errors[0].code);
+    },
     onDropAccepted: async (files) => {
       try {
         if (appUser) {
@@ -170,7 +189,7 @@ export const FieldImageUploader = ({
           formData.append("connectWith", JSON.stringify(connectWith));
 
           const cancelToken = createNewCancelToken();
-          
+
           await axios
             .request({
               method: "post",
@@ -200,19 +219,18 @@ export const FieldImageUploader = ({
                   setUploadedImgId(data?.id ?? undefined);
                   setValue(name, data?.id, { shouldDirty: true });
                   if (typeof onUpload === "function")
-                    onUpload.call(this, data?.id)
+                    onUpload.call(this, data?.id);
                 }
               }
             })
             .catch((error) => {
-              if (isCancel(error)) return;              
-              
+              if (isCancel(error)) return;
+
               if (getCancelToken()) {
                 setIsUploading(false);
                 setProgressInfo(initialProgressInfo);
                 setIsUploadError(true);
               }
-              
             });
         }
       } catch (err) {
@@ -226,9 +244,9 @@ export const FieldImageUploader = ({
       ...baseStyle,
       ...(isDragActive ? { activeStyle } : {}),
       ...(isDragAccept || isUploading ? acceptStyle : {}),
-      ...(isDragReject ? rejectStyle : {}),
+      ...(isDragReject || showFileDropError ? rejectStyle : {}),
     }),
-    [isDragActive, isDragReject, isDragAccept, isUploading]
+    [isDragActive, isDragReject, isDragAccept, isUploading, showFileDropError]
   );
 
   const [deleteButtonOnClick, DeleteAlertDialog, isDeleteError] =
@@ -239,8 +257,7 @@ export const FieldImageUploader = ({
         setimageIsDeleted(true);
         setIsUploading(false);
         setValue(name, undefined, { shouldDirty: true });
-        if (typeof onDelete === "function")
-          onDelete.call(null);
+        if (typeof onDelete === "function") onDelete.call(null);
       },
       {
         requireTextualConfirmation: false,
@@ -253,7 +270,75 @@ export const FieldImageUploader = ({
   if (imageIsDeleted) currentImage = {};
 
   const showImage = (currentImage && currentImage?.id) || !!uploadedImgId;
-  
+
+  const hasMin = settings?.minFileSize && settings?.minFileSize > 0;
+  const hasMax = settings?.maxFileSize && settings?.maxFileSize > 0;
+  let fileSizeInfo = "";
+
+  if (hasMin && hasMax) {
+    fileSizeInfo = t(
+      "imageuploader.filesizebetween",
+      "Size between {{minFileSize}} and {{maxFileSize}}",
+      {
+        maxFileSize: humanFileSize(settings?.maxFileSize,1),
+        minFileSize: humanFileSize(settings?.minFileSize,1),
+      }
+    );
+  } else if (hasMax) {
+    fileSizeInfo = t(
+      "imageuploader.filesizebelow",
+      "Size max. {{maxFileSize}}",
+      {
+        maxFileSize: humanFileSize(settings?.maxFileSize,1),
+      }
+    );
+  } else if (hasMin) {
+    fileSizeInfo = t(
+      "imageuploader.filesizeabove",
+      "Size min. {{minFileSize}}",
+      {
+        maxFileSize: humanFileSize(settings?.maxFileSize,1),
+        minFileSize: humanFileSize(settings?.minFileSize,1),
+      }
+    );
+  }
+
+  useEffect(() => {
+    if (fileDropError === "") return;
+
+    const timeout = setTimeout(() => {
+      setFileDropError("");
+      setShowFileDropError(false);
+    }, 2000);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [fileDropError, setFileDropError, setShowFileDropError]);
+
+  let fileDropErrorMessage = "";
+
+  switch (fileDropError) {
+    case "file-too-large":
+      fileDropErrorMessage = t(
+        "imageuploader.droperror.toolarge",
+        "Chosen file is too large"
+      );
+      break;
+    case "file-too-small":
+      fileDropErrorMessage = t(
+        "imageuploader.droperror.toosmall",
+        "Chosen file is too small"
+      );
+      break;
+    case "file-invalid-type":
+      fileDropErrorMessage = t(
+        "imageuploader.droperror.invalidtype",
+        "Type of chosen file is not accepted"
+      );
+      break;
+  }
+
   return (
     <>
       <FormNavigationBlock shouldBlock={isUploading} />
@@ -279,31 +364,29 @@ export const FieldImageUploader = ({
               sizes={settings?.image?.sizes}
             />
             <IconButton
-                    position="absolute"
-                    top="3"
-                    right="3"
-                    fontSize="xl"
-                    icon={<HiOutlineTrash />}
-                    onClick={() => {
-                      deleteButtonOnClick(uploadedImgId ?? currentImage?.id);
-                    }}
-                    aria-label={t(
-                      "module.profile.button.deleteimage",
-                      "Delete profile image"
-                    )}
-                    title={t(
-                      "module.profile.button.deleteimage",
-                      "Delete profile image"
-                    )}
-                    />
-                    
-            
+              position="absolute"
+              top="3"
+              right="3"
+              fontSize="xl"
+              icon={<HiOutlineTrash />}
+              onClick={() => {
+                deleteButtonOnClick(uploadedImgId ?? currentImage?.id);
+              }}
+              aria-label={t(
+                "imageuploader.button.deleteimage",
+                "Delete profile image"
+              )}
+              title={t(
+                "imageuploader.button.deleteimage",
+                "Delete profile image"
+              )}
+            />
           </Box>
         )}
         {isDeleteError && (
           <Text fontSize="sm" mt="0.5" color="red.500">
             {t(
-              "module.profile.deleteimage.error",
+              "imageuploader.deleteimage.error",
               "Unfortunately, we could not process you deletion request please try again later"
             )}
           </Text>
@@ -325,62 +408,72 @@ export const FieldImageUploader = ({
                 justifyContent="center"
                 textAlign="center"
                 alignItems="center"
+                flexDirection="column"
                 sx={style}
               >
                 {(!isUploading || progressInfo.total < 0.01) && (
-                  <p>
-                    {t(
-                      "imagedropzone.pleasedroporclick",
-                      "Drag & drop an image here, or click to select files"
+                  <>
+                    {showFileDropError && <Text color="white" fontWeight="bold">{fileDropErrorMessage}</Text>}
+                    {!showFileDropError && (
+                      <Text w="90%">
+                        {t(
+                          "imageuploader.pleasedroporclick",
+                          "Drag & drop an image here, or click to select one"
+                        )}
+                      </Text>
                     )}
-                  </p>
+
+                    {fileSizeInfo && (
+                      <Text fontSize="sm">
+                        {fileSizeInfo}
+                      </Text>
+                    )}
+                  </>
                 )}
 
-                {isUploading && progressInfo.total > 0.01 && (<>
-                  <chakra.span fontSize="md">
-                    {t("imagedropzone.uploading", "Uploading")}
-                    <br />
-                    <chakra.span fontSize="xl">
-                      {`${Math.round(
-                        (progressInfo.loaded / progressInfo.total) * 100
-                      )}`}
-                      %
+                {isUploading && progressInfo.total > 0.01 && (
+                  <>
+                    <chakra.span fontSize="md">
+                      {t("imageuploader.uploading", "Uploading")}
+                      <br />
+                      <chakra.span fontSize="xl">
+                        {`${Math.round(
+                          (progressInfo.loaded / progressInfo.total) * 100
+                        )}`}
+                        %
+                      </chakra.span>
                     </chakra.span>
-                  </chakra.span>
 
-                  <IconButton
-              position="absolute"
-              top="3"
-              right="3"
-              fontSize="2xl"
-              icon={<ImCancelCircle />}
-              color="red.600"
-              bg="white"
-              borderColor="gray.600"
-              _hover={{
-                bg:"red.100"
-              }}
-              onClick={(event) => {
-                event.preventDefault();
-                event.stopPropagation();
-                const canceler = getCanceler();
-                if (typeof canceler === "function") canceler();
-                setIsUploading(false);
-              }}
-              aria-label={t(
-                "imageuploader.cancelupload",
-                "Cancel upload"
-              )}
-              title={t(
-                "imageuploader.cancelupload",
-                "Cancel upload"
-              )}/>
-                    </>
+                    <IconButton
+                      position="absolute"
+                      top="3"
+                      right="3"
+                      fontSize="2xl"
+                      icon={<ImCancelCircle />}
+                      color="red.600"
+                      bg="white"
+                      borderColor="gray.600"
+                      _hover={{
+                        bg: "red.100",
+                      }}
+                      onClick={(event) => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        const canceler = getCanceler();
+                        if (typeof canceler === "function") canceler();
+                        setIsUploading(false);
+                      }}
+                      aria-label={t(
+                        "imageuploader.cancelupload",
+                        "Cancel upload"
+                      )}
+                      title={t("imageuploader.cancelupload", "Cancel upload")}
+                    />
+                  </>
                 )}
               </Flex>
             </Box>
           </>
-          
         )}
         {isUploadError && (
           <Text fontSize="sm" mt="0.5" color="red.500">
@@ -402,14 +495,6 @@ export const FieldImageUploader = ({
 
         <FieldErrorMessage error={errors[name]?.message} />
 
-        {isDragActive && isDragReject && (
-          <FormErrorMessage mt="0.5">
-            {t(
-              "imagedropzone.filetypenotaccepted",
-              "You can't upload this file"
-            )}
-          </FormErrorMessage>
-        )}
       </FormControl>
     </>
   );

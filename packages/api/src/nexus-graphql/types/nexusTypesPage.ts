@@ -255,13 +255,9 @@ export const PageMutations = extendType({
         if (!page)
           throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Update failed");
 
-        console.log(args.data, args.imagesTranslations);
-
-        if (Array.isArray(args.imagesTranslations)) {
-          const totalCount = await daoImageSaveImageTranslations(args.imagesTranslations);
-          console.log("dsklafdksfk Tita", totalCount);
-        }
-
+        if (Array.isArray(args.imagesTranslations))
+          await daoImageSaveImageTranslations(args.imagesTranslations);
+        
         return page;
       }
     });

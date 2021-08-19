@@ -8,7 +8,7 @@ import { useQuery, gql } from "@apollo/client";
 
 import { TextErrorMessage, FormNavigationBlock } from "~/components/forms";
 
-import { ModuleLocationValidationSchema } from "./forms";
+import { ModuleLocationCreateSchema } from "./forms";
 import { useLocationCreateMutation } from "./hooks";
 import {
   useAuthentication,
@@ -58,7 +58,7 @@ const Create = () => {
 
   const formMethods = useForm({
     mode: "onTouched",
-    resolver: yupResolver(ModuleLocationValidationSchema),
+    resolver: yupResolver(ModuleLocationCreateSchema),
   });
 
   const { data, loading, error } = useQuery(
@@ -78,7 +78,7 @@ const Create = () => {
   } = formMethods;
 
   const onSubmit = async (
-    newData: yup.InferType<typeof ModuleLocationValidationSchema>
+    newData: yup.InferType<typeof ModuleLocationCreateSchema>
   ) => {
     setIsFormError(false);
     try {
@@ -170,7 +170,7 @@ const Create = () => {
               <ModuleForm
                 action="create"
                 data={data}
-                validationSchema={ModuleLocationValidationSchema}
+                validationSchema={ModuleLocationCreateSchema}
               />
             </ModulePage>
           </fieldset>

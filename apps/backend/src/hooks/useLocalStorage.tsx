@@ -12,7 +12,6 @@ export const useLocalStorage = (key: string, initialValue: any) => {
       // Parse stored json or if none return initialValue
       return item ? JSON.parse(item) : initialValue;
     } catch (error) {
-      // TODO: need to do something ? 
       // If error also return initialValue
       console.log(error);
       return initialValue;
@@ -32,7 +31,6 @@ export const useLocalStorage = (key: string, initialValue: any) => {
       window.localStorage.setItem(key, JSON.stringify(valueToStore));
     } catch (error) {
 
-      // TODO: need to do something ? 
       // A more advanced implementation would handle the error case
       console.log(error);
     }

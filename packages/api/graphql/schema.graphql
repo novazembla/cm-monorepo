@@ -147,6 +147,7 @@ type Location {
   createdAt: DateTime
   description: JSON
   events: [Event]
+  heroImage: Image
   id: Int!
   lat: Float
   lng: Float
@@ -169,6 +170,7 @@ input LocationUpsertInput {
   address: JSON
   contactInfo: JSON
   description: JSON
+  heroImage: JSON
   lat: Float
   lng: Float
   offers: JSON
@@ -201,7 +203,7 @@ type Mutation {
   imageUpdate(data: ImageUpdateInput!, id: Int!): Image!
   locationCreate(data: LocationUpsertInput!): Location!
   locationDelete(id: Int!): BooleanResult!
-  locationUpdate(data: LocationUpsertInput!, id: Int!): Location!
+  locationUpdate(data: LocationUpsertInput!, id: Int!, imagesTranslations: [ImageTranslationInput]): Location!
   pageCreate(data: PageUpsertInput!): Page!
   pageDelete(id: Int!): BooleanResult!
   pageUpdate(data: PageUpsertInput!, id: Int!, imagesTranslations: [ImageTranslationInput]): Page!
