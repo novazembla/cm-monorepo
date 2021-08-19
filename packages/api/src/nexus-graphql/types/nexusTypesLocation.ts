@@ -217,7 +217,7 @@ export const LocationQueries = extendType({
           },
         };
 
-        if ((pRI?.fieldsByTypeName?.Page as any)?.heroImage)
+        if ((pRI?.fieldsByTypeName?.Location as any)?.heroImage)
           include = {
             ...include,
             heroImage: {
