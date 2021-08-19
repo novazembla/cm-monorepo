@@ -40,40 +40,147 @@
     "close": "Close menu",
     "open": "Open menu"
   },
-  "module": {
-    "profile": {
-      "button": {
-        "deleteimage": "Delete profile image",
-        "update": "Update profile",
-        "updatepassword": "Update password"
-      },
-      "deleteimage": {
-        "error": "Unfortunately, we could not process you deletion request please try again later"
-      },
-      "title": "Profile",
-      "image": {
-        "placeholder": "No profile picture uploaded"
-      },
-      "data": {
-        "title": {
-          "fullname": "Name",
-          "email": "Email address",
-          "emailverificationstatus": {
-            "status": "Email verification status",
-            "verified": "You've verified your email address",
-            "notverified": "You've not verified your email address. Check your inbox!"
-          }
-        }
-      },
-      "page": {
-        "title": {
-          "updateprofile": "Update profile"
-        }
+  "imageuploader": {
+    "filesizebetween": "Size between {{minFileSize}} and {{maxFileSize}}",
+    "filesizebelow": "Size max. {{maxFileSize}}",
+    "filesizeabove": "Size min. {{minFileSize}}",
+    "droperror": {
+      "toolarge": "Chosen file is too large",
+      "toosmall": "Chosen file is too small",
+      "invalidtype": "Type of chosen file is not accepted"
+    },
+    "button": {
+      "deleteimage": "Delete profile image"
+    },
+    "deleteimage": {
+      "error": "Unfortunately, we could not process you deletion request please try again later"
+    },
+    "pleasedroporclick": "Drag & drop an image here, or click to select one",
+    "uploading": "Uploading",
+    "cancelupload": "Cancel upload",
+    "error": "Unfortunately, we could not finish you upload please try again later"
+  },
+  "ui": {
+    "button": {
+      "label": {
+        "show": "Show",
+        "hide": "Hide"
+      }
+    }
+  },
+  "PublishStatus": {
+    "select": {
+      "label": "Publish status",
+      "placeholder": "Please choose a publish status"
+    }
+  },
+  "publish": {
+    "status": {
+      "draft": "Draft",
+      "forreview": "For review",
+      "rejected": "Rejected",
+      "published": "Published",
+      "trashed": "Trashed",
+      "unknown": "Unknown",
+      "autodraft": "Draft"
+    }
+  },
+  "form": {
+    "datepicker": {
+      "close": "close"
+    },
+    "image": {
+      "label": {
+        "image": "Image",
+        "alttext": "Alternative text",
+        "credits": "Copyright information"
       }
     },
+    "unsavedchanges": "It looks like you've unsaved changes. Leave without saving?",
+    "geolocation": {
+      "lat": {
+        "label": "Latitude"
+      },
+      "lng": {
+        "label": "Longitude"
+      }
+    },
+    "error": {
+      "notCorrectLatitude": "This seems not to be a latitiude value",
+      "notCorrectLongitude": "This seems not to be a longitude value"
+    },
+    "info": {
+      "pleasesafedraft": "Please save a draft to unlock further functionality"
+    }
+  },
+  "editor": {
+    "button": {
+      "save": "Save",
+      "cancel": "Cancel",
+      "unbold": "Remove bold text format",
+      "bold": "Format text bold",
+      "unitalic": "Remove italic text format",
+      "italic": "Format text italic",
+      "addNewLine": "Add a new line",
+      "clearFormatting": "Clear Formatting",
+      "undo": "Undo",
+      "redo": "Redo",
+      "link": "Add link",
+      "unlink": "Remove link"
+    },
+    "link": {
+      "label": {
+        "url": "Url"
+      },
+      "url": "https://..."
+    },
+    "count": {
+      "characters": "{{count}}/{{maxLength}} characters",
+      "characters_plural": "{{count}}/{{maxLength}} characters"
+    }
+  },
+  "alert": {
+    "emailnotverfied": {
+      "title": "You have not confirmed your email address, yet. ",
+      "info": "Please check your inbox and follow the link provided in the email. In case the email didn't come through you can request another email by clicking the button.",
+      "requresterrorinfo": "Something went wrong. Please try again in a little bit.",
+      "requrestsuccessinfo": "We've sent you another email. Please check your inbox.",
+      "button": "Request verification email"
+    }
+  },
+  "general": {
+    "error": {
+      "title": "We are sorry",
+      "requestfailed": "The request has failed. Please try again."
+    },
+    "success": {
+      "title": "Thank you!"
+    },
+    "readerror": {
+      "desc": "Something went wrong and the needed information could not be loaded. Please try again later"
+    },
+    "writeerror": {
+      "desc": "Something went wrong and the needed information could not be processed. Please try again later"
+    }
+  },
+  "http": {
+    "error": {
+      "403": {
+        "title": "Access denied",
+        "explanation": "You don't have permission to see this page."
+      },
+      "404": {
+        "title": "Not found",
+        "explanation": "The requested URL could not be found.",
+        "backtohome": "Go back to home screen"
+      }
+    }
+  },
+  "module": {
     "button": {
       "cancel": "Cancel",
       "update": "Update",
+      "savedraft": "Save draft",
       "save": "Save",
       "back": "Go back"
     },
@@ -304,6 +411,32 @@
         "delete": "Delete page"
       }
     },
+    "profile": {
+      "title": "Profile",
+      "button": {
+        "update": "Update profile",
+        "updatepassword": "Update password"
+      },
+      "image": {
+        "placeholder": "No profile picture uploaded"
+      },
+      "data": {
+        "title": {
+          "fullname": "Name",
+          "email": "Email address",
+          "emailverificationstatus": {
+            "status": "Email verification status",
+            "verified": "You've verified your email address",
+            "notverified": "You've not verified your email address. Check your inbox!"
+          }
+        }
+      },
+      "page": {
+        "title": {
+          "updateprofile": "Update profile"
+        }
+      }
+    },
     "settings": {
       "title": "Settings",
       "button": {
@@ -357,121 +490,6 @@
         "create": "Add new term",
         "edit": "Edit term",
         "delete": "Delete term"
-      }
-    }
-  },
-  "imagedropzone": {
-    "pleasedroporclick": "Drag & drop an image here, or click to select files",
-    "uploading": "Uploading",
-    "filetypenotaccepted": "You can't upload this file"
-  },
-  "imageuploader": {
-    "cancelupload": "Cancel upload",
-    "error": "Unfortunately, we could not finish you upload please try again later"
-  },
-  "ui": {
-    "button": {
-      "label": {
-        "show": "Show",
-        "hide": "Hide"
-      }
-    }
-  },
-  "PublishStatus": {
-    "select": {
-      "label": "Publish status",
-      "placeholder": "Please choose a publish status"
-    }
-  },
-  "publish": {
-    "status": {
-      "draft": "Draft",
-      "forreview": "For review",
-      "rejected": "Rejected",
-      "published": "Published",
-      "trashed": "Trashed",
-      "unknown": "Unknown",
-      "autodraft": "Draft"
-    }
-  },
-  "form": {
-    "datepicker": {
-      "close": "close"
-    },
-    "unsavedchanges": "It looks like you've unsaved changes. Leave without saving?",
-    "geolocation": {
-      "lat": {
-        "label": "Latitude"
-      },
-      "lng": {
-        "label": "Longitude"
-      }
-    },
-    "error": {
-      "notCorrectLatitude": "This seems not to be a latitiude value",
-      "notCorrectLongitude": "This seems not to be a longitude value"
-    }
-  },
-  "editor": {
-    "button": {
-      "save": "Save",
-      "cancel": "Cancel",
-      "unbold": "Remove bold text format",
-      "bold": "Format text bold",
-      "unitalic": "Remove italic text format",
-      "italic": "Format text italic",
-      "addNewLine": "Add a new line",
-      "clearFormatting": "Clear Formatting",
-      "undo": "Undo",
-      "redo": "Redo",
-      "link": "Add link",
-      "unlink": "Remove link"
-    },
-    "link": {
-      "label": {
-        "url": "Url"
-      },
-      "url": "https://..."
-    },
-    "count": {
-      "characters": "{{count}}/{{maxLength}} characters",
-      "characters_plural": "{{count}}/{{maxLength}} characters"
-    }
-  },
-  "alert": {
-    "emailnotverfied": {
-      "title": "You have not confirmed your email address, yet. ",
-      "info": "Please check your inbox and follow the link provided in the email. In case the email didn't come through you can request another email by clicking the button.",
-      "requresterrorinfo": "Something went wrong. Please try again in a little bit.",
-      "requrestsuccessinfo": "We've sent you another email. Please check your inbox.",
-      "button": "Request verification email"
-    }
-  },
-  "general": {
-    "error": {
-      "title": "We are sorry",
-      "requestfailed": "The request has failed. Please try again."
-    },
-    "success": {
-      "title": "Thank you!"
-    },
-    "readerror": {
-      "desc": "Something went wrong and the needed information could not be loaded. Please try again later"
-    },
-    "writeerror": {
-      "desc": "Something went wrong and the needed information could not be processed. Please try again later"
-    }
-  },
-  "http": {
-    "error": {
-      "403": {
-        "title": "Access denied",
-        "explanation": "You don't have permission to see this page."
-      },
-      "404": {
-        "title": "Not found",
-        "explanation": "The requested URL could not be found.",
-        "backtohome": "Go back to home screen"
       }
     }
   },
@@ -602,6 +620,11 @@
     "info": {
       "datasaved": "The data has been saved",
       "datadeleted": "The data has been deleted"
+    }
+  },
+  "forms": {
+    "heroImage": {
+      "label": "Featured image"
     }
   },
   "events": {

@@ -83,7 +83,7 @@ const Create = () => {
     setIsFormError(false);
     try {
       if (appUser) {
-        const { errors } = await firstMutation(
+        const mutationResults = await firstMutation(
           {
             owner: {
               connect: {
@@ -111,12 +111,12 @@ const Create = () => {
           }
         );
 
-        if (!errors) {
+        if (!mutationResults.errors) {
           successToast();
 
-          router.push(moduleRootPath);
+          router.push(`${moduleRootPath}/update/${mutationResults.data?.locationCreate?.id}`);
         } else {
-          let slugError = multiLangSlugUniqueError(errors, setError);
+          let slugError = multiLangSlugUniqueError(mutationResults.errors, setError);
 
           if (!slugError) setIsFormError(true);
         }
@@ -148,7 +148,7 @@ const Create = () => {
     {
       type: "submit",
       isLoading: isSubmitting,
-      label: t("module.button.save", "Save"),
+      label: t("module.button.savedraft", "Save draft"),
       userCan: "locationCreate",
     },
   ];

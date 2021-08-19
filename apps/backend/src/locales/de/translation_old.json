@@ -92,6 +92,14 @@
           }
         }
       }
+    },
+    "profile": {
+      "button": {
+        "deleteimage": "Delete profile image"
+      },
+      "deleteimage": {
+        "error": "Unfortunately, we could not process you deletion request please try again later"
+      }
     }
   },
   "vvalidation": {
@@ -105,5 +113,10 @@
         "acceptedTermsRequiredError": "Please accep t out terms & conditions"
       }
     }
+  },
+  "imagedropzone": {
+    "pleasedroporclick": "Drag & drop an image here, or click to select files",
+    "uploading": "Uploading",
+    "filetypenotaccepted": "You can't upload this file"
   }
 }

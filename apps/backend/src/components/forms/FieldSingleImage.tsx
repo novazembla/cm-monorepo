@@ -60,12 +60,12 @@ export const FieldSingleImage = ({
         <chakra.span px="2">{label}</chakra.span>
       </legend>
       <Grid
-        templateColumns={{ base: "100%", t: "max(20%,300px) 1fr" }}
+        templateColumns={{ base: "100%", t: "max(20%,320px) 1fr" }}
         templateRows={{ base: "auto 1fr", t: "auto" }}
         gap={{ base: "4", s: "6" }}
       >
         <Box>
-          <Box w={{ base: "50%", t: "100%" }}>
+          <Box w={{ base: "100%", t: "100%" }} maxW={{ base: "350px", t: "100%" }}>
             <FieldImageUploader
               name={`${name}`}
               id={`${id}`}
