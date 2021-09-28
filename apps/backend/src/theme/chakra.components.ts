@@ -51,6 +51,22 @@ export const components = {
       },
     },
   },
+  NumberInput: {
+    variants: {
+      outline: {
+        field: {
+          bg: "#fff",
+          borderColor: "gray.400",
+          _hover: {
+            borderColor: "gray.500",
+          },
+          _autofill: {
+            bg: "wine.300",
+          },
+        },
+      },
+    },
+  },
   Select: {
     variants: {
       outline: {

@@ -1,13 +1,13 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { Grid, Box, AspectRatio } from "@chakra-ui/react";
+import { Grid, Box, AspectRatio, Button } from "@chakra-ui/react";
 
 import L from "leaflet";
 import "maplibre-gl";
 import "@maplibre/maplibre-gl-leaflet";
 import "leaflet/dist/leaflet.css";
 
-import { FieldInput, FieldRow } from ".";
+import { FieldRow, FieldNumberInput } from ".";
 
 import type { GeoLocation } from "~/types";
 import { useConfig } from "~/hooks";
@@ -62,7 +62,6 @@ class LeafletLocationPicker {
       this.pin = undefined;
 
       this.map.on("click", (e: L.LeafletMouseEvent) => {
-        console.log(e);
         this.setPoint(e.latlng);
         this.storePoint(e.latlng);
       });
@@ -114,12 +113,29 @@ export const LocationPicker = ({
   const refMapContainer = useRef<HTMLDivElement>(null);
   const refMap = useRef<LeafletLocationPicker>();
 
-  const [point, setPoint] = useState({
+  const [point, setPoint] = useState<GeoLocation>({
     lat,
     lng,
   });
 
+  const [initialState, setInitialState] = useState<GeoLocation>();
+
   const { setValue } = useFormContext();
+
+  const setNewPoint = useCallback(
+    (point: GeoLocation) => {
+      if (Number.isNaN(point.lat) || Number.isNaN(point.lng)) return;
+
+      setValue(fieldNameLat, point.lat, {
+        shouldDirty: true,
+      });
+      setValue(fieldNameLng, point.lng, {
+        shouldDirty: true,
+      });
+      setPoint(point);
+    },
+    [setPoint, setValue, fieldNameLat, fieldNameLng]
+  );
 
   useEffect(() => {
     if (
@@ -133,29 +149,31 @@ export const LocationPicker = ({
     if (!refMap.current)
       refMap.current = new LeafletLocationPicker(
         refMapContainer,
-        (point: GeoLocation) => {
-          setPoint(point);
-          setValue(fieldNameLat, point.lat, {
-            shouldDirty: true,
-          });
-          setValue(fieldNameLng, point.lng, {
-            shouldDirty: true,
-          });
-        },
+        setNewPoint,
         config.mapOuterBounds,
         13,
         config.mapStyleUrl
       );
 
     refMap.current.setPoint(point);
+
+    if (!initialState) {
+      setInitialState(point);
+      setNewPoint(point);
+    }
   }, [
     point,
+    setInitialState,
+    initialState,
     config.mapOuterBounds,
     config.mapStyleUrl,
-    setValue,
+    setNewPoint,
     fieldNameLat,
     fieldNameLng,
   ]);
+
+  const isButtonDisabled =
+    point.lat === initialState?.lat && point.lng === initialState?.lng;
 
   return (
     <Grid
@@ -171,28 +189,63 @@ export const LocationPicker = ({
       </Box>
       <Box>
         <FieldRow>
-          <FieldInput
+          <FieldNumberInput
             name={fieldNameLat}
             id={fieldNameLat}
-            type="text"
             label={t("form.geolocation.lat.label", "Latitude")}
             isRequired={required}
             settings={{
+              precision: 8,
+              step: 0.01,
+              onChange: (value: number) => {
+                if (value) {
+                  setNewPoint({
+                    lat: parseFloat(
+                      typeof value === "string" ? value : value.toFixed(8)
+                    ),
+                    lng: point.lng,
+                  });
+                }
+              },
+              value: point.lat,
               defaultValue: lat,
             }}
           />
         </FieldRow>
         <FieldRow>
-          <FieldInput
+          <FieldNumberInput
             name={fieldNameLng}
             id={fieldNameLng}
-            type="text"
             label={t("form.geolocation.lng.label", "Longitude")}
             isRequired={required}
             settings={{
+              precision: 8,
+              step: 0.01,
+              onChange: (value: number) => {
+                if (value) {
+                  setNewPoint({
+                    lat: point.lat,
+                    lng: parseFloat(
+                      typeof value === "string" ? value : value.toFixed(8)
+                    ),
+                  });
+                }
+              },
+              value: point.lng,
               defaultValue: lng,
             }}
           />
+        </FieldRow>
+        <FieldRow>
+          <Button
+            onClick={() => {
+              if (initialState) setNewPoint(initialState);
+            }}
+            isDisabled={isButtonDisabled}
+            colorScheme={!isButtonDisabled ? "wine" : "gray"}
+          >
+            {t("form.geolocation.button.reset", "Reset")}
+          </Button>
         </FieldRow>
       </Box>
     </Grid>

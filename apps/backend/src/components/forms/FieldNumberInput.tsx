@@ -4,10 +4,8 @@ import { useFormContext, Controller } from "react-hook-form";
 import {
   FormControl,
   FormLabel,
-  FormHelperText,
   NumberInput,
   NumberInputField,
-  Box,
 } from "@chakra-ui/react";
 
 import FieldErrorMessage from "./FieldErrorMessage";
@@ -84,17 +82,17 @@ export const FieldNumberInput = ({
   );
 
   useEffect(() => {
-    if (settings?.value) {
-      console.log("called set value");
+    if (typeof settings?.value !== "undefined")
       setFieldValue(formatDefaultValue(settings?.value, settings?.precision));
-    }
   }, [settings?.value, settings?.precision]);
 
   const {
     formState: { errors },
     setValue,
+    getValues,
     control,
-  } = useFormContext(); 
+    trigger,
+  } = useFormContext();
 
   const onChangeHandler = (value: number) => {
     settings?.onChange && settings?.onChange.call(null, value);
@@ -124,88 +122,76 @@ export const FieldNumberInput = ({
       isInvalid={errors[name]?.message}
       {...{ isRequired, isDisabled }}
     >
-      <Box
-        alignItems="center"
-        p="6"
-        pb="4"
-        borderBottom="1px solid #fff"
-        borderLeft={errors[name]?.message ? "4px solid " : "0px"}
-        borderLeftColor="openar.error"
-        pl={errors[name]?.message ? "calc(var(--chakra-space-6) - 4px)" : "6"}
-      >
-        {errors[name]?.message && (
-          <Box m={0} position="absolute" top="0" right="0" pt="5" pr="6">
-            <FieldErrorMessage error={errors[name]?.message} />
-          </Box>
-        )}
-        <FormLabel htmlFor={id} m={0}>
-          {settings?.icon ? <>{settings.icon} </> : null}
-          {label}
-        </FormLabel>
-        {settings?.helpText && (
-          <FormHelperText>{settings?.helpText}</FormHelperText>
-        )}
+      <FormLabel htmlFor={id} mb="0.5">
+        {label}
+      </FormLabel>
+      <Controller
+        control={control}
+        name={name}
+        // render={({ field: { onChange, onBlur, value, ref } }) => {
+        render={({ field: { ref, ...restField } }) => {
+          return (
+            <NumberInput
+              {...{
+                ...restField,
+                onBlur: (event) => {
+                  // weirdly restField.onBlur()
+                  // sets the field value to undefined 
+                  // and then the validation fails. 
+                  // so we have to store it for the moment
+                  const v = getValues(restField.name);
+                  restField.onBlur();
 
-        <Controller
-          control={control}
-          name={name}
-          // render={({ field: { onChange, onBlur, value, ref } }) => {
-          render={({ field: { ref, ...restField } }) => {
-            return (
-              <NumberInput
-                {...{
-                  ...restField,
-                  onBlur: (event) => {
-                    restField.onBlur();
-                    onChangeHandler(restField.value);
-                  },
-                  onChange: (valueAsString, valueAsNumber) => {
-                    setFieldValue(valueAsString);
-                    restField.onChange(valueAsNumber);
-                    onChangeHandler(valueAsNumber);
-                  },
+                  // and reset the value and retrigger the validation again. 
+                  setValue(restField.name, v);
+                  trigger(restField.name);
+
+                  onChangeHandler(v);
+                },
+                onChange: (valueAsString, valueAsNumber) => {
+                  setFieldValue(valueAsString);
+                  restField.onChange(valueAsNumber);
+                  onChangeHandler(valueAsNumber);
+                },
+              }}
+              value={
+                typeof settings?.value !== "undefined"
+                  ? format(fieldValue, settings?.precision)
+                  : undefined
+              }
+              defaultValue={fieldValue}
+              max={
+                typeof settings?.max !== "undefined" ? settings.max : undefined
+              }
+              min={
+                typeof settings?.min !== "undefined" ? settings.min : undefined
+              }
+              precision={
+                typeof settings?.precision !== "undefined"
+                  ? settings.precision
+                  : undefined
+              }
+              step={
+                typeof settings?.step !== "undefined"
+                  ? settings.step
+                  : undefined
+              }
+              keepWithinRange={!!(settings?.min || settings?.max)}
+              clampValueOnBlur={!!(settings?.min || settings?.max)}
+            >
+              <NumberInputField
+                ref={(e: HTMLInputElement) => {
+                  ref(e)
+                  fieldRef.current = e;// you can still assign to ref
                 }}
-                value={format(fieldValue, settings?.precision)}
-                defaultValue={fieldValue}
-                max={
-                  typeof settings?.max !== "undefined"
-                    ? settings.max
-                    : undefined
-                }
-                min={
-                  typeof settings?.min !== "undefined"
-                    ? settings.min
-                    : undefined
-                }
-                precision={
-                  typeof settings?.precision !== "undefined"
-                    ? settings.precision
-                    : undefined
-                }
-                step={
-                  typeof settings?.step !== "undefined"
-                    ? settings.step
-                    : undefined
-                }
-                keepWithinRange={!!(settings?.min || settings?.max)}
-                clampValueOnBlur={!!(settings?.min || settings?.max)}
-              >
-                <NumberInputField
-                  variant="flushed"
-                  ref={ref}
-                  name={restField.name}
-                  _placeholder={{
-                    opacity: "0.6",
-                    color: "white",
-                  }}
-                  border="0"
-                  placeholder={settings?.placeholder}
-                />
-              </NumberInput>
-            );
-          }}
-        />
-      </Box>
+                name={restField.name}
+                placeholder={settings?.placeholder}
+              />
+            </NumberInput>
+          );
+        }}
+      />
+      <FieldErrorMessage error={errors[name]?.message} />
     </FormControl>
   );
 };

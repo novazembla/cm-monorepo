@@ -7,8 +7,6 @@ import "maplibre-gl";
 import "@maplibre/maplibre-gl-leaflet";
 import "leaflet/dist/leaflet.css";
 
-import { FieldInput, FieldRow } from "../forms";
-
 import type { GeoLocation } from "~/types";
 import { useConfig } from "~/hooks";
 
@@ -76,15 +74,9 @@ class LeafletLocationDisplay {
 export const MapLocation = ({
   lat,
   lng,
-  required,
-  fieldNameLat = "lat",
-  fieldNameLng = "lng",
 }: {
   lat: number;
   lng: number;
-  required: boolean;
-  fieldNameLat?: string;
-  fieldNameLng?: string;
 }) => {
   const { t } = useTranslation();
   const config = useConfig();
@@ -115,6 +107,21 @@ export const MapLocation = ({
     });
   }, [lat, lng, config.mapOuterBounds, config.mapStyleUrl]);
 
+  const format = (val: any) => {
+
+    console.log("VV", val);
+    try {
+      if (typeof val === "string") {
+        return parseFloat(val).toFixed(8);
+      }
+      
+      return val.toFixed(8);
+
+    } catch (err) {
+      return "Number format error";
+    }
+  }
+
   return (
     <Grid
       w="100%"
@@ -134,13 +141,13 @@ export const MapLocation = ({
           <br />
         </Text>
 
-        <Text>{lat}</Text>
+        <Text>{format(lat)}</Text>
 
         <Text fontSize="md" mb="0.2" fontWeight="normal">
           {t("form.geolocation.lng.label", "Longitude")}
         </Text>
 
-        <Text>{lng}</Text>
+        <Text>{format(lng)}</Text>
       </Box>
     </Grid>
   );
