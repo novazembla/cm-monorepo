@@ -125,7 +125,7 @@ const Create = () => {
             multiLangRHFormDataToJson(
               newData,
               multiLangFields,
-              config.activeLanguages
+              config.activeLanguages ?? ["en"]
             ),
             [],
             multiLangFields

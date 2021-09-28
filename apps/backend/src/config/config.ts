@@ -1,11 +1,11 @@
 import merge from "deepmerge";
-import { isPlainObject } from 'is-plain-object';
+import { isPlainObject } from "is-plain-object";
 
 import { appConfig } from "./tmpappconfig";
 
 import { AppSettingsFieldDefinitions } from "./settings";
 import { activeLanguages, defaultLanguage } from "./internationalization";
-import type { Complete } from "../types";
+import type { Complete, GeoLocation } from "~/types";
 
 export type AppConfigSettings = {
   apiUrl?: string | undefined;
@@ -17,7 +17,9 @@ export type AppConfigSettings = {
   settings?: AppSettingsFieldDefinitions;
   defaultPageSize?: number;
   activeLanguages: string[];
-  defaultLanguage: string;
+  defaultLanguage?: string;
+  mapOuterBounds?: [GeoLocation, GeoLocation];
+  mapStyleUrl?: string;
 };
 
 export type AppConfig = Complete<AppConfigSettings>;
@@ -30,16 +32,28 @@ const configDefault: AppConfig = {
   enableOpenRegistration: true,
   enableProfilePicture: true,
   defaultPageSize: 50,
-  activeLanguages: activeLanguages,
-  defaultLanguage: defaultLanguage,
+  activeLanguages,
+  defaultLanguage,
   settings: {},
+  mapOuterBounds: [
+    {
+      lat: 52.71218794157272,
+      lng: 13.000360654958342,
+    },
+    {
+      lat: 52.29188494426961,
+      lng: 13.813182965630787,
+    },
+  ],
+  mapStyleUrl:
+    "https://www.vincentvanuffelen.com/lichtenberg/osm_liberty_berlin.json",
 };
 
 export let config: AppConfig;
 
 try {
   config = merge(configDefault, appConfig, {
-    isMergeableObject: isPlainObject
+    isMergeableObject: isPlainObject,
   });
 } catch (Err) {
   // eslint-disable-next-line no-console

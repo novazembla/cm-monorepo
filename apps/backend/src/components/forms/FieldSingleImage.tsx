@@ -74,6 +74,8 @@ export const FieldSingleImage = ({
               deleteButtonGQL={deleteButtonGQL}
               connectWith={connectWith}
               onDelete={() => {
+                if (!config.activeLanguages) return;
+
                 config.activeLanguages.forEach((lang) => {
                   setValue(`${name}`, "");
                   setValue(`${name}_alt_${lang}`, "");

@@ -1,4 +1,4 @@
-import { Divider } from "@chakra-ui/react";
+import { Divider, chakra } from "@chakra-ui/react";
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import {
@@ -47,7 +47,7 @@ export const ModuleForm = ({
               />
             </FieldRow>
             <FieldRow>
-            <FieldSelect
+              <FieldSelect
                 name="ownerId"
                 id="ownerId"
                 label={t("module.locations.forms.field.label.author", "Author")}
@@ -56,7 +56,13 @@ export const ModuleForm = ({
                   value: authUser.id,
                   label: `${authUser.firstName} ${authUser.lastName}`,
                 }))}
-                isDisabled={!(appUser && (appUser.has("editor") || data.locationRead.ownerId === appUser.id))}
+                isDisabled={
+                  !(
+                    appUser &&
+                    (appUser.has("editor") ||
+                      data.locationRead.ownerId === appUser.id)
+                  )
+                }
                 settings={{
                   defaultValue: data.locationRead.ownerId,
                   placeholder: t(
@@ -65,7 +71,6 @@ export const ModuleForm = ({
                   ),
                 }}
               />
-              
             </FieldRow>
           </TwoColFieldRow>
           <Divider mt="10" />
@@ -82,9 +87,9 @@ export const ModuleForm = ({
             connectWith={{
               heroImageLocations: {
                 connect: {
-                  id: data?.locationRead?.id,            
-                }
-              }
+                  id: data?.locationRead?.id,
+                },
+              },
             }}
           />
         </>
@@ -127,11 +132,27 @@ export const ModuleForm = ({
       />
       {updateActions}
       <Divider mt="10" />
-      <LocationPicker
-        lat={data?.locationRead?.lat}
-        lng={data?.locationRead?.lng}
-        required
-      />
+      <chakra.fieldset
+        border="1px solid"
+        borderColor="gray.400"
+        p="4"
+        borderRadius="md"
+        w="100%"
+      >
+        <legend>
+          <chakra.span px="2">
+            {t(
+              "module.locations.forms.location.geoloaction",
+              "Location on map"
+            )}
+          </chakra.span>
+        </legend>
+        <LocationPicker
+          lat={data?.locationRead?.lat}
+          lng={data?.locationRead?.lng}
+          required
+        />
+      </chakra.fieldset>
 
       {data && data?.moduleTaxonomies && (
         <>

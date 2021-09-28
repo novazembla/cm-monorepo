@@ -1,17 +1,16 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Grid, Box, AspectRatio } from "@chakra-ui/react";
+import { Grid, Box, AspectRatio, Text } from "@chakra-ui/react";
 
 import L from "leaflet";
 import "maplibre-gl";
 import "@maplibre/maplibre-gl-leaflet";
 import "leaflet/dist/leaflet.css";
 
-import { FieldInput, FieldRow } from ".";
+import { FieldInput, FieldRow } from "../forms";
 
 import type { GeoLocation } from "~/types";
 import { useConfig } from "~/hooks";
-import { useFormContext } from "react-hook-form";
 
 import icon from "leaflet/dist/images/marker-icon.png";
 import iconRetina from "leaflet/dist/images/marker-icon-2x.png";
@@ -27,21 +26,16 @@ let DefaultIcon = L.icon({
 
 L.Marker.prototype.options.icon = DefaultIcon;
 
-class LeafletLocationPicker {
+class LeafletLocationDisplay {
   pin: L.Marker | undefined;
   map: L.Map | undefined;
 
-  storePoint: (geolocation: GeoLocation) => void;
-
   constructor(
     refContainer: React.RefObject<HTMLDivElement>,
-    storePoint: (geolocation: GeoLocation) => void,
     mapBounds: [GeoLocation, GeoLocation],
     zoom: number,
     style: string
   ) {
-    this.storePoint = storePoint;
-
     if (refContainer?.current) {
       this.map = L.map(refContainer.current, {
         maxBounds: [
@@ -60,12 +54,6 @@ class LeafletLocationPicker {
       }).addTo(this.map);
 
       this.pin = undefined;
-
-      this.map.on("click", (e: L.LeafletMouseEvent) => {
-        console.log(e);
-        this.setPoint(e.latlng);
-        this.storePoint(e.latlng);
-      });
     } else {
       throw Error("LeafLetMapGeopMan MapContainer Ref not set");
     }
@@ -75,19 +63,9 @@ class LeafletLocationPicker {
     if (!this.map) return;
 
     if (!this.pin) {
-      this.pin = L.marker(L.latLng(geolocation.lat, geolocation.lng), {
-        draggable: true,
-      }).addTo(this.map);
-
-      this.pin.on("dragend", (event) => {
-        if (!this.map) return;
-
-        const marker = event.target;
-        const position = marker.getLatLng();
-        marker.setLatLng(new L.LatLng(position.lat, position.lng));
-        this.map.panTo(new L.LatLng(position.lat, position.lng));
-        this.storePoint(position);
-      });
+      this.pin = L.marker(L.latLng(geolocation.lat, geolocation.lng), {}).addTo(
+        this.map
+      );
     } else {
       this.pin.setLatLng(new L.LatLng(geolocation.lat, geolocation.lng));
     }
@@ -95,7 +73,7 @@ class LeafletLocationPicker {
   }
 }
 
-export const LocationPicker = ({
+export const MapLocation = ({
   lat,
   lng,
   required,
@@ -112,14 +90,7 @@ export const LocationPicker = ({
   const config = useConfig();
 
   const refMapContainer = useRef<HTMLDivElement>(null);
-  const refMap = useRef<LeafletLocationPicker>();
-
-  const [point, setPoint] = useState({
-    lat,
-    lng,
-  });
-
-  const { setValue } = useFormContext();
+  const refMap = useRef<LeafletLocationDisplay>();
 
   useEffect(() => {
     if (
@@ -131,38 +102,26 @@ export const LocationPicker = ({
       return;
 
     if (!refMap.current)
-      refMap.current = new LeafletLocationPicker(
+      refMap.current = new LeafletLocationDisplay(
         refMapContainer,
-        (point: GeoLocation) => {
-          setPoint(point);
-          setValue(fieldNameLat, point.lat, {
-            shouldDirty: true,
-          });
-          setValue(fieldNameLng, point.lng, {
-            shouldDirty: true,
-          });
-        },
         config.mapOuterBounds,
         13,
         config.mapStyleUrl
       );
 
-    refMap.current.setPoint(point);
-  }, [
-    point,
-    config.mapOuterBounds,
-    config.mapStyleUrl,
-    setValue,
-    fieldNameLat,
-    fieldNameLng,
-  ]);
+    refMap.current.setPoint({
+      lat,
+      lng,
+    });
+  }, [lat, lng, config.mapOuterBounds, config.mapStyleUrl]);
 
   return (
     <Grid
       w="100%"
-      templateColumns={{ base: "100%", t: "2fr 1fr" }}
+      templateColumns={{ base: "100%", t: "1fr 1fr" }}
       templateRows={{ base: "auto 1fr", t: "auto" }}
       gap={{ base: "4", s: "6" }}
+      mt="2"
     >
       <Box>
         <AspectRatio ratio={16 / 9}>
@@ -170,30 +129,18 @@ export const LocationPicker = ({
         </AspectRatio>
       </Box>
       <Box>
-        <FieldRow>
-          <FieldInput
-            name={fieldNameLat}
-            id={fieldNameLat}
-            type="text"
-            label={t("form.geolocation.lat.label", "Latitude")}
-            isRequired={required}
-            settings={{
-              defaultValue: lat,
-            }}
-          />
-        </FieldRow>
-        <FieldRow>
-          <FieldInput
-            name={fieldNameLng}
-            id={fieldNameLng}
-            type="text"
-            label={t("form.geolocation.lng.label", "Longitude")}
-            isRequired={required}
-            settings={{
-              defaultValue: lng,
-            }}
-          />
-        </FieldRow>
+        <Text fontSize="md" mb="0.2" fontWeight="normal">
+          {t("form.geolocation.lat.label", "Latitude")}
+          <br />
+        </Text>
+
+        <Text>{lat}</Text>
+
+        <Text fontSize="md" mb="0.2" fontWeight="normal">
+          {t("form.geolocation.lng.label", "Longitude")}
+        </Text>
+
+        <Text>{lng}</Text>
       </Box>
     </Grid>
   );

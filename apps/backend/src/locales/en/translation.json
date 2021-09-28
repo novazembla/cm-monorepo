@@ -529,7 +529,7 @@
     "contactEmail": {
       "label": "Contact email address"
     },
-    "adminMapApiKey": {
+    "frontendMapStyeJsonUrl": {
       "label": "Backend Map Api Key"
     },
     "centerOfGravity": {

@@ -1,6 +1,6 @@
-// TODO: make the app really configureable 
+// TODO: make the app really configureable
 //import i18next from "i18next";
-import { AppConfigSettings } from "./config";
+import type { AppConfigSettings } from "./config";
 // import {string, object} from "yup";
 
 // this is the full list of the keys that are used for custom settings.
@@ -13,7 +13,7 @@ export const appConfig: AppConfigSettings = {
   enableProfilePicture: false,
   defaultPageSize: 30,
   defaultLanguage: "en",
-  activeLanguages: ["en","de"],
-  settings: {} // TODO: what else is needed? 
+  activeLanguages: ["en", "de"],
+  settings: {}, // TODO: what else is needed?
 };
 export default appConfig;

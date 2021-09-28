@@ -130,7 +130,7 @@ export const ModuleSubNav = ({
         mb={{ base: 3, tw: 4 }}
         position="sticky"
         top={{ base: "48px", tw: "70px" }}
-        zIndex="200"
+        zIndex="1001"
       >
         <Flex
           justifyContent="space-between"

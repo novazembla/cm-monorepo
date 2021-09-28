@@ -166,7 +166,7 @@ const Update = () => {
           multiLangFields
         ),
         multiLangFields,
-        config.activeLanguages
+        config.activeLanguages ?? ["en"]
       ),
       ...mapDataToModulesCheckboxArray(
         data.eventRead.terms,
@@ -183,7 +183,7 @@ const Update = () => {
         data.eventRead,
         ["heroImage"],
         ["alt", "credits"],
-        config.activeLanguages
+        config.activeLanguages ?? ["en"]
       ),
     });
   }, [reset, data, config.activeLanguages]);
@@ -236,7 +236,7 @@ const Update = () => {
               multiLangRHFormDataToJson(
                 newData,
                 multiLangFields,
-                config.activeLanguages
+                config.activeLanguages ?? ["en"]
               ),
               [],
               multiLangFields
@@ -251,7 +251,7 @@ const Update = () => {
               },
             ],
             ["alt", "credits"],
-            config.activeLanguages
+            config.activeLanguages ?? ["en"]
           )
         );
 

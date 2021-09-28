@@ -4,7 +4,7 @@ import { PartialRecord } from "@culturemap/core";
 import { getAppConfig } from "./config";
 import { AppConfigSettingsFiledKeys } from "./tmpappconfig";
 
-import { Map } from "~/components/ui";
+import { MapLocation } from "~/components/ui";
 import { LocationPicker } from "~/components/forms";
 
 export type AppSetting = {
@@ -26,7 +26,7 @@ export type AppSettingField = {
 
 export type AppSettingsDefaultFieldKeys =
   | "contactEmail"
-  | "adminMapApiKey"
+  | "frontendMapStyeJsonUrl"
   | "centerOfGravity";
 
 export type AppSettingsFieldKeys =
@@ -52,14 +52,14 @@ export const settingFields: AppSettingsFieldDefinitions = {
     }),
     required: true,
   },
-  adminMapApiKey: {
+  frontendMapStyeJsonUrl: {
     defaultValue: "",
     type: "text",
-    // t("settings.adminMapApiKey.label", "Backend Map Api Key")
-    label: "settings.adminMapApiKey.label",
+    // t("settings.frontendMapStyeJsonUrl.label", "Frontend Map Style Json Url")
+    label: "settings.frontendMapStyeJsonUrl.label",
     required: true,
     validationSchema: object().shape({
-      adminMapApiKey: string().required()
+      frontendMapStyeJsonUrl: string().required()
     }),
   },
   centerOfGravity: {
@@ -89,7 +89,7 @@ export const settingFields: AppSettingsFieldDefinitions = {
           (value) => !!(value && isFinite(value) && Math.abs(value) <= 180)
         ),
     }),
-    printComponent: Map,
+    printComponent: MapLocation,
     formComponent: LocationPicker,
     getFormComponentProps: (fieldDefs: AppSettingField, value: any) => {
       return {
