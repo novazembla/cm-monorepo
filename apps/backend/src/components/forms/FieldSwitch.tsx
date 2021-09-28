@@ -1,12 +1,13 @@
 import React from "react";
-import { Switch, FormControl, Flex } from "@chakra-ui/react";
-import { useFormContext } from "react-hook-form";
+import { Switch, FormControl, Flex, chakra } from "@chakra-ui/react";
+import { useFormContext, Controller } from "react-hook-form";
 
 import { FieldErrorMessage } from ".";
 
 export const FieldSwitch = ({
   name,
   label,
+  isChecked = false,
   isRequired = false,
   isReadOnly = false,
   isDisabled = false,
@@ -15,6 +16,7 @@ export const FieldSwitch = ({
 }: {
   name: string;
   label: string | React.ReactNode;
+  isChecked?: boolean;
   isRequired?: boolean;
   isReadOnly?: boolean;
   isDisabled?: boolean;
@@ -22,7 +24,7 @@ export const FieldSwitch = ({
   colorScheme?: string;
 }) => {
   const {
-    register,
+    control,
     formState: { errors },
   } = useFormContext();
 
@@ -33,17 +35,29 @@ export const FieldSwitch = ({
       isInvalid={!!errors[name]?.message}
     >
       <Flex alignItems="center">
-        <Switch
-          
-          id={name}
-          mt="1"
-          key={`key-${name}`}
-          isInvalid={!!errors[name]?.message}
-          {...{ isRequired, isDisabled, isReadOnly, defaultChecked, colorScheme }}
-          {...register(name, { required: isRequired })}
-          display="flex"
-          
-        >{label}</Switch>
+        <Controller
+          control={control}
+          name={name}
+          defaultValue={
+            typeof defaultChecked === "boolean" ? defaultChecked : false
+          }
+          render={({ field: { onChange, onBlur, value } }) => (
+            <Switch
+              display="flex"
+              mt="1"
+              onChange={onChange}
+              onBlur={onBlur}
+              isDisabled={isDisabled}
+              isChecked={typeof isChecked !== "undefined" ? !!isChecked : value}
+              isInvalid={!!errors[name]?.message}
+              colorScheme={colorScheme}
+              isRequired={isRequired}
+              isReadOnly={isReadOnly}
+            >
+              <chakra.span fontSize="sm">{label}</chakra.span>
+            </Switch>
+          )}
+        />
       </Flex>
       <FieldErrorMessage error={errors[name]?.message} />
     </FormControl>

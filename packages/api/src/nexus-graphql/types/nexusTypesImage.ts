@@ -20,27 +20,29 @@ import { GQLJson } from "./nexusTypesShared";
 
 import { authorizeApiUser } from "../helpers";
 
-import { apiConfig } from "../../config";
+import { getApiConfig } from "../../config";
 
 import {
   daoImageQuery,
   // daoImageCreate,
   daoImageUpdate,
-  daoImageDelete,
   daoImageQueryCount,
   daoImageGetById,
   daoImageGetStatusById,
-  daoImageSetToDelete
+  daoImageSetToDelete,
 } from "../../dao";
+
+const apiConfig = getApiConfig();
 
 export const Image = objectType({
   name: "Image",
   definition(t) {
     t.nonNull.int("id");
     t.nonNull.int("ownerId");
-    t.string("uuid");
+    t.string("nanoid");
     t.int("status");
     t.json("meta");
+    t.int("orderNumber");
     t.json("alt");
     t.json("credits");
     t.date("createdAt");
@@ -117,7 +119,7 @@ export const ImageQueries = extendType({
             args.pageIndex as number,
             args.pageSize as number
           );
-       
+
         return {
           totalCount,
           images,
@@ -132,6 +134,7 @@ export const ImageQueries = extendType({
         id: nonNull(intArg()),
       },
 
+      // TODO: how to protect individual assets only own or
       authorize: (...[, , ctx]) => authorizeApiUser(ctx, "imageRead"),
 
       // resolve(root, args, ctx, info)
@@ -149,7 +152,7 @@ export const ImageQueries = extendType({
 
       // resolve(root, args, ctx, info)
       async resolve(...[, args]) {
-        const image: any = await daoImageGetStatusById(args.id);
+        const image = await daoImageGetStatusById(args.id);
 
         // let status;
         // switch (image.status) {
@@ -190,7 +193,6 @@ export const ImageTranslationInput = inputObjectType({
     t.nonNull.int("id");
   },
 });
-
 
 export const ImageUpdateInput = inputObjectType({
   name: "ImageUpdateInput",

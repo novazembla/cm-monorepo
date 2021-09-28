@@ -32,7 +32,7 @@ const PasswordReset = () => {
 
   const { t } = useTranslation();
 
-  const formMethods = useForm({
+  const formMethods = useForm<any>({
     'mode':'onTouched',
     resolver: yupResolver(PasswordResetValidationSchema),
   });

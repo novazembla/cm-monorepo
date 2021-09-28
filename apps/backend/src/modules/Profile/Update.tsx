@@ -56,7 +56,7 @@ const Update = () => {
 
   const disableForm = firstMutationResults.loading;
 
-  const formMethods = useForm({
+  const formMethods = useForm<any>({
     mode: "onTouched",
     resolver: yupResolver(UserProfileUpdateValidationSchema),
   });

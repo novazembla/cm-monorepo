@@ -104,10 +104,11 @@ type Image {
   credits: JSON
   id: Int!
   meta: JSON
+  nanoid: String
+  orderNumber: Int
   ownerId: Int!
   status: Int
   updatedAt: DateTime
-  uuid: String
 }
 
 """List all the available images in the database."""

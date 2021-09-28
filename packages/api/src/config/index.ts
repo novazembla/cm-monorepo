@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import merge from "deepmerge";
-import { isPlainObject } from 'is-plain-object';
+import { isPlainObject } from "is-plain-object";
 import { CorsOptions } from "cors";
 import { PartialRecord, AppScopes, safeGuardVariable } from "@culturemap/core";
 import type { ApiConfigImageFormatType } from "@culturemap/core";
@@ -38,6 +38,7 @@ export type CulturemapScopes =
   | "page";
 
 export interface ApiConfigDB {
+  connectionLimit: number;
   url: string;
   defaultPageSize: number;
   maxPageSize: number;
@@ -126,6 +127,7 @@ const db: ApiConfigDB = {
     "",
     "Error: missing/wrong .env config: DATABASE_URL"
   ),
+  connectionLimit: 5,
   defaultPageSize: 50,
   maxPageSize: 500,
   privateJSONDataKeys: {
@@ -144,7 +146,7 @@ const db: ApiConfigDB = {
 const trimTrailingSlash = (str: string) =>
   str.endsWith("/") ? str.slice(0, -1) : str;
 
-export let apiConfig = {
+let apiConfig = {
   enablePublicRegistration: true,
   baseDir: resolve(dirname("")),
   publicDir: "public",
@@ -193,42 +195,42 @@ export let apiConfig = {
     normal: [
       {
         width: 480,
-        heigth: 480,
+        height: 480,
         crop: false,
         asWebP: true,
         asJpg: true,
       },
       {
         width: 720,
-        heigth: 720,
+        height: 720,
         crop: false,
         asWebP: true,
         asJpg: false,
       },
       {
         width: 1080,
-        heigth: 1080,
+        height: 1080,
         crop: false,
         asWebP: true,
         asJpg: true,
       },
       {
         width: 1700,
-        heigth: 1700,
+        height: 1700,
         crop: false,
         asWebP: true,
         asJpg: false,
       },
       {
         width: 2048,
-        heigth: 2048,
+        height: 2048,
         crop: false,
         asWebP: true,
         asJpg: true,
       },
       {
         width: 3000,
-        heigth: 3000,
+        height: 3000,
         crop: false,
         asWebP: true,
         asJpg: false,
@@ -237,28 +239,28 @@ export let apiConfig = {
     square: [
       {
         width: 480,
-        heigth: 480,
+        height: 480,
         crop: true,
         asWebP: true,
         asJpg: false,
       },
       {
         width: 720,
-        heigth: 720,
+        height: 720,
         crop: true,
         asWebP: true,
         asJpg: true,
       },
       {
         width: 1080,
-        heigth: 1080,
+        height: 1080,
         crop: true,
         asWebP: true,
         asJpg: false,
       },
       {
         width: 1700,
-        heigth: 1700,
+        height: 1700,
         crop: true,
         asWebP: true,
         asJpg: true,
@@ -369,13 +371,13 @@ export let apiConfig = {
   },
 };
 
-export const update = (aCfg: ApiConfigOverwrite) => {
+export const updateApiConfig = (aCfg: ApiConfigOverwrite) => {
   if (typeof aCfg !== "object")
     throw Error("Plase just pass objects to the apiConfig.update function");
 
   try {
     apiConfig = merge(apiConfig, aCfg, {
-      isMergeableObject: isPlainObject
+      isMergeableObject: isPlainObject,
     });
   } catch (Err) {
     // eslint-disable-next-line no-console
@@ -383,7 +385,8 @@ export const update = (aCfg: ApiConfigOverwrite) => {
   }
 };
 
+export const getApiConfig = () => apiConfig;
+
 export const updateCors = (newCorsSettings: CorsOptions) => {
   apiConfig.corsOptions = newCorsSettings;
 };
-

@@ -225,10 +225,11 @@ export interface NexusGenObjects {
     credits?: NexusGenScalars['JSON'] | null; // JSON
     id: number; // Int!
     meta?: NexusGenScalars['JSON'] | null; // JSON
+    nanoid?: string | null; // String
+    orderNumber?: number | null; // Int
     ownerId: number; // Int!
     status?: number | null; // Int
     updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
-    uuid?: string | null; // String
   }
   ImageQueryResult: { // root type
     images?: Array<NexusGenRootTypes['Image'] | null> | null; // [Image]
@@ -436,10 +437,11 @@ export interface NexusGenFieldTypes {
     credits: NexusGenScalars['JSON'] | null; // JSON
     id: number; // Int!
     meta: NexusGenScalars['JSON'] | null; // JSON
+    nanoid: string | null; // String
+    orderNumber: number | null; // Int
     ownerId: number; // Int!
     status: number | null; // Int
     updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
-    uuid: string | null; // String
   }
   ImageQueryResult: { // field return type
     images: Array<NexusGenRootTypes['Image'] | null> | null; // [Image]
@@ -710,10 +712,11 @@ export interface NexusGenFieldTypeNames {
     credits: 'JSON'
     id: 'Int'
     meta: 'JSON'
+    nanoid: 'String'
+    orderNumber: 'Int'
     ownerId: 'Int'
     status: 'Int'
     updatedAt: 'DateTime'
-    uuid: 'String'
   }
   ImageQueryResult: { // field return type name
     images: 'Image'

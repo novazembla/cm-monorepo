@@ -8,7 +8,7 @@ import {
 } from "@culturemap/core";
 import { Response } from "express";
 
-import { apiConfig } from "../config";
+import { getApiConfig } from "../config";
 import { AuthPayload } from "../types/auth";
 import { daoTokenCreate, daoTokenFindFirst } from "../dao/token";
 import { daoUserGetByEmail } from "../dao/user";
@@ -16,6 +16,8 @@ import { daoUserGetByEmail } from "../dao/user";
 import { ApiError, TokenTypes } from "../utils";
 
 import { logger } from "./serviceLogging";
+
+const apiConfig = getApiConfig();
 
 export const generateToken = (
   scope: string,
@@ -90,8 +92,6 @@ export const tokenVerify = (token: string): JwtPayload | null => {
     );
 
     if (typeof tokenPayload === "object") {
-      console.log(`Token payload.exp ${tokenPayload.exp ?? 0}`);
-
       if (Date.now() >= (tokenPayload.exp ?? 0) * 1000) {
         logger.debug(`Error: Token expired (VT 2)`);
         throw new ApiError(httpStatus.UNAUTHORIZED, "(VT 2)");
@@ -212,7 +212,10 @@ export const tokenGenerateResetPasswordToken = async (
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, "Email not found");
   }
-  const expires = addMinutes(new Date(), apiConfig.jwt.expiration.passwordReset);
+  const expires = addMinutes(
+    new Date(),
+    apiConfig.jwt.expiration.passwordReset
+  );
 
   const resetPasswordToken = generateToken(
     scope,
@@ -236,7 +239,10 @@ export const tokenGenerateVerifyEmailToken = async (
   scope: string,
   userId: number
 ) => {
-  const expires = addDays(new Date(), apiConfig.jwt.expiration.emailConfirmation);
+  const expires = addDays(
+    new Date(),
+    apiConfig.jwt.expiration.emailConfirmation
+  );
   const verifyEmailToken = generateToken(
     scope,
     {

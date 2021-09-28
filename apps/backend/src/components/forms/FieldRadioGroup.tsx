@@ -4,7 +4,7 @@
 // import { useForm, Controller } from "react-hook-form";
 export const FieldRadioGroup = () => {
   // TODO: finish field... 
-//     const { register, handleSubmit, control } = useForm();
+//     const { register, handleSubmit, control } = useForm<any>();
 //     const onSubmit =  data => {
 //         console.log(data)
 //     }

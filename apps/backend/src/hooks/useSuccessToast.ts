@@ -1,7 +1,7 @@
-import { useToast } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
+import { useToast, UseToastOptions } from "@chakra-ui/react";
 
-export const useSuccessToast = (defaultTitle: string, defaultMsg: string) => {
+export const useAppToast = (defaultTitle: string, defaultMsg: string, status: UseToastOptions["status"]) => {
   const toast = useToast();
 
   const trigger = (
@@ -28,7 +28,7 @@ export const useSuccessfullySavedToast = () => {
   const defaultTitle = t("toast.title.success", "Success!");
   const defaultMsg = t("toast.info.datasaved", "The data has been saved");
 
-  const toast = useSuccessToast(defaultTitle, defaultTitle);
+  const toast = useAppToast(defaultTitle, defaultTitle, "success");
 
   const trigger = (
     title: string = defaultTitle,
@@ -47,7 +47,7 @@ export const useSuccessfullyDeletedToast = () => {
   const defaultTitle = t("toast.title.success", "Success!");
   const defaultMsg = t("toast.info.datadeleted", "The data has been deleted");
 
-  const toast = useSuccessToast(defaultTitle, defaultTitle);
+  const toast = useAppToast(defaultTitle, defaultTitle, "success");
 
   const trigger = (
     title: string = defaultTitle,

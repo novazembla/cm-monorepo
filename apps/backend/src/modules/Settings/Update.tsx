@@ -51,7 +51,7 @@ const Update = () => {
 
   const settingsValidationSchema = getSettingsValidationSchema();
 
-  const formMethods = useForm({
+  const formMethods = useForm<any>({
     mode: "onTouched",
     resolver: yupResolver(settingsValidationSchema),
   });

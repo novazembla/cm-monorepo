@@ -17,18 +17,16 @@ import { AuthPayload } from "../types/auth";
 import { tokenGenerateAuthTokens } from "./serviceToken";
 import { authSendEmailConfirmationEmail } from "./serviceAuth";
 import { ApiError, TokenTypes } from "../utils";
-import { apiConfig } from "../config";
+import { getApiConfig } from "../config";
+
+const apiConfig = getApiConfig();
 
 export const userRegister = async (
   scope: AppScopes,
   data: Prisma.UserCreateInput
 ): Promise<AuthPayload> => {
-
   if (!apiConfig.enablePublicRegistration)
-    throw new ApiError(
-      httpStatus.FORBIDDEN,
-      "Access denied"
-    );
+    throw new ApiError(httpStatus.FORBIDDEN, "Access denied");
 
   if (!data.acceptedTerms)
     throw new ApiError(

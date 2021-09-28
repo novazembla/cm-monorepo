@@ -33,7 +33,7 @@ export const FieldSingleImage = ({
   name,
   deleteButtonGQL = imageDeleteMutationGQL,
   currentImage,
-  connectWith, 
+  connectWith,
 }: {
   settings: FieldSingleImageSettings;
   id: string;

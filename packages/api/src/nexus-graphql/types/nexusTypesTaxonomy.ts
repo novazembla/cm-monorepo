@@ -19,7 +19,7 @@ import { GQLJson } from "./nexusTypesShared";
 
 import { authorizeApiUser } from "../helpers";
 
-import { apiConfig } from "../../config";
+import { getApiConfig } from "../../config";
 
 import {
   daoTaxonomyQuery,
@@ -30,6 +30,8 @@ import {
   daoTaxonomyUpdate,
   daoTaxonomyDelete,
 } from "../../dao";
+
+const apiConfig = getApiConfig();
 
 export const Taxonomy = objectType({
   name: "Taxonomy",

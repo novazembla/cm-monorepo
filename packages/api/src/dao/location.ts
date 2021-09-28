@@ -3,7 +3,7 @@ import { Location, Prisma } from "@prisma/client";
 import { filteredOutputByBlacklist } from "@culturemap/core";
 
 import { ApiError, filteredOutputByBlacklistOrNotFound } from "../utils";
-import { apiConfig } from "../config";
+import { getApiConfig } from "../config";
 import { getPrismaClient } from "../db/client";
 import {
   daoSharedCheckSlugUnique,
@@ -13,6 +13,7 @@ import {
 } from ".";
 
 const prisma = getPrismaClient();
+const apiConfig = getApiConfig();
 
 const locationFullTextKeys = [
   "title",
@@ -39,7 +40,7 @@ export const daoLocationCheckSlugUnique = async (
 export const daoLocationQuery = async (
   where: Prisma.LocationWhereInput,
   include: Prisma.LocationInclude | undefined,
-  orderBy: Prisma.LocationOrderByInput | Prisma.LocationOrderByInput[],
+  orderBy: any,
   pageIndex: number = 0,
   pageSize: number = apiConfig.db.defaultPageSize
 ): Promise<Location[]> => {
@@ -136,11 +137,13 @@ export const daoLocationCreate = async (
   );
 };
 
-export const daoLocationGetById = async (id: number,
-  include?: Prisma.LocationInclude | undefined): Promise<Location> => {
+export const daoLocationGetById = async (
+  id: number,
+  include?: Prisma.LocationInclude | undefined
+): Promise<Location> => {
   const location: Location | null = await prisma.location.findUnique({
     where: { id },
-    include
+    include,
   });
 
   return filteredOutputByBlacklistOrNotFound(

@@ -37,7 +37,7 @@ import {
   isCurrentApiUser,
   isNotCurrentApiUser,
 } from "../helpers";
-import { apiConfig } from "../../config";
+import { getApiConfig } from "../../config";
 import {
   daoUserQuery,
   daoUserQueryCount,
@@ -45,6 +45,8 @@ import {
   daoImageGetById,
   daoUserProfileImageDelete,
 } from "../../dao";
+
+const apiConfig = getApiConfig();
 
 const UserBaseNode = interfaceType({
   name: "UserBaseNode",
@@ -416,7 +418,10 @@ export const UserMutations = extendType({
       },
 
       async resolve(...[, args, ctx]) {
-        const user = await daoUserProfileImageDelete(args.id, ctx?.apiUser?.id ?? 0);
+        const user = await daoUserProfileImageDelete(
+          args.id,
+          ctx?.apiUser?.id ?? 0
+        );
 
         if (!user)
           throw new ApiError(

@@ -4,6 +4,7 @@ import type { NexusResolverContext } from "../context";
 export const authorizeApiUser = (
   ctx: NexusResolverContext,
   permissions: PermissionNames | PermissionNames[],
+  // eslint-disable-next-line
   doingRefresh = false
 ) => {
   // TODO: enable auth gateway

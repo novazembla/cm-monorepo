@@ -77,8 +77,3 @@ export const filteredOutputByWhitelist = (
       };
     }, {});
 };
-
-export default {
-  filteredOutputByBlacklist,
-  filteredOutputByWhitelist,
-};

@@ -23,7 +23,7 @@ import { HiOutlineEyeOff, HiOutlineEye } from "react-icons/hi";
 
 import FieldErrorMessage from "./FieldErrorMessage";
 
-export interface FieldSettings {
+export interface FieldInputSettings {
   onChange?: ChangeEventHandler;
   rows?: number;
   required?: boolean;
@@ -50,7 +50,7 @@ export const FieldInput = ({
   isRequired,
   isDisabled,
 }: {
-  settings?: FieldSettings;
+  settings?: FieldInputSettings;
   id: string;
   isRequired?: boolean;
   isDisabled?: boolean;
@@ -68,16 +68,15 @@ export const FieldInput = ({
     setValue,
   } = useFormContext();
 
-  let fieldProps: FieldSettings = {
+  let fieldProps: FieldInputSettings = {
     key: `key-${id}`,
     name: name,
-    type: type
+    type: type,
   };
 
   fieldProps.rows = settings?.rows ?? undefined;
 
-  if (settings?.defaultValue)
-    fieldProps.defaultValue = settings?.defaultValue;
+  if (settings?.defaultValue) fieldProps.defaultValue = settings?.defaultValue;
 
   fieldProps.className = settings?.className ?? undefined;
 
@@ -104,7 +103,7 @@ export const FieldInput = ({
         ) + "px";
     }
   };
-  
+
   fieldProps.type = revealFlag ? "text" : fieldProps.type;
 
   const visibilityClickEvent: MouseEventHandler<HTMLButtonElement> = (

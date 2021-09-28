@@ -20,7 +20,7 @@ import { GQLJson } from "./nexusTypesShared";
 
 import { authorizeApiUser } from "../helpers";
 
-import { apiConfig } from "../../config";
+import { getApiConfig } from "../../config";
 
 import {
   daoLocationQuery,
@@ -31,8 +31,10 @@ import {
   daoLocationDelete,
   daoUserGetById,
   daoLocationGetBySlug,
-  daoImageSaveImageTranslations
+  daoImageSaveImageTranslations,
 } from "../../dao";
+
+const apiConfig = getApiConfig();
 
 export const Location = objectType({
   name: "Location",
@@ -70,7 +72,7 @@ export const Location = objectType({
 
     t.list.field("terms", {
       type: "Term",
-    }); 
+    });
 
     t.list.field("events", {
       type: "Event",
@@ -181,7 +183,7 @@ export const LocationQueries = extendType({
       // resolve(root, args, ctx, info)
       async resolve(...[, args, , info]) {
         const pRI = parseResolveInfo(info);
-        
+
         let include: any = {
           terms: {
             select: {
@@ -198,7 +200,7 @@ export const LocationQueries = extendType({
               id: true,
               slug: true,
               title: true,
-    
+
               dates: {
                 select: {
                   date: true,
@@ -272,7 +274,7 @@ export const LocationQueries = extendType({
               },
             },
           };
-        
+
         if ((pRI?.fieldsByTypeName?.Location as any)?.heroImage)
           include = {
             ...include,
@@ -309,7 +311,6 @@ export const LocationUpsertInput = inputObjectType({
     t.float("lng");
     t.json("terms");
     t.json("heroImage");
-
   },
 });
 
@@ -358,7 +359,6 @@ export const LocationMutations = extendType({
 
         if (Array.isArray(args.imagesTranslations))
           await daoImageSaveImageTranslations(args.imagesTranslations);
-        
 
         return location;
       },

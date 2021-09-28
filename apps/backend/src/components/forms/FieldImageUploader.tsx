@@ -24,7 +24,7 @@ import {
 } from "~/hooks";
 import { useFormContext } from "react-hook-form";
 
-import { FormNavigationBlock, FieldErrorMessage } from ".";
+import { FieldErrorMessage } from ".";
 import { ApiImage, ApiImageProps } from "~/components/ui";
 
 import { authentication } from "~/services";
@@ -115,24 +115,32 @@ export const FieldImageUploader = ({
   settings,
   id,
   label,
-  name,
+  name, 
   isRequired,
   isDisabled,
+  canDelete = true,
   deleteButtonGQL,
   onDelete,
   onUpload,
   connectWith,
   route = "image",
+  setActiveUploadCounter,
+  shouldSetFormDirtyOnUpload = false,
+  shouldSetFormDirtyOnDelete = false,
 }: {
   settings?: FieldImageUploaderSettings;
   id: string;
   isRequired?: boolean;
   isDisabled?: boolean;
+  canDelete?: boolean;
+  shouldSetFormDirtyOnUpload?: boolean;
+  shouldSetFormDirtyOnDelete?: boolean;
   label: string;
   name: string;
   deleteButtonGQL: DocumentNode;
   onDelete?: (id?: number) => void;
   onUpload?: (id?: number) => void;
+  setActiveUploadCounter?: Function;
   connectWith?: any;
   route?: string;
 }) => {
@@ -155,6 +163,7 @@ export const FieldImageUploader = ({
     formState: { errors },
     register,
     setValue,
+    clearErrors,
   } = useFormContext();
 
   const {
@@ -190,6 +199,9 @@ export const FieldImageUploader = ({
 
           const cancelToken = createNewCancelToken();
 
+          if (setActiveUploadCounter)
+            setActiveUploadCounter((state: number) => state + 1);
+
           await axios
             .request({
               method: "post",
@@ -215,15 +227,25 @@ export const FieldImageUploader = ({
             .then(({ data }) => {
               if (getCancelToken()) {
                 setIsUploading(false);
+
+                if (setActiveUploadCounter)
+                  setActiveUploadCounter((state: number) => state - 1);
+
                 if (data?.id) {
+                  clearErrors(name);
                   setUploadedImgId(data?.id ?? undefined);
-                  setValue(name, data?.id, { shouldDirty: true });
+                  setValue(name, data?.id, {
+                    shouldDirty: shouldSetFormDirtyOnDelete,
+                  });
                   if (typeof onUpload === "function")
                     onUpload.call(this, data?.id);
                 }
               }
             })
             .catch((error) => {
+              if (setActiveUploadCounter)
+                setActiveUploadCounter((state: number) => state - 1);
+
               if (isCancel(error)) return;
 
               if (getCancelToken()) {
@@ -256,7 +278,7 @@ export const FieldImageUploader = ({
         setUploadedImgId(undefined);
         setimageIsDeleted(true);
         setIsUploading(false);
-        setValue(name, undefined, { shouldDirty: true });
+        setValue(name, undefined, { shouldDirty: shouldSetFormDirtyOnUpload });
         if (typeof onDelete === "function") onDelete.call(null);
       },
       {
@@ -341,8 +363,6 @@ export const FieldImageUploader = ({
 
   return (
     <>
-      <FormNavigationBlock shouldBlock={isUploading} />
-
       <FormControl
         id={id}
         isInvalid={errors[name]?.message || isDragReject}
@@ -363,7 +383,7 @@ export const FieldImageUploader = ({
               alt={settings?.image?.alt ?? ""}
               sizes={settings?.image?.sizes}
             />
-            <IconButton
+            {canDelete && (<IconButton
               position="absolute"
               top="3"
               right="3"
@@ -380,7 +400,7 @@ export const FieldImageUploader = ({
                 "imageuploader.button.deleteimage",
                 "Delete profile image"
               )}
-            />
+            />)}
           </Box>
         )}
         {isDeleteError && (
@@ -494,7 +514,6 @@ export const FieldImageUploader = ({
         />
 
         <FieldErrorMessage error={errors[name]?.message} />
-
       </FormControl>
     </>
   );

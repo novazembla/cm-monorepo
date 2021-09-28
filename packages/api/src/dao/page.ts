@@ -3,7 +3,7 @@ import { Page, Prisma } from "@prisma/client";
 import { filteredOutputByBlacklist } from "@culturemap/core";
 
 import { ApiError, filteredOutputByBlacklistOrNotFound } from "../utils";
-import { apiConfig } from "../config";
+import { getApiConfig } from "../config";
 import { getPrismaClient } from "../db/client";
 import {
   daoSharedCheckSlugUnique,
@@ -13,6 +13,7 @@ import {
 } from ".";
 
 const prisma = getPrismaClient();
+const apiConfig = getApiConfig();
 
 export const daoPageTranlatedColumns = ["title", "slug", "content"];
 
@@ -31,7 +32,7 @@ export const daoPageCheckSlugUnique = async (
 
 export const daoPageQuery = async (
   where: Prisma.PageWhereInput,
-  orderBy: Prisma.PageOrderByInput | Prisma.PageOrderByInput[],
+  orderBy: any,
   pageIndex: number = 0,
   pageSize: number = apiConfig.db.defaultPageSize
 ): Promise<Page[]> => {

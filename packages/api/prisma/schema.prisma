@@ -8,7 +8,7 @@ datasource db {
 
 generator client {
   provider = "prisma-client-js"
-  previewFeatures = ["filterJson", "selectRelationCount"]
+  previewFeatures = ["filterJson"]
 }
 
 model User {
@@ -198,9 +198,10 @@ model Page {
 model Image {
   id             Int        @id @default(autoincrement())
   
-  uuid           String     @db.VarChar(48) @unique
+  nanoid         String     @db.VarChar(48) @unique
   meta           Json
   status         Int        @default(0)
+  orderNumber    Int        @default(0)
   
   retryCount     Int        @default(0)
   type           String     @db.VarChar(16) @default("image")

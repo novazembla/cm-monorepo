@@ -19,3 +19,6 @@ TODO: Maybe switch from Bcrypt to Argon2 (if the hosting platform does support i
 TODO:
 - Image File Delete, Cleanup of image table of image with status deleted.
 - Also ensure that the translations are gone 
+
+TODO:
+- Api upload file size limits on the server site too. Reject if too big.

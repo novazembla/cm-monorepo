@@ -20,7 +20,7 @@ import { GQLJson } from "./nexusTypesShared";
 
 import { authorizeApiUser } from "../helpers";
 
-import { apiConfig } from "../../config";
+import { getApiConfig } from "../../config";
 
 import {
   daoPageQuery,
@@ -33,6 +33,8 @@ import {
   daoPageGetBySlug,
   daoImageSaveImageTranslations,
 } from "../../dao";
+
+const apiConfig = getApiConfig();
 
 export const Page = objectType({
   name: "Page",
@@ -257,9 +259,9 @@ export const PageMutations = extendType({
 
         if (Array.isArray(args.imagesTranslations))
           await daoImageSaveImageTranslations(args.imagesTranslations);
-        
+
         return page;
-      }
+      },
     });
 
     t.nonNull.field("pageDelete", {

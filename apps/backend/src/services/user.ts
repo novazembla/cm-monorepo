@@ -92,6 +92,8 @@ const login = async (u: AuthenticatedAppUserData): Promise<boolean> => new Promi
 });
 
 const logout = async (): Promise<boolean> => new Promise(async (resolve) => {
+  clearTimeout(refreshTimeoutId);
+    
   setRefreshing(false);
   authentication.removeAuthToken();
   authentication.removeRefreshCookie();

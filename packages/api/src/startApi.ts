@@ -8,10 +8,11 @@ import { join } from "path";
 
 import { server } from "./server";
 import { app, addTerminatingErrorHandlingToApp } from "./app";
-import { apiConfig } from "./config";
+import { getApiConfig } from "./config";
 import { logger } from "./services/serviceLogging";
 import { getPrismaClient } from "./db/client";
 
+const apiConfig = getApiConfig();
 export const startApi = async () => {
   if (server && app) {
     try {
@@ -39,9 +40,7 @@ export const startApi = async () => {
       const expressServer = app.listen({ port }, () => {
         // eslint-disable-next-line no-console
         console.log(
-          `🚀 Server ready at ${apiConfig.baseUrl.api}${port ? `:${port}` : ""}${
-            server?.graphqlPath
-          }`
+          `🚀 Server ready at ${apiConfig.baseUrl.api}${server?.graphqlPath}`
         );
       });
 
@@ -50,12 +49,12 @@ export const startApi = async () => {
         root: join(apiConfig.packageBaseDir, "dist", "workers"),
         jobs: [
           {
-            name: "dbExpireTokens",
-            interval: "1m",
+            name: "dbHouseKeeping",
+            interval: process.env.NODE_ENV === "production" ? "1m" : "1hr",
           },
           {
             name: "dbConvertImages",
-            interval: "10s",
+            interval: process.env.NODE_ENV === "production" ? "13s" : "37s",
           },
         ],
       });

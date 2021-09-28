@@ -3,11 +3,12 @@ import { Term, Prisma } from "@prisma/client";
 import { filteredOutputByBlacklist } from "@culturemap/core";
 
 import { ApiError, filteredOutputByBlacklistOrNotFound } from "../utils";
-import { apiConfig } from "../config";
+import { getApiConfig } from "../config";
 import { getPrismaClient } from "../db/client";
 import { daoSharedCheckSlugUnique } from "./shared";
 
 const prisma = getPrismaClient();
+const apiConfig = getApiConfig();
 
 export const daoTermCheckSlugUnique = async (
   slug: Record<string, string>,
@@ -25,7 +26,7 @@ export const daoTermCheckSlugUnique = async (
 export const daoTermQuery = async (
   taxonomyId: number,
   where: Prisma.TermWhereInput,
-  orderBy: Prisma.TermOrderByInput | Prisma.TermOrderByInput[],
+  orderBy: any,
   pageIndex: number = 0,
   pageSize: number = apiConfig.db.defaultPageSize
 ): Promise<Term[]> => {
@@ -39,7 +40,10 @@ export const daoTermQuery = async (
     take: Math.min(pageSize, apiConfig.db.maxPageSize),
   });
 
-  return filteredOutputByBlacklist(terms, apiConfig.db.privateJSONDataKeys.term);
+  return filteredOutputByBlacklist(
+    terms,
+    apiConfig.db.privateJSONDataKeys.term
+  );
 };
 
 export const daoTermQueryCount = async (
@@ -63,7 +67,10 @@ export const daoTermGetTermsByTaxonomyId = async (
     },
   });
 
-  return filteredOutputByBlacklist(terms, apiConfig.db.privateJSONDataKeys.term);
+  return filteredOutputByBlacklist(
+    terms,
+    apiConfig.db.privateJSONDataKeys.term
+  );
 };
 
 export const daoTermGetTermsCountByTaxonomyId = async (

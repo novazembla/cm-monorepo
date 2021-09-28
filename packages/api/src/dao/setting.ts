@@ -1,10 +1,11 @@
 import { Setting, Prisma } from "@prisma/client";
 import { filteredOutputByBlacklist } from "@culturemap/core";
 import { filteredOutputByBlacklistOrNotFound } from "../utils";
-import { apiConfig } from "../config";
+import { getApiConfig } from "../config";
 import { getPrismaClient } from "../db/client";
 
 const prisma = getPrismaClient();
+const apiConfig = getApiConfig();
 
 export type SettingUpdateData = {
   key: string;
@@ -17,7 +18,10 @@ export const daoSettingQuery = async (): Promise<Setting[]> => {
       key: "asc",
     },
   });
-  return filteredOutputByBlacklist(settings, apiConfig.db.privateJSONDataKeys.all);
+  return filteredOutputByBlacklist(
+    settings,
+    apiConfig.db.privateJSONDataKeys.all
+  );
 };
 
 export const daoSettingGetById = async (id: number): Promise<Setting> => {

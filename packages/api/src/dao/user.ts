@@ -4,11 +4,12 @@ import { User, Prisma } from "@prisma/client";
 import { filteredOutputByBlacklist } from "@culturemap/core";
 
 import { ApiError, filteredOutputByBlacklistOrNotFound } from "../utils";
-import { apiConfig } from "../config";
+import { getApiConfig } from "../config";
 import { getPrismaClient } from "../db/client";
-import { daoImageSetToDelete } from ".";
+import { daoImageSetToDelete } from "./image";
 
 const prisma = getPrismaClient();
+const apiConfig = getApiConfig();
 
 export const daoUserCheckIsEmailTaken = async (
   email: string,
@@ -18,10 +19,12 @@ export const daoUserCheckIsEmailTaken = async (
     email,
   };
 
-  if (!Number.isNaN(id)) {
+  if (id && !Number.isNaN(id)) {
     where = {
       ...where,
-      id,
+      id: {
+        not: id,
+      },
     };
   }
 
@@ -59,7 +62,7 @@ export const daoUserCreate = async (
 
 export const daoUserQuery = async (
   where: Prisma.UserWhereInput,
-  orderBy: Prisma.UserOrderByInput | Prisma.UserOrderByInput[],
+  orderBy: any,
   pageIndex: number = 0,
   pageSize: number = apiConfig.db.defaultPageSize
 ): Promise<User[]> => {
@@ -77,10 +80,12 @@ export const daoUserQuery = async (
 };
 
 export const daoUserFindFirst = async (
-  where: Prisma.UserWhereInput
-): Promise<User | null> => {
-  const user: User | null = await prisma.user.findFirst({
+  where: Prisma.UserWhereInput,
+  include?: Prisma.UserInclude | undefined
+): Promise<User> => {
+  const user = await prisma.user.findFirst({
     where,
+    include,
   });
 
   return filteredOutputByBlacklistOrNotFound(

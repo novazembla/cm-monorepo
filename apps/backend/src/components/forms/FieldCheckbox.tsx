@@ -37,11 +37,11 @@ export const FieldCheckbox = ({
           {...{ isRequired, isDisabled, defaultChecked }}
           {...register(name, { required: isRequired })}
           display="flex"
-        >{label}</Checkbox>
-        
+        >
+          {label}
+        </Checkbox>
       </Flex>
       <FieldErrorMessage error={errors[name]?.message} />
     </FormControl>
   );
 };
-

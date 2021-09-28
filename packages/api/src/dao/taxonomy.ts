@@ -3,7 +3,7 @@ import { Taxonomy, Term, Prisma } from "@prisma/client";
 import { filteredOutputByBlacklist } from "@culturemap/core";
 
 import { ApiError, filteredOutputByBlacklistOrNotFound } from "../utils";
-import { apiConfig } from "../config";
+import { getApiConfig } from "../config";
 import { getPrismaClient } from "../db/client";
 import {
   daoTermGetTermsByTaxonomyId,
@@ -12,6 +12,7 @@ import {
 import { daoSharedCheckSlugUnique } from "./shared";
 
 const prisma = getPrismaClient();
+const apiConfig = getApiConfig();
 
 export const daoTaxonomyCheckSlugUnique = async (
   slug: Record<string, string>,
@@ -29,7 +30,7 @@ export const daoTaxonomyCheckSlugUnique = async (
 export const daoTaxonomyQuery = async (
   where: Prisma.TaxonomyWhereInput,
   include: Prisma.TaxonomyInclude | undefined,
-  orderBy: Prisma.TaxonomyOrderByInput | Prisma.TaxonomyOrderByInput[],
+  orderBy: any,
   pageIndex: number = 0,
   pageSize: number = apiConfig.db.defaultPageSize
 ): Promise<Taxonomy[]> => {
@@ -50,7 +51,7 @@ export const daoTaxonomyQuery = async (
 export const daoTaxonomyQueryFirst = async (
   where: Prisma.TaxonomyWhereInput,
   include?: Prisma.TaxonomyInclude | undefined,
-  orderBy?: Prisma.TaxonomyOrderByInput | Prisma.TaxonomyOrderByInput[],
+  orderBy?: any,
   pageIndex?: number,
   pageSize?: number
 ): Promise<Taxonomy> => {

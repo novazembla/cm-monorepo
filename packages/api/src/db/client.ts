@@ -1,8 +1,9 @@
 import Prisma from "@prisma/client";
 
-import { apiConfig } from "../config";
+import { getApiConfig } from "../config";
 import { logger } from "../services/serviceLogging";
 
+const apiConfig = getApiConfig();
 const { PrismaClient } = Prisma;
 
 declare const global: {
@@ -16,7 +17,7 @@ export const createPrismaClient = (): Prisma.PrismaClient => {
   return new PrismaClient({
     datasources: {
       db: {
-        url: apiConfig.db.url,
+        url: `${apiConfig.db.url}&connection_limit=${apiConfig.db.connectionLimit}`,
       },
     },
     log:

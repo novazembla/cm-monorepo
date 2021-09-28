@@ -3,7 +3,7 @@ import { Event, EventDate, Prisma } from "@prisma/client";
 import { filteredOutputByBlacklist } from "@culturemap/core";
 
 import { ApiError, filteredOutputByBlacklistOrNotFound } from "../utils";
-import { apiConfig } from "../config";
+import { getApiConfig } from "../config";
 import { getPrismaClient } from "../db/client";
 import {
   daoSharedCheckSlugUnique,
@@ -13,6 +13,7 @@ import {
 } from ".";
 
 const prisma = getPrismaClient();
+const apiConfig = getApiConfig();
 
 const eventFullTextKeys = [
   "title",
@@ -37,7 +38,7 @@ export const daoEventCheckSlugUnique = async (
 export const daoEventQuery = async (
   where: Prisma.EventWhereInput,
   include: Prisma.EventInclude | undefined,
-  orderBy: Prisma.EventOrderByInput | Prisma.EventOrderByInput[],
+  orderBy: any,
   pageIndex: number = 0,
   pageSize: number = apiConfig.db.defaultPageSize
 ): Promise<Event[]> => {
@@ -155,6 +156,7 @@ export const daoEventGetById = async (
 ): Promise<Event> => {
   const event: Event | null = await prisma.event.findUnique({
     where: { id },
+    include,
   });
 
   return filteredOutputByBlacklistOrNotFound(

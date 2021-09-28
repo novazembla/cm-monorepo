@@ -19,7 +19,7 @@ import { GQLJson } from "./nexusTypesShared";
 
 import { authorizeApiUser } from "../helpers";
 
-import { apiConfig } from "../../config";
+import { getApiConfig } from "../../config";
 
 import {
   daoTermQuery,
@@ -29,6 +29,8 @@ import {
   daoTermQueryCount,
   daoTermGetById,
 } from "../../dao";
+
+const apiConfig = getApiConfig();
 
 export const Term = objectType({
   name: "Term",

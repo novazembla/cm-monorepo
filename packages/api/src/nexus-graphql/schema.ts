@@ -5,9 +5,11 @@ import type { core } from "nexus";
 
 import { join } from "path";
 
-import { apiConfig } from "../config";
+import { getApiConfig } from "../config";
 
 import * as types from "./types";
+
+const apiConfig = getApiConfig();
 
 // TODO: interesting plugins:
 // https://www.npmjs.com/package/nexus-args-validation

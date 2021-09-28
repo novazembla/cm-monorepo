@@ -1,18 +1,19 @@
 import { Image } from "@prisma/client";
 import httpStatus from "http-status";
 import { mkdir } from "fs/promises";
-import { v4 as uuidv4 } from "uuid";
 import type { ApiImageMetaInformation } from "@culturemap/core";
 import { ImageStatusEnum } from "@culturemap/core";
 import { ApiError } from "../utils";
-import { apiConfig } from "../config";
-
+import { getApiConfig } from "../config";
+import { nanoid } from "nanoid";
 import { daoImageCreate } from "../dao";
 import { logger } from "./serviceLogging";
 
+const apiConfig = getApiConfig();
+
 export const imageGetUploadInfo = async (): Promise<{
   path: string;
-  uuid: string;
+  nanoid: string;
   baseUrl: string;
   uploadFolder: string;
 }> => {
@@ -21,10 +22,11 @@ export const imageGetUploadInfo = async (): Promise<{
   const uploadFolder = `${apiConfig.uploadDir}/${date.getUTCFullYear()}/${
     date.getUTCMonth() + 1
   }`;
-  const path = `${apiConfig.baseDir}/${apiConfig.publicDir}/${uploadFolder}`.replace(
-    /\/\//g,
-    "/"
-  );
+  const path =
+    `${apiConfig.baseDir}/${apiConfig.publicDir}/${uploadFolder}`.replace(
+      /\/\//g,
+      "/"
+    );
   const baseUrl = `${apiConfig.baseUrl.api}${uploadFolder}`;
 
   try {
@@ -37,15 +39,15 @@ export const imageGetUploadInfo = async (): Promise<{
     );
   }
 
-  return { path, uuid: uuidv4(), baseUrl, uploadFolder };
+  return { path, nanoid: nanoid(), baseUrl, uploadFolder };
 };
 
 export const imageCreate = async (
   ownerId: number,
-  imageUuid: string,
+  imageNanoId: string,
   meta: ApiImageMetaInformation,
   type: "image" | "profile" = "image",
-  connectWith?: any,
+  connectWith?: any
 ): Promise<Image> => {
   const image: Image = await daoImageCreate({
     owner: {
@@ -53,19 +55,21 @@ export const imageCreate = async (
         id: ownerId,
       },
     },
-      
-    uuid: imageUuid,
+
+    nanoid: imageNanoId,
     meta,
     type,
     status: ImageStatusEnum.UPLOADED,
     ...connectWith,
-    ...(type === "profile"? {
-      profileImageUsers: {
-        connect: {
-          id: ownerId,
-        },
-      }
-    } : {}),  
+    ...(type === "profile"
+      ? {
+          profileImageUsers: {
+            connect: {
+              id: ownerId,
+            },
+          },
+        }
+      : {}),
   });
 
   if (!image)
@@ -73,8 +77,6 @@ export const imageCreate = async (
       httpStatus.INTERNAL_SERVER_ERROR,
       "New profile image could not be created"
     );
-
-  // TODO: xxx schedule resizing tasks.
 
   return image;
 };

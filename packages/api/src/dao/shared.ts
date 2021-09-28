@@ -129,7 +129,7 @@ export const daoSharedMapTranslations = (
       {}
     ),
   };
-  delete returnData["translations"];
+  delete returnData.translations;
   return returnData;
 };
 
@@ -151,7 +151,7 @@ export const daoSharedWrapImageWithTranslationImage = (
     ...daoSharedMapTranslations(data[imageKey], transKeys),
   };
 
-  delete image["translations"];
+  delete image.translations;
 
   return {
     ...data,

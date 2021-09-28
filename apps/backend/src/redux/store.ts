@@ -11,7 +11,7 @@ export const store = configureStore({
     }
     return getDefaultMiddleware();  
   },
-  preloadedState: (typeof window !== undefined)? load() : undefined,
+  preloadedState: (typeof window !== "undefined")? load() : undefined,
   devTools: process.env.NODE_ENV !== 'production',
 })
 

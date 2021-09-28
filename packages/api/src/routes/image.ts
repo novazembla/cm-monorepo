@@ -3,17 +3,20 @@ import httpStatus from "http-status";
 import path from "path";
 import multer from "multer";
 import { mkdirSync } from "fs";
-import { v4 as uuidv4 } from "uuid";
+import { nanoid } from "nanoid";
 import type { ApiImageMetaInformation } from "@culturemap/core";
 
 import { logger } from "../services/serviceLogging";
 import { imageCreate } from "../services/serviceImage";
 
-import { apiConfig } from "../config";
+import { getApiConfig } from "../config";
 import { ApiError } from "../utils";
+import { authAuthenticateUserByToken } from "../services/serviceAuth";
+
+const apiConfig = getApiConfig();
 
 const storage = multer.diskStorage({
-  destination: async (req: Request, file, cb) => {
+  destination: async (_req: Request, _file, cb) => {
     const date = new Date();
 
     const uploadFolder = `${apiConfig.uploadDir}/${date.getUTCFullYear()}/${
@@ -22,7 +25,6 @@ const storage = multer.diskStorage({
     const uploadPath = `${apiConfig.baseDir}/${apiConfig.publicDir}/${uploadFolder}`;
 
     try {
-      // TODO: how to make this non blocking?
       mkdirSync(uploadPath, { recursive: true });
     } catch (e) {
       logger.error(e);
@@ -34,9 +36,9 @@ const storage = multer.diskStorage({
 
     cb(null, uploadPath);
   },
-  filename: (req, file, cb) => {
+  filename: (_req, file, cb) => {
     const extension = path.extname(file.originalname);
-    cb(null, `${uuidv4()}${extension}`);
+    cb(null, `${nanoid()}${extension}`);
   },
 });
 
@@ -45,7 +47,7 @@ export const postImageUpload = multer({ storage });
 const createImageMetaInfo = (
   file: Express.Multer.File
 ): {
-  fileUuid: string;
+  fileNanoId: string;
   metainfo: ApiImageMetaInformation;
 } => {
   const extension = path.extname(file.originalname);
@@ -55,37 +57,55 @@ const createImageMetaInfo = (
     ""
   );
 
-  const fileUuid = file.filename.replace(extension, "");
+  const fileNanoId = file.filename.replace(extension, "");
 
   const metainfo: ApiImageMetaInformation = {
     uploadFolder,
-    originalFileName: file.originalname,
+    originalFileName: file.filename,
     originalFileUrl: `${apiConfig.baseUrl.api}${uploadFolder}/${file.filename}`,
     originalFilePath: file.path,
     mimeType: file.mimetype,
-    encoding: file.encoding,
     imageType: "square",
     size: file.size,
   };
 
-  return { fileUuid, metainfo };
+  return { fileNanoId, metainfo };
 };
 
 export const postImage = async (req: Request, res: Response) => {
-  // TODO: access protection
-  // TODO: howto trigger refresh?
-  // Maybe autosend auth token
+  const refreshToken = req?.cookies?.refreshToken ?? "";
+  if (refreshToken) {
+    try {
+      const apiUserInRefreshToken = authAuthenticateUserByToken(refreshToken);
+      if (apiUserInRefreshToken) {
+        if (apiUserInRefreshToken.id !== parseInt(req.body.ownerId)) {
+          throw new ApiError(httpStatus.FORBIDDEN, "Access denied");
+        }
+      }
+    } catch (Err) {
+      throw new ApiError(httpStatus.FORBIDDEN, "Access denied");
+    }
+  } else {
+    throw new ApiError(httpStatus.FORBIDDEN, "Access denied");
+  }
 
   try {
     if (req.body.ownerId && !Number.isNaN(req.body.ownerId)) {
       if (req.file) {
-        const { fileUuid, metainfo } = createImageMetaInfo(req.file);
+        const { fileNanoId, metainfo } = createImageMetaInfo(req.file);
 
-        const connectWith = req?.body?.connectWith ? JSON.parse(req?.body?.connectWith) : {};
+        let connectWith;
+        try {
+          connectWith = req?.body?.connectWith
+            ? JSON.parse(req?.body?.connectWith)
+            : {};
+        } catch (err) {
+          // nothing to be done ...
+        }
 
         const image = await imageCreate(
           parseInt(req.body.ownerId, 10),
-          fileUuid,
+          fileNanoId,
           metainfo,
           "image",
           connectWith
@@ -108,18 +128,30 @@ export const postImage = async (req: Request, res: Response) => {
 };
 
 export const postProfileImage = async (req: Request, res: Response) => {
-  // TODO: access protection
-  // TODO: howto trigger refresh?
-  // Maybe autosend auth token
+  const refreshToken = req?.cookies?.refreshToken ?? "";
+  if (refreshToken) {
+    try {
+      const apiUserInRefreshToken = authAuthenticateUserByToken(refreshToken);
+      if (apiUserInRefreshToken) {
+        if (apiUserInRefreshToken.id !== parseInt(req.body.ownerId)) {
+          throw new ApiError(httpStatus.FORBIDDEN, "Access denied");
+        }
+      }
+    } catch (Err) {
+      throw new ApiError(httpStatus.FORBIDDEN, "Access denied");
+    }
+  } else {
+    throw new ApiError(httpStatus.FORBIDDEN, "Access denied");
+  }
 
   try {
     if (req.body.ownerId && !Number.isNaN(req.body.ownerId)) {
       if (req.file) {
-        const { fileUuid, metainfo } = createImageMetaInfo(req.file);
+        const { fileNanoId, metainfo } = createImageMetaInfo(req.file);
 
         const image = await imageCreate(
           parseInt(req.body.ownerId, 10),
-          fileUuid,
+          fileNanoId,
           metainfo,
           "profile"
         );

@@ -145,7 +145,7 @@ const EditorMenuBar = ({
   return (
     <>
       {showLinkEditScreen && (
-        <HStack className="menu-bar" spacing="1" height="42">
+        <HStack className="menu-bar" spacing="1" h="48px">
           <FormControl id={linkFieldId} isRequired={true}>
             <VisuallyHidden>
               <FormLabel htmlFor={linkFieldId} mb="0.5">
@@ -185,7 +185,7 @@ const EditorMenuBar = ({
         </HStack>
       )}
       {!showLinkEditScreen && (
-        <HStack className="menu-bar" spacing="1" height="42">
+        <HStack className="menu-bar" spacing="1" h="48px">
           <EditorMenuBarButton
             icon={<RiBold />}
             label={

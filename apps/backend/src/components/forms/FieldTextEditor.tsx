@@ -1,6 +1,6 @@
 import { useFormContext } from "react-hook-form";
 
-import { FormControl, FormLabel, Flex } from "@chakra-ui/react";
+import { FormControl, FormLabel, Flex, Box } from "@chakra-ui/react";
 
 import { TextEditor, FieldErrorMessage, TextEditorTypes } from ".";
 
@@ -52,8 +52,12 @@ export const FieldTextEditor = ({
           {label}
         </FormLabel>
 
-        <TextEditor
-          content={settings?.defaultValue ?? ""}
+        {isDisabled && <Box opacity={0.4} dangerouslySetInnerHTML={{
+          __html: settings?.defaultValue
+        }}></Box>}
+        
+        {!isDisabled && <TextEditor
+          content={settings?.defaultValue ?? undefined}
           placeholder={settings?.placeholder}
           type={type}
           name={name}
@@ -62,9 +66,9 @@ export const FieldTextEditor = ({
           }}
           isInvalid={errors[name]?.message}
           maxLength={settings?.maxLength}
-        />
+        />}
         <input
-          {...{ valid: !errors[name]?.message ? "valid":undefined }}
+          {...{ valid: !errors[name]?.message ? "valid" : undefined }}
           type="hidden"
           value={settings?.defaultValue}
           {...register(name, {

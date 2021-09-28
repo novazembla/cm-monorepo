@@ -20,7 +20,7 @@ import { GQLJson } from "./nexusTypesShared";
 
 import { authorizeApiUser } from "../helpers";
 
-import { apiConfig } from "../../config";
+import { getApiConfig } from "../../config";
 
 import {
   daoEventQuery,
@@ -30,10 +30,12 @@ import {
   daoEventDelete,
   daoUserGetById,
   daoEventGetBySlug,
-  daoImageSaveImageTranslations
+  daoImageSaveImageTranslations,
 } from "../../dao";
 
 import { eventUpdate } from "../../services/serviceEvent";
+
+const apiConfig = getApiConfig();
 
 export const EventDate = objectType({
   name: "EventDate",
@@ -230,7 +232,7 @@ export const EventQueries = extendType({
       // resolve(root, args, ctx, info)
       async resolve(...[, args, , info]) {
         const pRI = parseResolveInfo(info);
-        
+
         let include = {};
 
         if ((pRI?.fieldsByTypeName?.Event as any)?.heroImage)
@@ -289,7 +291,7 @@ export const EventQueries = extendType({
               },
             },
           };
-        
+
         if ((pRI?.fieldsByTypeName?.Event as any)?.locations)
           include = {
             ...include,
@@ -306,7 +308,7 @@ export const EventQueries = extendType({
               },
             },
           };
-        
+
         if ((pRI?.fieldsByTypeName?.Event as any)?.heroImage)
           include = {
             ...include,

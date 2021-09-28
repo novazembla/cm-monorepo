@@ -39,15 +39,15 @@ export const context = ({
         .substring(0, 40)
     : "no query passed in the body";
 
-  let token = req?.headers?.authorization;
-  if (token) {
+  let accessToken = req?.headers?.authorization ?? "";
+  if (accessToken) {
     accessTokenProvided = true;
 
     try {
-      if (token.indexOf("Bearer") > -1)
-        token = token.replace(/(Bearer:? )/g, "");
+      if (accessToken.indexOf("Bearer") > -1)
+        accessToken = accessToken.replace(/(Bearer:? )/g, "");
 
-      apiUser = authAuthenticateUserByToken(token);
+      apiUser = authAuthenticateUserByToken(accessToken);
 
       if (apiUser) {
         validAccessTokenProvided = true;
@@ -60,21 +60,24 @@ export const context = ({
   }
 
   // TODO: REMOVE
-  logger.debug(`Context: Auth token: ${token}`);
+  logger.debug(`Context: Auth token: ${accessToken}`);
 
-  token = req?.cookies?.refreshToken;
+  const refreshToken = req?.cookies?.refreshToken ?? "";
 
   // TODO: REMOVE
-  logger.debug(`Context: Refresh token: ${token}`);
+  logger.debug(`Context: Refresh token: ${refreshToken}`);
 
   // TODO: Remove
-  if (token) console.log(token, authAuthenticateUserByToken(token ?? ""));
+  if (refreshToken) {
+    // eslint-disable-next-line
+    console.log(refreshToken, authAuthenticateUserByToken(refreshToken ?? ""));
+  }
 
-  if (token) {
+  if (refreshToken) {
     refreshTokenProvided = true;
 
     try {
-      const apiUserInRefreshToken = authAuthenticateUserByToken(token);
+      const apiUserInRefreshToken = authAuthenticateUserByToken(refreshToken);
 
       if (apiUserInRefreshToken) {
         validRefreshTokenProvided = true;

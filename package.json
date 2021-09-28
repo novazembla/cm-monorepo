@@ -10,13 +10,13 @@
   "scripts": {
     "build:api": "NODE_ENV=production npm run package:core:build && npm run package:api:build && npm run app:api:build",
     "build:backend": "NODE_ENV=production npm run package:core:build && npm run app:backend:build",
-    "dev": "NODE_ENV=development npx concurrently -k -p \"[{name}]\" -n \"P:CORE,P:API,A:API,A:FRONTEND,A:BACKEND,P:EXAMPLE\" -c \"#d531f5,#4d5ffa,#09e3b4,#f41788,#f1610a,#61f10a\" \"npm run package:core:dev\" \"npm run package:api:dev\" \"npm run app:api:dev\" \"npm run app:frontend:dev\"  \"npm run app:backend:dev\" \"npm run plugin:example:dev\"",
+    "dev": "NODE_ENV=development npx concurrently -k -p \"[{name}]\" -n \"P:CORE,P:API,A:API,A:BACKEND,P:EXAMPLE\" -c \"#d531f5,#4d5ffa,#09e3b4,#f41788,#f1610a,#61f10a\" \"npm run package:core:dev\" \"npm run package:api:dev\" \"npm run app:api:dev\" \"npm run app:backend:dev\" \"npm run plugin:example:dev\"",
     "dev:api": "NODE_ENV=development npx concurrently -k -p \"[{name}]\" -n \"P:CORE,P:API,A:API,P:EXAMPLE\" -c \"#d531f5,#4d5ffa,#09e3b4,#f41788,#f1610a,#61f10a\" \"npm run package:core:dev\" \"npm run package:api:dev\" \"npm run app:api:dev\" \"npm run plugin:example:dev\"",
     "dev:backend": "NODE_ENV=development npx concurrently -k -p \"[{name}]\" -n \"P:CORE,P:API,A:API,A:BACKEND\" -c \"#d531f5,#4d5ffa,#09e3b4,#f41788,#f1610a,#61f10a\" \"npm run package:core:dev\" \"npm run package:api:dev\" \"npm run app:api:dev\" \"npm run app:backend:dev\"",
     "dev:frontend": "NODE_ENV=development npx concurrently -k -p \"[{name}]\" -n \"P:CORE,P:API,A:API,A:FRONTEND\" -c \"#d531f5,#4d5ffa,#09e3b4,#f41788,#f1610a,#61f10a\" \"npm run package:core:dev\" \"npm run package:api:dev\" \"npm run app:api:dev\" \"npm run app:frontend:dev\"",
     "lint": "npm run package:core:lint && npm run package:api:lint && npm run app:api:lint && npm run app:backend:lint && npm run app:frontend:lint",
     "app:api:start": "node ./apps/api/build/index.js",
-    "app:api:dev": "npx concurrently -k -p \"[{name}]\" -n \"BABEL,NODE\" -c \"#dddddd,#aaaaaa,#777777\" \"npm run app:api:watch:babel\" \"npm run app:api:watch:node\"",
+    "app:api:dev": "npx concurrently -k -p \"[{name}]\" -n \"BABEL,NODE\" -c \"#dddddd,#aaaaaa,#777777\" \"npm run app:api:watch:babel\" \"sleep 5 && npm run app:api:watch:node\"",
     "app:api:build": "npx rimraf ./apps/api/build && npm run app:api:babel",
     "app:api:babel": "npx babel ./apps/api/src --out-dir ./apps/api/build --extensions .ts",
     "app:api:watch:babel": "npx babel ./apps/api/src --watch --out-dir ./apps/api/build --extensions .ts",
@@ -63,7 +63,13 @@
     "plugin:example:watch:typings": "npx tsc ./plugins/example/src/*.ts --watch --declaration --esModuleInterop --emitDeclarationOnly --preserveWatchOutput --outDir ./plugins/example/dist"
   },
   "lint-staged": {
+    "apps/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
+      "prettier --write"
+    ],
     "packages/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
+      "prettier --write"
+    ],
+    "plugins/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
       "prettier --write"
     ]
   },
@@ -81,12 +87,12 @@
     "dotenv-cli": "^4.0.0",
     "env-cmd": "^10.1.0",
     "eslint": "^7.29.0",
-    "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-config-airbnb-typescript": "^12.3.1",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-config-airbnb-typescript": "^14.0.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-jsx-a11y": "^6.4.1",
-    "eslint-plugin-prettier": "^3.4.0",
+    "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-security": "^1.4.0",
     "husky": "^7.0.0",
@@ -94,7 +100,7 @@
     "lint-staged": "^11.0.0",
     "nodemon": "^2.0.9",
     "prettier": "^2.3.2",
-    "prisma": "^2.29.1",
+    "prisma": "^3.1.1",
     "rimraf": "^3.0.2",
     "ts-node": "^10.1.0",
     "typescript": "^4.3.5"

@@ -6,6 +6,14 @@ export type AppScopes = "frontend" | "backend" | "api";
 
 export type ApiConfigImageFormatType = "square" | "normal";
 
+export type ApiImageSizeInfo = {
+  width: number;
+  height: number;
+  url: string;
+  isJpg: boolean;
+  isWebP: boolean;
+};
+
 export type ApiImageMetaInformation = {
   uploadFolder: string;
   originalFileName: string;
@@ -13,16 +21,6 @@ export type ApiImageMetaInformation = {
   originalFilePath: string;
   imageType: ApiConfigImageFormatType;
   mimeType: any;
-  encoding: any;
   size: number;
-  availableSizes?: Record<
-    string,
-    {
-      width: number;
-      height: number;
-      url: string;
-      isJpg: boolean;
-      isWebP: boolean;
-    }
-  >;
+  availableSizes?: Record<string, ApiImageSizeInfo>;
 };

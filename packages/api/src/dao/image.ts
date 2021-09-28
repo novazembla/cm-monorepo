@@ -2,19 +2,20 @@ import { Image, Prisma } from "@prisma/client";
 import { filteredOutputByBlacklist, ImageStatusEnum } from "@culturemap/core";
 
 import { filteredOutputByBlacklistOrNotFound } from "../utils";
-import { apiConfig } from "../config";
+import { getApiConfig } from "../config";
 
 import { getPrismaClient } from "../db/client";
 
 import { daoSharedMapTranslations } from ".";
 
 const prisma = getPrismaClient();
+const apiConfig = getApiConfig();
 
 export const daoImageTranslatedColumns = ["alt", "credits"];
 
 export const daoImageQuery = async (
   where: Prisma.ImageWhereInput,
-  orderBy: Prisma.ImageOrderByInput | Prisma.ImageOrderByInput[],
+  orderBy: any,
   pageIndex: number = 0,
   pageSize: number = apiConfig.db.defaultPageSize
 ): Promise<Image[]> => {
@@ -53,9 +54,7 @@ export const daoImageGetById = async (id: number): Promise<Image> => {
   );
 };
 
-export const daoImageGetStatusById = async (
-  id: number
-): Promise<ImageStatusEnum> => {
+export const daoImageGetStatusById = async (id: number): Promise<Image> => {
   const image = await prisma.image.findUnique({
     where: { id },
     select: {
@@ -108,7 +107,6 @@ export const daoImageDelete = async (id: number): Promise<Image> => {
     },
   });
 
-  // TODO: schedule task to wipe file off the disk
   return filteredOutputByBlacklistOrNotFound(
     image,
     apiConfig.db.privateJSONDataKeys.image
@@ -138,14 +136,13 @@ export const daoImageSetToDelete = async (id: number): Promise<Image> => {
       },
       heroImageLocations: {
         set: [],
-      }
+      },
     },
     where: {
       id,
     },
   });
 
-  // TODO: schedule task to wipe file off the disk
   return filteredOutputByBlacklistOrNotFound(
     image,
     apiConfig.db.privateJSONDataKeys.image
@@ -166,25 +163,27 @@ export const daoImageSaveImageTranslations = async (
               (upserts: any[], key: any) => {
                 return [
                   ...upserts,
-                  ...Object.keys(imageTranslation.translations[key]).map((lang: any) => {
-                    return {
-                      create: {
-                        lang: lang,
-                        key: key,
-                        translation: imageTranslation.translations[key][lang],
-                      },
-                      update: {
-                        translation: imageTranslation.translations[key][lang],
-                      },
-                      where: {
-                        uniqueTransKeys: {
+                  ...Object.keys(imageTranslation.translations[key]).map(
+                    (lang: any) => {
+                      return {
+                        create: {
                           lang: lang,
                           key: key,
-                          imageId: imageTranslation.id,
+                          translation: imageTranslation.translations[key][lang],
                         },
-                      },
-                    };
-                  }),
+                        update: {
+                          translation: imageTranslation.translations[key][lang],
+                        },
+                        where: {
+                          uniqueTransKeys: {
+                            lang: lang,
+                            key: key,
+                            imageId: imageTranslation.id,
+                          },
+                        },
+                      };
+                    }
+                  ),
                 ];
               },
               []

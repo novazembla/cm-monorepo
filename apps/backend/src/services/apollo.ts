@@ -60,10 +60,12 @@ const retryWithRefreshTokenLink = onError(
             extensions?.code === "UNAUTHENTICATED"
           ) {
             const observable = new Observable((observer) => {
+              // TODO: this if condition is maybe not needed, as the server 
+              // already indicated that the refreshCookie is present
               if (
-                client &&
-                user.canRefresh() &&
-                authentication.getRefreshCookie()
+                client // &&
+                // user.canRefresh() &&
+                // authentication.getRefreshCookie()
               ) {
                 user.setAllowRefresh(false);
                 user.setRefreshing(true);
@@ -123,9 +125,10 @@ const retryWithRefreshTokenLink = onError(
 
                     observer.error(error);
                   });
-              } else {
-                observer.error(Error("Can't refresh session"));
-              }
+              } 
+              // else {
+              //   observer.error(Error("Can't refresh session"));
+              // }
             });
             observables.push(observable);
           }

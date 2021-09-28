@@ -5,17 +5,20 @@ import sharp from "sharp";
 
 // !!!! ALWAY REMEMBER TO CLOSE YOU DB CONNECTION !!!
 import Prisma from "@prisma/client";
-import type { ApiImageMetaInformation } from "@culturemap/core";
+import type {
+  ApiImageMetaInformation,
+  ApiImageSizeInfo,
+} from "@culturemap/core";
 import { ImageStatusEnum } from "@culturemap/core";
 
-import { apiConfig } from "../config/index.js";
+import { getApiConfig } from "../config";
 
+const apiConfig = getApiConfig();
 // https://github.com/breejs/bree#long-running-jobs
 // Or use https://threads.js.org/usage for a queing experience .. .
 // if (parentPort)
 //   parentPort.once("message", (message) => {
 //     //
-//     // TODO: once we can manipulate concurrency option to p-map
 //     // we could make it `Number.MAX_VALUE` here to speed cancellation up
 //     // <https://github.com/sindresorhus/p-map/issues/28>
 //     //
@@ -28,9 +31,13 @@ const postMessage = (msg: string) => {
   else console.log(msg);
 };
 
-const createImageSizeWebP = async (size: any, uuid: string, imageMeta: any) =>
+const createImageSizeWebP = async (
+  size: ApiConfigImageFormat,
+  nanoid: string,
+  imageMeta: any
+): Promise<ApiImageSizeInfo> =>
   new Promise((resolve, reject) => {
-    const newImgFileName = `${uuid}-${size.width}-${size.heigth}.webp`;
+    const newImgFileName = `${nanoid}-${size.width}-${size.height}.webp`;
     const newImgUrl = `${apiConfig.baseUrl.api}/${imageMeta.uploadFolder}/${newImgFileName}`;
     const newImgPath =
       `${apiConfig.baseDir}/${apiConfig.publicDir}/${imageMeta.uploadFolder}/${newImgFileName}`.replace(
@@ -39,9 +46,8 @@ const createImageSizeWebP = async (size: any, uuid: string, imageMeta: any) =>
       );
 
     sharp(imageMeta.originalFilePath)
-      .resize(size.width, size.heigth, {
+      .resize(size.width, size.height, {
         fit: size.crop ? sharp.fit.cover : sharp.fit.inside,
-        withoutEnlargement: true,
       })
       .toFile(newImgPath)
       .then((resizedImageMeta) => {
@@ -59,16 +65,19 @@ const createImageSizeWebP = async (size: any, uuid: string, imageMeta: any) =>
       });
   });
 
-const createImageSizeJpg = async (size: any, uuid: string, imageMeta: any) =>
+const createImageSizeJpg = async (
+  size: ApiConfigImageFormat,
+  nanoid: string,
+  imageMeta: any
+): Promise<ApiImageSizeInfo> =>
   new Promise((resolve, reject) => {
-    const newImgFileName = `${uuid}-${size.width}-${size.heigth}.jpg`;
+    const newImgFileName = `${nanoid}-${size.width}-${size.height}.jpg`;
     const newImgUrl = `${apiConfig.baseUrl.api}/${imageMeta.uploadFolder}/${newImgFileName}`;
     const newImgPath = `${apiConfig.baseDir}/${apiConfig.publicDir}/${imageMeta.uploadFolder}/${newImgFileName}`;
 
     sharp(imageMeta.originalFilePath)
-      .resize(size.width, size.heigth, {
+      .resize(size.width, size.height, {
         fit: size.crop ? sharp.fit.cover : sharp.fit.inside,
-        withoutEnlargement: true,
       })
       .jpeg({
         mozjpeg: true,
@@ -96,7 +105,7 @@ const doChores = async () => {
   const prisma = new PrismaClient({
     datasources: {
       db: {
-        url: apiConfig.db.url,
+        url: `${apiConfig.db.url}&connection_limit=1`,
       },
     },
   });
@@ -111,7 +120,7 @@ const doChores = async () => {
       select: {
         id: true,
         meta: true,
-        uuid: true,
+        nanoid: true,
       },
     });
 
@@ -145,21 +154,27 @@ const doChores = async () => {
             throw Error("Original image meta data read error");
 
           const processedSizesMetaInfo = await Promise.all(
-            apiConfig.imageFormats[meta.imageType].reduce((acc, size) => {
-              if (
-                size.width > (originalImageMetaData?.width ?? 0) &&
-                size.heigth > (originalImageMetaData?.height ?? 0)
-              )
+            apiConfig.imageFormats[meta.imageType].reduce(
+              (
+                acc: Promise<ApiImageSizeInfo>[],
+                size: ApiConfigImageFormat
+              ) => {
+                if (
+                  size.width > (originalImageMetaData?.width ?? 0) &&
+                  size.height > (originalImageMetaData?.height ?? 0)
+                )
+                  return acc;
+
+                if (size.asJpg)
+                  acc.push(createImageSizeJpg(size, image.nanoid, meta));
+
+                if (size.asWebP)
+                  acc.push(createImageSizeWebP(size, image.nanoid, meta));
+
                 return acc;
-
-              if (size.asJpg)
-                acc.push(createImageSizeJpg(size, image.uuid, meta));
-
-              if (size.asWebP)
-                acc.push(createImageSizeWebP(size, image.uuid, meta));
-
-              return acc;
-            }, [] as Promise<any>[])
+              },
+              [] as Promise<ApiImageSizeInfo>[]
+            )
           );
 
           const newMeta = {
@@ -175,7 +190,7 @@ const doChores = async () => {
                 isWebP: originalImageMetaData.format === "webp",
               },
               ...processedSizesMetaInfo.reduce(
-                (acc, sizeMetaInfo) => ({
+                (acc: object, sizeMetaInfo: ApiImageSizeInfo) => ({
                   ...acc,
                   [`${sizeMetaInfo.width}-${sizeMetaInfo.height}-${
                     sizeMetaInfo.isWebP ? "webp" : "jpg"
@@ -205,21 +220,17 @@ const doChores = async () => {
       );
     }
 
-    await prisma.$disconnect();
     postMessage(`[WORKER:DbConvertImages]: Processed ${count} images`);
-  } catch (Err) {
-    if (prisma) await prisma.$disconnect();
+  } catch (Err: any) {
     postMessage(
       `[WORKER:DbConvertImages]: Failed to run worker. ${Err.name} ${Err.message}`
     );
+  } finally {
+    if (prisma) await prisma.$disconnect();
   }
 };
 
-const main = async () => {
-  await doChores();
-};
-
-main()
+doChores()
   .then(async () => {
     if (parentPort) postMessage("done");
     else process.exit(0);
