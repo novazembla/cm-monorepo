@@ -29,6 +29,7 @@ const Update = () => {
   const [firstMutation, firstMutationResults] =
     useUserProfilePasswordUpdateMutation();
   const [isFormError, setIsFormError] = useState(false);
+  const [isNavigatingAway, setIsNavigatingAway] = useState(false);
 
   const disableForm = firstMutationResults.loading;
 
@@ -46,9 +47,11 @@ const Update = () => {
     newData: yup.InferType<typeof PasswordResetValidationSchema>
   ) => {
     setIsFormError(false);
+    setIsNavigatingAway(false);
     try {
       if (appUser) {
         await firstMutation(appUser?.id, newData.newPassword);
+        setIsNavigatingAway(true);
         await logoutAndRedirect("/password-has-been-reset");
       } else {
         setIsFormError(true);
@@ -57,7 +60,6 @@ const Update = () => {
       setIsFormError(true);
     }
   };
-
 
   const breadcrumb = [
     {
@@ -86,7 +88,9 @@ const Update = () => {
 
   return (
     <>
-      <FormNavigationBlock shouldBlock={isDirty && !isSubmitting} />     
+      <FormNavigationBlock
+        shouldBlock={!isNavigatingAway && isDirty && !isSubmitting}
+      />
       <FormProvider {...formMethods}>
         <form
           noValidate

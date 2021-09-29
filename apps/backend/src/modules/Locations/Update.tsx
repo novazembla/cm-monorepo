@@ -111,6 +111,8 @@ const Update = () => {
   const [appUser] = useAuthentication();
   const { t } = useTranslation();
   const successToast = useSuccessfullySavedToast();
+  const [isNavigatingAway, setIsNavigatingAway] = useState(false);
+  const [activeUploadCounter, setActiveUploadCounter] = useState<number>(0);
 
   const { data, loading, error } = useQuery(
     locationReadAndContentAuthorsQueryGQL,
@@ -169,19 +171,22 @@ const Update = () => {
     newData: yup.InferType<typeof ModuleLocationUpdateSchema>
   ) => {
     setIsFormError(false);
+    setIsNavigatingAway(false);
     try {
       if (appUser) {
         const heroImage =
-        newData.heroImage && !isNaN(newData.heroImage) && newData.heroImage > 0
-          ? {
-              heroImage: {
-                connect: {
-                  id: newData.heroImage,
+          newData.heroImage &&
+          !isNaN(newData.heroImage) &&
+          newData.heroImage > 0
+            ? {
+                heroImage: {
+                  connect: {
+                    id: newData.heroImage,
+                  },
                 },
-              },
-            }
-          : undefined;
-          
+              }
+            : undefined;
+
         const { errors } = await firstMutation(
           parseInt(router.query.id, 10),
           {
@@ -225,7 +230,7 @@ const Update = () => {
 
         if (!errors) {
           successToast();
-
+          setIsNavigatingAway(true);
           router.push(moduleRootPath);
         } else {
           let slugError = multiLangSlugUniqueError(errors, setError);
@@ -267,7 +272,9 @@ const Update = () => {
 
   return (
     <>
-      <FormNavigationBlock shouldBlock={isDirty && !isSubmitting} />
+      <FormNavigationBlock
+        shouldBlock={(isDirty && !isSubmitting && !isNavigatingAway) || activeUploadCounter > 0}
+      />
       <FormProvider {...formMethods}>
         <form noValidate onSubmit={handleSubmit(onSubmit)}>
           <fieldset disabled={disableForm}>
@@ -282,6 +289,7 @@ const Update = () => {
               <ModuleForm
                 action="update"
                 data={data}
+                setActiveUploadCounter={setActiveUploadCounter}
                 validationSchema={ModuleLocationUpdateSchema}
               />
 

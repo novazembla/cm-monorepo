@@ -39,9 +39,7 @@ import {
   multiLangSlugUniqueError,
 } from "~/utils";
 
-import { 
-  mapModulesCheckboxSelectionToData
-} from "./helpers";
+import { mapModulesCheckboxSelectionToData } from "./helpers";
 
 const Update = () => {
   const router = useRouter();
@@ -49,6 +47,7 @@ const Update = () => {
   const [appUser] = useAuthentication();
   const { t } = useTranslation();
   const successToast = useSuccessfullySavedToast();
+  const [isNavigatingAway, setIsNavigatingAway] = useState(false);
 
   const modules = useModules();
 
@@ -110,30 +109,27 @@ const Update = () => {
     newData: yup.InferType<typeof ModuleTaxonomySchema>
   ) => {
     setIsFormError(false);
+    setIsNavigatingAway(false);
     try {
       if (appUser) {
-        const { errors } = await firstMutation(
-          parseInt(router.query.id, 10),
-          {
-            ...filteredOutputByWhitelist(
-              multiLangRHFormDataToJson(
-                newData,
-                multiLangFields,
-                config.activeLanguages
-              ),
-              [],
-              multiLangFields
+        const { errors } = await firstMutation(parseInt(router.query.id, 10), {
+          ...filteredOutputByWhitelist(
+            multiLangRHFormDataToJson(
+              newData,
+              multiLangFields,
+              config.activeLanguages
             ),
-            modules: {
-              set: mapModulesCheckboxSelectionToData(newData, modules)
-            }
-          }
-          
-        );
+            [],
+            multiLangFields
+          ),
+          modules: {
+            set: mapModulesCheckboxSelectionToData(newData, modules),
+          },
+        });
 
         if (!errors) {
           successToast();
-
+          setIsNavigatingAway(true);
           router.push(moduleRootPath);
         } else {
           let slugError = multiLangSlugUniqueError(errors, setError);
@@ -178,7 +174,9 @@ const Update = () => {
 
   return (
     <>
-      <FormNavigationBlock shouldBlock={isDirty && !isSubmitting} />
+      <FormNavigationBlock
+        shouldBlock={!isNavigatingAway && isDirty && !isSubmitting}
+      />
       <FormProvider {...formMethods}>
         <form noValidate onSubmit={handleSubmit(onSubmit)}>
           <fieldset disabled={disableForm}>

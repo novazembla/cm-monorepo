@@ -34,6 +34,7 @@ export const FieldSingleImage = ({
   deleteButtonGQL = imageDeleteMutationGQL,
   currentImage,
   connectWith,
+  setActiveUploadCounter,
 }: {
   settings: FieldSingleImageSettings;
   id: string;
@@ -43,6 +44,7 @@ export const FieldSingleImage = ({
   name: string;
   currentImage: Record<string, any>;
   connectWith?: any;
+  setActiveUploadCounter?: Function;
 }) => {
   const { t } = useTranslation();
   const config = useConfig();
@@ -82,6 +84,7 @@ export const FieldSingleImage = ({
                   setValue(`${name}_credits_${lang}`, "");
                 });
               }}
+              setActiveUploadCounter={setActiveUploadCounter}
               settings={{
                 minFileSize: settings?.minFileSize ?? 1024 * 1024 * 0.0977,
                 maxFileSize: settings?.maxFileSize ?? 1024 * 1024 * 3,

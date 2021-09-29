@@ -5,7 +5,10 @@ import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useQuery } from "@apollo/client";
 import { BeatLoader } from "react-spinners";
-import { filteredOutputByWhitelist, taxonomyReadQueryGQL } from "@culturemap/core";
+import {
+  filteredOutputByWhitelist,
+  taxonomyReadQueryGQL,
+} from "@culturemap/core";
 
 import { TextErrorMessage, FormNavigationBlock } from "~/components/forms";
 
@@ -26,9 +29,7 @@ import {
   ButtonListElement,
 } from "~/components/modules";
 
-import {
-  MultiLangValue
-} from "~/components/ui"
+import { MultiLangValue } from "~/components/ui";
 
 import { moduleRootPath, multiLangFields } from "./moduleConfig";
 
@@ -41,13 +42,14 @@ const CreateTerm = () => {
   const [appUser] = useAuthentication();
   const { t } = useTranslation();
   const successToast = useSuccessfullySavedToast();
+  const [isNavigatingAway, setIsNavigatingAway] = useState(false);
 
   const [firstMutation, firstMutationResults] = useTermCreateMutation();
   const [isFormError, setIsFormError] = useState(false);
 
   const { data } = useQuery(taxonomyReadQueryGQL, {
     variables: {
-      id: parseInt(router.query.taxId, 10)
+      id: parseInt(router.query.taxId, 10),
     },
   });
 
@@ -64,30 +66,27 @@ const CreateTerm = () => {
     formState: { isSubmitting, isDirty },
   } = formMethods;
 
-  const onSubmit = async (
-    newData: yup.InferType<typeof ModuleTermSchema>
-  ) => {
+  const onSubmit = async (newData: yup.InferType<typeof ModuleTermSchema>) => {
     setIsFormError(false);
+    setIsNavigatingAway(false);
     try {
       if (appUser) {
-        const { errors } = await firstMutation(
-          {
-            taxonomyId: parseInt(router.query.taxId, 10),
-            ...filteredOutputByWhitelist(
-              multiLangRHFormDataToJson(
-                newData,
-                multiLangFields,
-                config.activeLanguages
-              ),
-              [],
-              multiLangFields
-            )
-          },
-        );
+        const { errors } = await firstMutation({
+          taxonomyId: parseInt(router.query.taxId, 10),
+          ...filteredOutputByWhitelist(
+            multiLangRHFormDataToJson(
+              newData,
+              multiLangFields,
+              config.activeLanguages
+            ),
+            [],
+            multiLangFields
+          ),
+        });
 
         if (!errors) {
           successToast();
-
+          setIsNavigatingAway(true);
           router.push(`${moduleRootPath}/${router.query.taxId}/terms`);
         } else {
           let slugError = multiLangSlugUniqueError(errors, setError);
@@ -109,7 +108,12 @@ const CreateTerm = () => {
     },
     {
       path: `${moduleRootPath}/${router.query.taxId}/terms`,
-      title: data && data.taxonomyRead ? <MultiLangValue json={data.taxonomyRead.name} /> : <BeatLoader size="10px" color="#666"/>,
+      title:
+        data && data.taxonomyRead ? (
+          <MultiLangValue json={data.taxonomyRead.name} />
+        ) : (
+          <BeatLoader size="10px" color="#666" />
+        ),
     },
     {
       title: t("module.taxonomies.page.title.createterm", "Add new term"),
@@ -133,7 +137,9 @@ const CreateTerm = () => {
 
   return (
     <>
-      <FormNavigationBlock shouldBlock={isDirty && !isSubmitting} />
+      <FormNavigationBlock
+        shouldBlock={!isNavigatingAway && isDirty && !isSubmitting}
+      />
       <FormProvider {...formMethods}>
         <form noValidate onSubmit={handleSubmit(onSubmit)}>
           <fieldset disabled={disableForm}>

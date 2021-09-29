@@ -8,7 +8,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { TextErrorMessage, FormNavigationBlock } from "~/components/forms";
 
 import { useSettingsUpdateMutation } from "~/hooks/mutations";
-import { useAuthentication, useTypedDispatch, useSuccessfullySavedToast } from "~/hooks";
+import {
+  useAuthentication,
+  useTypedDispatch,
+  useSuccessfullySavedToast,
+} from "~/hooks";
 import { settingsSet } from "~/redux/slices/settings";
 
 import { Divider } from "@chakra-ui/react";
@@ -40,6 +44,7 @@ const Update = () => {
   const [appUser] = useAuthentication();
   const { t } = useTranslation();
   const successToast = useSuccessfullySavedToast();
+  const [isNavigatingAway, setIsNavigatingAway] = useState(false);
 
   const { data, loading, error } = useQuery(settingsQueryGQL);
 
@@ -70,6 +75,7 @@ const Update = () => {
     newData: yup.InferType<typeof settingsValidationSchema>
   ) => {
     setIsFormError(false);
+    setIsNavigatingAway(false);
     try {
       if (appUser) {
         const fieldDefinitions = getSettingsFieldDefinitions();
@@ -87,9 +93,9 @@ const Update = () => {
               : newData[key],
           };
         });
-        
+
         const { errors } = await firstMutation(mutationData);
-        
+
         if (!errors) {
           const settingInRedux = (
             Object.keys(fieldDefinitions) as AppSettingsFieldKeys[]
@@ -108,6 +114,7 @@ const Update = () => {
           dispatch(settingsSet(settingInRedux));
 
           successToast();
+          setIsNavigatingAway(true);
           history.push("/settings");
         } else {
           setIsFormError(true);
@@ -147,7 +154,9 @@ const Update = () => {
 
   return (
     <>
-      <FormNavigationBlock shouldBlock={isDirty && !isSubmitting} />     
+      <FormNavigationBlock
+        shouldBlock={!isNavigatingAway && isDirty && !isSubmitting}
+      />
       <FormProvider {...formMethods}>
         <form noValidate onSubmit={handleSubmit(onSubmit)}>
           <fieldset disabled={disableForm}>

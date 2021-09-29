@@ -26,4 +26,21 @@ export const locationsQueryGQL = gql`
   }
 `;
 
+export const locationsSearchGQL = gql`
+  query locations($where: JSON) {
+    locations(
+      where: $where
+      orderBy: { id: "asc" }
+      pageIndex: 0
+      pageSize: 50
+    ) {
+      locations {
+        id
+        title
+      }
+      totalCount
+    }
+  }
+`;
+
 export default locationsQueryGQL;

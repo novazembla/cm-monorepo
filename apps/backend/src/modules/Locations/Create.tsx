@@ -29,7 +29,7 @@ import { moduleRootPath, multiLangFields } from "./moduleConfig";
 
 import { ModuleForm } from "./forms";
 import { multiLangRHFormDataToJson, multiLangSlugUniqueError } from "~/utils";
-import { mapModulesCheckboxArrayToData } from "./helpers"
+import { mapModulesCheckboxArrayToData } from "./helpers";
 
 export const locationReadGetTaxonomies = gql`
   query locationRead {
@@ -50,6 +50,7 @@ const Create = () => {
   const [appUser] = useAuthentication();
   const { t } = useTranslation();
   const successToast = useSuccessfullySavedToast();
+  const [isNavigatingAway, setIsNavigatingAway] = useState(false);
 
   const [firstMutation, firstMutationResults] = useLocationCreateMutation();
   const [isFormError, setIsFormError] = useState(false);
@@ -61,15 +62,11 @@ const Create = () => {
     resolver: yupResolver(ModuleLocationCreateSchema),
   });
 
-  const { data, loading, error } = useQuery(
-    locationReadGetTaxonomies,
-    {
-      variables: {
-        id: parseInt(router.query.id, 10),
-      },
-    }
-  );
-
+  const { data, loading, error } = useQuery(locationReadGetTaxonomies, {
+    variables: {
+      id: parseInt(router.query.id, 10),
+    },
+  });
 
   const {
     handleSubmit,
@@ -81,42 +78,46 @@ const Create = () => {
     newData: yup.InferType<typeof ModuleLocationCreateSchema>
   ) => {
     setIsFormError(false);
+    setIsNavigatingAway(false);
     try {
       if (appUser) {
-        const mutationResults = await firstMutation(
-          {
-            owner: {
-              connect: {
-                id: appUser.id
-              }
+        const mutationResults = await firstMutation({
+          owner: {
+            connect: {
+              id: appUser.id,
             },
-            lat: newData.lat,
-            lng: newData.lng,
-            status: PublishStatus.DRAFT,
-            terms: {
-              connect: mapModulesCheckboxArrayToData(
-                newData,
-                data?.moduleTaxonomies
-              ),
-            },
-            ...filteredOutputByWhitelist(
-              multiLangRHFormDataToJson(
-                newData,
-                multiLangFields,
-                config.activeLanguages
-              ),
-              [],
-              multiLangFields
-            )
-          }
-        );
+          },
+          lat: newData.lat,
+          lng: newData.lng,
+          status: PublishStatus.DRAFT,
+          terms: {
+            connect: mapModulesCheckboxArrayToData(
+              newData,
+              data?.moduleTaxonomies
+            ),
+          },
+          ...filteredOutputByWhitelist(
+            multiLangRHFormDataToJson(
+              newData,
+              multiLangFields,
+              config.activeLanguages
+            ),
+            [],
+            multiLangFields
+          ),
+        });
 
         if (!mutationResults.errors) {
           successToast();
-
-          router.push(`${moduleRootPath}/update/${mutationResults.data?.locationCreate?.id}`);
+          setIsNavigatingAway(true);
+          router.push(
+            `${moduleRootPath}/update/${mutationResults.data?.locationCreate?.id}`
+          );
         } else {
-          let slugError = multiLangSlugUniqueError(mutationResults.errors, setError);
+          let slugError = multiLangSlugUniqueError(
+            mutationResults.errors,
+            setError
+          );
 
           if (!slugError) setIsFormError(true);
         }
@@ -155,7 +156,9 @@ const Create = () => {
 
   return (
     <>
-      <FormNavigationBlock shouldBlock={isDirty && !isSubmitting} />
+      <FormNavigationBlock
+        shouldBlock={!isNavigatingAway && isDirty && !isSubmitting}
+      />
       <FormProvider {...formMethods}>
         <form noValidate onSubmit={handleSubmit(onSubmit)}>
           <fieldset disabled={disableForm}>

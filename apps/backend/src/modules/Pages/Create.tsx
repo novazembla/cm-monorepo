@@ -35,6 +35,7 @@ const Create = () => {
   const [appUser] = useAuthentication();
   const { t } = useTranslation();
   const successToast = useSuccessfullySavedToast();
+  const [isNavigatingAway, setIsNavigatingAway] = useState(false);
 
   const [firstMutation, firstMutationResults] = usePageCreateMutation();
   const [isFormError, setIsFormError] = useState(false);
@@ -56,6 +57,7 @@ const Create = () => {
     newData: yup.InferType<typeof ModulePageCreateSchema>
   ) => {
     setIsFormError(false);
+    setIsNavigatingAway(false);
     try {
       if (appUser) {
         const { data, errors } = await firstMutation({
@@ -76,7 +78,7 @@ const Create = () => {
 
         if (!errors) {
           successToast();
-
+          setIsNavigatingAway(true);
           router.push(`${moduleRootPath}/update/${data?.pageCreate?.id}`);
         } else {
           let slugError = multiLangSlugUniqueError(errors, setError);
@@ -118,7 +120,9 @@ const Create = () => {
 
   return (
     <>
-      <FormNavigationBlock shouldBlock={isDirty && !isSubmitting} />
+      <FormNavigationBlock
+        shouldBlock={!isNavigatingAway && isDirty && !isSubmitting}
+      />
       <FormProvider {...formMethods}>
         <form noValidate onSubmit={handleSubmit(onSubmit)}>
           <fieldset disabled={disableForm}>

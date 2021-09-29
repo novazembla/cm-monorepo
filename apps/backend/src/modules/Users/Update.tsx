@@ -18,10 +18,7 @@ import {
 import { userProfileUpdate } from "~/redux/slices/user";
 
 import { Divider } from "@chakra-ui/react";
-import {
-  userReadQueryGQL,
-  filteredOutputByWhitelist,
-} from "@culturemap/core";
+import { userReadQueryGQL, filteredOutputByWhitelist } from "@culturemap/core";
 
 import { useQuery } from "@apollo/client";
 
@@ -42,6 +39,7 @@ const Update = () => {
   const [appUser] = useAuthentication();
   const { t } = useTranslation();
   const successToast = useSuccessfullySavedToast();
+  const [isNavigatingAway, setIsNavigatingAway] = useState(false);
 
   const { data, loading, error } = useQuery(userReadQueryGQL, {
     variables: {
@@ -82,30 +80,32 @@ const Update = () => {
     newData: yup.InferType<typeof ModuleUsersUpdateSchema>
   ) => {
     setIsFormError(false);
+    setIsNavigatingAway(false);
     try {
       if (appUser) {
-        const { errors } = await firstMutation(parseInt(router.query.id, 10), newData);
+        const { errors } = await firstMutation(
+          parseInt(router.query.id, 10),
+          newData
+        );
 
         if (!errors) {
-          
           if (appUser.id === parseInt(router.query.id, 10))
-          dispatch(
-            userProfileUpdate({
-              firstName: newData.firstName,
-              lastName: newData.lastName,
-              emailVerified:
-                data?.userRead?.email &&
-                newData?.email &&
-                data?.userRead?.email !== newData?.email
-                  ? "no"
-                  : undefined,
-            })
-          );
+            dispatch(
+              userProfileUpdate({
+                firstName: newData.firstName,
+                lastName: newData.lastName,
+                emailVerified:
+                  data?.userRead?.email &&
+                  newData?.email &&
+                  data?.userRead?.email !== newData?.email
+                    ? "no"
+                    : undefined,
+              })
+            );
 
           successToast();
-
+          setIsNavigatingAway(true);
           router.push("/users");
-          
         } else {
           setIsFormError(true);
         }
@@ -144,7 +144,9 @@ const Update = () => {
 
   return (
     <>
-      <FormNavigationBlock shouldBlock={isDirty && !isSubmitting} />     
+      <FormNavigationBlock
+        shouldBlock={!isNavigatingAway && isDirty && !isSubmitting}
+      />
       <FormProvider {...formMethods}>
         <form noValidate onSubmit={handleSubmit(onSubmit)}>
           <fieldset disabled={disableForm}>
@@ -156,7 +158,11 @@ const Update = () => {
                   <Divider />
                 </>
               )}
-              <UserForm action="update" data={data?.userRead} validationSchema={ModuleUsersUpdateSchema} />
+              <UserForm
+                action="update"
+                data={data?.userRead}
+                validationSchema={ModuleUsersUpdateSchema}
+              />
             </ModulePage>
           </fieldset>
         </form>

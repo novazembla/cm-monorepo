@@ -48,6 +48,7 @@ class LeafletLocationPicker {
           [mapBounds[0].lat, mapBounds[0].lng],
           [mapBounds[1].lat, mapBounds[1].lng],
         ],
+        center: [(mapBounds[0].lat + mapBounds[1].lat) / 2, (mapBounds[0].lng + mapBounds[1].lng) / 2],
         zoom,
         minZoom: 11,
       });
@@ -114,8 +115,8 @@ export const LocationPicker = ({
   const refMap = useRef<LeafletLocationPicker>();
 
   const [point, setPoint] = useState<GeoLocation>({
-    lat,
-    lng,
+    lat: lat ?? (config.mapOuterBounds ? ((config.mapOuterBounds[0].lat + config.mapOuterBounds[1].lat) / 2) : undefined),
+    lng: lng ?? (config.mapOuterBounds ? ((config.mapOuterBounds[0].lng + config.mapOuterBounds[1].lng) / 2) : undefined),
   });
 
   const [initialState, setInitialState] = useState<GeoLocation>();
@@ -124,6 +125,9 @@ export const LocationPicker = ({
 
   const setNewPoint = useCallback(
     (point: GeoLocation) => {
+
+      console.log("POINT", point);
+
       if (Number.isNaN(point.lat) || Number.isNaN(point.lng)) return;
 
       setValue(fieldNameLat, point.lat, {
@@ -154,8 +158,15 @@ export const LocationPicker = ({
         13,
         config.mapStyleUrl
       );
+    
 
-    refMap.current.setPoint(point);
+    console.log(Number.isNaN(point.lat), Number.isNaN(point.lat), "xxx");
+
+    if (!Number.isNaN(point.lat) && !Number.isNaN(point.lng) && point.lat && point.lng) {
+      refMap.current.setPoint(point);
+    }
+      
+    
 
     if (!initialState) {
       setInitialState(point);

@@ -36,15 +36,18 @@ import { MultiLangValue } from "~/components/ui";
 import { moduleRootPath, multiLangFields } from "./moduleConfig";
 
 import { TaxonomyForm } from "./forms";
-import { multiLangJsonToRHFormData, multiLangRHFormDataToJson, multiLangSlugUniqueError } from "~/utils";
-;
-
+import {
+  multiLangJsonToRHFormData,
+  multiLangRHFormDataToJson,
+  multiLangSlugUniqueError,
+} from "~/utils";
 const UpdateTerm = () => {
   const router = useRouter();
   const config = useConfig();
   const [appUser] = useAuthentication();
   const { t } = useTranslation();
   const successToast = useSuccessfullySavedToast();
+  const [isNavigatingAway, setIsNavigatingAway] = useState(false);
 
   const { data, loading, error } = useQuery(termReadQueryGQL, {
     variables: {
@@ -54,10 +57,10 @@ const UpdateTerm = () => {
 
   const [firstMutation, firstMutationResults] = useTermUpdateMutation();
   const [isFormError, setIsFormError] = useState(false);
-  
+
   const taxonomyQueryResults = useQuery(taxonomyReadQueryGQL, {
     variables: {
-      id: parseInt(router.query.taxId, 10)
+      id: parseInt(router.query.taxId, 10),
     },
   });
 
@@ -87,10 +90,9 @@ const UpdateTerm = () => {
     );
   }, [reset, data, config.activeLanguages]);
 
-  const onSubmit = async (
-    newData: yup.InferType<typeof ModuleTermSchema>
-  ) => {
+  const onSubmit = async (newData: yup.InferType<typeof ModuleTermSchema>) => {
     setIsFormError(false);
+    setIsNavigatingAway(false);
     try {
       if (appUser) {
         const { errors } = await firstMutation(
@@ -108,13 +110,14 @@ const UpdateTerm = () => {
 
         if (!errors) {
           successToast();
-
-          router.push(`${moduleRootPath}/${parseInt(router.query.taxId, 10)}/terms`);
+          setIsNavigatingAway(true);
+          router.push(
+            `${moduleRootPath}/${parseInt(router.query.taxId, 10)}/terms`
+          );
         } else {
           let slugError = multiLangSlugUniqueError(errors, setError);
-          
-          if (!slugError)
-            setIsFormError(true);
+
+          if (!slugError) setIsFormError(true);
         }
       } else {
         setIsFormError(true);
@@ -131,7 +134,12 @@ const UpdateTerm = () => {
     },
     {
       path: `${moduleRootPath}/${router.query.taxId}/terms`,
-      title: taxonomyQueryResults.data && taxonomyQueryResults.data.taxonomyRead ? <MultiLangValue json={taxonomyQueryResults.data.taxonomyRead.name} /> : <BeatLoader size="10px" color="#666"/>,
+      title:
+        taxonomyQueryResults.data && taxonomyQueryResults.data.taxonomyRead ? (
+          <MultiLangValue json={taxonomyQueryResults.data.taxonomyRead.name} />
+        ) : (
+          <BeatLoader size="10px" color="#666" />
+        ),
     },
     {
       title: t("module.taxonomies.page.title.updatetax", "Update term"),
@@ -155,7 +163,9 @@ const UpdateTerm = () => {
 
   return (
     <>
-      <FormNavigationBlock shouldBlock={isDirty && !isSubmitting} />
+      <FormNavigationBlock
+        shouldBlock={!isNavigatingAway && isDirty && !isSubmitting}
+      />
       <FormProvider {...formMethods}>
         <form noValidate onSubmit={handleSubmit(onSubmit)}>
           <fieldset disabled={disableForm}>

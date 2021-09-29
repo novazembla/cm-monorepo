@@ -81,6 +81,8 @@
     "@babel/core": "^7.14.6",
     "@babel/preset-env": "^7.14.7",
     "@babel/preset-typescript": "^7.14.5",
+    "@types/lodash.debounce": "^4.0.6",
+    "@types/react-highlight-words": "^0.16.3",
     "@typescript-eslint/eslint-plugin": "^4.28.1",
     "babel-plugin-add-import-extension": "^1.5.1",
     "concurrently": "^6.2.0",
@@ -112,7 +114,8 @@
   ],
   "dependencies": {
     "dotenv": "^10.0.0",
-    "from": "^0.1.7"
+    "from": "^0.1.7",
+    "lodash.debounce": "^4.0.8"
   },
   "prisma": {
     "schema": "./packages/api/prisma/schema.prisma"

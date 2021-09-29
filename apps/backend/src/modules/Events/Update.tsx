@@ -68,6 +68,7 @@ export const eventReadAndContentAuthorsQueryGQL = gql`
       }
       locations {
         id
+        title
       }
       heroImage {
         id
@@ -90,13 +91,6 @@ export const eventReadAndContentAuthorsQueryGQL = gql`
         name
       }
     }
-
-    locations(pageSize: 1000) {
-      locations {
-        id
-        title
-      }
-    }
   }
 `;
 
@@ -106,6 +100,9 @@ const Update = () => {
   const [appUser] = useAuthentication();
   const { t } = useTranslation();
   const successToast = useSuccessfullySavedToast();
+
+  const [isNavigatingAway, setIsNavigatingAway] = useState(false);
+  const [activeUploadCounter, setActiveUploadCounter] = useState<number>(0);
 
   const { data, loading, error } = useQuery(
     eventReadAndContentAuthorsQueryGQL,
@@ -192,7 +189,7 @@ const Update = () => {
     newData: yup.InferType<typeof ModuleEventUpdateSchema>
   ) => {
     setIsFormError(false);
-
+    setIsNavigatingAway(false);
     try {
       if (appUser) {
         const heroImage =
@@ -257,7 +254,7 @@ const Update = () => {
 
         if (!errors) {
           successToast();
-
+          setIsNavigatingAway(true);
           router.push(moduleRootPath);
         } else {
           let slugError = multiLangSlugUniqueError(errors, setError);
@@ -299,7 +296,9 @@ const Update = () => {
 
   return (
     <>
-      <FormNavigationBlock shouldBlock={isDirty && !isSubmitting} />
+      <FormNavigationBlock
+        shouldBlock={(isDirty && !isSubmitting && !isNavigatingAway) || activeUploadCounter > 0}
+      />
       <FormProvider {...formMethods}>
         <form noValidate onSubmit={handleSubmit(onSubmit)}>
           <fieldset disabled={disableForm}>
@@ -314,6 +313,7 @@ const Update = () => {
               <ModuleForm
                 action="update"
                 data={data}
+                setActiveUploadCounter={setActiveUploadCounter}
                 validationSchema={ModuleEventUpdateSchema}
               />
             </ModulePage>

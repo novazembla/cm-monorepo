@@ -59,7 +59,8 @@ const Create = () => {
   const [appUser] = useAuthentication();
   const { t } = useTranslation();
   const successToast = useSuccessfullySavedToast();
-
+  const [isNavigatingAway, setIsNavigatingAway] = useState(false);
+  
   const [firstMutation, firstMutationResults] = useEventCreateMutation();
   const [isFormError, setIsFormError] = useState(false);
 
@@ -96,6 +97,8 @@ const Create = () => {
   ) => {
     
     setIsFormError(false);
+    setIsNavigatingAway(false);
+
     try {
       if (appUser) {
         const mutationResults = await firstMutation({
@@ -130,11 +133,14 @@ const Create = () => {
             [],
             multiLangFields
           ),
-        });
+        }); 
+
+        // TODO Image
 
         if (!mutationResults.errors) {
           successToast();
 
+    setIsNavigatingAway(true);
           router.push(`${moduleRootPath}/update/${mutationResults.data?.eventCreate?.id}`);
         } else {
           let slugError = multiLangSlugUniqueError(mutationResults.errors, setError);
@@ -176,7 +182,7 @@ const Create = () => {
 
   return (
     <>
-      <FormNavigationBlock shouldBlock={isDirty && !isSubmitting} />
+      <FormNavigationBlock shouldBlock={!isNavigatingAway && isDirty && !isSubmitting} />
       <FormProvider {...formMethods}>
         <form noValidate onSubmit={handleSubmit(onSubmit)}>
           <fieldset disabled={disableForm}>

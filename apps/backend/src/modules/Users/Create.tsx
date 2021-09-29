@@ -31,6 +31,7 @@ const Create = () => {
   const [appUser] = useAuthentication();
   const { t } = useTranslation();
   const successToast = useSuccessfullySavedToast();
+  const [isNavigatingAway, setIsNavigatingAway] = useState(false);
 
   const [firstMutation, firstMutationResults] = useUserCreateMutation();
   const [isFormError, setIsFormError] = useState(false);
@@ -51,6 +52,7 @@ const Create = () => {
     newData: yup.InferType<typeof ModuleUsersCreateSchema>
   ) => {
     setIsFormError(false);
+    setIsNavigatingAway(false);
     try {
       if (appUser) {
         const { errors } = await firstMutation({
@@ -61,12 +63,9 @@ const Create = () => {
         });
 
         if (!errors) {
-        
-
           successToast();
-
+          setIsNavigatingAway(true);
           router.push("/users");
-          
         } else {
           setIsFormError(true);
         }
@@ -105,7 +104,9 @@ const Create = () => {
 
   return (
     <>
-      <FormNavigationBlock shouldBlock={isDirty && !isSubmitting} />     
+      <FormNavigationBlock
+        shouldBlock={!isNavigatingAway && isDirty && !isSubmitting}
+      />
       <FormProvider {...formMethods}>
         <form noValidate onSubmit={handleSubmit(onSubmit)}>
           <fieldset disabled={disableForm}>
@@ -117,7 +118,10 @@ const Create = () => {
                   <Divider />
                 </>
               )}
-              <UserForm action="create" validationSchema={ModuleUsersCreateSchema} />
+              <UserForm
+                action="create"
+                validationSchema={ModuleUsersCreateSchema}
+              />
             </ModulePage>
           </fieldset>
         </form>

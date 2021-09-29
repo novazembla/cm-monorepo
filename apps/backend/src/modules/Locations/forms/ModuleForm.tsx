@@ -20,11 +20,13 @@ export const ModuleForm = ({
   errors,
   action,
   validationSchema,
+  setActiveUploadCounter,
 }: {
   data?: any;
   errors?: any;
   validationSchema: any;
   action: "create" | "update";
+  setActiveUploadCounter?: Function;
 }) => {
   const [appUser] = useAuthentication();
 
@@ -79,6 +81,7 @@ export const ModuleForm = ({
             name="heroImage"
             label={t("forms.heroImage.label", "Featured image")}
             currentImage={data?.locationRead?.heroImage}
+            setActiveUploadCounter={setActiveUploadCounter}
             settings={{
               imageRequired: false,
               altRequired: false,

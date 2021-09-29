@@ -41,6 +41,9 @@ const Update = () => {
   const [appUser] = useAuthentication();
   const { t } = useTranslation();
   const successToast = useSuccessfullySavedToast();
+  const [isNavigatingAway, setIsNavigatingAway] = useState(false);
+  const [activeUploadCounter, setActiveUploadCounter] = useState<number>(0);
+
   const [disableNavigation, setDisableNavigation] = useState(false);
 
   const { data, loading, error } = useQuery(userProfileReadQueryGQL, {
@@ -81,13 +84,13 @@ const Update = () => {
     newData: yup.InferType<typeof UserProfileUpdateValidationSchema>
   ) => {
     setIsFormError(false);
+    setIsNavigatingAway(false);
     try {
       if (appUser) {
-        const { errors } = await firstMutation(appUser?.id, filteredOutputByWhitelist(newData, [
-          "firstName",
-          "lastName",
-          "email",
-        ]));
+        const { errors } = await firstMutation(
+          appUser?.id,
+          filteredOutputByWhitelist(newData, ["firstName", "lastName", "email"])
+        );
 
         if (!errors) {
           dispatch(
@@ -104,9 +107,8 @@ const Update = () => {
           );
 
           successToast();
-
+          setIsNavigatingAway(true);
           history.push("/profile");
-          
         } else {
           setIsFormError(true);
         }
@@ -134,7 +136,7 @@ const Update = () => {
       to: moduleRootPath,
       label: t("module.button.cancel", "Cancel"),
       userCan: "profileUpdate",
-      isDisabled: disableNavigation
+      isDisabled: disableNavigation,
     },
     {
       type: "submit",
@@ -147,7 +149,9 @@ const Update = () => {
 
   return (
     <>
-      <FormNavigationBlock shouldBlock={isDirty && !isSubmitting} />     
+      <FormNavigationBlock
+        shouldBlock={(isDirty && !isSubmitting && !isNavigatingAway) || activeUploadCounter > 0}
+      />
       <FormProvider {...formMethods}>
         <form noValidate onSubmit={handleSubmit(onSubmit)}>
           <fieldset disabled={disableForm}>
@@ -159,7 +163,11 @@ const Update = () => {
                   <Divider />
                 </>
               )}
-              <UpdateForm data={data?.userProfileRead} disableNavigation={setDisableNavigation} />
+              <UpdateForm
+                data={data?.userProfileRead}
+                setActiveUploadCounter={setActiveUploadCounter}
+                disableNavigation={setDisableNavigation}
+              />
             </ModulePage>
           </fieldset>
         </form>

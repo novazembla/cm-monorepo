@@ -19,11 +19,13 @@ export const PageForm = ({
   errors,
   action,
   validationSchema,
+  setActiveUploadCounter,
 }: {
   data?: any;
   errors?: any;
   validationSchema: any;
   action: "create" | "update";
+  setActiveUploadCounter?: Function;
 }) => {
   const [appUser] = useAuthentication();
   const { t } = useTranslation();
@@ -81,6 +83,7 @@ export const PageForm = ({
             name="heroImage"
             label={t("forms.heroImage.label", "Featured image")}
             currentImage={data?.pageRead?.heroImage}
+            setActiveUploadCounter={setActiveUploadCounter}
             settings={{
               imageRequired: false,
               altRequired: false,

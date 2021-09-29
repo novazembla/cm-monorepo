@@ -17,10 +17,12 @@ export const UpdateForm = ({
   data,
   errors,
   disableNavigation,
+  setActiveUploadCounter,
 }: {
   data?: any;
   errors?: any;
   disableNavigation?: Function;
+  setActiveUploadCounter?: Function;
 }) => {
   const config = useConfig();
   const { t } = useTranslation();
@@ -46,6 +48,7 @@ export const UpdateForm = ({
               "profileImage",
               UserProfileUpdateValidationSchema
             )}
+            setActiveUploadCounter={setActiveUploadCounter}
             deleteButtonGQL={userProfileImageDeleteMutationGQL}
             settings={{
               minFileSize: 1024 * 1024 * 0.05,

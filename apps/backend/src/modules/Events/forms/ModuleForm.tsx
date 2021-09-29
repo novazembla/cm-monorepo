@@ -18,6 +18,8 @@ import { DateSingleInput } from "@datepicker-react/styled";
 import { useTranslation } from "react-i18next";
 import i18n from "i18next";
 
+import { locationsSearchGQL } from "@culturemap/core";
+
 import {
   FieldMultiLangInput,
   FieldMultiLangTextEditor,
@@ -28,6 +30,7 @@ import {
   TwoColFieldRow,
   FieldRadioOrCheckboxGroup,
   TimeField,
+  FieldSingleSelectAutocomplete,
 } from "~/components/forms";
 
 import { HiOutlineTrash } from "react-icons/hi";
@@ -62,10 +65,12 @@ export const ModuleForm = ({
   data,
   action,
   validationSchema,
+  setActiveUploadCounter,
 }: {
   data?: any;
   validationSchema: any;
   action: "create" | "update";
+  setActiveUploadCounter?: Function;
 }) => {
   const [appUser] = useAuthentication();
   const [isOpenFieldArray, setIsOpenFieldArray] = useState<
@@ -141,12 +146,13 @@ export const ModuleForm = ({
               altRequired: false,
               creditsRequired: false,
             }}
+            setActiveUploadCounter={setActiveUploadCounter}
             connectWith={{
               heroImageEvents: {
                 connect: {
-                  id: data?.eventRead?.id,            
-                }
-              }
+                  id: data?.eventRead?.id,
+                },
+              },
             }}
           />
         </>
@@ -212,34 +218,31 @@ export const ModuleForm = ({
         </>
       )}
 
-      {data?.locations?.locations && (
-        <>
-          <Divider mt="10" />
-          <FieldRow>
-            <FieldSelect
-              name="locationId"
-              id="locationId"
-              label={t("module.events.forms.field.label.location", "Location")}
-              isRequired={true}
-              options={data.locations.locations.map((loc: any) => ({
-                value: loc.id,
-                label: getMultilangValue(loc.title),
-              }))}
-              settings={{
-                defaultValue:
-                  data?.eventRead?.locations &&
-                  data?.eventRead?.locations.length
-                    ? data?.eventRead?.locations[0].id
-                    : undefined,
-                placeholder: t(
-                  "module.events.forms.field.placeholder.location",
-                  "Please choose the event's location"
-                ),
-              }}
-            />
-          </FieldRow>
-        </>
-      )}
+      <Divider mt="10" />
+      <FieldRow>
+        <FieldSingleSelectAutocomplete
+          name="locationId"
+          id="locationId"
+          label={t("module.events.forms.field.label.location", "Location")}
+          isRequired={true}
+          item={
+            data?.eventRead?.locations && data?.eventRead?.locations?.length > 0
+              ? {
+                  label: getMultilangValue(data?.eventRead?.locations[0].title),
+                  id: data?.eventRead?.locations[0].id,
+                }
+              : undefined
+          }
+          searchQueryGQL={locationsSearchGQL}
+          settings={{
+            placeholder: t(
+              "module.events.forms.field.placeholder.locationsearch",
+              "Please enter the location's title"
+            ),
+          }}
+        />
+      </FieldRow>
+
       <Divider mt="10" />
 
       <FieldMultiLangTextEditor
