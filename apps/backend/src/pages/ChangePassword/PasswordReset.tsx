@@ -10,7 +10,7 @@ import { PasswordResetValidationSchema, yupIsFieldRequired } from "~/validation"
 
 import { useTranslation } from "react-i18next";
 
-import { TextErrorMessage, FieldInput, FieldRow } from "~/components/forms";
+import { TextErrorMessage, FieldInput, FieldRow, FormScrollInvalidIntoView } from "~/components/forms";
 
 import { useAuthPasswordResetMutation } from "~/hooks/mutations";
 
@@ -101,6 +101,7 @@ const PasswordReset = () => {
         </Box>
         <Divider/>
           <FormProvider {...formMethods}>
+            <FormScrollInvalidIntoView/>
             <form
               noValidate
               onSubmit={handleSubmit(onSubmit)}

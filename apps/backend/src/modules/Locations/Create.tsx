@@ -6,7 +6,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { filteredOutputByWhitelist, PublishStatus } from "@culturemap/core";
 import { useQuery, gql } from "@apollo/client";
 
-import { TextErrorMessage, FormNavigationBlock } from "~/components/forms";
+import {
+  TextErrorMessage,
+  FormNavigationBlock,
+  FormScrollInvalidIntoView,
+} from "~/components/forms";
 
 import { ModuleLocationCreateSchema } from "./forms";
 import { useLocationCreateMutation } from "./hooks";
@@ -160,6 +164,7 @@ const Create = () => {
         shouldBlock={!isNavigatingAway && isDirty && !isSubmitting}
       />
       <FormProvider {...formMethods}>
+        <FormScrollInvalidIntoView />
         <form noValidate onSubmit={handleSubmit(onSubmit)}>
           <fieldset disabled={disableForm}>
             <ModuleSubNav breadcrumb={breadcrumb} buttonList={buttonList} />

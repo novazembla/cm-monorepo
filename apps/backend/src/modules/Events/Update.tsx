@@ -4,7 +4,11 @@ import { useTranslation } from "react-i18next";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import { TextErrorMessage, FormNavigationBlock } from "~/components/forms";
+import {
+  TextErrorMessage,
+  FormNavigationBlock,
+  FormScrollInvalidIntoView,
+} from "~/components/forms";
 
 import { ModuleEventUpdateSchema } from "./forms";
 import { useEventUpdateMutation } from "./hooks";
@@ -297,9 +301,13 @@ const Update = () => {
   return (
     <>
       <FormNavigationBlock
-        shouldBlock={(isDirty && !isSubmitting && !isNavigatingAway) || activeUploadCounter > 0}
+        shouldBlock={
+          (isDirty && !isSubmitting && !isNavigatingAway) ||
+          activeUploadCounter > 0
+        }
       />
       <FormProvider {...formMethods}>
+        <FormScrollInvalidIntoView />
         <form noValidate onSubmit={handleSubmit(onSubmit)}>
           <fieldset disabled={disableForm}>
             <ModuleSubNav breadcrumb={breadcrumb} buttonList={buttonList} />

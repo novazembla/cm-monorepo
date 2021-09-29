@@ -6,7 +6,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { filteredOutputByWhitelist, PublishStatus } from "@culturemap/core";
 import { useQuery, gql } from "@apollo/client";
 
-import { TextErrorMessage, FormNavigationBlock } from "~/components/forms";
+import {
+  TextErrorMessage,
+  FormNavigationBlock,
+  FormScrollInvalidIntoView,
+} from "~/components/forms";
 
 import { ModuleEventCreateSchema } from "./forms";
 import { useEventCreateMutation } from "./hooks";
@@ -60,7 +64,7 @@ const Create = () => {
   const { t } = useTranslation();
   const successToast = useSuccessfullySavedToast();
   const [isNavigatingAway, setIsNavigatingAway] = useState(false);
-  
+
   const [firstMutation, firstMutationResults] = useEventCreateMutation();
   const [isFormError, setIsFormError] = useState(false);
 
@@ -95,7 +99,6 @@ const Create = () => {
   const onSubmit = async (
     newData: yup.InferType<typeof ModuleEventCreateSchema>
   ) => {
-    
     setIsFormError(false);
     setIsNavigatingAway(false);
 
@@ -110,7 +113,7 @@ const Create = () => {
           locations: {
             connect: {
               id: newData.locationId,
-            }
+            },
           },
           dates: {
             create: newData.dates,
@@ -133,17 +136,22 @@ const Create = () => {
             [],
             multiLangFields
           ),
-        }); 
+        });
 
         // TODO Image
 
         if (!mutationResults.errors) {
           successToast();
 
-    setIsNavigatingAway(true);
-          router.push(`${moduleRootPath}/update/${mutationResults.data?.eventCreate?.id}`);
+          setIsNavigatingAway(true);
+          router.push(
+            `${moduleRootPath}/update/${mutationResults.data?.eventCreate?.id}`
+          );
         } else {
-          let slugError = multiLangSlugUniqueError(mutationResults.errors, setError);
+          let slugError = multiLangSlugUniqueError(
+            mutationResults.errors,
+            setError
+          );
 
           if (!slugError) setIsFormError(true);
         }
@@ -182,8 +190,11 @@ const Create = () => {
 
   return (
     <>
-      <FormNavigationBlock shouldBlock={!isNavigatingAway && isDirty && !isSubmitting} />
+      <FormNavigationBlock
+        shouldBlock={!isNavigatingAway && isDirty && !isSubmitting}
+      />
       <FormProvider {...formMethods}>
+        <FormScrollInvalidIntoView />
         <form noValidate onSubmit={handleSubmit(onSubmit)}>
           <fieldset disabled={disableForm}>
             <ModuleSubNav breadcrumb={breadcrumb} buttonList={buttonList} />

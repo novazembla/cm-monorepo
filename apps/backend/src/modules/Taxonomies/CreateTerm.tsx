@@ -10,7 +10,11 @@ import {
   taxonomyReadQueryGQL,
 } from "@culturemap/core";
 
-import { TextErrorMessage, FormNavigationBlock } from "~/components/forms";
+import {
+  TextErrorMessage,
+  FormNavigationBlock,
+  FormScrollInvalidIntoView,
+} from "~/components/forms";
 
 import { ModuleTermSchema } from "./forms";
 import { useTermCreateMutation } from "./hooks";
@@ -141,6 +145,7 @@ const CreateTerm = () => {
         shouldBlock={!isNavigatingAway && isDirty && !isSubmitting}
       />
       <FormProvider {...formMethods}>
+        <FormScrollInvalidIntoView />
         <form noValidate onSubmit={handleSubmit(onSubmit)}>
           <fieldset disabled={disableForm}>
             <ModuleSubNav breadcrumb={breadcrumb} buttonList={buttonList} />

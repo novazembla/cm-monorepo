@@ -18,4 +18,5 @@ export * from "./FieldRadioOrCheckboxGroup";
 export * from "./FieldHiddenShow";
 export * from "./FieldSingleImage";
 export * from "./FieldNumberInput";
+export * from "./FormScrollInvalidIntoView";
 export * from "./FieldSingleSelectAutocomplete";

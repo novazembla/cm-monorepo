@@ -4,7 +4,11 @@ import { useTranslation } from "react-i18next";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import { TextErrorMessage, FormNavigationBlock } from "~/components/forms";
+import {
+  TextErrorMessage,
+  FormNavigationBlock,
+  FormScrollInvalidIntoView,
+} from "~/components/forms";
 
 import { PasswordResetValidationSchema } from "~/validation";
 import { useUserProfilePasswordUpdateMutation } from "./hooks";
@@ -92,6 +96,7 @@ const Update = () => {
         shouldBlock={!isNavigatingAway && isDirty && !isSubmitting}
       />
       <FormProvider {...formMethods}>
+        <FormScrollInvalidIntoView />
         <form
           noValidate
           onSubmit={handleSubmit(onSubmit)}

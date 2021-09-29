@@ -15,6 +15,7 @@ import {
   FieldRow,
   FieldSwitch,
   TwoColFieldRow,
+  FormScrollInvalidIntoView,
 } from "~/components/forms";
 
 import {
@@ -91,6 +92,7 @@ const Signup = () => {
           <Divider />
 
           <FormProvider {...formMethods}>
+            <FormScrollInvalidIntoView/>
             <form noValidate onSubmit={handleSubmit(onSubmit)}>
               <fieldset disabled={disableForm}>
                 {isFormError && (

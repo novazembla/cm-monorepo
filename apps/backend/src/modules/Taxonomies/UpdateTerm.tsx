@@ -5,7 +5,11 @@ import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { BeatLoader } from "react-spinners";
 
-import { TextErrorMessage, FormNavigationBlock } from "~/components/forms";
+import {
+  TextErrorMessage,
+  FormNavigationBlock,
+  FormScrollInvalidIntoView,
+} from "~/components/forms";
 
 import { ModuleTermSchema } from "./forms";
 import { useTermUpdateMutation } from "./hooks";
@@ -167,6 +171,7 @@ const UpdateTerm = () => {
         shouldBlock={!isNavigatingAway && isDirty && !isSubmitting}
       />
       <FormProvider {...formMethods}>
+        <FormScrollInvalidIntoView />
         <form noValidate onSubmit={handleSubmit(onSubmit)}>
           <fieldset disabled={disableForm}>
             <ModuleSubNav breadcrumb={breadcrumb} buttonList={buttonList} />

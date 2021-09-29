@@ -8,7 +8,7 @@ import { PasswordRequestValidationSchema, yupIsFieldRequired } from "~/validatio
 
 import { useTranslation } from "react-i18next";
 
-import { TextErrorMessage, FieldInput, FieldRow } from "~/components/forms";
+import { TextErrorMessage, FieldInput, FieldRow, FormScrollInvalidIntoView } from "~/components/forms";
 
 import { useAuthPasswordRequestMutation } from "~/hooks/mutations";
 
@@ -87,6 +87,7 @@ const PasswordRequest = () => {
         </Box>
         <Divider/>
         <FormProvider {...formMethods}>
+          <FormScrollInvalidIntoView />
           <form
             noValidate
             onSubmit={handleSubmit(onSubmit)}

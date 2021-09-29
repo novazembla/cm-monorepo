@@ -22,7 +22,12 @@ import {
   AuthenticationPage,
   AuthenticationFormContainer,
 } from "~/components/ui";
-import { TextErrorMessage, FieldInput, FieldRow } from "~/components/forms";
+import {
+  TextErrorMessage,
+  FieldInput,
+  FieldRow,
+  FormScrollInvalidIntoView,
+} from "~/components/forms";
 
 const Login = () => {
   const config = useConfig();
@@ -49,7 +54,6 @@ const Login = () => {
       const { errors } = await firstMutation(data.email, data.password);
 
       if (errors) setIsFormError(true);
- 
     } catch (err) {
       setIsFormError(true);
     }
@@ -85,6 +89,7 @@ const Login = () => {
         </Box>
         <Divider />
         <FormProvider {...formMethods}>
+          <FormScrollInvalidIntoView />
           <form noValidate onSubmit={handleSubmit(onSubmit)}>
             <fieldset>
               {isFormError && <TextErrorMessage error="page.login.error" />}
