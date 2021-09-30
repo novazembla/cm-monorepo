@@ -165,6 +165,7 @@ export const PageForm = ({
         name="content"
         id="content"
         type="basic"
+        size="large"
         label={t("module.pages.forms.page.field.label.content", "Content")}
         isRequired={false}
         settings={{

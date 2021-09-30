@@ -74,6 +74,12 @@ code {
     }
   }
 
+  &.large {
+    .wrapper {
+      max-height: 1200px;
+    }
+  }
+
   &.is-error { 
     &.basic {
       border: 1px solid var(--chakra-colors-red-400);
