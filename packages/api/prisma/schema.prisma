@@ -147,6 +147,7 @@ model Taxonomy {
   name           Json     
   slug           Json     
   multiTerm      Boolean    @default(false)
+  hasColor       Boolean    @default(false)
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @default(now()) @updatedAt
 
@@ -160,6 +161,7 @@ model Term {
   name           Json     
   slug           Json   
 
+  color          String @default("")
   taxonomyId     Int
   taxonomy       Taxonomy   @relation(fields: [taxonomyId], references: [id])
 
@@ -177,6 +179,7 @@ model Page {
   
   title          Json     
   slug           Json     
+  intro          Json
   content        Json
 
   heroImageId    Int?

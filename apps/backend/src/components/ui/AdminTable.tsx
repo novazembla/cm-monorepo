@@ -35,7 +35,6 @@ import {
   usePagination,
   // TODO: enable useRowSelect,
   useAsyncDebounce,
-  useSortBy,
   useTable,
   SortingRule,
   Cell,
@@ -446,7 +445,6 @@ export const AdminTable = ({
       autoResetPage: false,
       pageCount: tablePageCount,
     },
-    useSortBy,
     usePagination
   );
 
@@ -565,7 +563,7 @@ export const AdminTable = ({
               <Tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column) => (
                   <Th
-                    {...column.getHeaderProps(column.getSortByToggleProps())}
+                    {...column.getHeaderProps(/* column.getSortByToggleProps() */)}
                     fontSize="md"
                     color="gray.800"
                     borderColor="gray.300"

@@ -15,8 +15,6 @@ import {
 const prisma = getPrismaClient();
 const apiConfig = getApiConfig();
 
-export const daoPageTranlatedColumns = ["title", "slug", "content"];
-
 export const daoPageCheckSlugUnique = async (
   slug: Record<string, string>,
   id?: number,
@@ -74,7 +72,12 @@ export const daoPageCreate = async (
   const page: Page = await prisma.page.create({
     data: {
       ...data,
-      fullText: daoSharedGenerateFullText(data, ["title", "slug", "content"]),
+      fullText: daoSharedGenerateFullText(data, [
+        "title",
+        "slug",
+        "intro",
+        "content",
+      ]),
     },
   });
 
@@ -178,7 +181,12 @@ export const daoPageUpdate = async (
   const page: Page = await prisma.page.update({
     data: {
       ...data,
-      fullText: daoSharedGenerateFullText(data, ["title", "slug", "content"]),
+      fullText: daoSharedGenerateFullText(data, [
+        "title",
+        "slug",
+        "intro",
+        "content",
+      ]),
     },
     where: {
       id,
@@ -208,7 +216,7 @@ export const daoPageDelete = async (id: number): Promise<Page> => {
   );
 };
 
-export default {
+const defaults = {
   daoPageQuery,
   daoPageQueryCount,
   daoPageGetById,
@@ -218,3 +226,5 @@ export default {
   daoPageDelete,
   daoPageGetBySlug,
 };
+
+export default defaults;

@@ -6,6 +6,7 @@ export const pageCreateMutationGQL = gql`
       id
       title
       slug
+      intro
       content
     }
   }
@@ -20,6 +21,7 @@ export const pageUpdateMutationGQL = gql`
     pageUpdate(id: $id, data: $data, imagesTranslations: $imagesTranslations) {
       id
       title
+      intro
       slug
       content
     }

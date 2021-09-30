@@ -36,8 +36,18 @@ export const termReadQueryGQL = gql`
       id
       name
       slug
+      color
       createdAt
       updatedAt
+
+      taxonomy {
+        id
+        name
+        slug
+        hasColor
+        createdAt
+        updatedAt
+      }
     }
   }
 `;

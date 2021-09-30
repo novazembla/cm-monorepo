@@ -53,17 +53,34 @@ const daoSharedGenerateFullText = (data: any, keys: string[]) => {
   }, "");
 };
 
-const lat = [
-  52.536821, 52.522971, 52.517696, 52.529969, 52.622971, 52.510593, 52.506675,
-  52.519315, 52.51175, 52.497888, 52.556821, 52.502971, 52.537696, 52.49999,
-  52.622971, 52.510593, 51.88976, 51.99999, 52.502971, 52.53696, 52.588969,
+const rndBetween = (min: number, max: number) =>
+  Math.floor(Math.random() * (max - min + 1)) + min;
+
+const mapOuterBounds = [
+  {
+    lat: 52.712187,
+    lng: 13.00036,
+  },
+  {
+    lat: 52.291884,
+    lng: 13.813182,
+  },
 ];
 
-const lng = [
-  13.514006, 13.492928, 13.479444, 13.491897, 13.471944, 13.498654, 13.47827,
-  13.472438, 13.437911, 13.472609, 13.481897, 13.500944, 13.458654, 13.49227,
-  13.482438, 13.427911, 13.4982609, 13.521897, 13.500944, 13.51154, 13.48827,
-];
+const lat = Array(50).map(
+  (i) =>
+    rndBetween(
+      mapOuterBounds[1].lat * 1000000,
+      mapOuterBounds[0].lat * 1000000
+    ) / 1000000
+);
+const lng = Array(50).map(
+  (i) =>
+    rndBetween(
+      mapOuterBounds[10].lng * 1000000,
+      mapOuterBounds[1].lng * 1000000
+    ) / 1000000
+);
 
 const slugify = (text: string) => {
   return text
@@ -75,9 +92,6 @@ const slugify = (text: string) => {
     .replace(/^-+/, "") // Trim - from start of text
     .replace(/-+$/, ""); // Trim - from end of text
 };
-
-const rndBetween = (min: number, max: number) =>
-  Math.floor(Math.random() * (max - min + 1)) + min;
 
 const categories = [
   ["Einrichtungen der kulturellen Bildung", "Cultural for Cultural Education"],
@@ -691,6 +705,14 @@ async function main() {
             slug: {
               de: slugify(page[0]),
               en: slugify(page[1]),
+            },
+            intro: {
+              de: `${keywordSelection} ${lorem
+                .generateParagraphs(rndBetween(1, 5))
+                .replace(/(\r\n|\n|\r)/g, "<br/><br/>")}`,
+              en: lorem
+                .generateParagraphs(rndBetween(1, 5))
+                .replace(/(\r\n|\n|\r)/g, "<br/><br/>"),
             },
             content: {
               de: `${keywordSelection} ${lorem

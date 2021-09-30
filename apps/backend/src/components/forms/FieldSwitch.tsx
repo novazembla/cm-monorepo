@@ -7,7 +7,7 @@ import { FieldErrorMessage } from ".";
 export const FieldSwitch = ({
   name,
   label,
-  isChecked = false,
+  isChecked,
   isRequired = false,
   isReadOnly = false,
   isDisabled = false,
@@ -41,7 +41,8 @@ export const FieldSwitch = ({
           defaultValue={
             typeof defaultChecked === "boolean" ? defaultChecked : false
           }
-          render={({ field: { onChange, onBlur, value } }) => (
+          render={({ field: { onChange, onBlur, value } }) => {
+            return (
             <Switch
               display="flex"
               mt="1"
@@ -56,7 +57,7 @@ export const FieldSwitch = ({
             >
               <chakra.span fontSize="sm">{label}</chakra.span>
             </Switch>
-          )}
+          )}}
         />
       </Flex>
       <FieldErrorMessage error={errors[name]?.message} />

@@ -21,11 +21,7 @@ import {
 } from "~/hooks";
 
 import { Divider } from "@chakra-ui/react";
-import {
-  filteredOutputByWhitelist,
-  taxonomyReadQueryGQL,
-  termReadQueryGQL,
-} from "@culturemap/core";
+import { filteredOutputByWhitelist, termReadQueryGQL } from "@culturemap/core";
 
 import { useQuery } from "@apollo/client";
 
@@ -62,12 +58,6 @@ const UpdateTerm = () => {
   const [firstMutation, firstMutationResults] = useTermUpdateMutation();
   const [hasFormError, setHasFormError] = useState(false);
 
-  const taxonomyQueryResults = useQuery(taxonomyReadQueryGQL, {
-    variables: {
-      id: parseInt(router.query.taxId, 10),
-    },
-  });
-
   const disableForm = firstMutationResults.loading;
 
   const formMethods = useForm<any>({
@@ -85,13 +75,15 @@ const UpdateTerm = () => {
   useEffect(() => {
     if (!data || !data.termRead) return;
 
-    reset(
-      multiLangJsonToRHFormData(
+    reset({
+      ...multiLangJsonToRHFormData(
         filteredOutputByWhitelist(data.termRead, [], multiLangFields),
         multiLangFields,
         config.activeLanguages
-      )
-    );
+      ),
+      color: data?.termRead?.color ?? "",
+      hasColor: !!data?.termRead?.taxonomy?.hasColor,
+    });
   }, [reset, data, config.activeLanguages]);
 
   const onSubmit = async (newData: yup.InferType<typeof ModuleTermSchema>) => {
@@ -99,9 +91,8 @@ const UpdateTerm = () => {
     setIsNavigatingAway(false);
     try {
       if (appUser) {
-        const { errors } = await firstMutation(
-          parseInt(router.query.id, 10),
-          filteredOutputByWhitelist(
+        const { errors } = await firstMutation(parseInt(router.query.id, 10), {
+          ...filteredOutputByWhitelist(
             multiLangRHFormDataToJson(
               newData,
               multiLangFields,
@@ -109,8 +100,9 @@ const UpdateTerm = () => {
             ),
             [],
             multiLangFields
-          )
-        );
+          ),
+          color: newData.color,
+        });
 
         if (!errors) {
           successToast();
@@ -139,8 +131,8 @@ const UpdateTerm = () => {
     {
       path: `${moduleRootPath}/${router.query.taxId}/terms`,
       title:
-        taxonomyQueryResults.data && taxonomyQueryResults.data.taxonomyRead ? (
-          <MultiLangValue json={taxonomyQueryResults.data.taxonomyRead.name} />
+        data && data?.termRead?.taxonomy ? (
+          <MultiLangValue json={data?.termRead?.taxonomy.name} />
         ) : (
           <BeatLoader size="10px" color="#666" />
         ),

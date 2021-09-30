@@ -51,7 +51,7 @@ const CreateTerm = () => {
   const [firstMutation, firstMutationResults] = useTermCreateMutation();
   const [hasFormError, setHasFormError] = useState(false);
 
-  const { data } = useQuery(taxonomyReadQueryGQL, {
+  const { data, loading, error } = useQuery(taxonomyReadQueryGQL, {
     variables: {
       id: parseInt(router.query.taxId, 10),
     },
@@ -75,8 +75,10 @@ const CreateTerm = () => {
     setIsNavigatingAway(false);
     try {
       if (appUser) {
+        console.log("new data", newData);
         const { errors } = await firstMutation({
           taxonomyId: parseInt(router.query.taxId, 10),
+          color: newData.color,
           ...filteredOutputByWhitelist(
             multiLangRHFormDataToJson(
               newData,
@@ -149,7 +151,7 @@ const CreateTerm = () => {
         <form noValidate onSubmit={handleSubmit(onSubmit)}>
           <fieldset disabled={disableForm}>
             <ModuleSubNav breadcrumb={breadcrumb} buttonList={buttonList} />
-            <ModulePage>
+            <ModulePage isLoading={loading} isError={!!error}>
               {hasFormError && (
                 <>
                   <TextErrorMessage error="general.writeerror.desc" />
@@ -159,6 +161,7 @@ const CreateTerm = () => {
               <TaxonomyForm
                 type="term"
                 action="create"
+                data={data?.taxonomyRead}
                 validationSchema={ModuleTermSchema}
               />
             </ModulePage>

@@ -105,6 +105,7 @@ const Update = () => {
         multiLangFields,
         config.activeLanguages
       ),
+      hasColor: !!data.taxonomyRead.hasColor,
       modules: currentModuleSelection,
     });
   }, [reset, data, config.activeLanguages, modules]);
@@ -126,6 +127,7 @@ const Update = () => {
             [],
             multiLangFields
           ),
+          hasColor: newData.hasColor,
           modules: {
             set: mapModulesCheckboxSelectionToData(newData, modules),
           },

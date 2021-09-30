@@ -23,7 +23,7 @@ export const daoTermCheckSlugUnique = async (
   );
 };
 
-export const daoTermQuery = async (
+export const daoTermsQuery = async (
   taxonomyId: number,
   where: Prisma.TermWhereInput,
   orderBy: any,
@@ -46,7 +46,21 @@ export const daoTermQuery = async (
   );
 };
 
-export const daoTermQueryCount = async (
+export const daoTermQuery = async (
+  where: Prisma.TermWhereInput,
+  include?: Prisma.TermInclude
+): Promise<Term> => {
+  const term = await prisma.term.findFirst({
+    where: {
+      ...where,
+    },
+    include,
+  });
+
+  return filteredOutputByBlacklist(term, apiConfig.db.privateJSONDataKeys.term);
+};
+
+export const daoTermsQueryCount = async (
   taxonomyId: number,
   where: Prisma.TermWhereInput
 ): Promise<number> => {
@@ -162,9 +176,9 @@ export const daoTermDelete = async (id: number): Promise<Term> => {
   );
 };
 
-export default {
-  daoTermQuery,
-  daoTermQueryCount,
+const defaults = {
+  daoTermsQuery,
+  daoTermsQueryCount,
   daoTermGetById,
   daoTermGetTermsByTaxonomyId,
   daoTermGetTermsCountByTaxonomyId,
@@ -173,3 +187,5 @@ export default {
   daoTermUpdate,
   daoTermDelete,
 };
+
+export default defaults;

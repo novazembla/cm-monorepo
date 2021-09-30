@@ -233,6 +233,7 @@ type Page {
   fullText: String
   heroImage: Image
   id: Int!
+  intro: JSON
   ownerId: Int!
   slug: JSON
   status: Int!
@@ -249,6 +250,7 @@ type PageQueryResult {
 input PageUpsertInput {
   content: JSON!
   heroImage: JSON
+  intro: JSON!
   owner: JSON!
   slug: JSON!
   status: Int!
@@ -326,6 +328,7 @@ input SettingsUpdateInput {
 
 type Taxonomy {
   createdAt: DateTime
+  hasColor: Boolean
   id: Int!
   modules: [Module]
   name: JSON
@@ -342,12 +345,14 @@ type TaxonomyQueryResult {
 }
 
 input TaxonomyUpsertInput {
+  hasColor: Boolean!
   modules: JSON!
   name: JSON!
   slug: JSON!
 }
 
 type Term {
+  color: String
   createdAt: DateTime
   id: Int!
   name: JSON
@@ -358,6 +363,7 @@ type Term {
 }
 
 input TermCreateInput {
+  color: String
   name: JSON!
   slug: JSON!
   taxonomyId: Int!
@@ -370,6 +376,7 @@ type TermQueryResult {
 }
 
 input TermUpdateInput {
+  color: String
   name: JSON!
   slug: JSON!
 }

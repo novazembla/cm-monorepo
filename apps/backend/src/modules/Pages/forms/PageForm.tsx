@@ -144,7 +144,22 @@ export const PageForm = ({
         }}
       />
       {updateActions}
-      
+      <Divider mt="10" />
+      <FieldMultiLangTextEditor
+        name="intro"
+        id="intro"
+        type="basic"
+        label={t("module.pages.forms.page.field.label.intro", "Intro")}
+        isRequired={false}
+        settings={{
+          defaultRequired: true,
+          defaultValues: data?.pageRead?.intro,
+          placeholder: t(
+            "module.pages.forms.page.field.placeholder.intro",
+            "Page's introduction paragraph"
+          ),
+        }}
+      />
       <Divider mt="10" />
       <FieldMultiLangTextEditor
         name="content"

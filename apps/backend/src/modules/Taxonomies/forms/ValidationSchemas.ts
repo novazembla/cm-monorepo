@@ -1,4 +1,4 @@
-import { string, object, array } from "yup";
+import { string, object, array, boolean, mixed } from "yup";
 
 import { activeLanguages } from "~/config";
 
@@ -11,6 +11,7 @@ export const ModuleTaxonomySchema = object().shape(
       [`slug_${lang}`]: string().lowercase().matches(/^[a-z\-\d]+$/, "validation.slug.invalidcharacters").required(),
     }),
     {
+      hasColor: boolean(),
       // t("validation.array.minOneItem", "Please select at least one item")
       modules: array().test(
         'at-least-one',
@@ -21,7 +22,6 @@ export const ModuleTaxonomySchema = object().shape(
   )
 );
 
-
 export const ModuleTermSchema = object().shape(
   activeLanguages.reduce(
     (acc, lang) => ({
@@ -30,7 +30,17 @@ export const ModuleTermSchema = object().shape(
       // t("validation.slug.invalidcharacters", "You can only use A-Z, -, and numbers")
       [`slug_${lang}`]: string().lowercase().matches(/^[a-z\-\d]+$/, "validation.slug.invalidcharacters").required(),
     }),
-    {}
+    {
+      hasColor: boolean(),
+      color: mixed().when("hasColor", {
+        is: true,
+        // t("validation.slug.notahexcolor", "Please provide a valid HEX color (like #a8f or #f9ad9f")
+        then: string().matches(/^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/, "validation.slug.notahexcolor")
+          .required(),
+        otherwise: string().nullable()
+      }),
+
+    }
   )
 );
 

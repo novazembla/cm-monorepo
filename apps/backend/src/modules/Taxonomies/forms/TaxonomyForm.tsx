@@ -1,9 +1,11 @@
 import { useTranslation } from "react-i18next";
 import {
   FieldMultiLangInput,
+  FieldInput,
   FieldRadioOrCheckboxGroup,
   FieldRadioOrCheckboxGroupOption,
   FieldRow,
+  FieldSwitch,
 } from "~/components/forms";
 import { useModules } from "~/hooks";
 import { yupIsFieldRequired } from "~/validation";
@@ -24,7 +26,8 @@ export const TaxonomyForm = ({
   const { t } = useTranslation();
   const modules = useModules();
 
-  
+  console.log(data);
+
   return (
     <>
       <FieldMultiLangInput
@@ -57,29 +60,50 @@ export const TaxonomyForm = ({
       />
 
       {type === "taxonomy" && (
+        <>
+          <FieldRow>
+            <FieldRadioOrCheckboxGroup
+              id="modules"
+              label={t(
+                "module.taxonomies.forms.field.modules.label",
+                "Active for the following Modules"
+              )}
+              name="modules"
+              type="checkbox"
+              isRequired={yupIsFieldRequired("modules", validationSchema)}
+              options={Object.keys(modules).reduce((acc, key) => {
+                const module: any = modules[key];
+                if (!module.withTaxonomies) return acc;
+                acc.push({
+                  label: module.name,
+                  key: module.key,
+                });
+                return acc;
+              }, [] as FieldRadioOrCheckboxGroupOption[])}
+            />
+          </FieldRow>
+          <FieldRow>
+            <FieldSwitch 
+              name="hasColor"
+              label={t("module.taxonomies.forms.field.hasColor.label", "Show color field")}
+              defaultChecked={!!data.hasColor}
+              colorScheme="wine"
+            />
+          </FieldRow>
+        </>
+      )}
+
+      {type === "term" && (!!data?.taxonomy?.hasColor || !!data?.hasColor) && (
         <FieldRow>
-          <FieldRadioOrCheckboxGroup
-            id="modules"
-            label={t(
-              "module.taxonomies.forms.field.modules.label",
-              "Active for the following Modules"
-            )}
-            name="modules"
-            type="checkbox"
-            isRequired={yupIsFieldRequired(
-              "modules",
-              validationSchema
-            )}
-            options={Object.keys(modules).reduce((acc, key) => {
-              const module: any = modules[key];
-              if (!module.withTaxonomies) return acc;
-              acc.push({
-                label: module.name,
-                key: module.key,
-              });
-              return acc;
-            }, [] as FieldRadioOrCheckboxGroupOption[])}
-            
+          <FieldInput
+            id="color"
+            label={t("module.taxonomies.forms.field.color.label", "Color")}
+            name="color"
+            type="text"
+            isRequired={yupIsFieldRequired("color", validationSchema)}
+            settings={{
+              placeholder: "#ab56cd",
+            }}
           />
         </FieldRow>
       )}

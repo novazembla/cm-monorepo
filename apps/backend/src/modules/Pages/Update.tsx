@@ -47,6 +47,7 @@ export const pageReadAndContentAuthorsQueryGQL = gql`
       id
       title
       slug
+      intro
       content
       status
       ownerId

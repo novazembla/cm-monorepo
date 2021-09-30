@@ -17,6 +17,7 @@ export const taxonomiesQueryGQL = gql`
         id
         name
         slug
+        hasColor
         termCount
       }
       totalCount
@@ -30,6 +31,7 @@ export const taxonomyReadQueryGQL = gql`
       id
       name
       slug
+      hasColor
       termCount
       modules {
         key

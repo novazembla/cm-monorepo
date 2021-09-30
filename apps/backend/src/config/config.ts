@@ -37,12 +37,12 @@ const configDefault: AppConfig = {
   settings: {},
   mapOuterBounds: [
     {
-      lat: 52.71218794157272,
-      lng: 13.000360654958342,
+      lat: 52.712187,
+      lng: 13.000360,
     },
     {
-      lat: 52.29188494426961,
-      lng: 13.813182965630787,
+      lat: 52.291884,
+      lng: 13.813182,
     },
   ],
   mapStyleUrl:

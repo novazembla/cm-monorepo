@@ -14,6 +14,7 @@ export const pagesQueryGQL = gql`
         title
         slug
         status
+        intro
         content
       }
       totalCount

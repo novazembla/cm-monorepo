@@ -22,12 +22,12 @@ import { authorizeApiUser } from "../helpers";
 import { getApiConfig } from "../../config";
 
 import {
+  daoTermsQuery,
   daoTermQuery,
   daoTermCreate,
   daoTermUpdate,
   daoTermDelete,
-  daoTermQueryCount,
-  daoTermGetById,
+  daoTermsQueryCount,
 } from "../../dao";
 
 const apiConfig = getApiConfig();
@@ -39,16 +39,11 @@ export const Term = objectType({
     t.nonNull.int("taxonomyId");
     t.json("name");
     t.json("slug");
+    t.string("color");
     t.date("createdAt");
     t.date("updatedAt");
     t.field("taxonomy", {
       type: "Taxonomy",
-
-      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "taxRead"),
-
-      async resolve(...[parent]) {
-        return daoTermGetById(parent.taxonomyId);
-      },
     });
   },
 });
@@ -97,7 +92,7 @@ export const TermQueries = extendType({
         let terms;
 
         if ((pRI?.fieldsByTypeName?.TermQueryResult as any)?.totalCount) {
-          totalCount = await daoTermQueryCount(args.taxonomyId, args.where);
+          totalCount = await daoTermsQueryCount(args.taxonomyId, args.where);
 
           if (totalCount === 0)
             return {
@@ -107,7 +102,7 @@ export const TermQueries = extendType({
         }
 
         if ((pRI?.fieldsByTypeName?.TermQueryResult as any)?.terms)
-          terms = await daoTermQuery(
+          terms = await daoTermsQuery(
             args.taxonomyId,
             args.where,
             args.orderBy,
@@ -132,8 +127,18 @@ export const TermQueries = extendType({
       authorize: (...[, , ctx]) => authorizeApiUser(ctx, "taxRead"),
 
       // resolve(root, args, ctx, info)
-      async resolve(...[, args]) {
-        return daoTermGetById(args.id);
+      async resolve(...[, args, , info]) {
+        const pRI = parseResolveInfo(info);
+
+        let include = {};
+
+        if ((pRI?.fieldsByTypeName?.Term as any)?.taxonomy) {
+          include = {
+            taxonomy: true,
+          };
+        }
+
+        return daoTermQuery({ id: args.id }, include);
       },
     });
   },
@@ -145,6 +150,7 @@ export const TermCreateInput = inputObjectType({
     t.nonNull.json("name");
     t.nonNull.json("slug");
     t.nonNull.int("taxonomyId");
+    t.string("color");
   },
 });
 
@@ -153,6 +159,7 @@ export const TermUpdateInput = inputObjectType({
   definition(t) {
     t.nonNull.json("name");
     t.nonNull.json("slug");
+    t.string("color");
   },
 });
 
@@ -173,6 +180,7 @@ export const TermMutations = extendType({
         const term = await daoTermCreate({
           name: args.data.name,
           slug: args.data.slug,
+          color: args.data.color ?? "",
           taxonomy: {
             connect: { id: args.data.taxonomyId },
           },
@@ -199,7 +207,11 @@ export const TermMutations = extendType({
       authorize: (...[, , ctx]) => authorizeApiUser(ctx, "taxUpdate"),
 
       async resolve(...[, args]) {
-        const term = await daoTermUpdate(args.id, args.data);
+        const term = await daoTermUpdate(args.id, {
+          name: args.data.name,
+          slug: args.data.slug,
+          color: args?.data?.color ?? "",
+        });
 
         if (!term)
           throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Update failed");

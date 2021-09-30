@@ -42,6 +42,7 @@ export const Page = objectType({
     t.nonNull.int("id");
     t.json("title");
     t.json("slug");
+    t.json("intro");
     t.json("content");
     t.string("fullText");
     t.nonNull.int("ownerId");
@@ -208,6 +209,7 @@ export const PageCreateInput = inputObjectType({
     t.nonNull.json("title");
     t.nonNull.json("slug");
     t.json("heroImage");
+    t.nonNull.json("intro");
     t.nonNull.json("content");
     t.nonNull.json("owner");
     t.nonNull.int("status");

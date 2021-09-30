@@ -6,6 +6,7 @@ export const taxonomyCreateMutationGQL = gql`
       id
       name
       slug
+      hasColor
     }
   }
 `;
@@ -16,6 +17,7 @@ export const taxonomyUpdateMutationGQL = gql`
       id
       name
       slug
+      hasColor
     }
   }
 `;
