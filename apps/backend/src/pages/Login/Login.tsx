@@ -32,7 +32,7 @@ import {
 const Login = () => {
   const config = useConfig();
   const [firstMutation] = useAuthLoginMutation();
-  const [isFormError, setIsFormError] = useState(false);
+  const [hasFormError, setHasFormError] = useState(false);
 
   const { t } = useTranslation();
 
@@ -49,13 +49,13 @@ const Login = () => {
   const onSubmit = async (
     data: yup.InferType<typeof UserLoginValidationSchema>
   ) => {
-    setIsFormError(false);
+    setHasFormError(false);
     try {
       const { errors } = await firstMutation(data.email, data.password);
 
-      if (errors) setIsFormError(true);
+      if (errors) setHasFormError(true);
     } catch (err) {
-      setIsFormError(true);
+      setHasFormError(true);
     }
   };
 
@@ -92,7 +92,7 @@ const Login = () => {
           <FormScrollInvalidIntoView />
           <form noValidate onSubmit={handleSubmit(onSubmit)}>
             <fieldset>
-              {isFormError && <TextErrorMessage error="page.login.error" />}
+              {hasFormError && <TextErrorMessage error="page.login.error" />}
               <FieldRow>
                 <FieldInput
                   name="email"

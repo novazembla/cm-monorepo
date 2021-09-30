@@ -27,7 +27,7 @@ const PasswordReset = () => {
   const token = router.query?.token;
 
   const [firstMutation] = useAuthPasswordResetMutation();
-  const [isFormError, setIsFormError] = useState(false);
+  const [hasFormError, setHasFormError] = useState(false);
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
   const { t } = useTranslation();
@@ -50,16 +50,16 @@ const PasswordReset = () => {
   }, [token, router]);
 
   const onSubmit = async (data: yup.InferType<typeof PasswordResetValidationSchema>) => {
-    setIsFormError(false);
+    setHasFormError(false);
     try {
       const { errors } = await firstMutation(data.newPassword, token ?? '');
       if (!errors) {
         setIsFormSubmitted(true);
       } else {
-        setIsFormError(true);
+        setHasFormError(true);
       }
     } catch (err) {
-      setIsFormError(true);
+      setHasFormError(true);
     }
   };
 
@@ -107,7 +107,7 @@ const PasswordReset = () => {
               onSubmit={handleSubmit(onSubmit)}
             >
               <fieldset>
-                {isFormError && (
+                {hasFormError && (
                   // t("general.error.requestfailed", "The request has failed. Please try again.")
                   <TextErrorMessage error="page.passwordreset.error" />
                 )}

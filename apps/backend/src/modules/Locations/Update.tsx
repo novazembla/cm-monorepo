@@ -128,7 +128,7 @@ const Update = () => {
   );
 
   const [firstMutation, firstMutationResults] = useLocationUpdateMutation();
-  const [isFormError, setIsFormError] = useState(false);
+  const [hasFormError, setHasFormError] = useState(false);
 
   const disableForm = firstMutationResults.loading;
 
@@ -174,7 +174,7 @@ const Update = () => {
   const onSubmit = async (
     newData: yup.InferType<typeof ModuleLocationUpdateSchema>
   ) => {
-    setIsFormError(false);
+    setHasFormError(false);
     setIsNavigatingAway(false);
     try {
       if (appUser) {
@@ -239,13 +239,15 @@ const Update = () => {
         } else {
           let slugError = multiLangSlugUniqueError(errors, setError);
 
-          if (!slugError) setIsFormError(true);
+          console.log("xxx", slugError, errors);
+
+          if (!slugError) setHasFormError(true);
         }
       } else {
-        setIsFormError(true);
+        setHasFormError(true);
       }
     } catch (err) {
-      setIsFormError(true);
+      setHasFormError(true);
     }
   };
 
@@ -283,12 +285,12 @@ const Update = () => {
         }
       />
       <FormProvider {...formMethods}>
-        <FormScrollInvalidIntoView />
+        <FormScrollInvalidIntoView hasFormError={hasFormError} />
         <form noValidate onSubmit={handleSubmit(onSubmit)}>
           <fieldset disabled={disableForm}>
             <ModuleSubNav breadcrumb={breadcrumb} buttonList={buttonList} />
             <ModulePage isLoading={loading} isError={!!error}>
-              {isFormError && (
+              {hasFormError && (
                 <>
                   <TextErrorMessage error="general.writeerror.desc" />
                   <Divider />

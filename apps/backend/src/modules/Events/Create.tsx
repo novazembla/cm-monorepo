@@ -66,7 +66,7 @@ const Create = () => {
   const [isNavigatingAway, setIsNavigatingAway] = useState(false);
 
   const [firstMutation, firstMutationResults] = useEventCreateMutation();
-  const [isFormError, setIsFormError] = useState(false);
+  const [hasFormError, setHasFormError] = useState(false);
 
   const disableForm = firstMutationResults.loading;
 
@@ -99,7 +99,7 @@ const Create = () => {
   const onSubmit = async (
     newData: yup.InferType<typeof ModuleEventCreateSchema>
   ) => {
-    setIsFormError(false);
+    setHasFormError(false);
     setIsNavigatingAway(false);
 
     try {
@@ -153,13 +153,13 @@ const Create = () => {
             setError
           );
 
-          if (!slugError) setIsFormError(true);
+          if (!slugError) setHasFormError(true);
         }
       } else {
-        setIsFormError(true);
+        setHasFormError(true);
       }
     } catch (err) {
-      setIsFormError(true);
+      setHasFormError(true);
     }
   };
 
@@ -199,7 +199,7 @@ const Create = () => {
           <fieldset disabled={disableForm}>
             <ModuleSubNav breadcrumb={breadcrumb} buttonList={buttonList} />
             <ModulePage isLoading={loading} isError={!!error}>
-              {isFormError && (
+              {hasFormError && (
                 <>
                   <TextErrorMessage error="general.writeerror.desc" />
                   <Divider />

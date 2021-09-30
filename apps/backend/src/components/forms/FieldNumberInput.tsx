@@ -51,11 +51,12 @@ const format = (val: any, precision: number | undefined) => {
 
 const formatDefaultValue = (val: any, settings: number | undefined) => {
   let defaultValue = format(
-    typeof val !== "undefined" ? val : "0.00",
+    val, //typeof val !== "undefined" ? val : "0.00",
     settings
   );
 
-  if (typeof defaultValue !== "string") defaultValue = defaultValue.toString();
+  if (typeof defaultValue !== "undefined" && typeof defaultValue !== "string")
+    defaultValue = defaultValue.toString();
 
   return defaultValue;
 };
@@ -136,13 +137,13 @@ export const FieldNumberInput = ({
                 ...restField,
                 onBlur: (event) => {
                   // weirdly restField.onBlur()
-                  // sets the field value to undefined 
-                  // and then the validation fails. 
+                  // sets the field value to undefined
+                  // and then the validation fails.
                   // so we have to store it for the moment
                   const v = getValues(restField.name);
                   restField.onBlur();
 
-                  // and reset the value and retrigger the validation again. 
+                  // and reset the value and retrigger the validation again.
                   setValue(restField.name, v);
                   trigger(restField.name);
 
@@ -181,8 +182,8 @@ export const FieldNumberInput = ({
             >
               <NumberInputField
                 ref={(e: HTMLInputElement) => {
-                  ref(e)
-                  fieldRef.current = e;// you can still assign to ref
+                  ref(e);
+                  fieldRef.current = e; // you can still assign to ref
                 }}
                 name={restField.name}
                 placeholder={settings?.placeholder}

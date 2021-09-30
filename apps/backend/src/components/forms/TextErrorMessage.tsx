@@ -27,7 +27,7 @@ export const TextErrorMessage = ({
   // make sure first character is uppder case
   message = message.charAt(0).toUpperCase() + message.slice(1);
 
-  return <Text pb="4" color="red.400">{message}</Text>;
+  return <Text pb="4" color="red.400" className="form-error">{message}</Text>;
 };
 
 export default TextErrorMessage;

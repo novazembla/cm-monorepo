@@ -21,7 +21,7 @@ import {
 
 const PasswordRequest = () => {
   const [firstMutation, firstMutationResponse] = useAuthPasswordRequestMutation();
-  const [isFormError, setIsFormError] = useState(false);
+  const [hasFormError, setHasFormError] = useState(false);
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
   const { t } = useTranslation();
@@ -38,20 +38,20 @@ const PasswordRequest = () => {
   const onSubmit = async (
     data: yup.InferType<typeof PasswordRequestValidationSchema>
   ) => {
-    setIsFormError(false);
+    setHasFormError(false);
     try {
       const { errors } = await firstMutation(data.email);
       if (!errors) {
         setIsFormSubmitted(true);
       } else {
-        setIsFormError(true);
+        setHasFormError(true);
       }
     } catch (err) {
-      setIsFormError(true);
+      setHasFormError(true);
     }
   };
 
-  if (isFormSubmitted && !firstMutationResponse.error && !isFormError)
+  if (isFormSubmitted && !firstMutationResponse.error && !hasFormError)
     return (
       <AuthenticationPage>
         <AuthenticationFormContainer>
@@ -93,7 +93,7 @@ const PasswordRequest = () => {
             onSubmit={handleSubmit(onSubmit)}
           >
             <fieldset>
-              {isFormError && (
+              {hasFormError && (
                 //  t("page.passwordrequest.error", "The reset request has failed. Please try again.")
                 <TextErrorMessage error="page.passwordrequest.error" />
               )}

@@ -54,7 +54,7 @@ const Update = () => {
 
   const history = useHistory();
   const [firstMutation, firstMutationResults] = useSettingsUpdateMutation();
-  const [isFormError, setIsFormError] = useState(false);
+  const [hasFormError, setHasFormError] = useState(false);
 
   const disableForm = firstMutationResults.loading;
 
@@ -78,7 +78,7 @@ const Update = () => {
   const onSubmit = async (
     newData: yup.InferType<typeof settingsValidationSchema>
   ) => {
-    setIsFormError(false);
+    setHasFormError(false);
     setIsNavigatingAway(false);
     try {
       if (appUser) {
@@ -121,13 +121,13 @@ const Update = () => {
           setIsNavigatingAway(true);
           history.push("/settings");
         } else {
-          setIsFormError(true);
+          setHasFormError(true);
         }
       } else {
-        setIsFormError(true);
+        setHasFormError(true);
       }
     } catch (err) {
-      setIsFormError(true);
+      setHasFormError(true);
     }
   };
 
@@ -167,7 +167,7 @@ const Update = () => {
           <fieldset disabled={disableForm}>
             <ModuleSubNav breadcrumb={breadcrumb} buttonList={buttonList} />
             <ModulePage isLoading={loading} isError={!!error}>
-              {isFormError && (
+              {hasFormError && (
                 <>
                   <TextErrorMessage error="general.writeerror.desc" />
                   <Divider />

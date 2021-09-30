@@ -42,7 +42,7 @@ const Create = () => {
   const [isNavigatingAway, setIsNavigatingAway] = useState(false);
 
   const [firstMutation, firstMutationResults] = usePageCreateMutation();
-  const [isFormError, setIsFormError] = useState(false);
+  const [hasFormError, setHasFormError] = useState(false);
 
   const disableForm = firstMutationResults.loading;
 
@@ -60,7 +60,7 @@ const Create = () => {
   const onSubmit = async (
     newData: yup.InferType<typeof ModulePageCreateSchema>
   ) => {
-    setIsFormError(false);
+    setHasFormError(false);
     setIsNavigatingAway(false);
     try {
       if (appUser) {
@@ -87,13 +87,13 @@ const Create = () => {
         } else {
           let slugError = multiLangSlugUniqueError(errors, setError);
 
-          if (!slugError) setIsFormError(true);
+          if (!slugError) setHasFormError(true);
         }
       } else {
-        setIsFormError(true);
+        setHasFormError(true);
       }
     } catch (err) {
-      setIsFormError(true);
+      setHasFormError(true);
     }
   };
 
@@ -133,7 +133,7 @@ const Create = () => {
           <fieldset disabled={disableForm}>
             <ModuleSubNav breadcrumb={breadcrumb} buttonList={buttonList} />
             <ModulePage>
-              {isFormError && (
+              {hasFormError && (
                 <>
                   <TextErrorMessage error="general.writeerror.desc" />
                   <Divider />

@@ -35,7 +35,7 @@ import {
 
 const Signup = () => {
   const [firstMutation, firstMutationResults] = useUserSignupMutation();
-  const [isFormError, setIsFormError] = useState(false);
+  const [hasFormError, setHasFormError] = useState(false);
   const [isFormEmailError, setIsFormEmailError] = useState(false);
 
   const { t } = useTranslation();
@@ -56,7 +56,7 @@ const Signup = () => {
   const onSubmit = async (
     data: yup.InferType<typeof UserSignupValidationSchema>
   ) => {
-    setIsFormError(false); // TODO: how to have this clear set on form change, also how to set the form fields to not valid to make them red...
+    setHasFormError(false); // TODO: how to have this clear set on form change, also how to set the form fields to not valid to make them red...
     setIsFormEmailError(false);
     try {
       const { errors } = await firstMutation(data);
@@ -65,10 +65,10 @@ const Signup = () => {
       } else {
         if (errors[0].message === "Email already taken")
           setIsFormEmailError(true);
-        setIsFormError(true);
+        setHasFormError(true);
       }
     } catch (err) {
-      setIsFormError(true);
+      setHasFormError(true);
     }
   };
 
@@ -95,7 +95,7 @@ const Signup = () => {
             <FormScrollInvalidIntoView/>
             <form noValidate onSubmit={handleSubmit(onSubmit)}>
               <fieldset disabled={disableForm}>
-                {isFormError && (
+                {hasFormError && (
                   <TextErrorMessage error={`page.register.${isFormEmailError ? "emailtaken":"error"}`} />
                 )}
 

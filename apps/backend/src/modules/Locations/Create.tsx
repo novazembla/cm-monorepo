@@ -57,7 +57,7 @@ const Create = () => {
   const [isNavigatingAway, setIsNavigatingAway] = useState(false);
 
   const [firstMutation, firstMutationResults] = useLocationCreateMutation();
-  const [isFormError, setIsFormError] = useState(false);
+  const [hasFormError, setHasFormError] = useState(false);
 
   const disableForm = firstMutationResults.loading;
 
@@ -81,7 +81,7 @@ const Create = () => {
   const onSubmit = async (
     newData: yup.InferType<typeof ModuleLocationCreateSchema>
   ) => {
-    setIsFormError(false);
+    setHasFormError(false);
     setIsNavigatingAway(false);
     try {
       if (appUser) {
@@ -122,14 +122,15 @@ const Create = () => {
             mutationResults.errors,
             setError
           );
+            
 
-          if (!slugError) setIsFormError(true);
+          if (!slugError) setHasFormError(true);
         }
       } else {
-        setIsFormError(true);
+        setHasFormError(true);
       }
     } catch (err) {
-      setIsFormError(true);
+      setHasFormError(true);
     }
   };
 
@@ -164,12 +165,12 @@ const Create = () => {
         shouldBlock={!isNavigatingAway && isDirty && !isSubmitting}
       />
       <FormProvider {...formMethods}>
-        <FormScrollInvalidIntoView />
+        <FormScrollInvalidIntoView hasFormError={hasFormError} />
         <form noValidate onSubmit={handleSubmit(onSubmit)}>
           <fieldset disabled={disableForm}>
             <ModuleSubNav breadcrumb={breadcrumb} buttonList={buttonList} />
             <ModulePage isLoading={loading} isError={!!error}>
-              {isFormError && (
+              {hasFormError && (
                 <>
                   <TextErrorMessage error="general.writeerror.desc" />
                   <Divider />

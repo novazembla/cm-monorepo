@@ -10,7 +10,6 @@ import {
   FormControl,
   Box,
   IconButton,
-  Button,
   Input,
   chakra,
 } from "@chakra-ui/react";
@@ -73,7 +72,6 @@ export const FieldSingleSelectAutocomplete = ({
     formState: { errors },
     register,
     setValue,
-    getValues,
   } = useFormContext();
 
   const findItemsButChill = debounce((inputValue: string) => {

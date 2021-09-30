@@ -53,7 +53,7 @@ const Update = () => {
   });
 
   const [firstMutation, firstMutationResults] = useUserUpdateMutation();
-  const [isFormError, setIsFormError] = useState(false);
+  const [hasFormError, setHasFormError] = useState(false);
 
   const disableForm = firstMutationResults.loading;
 
@@ -83,7 +83,7 @@ const Update = () => {
   const onSubmit = async (
     newData: yup.InferType<typeof ModuleUsersUpdateSchema>
   ) => {
-    setIsFormError(false);
+    setHasFormError(false);
     setIsNavigatingAway(false);
     try {
       if (appUser) {
@@ -111,13 +111,13 @@ const Update = () => {
           setIsNavigatingAway(true);
           router.push("/users");
         } else {
-          setIsFormError(true);
+          setHasFormError(true);
         }
       } else {
-        setIsFormError(true);
+        setHasFormError(true);
       }
     } catch (err) {
-      setIsFormError(true);
+      setHasFormError(true);
     }
   };
 
@@ -157,7 +157,7 @@ const Update = () => {
           <fieldset disabled={disableForm}>
             <ModuleSubNav breadcrumb={breadcrumb} buttonList={buttonList} />
             <ModulePage isLoading={loading} isError={!!error}>
-              {isFormError && (
+              {hasFormError && (
                 <>
                   <TextErrorMessage error="general.writeerror.desc" />
                   <Divider />

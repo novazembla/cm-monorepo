@@ -38,7 +38,7 @@ const Create = () => {
   const [isNavigatingAway, setIsNavigatingAway] = useState(false);
 
   const [firstMutation, firstMutationResults] = useUserCreateMutation();
-  const [isFormError, setIsFormError] = useState(false);
+  const [hasFormError, setHasFormError] = useState(false);
 
   const disableForm = firstMutationResults.loading;
 
@@ -55,7 +55,7 @@ const Create = () => {
   const onSubmit = async (
     newData: yup.InferType<typeof ModuleUsersCreateSchema>
   ) => {
-    setIsFormError(false);
+    setHasFormError(false);
     setIsNavigatingAway(false);
     try {
       if (appUser) {
@@ -71,13 +71,13 @@ const Create = () => {
           setIsNavigatingAway(true);
           router.push("/users");
         } else {
-          setIsFormError(true);
+          setHasFormError(true);
         }
       } else {
-        setIsFormError(true);
+        setHasFormError(true);
       }
     } catch (err) {
-      setIsFormError(true);
+      setHasFormError(true);
     }
   };
 
@@ -117,7 +117,7 @@ const Create = () => {
           <fieldset disabled={disableForm}>
             <ModuleSubNav breadcrumb={breadcrumb} buttonList={buttonList} />
             <ModulePage>
-              {isFormError && (
+              {hasFormError && (
                 <>
                   <TextErrorMessage error="general.writeerror.desc" />
                   <Divider />

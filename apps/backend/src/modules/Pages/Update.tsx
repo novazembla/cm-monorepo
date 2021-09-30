@@ -85,7 +85,7 @@ const Update = () => {
   });
 
   const [firstMutation, firstMutationResults] = usePageUpdateMutation();
-  const [isFormError, setIsFormError] = useState(false);
+  const [hasFormError, setHasFormError] = useState(false);
 
   const disableForm = firstMutationResults.loading;
 
@@ -127,7 +127,7 @@ const Update = () => {
   const onSubmit = async (
     newData: yup.InferType<typeof ModulePageUpdateSchema>
   ) => {
-    setIsFormError(false);
+    setHasFormError(false);
     setIsNavigatingAway(false);
     const heroImage =
       newData.heroImage && !isNaN(newData.heroImage) && newData.heroImage > 0
@@ -182,13 +182,13 @@ const Update = () => {
         } else {
           let slugError = multiLangSlugUniqueError(errors, setError);
 
-          if (!slugError) setIsFormError(true);
+          if (!slugError) setHasFormError(true);
         }
       } else {
-        setIsFormError(true);
+        setHasFormError(true);
       }
     } catch (err) {
-      setIsFormError(true);
+      setHasFormError(true);
     }
   };
 
@@ -231,7 +231,7 @@ const Update = () => {
           <fieldset disabled={disableForm}>
             <ModuleSubNav breadcrumb={breadcrumb} buttonList={buttonList} />
             <ModulePage isLoading={loading} isError={!!error}>
-              {isFormError && (
+              {hasFormError && (
                 <>
                   <TextErrorMessage error="general.writeerror.desc" />
                   <Divider />

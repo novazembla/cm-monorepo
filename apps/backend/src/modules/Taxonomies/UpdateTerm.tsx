@@ -60,7 +60,7 @@ const UpdateTerm = () => {
   });
 
   const [firstMutation, firstMutationResults] = useTermUpdateMutation();
-  const [isFormError, setIsFormError] = useState(false);
+  const [hasFormError, setHasFormError] = useState(false);
 
   const taxonomyQueryResults = useQuery(taxonomyReadQueryGQL, {
     variables: {
@@ -95,7 +95,7 @@ const UpdateTerm = () => {
   }, [reset, data, config.activeLanguages]);
 
   const onSubmit = async (newData: yup.InferType<typeof ModuleTermSchema>) => {
-    setIsFormError(false);
+    setHasFormError(false);
     setIsNavigatingAway(false);
     try {
       if (appUser) {
@@ -121,13 +121,13 @@ const UpdateTerm = () => {
         } else {
           let slugError = multiLangSlugUniqueError(errors, setError);
 
-          if (!slugError) setIsFormError(true);
+          if (!slugError) setHasFormError(true);
         }
       } else {
-        setIsFormError(true);
+        setHasFormError(true);
       }
     } catch (err) {
-      setIsFormError(true);
+      setHasFormError(true);
     }
   };
 
@@ -176,7 +176,7 @@ const UpdateTerm = () => {
           <fieldset disabled={disableForm}>
             <ModuleSubNav breadcrumb={breadcrumb} buttonList={buttonList} />
             <ModulePage isLoading={loading} isError={!!error}>
-              {isFormError && (
+              {hasFormError && (
                 <>
                   <TextErrorMessage error="general.writeerror.desc" />
                   <Divider />

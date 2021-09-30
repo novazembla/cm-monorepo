@@ -32,7 +32,7 @@ const Update = () => {
 
   const [firstMutation, firstMutationResults] =
     useUserProfilePasswordUpdateMutation();
-  const [isFormError, setIsFormError] = useState(false);
+  const [hasFormError, setHasFormError] = useState(false);
   const [isNavigatingAway, setIsNavigatingAway] = useState(false);
 
   const disableForm = firstMutationResults.loading;
@@ -50,7 +50,7 @@ const Update = () => {
   const onSubmit = async (
     newData: yup.InferType<typeof PasswordResetValidationSchema>
   ) => {
-    setIsFormError(false);
+    setHasFormError(false);
     setIsNavigatingAway(false);
     try {
       if (appUser) {
@@ -58,10 +58,10 @@ const Update = () => {
         setIsNavigatingAway(true);
         await logoutAndRedirect("/password-has-been-reset");
       } else {
-        setIsFormError(true);
+        setHasFormError(true);
       }
     } catch (err) {
-      setIsFormError(true);
+      setHasFormError(true);
     }
   };
 
@@ -105,7 +105,7 @@ const Update = () => {
           <fieldset disabled={disableForm}>
             <ModuleSubNav breadcrumb={breadcrumb} buttonList={buttonList} />
             <ModulePage>
-              {isFormError && (
+              {hasFormError && (
                 <>
                   <TextErrorMessage error="general.writeerror.desc" />
                   <Divider />

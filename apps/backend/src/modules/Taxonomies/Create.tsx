@@ -45,7 +45,7 @@ const Create = () => {
   const [isNavigatingAway, setIsNavigatingAway] = useState(false);
 
   const [firstMutation, firstMutationResults] = useTaxonomyCreateMutation();
-  const [isFormError, setIsFormError] = useState(false);
+  const [hasFormError, setHasFormError] = useState(false);
 
   const modules = useModules();
 
@@ -65,7 +65,7 @@ const Create = () => {
   const onSubmit = async (
     newData: yup.InferType<typeof ModuleTaxonomySchema>
   ) => {
-    setIsFormError(false);
+    setHasFormError(false);
     try {
       if (appUser) {
         const { errors } = await firstMutation({
@@ -90,13 +90,13 @@ const Create = () => {
         } else {
           let slugError = multiLangSlugUniqueError(errors, setError);
 
-          if (!slugError) setIsFormError(true);
+          if (!slugError) setHasFormError(true);
         }
       } else {
-        setIsFormError(true);
+        setHasFormError(true);
       }
     } catch (err) {
-      setIsFormError(true);
+      setHasFormError(true);
     }
   };
 
@@ -136,7 +136,7 @@ const Create = () => {
           <fieldset disabled={disableForm}>
             <ModuleSubNav breadcrumb={breadcrumb} buttonList={buttonList} />
             <ModulePage>
-              {isFormError && (
+              {hasFormError && (
                 <>
                   <TextErrorMessage error="general.writeerror.desc" />
                   <Divider />
