@@ -33,9 +33,11 @@ export const FieldMultiLangTextEditor = ({
   type,
   isRequired,
   isDisabled,
+  size = "small",
 }: {
   settings?: FieldMultiLangTextEditorSettings;
   id: string;
+  size?: string;
   isRequired?: boolean;
   isDisabled?: boolean;
   label: string;
@@ -63,7 +65,7 @@ export const FieldMultiLangTextEditor = ({
                 id={field_id}
                 type={type}
                 name={field_name}
-                
+                size={size}
                 label={
                   <chakra.span>
                     {label} (

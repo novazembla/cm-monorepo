@@ -1,4 +1,9 @@
-import React, { useState, MouseEventHandler, FormEvent, useEffect } from "react";
+import React, {
+  useState,
+  MouseEventHandler,
+  FormEvent,
+  useEffect,
+} from "react";
 import {
   Box,
   IconButton,
@@ -54,7 +59,7 @@ const EditorMenuBarButton = ({
   label,
   isActive,
   isDisabled,
-  
+
   onClick,
 }: {
   icon: React.ReactElement;
@@ -62,7 +67,7 @@ const EditorMenuBarButton = ({
   isFlashing?: boolean;
   isActive?: boolean;
   isDisabled?: boolean;
-  
+
   onClick: MouseEventHandler<HTMLButtonElement>;
 }) => (
   <IconButton
@@ -115,10 +120,8 @@ const EditorMenuBar = ({
     if (editorIsFocussed && showLinkEditScreen) {
       setShowLinkEditScreen(false);
     } else if (showLinkEditScreen) {
-      if (inputRef?.current)
-        inputRef?.current.focus();
+      if (inputRef?.current) inputRef?.current.focus();
     }
-
   }, [editorIsFocussed, showLinkEditScreen]);
 
   const save = t("editor.button.save", "Save");
@@ -320,8 +323,10 @@ export const TextEditor = ({
   contentType = "html",
   maxLength,
   isInvalid,
+  size = "small",
 }: {
   name: string;
+  size?: string;
   type: TextEditorTypes;
   onChange: (content: string | Record<string, any>) => void;
   content: Content;
@@ -368,9 +373,9 @@ export const TextEditor = ({
 
   return (
     <Box
-      className={`editor ${type} ${isFocussed ? "is-focussed" : ""} ${
+      className={`editor ${type} ${size} ${isFocussed ? "is-focussed" : ""} ${
         maxLength && maxLength > 0 ? "has-char-count" : ""
-      } ${isInvalid ? "is-error": ""}`}
+      } ${isInvalid ? "is-error" : ""}`}
     >
       <EditorMenuBar
         {...{ type, editor, name, editorIsFocussed: isFocussed }}

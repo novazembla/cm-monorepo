@@ -48,15 +48,14 @@ const baseStyle = {
   l: 0,
   w: "100%",
   h: "100%",
-  borderWidth: 2,
-  borderColor: "orange.200",
+  borderWidth: 1,
+  borderColor: "gray.400",
   borderStyle: "solid",
-  backgroundColor: "orange.100",
+  bg: "gray.200",
   color: "gray.800",
   outline: "none",
   transition: "all .24s ease-in-out",
   cursor: "pointer",
-
   _hover: {
     boderColor: "gray.600",
     bg: "orange.200",
@@ -68,7 +67,6 @@ const activeStyle = {
 };
 
 const acceptStyle = {
-  borderColor: "green.200",
   bg: "green.200",
   _hover: {
     bg: "green.200",
@@ -76,7 +74,6 @@ const acceptStyle = {
 };
 
 const rejectStyle = {
-  borderColor: "red.400",
   color: "#fff !important",
   bg: "red.400",
   _hover: {

@@ -21,9 +21,11 @@ export const FieldTextEditor = ({
   type,
   isRequired,
   isDisabled,
+  size = "small",
 }: {
   settings?: FieldTextEditorSettings;
   id: string;
+  size?: string;
   isRequired?: boolean;
   isDisabled?: boolean;
   label: string | React.ReactNode;
@@ -60,6 +62,7 @@ export const FieldTextEditor = ({
           content={settings?.defaultValue ?? undefined}
           placeholder={settings?.placeholder}
           type={type}
+          size={size}
           name={name}
           onChange={(content) => {
             setValue(name, content);
