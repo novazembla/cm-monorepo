@@ -7,9 +7,12 @@ import { ApiError, filteredOutputByBlacklistOrNotFound } from "../utils";
 import { getApiConfig } from "../config";
 import { getPrismaClient } from "../db/client";
 import { daoImageSetToDelete } from "./image";
+import { daoSharedGenerateFullText } from "./shared";
 
 const prisma = getPrismaClient();
 const apiConfig = getApiConfig();
+
+const userFullTextKeys = ["email", "firstName", "lastName"];
 
 export const daoUserCheckIsEmailTaken = async (
   email: string,
@@ -45,12 +48,8 @@ export const daoUserCreate = async (
   const user: User = await prisma.user.create({
     data: {
       ...data,
-      ...{
-        password: await bcrypt.hash(
-          data.password,
-          apiConfig.security.saltRounds
-        ),
-      },
+      password: await bcrypt.hash(data.password, apiConfig.security.saltRounds),
+      fullText: daoSharedGenerateFullText(data, userFullTextKeys),
     },
   });
 
@@ -140,16 +139,17 @@ export const daoUserUpdate = async (
   if (data.password)
     updateData = {
       ...data,
-      ...{
-        password: await bcrypt.hash(
-          data.password as string,
-          apiConfig.security.saltRounds
-        ),
-      },
+      password: await bcrypt.hash(
+        data.password as string,
+        apiConfig.security.saltRounds
+      ),
     };
 
   const user: User = await prisma.user.update({
-    data: updateData,
+    data: {
+      ...updateData,
+      fullText: daoSharedGenerateFullText(data, userFullTextKeys),
+    },
     where: {
       id,
     },

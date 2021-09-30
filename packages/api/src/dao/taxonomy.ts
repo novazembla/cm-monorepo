@@ -9,10 +9,12 @@ import {
   daoTermGetTermsByTaxonomyId,
   daoTermGetTermsCountByTaxonomyId,
 } from "./term";
-import { daoSharedCheckSlugUnique } from "./shared";
+import { daoSharedCheckSlugUnique, daoSharedGenerateFullText } from "./shared";
 
 const prisma = getPrismaClient();
 const apiConfig = getApiConfig();
+
+const taxFullTextKeys = ["name", "slug"];
 
 export const daoTaxonomyCheckSlugUnique = async (
   slug: Record<string, string>,
@@ -110,7 +112,10 @@ export const daoTaxonomyCreate = async (
     );
 
   const taxonomy: Taxonomy = await prisma.taxonomy.create({
-    data,
+    data: {
+      ...data,
+      fullText: daoSharedGenerateFullText(data, taxFullTextKeys),
+    },
   });
 
   return filteredOutputByBlacklistOrNotFound(
@@ -136,7 +141,10 @@ export const daoTaxonomyUpdate = async (
     );
 
   const taxonomy: Taxonomy = await prisma.taxonomy.update({
-    data,
+    data: {
+      ...data,
+      fullText: daoSharedGenerateFullText(data, taxFullTextKeys),
+    },
     where: {
       id,
     },
@@ -168,7 +176,7 @@ export const daoTaxonomyDelete = async (id: number): Promise<Taxonomy> => {
   );
 };
 
-export default {
+const defaults = {
   daoTaxonomyQuery,
   daoTaxonomyQueryFirst,
   daoTaxonomyQueryCount,
@@ -178,3 +186,4 @@ export default {
   daoTaxonomyUpdate,
   daoTaxonomyDelete,
 };
+export default defaults;

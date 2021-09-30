@@ -92,7 +92,13 @@ export const daoSharedGenerateFullText = (data: any, keys: string[]) => {
   return keys.reduce((fullText: string, key) => {
     if (!(key in data)) return fullText;
 
-    if (typeof data[key] !== "object") return fullText;
+    if (typeof data[key] !== "object") {
+      if (data[key]) {
+        return `${fullText} ${data[key]}`;
+      } else {
+        return fullText;
+      }
+    }
 
     return `${fullText} ${Object.keys(data[key])
       .map((oKey) => data[key][oKey])
@@ -159,7 +165,8 @@ export const daoSharedWrapImageWithTranslationImage = (
   };
 };
 
-export default {
+const defaults = {
   daoSharedGenerateFullText,
   daoSharedCheckSlugUnique,
 };
+export default defaults;

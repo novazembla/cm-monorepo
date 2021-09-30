@@ -78,6 +78,7 @@ const Create = () => {
             [],
             multiLangFields
           ),
+          hasColor: newData.hasColor,
           modules: {
             connect: mapModulesCheckboxSelectionToData(newData, modules),
           },

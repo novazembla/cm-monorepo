@@ -34,6 +34,8 @@ model User {
 
   images         Image[]    @relation("images")
   
+  fullText      String? @default("")
+
   profileImageId Int?           
   profileImage   Image?  @relation(fields: [profileImageId], references: [id], name: "profileImage")
 }
@@ -151,6 +153,8 @@ model Taxonomy {
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @default(now()) @updatedAt
 
+  fullText      String? @default("")
+
   terms          Term[]
   modules        Module[]
 
@@ -168,6 +172,8 @@ model Term {
   locations      Location[]
   events         Event[]
 
+  fullText      String? @default("")
+  
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @default(now()) @updatedAt
 

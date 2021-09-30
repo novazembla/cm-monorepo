@@ -28,7 +28,7 @@ import {
   Icon,
   IconButton,
   Input,
-  Badge
+  Badge,
 } from "@chakra-ui/react";
 
 import {
@@ -128,28 +128,38 @@ export const adminTableCreateQueryVariables = (
     variables = {
       ...variables,
       where: {
-        OR: filterColumnKeys.map((key) => {
-          if (jsonColumns && jsonKeys && jsonColumns.includes(key)) {
-            return {
-              OR: jsonKeys.map((jKey) => ({
-                [key]: {
-                  path: jKey,
-                  string_contains: tState.filterKeyword,
-                  // TODO: maybe enable at some point mode: 'insensitive',
-                },
-              })),
-            };
-          } else {
-            return {
-              [key]: {
-                contains: tState.filterKeyword,
-                mode: "insensitive",
-              },
-            };
-          }
-        }),
+        fullText: {
+          contains: tState.filterKeyword,
+          mode: "insensitive",
+        },
       },
     };
+
+    // variables = {
+    //   ...variables,
+    //   where: {
+    //     OR: filterColumnKeys.map((key) => {
+    //       if (jsonColumns && jsonKeys && jsonColumns.includes(key)) {
+    //         return {
+    //           OR: jsonKeys.map((jKey) => ({
+    //             [key]: {
+    //               path: jKey,
+    //               string_contains: tState.filterKeyword,
+    //               // TODO: maybe enable at some point mode: 'insensitive',
+    //             },
+    //           })),
+    //         };
+    //       } else {
+    //         return {
+    //           [key]: {
+    //             contains: tState.filterKeyword,
+    //             mode: "insensitive",
+    //           },
+    //         };
+    //       }
+    //     }),
+    //   },
+    // };
   }
 
   return variables;
@@ -329,40 +339,39 @@ export const AdminTableActionCell = (cell: Cell) => {
 };
 
 export const AdminTablePublishStatusCell = (cell: Cell) => {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   let color = "gray";
   let variant = "subtle";
-  let label = t("publish.status.unknown", "Unknown")
+  let label = t("publish.status.unknown", "Unknown");
 
   if (cell.value === PublishStatus.AUTODRAFT) {
     color = "gray";
-    label = t("publish.status.autodraft", "Draft")
+    label = t("publish.status.autodraft", "Draft");
   }
 
   if (cell.value === PublishStatus.DRAFT) {
     color = "gray";
-    label = t("publish.status.draft", "Draft")
+    label = t("publish.status.draft", "Draft");
   }
-    
 
   if (cell.value === PublishStatus.FORREVIEW) {
     color = "cyan";
-    label = t("publish.status.forreview", "For review")
+    label = t("publish.status.forreview", "For review");
   }
 
   if (cell.value === PublishStatus.REJECTED) {
     color = "orange";
-    label = t("publish.status.rejected", "Rejected")
+    label = t("publish.status.rejected", "Rejected");
   }
 
   if (cell.value === PublishStatus.PUBLISHED) {
     color = "green";
-    label = t("publish.status.published", "Published")
+    label = t("publish.status.published", "Published");
   }
 
   if (cell.value === PublishStatus.TRASHED) {
     color = "red";
-    label = t("publish.status.trashed", "Trashed")
+    label = t("publish.status.trashed", "Trashed");
   }
 
   return (
@@ -377,7 +386,6 @@ export const AdminTablePublishStatusCell = (cell: Cell) => {
       {label}
     </Badge>
   );
-
 };
 
 export const AdminTableMultiLangCell = (cell: Cell) => (
@@ -563,13 +571,14 @@ export const AdminTable = ({
               <Tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column) => (
                   <Th
-                    {...column.getHeaderProps(/* column.getSortByToggleProps() */)}
+                    {
+                      ...column.getHeaderProps(/* column.getSortByToggleProps() */)
+                    }
                     fontSize="md"
                     color="gray.800"
                     borderColor="gray.300"
                     isNumeric={(column as any).isNumeric}
                     _last={
-                      
                       (column as any).isStickyToTheRight
                         ? {
                             position: "sticky",
@@ -644,8 +653,8 @@ export const AdminTable = ({
                         bg: "gray.50",
 
                         "> div": {
-                          bg: "transparent"
-                        }
+                          bg: "transparent",
+                        },
                       },
                     },
                   }}

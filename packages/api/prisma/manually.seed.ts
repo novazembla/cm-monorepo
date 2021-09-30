@@ -204,6 +204,7 @@ const upsertUser = async (
       lastName: `${i}`,
       emailVerified,
       password: await bcrypt.hash(password, 10),
+      fullText: `${email} ${role}`,
     };
 
     const user = await prisma.user.upsert({
@@ -339,6 +340,7 @@ async function main() {
               key: "location",
             },
           },
+          fullText: "Kategorien kategorien Categories categories",
           terms: {
             createMany: {
               data: categories.map((term) => ({
@@ -350,6 +352,9 @@ async function main() {
                   de: slugify(term[0]),
                   en: slugify(term[1]),
                 },
+                fullText: `${term[0]} ${term[1]} ${slugify(term[0])} ${slugify(
+                  term[1]
+                )}`,
               })),
             },
           },
@@ -385,7 +390,8 @@ async function main() {
               key: "event",
             },
           },
-
+          fullText:
+            "Veranstaltungsart veranstaltungsarten Event Categories event-categories",
           terms: {
             createMany: {
               data: eventCategories.map((term) => ({
@@ -397,6 +403,9 @@ async function main() {
                   de: slugify(term[0]),
                   en: slugify(term[1]),
                 },
+                fullText: `${term[0]} ${term[1]} ${slugify(term[0])} ${slugify(
+                  term[1]
+                )}`,
               })),
             },
           },

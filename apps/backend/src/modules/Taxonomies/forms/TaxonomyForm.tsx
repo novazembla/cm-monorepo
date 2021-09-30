@@ -86,7 +86,7 @@ export const TaxonomyForm = ({
             <FieldSwitch 
               name="hasColor"
               label={t("module.taxonomies.forms.field.hasColor.label", "Show color field")}
-              defaultChecked={!!data.hasColor}
+              defaultChecked={!!data?.hasColor}
               colorScheme="wine"
             />
           </FieldRow>

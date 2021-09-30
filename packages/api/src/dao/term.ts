@@ -5,10 +5,12 @@ import { filteredOutputByBlacklist } from "@culturemap/core";
 import { ApiError, filteredOutputByBlacklistOrNotFound } from "../utils";
 import { getApiConfig } from "../config";
 import { getPrismaClient } from "../db/client";
-import { daoSharedCheckSlugUnique } from "./shared";
+import { daoSharedCheckSlugUnique, daoSharedGenerateFullText } from "./shared";
 
 const prisma = getPrismaClient();
 const apiConfig = getApiConfig();
+
+const termFullTextKeys = ["name", "slug"];
 
 export const daoTermCheckSlugUnique = async (
   slug: Record<string, string>,
@@ -125,7 +127,10 @@ export const daoTermCreate = async (
     );
 
   const term: Term = await prisma.term.create({
-    data,
+    data: {
+      ...data,
+      fullText: daoSharedGenerateFullText(data, termFullTextKeys),
+    },
   });
 
   return filteredOutputByBlacklistOrNotFound(
@@ -151,7 +156,10 @@ export const daoTermUpdate = async (
     );
 
   const term: Term = await prisma.term.update({
-    data,
+    data: {
+      ...data,
+      fullText: daoSharedGenerateFullText(data, termFullTextKeys),
+    },
     where: {
       id,
     },
