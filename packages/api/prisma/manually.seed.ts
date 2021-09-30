@@ -67,20 +67,24 @@ const mapOuterBounds = [
   },
 ];
 
-const lat = Array(50).map(
-  (i) =>
-    rndBetween(
-      mapOuterBounds[1].lat * 1000000,
-      mapOuterBounds[0].lat * 1000000
-    ) / 1000000
-);
-const lng = Array(50).map(
-  (i) =>
-    rndBetween(
-      mapOuterBounds[10].lng * 1000000,
-      mapOuterBounds[1].lng * 1000000
-    ) / 1000000
-);
+const lat = Array(50)
+  .fill(1)
+  .map(
+    () =>
+      rndBetween(
+        mapOuterBounds[1].lat * 1000000,
+        mapOuterBounds[0].lat * 1000000
+      ) / 1000000
+  );
+const lng = Array(50)
+  .fill(1)
+  .map(
+    () =>
+      rndBetween(
+        mapOuterBounds[0].lng * 1000000,
+        mapOuterBounds[1].lng * 1000000
+      ) / 1000000
+  );
 
 const slugify = (text: string) => {
   return text
