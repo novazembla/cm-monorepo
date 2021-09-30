@@ -62,6 +62,15 @@ export const Location = objectType({
         return null;
       },
     });
+
+    // TODO: enable ... Show form fields and such fun ...
+    // Add tracker ..
+    t.date("visibleFrom");
+    t.date("visibleFromTime");
+
+    t.date("visibleUntil");
+    t.date("visibleUntilTime");
+
     t.json("description");
     t.json("address");
     t.json("contactInfo");

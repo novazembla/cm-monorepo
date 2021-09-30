@@ -83,9 +83,12 @@ export const TaxonomyForm = ({
             />
           </FieldRow>
           <FieldRow>
-            <FieldSwitch 
+            <FieldSwitch
               name="hasColor"
-              label={t("module.taxonomies.forms.field.hasColor.label", "Show color field")}
+              label={t(
+                "module.taxonomies.forms.field.hasColor.label",
+                "Show color fields"
+              )}
               defaultChecked={!!data?.hasColor}
               colorScheme="wine"
             />
@@ -94,18 +97,35 @@ export const TaxonomyForm = ({
       )}
 
       {type === "term" && (!!data?.taxonomy?.hasColor || !!data?.hasColor) && (
-        <FieldRow>
-          <FieldInput
-            id="color"
-            label={t("module.taxonomies.forms.field.color.label", "Color")}
-            name="color"
-            type="text"
-            isRequired={yupIsFieldRequired("color", validationSchema)}
-            settings={{
-              placeholder: "#ab56cd",
-            }}
-          />
-        </FieldRow>
+        <>
+          <FieldRow>
+            <FieldInput
+              id="color"
+              label={t("module.taxonomies.forms.field.color.label", "Color (light)")}
+              name="color"
+              type="text"
+              isRequired={yupIsFieldRequired("color", validationSchema)}
+              settings={{
+                placeholder: "#ab56cd",
+              }}
+            />
+          </FieldRow>
+          <FieldRow>
+            <FieldInput
+              id="colorDark"
+              label={t(
+                "module.taxonomies.forms.field.colorDark.label",
+                "Color (dark)"
+              )}
+              name="colorDark"
+              type="text"
+              isRequired={yupIsFieldRequired("colorDark", validationSchema)}
+              settings={{
+                placeholder: "#6686cd",
+              }}
+            />
+          </FieldRow>
+        </>
       )}
     </>
   );

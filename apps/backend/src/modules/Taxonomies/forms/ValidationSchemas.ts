@@ -39,7 +39,11 @@ export const ModuleTermSchema = object().shape(
           .required(),
         otherwise: string().nullable()
       }),
-
+      colorDark: mixed().when("hasColor", {
+        is: true,
+        then: string().matches(/^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/, "validation.slug.notahexcolor"),
+        otherwise: string().nullable()
+      }),
     }
   )
 );

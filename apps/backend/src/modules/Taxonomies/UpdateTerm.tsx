@@ -82,6 +82,7 @@ const UpdateTerm = () => {
         config.activeLanguages
       ),
       color: data?.termRead?.color ?? "",
+      colorDark: data?.termRead?.colorDark ?? "",
       hasColor: !!data?.termRead?.taxonomy?.hasColor,
     });
   }, [reset, data, config.activeLanguages]);
@@ -102,6 +103,7 @@ const UpdateTerm = () => {
             multiLangFields
           ),
           color: newData.color,
+          colorDark: newData.colorDark,
         });
 
         if (!errors) {

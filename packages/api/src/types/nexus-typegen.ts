@@ -109,12 +109,14 @@ export interface NexusGenInputs {
   }
   TermCreateInput: { // input type
     color?: string | null; // String
+    colorDark?: string | null; // String
     name: NexusGenScalars['JSON']; // JSON!
     slug: NexusGenScalars['JSON']; // JSON!
     taxonomyId: number; // Int!
   }
   TermUpdateInput: { // input type
     color?: string | null; // String
+    colorDark?: string | null; // String
     name: NexusGenScalars['JSON']; // JSON!
     slug: NexusGenScalars['JSON']; // JSON!
   }
@@ -261,6 +263,10 @@ export interface NexusGenObjects {
     terms?: Array<NexusGenRootTypes['Term'] | null> | null; // [Term]
     title?: NexusGenScalars['JSON'] | null; // JSON
     updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
+    visibleFrom?: NexusGenScalars['DateTime'] | null; // DateTime
+    visibleFromTime?: NexusGenScalars['DateTime'] | null; // DateTime
+    visibleUntil?: NexusGenScalars['DateTime'] | null; // DateTime
+    visibleUntilTime?: NexusGenScalars['DateTime'] | null; // DateTime
   }
   LocationQueryResult: { // root type
     locations?: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
@@ -336,6 +342,7 @@ export interface NexusGenObjects {
   }
   Term: { // root type
     color?: string | null; // String
+    colorDark?: string | null; // String
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
     id: number; // Int!
     name?: NexusGenScalars['JSON'] | null; // JSON
@@ -478,6 +485,10 @@ export interface NexusGenFieldTypes {
     terms: Array<NexusGenRootTypes['Term'] | null> | null; // [Term]
     title: NexusGenScalars['JSON'] | null; // JSON
     updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
+    visibleFrom: NexusGenScalars['DateTime'] | null; // DateTime
+    visibleFromTime: NexusGenScalars['DateTime'] | null; // DateTime
+    visibleUntil: NexusGenScalars['DateTime'] | null; // DateTime
+    visibleUntilTime: NexusGenScalars['DateTime'] | null; // DateTime
   }
   LocationQueryResult: { // field return type
     locations: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
@@ -617,6 +628,7 @@ export interface NexusGenFieldTypes {
   }
   Term: { // field return type
     color: string | null; // String
+    colorDark: string | null; // String
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
     id: number; // Int!
     name: NexusGenScalars['JSON'] | null; // JSON
@@ -756,6 +768,10 @@ export interface NexusGenFieldTypeNames {
     terms: 'Term'
     title: 'JSON'
     updatedAt: 'DateTime'
+    visibleFrom: 'DateTime'
+    visibleFromTime: 'DateTime'
+    visibleUntil: 'DateTime'
+    visibleUntilTime: 'DateTime'
   }
   LocationQueryResult: { // field return type name
     locations: 'Location'
@@ -895,6 +911,7 @@ export interface NexusGenFieldTypeNames {
   }
   Term: { // field return type name
     color: 'String'
+    colorDark: 'String'
     createdAt: 'DateTime'
     id: 'Int'
     name: 'JSON'

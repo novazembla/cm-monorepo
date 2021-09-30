@@ -161,6 +161,10 @@ type Location {
   terms: [Term]
   title: JSON
   updatedAt: DateTime
+  visibleFrom: DateTime
+  visibleFromTime: DateTime
+  visibleUntil: DateTime
+  visibleUntilTime: DateTime
 }
 
 """List all the locations in the database."""
@@ -353,6 +357,7 @@ input TaxonomyUpsertInput {
 
 type Term {
   color: String
+  colorDark: String
   createdAt: DateTime
   id: Int!
   name: JSON
@@ -364,6 +369,7 @@ type Term {
 
 input TermCreateInput {
   color: String
+  colorDark: String
   name: JSON!
   slug: JSON!
   taxonomyId: Int!
@@ -377,6 +383,7 @@ type TermQueryResult {
 
 input TermUpdateInput {
   color: String
+  colorDark: String
   name: JSON!
   slug: JSON!
 }

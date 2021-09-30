@@ -34,6 +34,9 @@ model User {
 
   images         Image[]    @relation("images")
   
+  tours         Tour[]
+  tourStops     TourStop[]
+
   fullText      String? @default("")
 
   profileImageId Int?           
@@ -42,12 +45,18 @@ model User {
 
 model Location {
   id            Int    @id @default(autoincrement())
-  title           Json     
-  slug           Json    
+  title         Json     
+  slug          Json    
   description   Json   @default("{}")
   address       Json?  @default("{}")
   contactInfo   Json?  @default("{}")
   offers        Json?  @default("{}")
+
+  visibleFrom   DateTime?
+  visibleFromTime   DateTime?
+
+  visibleUntil  DateTime?
+  visibleUntilTime  DateTime?
 
   status      Int  
 
@@ -57,6 +66,7 @@ model Location {
   events      Event[]
   images      Image[]
   terms       Term[]
+  tourStops   TourStop[]
 
   fullText      String? @default("")
 
@@ -166,6 +176,7 @@ model Term {
   slug           Json   
 
   color          String @default("")
+  colorDark      String @default("")
   taxonomyId     Int
   taxonomy       Taxonomy   @relation(fields: [taxonomyId], references: [id])
 
@@ -173,12 +184,74 @@ model Term {
   events         Event[]
 
   fullText      String? @default("")
-  
+
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @default(now()) @updatedAt
 
   @@index([taxonomyId], name: "indexTermTaxonomyId")
 }
+
+model Tour {
+  id             Int        @id @default(autoincrement())
+  
+  title          Json     
+  slug           Json     
+  duration       Json     
+  distance       String    
+  teaser         Json
+  description    Json
+  path           Json
+
+  heroImageId    Int?
+  heroImage      Image?    @relation(fields: [heroImageId], references: [id], name: "tourHeroImage")
+
+  status         Int  
+
+  fullText       String    @default("")
+
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @default(now()) @updatedAt
+
+  ownerId     Int    
+  owner       User   @relation(fields: [ownerId], references: [id])
+  
+  @@index([ownerId], name: "indexTourOwnerId")
+
+  tourStops          TourStop[]  
+}
+
+model TourStop {
+  id             Int        @id @default(autoincrement())
+  
+  title          Json     
+  number         Int
+
+
+  loactionId     Int
+  location       Location?    @relation(fields: [loactionId], references: [id])
+
+  teaser         Json
+  description    Json
+  
+  tourId        Int?
+  tour          Tour?    @relation(fields: [tourId], references: [id])
+
+  heroImageId    Int?
+  heroImage      Image?    @relation(fields: [heroImageId], references: [id], name: "tourStopHeroImage")
+
+  fullText       String    @default("")
+
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @default(now()) @updatedAt
+  
+  ownerId     Int    
+  owner       User   @relation(fields: [ownerId], references: [id])
+  
+  @@index([ownerId], name: "indexTourStopOwnerId")
+
+}
+
+
 
 model Page {
   id             Int        @id @default(autoincrement())
@@ -227,6 +300,8 @@ model Image {
   heroImagePages      Page[]  @relation("pageHeroImage")
   heroImageEvents     Event[]  @relation("eventHeroImage")
   heroImageLocations  Location[]  @relation("locationHeroImage")
+  heroImageTours      Tour[]  @relation("tourHeroImage")
+  heroImageTourStops  TourStop[]  @relation("tourStopHeroImage")
 
   @@index([ownerId], name: "indexImageOwnerId")
   @@index([ownerId, type], name: "indexImageOwnerIdType")

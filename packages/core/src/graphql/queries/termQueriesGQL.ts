@@ -12,6 +12,7 @@ export const termsQueryGQL = gql`
       id
       name
       slug
+      hasColor
     }
     terms(
       taxonomyId: $taxonomyId
@@ -24,6 +25,8 @@ export const termsQueryGQL = gql`
         id
         name
         slug
+        color
+        colorDark
       }
       totalCount
     }
@@ -37,6 +40,7 @@ export const termReadQueryGQL = gql`
       name
       slug
       color
+      colorDark
       createdAt
       updatedAt
 

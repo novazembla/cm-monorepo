@@ -75,10 +75,10 @@ const CreateTerm = () => {
     setIsNavigatingAway(false);
     try {
       if (appUser) {
-        console.log("new data", newData);
         const { errors } = await firstMutation({
           taxonomyId: parseInt(router.query.taxId, 10),
           color: newData.color,
+          colorDark: newData.color,
           ...filteredOutputByWhitelist(
             multiLangRHFormDataToJson(
               newData,

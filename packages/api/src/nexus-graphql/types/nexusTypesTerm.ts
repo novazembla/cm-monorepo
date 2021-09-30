@@ -40,6 +40,7 @@ export const Term = objectType({
     t.json("name");
     t.json("slug");
     t.string("color");
+    t.string("colorDark");
     t.date("createdAt");
     t.date("updatedAt");
     t.field("taxonomy", {
@@ -151,6 +152,7 @@ export const TermCreateInput = inputObjectType({
     t.nonNull.json("slug");
     t.nonNull.int("taxonomyId");
     t.string("color");
+    t.string("colorDark");
   },
 });
 
@@ -160,6 +162,7 @@ export const TermUpdateInput = inputObjectType({
     t.nonNull.json("name");
     t.nonNull.json("slug");
     t.string("color");
+    t.string("colorDark");
   },
 });
 
@@ -181,6 +184,7 @@ export const TermMutations = extendType({
           name: args.data.name,
           slug: args.data.slug,
           color: args.data.color ?? "",
+          colorDark: args.data.colorDark ?? "",
           taxonomy: {
             connect: { id: args.data.taxonomyId },
           },
@@ -211,6 +215,7 @@ export const TermMutations = extendType({
           name: args.data.name,
           slug: args.data.slug,
           color: args?.data?.color ?? "",
+          colorDark: args?.data?.colorDark ?? "",
         });
 
         if (!term)
