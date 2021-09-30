@@ -4,7 +4,7 @@ export * from "./settingsQueriesGQL";
 export * from "./modulesQueriesGQL";
 export * from "./usersQueryGQL";
 export * from "./taxonomyQueriesGQL";
-export * from "./termQueriesGQL";
+export * from "./tourQueriesGQL";
 export * from "./pageQueriesGQL";
 export * from "./imageQueriesGQL";
 export * from "./locationQueriesGQL";

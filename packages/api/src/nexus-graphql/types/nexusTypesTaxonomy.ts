@@ -107,7 +107,7 @@ export const TaxonomyQueries = extendType({
         let totalCount;
         let taxonomies;
         let include = {};
-        console.log(args.where);
+
         if ((pRI?.fieldsByTypeName?.TaxonomyQueryResult as any)?.totalCount) {
           totalCount = await daoTaxonomyQueryCount(args.where);
 
@@ -130,10 +130,6 @@ export const TaxonomyQueries = extendType({
               },
             },
           };
-
-
-        
-         
 
         if ((pRI?.fieldsByTypeName?.TaxonomyQueryResult as any)?.taxonomies)
           taxonomies = await daoTaxonomyQuery(

@@ -221,6 +221,12 @@ type Mutation {
   termCreate(data: TermCreateInput!): Term!
   termDelete(id: Int!): BooleanResult!
   termUpdate(data: TermUpdateInput!, id: Int!): Term!
+  tourCreate(data: TourUpsertInput!): Tour!
+  tourDelete(id: Int!): BooleanResult!
+  tourStopCreate(data: TourStopCreateInput!): TourStop!
+  tourStopDelete(id: Int!): BooleanResult!
+  tourStopUpdate(data: TourStopUpdateInput!, id: Int!): TourStop!
+  tourUpdate(data: TourUpsertInput!, id: Int!): Tour!
   userCreate(data: UserCreateInput!, scope: String!): User!
   userDelete(id: Int!, scope: String!): BooleanResult!
   userProfileImageDelete(id: Int!, scope: String!): BooleanResult!
@@ -294,6 +300,10 @@ type Query {
   taxonomyRead(id: Int!): Taxonomy!
   termRead(id: Int!): Term!
   terms(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, taxonomyId: Int!, where: JSON): TermQueryResult
+  tourRead(id: Int!): Tour!
+  tourStopRead(id: Int!): TourStop!
+  tourStops(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, tourId: Int!, where: JSON): TourStopQueryResult
+  tours(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): TourQueryResult
   uniqueSlug(data: UniqueSlugInput!, id: Int!, type: String!): UniqueSlugResult
   userProfileRead(id: Int!, scope: String!): ProfileUser!
   userRead(id: Int!, scope: String!): User!
@@ -386,6 +396,83 @@ input TermUpdateInput {
   colorDark: String
   name: JSON!
   slug: JSON!
+}
+
+type Tour {
+  createdAt: DateTime
+  description: JSON!
+  distance: String!
+  duration: String!
+  heroImage: JSON
+  id: Int!
+  modules: [Module]
+  path: JSON!
+  slug: JSON!
+  status: Int!
+  teaser: JSON!
+  termCount: Int
+  title: JSON!
+  tourStops: [TourStop]
+  updatedAt: DateTime
+}
+
+"""List all the tours in the database."""
+type TourQueryResult {
+  totalCount: Int
+  tours: [Tour]
+}
+
+type TourStop {
+  createdAt: DateTime
+  description: JSON!
+  heroImage: JSON
+  id: Int!
+  slug: JSON
+  teaser: JSON!
+  title: JSON
+  tour: Tour
+  tourId: Int
+  updatedAt: DateTime
+}
+
+input TourStopCreateInput {
+  description: JSON!
+  locationId: Int!
+  owner: JSON!
+  slug: JSON!
+  teaser: JSON!
+  title: JSON!
+  tourId: Int!
+}
+
+"""List all the available tour stops of the given tour in the database."""
+type TourStopQueryResult {
+  totalCount: Int
+  tourStops: [TourStop]
+}
+
+input TourStopUpdateInput {
+  description: JSON!
+  heroImage: JSON
+  locationId: Int!
+  owner: JSON!
+  slug: JSON!
+  teaser: JSON!
+  title: JSON!
+  tourId: Int!
+}
+
+input TourUpsertInput {
+  description: JSON!
+  distance: String!
+  duration: String!
+  heroImage: JSON
+  owner: JSON!
+  path: JSON!
+  slug: JSON!
+  status: Int!
+  teaser: JSON!
+  title: JSON!
 }
 
 input UniqueSlugInput {

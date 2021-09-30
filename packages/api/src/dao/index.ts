@@ -9,3 +9,5 @@ export * from "./image";
 export * from "./setting";
 export * from "./location";
 export * from "./event";
+export * from "./tour";
+export * from "./tourStop";

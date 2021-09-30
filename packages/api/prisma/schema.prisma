@@ -196,7 +196,7 @@ model Tour {
   
   title          Json     
   slug           Json     
-  duration       Json     
+  duration       String
   distance       String    
   teaser         Json
   description    Json
@@ -224,7 +224,7 @@ model TourStop {
   id             Int        @id @default(autoincrement())
   
   title          Json     
-  number         Int
+  number         Int?        @default(1)
 
 
   loactionId     Int

@@ -1,38 +1,33 @@
 import gql from "graphql-tag";
 
-export const taxonomiesQueryGQL = gql`
-  query taxonomies(
-    $where: JSON
-    $orderBy: JSON
-    $pageIndex: Int
-    $pageSize: Int
-  ) {
-    taxonomies(
+export const toursQueryGQL = gql`
+  query tours($where: JSON, $orderBy: JSON, $pageIndex: Int, $pageSize: Int) {
+    tours(
       where: $where
       orderBy: $orderBy
       pageIndex: $pageIndex
       pageSize: $pageSize
     ) {
-      taxonomies {
+      tours {
         id
         name
         slug
         hasColor
-        termCount
+        tourStopCount
       }
       totalCount
     }
   }
 `;
 
-export const taxonomyReadQueryGQL = gql`
-  query taxonomyRead($id: Int!) {
-    taxonomyRead(id: $id) {
+export const tourReadQueryGQL = gql`
+  query tourRead($id: Int!) {
+    tourRead(id: $id) {
       id
       name
       slug
       hasColor
-      termCount
+      tourStopCount
       modules {
         key
       }
@@ -42,8 +37,9 @@ export const taxonomyReadQueryGQL = gql`
   }
 `;
 
-export const termsQueryGQL = gql`
-  query terms(
+
+export const tourStopsQueryGQL = gql`
+  query tourStops(
     $taxonomyId: Int!
     $where: JSON
     $orderBy: JSON
@@ -56,14 +52,14 @@ export const termsQueryGQL = gql`
       slug
       hasColor
     }
-    terms(
+    tourStops(
       taxonomyId: $taxonomyId
       where: $where
       orderBy: $orderBy
       pageIndex: $pageIndex
       pageSize: $pageSize
     ) {
-      terms {
+      tourStops {
         id
         name
         slug
@@ -75,9 +71,9 @@ export const termsQueryGQL = gql`
   }
 `;
 
-export const termReadQueryGQL = gql`
-  query termRead($id: Int!) {
-    termRead(id: $id) {
+export const tourStopReadQueryGQL = gql`
+  query tourStopRead($id: Int!) {
+    tourStopRead(id: $id) {
       id
       name
       slug
