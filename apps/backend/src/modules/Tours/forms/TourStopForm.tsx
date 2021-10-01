@@ -1,16 +1,15 @@
 import { useTranslation } from "react-i18next";
 import { Divider, Alert, AlertIcon } from "@chakra-ui/react";
+import { locationsSearchGQL } from "@culturemap/core";
+
 import {
   FieldMultiLangInput,
-  FieldInput,
-  FieldRadioOrCheckboxGroup,
-  FieldRadioOrCheckboxGroupOption,
-  FieldRow,
-  FieldSwitch,
+  FieldMultiLangTextEditor,
   FieldSingleImage,
+  FieldRow,
+  FieldSingleSelectAutocomplete,
 } from "~/components/forms";
-import { useModules } from "~/hooks";
-import { yupIsFieldRequired } from "~/validation";
+import { getMultilangValue } from "~/utils";
 
 export const TourStopForm = ({
   data,
@@ -27,45 +26,95 @@ export const TourStopForm = ({
 }) => {
   const { t } = useTranslation();
 
+  console.log(data?.tourStopRead);
 
   return (
     <>
-      {action === "create" && <>
-      
-      <Alert borderRadius="lg">
-      <AlertIcon />
-  {t("form.info.pleasesafedraft", "Please save a draft to unlock further functionality")}
-      </Alert>
-    </>}
+      {action === "create" && (
+        <>
+          <Alert borderRadius="lg">
+            <AlertIcon />
+            {t(
+              "form.info.pleasesafedraft",
+              "Please save a draft to unlock further functionality"
+            )}
+          </Alert>
+        </>
+      )}
       <FieldMultiLangInput
         name="title"
         id="title"
         type="text"
-        label={t("module.tours.forms.tour.field.label.title", "Title")}
+        label={t("module.tours.forms.tourStop.field.label.title", "Title")}
         isRequired={true}
         settings={{
           defaultValues: data?.tourStopRead?.title,
           placeholder: t(
-            "module.tours.forms.tour.field.placeholder.title",
-            "Tour name"
+            "module.tours.forms.tourStop.field.placeholder.title",
+            "Tour stop name"
           ),
         }}
       />
-      <FieldMultiLangInput
-        name="slug"
-        id="slug"
-        type="text"
-        label={t("module.tours.forms.tour.field.label.slug", "Slug")}
-        isRequired={true}
+      <Divider mt="10" />
+      <FieldRow>
+        <FieldSingleSelectAutocomplete
+          name="locationId"
+          id="locationId"
+          label={t("forms.field.label.location", "Location")}
+          isRequired={true}
+          item={
+            data?.tourStopRead?.location && data?.tourStopRead?.location?.id
+              ? {
+                  label: getMultilangValue(data?.tourStopRead?.location.title),
+                  id: data?.tourStopRead?.location.id,
+                }
+              : undefined
+          }
+          searchQueryGQL={locationsSearchGQL}
+          settings={{
+            placeholder: t(
+              "forms.field.placeholder.locationsearch",
+              "Please enter the location's title"
+            ),
+          }}
+        />
+      </FieldRow>
+      <Divider mt="10" />
+      <FieldMultiLangTextEditor
+        name="teaser"
+        id="teaser"
+        type="basic"
+        label={t("module.tours.forms.tourStop.field.label.teaser", "Intro")}
+        isRequired={false}
         settings={{
-          defaultValues: data?.tourStopRead?.slug,
+          defaultRequired: true,
+          defaultValues: data?.tourStopRead?.teaser,
           placeholder: t(
-            "module.tours.forms.tour.field.placeholder.slug",
-            "Slug / URL part"
+            "module.tours.forms.tourStop.field.placeholder.teaser",
+            "Tour stop listing teaser"
           ),
         }}
       />
-
+      <Divider mt="10" />
+      <FieldMultiLangTextEditor
+        name="description"
+        id="description"
+        type="basic"
+        size="large"
+        label={t(
+          "module.tours.forms.tourStop.field.label.description",
+          "Description"
+        )}
+        isRequired={false}
+        settings={{
+          defaultRequired: true,
+          defaultValues: data?.tourStopRead?.description,
+          placeholder: t(
+            "module.tours.forms.tourStop.field.placeholder.description",
+            "Full tour stop description"
+          ),
+        }}
+      />
       {action === "update" && (
         <>
           <Divider mt="10" />
@@ -76,12 +125,12 @@ export const TourStopForm = ({
             currentImage={data?.tourStopRead?.heroImage}
             setActiveUploadCounter={setActiveUploadCounter}
             settings={{
-              imageRequired: true,
+              imageRequired: false,
               altRequired: true,
               creditsRequired: true,
             }}
             connectWith={{
-              heroImageTours: {
+              heroImageTourStops: {
                 connect: {
                   id: data?.tourStopRead?.id,
                 },

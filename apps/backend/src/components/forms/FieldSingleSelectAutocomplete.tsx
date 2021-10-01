@@ -12,12 +12,14 @@ import {
   IconButton,
   Input,
   chakra,
+  useToken,
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { RiCloseFill } from "@hacknug/react-icons/ri";
 import { usePopper } from "@chakra-ui/popper";
 
 import { getMultilangValue } from "~/utils";
+import { FieldErrorMessage } from "~/components/forms";
 
 export interface FieldSingleSelectAutocompleteItem {
   label: string;
@@ -60,6 +62,8 @@ export const FieldSingleSelectAutocomplete = ({
   const { popperRef, referenceRef } = usePopper({
     matchWidth: true,
   });
+
+  const [wine100] = useToken("colors", ["wine.100"]);
 
   const [lastSearch, setLastSearch] = useState("");
   const [currentItem, setCurrentItem] = useState(item);
@@ -235,27 +239,86 @@ export const FieldSingleSelectAutocomplete = ({
           <Box ref={referenceRef}>
             <Input {...getInputProps()} />
           </Box>
+          <Box ref={popperRef} zIndex={1000}>
+            <chakra.ul
+              {...getMenuProps()}
+              border={
+                isOpen &&
+                inputValue &&
+                inputValue.length > 2 &&
+                (loading || data || error)
+                  ? "1px solid"
+                  : "none"
+              }
+              borderRadius="md"
+              bg="#fff"
+              borderColor="gray.400"
+              p="0"
+              m="0"
+              maxH="310px"
+              overflowY="auto"
+            >
+              {isOpen &&
+                inputValue &&
+                inputValue.length > 2 &&
+                (loading || error || data) && (
+                  <>
+                    {data &&
+                      searchResult &&
+                      !loading &&
+                      searchResult.map((item: any, index: number) => {
+                        return (
+                          <chakra.li
+                            listStyleType="none"
+                            m="1"
+                            px="2"
+                            borderColor="gray.400"
+                            cursor="pointer"
+                            h="42px"
+                            borderRadius="md"
+                            lineHeight="42px"
+                            bg={
+                              highlightedIndex === index
+                                ? "gray.200"
+                                : "transparent"
+                            }
+                            key={`${item}${index}`}
+                            {...getItemProps({ item, index })}
+                          >
+                            <Highlighter
+                              highlightStyle={{
+                                background: wine100,                                
+                              }}
+                              searchWords={[inputValue]}
+                              autoEscape={true}
+                              textToHighlight={item.label}
+                            />
+                          </chakra.li>
+                        );
+                      })}
 
-          {isOpen && inputValue && inputValue.length > 2 && (loading || error || data) && (
-            <Box ref={popperRef} zIndex={1000}>
-              <chakra.ul
-                {...getMenuProps()}
-                position="absolut"
-                
-                border="1px solid"
-                borderRadius="md"
-                bg="#fff"
-                borderColor="gray.400"
-                p="0"
-                m="0"
-                maxH="310px"
-                overflowY="auto"
-              >
-                {data &&
-                  searchResult &&
-                  !loading &&
-                  searchResult.map((item: any, index: number) => {
-                    return (
+                    {(data?.locations?.totalCount === 0 || error) &&
+                      !loading &&
+                      inputValue.length > 2 && (
+                        <chakra.li
+                          listStyleType="none"
+                          m="1"
+                          px="2"
+                          borderColor="gray.400"
+                          cursor="pointer"
+                          h="42px"
+                          borderRadius="md"
+                          lineHeight="42px"
+                          key={`not-found`}
+                        >
+                          {t(
+                            "forms.select.autocomplete.search.notfound",
+                            "Nothing found"
+                          )}
+                        </chakra.li>
+                      )}
+
+                    {loading && (
                       <chakra.li
                         listStyleType="none"
                         m="1"
@@ -265,64 +328,18 @@ export const FieldSingleSelectAutocomplete = ({
                         h="42px"
                         borderRadius="md"
                         lineHeight="42px"
-                        bg={
-                          highlightedIndex === index ? "gray.200": "transparent"
-                        }
-                        key={`${item}${index}`}
-                        {...getItemProps({ item, index })}
+                        key={`not-found`}
                       >
-                        <Highlighter
-                          highlightStyle={{
-                            background: "#f0f",
-                          }}
-                          searchWords={[inputValue]}
-                          autoEscape={true}
-                          textToHighlight={item.label}
-                        />
+                        {t(
+                          "forms.select.autocomplete.search.loading",
+                          "Serching the database"
+                        )}
                       </chakra.li>
-                    );
-                  })}
-
-                {(data?.locations?.totalCount === 0 || error) &&
-                  !loading &&
-                  inputValue.length > 2 && (
-                    <chakra.li
-                      listStyleType="none"
-                      m="1"
-                      px="2"
-                      borderColor="gray.400"
-                      cursor="pointer"
-                      h="42px"
-                      borderRadius="md"
-                      lineHeight="42px"
-                      key={`not-found`}
-                    >
-                      {t(
-                        "forms.select.autocomplete.search.notfound",
-                        "Nothing found"
-                      )}
-                    </chakra.li>
-                  )}
-
-                  {loading && <chakra.li
-                      listStyleType="none"
-                      m="1"
-                      px="2"
-                      borderColor="gray.400"
-                      cursor="pointer"
-                      h="42px"
-                      borderRadius="md"
-                      lineHeight="42px"
-                      key={`not-found`}
-                    >
-                      {t(
-                        "forms.select.autocomplete.search.loading",
-                        "Serching the database"
-                      )}
-                    </chakra.li>}
-              </chakra.ul>
-            </Box>
-          )}
+                    )}
+                  </>
+                )}
+            </chakra.ul>
+          </Box>
         </Box>
       </Box>
 
@@ -334,6 +351,7 @@ export const FieldSingleSelectAutocomplete = ({
           required: isRequired,
         })}
       />
+      <FieldErrorMessage error={errors[name]?.message} />
     </FormControl>
   );
 };

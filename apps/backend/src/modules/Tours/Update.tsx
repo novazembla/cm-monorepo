@@ -10,8 +10,11 @@ import {
   FormScrollInvalidIntoView,
 } from "~/components/forms";
 
-import { ModuleTourSchemaUpdate } from "./forms";
-import { useTourUpdateMutation } from "./hooks";
+import { ModuleTourSchemaUpdate, TourStopListing } from "./forms";
+import {
+  useTourUpdateMutation,
+  useTourReorderTourStopsMutation,
+} from "./hooks";
 import {
   useAuthentication,
   useConfig,
@@ -86,16 +89,18 @@ const Update = () => {
   const successToast = useSuccessfullySavedToast();
   const [isNavigatingAway, setIsNavigatingAway] = useState(false);
   const [activeUploadCounter, setActiveUploadCounter] = useState<number>(0);
-
+  
   const modules = useModules();
 
-  const { data, loading, error } = useQuery(tourReadAndContentAuthorsQueryGQL, {
+  const { data, loading, error, refetch } = useQuery(tourReadAndContentAuthorsQueryGQL, {
     variables: {
-      id: parseInt(router.query.id, 10),
+      id: parseInt(router.query.tourId, 10),
     },
   });
 
   const [firstMutation, firstMutationResults] = useTourUpdateMutation();
+  const [reorderMutation] = useTourReorderTourStopsMutation();
+
   const [hasFormError, setHasFormError] = useState(false);
 
   const disableForm = firstMutationResults.loading;
@@ -114,8 +119,6 @@ const Update = () => {
 
   useEffect(() => {
     if (!data || !data.tourRead) return;
-
-    console.log(data?.tourRead);
 
     reset({
       ...multiLangJsonToRHFormData(
@@ -136,7 +139,9 @@ const Update = () => {
     });
   }, [reset, data, config.activeLanguages, modules]);
 
-  const onSubmit = async (newData: yup.InferType<typeof ModuleTourSchemaUpdate>) => {
+  const onSubmit = async (
+    newData: yup.InferType<typeof ModuleTourSchemaUpdate>
+  ) => {
     setHasFormError(false);
     setIsNavigatingAway(false);
     try {
@@ -145,7 +150,7 @@ const Update = () => {
 
         try {
           path = JSON.parse(newData.path);
-        } catch(err) {}
+        } catch (err) {}
 
         const heroImage =
           newData.heroImage &&
@@ -160,20 +165,8 @@ const Update = () => {
               }
             : undefined;
 
-        console.log(multiLangImageTranslationsRHFormDataToJson(
-          newData,
-          [
-            {
-              name: "heroImage",
-              id: newData.heroImage,
-            },
-          ],
-          ["alt", "credits"],
-          config.activeLanguages
-        ));
-
         const { errors } = await firstMutation(
-          parseInt(router.query.id, 10),
+          parseInt(router.query.tourId, 10),
           {
             ...filteredOutputByWhitelist(
               multiLangRHFormDataToJson(
@@ -273,6 +266,26 @@ const Update = () => {
                 data={data}
                 setActiveUploadCounter={setActiveUploadCounter}
                 validationSchema={ModuleTourSchemaUpdate}
+              />
+              <TourStopListing
+                data={data}
+                onSortUpdate={async (stops: any) => {
+                  try {
+                    const result = await reorderMutation(
+                      parseInt(router.query.tourId),
+                      stops.map((stop: any, index: number) => ({
+                        id: parseInt(stop.tourStopId),
+                        number: index + 1,
+                      }))
+                    );
+                    
+                    if (!result.errors)
+                      refetch();
+
+                  } catch (err) {
+                    console.log(err);
+                  }
+                }}
               />
             </ModulePage>
           </fieldset>

@@ -258,7 +258,7 @@ export const LocationPicker = ({
             {t("form.geolocation.button.reset", "Reset")}
           </Button>
         </FieldRow>
-      </Box>
+      </Box>      
     </Grid>
   );
 };

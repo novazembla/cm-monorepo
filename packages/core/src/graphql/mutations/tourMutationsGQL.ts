@@ -24,6 +24,14 @@ export const tourUpdateMutationGQL = gql`
   }
 `;
 
+export const tourReorderTourStopsMutationGQL = gql`
+  mutation tourReorderTourStops($id: Int!, $data: [TourStopOrderInput]!) {
+    tourReorderTourStops(id: $id, data: $data) {
+      id
+    }
+  }
+`;
+
 export const tourDeleteMutationGQL = gql`
   mutation tourDelete($id: Int!) {
     tourDelete(id: $id) {

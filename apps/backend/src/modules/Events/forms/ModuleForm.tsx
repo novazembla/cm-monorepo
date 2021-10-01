@@ -236,7 +236,7 @@ export const ModuleForm = ({
         <FieldSingleSelectAutocomplete
           name="locationId"
           id="locationId"
-          label={t("module.events.forms.field.label.location", "Location")}
+          label={t("forms.field.label.location", "Location")}
           isRequired={true}
           item={
             data?.eventRead?.locations && data?.eventRead?.locations?.length > 0
@@ -249,7 +249,7 @@ export const ModuleForm = ({
           searchQueryGQL={locationsSearchGQL}
           settings={{
             placeholder: t(
-              "module.events.forms.field.placeholder.locationsearch",
+              "forms.field.placeholder.locationsearch",
               "Please enter the location's title"
             ),
           }}
@@ -337,7 +337,7 @@ export const ModuleForm = ({
                   },
                 }}
               >
-                {t("module.events.forms.event.title.actions", "Actions")}
+                {t("table.label.actions", "Actions")}
               </Th>
             </tr>
           </Thead>

@@ -223,6 +223,7 @@ type Mutation {
   termUpdate(data: TermUpdateInput!, id: Int!): Term!
   tourCreate(data: TourUpsertInput!): Tour!
   tourDelete(id: Int!): BooleanResult!
+  tourReorderTourStops(data: [TourStopOrderInput]!, id: Int!): Tour!
   tourStopCreate(data: TourStopCreateInput!): TourStop!
   tourStopDelete(id: Int!): BooleanResult!
   tourStopUpdate(data: TourStopUpdateInput!, id: Int!, imagesTranslations: [ImageTranslationInput]): TourStop!
@@ -302,7 +303,6 @@ type Query {
   terms(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, taxonomyId: Int!, where: JSON): TermQueryResult
   tourRead(id: Int!): Tour!
   tourStopRead(id: Int!): TourStop!
-  tourStops(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, tourId: Int!, where: JSON): TourStopQueryResult
   tours(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): TourQueryResult
   uniqueSlug(data: UniqueSlugInput!, id: Int!, type: String!): UniqueSlugResult
   userProfileRead(id: Int!, scope: String!): ProfileUser!
@@ -428,8 +428,9 @@ type TourStop {
   description: JSON!
   heroImage: Image
   id: Int!
+  location: Location
+  locationId: Int
   number: Int
-  slug: JSON
   teaser: JSON!
   title: JSON
   tour: Tour
@@ -440,11 +441,14 @@ type TourStop {
 input TourStopCreateInput {
   description: JSON!
   locationId: Int!
-  owner: JSON!
-  slug: JSON!
   teaser: JSON!
   title: JSON!
   tourId: Int!
+}
+
+input TourStopOrderInput {
+  id: Int
+  number: Int
 }
 
 """List all the available tour stops of the given tour in the database."""
@@ -457,11 +461,9 @@ input TourStopUpdateInput {
   description: JSON!
   heroImage: JSON
   locationId: Int!
-  owner: JSON!
-  slug: JSON!
   teaser: JSON!
   title: JSON!
-  tourId: Int!
+  tourId: Int
 }
 
 input TourUpsertInput {

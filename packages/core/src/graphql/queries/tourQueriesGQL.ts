@@ -71,9 +71,7 @@ export const tourStopsQueryGQL = gql`
       tourStops {
         id
         title
-        slug
-        color
-        colorDark
+        number
       }
       totalCount
     }
@@ -85,19 +83,26 @@ export const tourStopReadQueryGQL = gql`
     tourStopRead(id: $id) {
       id
       title
-      slug
-      color
-      colorDark
+      number
+      teaser
+      description
+      locationId
       createdAt
       updatedAt
-
-      taxonomy {
+      location {
         id
         title
-        slug
-        hasColor
-        createdAt
-        updatedAt
+      }
+      tour {
+        id
+        title
+      }
+      heroImage {
+        id
+        meta
+        status
+        alt
+        credits
       }
     }
   }

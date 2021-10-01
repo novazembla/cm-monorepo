@@ -3,6 +3,7 @@ import {
   tourUpdateMutationGQL,
   tourCreateMutationGQL,
   tourStopCreateMutationGQL,
+  tourReorderTourStopsMutationGQL,
 } from "@culturemap/core";
 import { useMutation } from "@apollo/client";
 
@@ -32,6 +33,25 @@ export const useTourUpdateMutation = () => {
         id,
         data,
         imagesTranslations,
+      },
+    });
+  };
+  return [execute, mutationResults] as const;
+};
+
+export const useTourReorderTourStopsMutation =() => {
+  const [mutation, mutationResults] = useMutation(
+    tourReorderTourStopsMutationGQL,
+    {
+      // onCompleted: (data) => {},
+    }
+  );
+
+  const execute = (id: number, data: any[]) => {
+    return mutation({
+      variables: {
+        id,
+        data
       },
     });
   };

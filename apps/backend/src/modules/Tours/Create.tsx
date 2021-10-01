@@ -82,8 +82,6 @@ const Create = () => {
           path: {}          
         });
 
-        console.log(data);
-
         if (!errors && data?.tourCreate?.id) {
           successToast();
           setIsNavigatingAway(true);

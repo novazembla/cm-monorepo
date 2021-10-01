@@ -94,17 +94,17 @@ const Index = () => {
   // columns need to be a ref!
   const { current: AdminTableColumns } = useRef([
     {
-      Header: t("taxonomies.fields.label.id", "Id"),
+      Header: t("tablae.label.id", "Id"),
       accessor: "id",
     } as AdminTableColumn,
     {
       Cell: AdminTableMultiLangCell,
-      Header: t("taxonomies.fields.label.name", "Name"),
+      Header: t("tablae.label.name", "Name"),
       accessor: "name",
     } as AdminTableColumn,
     {
       Cell: AdminTableMultiLangCell,
-      Header: t("taxonomies.fields.label.slug", "Slug"),
+      Header: t("tablae.label.slug", "Slug"),
       accessor: "slug",
     } as AdminTableColumn,
     {
@@ -115,7 +115,7 @@ const Index = () => {
     } as AdminTableColumn,
     {
       Cell: AdminTableActionCell,
-      Header: t("taxonomies.fields.label.actions", "Actions"),
+      Header: t("table.label.actions", "Actions"),
       isStickyToTheRight: true,
 
       isCentered: true,

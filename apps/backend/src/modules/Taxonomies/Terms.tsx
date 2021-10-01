@@ -107,22 +107,22 @@ const Terms = () => {
   // columns need to be a ref!
   const { current: AdminTableColumns } = useRef([
     {
-      Header: t("terms.fields.label.id", "Id"),
+      Header: t("table.label.id", "Id"),
       accessor: "id",
     } as AdminTableColumn,
     {
       Cell: AdminTableMultiLangCell,
-      Header: t("terms.fields.label.name", "Name"),
+      Header: t("table.label.name", "Name"),
       accessor: "name",
     } as AdminTableColumn,
     {
       Cell: AdminTableMultiLangCell,
-      Header: t("terms.fields.label.slug", "Slug"),
+      Header: t("table.label.slug", "Slug"),
       accessor: "slug",
     } as AdminTableColumn,
     {
       Cell: AdminTableActionCell,
-      Header: t("terms.fields.label.actions", "Actions"),
+      Header: t("table.label.actions", "Actions"),
       isStickyToTheRight: true,
 
       isCentered: true,

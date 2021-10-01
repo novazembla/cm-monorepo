@@ -22,7 +22,7 @@ const authLink = new ApolloLink((operation, forward) => {
   // retrieve access token from memory
   const accessToken = authentication.getAuthToken();
 
-  console.log("Apollo, access Token", accessToken)
+  
   if (accessToken) {
     operation.setContext(({ headers = {} }) => ({
       headers: {
@@ -30,6 +30,9 @@ const authLink = new ApolloLink((operation, forward) => {
         authorization: `Bearer ${accessToken.token}`,
       },
     }));
+  } else {
+    // TODO: remove
+    console.log("Apollo, no access Token")
   }
 
   // Call the next link in the middleware chain.

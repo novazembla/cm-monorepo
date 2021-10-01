@@ -46,7 +46,6 @@ import {
   mapDataToModulesCheckboxArray,
 } from "./helpers";
 
-// TODO
 export const eventReadAndContentAuthorsQueryGQL = gql`
   query eventRead($id: Int!) {
     eventRead(id: $id) {

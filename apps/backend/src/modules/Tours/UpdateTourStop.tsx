@@ -11,7 +11,7 @@ import {
   FormScrollInvalidIntoView,
 } from "~/components/forms";
 
-import { ModuleTourStopSchema } from "./forms";
+import { ModuleTourStopUpdateSchema } from "./forms";
 
 import { useTourStopUpdateMutation } from "./hooks";
 import {
@@ -22,7 +22,10 @@ import {
 } from "~/hooks";
 
 import { Divider } from "@chakra-ui/react";
-import { filteredOutputByWhitelist, tourStopReadQueryGQL } from "@culturemap/core";
+import {
+  filteredOutputByWhitelist,
+  tourStopReadQueryGQL,
+} from "@culturemap/core";
 
 import { useQuery } from "@apollo/client";
 
@@ -36,12 +39,16 @@ import { MultiLangValue } from "~/components/ui";
 
 import { moduleRootPath, multiLangFieldsTourStop } from "./moduleConfig";
 
-import { TourStopForm } from "./forms";
 import {
   multiLangJsonToRHFormData,
   multiLangRHFormDataToJson,
   multiLangSlugUniqueError,
+  multiLangImageTranslationsRHFormDataToJson,
+  multiLangImageTranslationsJsonRHFormData,
 } from "~/utils";
+
+import { TourStopForm } from "./forms";
+
 const UpdateTourStop = () => {
   const router = useRouter();
   const config = useConfig();
@@ -53,7 +60,7 @@ const UpdateTourStop = () => {
 
   const { data, loading, error } = useQuery(tourStopReadQueryGQL, {
     variables: {
-      id: parseInt(router.query.id, 10),
+      id: parseInt(router.query.tourStopId, 10),
     },
   });
 
@@ -64,7 +71,7 @@ const UpdateTourStop = () => {
 
   const formMethods = useForm<any>({
     mode: "onTouched",
-    resolver: yupResolver(ModuleTourStopSchema),
+    resolver: yupResolver(ModuleTourStopUpdateSchema),
   });
 
   const {
@@ -79,34 +86,73 @@ const UpdateTourStop = () => {
 
     reset({
       ...multiLangJsonToRHFormData(
-        filteredOutputByWhitelist(data.tourStopRead, [], multiLangFieldsTourStop),
+        filteredOutputByWhitelist(
+          data.tourStopRead,
+          [],
+          multiLangFieldsTourStop
+        ),
         multiLangFieldsTourStop,
         config.activeLanguages
       ),
-      color: data?.tourStopRead?.color ?? "",
-      colorDark: data?.tourStopRead?.colorDark ?? "",
-      hasColor: !!data?.tourStopRead?.tour?.hasColor,
+      locationId: data.tourStopRead?.location?.id,
+      tourId: data.tourStopRead?.tourId,
+      heroImage: data?.tourStopRead?.heroImage?.id,
+      ...multiLangImageTranslationsJsonRHFormData(
+        data?.tourRead,
+        ["heroImage"],
+        ["alt", "credits"],
+        config.activeLanguages
+      ),
     });
   }, [reset, data, config.activeLanguages]);
 
-  const onSubmit = async (newData: yup.InferType<typeof ModuleTourStopSchema>) => {
+  const onSubmit = async (
+    newData: yup.InferType<typeof ModuleTourStopUpdateSchema>
+  ) => {
     setHasFormError(false);
     setIsNavigatingAway(false);
     try {
       if (appUser) {
-        const { errors } = await firstMutation(parseInt(router.query.id, 10), {
-          ...filteredOutputByWhitelist(
-            multiLangRHFormDataToJson(
-              newData,
-              multiLangFieldsTourStop,
-              config.activeLanguages
+        const heroImage =
+          newData.heroImage &&
+          !isNaN(newData.heroImage) &&
+          newData.heroImage > 0
+            ? {
+                heroImage: {
+                  connect: {
+                    id: newData.heroImage,
+                  },
+                },
+              }
+            : undefined;
+
+        const { errors } = await firstMutation(
+          parseInt(router.query.tourStopId, 10),
+          {
+            ...filteredOutputByWhitelist(
+              multiLangRHFormDataToJson(
+                newData,
+                multiLangFieldsTourStop,
+                config.activeLanguages
+              ),
+              [],
+              multiLangFieldsTourStop
             ),
-            [],
-            multiLangFieldsTourStop
-          ),
-          color: newData.color,
-          colorDark: newData.colorDark,
-        });
+            ...heroImage,
+            locationId: newData.locationId,
+          },
+          multiLangImageTranslationsRHFormDataToJson(
+            newData,
+            [
+              {
+                name: "heroImage",
+                id: newData.heroImage,
+              },
+            ],
+            ["alt", "credits"],
+            config.activeLanguages
+          )
+        );
 
         if (!errors) {
           successToast();
@@ -185,7 +231,7 @@ const UpdateTourStop = () => {
                 action="update"
                 data={data}
                 setActiveUploadCounter={setActiveUploadCounter}
-                validationSchema={ModuleTourStopSchema}
+                validationSchema={ModuleTourStopUpdateSchema}
               />
             </ModulePage>
           </fieldset>

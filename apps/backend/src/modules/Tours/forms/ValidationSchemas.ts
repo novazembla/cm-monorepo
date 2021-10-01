@@ -1,4 +1,4 @@
-import { string, object, array, boolean, mixed } from "yup";
+import { string, object, mixed, number } from "yup";
 
 import { activeLanguages, defaultLanguage } from "~/config";
 
@@ -57,38 +57,50 @@ export const ModuleTourSchemaUpdate = ModuleTourSchemaCreate.concat(
   )
 );
 
-export const ModuleTourStopSchema = object().shape(
+export const ModuleTourStopCreateSchema = object().shape(
   activeLanguages.reduce(
     (acc, lang) => ({
       ...acc,
       [`title_${lang}`]: string().required(),
-      // t("validation.slug.invalidcharacters", "You can only use A-Z, -, and numbers")
-      [`slug_${lang}`]: string()
-        .lowercase()
-        .matches(/^[a-z\-\d]+$/, "validation.slug.invalidcharacters")
-        .required(),
+      [`teaser_${lang}`]:
+        lang === defaultLanguage
+          ? string().nonEmptyHtml().required()
+          : string(),
+      [`description_${lang}`]:
+        lang === defaultLanguage
+          ? string().nonEmptyHtml().required()
+          : string(),
     }),
     {
-      hasColor: boolean(),
-      color: mixed().when("hasColor", {
-        is: true,
-        // t("validation.slug.notahexcolor", "Please provide a valid HEX color (like #a8f or #f9ad9f")
-        then: string()
-          .matches(
-            /^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/,
-            "validation.slug.notahexcolor"
-          )
-          .required(),
-        otherwise: string().nullable(),
-      }),
-      colorDark: mixed().when("hasColor", {
-        is: true,
-        then: string().matches(
-          /^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/,
-          "validation.slug.notahexcolor"
-        ),
-        otherwise: string().nullable(),
-      }),
+      // t("validation.slug.chooselocation", "Please choose a location")
+      locationId: number().typeError("validation.slug.chooselocation").required()
     }
+  )
+);
+
+export const ModuleTourStopUpdateSchema = ModuleTourStopCreateSchema.concat(
+  object().shape(
+    activeLanguages.reduce(
+      (acc: any, lang: any) => ({
+        ...acc,
+        [`heroImage_alt_${lang}`]:
+          lang === defaultLanguage
+            ? mixed().when("heroImage", {
+                is: (value: any) => value && !isNaN(value) && value > 0,
+                then: string().required(),
+                otherwise: string(),
+              })
+            : string(),
+        [`heroImage_credits_${lang}`]:
+          lang === defaultLanguage
+            ? mixed().when("heroImage", {
+                is: (value: any) => value && !isNaN(value) && value > 0,
+                then: string().required(),
+                otherwise: string(),
+              })
+            : string(),
+      }),
+      {}
+    )
   )
 );

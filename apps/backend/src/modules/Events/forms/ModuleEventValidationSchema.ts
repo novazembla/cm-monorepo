@@ -22,7 +22,8 @@ export const ModuleEventCreateSchema = object().shape(
     }),
     {
       ownerId: number(),
-      locationId: number().required(),
+      // t("validation.slug.chooselocation", "Please choose a location")
+      locationId: number().typeError("validation.slug.chooselocation").required(),
       status: number(),
     }
   )

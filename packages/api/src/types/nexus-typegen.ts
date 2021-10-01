@@ -123,21 +123,21 @@ export interface NexusGenInputs {
   TourStopCreateInput: { // input type
     description: NexusGenScalars['JSON']; // JSON!
     locationId: number; // Int!
-    owner: NexusGenScalars['JSON']; // JSON!
-    slug: NexusGenScalars['JSON']; // JSON!
     teaser: NexusGenScalars['JSON']; // JSON!
     title: NexusGenScalars['JSON']; // JSON!
     tourId: number; // Int!
+  }
+  TourStopOrderInput: { // input type
+    id?: number | null; // Int
+    number?: number | null; // Int
   }
   TourStopUpdateInput: { // input type
     description: NexusGenScalars['JSON']; // JSON!
     heroImage?: NexusGenScalars['JSON'] | null; // JSON
     locationId: number; // Int!
-    owner: NexusGenScalars['JSON']; // JSON!
-    slug: NexusGenScalars['JSON']; // JSON!
     teaser: NexusGenScalars['JSON']; // JSON!
     title: NexusGenScalars['JSON']; // JSON!
-    tourId: number; // Int!
+    tourId?: number | null; // Int
   }
   TourUpsertInput: { // input type
     description: NexusGenScalars['JSON']; // JSON!
@@ -413,8 +413,9 @@ export interface NexusGenObjects {
     description: NexusGenScalars['JSON']; // JSON!
     heroImage?: NexusGenRootTypes['Image'] | null; // Image
     id: number; // Int!
+    location?: NexusGenRootTypes['Location'] | null; // Location
+    locationId?: number | null; // Int
     number?: number | null; // Int
-    slug?: NexusGenScalars['JSON'] | null; // JSON
     teaser: NexusGenScalars['JSON']; // JSON!
     title?: NexusGenScalars['JSON'] | null; // JSON
     tour?: NexusGenRootTypes['Tour'] | null; // Tour
@@ -598,6 +599,7 @@ export interface NexusGenFieldTypes {
     termUpdate: NexusGenRootTypes['Term']; // Term!
     tourCreate: NexusGenRootTypes['Tour']; // Tour!
     tourDelete: NexusGenRootTypes['BooleanResult']; // BooleanResult!
+    tourReorderTourStops: NexusGenRootTypes['Tour']; // Tour!
     tourStopCreate: NexusGenRootTypes['TourStop']; // TourStop!
     tourStopDelete: NexusGenRootTypes['BooleanResult']; // BooleanResult!
     tourStopUpdate: NexusGenRootTypes['TourStop']; // TourStop!
@@ -662,7 +664,6 @@ export interface NexusGenFieldTypes {
     terms: NexusGenRootTypes['TermQueryResult'] | null; // TermQueryResult
     tourRead: NexusGenRootTypes['Tour']; // Tour!
     tourStopRead: NexusGenRootTypes['TourStop']; // TourStop!
-    tourStops: NexusGenRootTypes['TourStopQueryResult'] | null; // TourStopQueryResult
     tours: NexusGenRootTypes['TourQueryResult'] | null; // TourQueryResult
     uniqueSlug: NexusGenRootTypes['UniqueSlugResult'] | null; // UniqueSlugResult
     userProfileRead: NexusGenRootTypes['ProfileUser']; // ProfileUser!
@@ -748,8 +749,9 @@ export interface NexusGenFieldTypes {
     description: NexusGenScalars['JSON']; // JSON!
     heroImage: NexusGenRootTypes['Image'] | null; // Image
     id: number; // Int!
+    location: NexusGenRootTypes['Location'] | null; // Location
+    locationId: number | null; // Int
     number: number | null; // Int
-    slug: NexusGenScalars['JSON'] | null; // JSON
     teaser: NexusGenScalars['JSON']; // JSON!
     title: NexusGenScalars['JSON'] | null; // JSON
     tour: NexusGenRootTypes['Tour'] | null; // Tour
@@ -930,6 +932,7 @@ export interface NexusGenFieldTypeNames {
     termUpdate: 'Term'
     tourCreate: 'Tour'
     tourDelete: 'BooleanResult'
+    tourReorderTourStops: 'Tour'
     tourStopCreate: 'TourStop'
     tourStopDelete: 'BooleanResult'
     tourStopUpdate: 'TourStop'
@@ -994,7 +997,6 @@ export interface NexusGenFieldTypeNames {
     terms: 'TermQueryResult'
     tourRead: 'Tour'
     tourStopRead: 'TourStop'
-    tourStops: 'TourStopQueryResult'
     tours: 'TourQueryResult'
     uniqueSlug: 'UniqueSlugResult'
     userProfileRead: 'ProfileUser'
@@ -1080,8 +1082,9 @@ export interface NexusGenFieldTypeNames {
     description: 'JSON'
     heroImage: 'Image'
     id: 'Int'
+    location: 'Location'
+    locationId: 'Int'
     number: 'Int'
-    slug: 'JSON'
     teaser: 'JSON'
     title: 'JSON'
     tour: 'Tour'
@@ -1217,6 +1220,10 @@ export interface NexusGenArgTypes {
       data: NexusGenInputs['TourUpsertInput']; // TourUpsertInput!
     }
     tourDelete: { // args
+      id: number; // Int!
+    }
+    tourReorderTourStops: { // args
+      data: Array<NexusGenInputs['TourStopOrderInput'] | null>; // [TourStopOrderInput]!
       id: number; // Int!
     }
     tourStopCreate: { // args
@@ -1355,13 +1362,6 @@ export interface NexusGenArgTypes {
     }
     tourStopRead: { // args
       id: number; // Int!
-    }
-    tourStops: { // args
-      orderBy?: NexusGenScalars['JSON'] | null; // JSON
-      pageIndex?: number | null; // Int
-      pageSize: number | null; // Int
-      tourId: number; // Int!
-      where?: NexusGenScalars['JSON'] | null; // JSON
     }
     tours: { // args
       orderBy?: NexusGenScalars['JSON'] | null; // JSON

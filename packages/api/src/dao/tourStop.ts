@@ -4,12 +4,17 @@ import { filteredOutputByBlacklist } from "@culturemap/core";
 import { filteredOutputByBlacklistOrNotFound } from "../utils";
 import { getApiConfig } from "../config";
 import { getPrismaClient } from "../db/client";
-import { daoSharedCheckSlugUnique, daoSharedGenerateFullText } from "./shared";
+import {
+  daoSharedCheckSlugUnique,
+  daoSharedGenerateFullText,
+  daoSharedWrapImageWithTranslationImage,
+  daoImageTranslatedColumns,
+} from ".";
 
 const prisma = getPrismaClient();
 const apiConfig = getApiConfig();
 
-const fullTextKeys = ["name", "slug"];
+const fullTextKeys = ["title", "description", "teaser"];
 
 export const daoTourStopCheckSlugUnique = async (
   slug: Record<string, string>,
@@ -22,6 +27,26 @@ export const daoTourStopCheckSlugUnique = async (
     id,
     uniqueInObject
   );
+};
+
+export const daoTourStopReorder = async (
+  id: number,
+  data: any
+): Promise<number> => {
+  const promises = await prisma.$transaction(
+    data.map((tS: any) => {
+      return prisma.tourStop.update({
+        data: {
+          number: tS.number,
+        },
+        where: {
+          id: tS.id,
+        },
+      });
+    })
+  );
+
+  return promises.length;
 };
 
 export const daoTourStopsQuery = async (
@@ -59,7 +84,11 @@ export const daoTourStopQuery = async (
   });
 
   return filteredOutputByBlacklist(
-    tourStop,
+    daoSharedWrapImageWithTranslationImage(
+      "heroImage",
+      tourStop,
+      daoImageTranslatedColumns
+    ),
     apiConfig.db.privateJSONDataKeys.tour
   );
 };
@@ -109,7 +138,11 @@ export const daoTourStopGetById = async (id: number): Promise<TourStop> => {
   });
 
   return filteredOutputByBlacklistOrNotFound(
-    tourStop,
+    daoSharedWrapImageWithTranslationImage(
+      "heroImage",
+      tourStop,
+      daoImageTranslatedColumns
+    ),
     apiConfig.db.privateJSONDataKeys.tour
   );
 };
@@ -117,15 +150,36 @@ export const daoTourStopGetById = async (id: number): Promise<TourStop> => {
 export const daoTourStopCreate = async (
   data: Prisma.TourStopCreateInput
 ): Promise<TourStop> => {
-  const tourStop: TourStop = await prisma.tourStop.create({
+  let tourStop: TourStop = await prisma.tourStop.create({
     data: {
       ...data,
       fullText: daoSharedGenerateFullText(data, fullTextKeys),
     },
   });
 
+  const count = await prisma.tourStop.count({
+    where: {
+      tourId: tourStop.tourId,
+    },
+  });
+
+  if (count > 1) {
+    tourStop = await prisma.tourStop.update({
+      data: {
+        number: count,
+      },
+      where: {
+        id: tourStop.id,
+      },
+    });
+  }
+
   return filteredOutputByBlacklistOrNotFound(
-    tourStop,
+    daoSharedWrapImageWithTranslationImage(
+      "heroImage",
+      tourStop,
+      daoImageTranslatedColumns
+    ),
     apiConfig.db.privateJSONDataKeys.tour
   );
 };
@@ -145,7 +199,11 @@ export const daoTourStopUpdate = async (
   });
 
   return filteredOutputByBlacklistOrNotFound(
-    tourStop,
+    daoSharedWrapImageWithTranslationImage(
+      "heroImage",
+      tourStop,
+      daoImageTranslatedColumns
+    ),
     apiConfig.db.privateJSONDataKeys.tour
   );
 };
@@ -173,6 +231,7 @@ const defaults = {
   daoTourStopCreate,
   daoTourStopUpdate,
   daoTourStopDelete,
+  daoTourStopReorder,
 };
 
 export default defaults;

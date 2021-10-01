@@ -4,15 +4,13 @@ import {
   FieldMultiLangInput,
   FieldSelect,
   FieldHidden,
-  FieldRadioOrCheckboxGroup,
   FieldPublishStatusSelect,
   FieldRow,
   TwoColFieldRow,
   FieldMultiLangTextEditor,
   FieldSingleImage,
 } from "~/components/forms";
-import { useAuthentication, useModules } from "~/hooks";
-import { yupIsFieldRequired } from "~/validation";
+import { useAuthentication } from "~/hooks";
 
 export const TourForm = ({
   data,

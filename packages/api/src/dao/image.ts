@@ -120,18 +120,23 @@ export const daoImageSetToDelete = async (id: number): Promise<Image> => {
       events: {
         set: [],
       },
-      // TODO: tours?
+      // tours TODO: ...
       locations: {
         set: [],
       },
       profileImageUsers: {
         set: [],
       },
-      // TODO: tours?
       heroImagePages: {
         set: [],
       },
       heroImageEvents: {
+        set: [],
+      },
+      heroImageTours: {
+        set: [],
+      },
+      heroImageTourStops: {
         set: [],
       },
       heroImageLocations: {
@@ -198,7 +203,7 @@ export const daoImageSaveImageTranslations = async (
   return totals.reduce((acc, total) => acc + total, 0);
 };
 
-export default {
+const defaults = {
   daoImageQuery,
   daoImageQueryCount,
   daoImageGetById,
@@ -210,3 +215,5 @@ export default {
   daoImageTranslatedColumns,
   daoImageSaveImageTranslations,
 };
+
+export default defaults;

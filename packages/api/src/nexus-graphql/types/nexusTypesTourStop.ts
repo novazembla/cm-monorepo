@@ -1,5 +1,6 @@
 /// <reference path="../../types/nexus-typegen.ts" />
 import { parseResolveInfo } from "graphql-parse-resolve-info";
+import { Prisma } from ".prisma/client";
 
 import dedent from "dedent";
 import {
@@ -13,34 +14,32 @@ import {
   list,
 } from "nexus";
 import httpStatus from "http-status";
-import { ApiError } from "../../utils";
+import lodash from "lodash";
 
-import { GQLJson } from "./nexusTypesShared";
+import { ApiError } from "../../utils";
 
 import { authorizeApiUser } from "../helpers";
 
-import { getApiConfig } from "../../config";
-
 import {
-  daoTourStopsQuery,
   daoTourStopQuery,
   daoTourStopCreate,
   daoTourStopUpdate,
   daoTourStopDelete,
-  daoTourStopsQueryCount,
   daoImageSaveImageTranslations,
+  daoTourGetById,
 } from "../../dao";
 
-const apiConfig = getApiConfig();
+const { pick } = lodash;
 
 export const TourStop = objectType({
   name: "TourStop",
   definition(t) {
     t.nonNull.int("id");
     t.int("tourId");
+    t.int("locationId");
     t.json("title");
-    t.json("slug");
     t.int("number");
+    t.int("location");
 
     t.nonNull.json("teaser");
     t.nonNull.json("description");
@@ -49,8 +48,13 @@ export const TourStop = objectType({
       type: "Image",
     });
 
+    t.field("location", {
+      type: "Location",
+    });
+
     t.date("createdAt");
     t.date("updatedAt");
+
     t.field("tour", {
       type: "Tour",
     });
@@ -73,59 +77,6 @@ export const TourStopQueryResult = objectType({
 export const TourStopQueries = extendType({
   type: "Query",
   definition(t) {
-    t.field("tourStops", {
-      type: "TourStopQueryResult",
-
-      args: {
-        tourId: nonNull(intArg()),
-        pageIndex: intArg({
-          default: 0,
-        }),
-        pageSize: intArg({
-          default: apiConfig.db.defaultPageSize,
-        }),
-        orderBy: arg({
-          type: GQLJson,
-          default: undefined,
-        }),
-        where: arg({
-          type: GQLJson,
-          default: undefined,
-        }),
-      },
-
-      async resolve(...[, args, , info]) {
-        const pRI = parseResolveInfo(info);
-
-        let totalCount;
-        let tourStops;
-
-        if ((pRI?.fieldsByTypeName?.TourStopQueryResult as any)?.totalCount) {
-          totalCount = await daoTourStopsQueryCount(args.tourId, args.where);
-
-          if (totalCount === 0)
-            return {
-              totalCount,
-              tourStops: [],
-            };
-        }
-
-        if ((pRI?.fieldsByTypeName?.TourStopQueryResult as any)?.tourStops)
-          tourStops = await daoTourStopsQuery(
-            args.tourId,
-            args.where,
-            args.orderBy,
-            args.pageIndex as number,
-            args.pageSize as number
-          );
-
-        return {
-          totalCount,
-          tourStops,
-        };
-      },
-    });
-
     t.nonNull.field("tourStopRead", {
       type: "TourStop",
 
@@ -140,6 +91,9 @@ export const TourStopQueries = extendType({
         const pRI = parseResolveInfo(info);
 
         let include = {};
+        let where: Prisma.TourStopWhereInput = {
+          id: args.id,
+        };
 
         if ((pRI?.fieldsByTypeName?.TourStop as any)?.tour) {
           include = {
@@ -147,7 +101,58 @@ export const TourStopQueries = extendType({
           };
         }
 
-        return daoTourStopQuery({ id: args.id }, include);
+        if ((pRI?.fieldsByTypeName?.TourStop as any)?.location) {
+          include = {
+            ...include,
+            location: {
+              select: {
+                id: true,
+                title: true,
+              },
+            },
+          };
+        }
+
+        if ((pRI?.fieldsByTypeName?.TourStop as any)?.heroImage) {
+          include = {
+            ...include,
+            heroImage: {
+              select: {
+                id: true,
+                meta: true,
+                status: true,
+                translations: true,
+              },
+            },
+          };
+          // TODO: fix that
+          // where = {
+          //   ...where,
+          //   OR: [
+          //     {
+          //       heroImage: {
+          //         status: {
+          //           not: {
+          //             in: [
+          //               ImageStatusEnum.ERROR,
+          //               ImageStatusEnum.DELETED,
+          //               ImageStatusEnum.TRASHED,
+          //             ],
+          //           },
+          //         },
+          //       },
+          //     },
+          //     {
+          //       heroImage: null,
+          //     },
+          //   ],
+          // };
+        }
+
+        return daoTourStopQuery(
+          where,
+          Object.keys(include).length > 0 ? include : undefined
+        );
       },
     });
   },
@@ -157,12 +162,10 @@ export const TourStopCreateInput = inputObjectType({
   name: "TourStopCreateInput",
   definition(t) {
     t.nonNull.json("title");
-    t.nonNull.json("slug");
     t.nonNull.int("tourId");
     t.nonNull.json("teaser");
     t.nonNull.json("description");
     t.nonNull.int("locationId");
-    t.nonNull.json("owner");
   },
 });
 
@@ -170,12 +173,10 @@ export const TourStopUpdateInput = inputObjectType({
   name: "TourStopUpdateInput",
   definition(t) {
     t.nonNull.json("title");
-    t.nonNull.json("slug");
-    t.nonNull.int("tourId");
+    t.int("tourId");
     t.nonNull.json("teaser");
     t.nonNull.json("description");
     t.nonNull.int("locationId");
-    t.nonNull.json("owner");
     t.json("heroImage");
   },
 });
@@ -194,11 +195,28 @@ export const TourStopMutations = extendType({
       authorize: (...[, , ctx]) => authorizeApiUser(ctx, "tourCreate"),
 
       async resolve(...[, args]) {
-        const tourStop = await daoTourStopCreate({
-          ...args.data,
+        const tour = await daoTourGetById(args.data.tourId);
+        if (!tour)
+          throw new ApiError(
+            httpStatus.INTERNAL_SERVER_ERROR,
+            "Creation failed"
+          );
+
+        const connect = {
           tour: {
             connect: { id: args.data.tourId },
           },
+          location: {
+            connect: { id: args.data.locationId },
+          },
+          owner: {
+            connect: { id: tour.ownerId },
+          },
+        };
+
+        const tourStop = await daoTourStopCreate({
+          ...pick(args.data, ["title", "teaser", "description"]),
+          ...connect,
         });
 
         if (!tourStop)
@@ -223,7 +241,16 @@ export const TourStopMutations = extendType({
       authorize: (...[, , ctx]) => authorizeApiUser(ctx, "tourUpdate"),
 
       async resolve(...[, args]) {
-        const tourStop = await daoTourStopUpdate(args.id, args.data);
+        const connect = {
+          location: {
+            connect: { id: args.data.locationId },
+          },
+        };
+
+        const tourStop = await daoTourStopUpdate(args.id, {
+          ...pick(args.data, ["title", "teaser", "description", "heroImage"]),
+          ...connect,
+        });
 
         if (!tourStop)
           throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Update failed");

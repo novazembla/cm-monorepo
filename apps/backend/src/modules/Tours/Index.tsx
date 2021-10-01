@@ -41,8 +41,6 @@ let refetchDataCache: any[] = [];
 let refetchTotalCount = 0;
 let refetchPageIndex: number | undefined = undefined;
 
-
-
 const Index = () => {
   const { t } = useTranslation();
   const [appUser] = useAuthentication();
@@ -94,17 +92,17 @@ const Index = () => {
   // columns need to be a ref!
   const { current: AdminTableColumns } = useRef([
     {
-      Header: t("tours.fields.label.id", "Id"),
+      Header: t("table.label.id", "Id"),
       accessor: "id",
     } as AdminTableColumn,
     {
       Cell: AdminTableMultiLangCell,
-      Header: t("tours.fields.label.title", "Title"),
+      Header: t("table.label.title", "Title"),
       accessor: "title",
     } as AdminTableColumn,
     {
       Cell: AdminTableMultiLangCell,
-      Header: t("tours.fields.label.slug", "Slug"),
+      Header: t("table.label.slug", "Slug"),
       accessor: "slug",
     } as AdminTableColumn,
     {
@@ -115,7 +113,7 @@ const Index = () => {
     } as AdminTableColumn,
     {
       Cell: AdminTableActionCell,
-      Header: t("tours.fields.label.actions", "Actions"),
+      Header: t("table.label.actions", "Actions"),
       isStickyToTheRight: true,
 
       isCentered: true,
@@ -128,7 +126,7 @@ const Index = () => {
       editButtonLabel: t("module.tours.button.edit", "Edit tour"),
       // editButtonComponent: undefined,
 
-      showView: true,
+      showView: false,
       canView: (cell, appUser) =>
         appUser?.can("tourUpdate"),
       viewPath: `${moduleRootPath}/:id/tourStops`,

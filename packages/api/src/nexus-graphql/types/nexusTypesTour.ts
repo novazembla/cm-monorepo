@@ -1,6 +1,7 @@
 /// <reference path="../../types/nexus-typegen.ts" />
 import { parseResolveInfo } from "graphql-parse-resolve-info";
 import { PublishStatus, ImageStatusEnum } from "@culturemap/core";
+import { Prisma } from ".prisma/client";
 
 import dedent from "dedent";
 import {
@@ -26,13 +27,14 @@ import {
   daoTourQuery,
   daoTourQueryCount,
   daoTourQueryFirst,
+  daoTourGetById,
   // daoTourGetTourStops,
   daoTourCreate,
   daoTourUpdate,
   daoTourDelete,
   daoImageSaveImageTranslations,
+  daoTourStopReorder,
 } from "../../dao";
-import { Prisma } from ".prisma/client";
 
 const apiConfig = getApiConfig();
 
@@ -157,6 +159,8 @@ export const TourQueries = extendType({
               },
             },
           };
+
+          // TODO: get this where running
           where = {
             ...where,
             heroImage: {
@@ -256,7 +260,7 @@ export const TourQueries = extendType({
               },
             },
           };
-          // TODO get this where running
+          // TODO: get this where running
           // where = {
           //   ...where,
           //   OR: [
@@ -294,27 +298,27 @@ export const TourQueries = extendType({
               },
             },
           };
-          where = {
-            ...where,
-            OR: [
-              {
-                heroImage: {
-                  status: {
-                    not: {
-                      in: [
-                        ImageStatusEnum.ERROR,
-                        ImageStatusEnum.DELETED,
-                        ImageStatusEnum.TRASHED,
-                      ],
-                    },
-                  },
-                },
-              },
-              {
-                heroImage: null,
-              },
-            ],
-          };
+          // where = {
+          //   ...where,
+          //   OR: [
+          //     {
+          //       heroImage: {
+          //         status: {
+          //           not: {
+          //             in: [
+          //               ImageStatusEnum.ERROR,
+          //               ImageStatusEnum.DELETED,
+          //               ImageStatusEnum.TRASHED,
+          //             ],
+          //           },
+          //         },
+          //       },
+          //     },
+          //     {
+          //       heroImage: null,
+          //     },
+          //   ],
+          // };
         }
 
         const tour = await daoTourQueryFirst(
@@ -341,6 +345,14 @@ export const TourUpsertInput = inputObjectType({
     t.json("heroImage");
     t.nonNull.json("owner");
     t.nonNull.int("status");
+  },
+});
+
+export const TourStopOrderInput = inputObjectType({
+  name: "TourStopOrderInput",
+  definition(t) {
+    t.int("id");
+    t.int("number");
   },
 });
 
@@ -391,6 +403,31 @@ export const TourMutations = extendType({
           await daoImageSaveImageTranslations(args.imagesTranslations);
 
         return tour;
+      },
+    });
+
+    t.nonNull.field("tourReorderTourStops", {
+      type: "Tour",
+
+      args: {
+        id: nonNull(intArg()),
+        data: nonNull(list("TourStopOrderInput")),
+      },
+
+      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "tourUpdate"),
+
+      async resolve(...[, args]) {
+        const currentTour = await daoTourGetById(args.id);
+
+        if (!currentTour || !Array.isArray(args.data) || args.data.length <= 1)
+          throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Update failed");
+
+        const count = await daoTourStopReorder(args.id, args.data);
+
+        if (count !== args.data.length)
+          throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Update failed");
+
+        return currentTour;
       },
     });
 

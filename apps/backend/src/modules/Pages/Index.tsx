@@ -97,27 +97,27 @@ const Index = () => {
   // columns need to be a ref!
   const { current: AdminTableColumns } = useRef([
     {
-      Header: t("pages.fields.label.id", "Id"),
+      Header: t("table.label.id", "Id"),
       accessor: "id",
     } as AdminTableColumn,
     {
       Cell: AdminTablePublishStatusCell,
-      Header: t("locations.fields.label.status", "status"),
+      Header: t("table.label.status", "status"),
       accessor: "status",
     } as AdminTableColumn,
     {
       Cell: AdminTableMultiLangCell,
-      Header: t("pages.fields.label.title", "title"),
+      Header: t("table.label.title", "title"),
       accessor: "title",
     } as AdminTableColumn,
     {
       Cell: AdminTableMultiLangCell,
-      Header: t("pages.fields.label.slug", "Slug"),
+      Header: t("table.label.slug", "Slug"),
       accessor: "slug",
     } as AdminTableColumn,
     {
       Cell: AdminTableActionCell,
-      Header: t("pages.fields.label.actions", "Actions"),
+      Header: t("table.label.actions", "Actions"),
       isStickyToTheRight: true,
 
       isCentered: true,

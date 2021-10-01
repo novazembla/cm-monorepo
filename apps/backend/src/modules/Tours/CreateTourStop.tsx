@@ -16,7 +16,7 @@ import {
   FormScrollInvalidIntoView,
 } from "~/components/forms";
 
-import { ModuleTourStopSchema } from "./forms";
+import { ModuleTourStopCreateSchema } from "./forms";
 import { useTourStopCreateMutation } from "./hooks";
 import {
   useAuthentication,
@@ -61,7 +61,7 @@ const CreateTourStop = () => {
 
   const formMethods = useForm<any>({
     mode: "onTouched",
-    resolver: yupResolver(ModuleTourStopSchema),
+    resolver: yupResolver(ModuleTourStopCreateSchema),
   });
 
   const {
@@ -70,15 +70,14 @@ const CreateTourStop = () => {
     formState: { isSubmitting, isDirty },
   } = formMethods;
 
-  const onSubmit = async (newData: yup.InferType<typeof ModuleTourStopSchema>) => {
+  const onSubmit = async (newData: yup.InferType<typeof ModuleTourStopCreateSchema>) => {
     setHasFormError(false);
     setIsNavigatingAway(false);
     try {
       if (appUser) {
         const { data, errors } = await firstMutation({
           tourId: parseInt(router.query.tourId, 10),
-          color: newData.color,
-          colorDark: newData.color,
+          locationId: newData.locationId,
           ...filteredOutputByWhitelist(
             multiLangRHFormDataToJson(
               newData,
@@ -122,7 +121,7 @@ const CreateTourStop = () => {
         ),
     },
     {
-      title: t("module.tours.page.title.createtourStop", "Add new tourStop"),
+      title: t("module.tours.page.title.createtourStop", "New Tour Stop"),
     },
   ];
 
@@ -161,7 +160,7 @@ const CreateTourStop = () => {
               <TourStopForm
                 action="create"
                 data={data?.tourRead}
-                validationSchema={ModuleTourStopSchema}
+                validationSchema={ModuleTourStopCreateSchema}
               />
             </ModulePage>
           </fieldset>
