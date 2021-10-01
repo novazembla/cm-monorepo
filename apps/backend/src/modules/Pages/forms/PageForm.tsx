@@ -52,7 +52,7 @@ export const PageForm = ({
                 name="ownerId"
                 id="ownerId"
                 label={t(
-                  "module.pages.forms.field.label.author",
+                  "module.forms.field.label.author",
                   "Page author"
                 )}
                 isDisabled={
@@ -70,8 +70,8 @@ export const PageForm = ({
                 settings={{
                   defaultValue: data.pageRead.ownerId,
                   placeholder: t(
-                    "module.pages.forms.field.placeholder.author",
-                    "Please choose the pages's author"
+                    "module.forms.field.placeholder.author",
+                    "Please choose the author"
                   ),
                 }}
               />
@@ -156,7 +156,7 @@ export const PageForm = ({
           defaultValues: data?.pageRead?.intro,
           placeholder: t(
             "module.pages.forms.page.field.placeholder.intro",
-            "Page's introduction paragraph"
+            "Page's introduction block"
           ),
         }}
       />

@@ -28,6 +28,7 @@ import {
   daoTourStopUpdate,
   daoTourStopDelete,
   daoTourStopsQueryCount,
+  daoImageSaveImageTranslations,
 } from "../../dao";
 
 const apiConfig = getApiConfig();
@@ -39,11 +40,14 @@ export const TourStop = objectType({
     t.int("tourId");
     t.json("title");
     t.json("slug");
+    t.int("number");
 
     t.nonNull.json("teaser");
     t.nonNull.json("description");
 
-    t.json("heroImage");
+    t.field("heroImage", {
+      type: "Image",
+    });
 
     t.date("createdAt");
     t.date("updatedAt");
@@ -213,6 +217,7 @@ export const TourStopMutations = extendType({
       args: {
         id: nonNull(intArg()),
         data: nonNull("TourStopUpdateInput"),
+        imagesTranslations: list(arg({ type: "ImageTranslationInput" })),
       },
 
       authorize: (...[, , ctx]) => authorizeApiUser(ctx, "tourUpdate"),
@@ -222,6 +227,9 @@ export const TourStopMutations = extendType({
 
         if (!tourStop)
           throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Update failed");
+
+        if (Array.isArray(args.imagesTranslations))
+          await daoImageSaveImageTranslations(args.imagesTranslations);
 
         return tourStop;
       },

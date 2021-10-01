@@ -258,12 +258,12 @@ async function main() {
         create: {
           key: m.key,
           name: m.name,
-          withTaxonomies: ["location", "event", "tour"].includes(m.key),
+          withTaxonomies: ["location", "event"].includes(m.key),
         },
         update: {
           key: m.key,
           name: m.name,
-          withTaxonomies: ["location", "event", "tour"].includes(m.key),
+          withTaxonomies: ["location", "event"].includes(m.key),
         },
         where: {
           key: m.key,

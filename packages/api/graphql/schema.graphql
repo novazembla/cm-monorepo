@@ -225,8 +225,8 @@ type Mutation {
   tourDelete(id: Int!): BooleanResult!
   tourStopCreate(data: TourStopCreateInput!): TourStop!
   tourStopDelete(id: Int!): BooleanResult!
-  tourStopUpdate(data: TourStopUpdateInput!, id: Int!): TourStop!
-  tourUpdate(data: TourUpsertInput!, id: Int!): Tour!
+  tourStopUpdate(data: TourStopUpdateInput!, id: Int!, imagesTranslations: [ImageTranslationInput]): TourStop!
+  tourUpdate(data: TourUpsertInput!, id: Int!, imagesTranslations: [ImageTranslationInput]): Tour!
   userCreate(data: UserCreateInput!, scope: String!): User!
   userDelete(id: Int!, scope: String!): BooleanResult!
   userProfileImageDelete(id: Int!, scope: String!): BooleanResult!
@@ -401,17 +401,18 @@ input TermUpdateInput {
 type Tour {
   createdAt: DateTime
   description: JSON!
-  distance: String!
-  duration: String!
-  heroImage: JSON
+  distance: JSON!
+  duration: JSON!
+  heroImage: Image
   id: Int!
   modules: [Module]
+  ownerId: Int!
   path: JSON!
   slug: JSON!
   status: Int!
   teaser: JSON!
-  termCount: Int
   title: JSON!
+  tourStopCount: Int
   tourStops: [TourStop]
   updatedAt: DateTime
 }
@@ -425,8 +426,9 @@ type TourQueryResult {
 type TourStop {
   createdAt: DateTime
   description: JSON!
-  heroImage: JSON
+  heroImage: Image
   id: Int!
+  number: Int
   slug: JSON
   teaser: JSON!
   title: JSON
@@ -464,8 +466,8 @@ input TourStopUpdateInput {
 
 input TourUpsertInput {
   description: JSON!
-  distance: String!
-  duration: String!
+  distance: JSON!
+  duration: JSON!
   heroImage: JSON
   owner: JSON!
   path: JSON!

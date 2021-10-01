@@ -10,13 +10,14 @@ import {
   FormScrollInvalidIntoView,
 } from "~/components/forms";
 
-import { ModulePageUpdateSchema } from "./forms";
-import { usePageUpdateMutation } from "./hooks";
+import { ModuleTourSchemaUpdate } from "./forms";
+import { useTourUpdateMutation } from "./hooks";
 import {
   useAuthentication,
   useConfig,
   useSuccessfullySavedToast,
   useRouter,
+  useModules,
 } from "~/hooks";
 
 import { Divider } from "@chakra-ui/react";
@@ -30,9 +31,9 @@ import {
   ButtonListElement,
 } from "~/components/modules";
 
-import { moduleRootPath, multiLangFields } from "./moduleConfig";
+import { moduleRootPath, multiLangFieldsTour } from "./moduleConfig";
 
-import { PageForm } from "./forms";
+import { TourForm } from "./forms";
 import {
   multiLangJsonToRHFormData,
   multiLangRHFormDataToJson,
@@ -41,23 +42,30 @@ import {
   multiLangImageTranslationsJsonRHFormData,
 } from "~/utils";
 
-export const pageReadAndContentAuthorsQueryGQL = gql`
-  query pageRead($id: Int!) {
-    pageRead(id: $id) {
+export const tourReadAndContentAuthorsQueryGQL = gql`
+  query tourRead($id: Int!) {
+    tourRead(id: $id) {
       id
       title
       slug
-      intro
-      content
-      status
+      distance
+      duration
+      teaser
+      description
       ownerId
-
+      status
       heroImage {
         id
         meta
         status
         alt
         credits
+      }
+      tourStopCount
+      tourStops {
+        id
+        title
+        number
       }
       createdAt
       updatedAt
@@ -79,20 +87,22 @@ const Update = () => {
   const [isNavigatingAway, setIsNavigatingAway] = useState(false);
   const [activeUploadCounter, setActiveUploadCounter] = useState<number>(0);
 
-  const { data, loading, error } = useQuery(pageReadAndContentAuthorsQueryGQL, {
+  const modules = useModules();
+
+  const { data, loading, error } = useQuery(tourReadAndContentAuthorsQueryGQL, {
     variables: {
       id: parseInt(router.query.id, 10),
     },
   });
 
-  const [firstMutation, firstMutationResults] = usePageUpdateMutation();
+  const [firstMutation, firstMutationResults] = useTourUpdateMutation();
   const [hasFormError, setHasFormError] = useState(false);
 
   const disableForm = firstMutationResults.loading;
 
   const formMethods = useForm<any>({
     mode: "onTouched",
-    resolver: yupResolver(ModulePageUpdateSchema),
+    resolver: yupResolver(ModuleTourSchemaUpdate),
   });
 
   const {
@@ -103,65 +113,83 @@ const Update = () => {
   } = formMethods;
 
   useEffect(() => {
-    if (!data || !data.pageRead) return;
+    if (!data || !data.tourRead) return;
 
-    console.log(data.pageRead);
-    
+    console.log(data?.tourRead);
+
     reset({
       ...multiLangJsonToRHFormData(
-        filteredOutputByWhitelist(
-          data.pageRead,
-          ["ownerId", "status"],
-          multiLangFields
-        ),
-        multiLangFields,
+        filteredOutputByWhitelist(data.tourRead, [], multiLangFieldsTour),
+        multiLangFieldsTour,
         config.activeLanguages
       ),
-      heroImage: data.pageRead.heroImage?.id,
+      status: data?.tourRead?.status,
+      ownerId: data?.tourRead?.ownerId,
+      path: data?.tourRead?.path,
+      heroImage: data?.tourRead?.heroImage?.id,
       ...multiLangImageTranslationsJsonRHFormData(
-        data.pageRead,
+        data?.tourRead,
         ["heroImage"],
         ["alt", "credits"],
         config.activeLanguages
       ),
     });
-  }, [reset, data, config.activeLanguages]);
+  }, [reset, data, config.activeLanguages, modules]);
 
-  const onSubmit = async (
-    newData: yup.InferType<typeof ModulePageUpdateSchema>
-  ) => {
+  const onSubmit = async (newData: yup.InferType<typeof ModuleTourSchemaUpdate>) => {
     setHasFormError(false);
     setIsNavigatingAway(false);
-    const heroImage =
-      newData.heroImage && !isNaN(newData.heroImage) && newData.heroImage > 0
-        ? {
-            heroImage: {
-              connect: {
-                id: newData.heroImage,
-              },
-            },
-          }
-        : undefined;
-
     try {
       if (appUser) {
+        let path = {};
+
+        try {
+          path = JSON.parse(newData.path);
+        } catch(err) {}
+
+        const heroImage =
+          newData.heroImage &&
+          !isNaN(newData.heroImage) &&
+          newData.heroImage > 0
+            ? {
+                heroImage: {
+                  connect: {
+                    id: newData.heroImage,
+                  },
+                },
+              }
+            : undefined;
+
+        console.log(multiLangImageTranslationsRHFormDataToJson(
+          newData,
+          [
+            {
+              name: "heroImage",
+              id: newData.heroImage,
+            },
+          ],
+          ["alt", "credits"],
+          config.activeLanguages
+        ));
+
         const { errors } = await firstMutation(
           parseInt(router.query.id, 10),
           {
-            status: newData.status,
             ...filteredOutputByWhitelist(
               multiLangRHFormDataToJson(
                 newData,
-                multiLangFields,
+                multiLangFieldsTour,
                 config.activeLanguages
               ),
               [],
-              multiLangFields
+              multiLangFieldsTour
             ),
+            status: parseInt(newData.status),
+            path,
             ...heroImage,
             owner: {
               connect: {
-                id: newData.ownerId,
+                id: parseInt(newData.ownerId),
               },
             },
           },
@@ -198,10 +226,10 @@ const Update = () => {
   const breadcrumb = [
     {
       path: moduleRootPath,
-      title: t("module.pages.title", "Pages"),
+      title: t("module.tours.title", "Tours"),
     },
     {
-      title: t("module.pages.page.title.updatepage", "Update page"),
+      title: t("module.tours.page.title.updatetour", "Update tour"),
     },
   ];
 
@@ -210,13 +238,13 @@ const Update = () => {
       type: "back",
       to: moduleRootPath,
       label: t("module.button.cancel", "Cancel"),
-      userCan: "pageRead",
+      userCan: "tourRead",
     },
     {
       type: "submit",
       isLoading: isSubmitting,
       label: t("module.button.update", "Update"),
-      userCan: "pageUpdate",
+      userCan: "tourUpdate",
     },
   ];
 
@@ -240,11 +268,11 @@ const Update = () => {
                   <Divider />
                 </>
               )}
-              <PageForm
+              <TourForm
                 action="update"
                 data={data}
                 setActiveUploadCounter={setActiveUploadCounter}
-                validationSchema={ModulePageUpdateSchema}
+                validationSchema={ModuleTourSchemaUpdate}
               />
             </ModulePage>
           </fieldset>

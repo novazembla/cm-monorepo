@@ -26,8 +26,6 @@ export const TaxonomyForm = ({
   const { t } = useTranslation();
   const modules = useModules();
 
-  console.log(data);
-
   return (
     <>
       <FieldMultiLangInput

@@ -25,7 +25,7 @@ import {
   daoTaxonomyQuery,
   daoTaxonomyQueryCount,
   daoTaxonomyQueryFirst,
-  daoTaxonomyGetTerms,
+  // daoTaxonomyGetTerms,
   daoTaxonomyCreate,
   daoTaxonomyUpdate,
   daoTaxonomyDelete,
@@ -49,12 +49,6 @@ export const Taxonomy = objectType({
     });
     t.field("terms", {
       type: list("Term"),
-
-      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "taxRead"),
-
-      async resolve(...[parent]) {
-        return daoTaxonomyGetTerms(parent.id);
-      },
     });
 
     t.list.field("modules", {
@@ -129,6 +123,15 @@ export const TaxonomyQueries = extendType({
                 terms: true,
               },
             },
+          };
+
+        if (
+          (pRI?.fieldsByTypeName?.TaxonomyQueryResult as any)?.taxonomies
+            ?.fieldsByTypeName?.Taxonomy?.terms
+        )
+          include = {
+            ...include,
+            terms: true,
           };
 
         if ((pRI?.fieldsByTypeName?.TaxonomyQueryResult as any)?.taxonomies)

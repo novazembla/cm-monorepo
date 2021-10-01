@@ -48,8 +48,7 @@ export const ModuleQuery = extendType({
 
       // resolve(root, args, ctx, info)
       async resolve(...[, args]) {
-        // TODO:, you can't really sort JSON fields
-        // So how to fake that here?
+        // V2, you can't really sort JSON fields
         const module = await daoModuleGetWithTaxonomiesByKey(
           {
             key: args.key,
@@ -57,7 +56,7 @@ export const ModuleQuery = extendType({
           {
             taxonomies: {
               orderBy: {
-                name: "asc",
+                fullText: "asc",
               },
               select: {
                 id: true,
@@ -65,7 +64,7 @@ export const ModuleQuery = extendType({
                 slug: true,
                 terms: {
                   orderBy: {
-                    name: "asc",
+                    fullText: "asc",
                   },
                   select: {
                     id: true,
@@ -83,7 +82,7 @@ export const ModuleQuery = extendType({
         return filteredOutputByWhitelist(
           (module as any).taxonomies,
           FIELD_KEYS_SETTING,
-          ["name", "slug"]
+          ["id", "name", "slug", "terms"]
         );
       },
     });

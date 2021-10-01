@@ -22,6 +22,7 @@ const authLink = new ApolloLink((operation, forward) => {
   // retrieve access token from memory
   const accessToken = authentication.getAuthToken();
 
+  console.log("Apollo, access Token", accessToken)
   if (accessToken) {
     operation.setContext(({ headers = {} }) => ({
       headers: {

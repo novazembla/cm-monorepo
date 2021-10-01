@@ -12,7 +12,7 @@ export const TwoColFieldRow = ({
 
   let props = {
     columns: {base:1,t:2}, 
-    spacing: 6,
+    spacing: 2,
     mt: 4,
   }
 

@@ -1,4 +1,4 @@
-import { Divider, chakra } from "@chakra-ui/react";
+import { Divider, chakra, Alert, AlertIcon } from "@chakra-ui/react";
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import {
@@ -52,7 +52,7 @@ export const ModuleForm = ({
               <FieldSelect
                 name="ownerId"
                 id="ownerId"
-                label={t("module.locations.forms.field.label.author", "Author")}
+                label={t("module.forms.field.label.author", "Author")}
                 isRequired={true}
                 options={data.adminUsers.map((authUser: any) => ({
                   value: authUser.id,
@@ -68,8 +68,8 @@ export const ModuleForm = ({
                 settings={{
                   defaultValue: data.locationRead.ownerId,
                   placeholder: t(
-                    "module.locations.forms.field.placeholder.author",
-                    "Please choose the location's author"
+                    "module.forms.field.placeholder.author",
+                    "Please choose the author"
                   ),
                 }}
               />
@@ -105,6 +105,14 @@ export const ModuleForm = ({
   }
   return (
     <>
+      {action === "create" && <>
+      
+      <Alert borderRadius="lg">
+      <AlertIcon />
+  {t("form.info.pleasesafedraft", "Please save a draft to unlock further functionality")}
+      </Alert>
+    </>}
+
       <FieldMultiLangInput
         name="title"
         id="title"

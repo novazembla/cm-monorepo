@@ -141,8 +141,8 @@ export interface NexusGenInputs {
   }
   TourUpsertInput: { // input type
     description: NexusGenScalars['JSON']; // JSON!
-    distance: string; // String!
-    duration: string; // String!
+    distance: NexusGenScalars['JSON']; // JSON!
+    duration: NexusGenScalars['JSON']; // JSON!
     heroImage?: NexusGenScalars['JSON'] | null; // JSON
     owner: NexusGenScalars['JSON']; // JSON!
     path: NexusGenScalars['JSON']; // JSON!
@@ -365,6 +365,7 @@ export interface NexusGenObjects {
     modules?: Array<NexusGenRootTypes['Module'] | null> | null; // [Module]
     name?: NexusGenScalars['JSON'] | null; // JSON
     slug?: NexusGenScalars['JSON'] | null; // JSON
+    terms?: Array<NexusGenRootTypes['Term'] | null> | null; // [Term]
     updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
   }
   TaxonomyQueryResult: { // root type
@@ -389,11 +390,12 @@ export interface NexusGenObjects {
   Tour: { // root type
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
     description: NexusGenScalars['JSON']; // JSON!
-    distance: string; // String!
-    duration: string; // String!
-    heroImage?: NexusGenScalars['JSON'] | null; // JSON
+    distance: NexusGenScalars['JSON']; // JSON!
+    duration: NexusGenScalars['JSON']; // JSON!
+    heroImage?: NexusGenRootTypes['Image'] | null; // Image
     id: number; // Int!
     modules?: Array<NexusGenRootTypes['Module'] | null> | null; // [Module]
+    ownerId: number; // Int!
     path: NexusGenScalars['JSON']; // JSON!
     slug: NexusGenScalars['JSON']; // JSON!
     status: number; // Int!
@@ -409,8 +411,9 @@ export interface NexusGenObjects {
   TourStop: { // root type
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
     description: NexusGenScalars['JSON']; // JSON!
-    heroImage?: NexusGenScalars['JSON'] | null; // JSON
+    heroImage?: NexusGenRootTypes['Image'] | null; // Image
     id: number; // Int!
+    number?: number | null; // Int
     slug?: NexusGenScalars['JSON'] | null; // JSON
     teaser: NexusGenScalars['JSON']; // JSON!
     title?: NexusGenScalars['JSON'] | null; // JSON
@@ -721,17 +724,18 @@ export interface NexusGenFieldTypes {
   Tour: { // field return type
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
     description: NexusGenScalars['JSON']; // JSON!
-    distance: string; // String!
-    duration: string; // String!
-    heroImage: NexusGenScalars['JSON'] | null; // JSON
+    distance: NexusGenScalars['JSON']; // JSON!
+    duration: NexusGenScalars['JSON']; // JSON!
+    heroImage: NexusGenRootTypes['Image'] | null; // Image
     id: number; // Int!
     modules: Array<NexusGenRootTypes['Module'] | null> | null; // [Module]
+    ownerId: number; // Int!
     path: NexusGenScalars['JSON']; // JSON!
     slug: NexusGenScalars['JSON']; // JSON!
     status: number; // Int!
     teaser: NexusGenScalars['JSON']; // JSON!
-    termCount: number | null; // Int
     title: NexusGenScalars['JSON']; // JSON!
+    tourStopCount: number | null; // Int
     tourStops: Array<NexusGenRootTypes['TourStop'] | null> | null; // [TourStop]
     updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
   }
@@ -742,8 +746,9 @@ export interface NexusGenFieldTypes {
   TourStop: { // field return type
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
     description: NexusGenScalars['JSON']; // JSON!
-    heroImage: NexusGenScalars['JSON'] | null; // JSON
+    heroImage: NexusGenRootTypes['Image'] | null; // Image
     id: number; // Int!
+    number: number | null; // Int
     slug: NexusGenScalars['JSON'] | null; // JSON
     teaser: NexusGenScalars['JSON']; // JSON!
     title: NexusGenScalars['JSON'] | null; // JSON
@@ -1051,17 +1056,18 @@ export interface NexusGenFieldTypeNames {
   Tour: { // field return type name
     createdAt: 'DateTime'
     description: 'JSON'
-    distance: 'String'
-    duration: 'String'
-    heroImage: 'JSON'
+    distance: 'JSON'
+    duration: 'JSON'
+    heroImage: 'Image'
     id: 'Int'
     modules: 'Module'
+    ownerId: 'Int'
     path: 'JSON'
     slug: 'JSON'
     status: 'Int'
     teaser: 'JSON'
-    termCount: 'Int'
     title: 'JSON'
+    tourStopCount: 'Int'
     tourStops: 'TourStop'
     updatedAt: 'DateTime'
   }
@@ -1072,8 +1078,9 @@ export interface NexusGenFieldTypeNames {
   TourStop: { // field return type name
     createdAt: 'DateTime'
     description: 'JSON'
-    heroImage: 'JSON'
+    heroImage: 'Image'
     id: 'Int'
+    number: 'Int'
     slug: 'JSON'
     teaser: 'JSON'
     title: 'JSON'
@@ -1221,10 +1228,12 @@ export interface NexusGenArgTypes {
     tourStopUpdate: { // args
       data: NexusGenInputs['TourStopUpdateInput']; // TourStopUpdateInput!
       id: number; // Int!
+      imagesTranslations?: Array<NexusGenInputs['ImageTranslationInput'] | null> | null; // [ImageTranslationInput]
     }
     tourUpdate: { // args
       data: NexusGenInputs['TourUpsertInput']; // TourUpsertInput!
       id: number; // Int!
+      imagesTranslations?: Array<NexusGenInputs['ImageTranslationInput'] | null> | null; // [ImageTranslationInput]
     }
     userCreate: { // args
       data: NexusGenInputs['UserCreateInput']; // UserCreateInput!

@@ -10,9 +10,8 @@ export const toursQueryGQL = gql`
     ) {
       tours {
         id
-        name
+        title
         slug
-        hasColor
         tourStopCount
       }
       totalCount
@@ -24,19 +23,29 @@ export const tourReadQueryGQL = gql`
   query tourRead($id: Int!) {
     tourRead(id: $id) {
       id
-      name
+      title
       slug
-      hasColor
+      distance
+      duration
+      teaser
+      description
+      ownerId
+      heroImage {
+        id
+        meta
+        status
+      }
       tourStopCount
-      modules {
-        key
+      tourStops {
+        id
+        title
+        number
       }
       createdAt
       updatedAt
     }
   }
 `;
-
 
 export const tourStopsQueryGQL = gql`
   query tourStops(
@@ -48,7 +57,7 @@ export const tourStopsQueryGQL = gql`
   ) {
     taxonomyRead(id: $taxonomyId) {
       id
-      name
+      title
       slug
       hasColor
     }
@@ -61,7 +70,7 @@ export const tourStopsQueryGQL = gql`
     ) {
       tourStops {
         id
-        name
+        title
         slug
         color
         colorDark
@@ -75,7 +84,7 @@ export const tourStopReadQueryGQL = gql`
   query tourStopRead($id: Int!) {
     tourStopRead(id: $id) {
       id
-      name
+      title
       slug
       color
       colorDark
@@ -84,7 +93,7 @@ export const tourStopReadQueryGQL = gql`
 
       taxonomy {
         id
-        name
+        title
         slug
         hasColor
         createdAt

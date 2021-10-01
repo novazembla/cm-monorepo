@@ -9,12 +9,24 @@ import {
   daoTourStopGetTourStopsByTourId,
   daoTourStopGetTourStopsCountByTourId,
 } from "./tourStop";
-import { daoSharedCheckSlugUnique, daoSharedGenerateFullText } from "./shared";
+import {
+  daoSharedCheckSlugUnique,
+  daoSharedGenerateFullText,
+  daoSharedWrapImageWithTranslationImage,
+  daoImageTranslatedColumns,
+} from ".";
 
 const prisma = getPrismaClient();
 const apiConfig = getApiConfig();
 
-const fullTextKeys = ["name", "slug"];
+const fullTextKeys = [
+  "title",
+  "slug",
+  "duration",
+  "distance",
+  "teaser",
+  "description",
+];
 
 export const daoTourCheckSlugUnique = async (
   slug: Record<string, string>,
@@ -69,7 +81,12 @@ export const daoTourQueryFirst = async (
   });
 
   return filteredOutputByBlacklistOrNotFound(
-    tour,
+    // HOW to generalize that to work with many images...
+    daoSharedWrapImageWithTranslationImage(
+      "heroImage",
+      tour,
+      daoImageTranslatedColumns
+    ),
     apiConfig.db.privateJSONDataKeys.tour
   );
 };
@@ -92,7 +109,11 @@ export const daoTourGetById = async (id: number): Promise<Tour> => {
   });
 
   return filteredOutputByBlacklistOrNotFound(
-    tour,
+    daoSharedWrapImageWithTranslationImage(
+      "heroImage",
+      tour,
+      daoImageTranslatedColumns
+    ),
     apiConfig.db.privateJSONDataKeys.tour
   );
 };
@@ -151,7 +172,11 @@ export const daoTourUpdate = async (
   });
 
   return filteredOutputByBlacklistOrNotFound(
-    tour,
+    daoSharedWrapImageWithTranslationImage(
+      "heroImage",
+      tour,
+      daoImageTranslatedColumns
+    ),
     apiConfig.db.privateJSONDataKeys.tour
   );
 };

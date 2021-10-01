@@ -196,8 +196,8 @@ model Tour {
   
   title          Json     
   slug           Json     
-  duration       String
-  distance       String    
+  duration       Json
+  distance       Json    
   teaser         Json
   description    Json
   path           Json
@@ -250,8 +250,6 @@ model TourStop {
   @@index([ownerId], name: "indexTourStopOwnerId")
 
 }
-
-
 
 model Page {
   id             Int        @id @default(autoincrement())

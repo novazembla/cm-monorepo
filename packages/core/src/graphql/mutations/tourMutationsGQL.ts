@@ -1,23 +1,25 @@
 import gql from "graphql-tag";
 
 export const tourCreateMutationGQL = gql`
-  mutation tourCreate($data: TaxonomyUpsertInput!) {
+  mutation tourCreate($data: TourUpsertInput!) {
     tourCreate(data: $data) {
       id
-      name
+      title
       slug
-      hasColor
     }
   }
 `;
 
 export const tourUpdateMutationGQL = gql`
-  mutation tourUpdate($id: Int!, $data: TaxonomyUpsertInput!) {
-    tourUpdate(id: $id, data: $data) {
+  mutation tourUpdate(
+    $id: Int!
+    $data: TourUpsertInput!
+    $imagesTranslations: [ImageTranslationInput]
+  ) {
+    tourUpdate(id: $id, data: $data, imagesTranslations: $imagesTranslations) {
       id
-      name
+      title
       slug
-      hasColor
     }
   }
 `;
@@ -31,26 +33,29 @@ export const tourDeleteMutationGQL = gql`
 `;
 
 export const tourStopCreateMutationGQL = gql`
-  mutation tourStopCreate($data: TermCreateInput!) {
+  mutation tourStopCreate($data: TourStopCreateInput!) {
     tourStopCreate(data: $data) {
       id
-      name
-      slug
-      color
-      colorDark
+      title
       tourId
     }
   }
 `;
 
 export const tourStopUpdateMutationGQL = gql`
-  mutation tourStopUpdate($id: Int!, $data: TermUpdateInput!) {
-    tourStopUpdate(id: $id, data: $data) {
+  mutation tourStopUpdate(
+    $id: Int!
+    $data: TourStopUpdateInput!
+    $imagesTranslations: [ImageTranslationInput]
+  ) {
+    tourStopUpdate(
+      id: $id
+      data: $data
+      imagesTranslations: $imagesTranslations
+    ) {
       id
-      name
-      slug
-      color
-      colorDark
+      title
+      number
     }
   }
 `;

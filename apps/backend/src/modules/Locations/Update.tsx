@@ -239,8 +239,6 @@ const Update = () => {
         } else {
           let slugError = multiLangSlugUniqueError(errors, setError);
 
-          console.log("xxx", slugError, errors);
-
           if (!slugError) setHasFormError(true);
         }
       } else {

@@ -12,6 +12,8 @@ import {
   HStack,
   VisuallyHidden,
   Flex,
+  Alert,
+  AlertIcon,
 } from "@chakra-ui/react";
 import { useFormContext, useFieldArray, Controller } from "react-hook-form";
 import { DateSingleInput } from "@datepicker-react/styled";
@@ -112,7 +114,7 @@ export const ModuleForm = ({
               <FieldSelect
                 name="ownerId"
                 id="ownerId"
-                label={t("module.events.forms.field.label.author", "Author")}
+                label={t("module.forms.field.label.author", "Author")}
                 isRequired={true}
                 options={data.adminUsers.map((authUser: any) => ({
                   value: authUser.id,
@@ -128,8 +130,8 @@ export const ModuleForm = ({
                 settings={{
                   defaultValue: data.eventRead.ownerId,
                   placeholder: t(
-                    "module.events.forms.field.placeholder.author",
-                    "Please choose the event's author"
+                    "module.forms.field.placeholder.author",
+                    "Please choose the author"
                   ),
                 }}
               />
@@ -167,6 +169,17 @@ export const ModuleForm = ({
   // TODO: allow taxonomies to be required (And validated accordingly)
   return (
     <>
+      {action === "create" && (
+        <>
+          <Alert borderRadius="lg">
+            <AlertIcon />
+            {t(
+              "form.info.pleasesafedraft",
+              "Please save a draft to unlock further functionality"
+            )}
+          </Alert>
+        </>
+      )}
       <FieldMultiLangInput
         name="title"
         id="title"

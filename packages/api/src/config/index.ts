@@ -132,14 +132,14 @@ const db: ApiConfigDB = {
   maxPageSize: 500,
   privateJSONDataKeys: {
     all: ["password"],
-    location: ["createdAt", "updatedAt", "fullText"],
-    event: ["createdAt", "updatedAt", "fullText"],
-    tour: ["createdAt", "updatedAt", "fullText"],
-    taxonomy: [],
-    term: [],
+    location: ["fullText"],
+    event: ["fullText"],
+    tour: ["fullText"],
+    taxonomy: ["fullText"],
+    term: ["fullText"],
     page: ["fullText"],
     image: [],
-    user: ["password"],
+    user: ["password", "fullText"],
   },
 };
 

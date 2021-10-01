@@ -19,7 +19,7 @@ const refreshToken = async () => {
   if (client && canRefresh() && getRefreshCookie()) {
     setAllowRefresh(false);
     setRefreshing(true);
-    console.log("Triggering refreshToken via timeOut");
+    console.log("user.refreshToken()");
 
     client
       .mutate({

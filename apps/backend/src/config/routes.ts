@@ -9,7 +9,7 @@ import { dashboadModuleAccessRules,
   pagesModuleAccessRules,
   settingsModuleAccessRules,
   locationsModuleAccessRules,
-  eventsModuleAccessRules } from "./moduleaccessrules";
+  eventsModuleAccessRules,toursModuleAccessRules, } from "./moduleaccessrules";
 
 
 // Public
@@ -37,6 +37,7 @@ const DashBoard = lazy(() => import("~/modules/DashBoard/DashBoard"));
 const Users = lazy(() => import("~/modules/Users/Users"));
 const Taxonomies = lazy(() => import("~/modules/Taxonomies/Taxonomies"));
 const Pages = lazy(() => import("~/modules/Pages/Pages"));
+const Tours = lazy(() => import("~/modules/Tours/Tours"));
 const Locations = lazy(() => import("~/modules/Locations/Locations"));
 const Events = lazy(() => import("~/modules/Events/Events"));
 const Settings = lazy(() => import("~/modules/Settings/Settings"));
@@ -125,6 +126,13 @@ export const privateRoutes: RoutePrivateParams[] = [
     component: Pages,
     exact: false,
     ...pagesModuleAccessRules,
+  },
+  {
+    key: "tours",
+    path: "/tours",
+    component: Tours,
+    exact: false,
+    ...toursModuleAccessRules,
   },
   {
     key: "taxonomies",
