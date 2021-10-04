@@ -70,7 +70,7 @@ export const SortableList = ({
                       className={snapshot.isDragging ? "is-dragged" : ""}
                       borderBottom={snapshot.isDragging? "1px solid #888" : "1px solid white"}
                     >
-                      {item.content}
+                      {typeof item.content === "function" ? item.content.call(null, {index}) : item.content}
                     </Box>
                   )}
                 </Draggable>

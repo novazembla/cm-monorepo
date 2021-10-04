@@ -197,6 +197,15 @@ export const TourQueries = extendType({
                     status: true,
                   },
                 },
+                location: {
+                  select: {
+                    id: true,
+                    title: true,
+                    slug: true,
+                    lat: true,
+                    lng: true,
+                  },
+                },
               },
             },
           };
@@ -255,6 +264,15 @@ export const TourQueries = extendType({
                     meta: true,
                     status: true,
                     translations: true,
+                  },
+                },
+                location: {
+                  select: {
+                    id: true,
+                    title: true,
+                    slug: true,
+                    lat: true,
+                    lng: true,
                   },
                 },
               },

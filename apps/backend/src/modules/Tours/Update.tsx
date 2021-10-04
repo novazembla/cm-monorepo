@@ -69,6 +69,12 @@ export const tourReadAndContentAuthorsQueryGQL = gql`
         id
         title
         number
+
+        location {
+          title
+          lat
+          lng
+        }
       }
       createdAt
       updatedAt
@@ -89,10 +95,11 @@ const Update = () => {
   const successToast = useSuccessfullySavedToast();
   const [isNavigatingAway, setIsNavigatingAway] = useState(false);
   const [activeUploadCounter, setActiveUploadCounter] = useState<number>(0);
-  
+  const [tourStops, setTourStops] = useState<any[]>([]);
+
   const modules = useModules();
 
-  const { data, loading, error, refetch } = useQuery(tourReadAndContentAuthorsQueryGQL, {
+  const { data, loading, error } = useQuery(tourReadAndContentAuthorsQueryGQL, {
     variables: {
       id: parseInt(router.query.tourId, 10),
     },
@@ -119,6 +126,8 @@ const Update = () => {
 
   useEffect(() => {
     if (!data || !data.tourRead) return;
+
+    setTourStops(data?.tourRead?.tourStops ?? []);
 
     reset({
       ...multiLangJsonToRHFormData(
@@ -268,20 +277,29 @@ const Update = () => {
                 validationSchema={ModuleTourSchemaUpdate}
               />
               <TourStopListing
-                data={data}
+                tourStops={tourStops}
                 onSortUpdate={async (stops: any) => {
                   try {
-                    const result = await reorderMutation(
+                    
+                    await reorderMutation(
                       parseInt(router.query.tourId),
                       stops.map((stop: any, index: number) => ({
                         id: parseInt(stop.tourStopId),
                         number: index + 1,
                       }))
                     );
-                    
-                    if (!result.errors)
-                      refetch();
+                    const newStopsOrder =stops.map((newStop: any, index: number) => {
+                      const s = tourStops.find((ts) => ts.id === newStop.tourStopId);
 
+                      return {
+                        ...s,
+                        number: index + 1
+                      };
+                      
+                    });
+
+                    setTourStops(newStopsOrder);
+                   
                   } catch (err) {
                     console.log(err);
                   }
