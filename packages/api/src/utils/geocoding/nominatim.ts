@@ -1,6 +1,5 @@
 import axios, { AxiosResponse } from "axios";
 import axiosRetry from "axios-retry";
-import { safeGuardVariable } from "@culturemap/core";
 
 import { Address } from "../../types";
 import logger from "../../services/serviceLogging";
@@ -8,22 +7,14 @@ import { getApiConfig } from "../../config";
 
 axiosRetry(axios, { retries: 3, retryDelay: axiosRetry.exponentialDelay });
 
-// Docs: https://developer.here.com/documentation/geocoding-search-api/dev_guide/topics/endpoint-geocode-brief.html
-// resultTypes: place, locality, street, houseNumber, administrativeArea, addressBlock, intersection, postalCodePoint, chainQuery, categoryQuery.
+// https://nominatim.org/release-docs/develop/api/Search/
 
-export class GeoCoderHere {
+export class GeoCoderNominatim {
   async query(address: Address, type: string = "autocomplete") {
     const apiConfig = getApiConfig();
-    const apiKey = safeGuardVariable(
-      logger,
-      "string",
-      process.env.HERE_API_KEY,
-      "",
-      "Error: missing/wrong .env config: HERE_API_KEY"
-    );
 
     const client = axios.create({
-      baseURL: "https://geocode.search.hereapi.com/v1/",
+      baseURL: "https://nominatim.openstreetmap.org/",
     });
     axiosRetry(client, { retries: 3 });
 
@@ -35,22 +26,29 @@ export class GeoCoderHere {
         query = `q=${address.street.trim()}`;
     } else {
       const queryParams = [];
-      const streetParts = [];
-
-      if (address.street && address.street.trim() !== "")
-        streetParts.push(address.street.trim());
-
-      if (address.street2 && address.street2.trim() !== "")
-        streetParts.push(address.street2.trim());
-
-      if (address.street3 && address.street3.trim() !== "")
-        streetParts.push(address.street3.trim());
-
-      if (streetParts.length > 0)
-        queryParams.push(`street=${streetParts.join(", ")}`);
+      let street = "";
+      let houseNumber = "";
 
       if (address.houseNumber && address.houseNumber.trim() !== "")
-        queryParams.push(`houseNumber=${address.houseNumber.trim()}`);
+        houseNumber = `${address.houseNumber.trim()}`;
+
+      if (address.street && address.street.trim() !== "")
+        street = `${address.street.trim()}`;
+
+      if (address.street2 && address.street2.trim() !== "")
+        street = `${street}${
+          street.length > 0 ? ", " : ""
+        } ${address.street2.trim()}`;
+
+      if (address.street3 && address.street3.trim() !== "")
+        street = `${street}${
+          street.length > 0 ? ", " : ""
+        } ${address.street3.trim()}`;
+
+      if (street.length > 0)
+        queryParams.push(
+          `street=${houseNumber}${houseNumber.length > 0 ? " " : ""}${street}`
+        );
 
       if (address.postcode && address.postcode.trim() !== "")
         queryParams.push(`postalCode=${address.postcode.trim()}`);
@@ -64,43 +62,34 @@ export class GeoCoderHere {
       if (address.country && address.country.trim() !== "")
         queryParams.push(`country=${address.country.trim()}`);
 
-      query = `qq=${queryParams.join(";")}`;
+      query = `qq=${queryParams.join("&")}`;
     }
 
     try {
       if (query !== "") {
         await client
           .get(
-            `geocode?${query}&limit=10&in=countryCode:${apiConfig.geoCodingRegions.join(
+            `search?${query}&format=geojson&limit=10&countrycodes=${apiConfig.geoCodingRegions.join(
               ","
-            )}&apiKey=${apiKey}`,
+            )}`,
             {
               headers: { "User-Agent": "CultureMap 1.0" },
             }
           )
           .then((response: AxiosResponse<any>) => {
-            if (
-              response.data &&
-              response?.data?.items &&
-              Array.isArray(response?.data?.items)
-            ) {
-              result.features = response.data.items.map((item: any) => ({
-                type: "Feature",
-                geometry: {
-                  coordinates: [
-                    item?.position?.lng ?? 0.0,
-                    item?.position?.lat ?? 0.0,
-                  ],
-                  type: "Point",
-                },
-                properties: {
-                  ...item.address,
-                  title: item.title,
-                  resultType: item.resultType,
-                  houseNumberType: item.houseNumberType,
-                },
-              }));
-              result.count = result.features.length;
+            if (response.data) {
+              result = response.data;
+
+              if (result.features && Array.isArray(result.features))
+                result.features = result.features.map((feature: any) => {
+                  return {
+                    ...feature,
+                    properties: {
+                      ...feature.properties,
+                      title: feature.properties.display_name,
+                    },
+                  };
+                });
             }
           })
           .catch((err) => {

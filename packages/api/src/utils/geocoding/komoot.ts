@@ -2,10 +2,14 @@ import axios, { AxiosResponse } from "axios";
 import axiosRetry from "axios-retry";
 import { GeoLocation, Address } from "../../types";
 
+import pkg from "lodash";
+
 import { geocodingGetCenterOfGravity } from ".";
 import logger from "../../services/serviceLogging";
-
+const { pick } = pkg;
 axiosRetry(axios, { retries: 3, retryDelay: axiosRetry.exponentialDelay });
+
+// https://photon.komoot.io/
 
 export class GeoCoderKomoot {
   async query(address: Address, point?: GeoLocation) {
@@ -14,7 +18,7 @@ export class GeoCoderKomoot {
     const client = axios.create({ baseURL: "https://photon.komoot.io/api/" });
     axiosRetry(client, { retries: 3 });
 
-    let result = { features: [], type: "FeatureCollection" };
+    let result = { features: [], type: "FeatureCollection" } as any;
     const query = [];
 
     if (address.city && address.city.trim() !== "")
@@ -45,7 +49,32 @@ export class GeoCoderKomoot {
           headers: { "User-Agent": "CultureMap 1.0" },
         })
         .then((response: AxiosResponse<any>) => {
-          if (response.data) result = response.data;
+          if (response.data) {
+            result = response.data;
+
+            if (result.features && Array.isArray(result.features))
+              result.features = result.features.map((feature: any) => {
+                const titleAttr = pick(feature.properties, [
+                  "name",
+                  "street",
+                  "housenumber",
+                  "postcode",
+                  "city",
+                  "country",
+                ]) as any;
+
+                const title = Object.keys(titleAttr)
+                  .map((key: any) => titleAttr[key])
+                  .join(", ");
+                return {
+                  ...feature,
+                  properties: {
+                    ...feature.properties,
+                    title,
+                  },
+                };
+              });
+          }
         })
         .catch((err) => {
           throw err;

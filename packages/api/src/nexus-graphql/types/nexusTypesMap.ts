@@ -2,20 +2,11 @@
 import { objectType, extendType, nonNull, stringArg } from "nexus";
 import { getApiConfig } from "../../config";
 
-// import httpStatus from "http-status";
-// import { ApiError } from "../../utils";
-
-// import { authorizeApiUser } from "../helpers";
-
-// import // daoLocationSearchQuery,
-// // daoEventSearchQuery,
-// // daoPageSearchQuery,
-// // daoImageQuery,
-// // daoImageCreate,
-// // daoImageQueryCount,
-// "../../dao";
-
-import { GeoCoderKomoot } from "../../utils/geocoding";
+import {
+  GeoCoderKomoot,
+  GeoCoderHere,
+  GeoCoderNominatim,
+} from "../../utils/geocoding";
 
 export const AddressResult = objectType({
   name: "AddressResult",
@@ -42,6 +33,33 @@ export const MapQueries = extendType({
           const result = await new GeoCoderKomoot().query({
             street: args.q,
           });
+          return {
+            geojson: result,
+            count: Array.isArray(result?.features)
+              ? result?.features?.length
+              : 0,
+          } as any;
+        }
+
+        if (apiConfig.geoCodingProvider.autocomplete === "here") {
+          const result = await new GeoCoderHere().query({
+            street: args.q,
+          });
+          return {
+            geojson: result,
+            count: Array.isArray(result?.features)
+              ? result?.features?.length
+              : 0,
+          } as any;
+        }
+
+        if (apiConfig.geoCodingProvider.autocomplete === "here") {
+          const result = await new GeoCoderNominatim().query(
+            {
+              street: args.q,
+            },
+            "import"
+          );
           return {
             geojson: result,
             count: Array.isArray(result?.features)
