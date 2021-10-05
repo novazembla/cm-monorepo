@@ -15,11 +15,11 @@ import {
 import { morganErrorHandler, morganSuccessHandler } from "./middlewares/morgan";
 import { postImage, postProfileImage, postImageUpload } from "./routes";
 
-const apiConfig = getApiConfig();
-
 export const app: Application = express();
 
 export const initializeExpressApp = () => {
+  const apiConfig = getApiConfig();
+
   app.use(cookieParser());
   app.use(urlencoded({ extended: false }));
 

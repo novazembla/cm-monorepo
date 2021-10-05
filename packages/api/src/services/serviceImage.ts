@@ -9,14 +9,14 @@ import { nanoid } from "nanoid";
 import { daoImageCreate } from "../dao";
 import { logger } from "./serviceLogging";
 
-const apiConfig = getApiConfig();
-
 export const imageGetUploadInfo = async (): Promise<{
   path: string;
   nanoid: string;
   baseUrl: string;
   uploadFolder: string;
 }> => {
+  const apiConfig = getApiConfig();
+
   const date = new Date();
 
   const uploadFolder = `${apiConfig.uploadDir}/${date.getUTCFullYear()}/${
@@ -118,9 +118,10 @@ export const imageCreate = async (
 //   return image;
 // };
 
-export default {
+export const defaults = {
   imageGetUploadInfo,
   imageCreate,
   // imageUpdate,
   // imageRead,
 };
+export default defaults;

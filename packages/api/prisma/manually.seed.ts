@@ -56,13 +56,14 @@ const daoSharedGenerateFullText = (data: any, keys: string[]) => {
 const rndBetween = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1)) + min;
 
+// mapOuteBouds [ East/South, North/West ] corners
 const mapOuterBounds = [
   {
-    lat: 52.712187,
+    lat: 52.291884,
     lng: 13.00036,
   },
   {
-    lat: 52.291884,
+    lat: 52.712187,
     lng: 13.813182,
   },
 ];

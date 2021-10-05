@@ -13,16 +13,16 @@ import { getApiConfig } from "../config";
 import { ApiError } from "../utils";
 import { authAuthenticateUserByToken } from "../services/serviceAuth";
 
-const apiConfig = getApiConfig();
+const apiConfigOnBoot = getApiConfig();
 
 const storage = multer.diskStorage({
   destination: async (_req: Request, _file, cb) => {
     const date = new Date();
 
-    const uploadFolder = `${apiConfig.uploadDir}/${date.getUTCFullYear()}/${
-      date.getUTCMonth() + 1
-    }`;
-    const uploadPath = `${apiConfig.baseDir}/${apiConfig.publicDir}/${uploadFolder}`;
+    const uploadFolder = `${
+      apiConfigOnBoot.uploadDir
+    }/${date.getUTCFullYear()}/${date.getUTCMonth() + 1}`;
+    const uploadPath = `${apiConfigOnBoot.baseDir}/${apiConfigOnBoot.publicDir}/${uploadFolder}`;
 
     try {
       mkdirSync(uploadPath, { recursive: true });
@@ -50,6 +50,8 @@ const createImageMetaInfo = (
   fileNanoId: string;
   metainfo: ApiImageMetaInformation;
 } => {
+  const apiConfig = getApiConfig();
+
   const extension = path.extname(file.originalname);
 
   const uploadFolder = file.destination.replace(

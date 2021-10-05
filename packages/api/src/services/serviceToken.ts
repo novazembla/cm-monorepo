@@ -17,8 +17,6 @@ import { ApiError, TokenTypes } from "../utils";
 
 import { logger } from "./serviceLogging";
 
-const apiConfig = getApiConfig();
-
 export const generateToken = (
   scope: string,
   payloadUser: JwtPayloadAuthenticatedApiUser,
@@ -27,6 +25,8 @@ export const generateToken = (
   type: string,
   secret?: string
 ) => {
+  const apiConfig = getApiConfig();
+
   let user: JwtPayloadAuthenticatedApiUser = {
     id: payloadUser.id,
     scope,
@@ -78,6 +78,8 @@ export const generateToken = (
 };
 
 export const tokenVerify = (token: string): JwtPayload | null => {
+  const apiConfig = getApiConfig();
+
   try {
     if (!apiConfig.jwt.secret) {
       const msg = "Please configure your JWT Secret";
@@ -100,7 +102,7 @@ export const tokenVerify = (token: string): JwtPayload | null => {
       return null;
     }
     return tokenPayload;
-  } catch (err) {
+  } catch (err: any) {
     throw new ApiError(
       httpStatus.UNAUTHORIZED,
       `Token not authorized (${err.message})`
@@ -139,7 +141,7 @@ export const tokenVerifyInDB = async (
     }
 
     return tokenPayload;
-  } catch (err) {
+  } catch (err: any) {
     logger.debug(`Token not authorized (${err.message})`);
     throw new ApiError(
       httpStatus.UNAUTHORIZED,
@@ -153,6 +155,8 @@ export const tokenGenerateAuthTokens = async (
   user: JwtPayloadAuthenticatedApiUser,
   role: RoleNames
 ): Promise<AuthPayload> => {
+  const apiConfig = getApiConfig();
+
   const accessTokenExpires = addMinutes(
     new Date(),
     apiConfig.jwt.expiration.access
@@ -208,6 +212,8 @@ export const tokenGenerateResetPasswordToken = async (
   scope: string,
   email: string
 ) => {
+  const apiConfig = getApiConfig();
+
   const user = await daoUserGetByEmail(email);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, "Email not found");
@@ -239,6 +245,8 @@ export const tokenGenerateVerifyEmailToken = async (
   scope: string,
   userId: number
 ) => {
+  const apiConfig = getApiConfig();
+
   const expires = addDays(
     new Date(),
     apiConfig.jwt.expiration.emailConfirmation
@@ -265,6 +273,8 @@ export const tokenProcessRefreshToken = (
   res: any, // TODO: this should be properly typed
   authPayload: AuthPayload
 ): AuthPayload => {
+  const apiConfig = getApiConfig();
+
   const secureCookie = apiConfig.baseUrl.api.indexOf("localhost") === -1;
   res.cookie("refreshToken", (authPayload as any).tokens.refresh.token, {
     sameSite: secureCookie ? "none" : "lax",
@@ -282,6 +292,8 @@ export const tokenProcessRefreshToken = (
 };
 
 export const tokenClearRefreshToken = (res: Response): void => {
+  const apiConfig = getApiConfig();
+
   const secureCookie = apiConfig.baseUrl.api.indexOf("localhost") === -1;
   res.cookie("refreshToken", "", {
     sameSite: secureCookie ? "none" : "lax",
@@ -291,7 +303,7 @@ export const tokenClearRefreshToken = (res: Response): void => {
   });
 };
 
-export default {
+const defaults = {
   generateToken,
   tokenVerify,
   tokenVerifyInDB,
@@ -300,3 +312,4 @@ export default {
   tokenGenerateVerifyEmailToken,
   tokenProcessRefreshToken,
 };
+export default defaults;

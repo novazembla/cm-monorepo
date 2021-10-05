@@ -12,8 +12,8 @@ import { getApiConfig } from "./config";
 import { logger } from "./services/serviceLogging";
 import { getPrismaClient } from "./db/client";
 
-const apiConfig = getApiConfig();
 export const startApi = async () => {
+  const apiConfig = getApiConfig();
   if (server && app) {
     try {
       const prisma = getPrismaClient();

@@ -6,15 +6,15 @@ import { getApiConfig } from "../config";
 
 // TODO: maybe use https://www.npmjs.com/package/email-templates
 
-const apiConfig = getApiConfig();
+const apiConfigOnBoot = getApiConfig();
 
 const transport = nodemailer.createTransport({
-  host: apiConfig.smtp.host,
-  port: apiConfig.smtp.port,
-  secure: apiConfig.smtp.secure, // true for 465, false for other ports
+  host: apiConfigOnBoot.smtp.host,
+  port: apiConfigOnBoot.smtp.port,
+  secure: apiConfigOnBoot.smtp.secure, // true for 465, false for other ports
   auth: {
-    user: apiConfig.smtp.user, // generated ethereal user
-    pass: apiConfig.smtp.password, // generated ethereal password
+    user: apiConfigOnBoot.smtp.user, // generated ethereal user
+    pass: apiConfigOnBoot.smtp.password, // generated ethereal password
   },
 });
 
@@ -31,6 +31,8 @@ if (process.env.NODE_ENV !== "test") {
 }
 
 export const sendEmail = (to: string, subject: string, text: string) => {
+  const apiConfig = getApiConfig();
+
   const msg = { from: apiConfig.email.from, to, subject, text };
 
   logger.info(`[service.email.sendMail]: ${subject}`);
@@ -45,6 +47,8 @@ export const sendResetPasswordEmail = async (
   to: string,
   token: string
 ) => {
+  const apiConfig = getApiConfig();
+
   // TODO: multilang?
   const subject = `${apiConfig.email.subjectPrefix} Password reset requested`;
 
@@ -68,6 +72,8 @@ export const sendEmailConfirmationEmail = async (
   to: string,
   token: string
 ) => {
+  const apiConfig = getApiConfig();
+
   // TODO: multilang?
   const subject = `${apiConfig.email.subjectPrefix} Please verify your email`;
 
@@ -86,9 +92,10 @@ ${apiConfig.appName} team`;
   await sendEmail(to, subject, text);
 };
 
-export default {
+export const defaults = {
   transport,
   sendEmail,
   sendResetPasswordEmail,
   sendEmailConfirmationEmail,
 };
+export default defaults;

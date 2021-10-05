@@ -35,6 +35,17 @@ export const daoSettingGetById = async (id: number): Promise<Setting> => {
   );
 };
 
+export const daoSettingGetByKey = async (key: string): Promise<Setting> => {
+  const setting: Setting | null = await prisma.setting.findFirst({
+    where: { key },
+  });
+
+  return filteredOutputByBlacklistOrNotFound(
+    setting,
+    apiConfig.db.privateJSONDataKeys.all
+  );
+};
+
 export const daoSettingUpsert = async (
   key: string,
   createData: Prisma.SettingCreateInput,
@@ -54,8 +65,11 @@ export const daoSettingUpsert = async (
   );
 };
 
-export default {
+const defaults = {
   daoSettingQuery,
   daoSettingGetById,
+  daoSettingGetByKey,
   daoSettingUpsert,
 };
+
+export default defaults;

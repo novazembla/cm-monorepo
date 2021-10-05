@@ -35,7 +35,7 @@ import {
 
 import { eventUpdate } from "../../services/serviceEvent";
 
-const apiConfig = getApiConfig();
+const apiConfigOnBoot = getApiConfig();
 
 export const EventDate = objectType({
   name: "EventDate",
@@ -124,7 +124,7 @@ export const EventQueries = extendType({
           default: 0,
         }),
         pageSize: intArg({
-          default: apiConfig.db.defaultPageSize,
+          default: apiConfigOnBoot.db.defaultPageSize,
         }),
         orderBy: arg({
           type: GQLJson,

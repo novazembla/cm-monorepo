@@ -8,12 +8,12 @@ import Prisma from "@prisma/client";
 import type {
   ApiImageMetaInformation,
   ApiImageSizeInfo,
+  ApiImageFormatInfo,
 } from "@culturemap/core";
 import { ImageStatusEnum } from "@culturemap/core";
 
 import { getApiConfig } from "../config";
 
-const apiConfig = getApiConfig();
 // https://github.com/breejs/bree#long-running-jobs
 // Or use https://threads.js.org/usage for a queing experience .. .
 // if (parentPort)
@@ -32,11 +32,13 @@ const postMessage = (msg: string) => {
 };
 
 const createImageSizeWebP = async (
-  size: ApiConfigImageFormat,
+  size: ApiImageFormatInfo,
   nanoid: string,
   imageMeta: any
-): Promise<ApiImageSizeInfo> =>
-  new Promise((resolve, reject) => {
+): Promise<ApiImageSizeInfo> => {
+  const apiConfig = getApiConfig();
+
+  return new Promise((resolve, reject) => {
     const newImgFileName = `${nanoid}-${size.width}-${size.height}.webp`;
     const newImgUrl = `${apiConfig.baseUrl.api}/${imageMeta.uploadFolder}/${newImgFileName}`;
     const newImgPath =
@@ -64,13 +66,16 @@ const createImageSizeWebP = async (
         reject(Err);
       });
   });
+};
 
 const createImageSizeJpg = async (
-  size: ApiConfigImageFormat,
+  size: ApiImageFormatInfo,
   nanoid: string,
   imageMeta: any
-): Promise<ApiImageSizeInfo> =>
-  new Promise((resolve, reject) => {
+): Promise<ApiImageSizeInfo> => {
+  const apiConfig = getApiConfig();
+
+  return new Promise((resolve, reject) => {
     const newImgFileName = `${nanoid}-${size.width}-${size.height}.jpg`;
     const newImgUrl = `${apiConfig.baseUrl.api}/${imageMeta.uploadFolder}/${newImgFileName}`;
     const newImgPath = `${apiConfig.baseDir}/${apiConfig.publicDir}/${imageMeta.uploadFolder}/${newImgFileName}`;
@@ -97,8 +102,11 @@ const createImageSizeJpg = async (
         reject(Err);
       });
   });
+};
 
 const doChores = async () => {
+  const apiConfig = getApiConfig();
+
   // !!!! ALWAY REMEMBER TO CLOSE YOU DB CONNECTION !!!
   postMessage("Creating prisma client");
   const { PrismaClient } = Prisma;
@@ -155,10 +163,7 @@ const doChores = async () => {
 
           const processedSizesMetaInfo = await Promise.all(
             apiConfig.imageFormats[meta.imageType].reduce(
-              (
-                acc: Promise<ApiImageSizeInfo>[],
-                size: ApiConfigImageFormat
-              ) => {
+              (acc: Promise<ApiImageSizeInfo>[], size: ApiImageFormatInfo) => {
                 if (
                   size.width > (originalImageMetaData?.width ?? 0) &&
                   size.height > (originalImageMetaData?.height ?? 0)

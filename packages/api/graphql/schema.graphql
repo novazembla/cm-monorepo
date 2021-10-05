@@ -2,6 +2,11 @@
 ### Do not make changes to this file directly
 
 
+type AddressResult {
+  count: Int!
+  geojson: JSON!
+}
+
 type AdminUser {
   firstName: String
   id: Int
@@ -279,6 +284,7 @@ type ProfileUser implements UserBaseNode {
 }
 
 type Query {
+  address(q: String!): AddressResult
   adminUsers(roles: [String]!): [AdminUser] @deprecated(reason: "A publicly accessible list Lists all users that have a the given roles")
   event(slug: String!): Event!
   eventRead(id: Int!): Event!

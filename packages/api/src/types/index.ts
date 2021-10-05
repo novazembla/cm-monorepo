@@ -26,3 +26,20 @@ export type ApiImageMetaInformation = {
   size: number;
   availableSizes?: Record<string, ApiImageSizeInfo>;
 };
+
+export interface GeoLocation {
+  lat: number | undefined;
+  lng: number | undefined;
+}
+
+export interface Address {
+  co?: string | undefined;
+  street: string | undefined;
+  street2?: string | undefined;
+  street3?: string | undefined;
+  houseNumber?: string | undefined;
+  postcode?: string | undefined;
+  city?: string | undefined;
+  state?: string | undefined;
+  country?: string | undefined;
+}

@@ -24,13 +24,14 @@ export const appConfig: AppConfigSettings = {
   //     validationSchema: ___, // your custom yup validation schama needs to be object().shape(...) as the schemas will be merged object().shape({email:string(),emailconfirm:string()})
   //   },
   // }, // TODO: what else is needed?
+  // mapOuteBouds [ East/South, North/West ] corners
   mapOuterBounds: [
     {
-      lat: 52.71218794157272,
+      lat: 52.29188494426961,
       lng: 13.000360654958342,
     },
     {
-      lat: 52.29188494426961,
+      lat: 52.71218794157272,
       lng: 13.813182965630787,
     },
   ],

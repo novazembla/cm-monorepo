@@ -46,7 +46,7 @@ import {
   daoUserProfileImageDelete,
 } from "../../dao";
 
-const apiConfig = getApiConfig();
+const apiConfigOnBoot = getApiConfig();
 
 const UserBaseNode = interfaceType({
   name: "UserBaseNode",
@@ -123,7 +123,7 @@ export const UserQueries = extendType({
           default: 0,
         }),
         pageSize: intArg({
-          default: apiConfig.db.defaultPageSize,
+          default: apiConfigOnBoot.db.defaultPageSize,
         }),
         orderBy: arg({
           type: GQLJson,
@@ -277,7 +277,10 @@ export const UserMutations = extendType({
         data: nonNull(UserSignupInput),
       },
 
-      authorize: () => apiConfig.enablePublicRegistration,
+      authorize: () => {
+        const apiConfig = getApiConfig();
+        return apiConfig.enablePublicRegistration;
+      },
 
       async resolve(...[, args, { res }]) {
         const authPayload = await userRegister(

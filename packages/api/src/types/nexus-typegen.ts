@@ -200,6 +200,10 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
+  AddressResult: { // root type
+    count: number; // Int!
+    geojson: NexusGenScalars['JSON']; // JSON!
+  }
   AdminUser: { // root type
     firstName?: string | null; // String
     id?: number | null; // Int
@@ -460,6 +464,10 @@ export type NexusGenRootTypes = NexusGenInterfaces & NexusGenObjects
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
 
 export interface NexusGenFieldTypes {
+  AddressResult: { // field return type
+    count: number; // Int!
+    geojson: NexusGenScalars['JSON']; // JSON!
+  }
   AdminUser: { // field return type
     firstName: string | null; // String
     id: number | null; // Int
@@ -640,6 +648,7 @@ export interface NexusGenFieldTypes {
     profileImageId: number | null; // Int
   }
   Query: { // field return type
+    address: NexusGenRootTypes['AddressResult'] | null; // AddressResult
     adminUsers: Array<NexusGenRootTypes['AdminUser'] | null> | null; // [AdminUser]
     event: NexusGenRootTypes['Event']; // Event!
     eventRead: NexusGenRootTypes['Event']; // Event!
@@ -793,6 +802,10 @@ export interface NexusGenFieldTypes {
 }
 
 export interface NexusGenFieldTypeNames {
+  AddressResult: { // field return type name
+    count: 'Int'
+    geojson: 'JSON'
+  }
   AdminUser: { // field return type name
     firstName: 'String'
     id: 'Int'
@@ -973,6 +986,7 @@ export interface NexusGenFieldTypeNames {
     profileImageId: 'Int'
   }
   Query: { // field return type name
+    address: 'AddressResult'
     adminUsers: 'AdminUser'
     event: 'Event'
     eventRead: 'Event'
@@ -1275,6 +1289,9 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
+    address: { // args
+      q: string; // String!
+    }
     adminUsers: { // args
       roles: Array<string | null>; // [String]!
     }

@@ -35,13 +35,14 @@ const configDefault: AppConfig = {
   activeLanguages,
   defaultLanguage,
   settings: {},
+  // mapOuteBouds [ East/South, North/West ] corners
   mapOuterBounds: [
     {
-      lat: 52.712187,
+      lat: 52.291884,
       lng: 13.000360,
     },
     {
-      lat: 52.291884,
+      lat: 52.712187,      
       lng: 13.813182,
     },
   ],

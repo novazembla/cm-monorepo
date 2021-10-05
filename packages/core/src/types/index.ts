@@ -4,7 +4,7 @@ export type PartialRecord<K extends keyof any, T> = {
 
 export type AppScopes = "frontend" | "backend" | "api";
 
-export type ApiConfigImageFormatType = "square" | "normal";
+export type ApiImageSizeInfoType = "square" | "normal";
 
 export type ApiImageSizeInfo = {
   width: number;
@@ -14,12 +14,20 @@ export type ApiImageSizeInfo = {
   isWebP: boolean;
 };
 
+export interface ApiImageFormatInfo {
+  width: number;
+  height: number;
+  crop: boolean;
+  asWebP: boolean;
+  asJpg: boolean;
+}
+
 export type ApiImageMetaInformation = {
   uploadFolder: string;
   originalFileName: string;
   originalFileUrl: string;
   originalFilePath: string;
-  imageType: ApiConfigImageFormatType;
+  imageType: ApiImageSizeInfoType;
   mimeType: any;
   size: number;
   availableSizes?: Record<string, ApiImageSizeInfo>;

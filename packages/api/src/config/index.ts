@@ -3,8 +3,9 @@ import merge from "deepmerge";
 import { isPlainObject } from "is-plain-object";
 import { CorsOptions } from "cors";
 import { PartialRecord, AppScopes, safeGuardVariable } from "@culturemap/core";
-import type { ApiConfigImageFormatType } from "@culturemap/core";
+import type { ApiImageSizeInfoType } from "@culturemap/core";
 import { join, resolve, dirname } from "path";
+import { GeoLocation } from "../types";
 
 import { logger } from "../services/serviceLogging";
 
@@ -25,6 +26,7 @@ const corsOptions: CorsOptions = {
 };
 
 dotenv.config();
+export type CulturemapGeoCodingScopes = "autocomplete" | "import";
 
 export type CulturemapScopes =
   | "all"
@@ -53,7 +55,7 @@ export interface ApiConfigSmtp {
   password: string;
 }
 
-export interface ApiConfigImageFormat {
+export interface ApiImageSizeInfo {
   width: number;
   height: number;
   crop: boolean;
@@ -96,7 +98,10 @@ export interface ApiConfig {
   corsOptions: CorsOptions;
   jwt: ApiConfigJwt;
   security: ApiConfigSecurity;
-  imageFormats: Record<ApiConfigImageFormatType, ApiConfigImageFormat[]>;
+  imageFormats: Record<ApiImageSizeInfoType, ApiImageSizeInfo[]>;
+  mapOuterBounds: [GeoLocation, GeoLocation];
+  geoCodingProvider: Record<CulturemapGeoCodingScopes, string>;
+  geoCodingRegions: string[];
 }
 
 export interface ApiConfigOverwrite {
@@ -110,13 +115,14 @@ export interface ApiConfigOverwrite {
   db?: Partial<ApiConfigDB>;
   smtp?: Partial<ApiConfigSmtp>;
   email?: Partial<ApiConfigEmail>;
-  imageFormats?: PartialRecord<
-    ApiConfigImageFormatType,
-    ApiConfigImageFormat[]
-  >;
+  imageFormats?: PartialRecord<ApiImageSizeInfoType, ApiImageSizeInfo[]>;
   corsOptions: CorsOptions;
   security?: Partial<ApiConfigSecurity>;
   jwt: Partial<ApiConfigJwt>;
+  mapOuterBounds?: [GeoLocation, GeoLocation];
+  geoCodingProvider?: Record<CulturemapGeoCodingScopes, string>;
+  // https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3 country codes
+  geoCodingRegions?: string[];
 }
 
 const db: ApiConfigDB = {
@@ -369,6 +375,21 @@ let apiConfig = {
       ),
     },
   },
+  mapOuterBounds: [
+    {
+      lat: 52.29188494426961,
+      lng: 13.000360654958342,
+    },
+    {
+      lat: 52.71218794157272,
+      lng: 13.813182965630787,
+    },
+  ],
+  geoCodingProvider: {
+    autocomplete: "komoot",
+    import: "komoot",
+  },
+  geoCodingRegions: ["DEU"],
 };
 
 export const updateApiConfig = (aCfg: ApiConfigOverwrite) => {

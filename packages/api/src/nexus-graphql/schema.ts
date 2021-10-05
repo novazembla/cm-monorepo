@@ -9,7 +9,7 @@ import { getApiConfig } from "../config";
 
 import * as types from "./types";
 
-const apiConfig = getApiConfig();
+const apiConfigOnBoot = getApiConfig();
 
 // TODO: interesting plugins:
 // https://www.npmjs.com/package/nexus-args-validation
@@ -27,11 +27,17 @@ if (process.env.NODE_ENV !== "production")
     ...schemaConfig,
     ...{
       outputs: {
-        typegen: join(apiConfig.packageBaseDir, "src/types/nexus-typegen.ts"),
-        schema: join(apiConfig.packageBaseDir, "graphql/schema.graphql"),
+        typegen: join(
+          apiConfigOnBoot.packageBaseDir,
+          "src/types/nexus-typegen.ts"
+        ),
+        schema: join(apiConfigOnBoot.packageBaseDir, "graphql/schema.graphql"),
       },
       contextType: {
-        module: join(apiConfig.packageBaseDir, "src/nexus-graphql/context.ts"),
+        module: join(
+          apiConfigOnBoot.packageBaseDir,
+          "src/nexus-graphql/context.ts"
+        ),
         export: "NexusResolverContext",
       },
     },

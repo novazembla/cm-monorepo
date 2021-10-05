@@ -19,12 +19,12 @@ import { authSendEmailConfirmationEmail } from "./serviceAuth";
 import { ApiError, TokenTypes } from "../utils";
 import { getApiConfig } from "../config";
 
-const apiConfig = getApiConfig();
-
 export const userRegister = async (
   scope: AppScopes,
   data: Prisma.UserCreateInput
 ): Promise<AuthPayload> => {
+  const apiConfig = getApiConfig();
+
   if (!apiConfig.enablePublicRegistration)
     throw new ApiError(httpStatus.FORBIDDEN, "Access denied");
 
@@ -158,7 +158,7 @@ export const userProfilePasswordUpdate = async (
   return user;
 };
 
-export default {
+const defaults = {
   userCreate,
   userUpdate,
   userRead,
@@ -166,3 +166,4 @@ export default {
   userProfileUpdate,
   userProfilePasswordUpdate,
 };
+export default defaults;

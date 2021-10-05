@@ -5,9 +5,7 @@ import { unlinkSync } from "fs";
 import Prisma from "@prisma/client";
 
 import { getApiConfig } from "../config";
-import { ImageStatusEnum, ArModelStatusEnum } from "../utils";
-
-const apiConfig = getApiConfig();
+import { ImageStatusEnum } from "@culturemap/core";
 
 // https://github.com/breejs/bree#long-running-jobs
 // Or use https://threads.js.org/usage for a queing experience .. .
@@ -27,6 +25,8 @@ const postMessage = (msg: string) => {
 };
 
 const doChores = async () => {
+  const apiConfig = getApiConfig();
+
   const { PrismaClient } = Prisma;
   const prisma = new PrismaClient({
     datasources: {
@@ -86,40 +86,40 @@ const doChores = async () => {
       `[WORKER:dbHousekeeping]: Removed ${images.length} image(s) and their files`
     );
 
-    const models = await prisma.arModel.findMany({
-      where: {
-        status: ArModelStatusEnum.DELETED,
-      },
-      take: 10,
-      select: {
-        id: true,
-        meta: true,
-      },
-    });
+    // const models = await prisma.arModel.findMany({
+    //   where: {
+    //     status: ArModelStatusEnum.DELETED,
+    //   },
+    //   take: 10,
+    //   select: {
+    //     id: true,
+    //     meta: true,
+    //   },
+    // });
 
-    if (models && models.length > 0) {
-      await Promise.all(
-        models.map(async (model) => {
-          if (model?.meta) {
-            const meta = model?.meta as any;
-            try {
-              unlinkSync(`${meta.originalFilePath}`);
+    // if (models && models.length > 0) {
+    //   await Promise.all(
+    //     models.map(async (model) => {
+    //       if (model?.meta) {
+    //         const meta = model?.meta as any;
+    //         try {
+    //           unlinkSync(`${meta.originalFilePath}`);
 
-              await prisma.arModel.delete({
-                where: {
-                  id: model.id,
-                },
-              });
-            } catch (err: any) {
-              postMessage(`Error ${err.message}`);
-            }
-          }
-        })
-      );
-    }
-    postMessage(
-      `[WORKER:dbHousekeeping]: Removed ${models.length} models(s) and their files`
-    );
+    //           await prisma.arModel.delete({
+    //             where: {
+    //               id: model.id,
+    //             },
+    //           });
+    //         } catch (err: any) {
+    //           postMessage(`Error ${err.message}`);
+    //         }
+    //       }
+    //     })
+    //   );
+    // }
+    // postMessage(
+    //   `[WORKER:dbHousekeeping]: Removed ${models.length} models(s) and their files`
+    // );
   } catch (Err: any) {
     postMessage(
       `[WORKER:dbHousekeeping]: Failed to run worker. ${Err.name} ${Err.message}`

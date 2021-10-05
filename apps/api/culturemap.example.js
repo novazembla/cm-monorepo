@@ -8,6 +8,12 @@ const settings = {
     tour: ["createdAt", "updatedAt", "test4"],
     user: ["password", "test5"],
   },
+  geoCodingProvider: {
+    autocomplete: "komoot",
+    impot: "komoot",
+  },
+  // https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3 country codes
+  geoCodingRegions: ["DEU"],
 };
 
 export default settings;
