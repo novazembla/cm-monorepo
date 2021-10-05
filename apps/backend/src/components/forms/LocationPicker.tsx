@@ -130,15 +130,10 @@ export const LocationPicker = ({
     (point: GeoLocation) => {
       if (Number.isNaN(point.lat) || Number.isNaN(point.lng)) return;
 
-      setValue(fieldNameLat, point.lat, {
-        shouldDirty: true,
-      });
-      setValue(fieldNameLng, point.lng, {
-        shouldDirty: true,
-      });
       setPoint(point);
     },
-    [setPoint, setValue, fieldNameLat, fieldNameLng]
+
+    [setPoint] //, setValue, fieldNameLat, fieldNameLng]
   );
 
   useEffect(() => {
@@ -165,13 +160,24 @@ export const LocationPicker = ({
       point.lat &&
       point.lng
     ) {
+      console.log("refMap.current.setPoint");
       refMap.current.setPoint(point);
     }
 
     if (!initialState) {
       setInitialState(point);
       setNewPoint(point);
+      console.log(123);
     }
+
+    setValue(fieldNameLat, point.lat, {
+      shouldDirty: true,
+    });
+
+    setValue(fieldNameLng, point.lng, {
+      shouldDirty: true,
+    });
+
   }, [
     point,
     setInitialState,
@@ -181,6 +187,7 @@ export const LocationPicker = ({
     setNewPoint,
     fieldNameLat,
     fieldNameLng,
+    setValue,
   ]);
 
   const isButtonDisabled =
@@ -258,7 +265,7 @@ export const LocationPicker = ({
             {t("form.geolocation.button.reset", "Reset")}
           </Button>
         </FieldRow>
-      </Box>      
+      </Box>
     </Grid>
   );
 };

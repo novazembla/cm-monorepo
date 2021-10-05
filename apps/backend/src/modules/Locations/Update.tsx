@@ -162,6 +162,8 @@ const Update = () => {
         data.moduleTaxonomies
       ),
       heroImage: data.locationRead.heroImage?.id,
+      lat: data.locationRead?.lat,
+      lng: data.locationRead?.lng,
       ...multiLangImageTranslationsJsonRHFormData(
         data.locationRead,
         ["heroImage"],

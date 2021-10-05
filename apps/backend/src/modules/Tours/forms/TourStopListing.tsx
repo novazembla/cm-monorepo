@@ -11,7 +11,6 @@ import {
   Td,
   Th,
   Tbody,
-  Tfoot,
   HStack,
   Button,
 } from "@chakra-ui/react";
@@ -168,23 +167,15 @@ export const TourStopListing = ({
           <SortableList items={stops} onSortUpdate={onSortUpdate} />
         </Box>
       )}
-      <Table>
-        <Tfoot>
-          <Tr>
-            <Td px="0" colSpan={4}>
-              <Button
-                onClick={() => {
-                  router.push(
-                    `${moduleRootPath}/${router.query.tourId}/create`
-                  );
-                }}
-              >
-                {t("module.tour.table.tourstops.button.add", "Add tour stop")}
-              </Button>
-            </Td>
-          </Tr>
-        </Tfoot>
-      </Table>
+      <Box px="0" pt="4">
+        <Button
+          onClick={() => {
+            router.push(`${moduleRootPath}/${router.query.tourId}/create`);
+          }}
+        >
+          {t("module.tour.table.tourstops.button.add", "Add tour stop")}
+        </Button>
+      </Box>
     </Box>
   );
 };

@@ -73,7 +73,8 @@ export const ModuleTourStopCreateSchema = object().shape(
     }),
     {
       // t("validation.slug.chooselocation", "Please choose a location")
-      locationId: number().typeError("validation.slug.chooselocation").required()
+      locationId: number().typeError("validation.slug.chooselocation").required(),
+      path: string(),
     }
   )
 );

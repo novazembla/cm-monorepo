@@ -36,7 +36,7 @@ import {
 
 import { moduleRootPath, multiLangFieldsTour } from "./moduleConfig";
 
-import { TourForm } from "./forms";
+import { TourForm, TourPathEditor } from "./forms";
 import {
   multiLangJsonToRHFormData,
   multiLangRHFormDataToJson,
@@ -57,6 +57,7 @@ export const tourReadAndContentAuthorsQueryGQL = gql`
       description
       ownerId
       status
+      path
       heroImage {
         id
         meta
@@ -155,11 +156,7 @@ const Update = () => {
     setIsNavigatingAway(false);
     try {
       if (appUser) {
-        let path = {};
-
-        try {
-          path = JSON.parse(newData.path);
-        } catch (err) {}
+        
 
         const heroImage =
           newData.heroImage &&
@@ -174,6 +171,25 @@ const Update = () => {
               }
             : undefined;
 
+            console.log(123, {
+              ...filteredOutputByWhitelist(
+                multiLangRHFormDataToJson(
+                  newData,
+                  multiLangFieldsTour,
+                  config.activeLanguages
+                ),
+                [],
+                multiLangFieldsTour
+              ),
+              status: parseInt(newData.status),
+              path: newData.path,
+              ...heroImage, 
+              owner: {
+                connect: {
+                  id: parseInt(newData.ownerId),
+                },
+              },
+            })
         const { errors } = await firstMutation(
           parseInt(router.query.tourId, 10),
           {
@@ -187,7 +203,7 @@ const Update = () => {
               multiLangFieldsTour
             ),
             status: parseInt(newData.status),
-            path,
+            path: newData.path,
             ...heroImage,
             owner: {
               connect: {
@@ -304,6 +320,15 @@ const Update = () => {
                     console.log(err);
                   }
                 }}
+              />
+              <TourPathEditor 
+                tourStops={tourStops.map((stop) => ({
+                  number: stop.number, 
+                  lat: stop.location.lat,
+                  lng: stop.location.lng,
+                }))}
+                path={data?.tourRead?.path ?? {}}
+                name="path"
               />
             </ModulePage>
           </fieldset>

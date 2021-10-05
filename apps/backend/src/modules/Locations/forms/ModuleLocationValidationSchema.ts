@@ -55,7 +55,7 @@ export const ModuleLocationUpdateSchema = ModuleLocationCreateSchema.concat(
               })
             : string(),
       }),
-      {
+      { 
         // t("validation.image.required", "Please upload an image")
         // heroImage: mixed().test(
         //   'is-required-image',
