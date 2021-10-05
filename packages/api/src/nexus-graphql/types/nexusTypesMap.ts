@@ -8,8 +8,8 @@ import {
   GeoCoderNominatim,
 } from "../../utils/geocoding";
 
-export const AddressResult = objectType({
-  name: "AddressResult",
+export const GeoCodeResult = objectType({
+  name: "GeoCodeResult",
   definition(t) {
     t.nonNull.json("geojson");
     t.nonNull.int("count");
@@ -19,8 +19,8 @@ export const AddressResult = objectType({
 export const MapQueries = extendType({
   type: "Query",
   definition(t) {
-    t.field("address", {
-      type: "AddressResult",
+    t.field("geocode", {
+      type: "GeoCodeResult",
 
       args: {
         q: nonNull(stringArg()),
@@ -53,13 +53,10 @@ export const MapQueries = extendType({
           } as any;
         }
 
-        if (apiConfig.geoCodingProvider.autocomplete === "here") {
-          const result = await new GeoCoderNominatim().query(
-            {
-              street: args.q,
-            },
-            "import"
-          );
+        if (apiConfig.geoCodingProvider.autocomplete === "nominatim") {
+          const result = await new GeoCoderNominatim().query({
+            street: args.q,
+          });
           return {
             geojson: result,
             count: Array.isArray(result?.features)

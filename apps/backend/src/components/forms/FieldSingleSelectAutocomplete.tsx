@@ -27,13 +27,7 @@ export interface FieldSingleSelectAutocompleteItem {
 }
 
 export interface FieldSingleSelectAutocompleteSettings {
-  onChange?: (item: FieldSingleSelectAutocompleteItem) => void;
-  required?: boolean;
-  key?: string;
-  name?: string;
-  className?: string;
   placeholder?: string;
-  valid?: boolean;
 }
 
 export const FieldSingleSelectAutocomplete = ({
@@ -117,7 +111,6 @@ export const FieldSingleSelectAutocomplete = ({
     );
   }
 
-  // TODO: needed ? resetIdCounter();
   const {
     isOpen,
     inputValue,
@@ -133,14 +126,6 @@ export const FieldSingleSelectAutocomplete = ({
     onStateChange: ({ inputValue, type, selectedItem, isOpen }) => {
       switch (type) {
         case useCombobox.stateChangeTypes.ToggleButtonClick:
-          console.log(
-            type,
-            isOpen,
-            inputValue,
-            currentItem?.label,
-            typeof currentItem?.label === "string",
-            currentItem?.label && currentItem?.label?.length > 2
-          );
           if (
             isOpen &&
             typeof currentItem?.label === "string" &&
@@ -158,8 +143,6 @@ export const FieldSingleSelectAutocomplete = ({
           break;
         case useCombobox.stateChangeTypes.InputKeyDownEnter:
         case useCombobox.stateChangeTypes.ItemClick:
-          console.log("ItemClick", inputValue, selectedItem);
-
           if (!selectedItem) return;
 
           setCurrentItem(selectedItem);
@@ -237,7 +220,10 @@ export const FieldSingleSelectAutocomplete = ({
       >
         <Box {...getComboboxProps()}>
           <Box ref={referenceRef}>
-            <Input {...getInputProps()} />
+            <Input
+              {...getInputProps()}
+              placeholder={settings?.placeholder ?? ""}
+            />
           </Box>
           <Box ref={popperRef} zIndex={1000}>
             <chakra.ul
@@ -285,14 +271,22 @@ export const FieldSingleSelectAutocomplete = ({
                             key={`${item}${index}`}
                             {...getItemProps({ item, index })}
                           >
-                            <Highlighter
-                              highlightStyle={{
-                                background: wine100,                                
-                              }}
-                              searchWords={[inputValue]}
-                              autoEscape={true}
-                              textToHighlight={item.label}
-                            />
+                            <chakra.span
+                              display="block"
+                              overflow="hidden"
+                              textOverflow="ellipsis"
+                              w="100%"
+                              whiteSpace="nowrap"
+                            >
+                              <Highlighter
+                                highlightStyle={{
+                                  background: wine100,
+                                }}
+                                searchWords={[inputValue]}
+                                autoEscape={true}
+                                textToHighlight={item.label}
+                              />
+                            </chakra.span>
                           </chakra.li>
                         );
                       })}

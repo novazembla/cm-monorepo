@@ -1,16 +1,17 @@
 import { useRef, useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { Grid, Box, AspectRatio, Button } from "@chakra-ui/react";
+import { geocodeQueryGQL } from "@culturemap/core";
 
 import L from "leaflet";
 import "maplibre-gl";
 import "@maplibre/maplibre-gl-leaflet";
 import "leaflet/dist/leaflet.css";
 
-import { FieldRow, FieldNumberInput } from ".";
+import { FieldRow, FieldNumberInput, FieldAutocomplete, FieldAutocompleteItem } from ".";
 
 import type { GeoLocation } from "~/types";
-import { useConfig } from "~/hooks";
+import { useConfig, useSettings } from "~/hooks";
 import { useFormContext } from "react-hook-form";
 
 import icon from "leaflet/dist/images/marker-icon.png";
@@ -98,6 +99,28 @@ class LeafletLocationPicker {
   }
 }
 
+const distance = (p1: GeoLocation, p2: GeoLocation) => {
+  const R = 3958.8; // Radius of the Earth in miles
+  const rlat1 = p1.lat * (Math.PI / 180); // Convert degrees to radians
+  const rlat2 = p2.lat * (Math.PI / 180); // Convert degrees to radians
+  const difflat = rlat2 - rlat1; // Radian difference (latitudes)
+  const difflon = (p2.lng - p1.lng) * (Math.PI / 180); // Radian difference (longitudes)
+
+  const d =
+    2 *
+    R *
+    Math.asin(
+      Math.sqrt(
+        Math.sin(difflat / 2) * Math.sin(difflat / 2) +
+          Math.cos(rlat1) *
+            Math.cos(rlat2) *
+            Math.sin(difflon / 2) *
+            Math.sin(difflon / 2)
+      )
+    );
+  return d;
+};
+
 export const LocationPicker = ({
   lat,
   lng,
@@ -111,6 +134,7 @@ export const LocationPicker = ({
   fieldNameLat?: string;
   fieldNameLng?: string;
 }) => {
+  const settings = useSettings();
   const { t } = useTranslation();
   const config = useConfig();
 
@@ -160,14 +184,12 @@ export const LocationPicker = ({
       point.lat &&
       point.lng
     ) {
-      console.log("refMap.current.setPoint");
       refMap.current.setPoint(point);
     }
 
     if (!initialState) {
       setInitialState(point);
       setNewPoint(point);
-      console.log(123);
     }
 
     setValue(fieldNameLat, point.lat, {
@@ -177,7 +199,6 @@ export const LocationPicker = ({
     setValue(fieldNameLng, point.lng, {
       shouldDirty: true,
     });
-
   }, [
     point,
     setInitialState,
@@ -190,82 +211,194 @@ export const LocationPicker = ({
     setValue,
   ]);
 
+  const bounds = [
+    [
+      config?.mapOuterBounds?.[0].lat ?? 0,
+      config?.mapOuterBounds?.[0].lng ?? 0,
+    ],
+    [
+      config?.mapOuterBounds?.[1].lat ?? 0,
+      config?.mapOuterBounds?.[1].lng ?? 0,
+    ],
+  ];
+
+  const centerOfGravity = settings.centerOfGravity ?? {
+    lng: (bounds[0][1] + bounds[1][1]) / 2,
+    lat: (bounds[0][0] + bounds[1][0]) / 2,
+  };
+
   const isButtonDisabled =
     point.lat === initialState?.lat && point.lng === initialState?.lng;
 
   return (
-    <Grid
-      w="100%"
-      templateColumns={{ base: "100%", t: "2fr 1fr" }}
-      templateRows={{ base: "auto 1fr", t: "auto" }}
-      gap={{ base: "4", s: "6" }}
-    >
-      <Box>
-        <AspectRatio ratio={16 / 9}>
-          <Box w="100%" h="100%" ref={refMapContainer}></Box>
-        </AspectRatio>
-      </Box>
-      <Box>
+    <Box>
+      <Box pb="4">
         <FieldRow>
-          <FieldNumberInput
-            name={fieldNameLat}
-            id={fieldNameLat}
-            label={t("form.geolocation.lat.label", "Latitude")}
-            isRequired={required}
-            settings={{
-              precision: 8,
-              step: 0.01,
-              onChange: (value: number) => {
-                if (value) {
-                  setNewPoint({
-                    lat: parseFloat(
-                      typeof value === "string" ? value : value.toFixed(8)
-                    ),
-                    lng: point.lng,
-                  });
+          <FieldAutocomplete
+            name="searchLocation"
+            id="searchLocation"
+            label={t("forms.field.label.locationPickerSearch", "Search")}
+            searchQueryGQL={geocodeQueryGQL}
+            createSearchVariables={(value) => ({
+              q: value,
+            })}
+            processSearchResult={(data) => {
+              if (
+                data &&
+                data?.geocode &&
+                data?.geocode?.geojson &&
+                data?.geocode?.count > 0 &&
+                Array.isArray(data?.geocode?.geojson?.features)
+              ) {
+                const result = data.geocode.geojson.features.reduce(
+                  (agg: any, item: any) => {
+                    if (
+                      item?.geometry?.coordinates &&
+                      item?.geometry?.type === "Point" && 
+
+                      // lng
+                      item?.geometry?.coordinates[0] >= bounds[0][1] && 
+                      item?.geometry?.coordinates[0] <= bounds[1][1] && 
+
+                      // lat
+                      item?.geometry?.coordinates[1] >= bounds[0][0] && 
+                      item?.geometry?.coordinates[1] <= bounds[1][0]
+                    ) {
+                      agg.push({
+                        lng: item?.geometry?.coordinates[0],
+                        lat: item?.geometry?.coordinates[1],
+                        title: item?.properties?.title,
+                        distance: distance(
+                          {
+                            lng: item?.geometry?.coordinates[0],
+                            lat: item?.geometry?.coordinates[1],
+                          },
+                          centerOfGravity
+                        ),
+                      });
+                    }
+                    return agg;
+                  },
+
+                  []
+                );
+
+                if (result.length > 0) {
+                  result.sort(
+                    (
+                      item: FieldAutocompleteItem,
+                      item2: FieldAutocompleteItem
+                    ) => {
+                      if (item.distance < item2.distance) {
+                        return -1;
+                      }
+                      if (item2.distance > item.distance) {
+                        return 1;
+                      }
+                      return 0;
+                    }
+                  );
                 }
-              },
-              value: point.lat,
-              defaultValue: lat,
+                
+                return result;
+              }
+              return [];
+            }}
+            onItemSelect={(item: any) => {
+              setNewPoint({
+                lat: parseFloat(
+                  typeof item.lat === "string" ? item.lat : item.lat.toFixed(8)
+                ),
+                lng: parseFloat(
+                  typeof item.lng === "string" ? item.lng : item.lng.toFixed(8)
+                ),
+              });
+            }}
+            resultItemToString={(item: any) => item.title}
+            settings={{
+              debounceInterval: 1000,
+              minimumLength: 5,
+              placeholder: t(
+                "forms.field.placeholder.locationPickerSearch",
+                "Please enter an address to search"
+              ),
             }}
           />
         </FieldRow>
-        <FieldRow>
-          <FieldNumberInput
-            name={fieldNameLng}
-            id={fieldNameLng}
-            label={t("form.geolocation.lng.label", "Longitude")}
-            isRequired={required}
-            settings={{
-              precision: 8,
-              step: 0.01,
-              onChange: (value: number) => {
-                if (value) {
-                  setNewPoint({
-                    lat: point.lat,
-                    lng: parseFloat(
-                      typeof value === "string" ? value : value.toFixed(8)
-                    ),
-                  });
-                }
-              },
-              value: point.lng,
-              defaultValue: lng,
-            }}
-          />
-        </FieldRow>
-        <FieldRow>
-          <Button
-            onClick={() => {
-              if (initialState) setNewPoint(initialState);
-            }}
-            isDisabled={isButtonDisabled}
-            colorScheme={!isButtonDisabled ? "wine" : "gray"}
-          >
-            {t("form.geolocation.button.reset", "Reset")}
-          </Button>
-        </FieldRow>
       </Box>
-    </Grid>
+      <Grid
+        w="100%"
+        templateColumns={{ base: "100%", t: "2fr 1fr" }}
+        templateRows={{ base: "auto 1fr", t: "auto" }}
+        gap={{ base: "4", s: "6" }}
+      >
+        <Box>
+          <AspectRatio ratio={16 / 9}>
+            <Box w="100%" h="100%" ref={refMapContainer}></Box>
+          </AspectRatio>
+        </Box>
+        <Box>
+          <FieldRow>
+            <FieldNumberInput
+              name={fieldNameLat}
+              id={fieldNameLat}
+              label={t("form.geolocation.lat.label", "Latitude")}
+              isRequired={required}
+              settings={{
+                precision: 8,
+                step: 0.01,
+                onChange: (value: number) => {
+                  if (value) {
+                    setNewPoint({
+                      lat: parseFloat(
+                        typeof value === "string" ? value : value.toFixed(8)
+                      ),
+                      lng: point.lng,
+                    });
+                  }
+                },
+                value: point.lat,
+                defaultValue: lat,
+              }}
+            />
+          </FieldRow>
+          <FieldRow>
+            <FieldNumberInput
+              name={fieldNameLng}
+              id={fieldNameLng}
+              label={t("form.geolocation.lng.label", "Longitude")}
+              isRequired={required}
+              settings={{
+                precision: 8,
+                step: 0.01,
+                onChange: (value: number) => {
+                  if (value) {
+                    setNewPoint({
+                      lat: point.lat,
+                      lng: parseFloat(
+                        typeof value === "string" ? value : value.toFixed(8)
+                      ),
+                    });
+                  }
+                },
+                value: point.lng,
+                defaultValue: lng,
+              }}
+            />
+          </FieldRow>
+          <FieldRow>
+            <Button
+              onClick={() => {
+                if (initialState) setNewPoint(initialState);
+              }}
+              isDisabled={isButtonDisabled}
+              colorScheme={!isButtonDisabled ? "wine" : "gray"}
+            >
+              {t("form.geolocation.button.reset", "Reset")}
+            </Button>
+          </FieldRow>
+        </Box>
+      </Grid>
+    </Box>
   );
 };

@@ -2,11 +2,6 @@
 ### Do not make changes to this file directly
 
 
-type AddressResult {
-  count: Int!
-  geojson: JSON!
-}
-
 type AdminUser {
   firstName: String
   id: Int
@@ -96,6 +91,11 @@ input EventUpsertInput {
   status: Int!
   terms: JSON
   title: JSON!
+}
+
+type GeoCodeResult {
+  count: Int!
+  geojson: JSON!
 }
 
 type GeoPoint {
@@ -284,11 +284,11 @@ type ProfileUser implements UserBaseNode {
 }
 
 type Query {
-  address(q: String!): AddressResult
   adminUsers(roles: [String]!): [AdminUser] @deprecated(reason: "A publicly accessible list Lists all users that have a the given roles")
   event(slug: String!): Event!
   eventRead(id: Int!): Event!
   events(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): EventQueryResult
+  geocode(q: String!): GeoCodeResult
   imageRead(id: Int!): Image!
   imageStatus(id: Int!): ImageStatus!
   images(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, taxonomyId: Int, where: JSON): ImageQueryResult
