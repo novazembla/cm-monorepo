@@ -141,10 +141,13 @@ export const LocationPicker = ({
   const refMapContainer = useRef<HTMLDivElement>(null);
   const refMap = useRef<LeafletLocationPicker>();
 
+  const [shouldSetIsDirty, setShouldSetIsDirty] = useState(false)
   const [point, setPoint] = useState<GeoLocation>({
     lat,
     lng,
   });
+
+
 
   const [initialState, setInitialState] = useState<GeoLocation>();
 
@@ -172,7 +175,10 @@ export const LocationPicker = ({
     if (!refMap.current)
       refMap.current = new LeafletLocationPicker(
         refMapContainer,
-        setNewPoint,
+        (p) => {
+          setShouldSetIsDirty(true);
+          setNewPoint(p);
+        },
         config.mapOuterBounds,
         13,
         config.mapStyleUrl
@@ -191,16 +197,17 @@ export const LocationPicker = ({
       setInitialState(point);
       setNewPoint(point);
     }
-
+    
     setValue(fieldNameLat, point.lat, {
-      shouldDirty: true,
+      shouldDirty: shouldSetIsDirty,
     });
 
     setValue(fieldNameLng, point.lng, {
-      shouldDirty: true,
+      shouldDirty: shouldSetIsDirty,
     });
   }, [
     point,
+    shouldSetIsDirty,
     setInitialState,
     initialState,
     config.mapOuterBounds,
@@ -349,6 +356,7 @@ export const LocationPicker = ({
                 step: 0.01,
                 onChange: (value: number) => {
                   if (value) {
+                    setShouldSetIsDirty(true);
                     setNewPoint({
                       lat: parseFloat(
                         typeof value === "string" ? value : value.toFixed(8)
@@ -373,6 +381,7 @@ export const LocationPicker = ({
                 step: 0.01,
                 onChange: (value: number) => {
                   if (value) {
+                    setShouldSetIsDirty(true);
                     setNewPoint({
                       lat: point.lat,
                       lng: parseFloat(
