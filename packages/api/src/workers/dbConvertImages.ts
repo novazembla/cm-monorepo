@@ -10,7 +10,7 @@ import type {
   ApiImageSizeInfo,
   ApiImageFormatInfo,
 } from "@culturemap/core";
-import { ImageStatusEnum } from "@culturemap/core";
+import { ImageStatus } from "@culturemap/core";
 
 import { getApiConfig } from "../config";
 
@@ -122,7 +122,7 @@ const doChores = async () => {
     let count = 0;
     const images = await prisma.image.findMany({
       where: {
-        status: ImageStatusEnum.UPLOADED,
+        status: ImageStatus.UPLOADED,
       },
       take: 10,
       select: {
@@ -137,7 +137,7 @@ const doChores = async () => {
       postMessage(`Found ${images.length} to process`);
       await prisma.image.updateMany({
         data: {
-          status: ImageStatusEnum.PROCESSING,
+          status: ImageStatus.PROCESSING,
         },
         where: {
           id: {
@@ -210,7 +210,7 @@ const doChores = async () => {
             await prisma.image.update({
               data: {
                 meta: newMeta,
-                status: ImageStatusEnum.READY,
+                status: ImageStatus.READY,
               },
               where: {
                 id: image.id,

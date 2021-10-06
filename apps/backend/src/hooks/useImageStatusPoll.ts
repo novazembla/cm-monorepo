@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { imageStatusGQL, ImageStatusEnum } from "@culturemap/core";
+import { imageStatusGQL, ImageStatus } from "@culturemap/core";
 import { useLazyQuery } from "@apollo/client";
 import type { ApiImageMetaInformation } from "@culturemap/core";
 
 type PollingState = {
-  status: undefined | ImageStatusEnum;
+  status: undefined | ImageStatus;
   meta: ApiImageMetaInformation | undefined;
 };
 
@@ -17,8 +17,8 @@ const pollingIntervalMs = 5000;
 
 export const useImageStatusPoll = (
   id: number | undefined,
-  status: ImageStatusEnum | undefined
-): [undefined | ImageStatusEnum, undefined | ApiImageMetaInformation] => {
+  status: ImageStatus | undefined
+): [undefined | ImageStatus, undefined | ApiImageMetaInformation] => {
   const [statusInformation, setStatusInformation] = useState(defaultState);
 
   const [triggerPoll, { data, loading, error }] = useLazyQuery(imageStatusGQL, {
@@ -33,18 +33,18 @@ export const useImageStatusPoll = (
 
   if (
     !id ||
-    status === ImageStatusEnum.READY ||
-    status === ImageStatusEnum.ERROR ||
+    status === ImageStatus.READY ||
+    status === ImageStatus.ERROR ||
     (pollData &&
-      (pollData?.status === ImageStatusEnum.READY ||
-        pollData?.status === ImageStatusEnum.ERROR))
+      (pollData?.status === ImageStatus.READY ||
+        pollData?.status === ImageStatus.ERROR))
   )
     runPoll = false;
 
   if (error) {
-    if (statusInformation.status !== ImageStatusEnum.ERROR) {
+    if (statusInformation.status !== ImageStatus.ERROR) {
       setStatusInformation({
-        status: ImageStatusEnum.ERROR,
+        status: ImageStatus.ERROR,
         meta: undefined,
       });
     }
@@ -64,8 +64,8 @@ export const useImageStatusPoll = (
       }
 
       if (
-        pollData?.status === ImageStatusEnum.READY ||
-        pollData?.status === ImageStatusEnum.ERROR
+        pollData?.status === ImageStatus.READY ||
+        pollData?.status === ImageStatus.ERROR
       ) {
         runPoll = false;
       }

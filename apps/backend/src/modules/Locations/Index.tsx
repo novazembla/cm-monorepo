@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import { locationsQueryGQL, locationDeleteMutationGQL } from "@culturemap/core";
 import { useQuery } from "@apollo/client";
 
-
 import {
   ModuleSubNav,
   ButtonListElement,
@@ -30,7 +29,7 @@ import {
 import { config } from "~/config";
 import { SortingRule } from "react-table";
 
-import {filterColumnKeys} from "./moduleConfig";
+import { filterColumnKeys } from "./moduleConfig";
 
 const intitalTableState: AdminTableState = {
   pageIndex: 0,
@@ -43,8 +42,6 @@ let refetchDataCache: any[] = [];
 let refetchTotalCount = 0;
 let refetchPageIndex: number | undefined = undefined;
 
-
-
 const Index = () => {
   const { t } = useTranslation();
   const [appUser] = useAuthentication();
@@ -54,7 +51,7 @@ const Index = () => {
   );
 
   const [isRefetching, setIsRefetching] = useState(false);
-  
+
   const { loading, error, data, refetch } = useQuery(locationsQueryGQL, {
     onCompleted: () => {
       setIsRefetching(false);
@@ -63,7 +60,12 @@ const Index = () => {
       setIsRefetching(false);
     },
     notifyOnNetworkStatusChange: true,
-    variables: adminTableCreateQueryVariables(tableState, filterColumnKeys, multiLangFields, config.activeLanguages),
+    variables: adminTableCreateQueryVariables(
+      tableState,
+      filterColumnKeys,
+      multiLangFields,
+      config.activeLanguages
+    ),
   });
 
   const [adminTableDeleteButtonOnClick, DeleteAlertDialog, isDeleteError] =
@@ -85,6 +87,12 @@ const Index = () => {
   ];
 
   const buttonList: ButtonListElement[] = [
+    {
+      type: "navigation",
+      to: `${moduleRootPath}/import`,
+      label: t("module.locations.mneuitem.imports", "Imports"),
+      userCan: "locationCreate",
+    },
     {
       type: "navigation",
       to: `${moduleRootPath}/create`,
@@ -123,17 +131,17 @@ const Index = () => {
       appUser,
 
       showEdit: true,
-      canEdit: (cell, appUser) =>
-        appUser?.can("locationUpdate"),
+      canEdit: (cell, appUser) => appUser?.can("locationUpdate"),
       editPath: `${moduleRootPath}/update/:id`,
       editButtonLabel: t("module.locations.button.edit", "Edit location"),
       // editButtonComponent: undefined,
 
       showDelete: true,
-      canDelete: (cell, appUser) => appUser?.can("locationDelete") ||
-      (appUser.can("locationDeleteOwn") &&
-        appUser.id === (cell?.row?.original as any)?.ownerId),
-        
+      canDelete: (cell, appUser) =>
+        appUser?.can("locationDelete") ||
+        (appUser.can("locationDeleteOwn") &&
+          appUser.id === (cell?.row?.original as any)?.ownerId),
+
       deleteButtonLabel: t("module.locations.button.delete", "Delete location"),
       // deleteButtonComponent?: React.FC<any>;
 
@@ -167,7 +175,14 @@ const Index = () => {
 
       setIsRefetching(true);
 
-      refetch(adminTableCreateQueryVariables(newTableState, filterColumnKeys, multiLangFields, config.activeLanguages));
+      refetch(
+        adminTableCreateQueryVariables(
+          newTableState,
+          filterColumnKeys,
+          multiLangFields,
+          config.activeLanguages
+        )
+      );
 
       setTableState(newTableState);
     }
@@ -180,7 +195,8 @@ const Index = () => {
   const tablePageCount =
     tableTotalCount > 0
       ? Math.ceil(
-          (data?.locations?.totalCount ?? refetchTotalCount) / tableState.pageSize
+          (data?.locations?.totalCount ?? refetchTotalCount) /
+            tableState.pageSize
         )
       : 0;
 
@@ -201,7 +217,9 @@ const Index = () => {
             onFetchData,
             refetchPageIndex,
           }}
-          data={isRefetching ? refetchDataCache : data?.locations?.locations ?? []}
+          data={
+            isRefetching ? refetchDataCache : data?.locations?.locations ?? []
+          }
           intitalTableState={tableState}
         />
       </ModulePage>

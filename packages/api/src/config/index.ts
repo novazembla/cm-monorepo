@@ -87,6 +87,7 @@ export interface ApiConfig {
   enablePublicRegistration: boolean;
   baseDir: string;
   publicDir: string;
+  importDir: string;
   uploadDir: string;
   packageBaseDir: string;
   appName: string;
@@ -108,6 +109,7 @@ export interface ApiConfigOverwrite {
   enablePublicRegistration?: boolean;
   baseDir?: string;
   uploadDir?: string;
+  importDir?: string;
   publicDir?: string;
   packageBaseDir?: string;
   appName?: string;
@@ -156,6 +158,7 @@ let apiConfig = {
   enablePublicRegistration: true,
   baseDir: resolve(dirname("")),
   publicDir: "public",
+  importDir: "csv",
   uploadDir: "img",
   packageBaseDir: join(resolve(dirname(""), "packages/api")),
   db,

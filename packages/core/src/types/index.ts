@@ -32,3 +32,11 @@ export type ApiImageMetaInformation = {
   size: number;
   availableSizes?: Record<string, ApiImageSizeInfo>;
 };
+
+export type ApiFileMetaInformation = {
+  uploadFolder: string;
+  originalFileName: string;
+  originalFileUrl: string;
+  originalFilePath: string;
+  mimeType: any;
+};

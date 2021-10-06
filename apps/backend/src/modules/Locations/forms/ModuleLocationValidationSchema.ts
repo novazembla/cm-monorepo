@@ -32,7 +32,6 @@ export const ModuleLocationCreateSchema = object().shape(
   )
 );
 
-
 export const ModuleLocationUpdateSchema = ModuleLocationCreateSchema.concat(
   object().shape(
     activeLanguages.reduce(
@@ -55,7 +54,7 @@ export const ModuleLocationUpdateSchema = ModuleLocationCreateSchema.concat(
               })
             : string(),
       }),
-      { 
+      {
         // t("validation.image.required", "Please upload an image")
         // heroImage: mixed().test(
         //   'is-required-image',
@@ -67,4 +66,14 @@ export const ModuleLocationUpdateSchema = ModuleLocationCreateSchema.concat(
       } as any
     )
   )
+);
+
+export const ModuleImportCreateSchema = object().shape({
+  title: string().required(),
+});
+
+export const ModuleImportUpdateSchema = ModuleImportCreateSchema.concat(
+  object().shape({
+    status: number().required(),
+  })
 );

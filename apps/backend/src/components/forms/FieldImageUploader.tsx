@@ -86,7 +86,6 @@ export interface FieldImageUploaderSettings {
   required?: boolean;
   className?: string;
   placeholder?: string;
-  currentImage?: any;
   imageIdAsFieldValue?: boolean;
   valid?: boolean;
   accept?: string;

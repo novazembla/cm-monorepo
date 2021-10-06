@@ -99,7 +99,7 @@ export const ModuleForm = ({
       );
     } else {
       updateActions = (
-        <input value={data.locationRead.ownerId} {...register("ownerId")} />
+        <input value={data?.locationRead?.ownerId} {...register("ownerId")} />
       );
     }
   }

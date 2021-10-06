@@ -138,6 +138,32 @@ input ImageUpdateInput {
   ownerId: Int!
 }
 
+type Import {
+  createdAt: DateTime
+  errors: JSON
+  file: JSON
+  id: Int!
+  log: JSON
+  mapping: JSON
+  status: Int
+  title: JSON
+  updatedAt: DateTime
+}
+
+"""List all the imports in the database."""
+type ImportQueryResult {
+  imports: [Import]
+  totalCount: Int
+}
+
+input ImportUpsertInput {
+  errors: JSON
+  log: JSON
+  mapping: JSON
+  status: Int!
+  title: String!
+}
+
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -213,6 +239,9 @@ type Mutation {
   eventUpdate(data: EventUpsertInput!, id: Int!, imagesTranslations: [ImageTranslationInput]): Event!
   imageDelete(id: Int!): BooleanResult!
   imageUpdate(data: ImageUpdateInput!, id: Int!): Image!
+  importCreate(data: ImportUpsertInput!): Import!
+  importDelete(id: Int!): BooleanResult!
+  importUpdate(data: ImportUpsertInput!, id: Int!): Import!
   locationCreate(data: LocationUpsertInput!): Location!
   locationDelete(id: Int!): BooleanResult!
   locationUpdate(data: LocationUpsertInput!, id: Int!, imagesTranslations: [ImageTranslationInput]): Location!
@@ -292,6 +321,8 @@ type Query {
   imageRead(id: Int!): Image!
   imageStatus(id: Int!): ImageStatus!
   images(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, taxonomyId: Int, where: JSON): ImageQueryResult
+  importRead(id: Int!): Import!
+  imports(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): ImportQueryResult
   location(slug: String!): Location!
   locationRead(id: Int!): Location!
   locations(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): LocationQueryResult

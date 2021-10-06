@@ -13,8 +13,6 @@ export const locationCreateMutationGQL = gql`
   }
 `;
 
-// TODO::more rows in return.
-
 export const locationUpdateMutationGQL = gql`
   mutation locationUpdate(
     $id: Int!

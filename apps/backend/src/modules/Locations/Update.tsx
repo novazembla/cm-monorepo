@@ -303,7 +303,7 @@ const Update = () => {
                 validationSchema={ModuleLocationUpdateSchema}
               />
 
-              {data && Array.isArray(data.locationRead.events) && (
+              {data && Array.isArray(data?.locationRead?.events) && (
                 <Box mt="6">
                   <Heading as="h2" mb="3">
                     {t(

@@ -1,6 +1,6 @@
 /// <reference path="../../types/nexus-typegen.ts" />
 import { parseResolveInfo } from "graphql-parse-resolve-info";
-import { PublishStatus, ImageStatusEnum } from "@culturemap/core";
+import { PublishStatus, ImageStatus } from "@culturemap/core";
 import { Prisma } from ".prisma/client";
 
 import dedent from "dedent";
@@ -167,9 +167,9 @@ export const TourQueries = extendType({
               status: {
                 not: {
                   in: [
-                    ImageStatusEnum.ERROR,
-                    ImageStatusEnum.DELETED,
-                    ImageStatusEnum.TRASHED,
+                    ImageStatus.ERROR,
+                    ImageStatus.DELETED,
+                    ImageStatus.TRASHED,
                   ],
                 },
               },
@@ -288,9 +288,9 @@ export const TourQueries = extendType({
           //           status: {
           //             not: {
           //               in: [
-          //                 ImageStatusEnum.ERROR,
-          //                 ImageStatusEnum.DELETED,
-          //                 ImageStatusEnum.TRASHED,
+          //                 ImageStatus.ERROR,
+          //                 ImageStatus.DELETED,
+          //                 ImageStatus.TRASHED,
           //               ],
           //             },
           //           },
@@ -324,9 +324,9 @@ export const TourQueries = extendType({
           //         status: {
           //           not: {
           //             in: [
-          //               ImageStatusEnum.ERROR,
-          //               ImageStatusEnum.DELETED,
-          //               ImageStatusEnum.TRASHED,
+          //               ImageStatus.ERROR,
+          //               ImageStatus.DELETED,
+          //               ImageStatus.TRASHED,
           //             ],
           //           },
           //         },

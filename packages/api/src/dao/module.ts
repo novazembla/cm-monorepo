@@ -30,7 +30,7 @@ export const daoModuleGetWithTaxonomiesByKey = async (
   );
 };
 
-export const defaults = {
+const defaults = {
   daoModuleQueryAll,
   daoModuleGetWithTaxonomiesByKey,
 };

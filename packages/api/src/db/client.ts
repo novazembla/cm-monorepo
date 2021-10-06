@@ -50,7 +50,7 @@ export const prismaDisconnect = async function () {
   global.prisma = undefined;
 };
 
-export const defaults = {
+const defaults = {
   prismaDisconnect,
   setPrismaClient,
   getPrismaClient,

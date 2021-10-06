@@ -1,5 +1,5 @@
 import { Image, Prisma } from "@prisma/client";
-import { filteredOutputByBlacklist, ImageStatusEnum } from "@culturemap/core";
+import { filteredOutputByBlacklist, ImageStatus } from "@culturemap/core";
 
 import { filteredOutputByBlacklistOrNotFound } from "../utils";
 import { getApiConfig } from "../config";
@@ -116,7 +116,7 @@ export const daoImageDelete = async (id: number): Promise<Image> => {
 export const daoImageSetToDelete = async (id: number): Promise<Image> => {
   const image: Image = await prisma.image.update({
     data: {
-      status: ImageStatusEnum.DELETED,
+      status: ImageStatus.DELETED,
       events: {
         set: [],
       },

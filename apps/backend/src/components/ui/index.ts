@@ -8,6 +8,7 @@ export * from "./Map";
 export * from "./MapLocation";
 export * from "./AdminTable";
 export * from "./ApiImage";
+export * from "./ApiFile";
 export * from "./MultiLangValue";
 export * from "./DangerZoneAlertDialog";
 export * from "./SortableList";

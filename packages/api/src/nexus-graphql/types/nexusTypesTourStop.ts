@@ -134,9 +134,9 @@ export const TourStopQueries = extendType({
           //         status: {
           //           not: {
           //             in: [
-          //               ImageStatusEnum.ERROR,
-          //               ImageStatusEnum.DELETED,
-          //               ImageStatusEnum.TRASHED,
+          //               ImageStatus.ERROR,
+          //               ImageStatus.DELETED,
+          //               ImageStatus.TRASHED,
           //             ],
           //           },
           //         },

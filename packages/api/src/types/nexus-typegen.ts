@@ -74,6 +74,13 @@ export interface NexusGenInputs {
     meta: NexusGenScalars['JSON']; // JSON!
     ownerId: number; // Int!
   }
+  ImportUpsertInput: { // input type
+    errors?: NexusGenScalars['JSON'] | null; // JSON
+    log?: NexusGenScalars['JSON'] | null; // JSON
+    mapping?: NexusGenScalars['JSON'] | null; // JSON
+    status: number; // Int!
+    title: string; // String!
+  }
   LocationUpsertInput: { // input type
     address?: NexusGenScalars['JSON'] | null; // JSON
     contactInfo?: NexusGenScalars['JSON'] | null; // JSON
@@ -280,6 +287,21 @@ export interface NexusGenObjects {
     id: number; // Int!
     meta?: NexusGenScalars['JSON'] | null; // JSON
     status: number; // Int!
+  }
+  Import: { // root type
+    createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
+    errors?: NexusGenScalars['JSON'] | null; // JSON
+    file?: NexusGenScalars['JSON'] | null; // JSON
+    id: number; // Int!
+    log?: NexusGenScalars['JSON'] | null; // JSON
+    mapping?: NexusGenScalars['JSON'] | null; // JSON
+    status?: number | null; // Int
+    title?: NexusGenScalars['JSON'] | null; // JSON
+    updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
+  }
+  ImportQueryResult: { // root type
+    imports?: Array<NexusGenRootTypes['Import'] | null> | null; // [Import]
+    totalCount?: number | null; // Int
   }
   Location: { // root type
     address?: NexusGenScalars['JSON'] | null; // JSON
@@ -546,6 +568,21 @@ export interface NexusGenFieldTypes {
     meta: NexusGenScalars['JSON'] | null; // JSON
     status: number; // Int!
   }
+  Import: { // field return type
+    createdAt: NexusGenScalars['DateTime'] | null; // DateTime
+    errors: NexusGenScalars['JSON'] | null; // JSON
+    file: NexusGenScalars['JSON'] | null; // JSON
+    id: number; // Int!
+    log: NexusGenScalars['JSON'] | null; // JSON
+    mapping: NexusGenScalars['JSON'] | null; // JSON
+    status: number | null; // Int
+    title: NexusGenScalars['JSON'] | null; // JSON
+    updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
+  }
+  ImportQueryResult: { // field return type
+    imports: Array<NexusGenRootTypes['Import'] | null> | null; // [Import]
+    totalCount: number | null; // Int
+  }
   Location: { // field return type
     address: NexusGenScalars['JSON'] | null; // JSON
     author: NexusGenRootTypes['User'] | null; // User
@@ -592,6 +629,9 @@ export interface NexusGenFieldTypes {
     eventUpdate: NexusGenRootTypes['Event']; // Event!
     imageDelete: NexusGenRootTypes['BooleanResult']; // BooleanResult!
     imageUpdate: NexusGenRootTypes['Image']; // Image!
+    importCreate: NexusGenRootTypes['Import']; // Import!
+    importDelete: NexusGenRootTypes['BooleanResult']; // BooleanResult!
+    importUpdate: NexusGenRootTypes['Import']; // Import!
     locationCreate: NexusGenRootTypes['Location']; // Location!
     locationDelete: NexusGenRootTypes['BooleanResult']; // BooleanResult!
     locationUpdate: NexusGenRootTypes['Location']; // Location!
@@ -656,6 +696,8 @@ export interface NexusGenFieldTypes {
     imageRead: NexusGenRootTypes['Image']; // Image!
     imageStatus: NexusGenRootTypes['ImageStatus']; // ImageStatus!
     images: NexusGenRootTypes['ImageQueryResult'] | null; // ImageQueryResult
+    importRead: NexusGenRootTypes['Import']; // Import!
+    imports: NexusGenRootTypes['ImportQueryResult'] | null; // ImportQueryResult
     location: NexusGenRootTypes['Location']; // Location!
     locationRead: NexusGenRootTypes['Location']; // Location!
     locations: NexusGenRootTypes['LocationQueryResult'] | null; // LocationQueryResult
@@ -884,6 +926,21 @@ export interface NexusGenFieldTypeNames {
     meta: 'JSON'
     status: 'Int'
   }
+  Import: { // field return type name
+    createdAt: 'DateTime'
+    errors: 'JSON'
+    file: 'JSON'
+    id: 'Int'
+    log: 'JSON'
+    mapping: 'JSON'
+    status: 'Int'
+    title: 'JSON'
+    updatedAt: 'DateTime'
+  }
+  ImportQueryResult: { // field return type name
+    imports: 'Import'
+    totalCount: 'Int'
+  }
   Location: { // field return type name
     address: 'JSON'
     author: 'User'
@@ -930,6 +987,9 @@ export interface NexusGenFieldTypeNames {
     eventUpdate: 'Event'
     imageDelete: 'BooleanResult'
     imageUpdate: 'Image'
+    importCreate: 'Import'
+    importDelete: 'BooleanResult'
+    importUpdate: 'Import'
     locationCreate: 'Location'
     locationDelete: 'BooleanResult'
     locationUpdate: 'Location'
@@ -994,6 +1054,8 @@ export interface NexusGenFieldTypeNames {
     imageRead: 'Image'
     imageStatus: 'ImageStatus'
     images: 'ImageQueryResult'
+    importRead: 'Import'
+    imports: 'ImportQueryResult'
     location: 'Location'
     locationRead: 'Location'
     locations: 'LocationQueryResult'
@@ -1185,6 +1247,16 @@ export interface NexusGenArgTypes {
       data: NexusGenInputs['ImageUpdateInput']; // ImageUpdateInput!
       id: number; // Int!
     }
+    importCreate: { // args
+      data: NexusGenInputs['ImportUpsertInput']; // ImportUpsertInput!
+    }
+    importDelete: { // args
+      id: number; // Int!
+    }
+    importUpdate: { // args
+      data: NexusGenInputs['ImportUpsertInput']; // ImportUpsertInput!
+      id: number; // Int!
+    }
     locationCreate: { // args
       data: NexusGenInputs['LocationUpsertInput']; // LocationUpsertInput!
     }
@@ -1318,6 +1390,15 @@ export interface NexusGenArgTypes {
       pageIndex?: number | null; // Int
       pageSize: number | null; // Int
       taxonomyId?: number | null; // Int
+      where?: NexusGenScalars['JSON'] | null; // JSON
+    }
+    importRead: { // args
+      id: number; // Int!
+    }
+    imports: { // args
+      orderBy?: NexusGenScalars['JSON'] | null; // JSON
+      pageIndex?: number | null; // Int
+      pageSize: number | null; // Int
       where?: NexusGenScalars['JSON'] | null; // JSON
     }
     location: { // args

@@ -156,20 +156,20 @@ export const ImageQueries = extendType({
 
         // let status;
         // switch (image.status) {
-        //   case ImageStatusEnum.UPLOADED:
+        //   case ImageStatus.UPLOADED:
         //     status = "uploaded";
         //     break;
 
-        //   case ImageStatusEnum.PROCESSING:
-        //   case ImageStatusEnum.FAILEDRETRY:
+        //   case ImageStatus.PROCESSING:
+        //   case ImageStatus.FAILEDRETRY:
         //     status = "processing";
         //     break;
 
-        //   case ImageStatusEnum.ERROR:
+        //   case ImageStatus.ERROR:
         //     status = "error";
         //     break;
 
-        //   case ImageStatusEnum.READY:
+        //   case ImageStatus.READY:
         //     status = "ready";
         //     break;
 

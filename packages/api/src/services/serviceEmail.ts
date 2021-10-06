@@ -92,7 +92,7 @@ ${apiConfig.appName} team`;
   await sendEmail(to, subject, text);
 };
 
-export const defaults = {
+const defaults = {
   transport,
   sendEmail,
   sendResetPasswordEmail,

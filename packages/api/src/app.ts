@@ -1,6 +1,3 @@
-// TODO: Make use of https://github.com/godaddy/terminus https://stackoverflow.com/questions/43003870/how-do-i-shut-down-my-express-server-gracefully-when-its-process-is-killed
-//
-
 import express, { Application, urlencoded } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -13,7 +10,13 @@ import {
 } from "./middlewares/error";
 
 import { morganErrorHandler, morganSuccessHandler } from "./middlewares/morgan";
-import { postImage, postProfileImage, postImageUpload } from "./routes";
+import {
+  postImage,
+  postProfileImage,
+  postImageUpload,
+  postFile,
+  postFileUpload,
+} from "./routes";
 
 export const app: Application = express();
 
@@ -31,6 +34,7 @@ export const initializeExpressApp = () => {
 
   app.post("/profileImage", postImageUpload.single("image"), postProfileImage);
   app.post("/image", postImageUpload.single("image"), postImage);
+  app.post("/file", postFileUpload.single("file"), postFile);
 };
 
 export const addTerminatingErrorHandlingToApp = () => {

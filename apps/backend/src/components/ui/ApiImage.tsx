@@ -1,5 +1,5 @@
 import React from "react";
-import { ImageStatusEnum } from "@culturemap/core";
+import { ImageStatus } from "@culturemap/core";
 import type { ApiImageMetaInformation } from "@culturemap/core";
 import { Box, Flex, Text } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
@@ -11,7 +11,7 @@ export type ApiImageProps = {
   id: number | undefined;
   alt: string;
   meta?: ApiImageMetaInformation;
-  status: ImageStatusEnum;
+  status: ImageStatus;
   forceAspectRatioPB?: number;
   useImageAspectRatioPB?: boolean;
   showPlaceholder?: boolean;
@@ -38,8 +38,8 @@ export const ApiImage = ({
   let imageAspectRationPB;
 
   if (
-    status === ImageStatusEnum.READY ||
-    polledStatus === ImageStatusEnum.READY
+    status === ImageStatus.READY ||
+    polledStatus === ImageStatus.READY
   ) {
     const aSizes =
       meta?.availableSizes ?? polledMeta?.availableSizes ?? undefined;
@@ -101,7 +101,7 @@ export const ApiImage = ({
 
   if (
     !content &&
-    (status === ImageStatusEnum.ERROR || polledStatus === ImageStatusEnum.ERROR)
+    (status === ImageStatus.ERROR || polledStatus === ImageStatus.ERROR)
   )
     content = (
       <Flex
@@ -123,9 +123,9 @@ export const ApiImage = ({
 
   if (
     !content &&
-    (status === ImageStatusEnum.UPLOADED ||
-      status === ImageStatusEnum.PROCESSING ||
-      status === ImageStatusEnum.FAILEDRETRY)
+    (status === ImageStatus.UPLOADED ||
+      status === ImageStatus.PROCESSING ||
+      status === ImageStatus.FAILEDRETRY)
   )
     content = (
       <Flex

@@ -3,6 +3,9 @@ import type { RoutePrivateParams } from '~/types';
 import Create from "./Create";
 import Update from "./Update";
 import Index from "./Index";
+import Import from "./Import";
+import ImportCreate from "./ImportCreate";
+import ImportUpdate from "./ImportUpdate";
 
 import { moduleRootPath } from './moduleConfig';
 
@@ -11,6 +14,27 @@ export const moduleRoutes: RoutePrivateParams[] = [
     key: "create",
     path: `${moduleRootPath}/create`,
     component: Create,
+    exact: true,
+    userCan: "locationCreate",
+  },
+  {
+    key: "import",
+    path: `${moduleRootPath}/import`,
+    component: Import,
+    exact: true,
+    userCan: "locationCreate",
+  },
+  {
+    key: "importcreate",
+    path: `${moduleRootPath}/import/create`,
+    component: ImportCreate,
+    exact: true,
+    userCan: "locationCreate",
+  },
+  {
+    key: "importupdate",
+    path: `${moduleRootPath}/import/:id`,
+    component: ImportUpdate,
     exact: true,
     userCan: "locationCreate",
   },

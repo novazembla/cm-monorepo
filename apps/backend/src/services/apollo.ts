@@ -22,7 +22,6 @@ const authLink = new ApolloLink((operation, forward) => {
   // retrieve access token from memory
   const accessToken = authentication.getAuthToken();
 
-  
   if (accessToken) {
     operation.setContext(({ headers = {} }) => ({
       headers: {
@@ -32,7 +31,7 @@ const authLink = new ApolloLink((operation, forward) => {
     }));
   } else {
     // TODO: remove
-    console.log("Apollo, no access Token")
+    console.log("Apollo, no access Token");
   }
 
   // Call the next link in the middleware chain.
@@ -42,18 +41,16 @@ const authLink = new ApolloLink((operation, forward) => {
 // Log any GraphQL errors or network error that occurred
 const retryWithRefreshTokenLink = onError(
   ({ graphQLErrors, networkError, operation, forward }) => {
-    
     if (graphQLErrors) {
       const observables: Observable<any>[] = graphQLErrors.reduce(
         (observables, graphQLError) => {
           const { message, extensions } = graphQLError;
-          if (
-            message === "Access Denied" &&
-            extensions?.code === "FORBIDDEN"
-          ) {
+          if (message === "Access Denied" && extensions?.code === "FORBIDDEN") {
             const observableForbidden = new Observable((observer) => {
               new Promise(async (resolve) => {
-                console.log("logout() ApolloClient.retryWithRefreshTokenLink: FORBIDDEN");
+                console.log(
+                  "logout() ApolloClient.retryWithRefreshTokenLink: FORBIDDEN"
+                );
                 await user.logout();
                 observer.error(new Error("Access Denied - FORBIDDEN "));
               });
@@ -64,7 +61,7 @@ const retryWithRefreshTokenLink = onError(
             extensions?.code === "UNAUTHENTICATED"
           ) {
             const observable = new Observable((observer) => {
-              // TODO: this if condition is maybe not needed, as the server 
+              // TODO: this if condition is maybe not needed, as the server
               // already indicated that the refreshCookie is present
               if (
                 client // &&
@@ -124,12 +121,14 @@ const retryWithRefreshTokenLink = onError(
                     forward(operation).subscribe(subscriber);
                   })
                   .catch(async (error) => {
-                    console.log("logout() ApolloClient.retryWithRefreshTokenLink: refresh error");
+                    console.log(
+                      "logout() ApolloClient.retryWithRefreshTokenLink: refresh error"
+                    );
                     await user.logout();
 
                     observer.error(error);
                   });
-              } 
+              }
               // else {
               //   observer.error(Error("Can't refresh session"));
               // }
@@ -147,7 +146,7 @@ const retryWithRefreshTokenLink = onError(
 );
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
-  if (graphQLErrors)
+  if (graphQLErrors) {
     // TODO: remove?
     graphQLErrors.forEach((err) =>
       console.log(
@@ -155,6 +154,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
         `[GQLError error]: ${err.message} ${err?.extensions?.code ?? ""}`
       )
     );
+  }
 
   if (networkError) console.log(`[Network error]: ${networkError}`);
 });
@@ -208,8 +208,8 @@ const createApolloClient = (settings: AppConfig) => {
     }),
     defaultOptions: {
       watchQuery: {
-        fetchPolicy: "cache-and-network",
-        errorPolicy: "ignore",
+        fetchPolicy: "network-only",
+        errorPolicy: "all",
       },
       query: {
         // TODO: revist better caching at some point

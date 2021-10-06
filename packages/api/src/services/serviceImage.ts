@@ -2,7 +2,7 @@ import { Image } from "@prisma/client";
 import httpStatus from "http-status";
 import { mkdir } from "fs/promises";
 import type { ApiImageMetaInformation } from "@culturemap/core";
-import { ImageStatusEnum } from "@culturemap/core";
+import { ImageStatus } from "@culturemap/core";
 import { ApiError } from "../utils";
 import { getApiConfig } from "../config";
 import { nanoid } from "nanoid";
@@ -59,7 +59,7 @@ export const imageCreate = async (
     nanoid: imageNanoId,
     meta,
     type,
-    status: ImageStatusEnum.UPLOADED,
+    status: ImageStatus.UPLOADED,
     ...connectWith,
     ...(type === "profile"
       ? {
@@ -81,47 +81,8 @@ export const imageCreate = async (
   return image;
 };
 
-// export const imageUpdate = async (
-//   scope: string,
-//   id: number,
-//   data: Prisma.ImageUpdateInput
-// ): Promise<Image> => {
-//   const imageInDb = await daoImageGetById(id);
-
-//   let newEmailAddress = false;
-//   let dbData = data;
-
-//   if (data.email && data.email !== imageInDb.email) {
-//     newEmailAddress = true;
-//     dbData = {
-//       ...dbData,
-//       emailVerified: false,
-//     };
-//     if (await daoImageCheckIsEmailTaken(data.email as string, id))
-//       throw new ApiError(httpStatus.BAD_REQUEST, "Email already taken");
-//   }
-
-//   const image: Image = await daoImageUpdate(id, dbData);
-
-//   if (image.imageBanned)
-//     await daoTokenDeleteMany({
-//       imageId: id,
-//     });
-
-//   if (newEmailAddress)
-//     await authSendEmailConfirmationEmail(
-//       scope as AppScopes,
-//       image.id,
-//       image.email
-//     );
-
-//   return image;
-// };
-
-export const defaults = {
+const defaults = {
   imageGetUploadInfo,
   imageCreate,
-  // imageUpdate,
-  // imageRead,
 };
 export default defaults;

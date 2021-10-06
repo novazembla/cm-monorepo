@@ -22,3 +22,4 @@ export * from "./FormScrollInvalidIntoView";
 export * from "./FieldSingleSelectAutocomplete";
 export * from "./FieldAutocomplete";
 export * from "./FieldHidden";
+export * from "./FieldFileUpload";

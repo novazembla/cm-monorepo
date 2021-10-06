@@ -35,6 +35,9 @@ model User {
   images         Image[]    @relation("images")
   
   tours         Tour[]
+  
+  files         File[]
+
   tourStops     TourStop[]
 
   fullText      String? @default("")
@@ -323,16 +326,34 @@ model ImageTranslation {
 
 model Import {
   id             Int        @id @default(autoincrement())
-  log            Json     
-  errors         Json   
+  title          String     
+  log            Json?      @default("{}")
+  errors         Json?      @default("{}")
+  mapping        Json?      @default("{}")
   status         Int        @default(0)
 
-  fileMeta       Json
+  fileId         Int?
+  file           File?    @relation(fields: [fileId], references: [id], name: "importFile")
   
   ownerId        Int    
   owner          User   @relation(fields: [ownerId], references: [id])
 
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @default(now()) @updatedAt
+}
 
+model File {
+  id             Int        @id @default(autoincrement())
+  
+  nanoid         String     @db.VarChar(48) @unique
+  status         Int        @default(0)
+  meta           Json
+
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @default(now()) @updatedAt
+  
+  ownerId        Int           
+  owner          User   @relation(fields: [ownerId], references: [id])
+
+  imports        Import[]  @relation("importFile")
 }

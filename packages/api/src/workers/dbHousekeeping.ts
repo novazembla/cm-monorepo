@@ -5,7 +5,7 @@ import { unlinkSync } from "fs";
 import Prisma from "@prisma/client";
 
 import { getApiConfig } from "../config";
-import { ImageStatusEnum } from "@culturemap/core";
+import { ImageStatus } from "@culturemap/core";
 
 // https://github.com/breejs/bree#long-running-jobs
 // Or use https://threads.js.org/usage for a queing experience .. .
@@ -49,7 +49,7 @@ const doChores = async () => {
 
     const images = await prisma.image.findMany({
       where: {
-        status: ImageStatusEnum.DELETED,
+        status: ImageStatus.DELETED,
       },
       take: 10,
       select: {

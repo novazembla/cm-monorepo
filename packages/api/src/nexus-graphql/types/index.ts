@@ -13,3 +13,4 @@ export * from "./nexusTypesEvent";
 export * from "./nexusTypesTour";
 export * from "./nexusTypesTourStop";
 export * from "./nexusTypesMap";
+export * from "./nexusTypesImport";
