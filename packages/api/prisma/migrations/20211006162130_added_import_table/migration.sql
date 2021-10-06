@@ -1,0 +1,16 @@
+-- CreateTable
+CREATE TABLE "Import" (
+    "id" SERIAL NOT NULL,
+    "log" JSONB NOT NULL,
+    "errors" JSONB NOT NULL,
+    "status" INTEGER NOT NULL DEFAULT 0,
+    "fileMeta" JSONB NOT NULL,
+    "ownerId" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Import_pkey" PRIMARY KEY ("id")
+);
+
+-- AddForeignKey
+ALTER TABLE "Import" ADD CONSTRAINT "Import_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
