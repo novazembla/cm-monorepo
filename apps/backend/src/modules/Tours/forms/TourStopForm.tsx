@@ -26,8 +26,6 @@ export const TourStopForm = ({
 }) => {
   const { t } = useTranslation();
 
-  console.log(data?.tourStopRead);
-
   return (
     <>
       {action === "create" && (

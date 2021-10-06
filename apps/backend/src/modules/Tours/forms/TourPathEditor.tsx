@@ -62,9 +62,6 @@ export const TourPathEditor = ({
 
   useEffect(() => {
     if (refMap.current) {
-      console.log("trigger update loadGeoJson", path);
-
-      console.log(tourStops);
       refMap.current.setTourStops(tourStops);
       refMap.current.loadGeoJson(
         path
@@ -76,8 +73,6 @@ export const TourPathEditor = ({
 
   useEffect(() => {
     if (refMap.current) {
-      console.log("trigger update setTourStops", tourStops);
-
       refMap.current.setTourStops(tourStops);      
     }
     

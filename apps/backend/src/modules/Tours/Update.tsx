@@ -156,8 +156,6 @@ const Update = () => {
     setIsNavigatingAway(false);
     try {
       if (appUser) {
-        
-
         const heroImage =
           newData.heroImage &&
           !isNaN(newData.heroImage) &&
@@ -171,25 +169,6 @@ const Update = () => {
               }
             : undefined;
 
-            console.log(123, {
-              ...filteredOutputByWhitelist(
-                multiLangRHFormDataToJson(
-                  newData,
-                  multiLangFieldsTour,
-                  config.activeLanguages
-                ),
-                [],
-                multiLangFieldsTour
-              ),
-              status: parseInt(newData.status),
-              path: newData.path,
-              ...heroImage, 
-              owner: {
-                connect: {
-                  id: parseInt(newData.ownerId),
-                },
-              },
-            })
         const { errors } = await firstMutation(
           parseInt(router.query.tourId, 10),
           {
@@ -296,7 +275,6 @@ const Update = () => {
                 tourStops={tourStops}
                 onSortUpdate={async (stops: any) => {
                   try {
-                    
                     await reorderMutation(
                       parseInt(router.query.tourId),
                       stops.map((stop: any, index: number) => ({
@@ -304,26 +282,28 @@ const Update = () => {
                         number: index + 1,
                       }))
                     );
-                    const newStopsOrder =stops.map((newStop: any, index: number) => {
-                      const s = tourStops.find((ts) => ts.id === newStop.tourStopId);
+                    const newStopsOrder = stops.map(
+                      (newStop: any, index: number) => {
+                        const s = tourStops.find(
+                          (ts) => ts.id === newStop.tourStopId
+                        );
 
-                      return {
-                        ...s,
-                        number: index + 1
-                      };
-                      
-                    });
+                        return {
+                          ...s,
+                          number: index + 1,
+                        };
+                      }
+                    );
 
                     setTourStops(newStopsOrder);
-                   
                   } catch (err) {
                     console.log(err);
                   }
                 }}
               />
-              <TourPathEditor 
+              <TourPathEditor
                 tourStops={tourStops.map((stop) => ({
-                  number: stop.number, 
+                  number: stop.number,
                   lat: stop.location.lat,
                   lng: stop.location.lng,
                 }))}

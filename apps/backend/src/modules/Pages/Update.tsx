@@ -105,8 +105,6 @@ const Update = () => {
   useEffect(() => {
     if (!data || !data.pageRead) return;
 
-    console.log(data.pageRead);
-    
     reset({
       ...multiLangJsonToRHFormData(
         filteredOutputByWhitelist(

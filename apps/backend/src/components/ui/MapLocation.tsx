@@ -108,8 +108,6 @@ export const MapLocation = ({
   }, [lat, lng, config.mapOuterBounds, config.mapStyleUrl]);
 
   const format = (val: any) => {
-
-    console.log("VV", val);
     try {
       if (typeof val === "string") {
         return parseFloat(val).toFixed(8);
