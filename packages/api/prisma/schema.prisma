@@ -39,6 +39,8 @@ model User {
 
   fullText      String? @default("")
 
+  imports      Import[]
+
   profileImageId Int?           
   profileImage   Image?  @relation(fields: [profileImageId], references: [id], name: "profileImage")
 }
@@ -191,6 +193,7 @@ model Term {
   @@index([taxonomyId], name: "indexTermTaxonomyId")
 }
 
+
 model Tour {
   id             Int        @id @default(autoincrement())
   
@@ -316,4 +319,20 @@ model ImageTranslation {
   image           Image?     @relation(fields: [imageId], references: [id])
 
   @@unique([imageId, key, lang], name: "uniqueTransKeys")
+}
+
+model Import {
+  id             Int        @id @default(autoincrement())
+  log            Json     
+  errors         Json   
+  status         Int        @default(0)
+
+  fileMeta       Json
+  
+  ownerId        Int    
+  owner          User   @relation(fields: [ownerId], references: [id])
+
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @default(now()) @updatedAt
+
 }
