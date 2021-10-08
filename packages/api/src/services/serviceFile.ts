@@ -9,7 +9,9 @@ import { nanoid } from "nanoid";
 import { daoFileCreate } from "../dao";
 import { logger } from "./serviceLogging";
 
-export const fileGetUploadInfo = async (): Promise<{
+export const fileGetUploadInfo = async (
+  isPrivate: boolean
+): Promise<{
   path: string;
   nanoid: string;
   baseUrl: string;
@@ -17,13 +19,16 @@ export const fileGetUploadInfo = async (): Promise<{
 }> => {
   const apiConfig = getApiConfig();
 
-  const uploadFolder = `csv/`;
-  const path =
-    `${apiConfig.baseDir}/${apiConfig.importDir}/${uploadFolder}`.replace(
-      /\/\//g,
-      "/"
-    );
-  const baseUrl = `${apiConfig.baseUrl.api}${uploadFolder}`;
+  const date = new Date();
+
+  const uploadFolder = `${date.getUTCFullYear()}/${date.getUTCMonth() + 1}`;
+
+  const path = `${apiConfig.baseDir}/${
+    isPrivate
+      ? apiConfig.importDir
+      : `${apiConfig.publicDir}/${apiConfig.uploadDir}`
+  }/${uploadFolder}`.replace(/\/\//g, "/");
+  const baseUrl = `${apiConfig.baseUrl.api}${apiConfig.uploadDir}/${uploadFolder}`;
 
   try {
     await mkdir(path, { recursive: true });

@@ -111,8 +111,6 @@ const Update = () => {
           );
 
           successToast();
-          setIsNavigatingAway(true);
-          history.push("/profile");
         } else {
           setHasFormError(true);
         }

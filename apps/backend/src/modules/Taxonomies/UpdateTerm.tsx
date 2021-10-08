@@ -108,10 +108,6 @@ const UpdateTerm = () => {
 
         if (!errors) {
           successToast();
-          setIsNavigatingAway(true);
-          router.push(
-            `${moduleRootPath}/${parseInt(router.query.taxId, 10)}/terms`
-          );
         } else {
           let slugError = multiLangSlugUniqueError(errors, setError);
 

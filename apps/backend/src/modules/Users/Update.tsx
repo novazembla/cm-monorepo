@@ -108,8 +108,6 @@ const Update = () => {
             );
 
           successToast();
-          setIsNavigatingAway(true);
-          router.push("/users");
         } else {
           setHasFormError(true);
         }

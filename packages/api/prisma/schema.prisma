@@ -45,7 +45,7 @@ model User {
   imports      Import[]
 
   profileImageId Int?           
-  profileImage   Image?  @relation(fields: [profileImageId], references: [id], name: "profileImage")
+  profileImage   Image?  @relation(fields: [profileImageId], references: [id], name: "profileImage", onDelete: Cascade)
 }
 
 model Location {
@@ -70,19 +70,25 @@ model Location {
 
   events      Event[]
   images      Image[]
-  terms       Term[]
+  terms       Term[]        @relation(name: "locationTerms")
   tourStops   TourStop[]
 
   fullText      String? @default("")
 
   ownerId     Int    
-  owner       User   @relation(fields: [ownerId], references: [id])
+  owner       User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
   heroImageId    Int?
-  heroImage      Image?    @relation(fields: [heroImageId], references: [id], name: "locationHeroImage")
+  heroImage      Image?    @relation(fields: [heroImageId], references: [id], name: "locationHeroImage", onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
+
+  eventLocationId  Int? 
+  agency      String? 
+
+  primaryTypeId    Int?
+  primaryType      Term?    @relation(fields: [primaryTypeId], references: [id], name: "locationPrimaryType", onDelete: Cascade)
 
   @@index([ownerId], name: "indexLocationOwnerId")
 }
@@ -98,7 +104,7 @@ model Event {
   locations      Location[]
 
   ownerId     Int    
-  owner       User   @relation(fields: [ownerId], references: [id])
+  owner       User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
   status      Int  
   
@@ -107,7 +113,7 @@ model Event {
   terms       Term[]
 
   heroImageId    Int?
-  heroImage      Image?    @relation(fields: [heroImageId], references: [id], name: "eventHeroImage")
+  heroImage      Image?    @relation(fields: [heroImageId], references: [id], name: "eventHeroImage", onDelete: Cascade)
 
   fullText      String? @default("")
 
@@ -131,7 +137,7 @@ model Token {
   token  String
   type   String @db.VarChar(16)
   userId Int
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   expires     DateTime
   
   createdAt   DateTime @default(now())
@@ -183,9 +189,12 @@ model Term {
   color          String @default("")
   colorDark      String @default("")
   taxonomyId     Int
-  taxonomy       Taxonomy   @relation(fields: [taxonomyId], references: [id])
+  taxonomy       Taxonomy   @relation(fields: [taxonomyId], references: [id], onDelete: Cascade)
 
-  locations      Location[]
+  locations      Location[] @relation(name: "locationTerms", onDelete: Cascade)
+
+  primaryTypeLocation Location? @relation(name: "locationPrimaryType")
+
   events         Event[]
 
   fullText      String? @default("")
@@ -209,7 +218,7 @@ model Tour {
   path           Json
 
   heroImageId    Int?
-  heroImage      Image?    @relation(fields: [heroImageId], references: [id], name: "tourHeroImage")
+  heroImage      Image?    @relation(fields: [heroImageId], references: [id], name: "tourHeroImage", onDelete: Cascade)
 
   status         Int  
 
@@ -219,7 +228,7 @@ model Tour {
   updatedAt      DateTime   @default(now()) @updatedAt
 
   ownerId     Int    
-  owner       User   @relation(fields: [ownerId], references: [id])
+  owner       User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   
   @@index([ownerId], name: "indexTourOwnerId")
 
@@ -234,7 +243,7 @@ model TourStop {
 
 
   loactionId     Int
-  location       Location?    @relation(fields: [loactionId], references: [id])
+  location       Location?    @relation(fields: [loactionId], references: [id], onDelete: Cascade)
 
   teaser         Json
   description    Json
@@ -243,7 +252,7 @@ model TourStop {
   tour          Tour?    @relation(fields: [tourId], references: [id])
 
   heroImageId    Int?
-  heroImage      Image?    @relation(fields: [heroImageId], references: [id], name: "tourStopHeroImage")
+  heroImage      Image?    @relation(fields: [heroImageId], references: [id], name: "tourStopHeroImage", onDelete: Cascade)
 
   fullText       String    @default("")
 
@@ -251,7 +260,7 @@ model TourStop {
   updatedAt      DateTime   @default(now()) @updatedAt
   
   ownerId     Int    
-  owner       User   @relation(fields: [ownerId], references: [id])
+  owner       User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   
   @@index([ownerId], name: "indexTourStopOwnerId")
 
@@ -266,7 +275,7 @@ model Page {
   content        Json
 
   heroImageId    Int?
-  heroImage      Image?    @relation(fields: [heroImageId], references: [id], name: "pageHeroImage")
+  heroImage      Image?    @relation(fields: [heroImageId], references: [id], name: "pageHeroImage", onDelete: Cascade)
 
   status         Int  
 
@@ -275,7 +284,7 @@ model Page {
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @default(now()) @updatedAt
   ownerId     Int    
-  owner       User   @relation(fields: [ownerId], references: [id])
+  owner       User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   
   @@index([ownerId], name: "indexPageOwnerId")
 }
@@ -294,7 +303,7 @@ model Image {
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @default(now()) @updatedAt
   ownerId        Int           
-  owner          User   @relation(fields: [ownerId], references: [id], name: "images")
+  owner          User   @relation(fields: [ownerId], references: [id], name: "images", onDelete: Cascade)
 
   events         Event[]
   locations      Location[]
@@ -319,7 +328,7 @@ model ImageTranslation {
   translation     String
   
   imageId    Int     
-  image           Image?     @relation(fields: [imageId], references: [id])
+  image           Image?     @relation(fields: [imageId], references: [id], onDelete: Cascade)
 
   @@unique([imageId, key, lang], name: "uniqueTransKeys")
 }
@@ -327,16 +336,17 @@ model ImageTranslation {
 model Import {
   id             Int        @id @default(autoincrement())
   title          String     
-  log            Json?      @default("{}")
-  errors         Json?      @default("{}")
-  mapping        Json?      @default("{}")
+  log            Json?      @default("[]")
+  errors         Json?      @default("[]")
+  mapping        Json?      @default("[]")
+  warnings        Json?      @default("[]")
   status         Int        @default(0)
 
   fileId         Int?
-  file           File?    @relation(fields: [fileId], references: [id], name: "importFile")
+  file           File?    @relation(fields: [fileId], references: [id], name: "importFiles")
   
   ownerId        Int    
-  owner          User   @relation(fields: [ownerId], references: [id])
+  owner          User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @default(now()) @updatedAt
@@ -353,7 +363,7 @@ model File {
   updatedAt      DateTime   @default(now()) @updatedAt
   
   ownerId        Int           
-  owner          User   @relation(fields: [ownerId], references: [id])
+  owner          User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
-  imports        Import[]  @relation("importFile")
+  imports        Import[]  @relation("importFiles")
 }

@@ -2,26 +2,20 @@ import { Request, Response } from "express";
 import httpStatus from "http-status";
 import path from "path";
 import multer from "multer";
-import { mkdirSync } from "fs";
 import { nanoid } from "nanoid";
-import type { ApiFileMetaInformation } from "@culturemap/core";
 
 import { logger } from "../services/serviceLogging";
-import { fileCreate } from "../services/serviceFile";
+import { fileCreate, fileGetUploadInfo } from "../services/serviceFile";
 
-import { getApiConfig } from "../config";
 import { ApiError } from "../utils";
+import { createFileMetaInfo } from ".";
 import { authAuthenticateUserByToken } from "../services/serviceAuth";
-
-const apiConfigOnBoot = getApiConfig();
 
 const storage = multer.diskStorage({
   destination: async (_req: Request, _file, cb) => {
-    const uploadFolder = `csv/`;
-    const uploadPath = `${apiConfigOnBoot.baseDir}/${apiConfigOnBoot.importDir}/${uploadFolder}`;
-
+    let uploadInfo: any;
     try {
-      mkdirSync(uploadPath, { recursive: true });
+      uploadInfo = await fileGetUploadInfo(false);
     } catch (e) {
       logger.error(e);
       throw new ApiError(
@@ -30,7 +24,13 @@ const storage = multer.diskStorage({
       );
     }
 
-    cb(null, uploadPath);
+    if (!uploadInfo?.path)
+      throw new ApiError(
+        httpStatus.INTERNAL_SERVER_ERROR,
+        "[file] upload failed #2"
+      );
+
+    cb(null, uploadInfo.path);
   },
   filename: (_req, file, cb) => {
     const extension = path.extname(file.originalname);
@@ -40,37 +40,7 @@ const storage = multer.diskStorage({
 
 export const postFileUpload = multer({ storage });
 
-const createFileMetaInfo = (
-  file: Express.Multer.File
-): {
-  fileNanoId: string;
-  metainfo: ApiFileMetaInformation;
-} => {
-  const apiConfig = getApiConfig();
-
-  const extension = path.extname(file.originalname);
-
-  const uploadFolder = file.destination.replace(
-    `${apiConfig.baseDir}/${apiConfig.publicDir}`,
-    ""
-  );
-
-  const fileNanoId = file.filename.replace(extension, "");
-
-  const metainfo: ApiFileMetaInformation = {
-    uploadFolder,
-    originalFileName: file.filename,
-    originalFileUrl: `${apiConfig.baseUrl.api}${uploadFolder}/${file.filename}`,
-    originalFilePath: file.path,
-    mimeType: file.mimetype,
-    size: file.size,
-  };
-
-  return { fileNanoId, metainfo };
-};
-
 export const postFile = async (req: Request, res: Response) => {
-  console.log("FILE FILE FILE");
   const refreshToken = req?.cookies?.refreshToken ?? "";
   if (refreshToken) {
     try {
@@ -90,7 +60,7 @@ export const postFile = async (req: Request, res: Response) => {
   try {
     if (req.body.ownerId && !Number.isNaN(req.body.ownerId)) {
       if (req.file) {
-        const { fileNanoId, metainfo } = createFileMetaInfo(req.file);
+        const { fileNanoId, metainfo } = createFileMetaInfo(req.file, false);
 
         let connectWith;
         try {
@@ -123,5 +93,4 @@ export const postFile = async (req: Request, res: Response) => {
     );
   }
 };
-
 export default postFile;

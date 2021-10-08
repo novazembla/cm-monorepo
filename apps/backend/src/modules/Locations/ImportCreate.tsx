@@ -87,14 +87,18 @@ const Create = () => {
       title: t("module.locations.title", "Locations"),
     },
     {
-      title: t("module.locations.mneuitem.createlocation", "Add new location"),
+      path: `${moduleRootPath}/import`,
+      title: t("module.locations.imports.title", "Imports"),
+    },
+    {
+      title: t("module.locations.mneuitem.createimport", "Add new import"),
     },
   ];
 
   const buttonList: ButtonListElement[] = [
     {
       type: "back",
-      to: moduleRootPath,
+      to: `${moduleRootPath}/import`,
       label: t("module.button.cancel", "Cancel"),
       userCan: "locationRead",
     },

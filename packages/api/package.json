@@ -14,6 +14,7 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "@fast-csv/parse": "^4.3.6",
     "@ladjs/graceful": "^1.0.5",
     "@prisma/client": "^3.1.1",
     "@types/bcrypt": "^5.0.0",

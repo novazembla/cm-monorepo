@@ -205,8 +205,6 @@ const Update = () => {
 
         if (!errors) {
           successToast();
-          setIsNavigatingAway(true);
-          router.push(moduleRootPath);
         } else {
           let slugError = multiLangSlugUniqueError(errors, setError);
 

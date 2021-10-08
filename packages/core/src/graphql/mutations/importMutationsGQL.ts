@@ -33,3 +33,11 @@ export const importDeleteMutationGQL = gql`
     }
   }
 `;
+
+export const importFileDeleteMutationGQL = gql`
+  mutation importFileDelete($id: Int!) {
+    importFileDelete(id: $id) {
+      result
+    }
+  }
+`;

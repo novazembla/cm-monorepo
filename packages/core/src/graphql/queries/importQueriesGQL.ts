@@ -26,6 +26,7 @@ export const importReadQueryGQL = gql`
       log
       errors
       status
+      mapping
       file
       createdAt
       updatedAt

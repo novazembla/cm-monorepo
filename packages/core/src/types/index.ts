@@ -39,4 +39,5 @@ export type ApiFileMetaInformation = {
   originalFileUrl: string;
   originalFilePath: string;
   mimeType: any;
+  size: number;
 };

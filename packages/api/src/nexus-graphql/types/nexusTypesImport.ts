@@ -26,10 +26,12 @@ import {
   daoImportQueryCount,
   daoImportCreate,
   daoImportUpdate,
-  daoImportDelete,
+  daoFileSetToDelete,
+  daoFileGetById,
 } from "../../dao";
 import { Prisma } from ".prisma/client";
 import { ImportStatus } from "@culturemap/core";
+import { importDelete } from "../../services/serviceImport";
 
 const apiConfig = getApiConfig();
 
@@ -208,6 +210,48 @@ export const ImportMutations = extendType({
       },
     });
 
+    t.nonNull.field("importFileDelete", {
+      type: "BooleanResult",
+
+      args: {
+        id: nonNull(intArg()),
+      },
+
+      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "locationCreate"),
+
+      async resolve(...[, args]) {
+        const fileInDb: any = await daoFileGetById(args.id, {
+          imports: true,
+        });
+
+        if (!fileInDb)
+          throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Delete failed");
+
+        if (
+          fileInDb &&
+          Array.isArray(fileInDb?.imports) &&
+          fileInDb?.imports.length > 0
+        ) {
+          const ids = fileInDb?.imports.map((imp: any) => imp.id);
+
+          if (ids && ids.length > 0)
+            await daoImportUpdate(ids[0], {
+              log: [],
+              errors: [],
+              mapping: [],
+              status: ImportStatus.CREATED,
+            });
+        }
+
+        const file = await daoFileSetToDelete(fileInDb.id);
+
+        if (!file)
+          throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Delete failed");
+
+        return { result: true };
+      },
+    });
+
     t.nonNull.field("importDelete", {
       type: "BooleanResult",
 
@@ -218,7 +262,7 @@ export const ImportMutations = extendType({
       authorize: (...[, , ctx]) => authorizeApiUser(ctx, "locationCreate"),
 
       async resolve(...[, args]) {
-        const location = await daoImportDelete(args.id);
+        const location = await importDelete(args.id);
 
         if (!location)
           throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Delete failed");

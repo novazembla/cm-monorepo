@@ -11,6 +11,7 @@ export enum ImageStatus {
 export enum FileStatus {
   UPLOADED,
   PROCESSING,
+  OK,
   ERROR,
   DELETED,
 }

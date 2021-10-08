@@ -61,7 +61,7 @@ const Update = () => {
   const {
     handleSubmit,
     reset,
-    formState: { isSubmitting, isDirty },
+    formState: { isSubmitting, isDirty, dirtyFields },
   } = formMethods;
 
   useEffect(() => {
@@ -70,7 +70,8 @@ const Update = () => {
     reset({
       title: data.importRead.title,
       status: parseInt(data.importRead.status),
-      mapping: {}, // TODO: ....
+      file: data.importRead.fileId,
+      mapping: [], // TODO: ....
     });
   }, [reset, data, config.activeLanguages]);
 
@@ -81,19 +82,14 @@ const Update = () => {
     setIsNavigatingAway(false);
     try {
       if (appUser) {
-
-        console.log(newData)
-
         const { errors } = await firstMutation(parseInt(router.query.id, 10), {
           title: newData.title,
           status: newData.status,
-          mapping: {},
+          mapping: newData.mapping, // TODO: if file deleted status has to change ...
         });
 
         if (!errors) {
           successToast();
-          setIsNavigatingAway(true);
-          router.push(moduleRootPath);
         } else {
           setHasFormError(true);
         }
@@ -108,7 +104,11 @@ const Update = () => {
   const breadcrumb = [
     {
       path: moduleRootPath,
-      title: t("module.locations.title", "Imports"),
+      title: t("module.locations.title", "Locations"),
+    },
+    {
+      path: `${moduleRootPath}/import`,
+      title: t("module.locations.imports.title", "Imports"),
     },
     {
       title: t("module.locations.location.title.updatepage", "Update location"),
@@ -118,7 +118,7 @@ const Update = () => {
   const buttonList: ButtonListElement[] = [
     {
       type: "back",
-      to: moduleRootPath,
+      to: `${moduleRootPath}/import`,
       label: t("module.button.cancel", "Cancel"),
       userCan: "locationRead",
     },
@@ -155,6 +155,15 @@ const Update = () => {
                 data={data}
                 setActiveUploadCounter={setActiveUploadCounter}
                 validationSchema={ModuleImportUpdateSchema}
+                onUpload={(data: any, formFunctions: any) => {
+                  if (data?.file?.id) {
+                    formFunctions.clearErrors("file");
+                    formFunctions.setValue("file", data?.file?.id, {
+                      shouldDirty: false,
+                    });
+                    formFunctions.setUploadedFileId(data?.file?.id);
+                  }
+                }}
               />
             </ModulePage>
           </fieldset>

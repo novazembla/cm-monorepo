@@ -5,7 +5,7 @@ import { unlinkSync } from "fs";
 import Prisma from "@prisma/client";
 
 import { getApiConfig } from "../config";
-import { ImageStatus } from "@culturemap/core";
+import { ImageStatus, FileStatus } from "@culturemap/core";
 
 // https://github.com/breejs/bree#long-running-jobs
 // Or use https://threads.js.org/usage for a queing experience .. .
@@ -85,6 +85,39 @@ const doChores = async () => {
     postMessage(
       `[WORKER:dbHousekeeping]: Removed ${images.length} image(s) and their files`
     );
+
+    const files = await prisma.file.findMany({
+      where: {
+        status: FileStatus.DELETED,
+      },
+      take: 10,
+      select: {
+        id: true,
+        meta: true,
+      },
+    });
+
+    if (files && files.length > 0) {
+      await Promise.all(
+        files.map(async (file) => {
+          if (file?.meta) {
+            const meta = file?.meta as any;
+            try {
+              unlinkSync(`${meta.originalFilePath}`);
+
+              await prisma.file.delete({
+                where: {
+                  id: file.id,
+                },
+              });
+            } catch (err: any) {
+              postMessage(`Error ${err.message}`);
+            }
+          }
+        })
+      );
+    }
+    postMessage(`[WORKER:dbHousekeeping]: Removed ${files.length} file(s)`);
 
     // const models = await prisma.arModel.findMany({
     //   where: {

@@ -156,10 +156,6 @@ const UpdateTourStop = () => {
 
         if (!errors) {
           successToast();
-          setIsNavigatingAway(true);
-          router.push(
-            `${moduleRootPath}/update/${parseInt(router.query.tourId, 10)}/`
-          );
         } else {
           let slugError = multiLangSlugUniqueError(errors, setError);
 

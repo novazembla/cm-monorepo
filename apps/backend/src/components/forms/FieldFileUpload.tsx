@@ -45,8 +45,8 @@ const baseStyle = {
   boxSizing: "border-box",
   p: "4",
   position: "absolute",
-  t: 0,
-  l: 0,
+  top: 0,
+  left: 0,
   w: "100%",
   h: "100px",
   borderWidth: 1,
@@ -92,7 +92,7 @@ export interface FieldFileUploaderSettings {
   accept?: string;
   minFileSize?: number; // in bytes 1024 * 1024 = 1MB
   maxFileSize?: number; // in bytes 1024 * 1024 = 1MB
-  file?: ApiFileProps;
+  file?: ApiFileProps | null;
 }
 
 export type FieldFileUploaderProgessInfo = {
@@ -100,6 +100,12 @@ export type FieldFileUploaderProgessInfo = {
   total: number;
   percent: number;
 };
+
+export type FieldFileFormFunctions = {
+  clearErrors: Function
+  setUploadedFileId: Function
+  setValue: Function
+}
 
 const initialProgressInfo: FieldFileUploaderProgessInfo = {
   loaded: 0,
@@ -114,6 +120,7 @@ export const FieldFileUploader = ({
   name,
   isRequired,
   isDisabled,
+  isPrivate,
   canDelete = true,
   deleteButtonGQL,
   onDelete,
@@ -128,6 +135,7 @@ export const FieldFileUploader = ({
   id: string;
   isRequired?: boolean;
   isDisabled?: boolean;
+  isPrivate?: boolean;
   canDelete?: boolean;
   shouldSetFormDirtyOnUpload?: boolean;
   shouldSetFormDirtyOnDelete?: boolean;
@@ -135,7 +143,7 @@ export const FieldFileUploader = ({
   name: string;
   deleteButtonGQL: DocumentNode;
   onDelete?: (id?: number) => void;
-  onUpload?: (id?: number) => void;
+  onUpload?: (data: any, formFunctions: FieldFileFormFunctions) => void;
   setActiveUploadCounter?: Function;
   connectWith?: any;
   route?: string;
@@ -149,7 +157,7 @@ export const FieldFileUploader = ({
     useState<FieldFileUploaderProgessInfo>(initialProgressInfo);
   const [isUploading, setIsUploading] = useState(false);
   const [isUploadError, setIsUploadError] = useState(false);
-  const [uploadedImgId, setUploadedImgId] = useState();
+  const [uploadedFileId, setUploadedFileId] = useState();
   const [fileIsDeleted, setfileIsDeleted] = useState(false);
 
   const [showFileDropError, setShowFileDropError] = useState(false);
@@ -187,7 +195,6 @@ export const FieldFileUploader = ({
         if (appUser) {
           setIsUploading(true);
           setIsUploadError(false);
-
           const formData = new FormData();
           formData.append("file", files[0]);
           formData.append("ownerId", `${appUser.id}`);
@@ -223,18 +230,26 @@ export const FieldFileUploader = ({
             .then(({ data }) => {
               if (getCancelToken()) {
                 setIsUploading(false);
+                setfileIsDeleted(false);
 
                 if (setActiveUploadCounter)
                   setActiveUploadCounter((state: number) => state - 1);
 
-                if (data?.id) {
-                  clearErrors(name);
-                  setUploadedImgId(data?.id ?? undefined);
-                  setValue(name, data?.id, {
-                    shouldDirty: shouldSetFormDirtyOnDelete,
+                
+                if (typeof onUpload === "function") {
+                  onUpload.call(this, data, {
+                    clearErrors,
+                    setUploadedFileId,
+                    setValue,
                   });
-                  if (typeof onUpload === "function")
-                    onUpload.call(this, data?.id);
+                } else {
+                  if (data?.id) {
+                    clearErrors(name);
+                    setUploadedFileId(data?.id ?? undefined);
+                    setValue(name, data?.id, {
+                      shouldDirty: shouldSetFormDirtyOnUpload,
+                    });
+                  }
                 }
               }
             })
@@ -271,7 +286,7 @@ export const FieldFileUploader = ({
     useDeleteByIdButton(
       deleteButtonGQL,
       () => {
-        setUploadedImgId(undefined);
+        setUploadedFileId(undefined);
         setfileIsDeleted(true);
         setIsUploading(false);
         setValue(name, undefined, { shouldDirty: shouldSetFormDirtyOnUpload });
@@ -284,10 +299,11 @@ export const FieldFileUploader = ({
 
   let currentFile: any =
     settings?.file && settings?.file?.id ? settings.file : {};
-
+  console.log("currentFile1", currentFile);
   if (fileIsDeleted) currentFile = {};
+  console.log("currentFile2", currentFile);
 
-  const showFile = (currentFile && currentFile?.id) || !!uploadedImgId;
+  const showFile = (currentFile && currentFile?.id) || !!uploadedFileId;
 
   const hasMin = settings?.minFileSize && settings?.minFileSize > 0;
   const hasMax = settings?.maxFileSize && settings?.maxFileSize > 0;
@@ -369,12 +385,12 @@ export const FieldFileUploader = ({
         </FormLabel>
 
         {showFile && (
-          <Box position="relative">
+          <Box position="relative" h="80px">
             <ApiFile
-              id={uploadedImgId ?? currentFile?.id ?? undefined}
+              id={uploadedFileId ?? currentFile?.id ?? undefined}
               status={currentFile?.status ?? 0}
               meta={currentFile?.meta}
-              allowDownload={false}
+              allowDownload={!!isPrivate}
             />
             {canDelete && (
               <IconButton
@@ -384,16 +400,10 @@ export const FieldFileUploader = ({
                 fontSize="xl"
                 icon={<HiOutlineTrash />}
                 onClick={() => {
-                  deleteButtonOnClick(uploadedImgId ?? currentFile?.id);
+                  deleteButtonOnClick(uploadedFileId ?? currentFile?.id);
                 }}
-                aria-label={t(
-                  "fileuploader.button.deletefile",
-                  "Delete file"
-                )}
-                title={t(
-                  "fileuploader.button.deletefile",
-                  "Delete file"
-                )}
+                aria-label={t("fileuploader.button.deletefile", "Delete file")}
+                title={t("fileuploader.button.deletefile", "Delete file")}
               />
             )}
           </Box>
@@ -409,7 +419,7 @@ export const FieldFileUploader = ({
         {DeleteAlertDialog}
 
         {!showFile && (
-          <>
+          <Box h="100px" position="relative">
             <input name={`${name}_dropzone`} {...getInputProps()} />
 
             <Flex
@@ -479,7 +489,7 @@ export const FieldFileUploader = ({
                 </>
               )}
             </Flex>
-          </>
+          </Box>
         )}
         {isUploadError && (
           <Text fontSize="sm" mt="0.5" color="red.500">

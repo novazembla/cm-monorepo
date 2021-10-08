@@ -2,30 +2,22 @@ import { Request, Response } from "express";
 import httpStatus from "http-status";
 import path from "path";
 import multer from "multer";
-import { mkdirSync } from "fs";
+
 import { nanoid } from "nanoid";
 import type { ApiImageMetaInformation } from "@culturemap/core";
 
 import { logger } from "../services/serviceLogging";
-import { imageCreate } from "../services/serviceImage";
+import { imageCreate, imageGetUploadInfo } from "../services/serviceImage";
 
 import { getApiConfig } from "../config";
 import { ApiError } from "../utils";
 import { authAuthenticateUserByToken } from "../services/serviceAuth";
 
-const apiConfigOnBoot = getApiConfig();
-
 const storage = multer.diskStorage({
   destination: async (_req: Request, _file, cb) => {
-    const date = new Date();
-
-    const uploadFolder = `${
-      apiConfigOnBoot.uploadDir
-    }/${date.getUTCFullYear()}/${date.getUTCMonth() + 1}`;
-    const uploadPath = `${apiConfigOnBoot.baseDir}/${apiConfigOnBoot.publicDir}/${uploadFolder}`;
-
+    let uploadInfo: any;
     try {
-      mkdirSync(uploadPath, { recursive: true });
+      uploadInfo = await imageGetUploadInfo();
     } catch (e) {
       logger.error(e);
       throw new ApiError(
@@ -34,7 +26,13 @@ const storage = multer.diskStorage({
       );
     }
 
-    cb(null, uploadPath);
+    if (!uploadInfo?.path)
+      throw new ApiError(
+        httpStatus.INTERNAL_SERVER_ERROR,
+        "[image] upload failed #2"
+      );
+
+    cb(null, uploadInfo.path);
   },
   filename: (_req, file, cb) => {
     const extension = path.extname(file.originalname);

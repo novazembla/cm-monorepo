@@ -16,6 +16,8 @@ import {
   postImageUpload,
   postFile,
   postFileUpload,
+  postImportFile,
+  postImportFileUpload,
 } from "./routes";
 
 export const app: Application = express();
@@ -35,6 +37,7 @@ export const initializeExpressApp = () => {
   app.post("/profileImage", postImageUpload.single("image"), postProfileImage);
   app.post("/image", postImageUpload.single("image"), postImage);
   app.post("/file", postFileUpload.single("file"), postFile);
+  app.post("/import", postImportFileUpload.single("file"), postImportFile);
 };
 
 export const addTerminatingErrorHandlingToApp = () => {

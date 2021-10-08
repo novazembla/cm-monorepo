@@ -12,9 +12,13 @@ const apiConfig = getApiConfig();
 
 export const daoFileTranslatedColumns = ["alt", "credits"];
 
-export const daoFileGetById = async (id: number): Promise<File> => {
+export const daoFileGetById = async (
+  id: number,
+  include?: Prisma.FileInclude | undefined
+): Promise<File> => {
   const file: File | null = await prisma.file.findUnique({
     where: { id },
+    include,
   });
 
   return filteredOutputByBlacklistOrNotFound(

@@ -118,8 +118,6 @@ const Update = () => {
           dispatch(settingsSet(settingInRedux));
 
           successToast();
-          setIsNavigatingAway(true);
-          history.push("/settings");
         } else {
           setHasFormError(true);
         }

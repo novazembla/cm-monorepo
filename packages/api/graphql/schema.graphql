@@ -241,6 +241,7 @@ type Mutation {
   imageUpdate(data: ImageUpdateInput!, id: Int!): Image!
   importCreate(data: ImportUpsertInput!): Import!
   importDelete(id: Int!): BooleanResult!
+  importFileDelete(id: Int!): BooleanResult!
   importUpdate(data: ImportUpsertInput!, id: Int!): Import!
   locationCreate(data: LocationUpsertInput!): Location!
   locationDelete(id: Int!): BooleanResult!

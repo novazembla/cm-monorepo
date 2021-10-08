@@ -189,6 +189,7 @@ export const daoUserProfileImageDelete = async (
     },
   });
 
+  // TODO: take over content to first administrator or deleting user ... 
   await daoImageSetToDelete(imageId);
 
   return filteredOutputByBlacklistOrNotFound(
@@ -197,7 +198,7 @@ export const daoUserProfileImageDelete = async (
   );
 };
 
-export default {
+const defaults = {
   daoUserCreate,
   daoUserQuery,
   daoUserQueryCount,
@@ -209,4 +210,5 @@ export default {
   daoUserFindFirst,
   daoUserProfileImageDelete,
   daoUserCheckIsEmailTaken,
-};
+}
+export default defaults;

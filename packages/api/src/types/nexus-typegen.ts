@@ -631,6 +631,7 @@ export interface NexusGenFieldTypes {
     imageUpdate: NexusGenRootTypes['Image']; // Image!
     importCreate: NexusGenRootTypes['Import']; // Import!
     importDelete: NexusGenRootTypes['BooleanResult']; // BooleanResult!
+    importFileDelete: NexusGenRootTypes['BooleanResult']; // BooleanResult!
     importUpdate: NexusGenRootTypes['Import']; // Import!
     locationCreate: NexusGenRootTypes['Location']; // Location!
     locationDelete: NexusGenRootTypes['BooleanResult']; // BooleanResult!
@@ -989,6 +990,7 @@ export interface NexusGenFieldTypeNames {
     imageUpdate: 'Image'
     importCreate: 'Import'
     importDelete: 'BooleanResult'
+    importFileDelete: 'BooleanResult'
     importUpdate: 'Import'
     locationCreate: 'Location'
     locationDelete: 'BooleanResult'
@@ -1251,6 +1253,9 @@ export interface NexusGenArgTypes {
       data: NexusGenInputs['ImportUpsertInput']; // ImportUpsertInput!
     }
     importDelete: { // args
+      id: number; // Int!
+    }
+    importFileDelete: { // args
       id: number; // Int!
     }
     importUpdate: { // args
