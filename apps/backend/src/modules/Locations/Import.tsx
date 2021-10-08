@@ -47,25 +47,26 @@ export const AdminTableImportStatusCell = (cell: Cell) => {
     label = t("import.status.autodraft", "CSV DATA NEEDED");
   }
 
-  if (cell.value === ImportStatus.UPLOADED) {
-    color = "orange";
-    label = t("import.status.draft", "Uploaded");
-  }
-
   if (cell.value === ImportStatus.ASSIGN) {
     color = "orange";
     label = t("import.status.forreview", "Assign columns");
   }
 
   if (
-    cell.value === ImportStatus.PROCESS ||
+    cell.value === ImportStatus.PROCESS
+  ) {
+    color = "cyan";
+    label = t("import.status.rejected", "Scheduled");
+  }
+
+  if (
     cell.value === ImportStatus.PROCESSING
   ) {
     color = "cyan";
     label = t("import.status.rejected", "Processing");
   }
 
-  if (cell.value === ImportStatus.OK) {
+  if (cell.value === ImportStatus.PROCESSED) {
     color = "green";
     label = t("import.status.published", "Processed");
   }

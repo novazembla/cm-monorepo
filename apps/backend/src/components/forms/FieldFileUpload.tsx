@@ -299,10 +299,9 @@ export const FieldFileUploader = ({
 
   let currentFile: any =
     settings?.file && settings?.file?.id ? settings.file : {};
-  console.log("currentFile1", currentFile);
+  
   if (fileIsDeleted) currentFile = {};
-  console.log("currentFile2", currentFile);
-
+  
   const showFile = (currentFile && currentFile?.id) || !!uploadedFileId;
 
   const hasMin = settings?.minFileSize && settings?.minFileSize > 0;

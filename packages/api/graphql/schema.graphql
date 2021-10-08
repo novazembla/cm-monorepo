@@ -148,6 +148,7 @@ type Import {
   status: Int
   title: JSON
   updatedAt: DateTime
+  warnings: JSON
 }
 
 """List all the imports in the database."""
@@ -162,6 +163,7 @@ input ImportUpsertInput {
   mapping: JSON
   status: Int!
   title: String!
+  warnings: JSON
 }
 
 """

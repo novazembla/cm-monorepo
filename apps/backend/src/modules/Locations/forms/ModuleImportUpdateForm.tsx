@@ -8,30 +8,50 @@ import {
   OrderedList,
   UnorderedList,
   IconButton,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Td,
+  Th,
 } from "@chakra-ui/react";
 
-import { importFileDeleteMutationGQL, ImportStatus } from "@culturemap/core";
+import {
+  importFileDeleteMutationGQL,
+  ImportStatus,
+  importHeaders,
+} from "@culturemap/core";
 
 import { useTranslation } from "react-i18next";
-import { FieldInput, FieldRow, FieldFileUploader } from "~/components/forms";
+import {
+  FieldInput,
+  FieldRow,
+  FieldFileUploader,
+  FieldSelect,
+} from "~/components/forms";
 import { MdContentCopy } from "react-icons/md";
 import { useFormContext } from "react-hook-form";
+import { getMultilangValue } from "~/utils";
 
 export const ModuleImportUpdateForm = ({
   data,
   errors,
   action,
+  isSubmitting,
   validationSchema,
   setActiveUploadCounter,
   onUpload,
 }: {
   data?: any;
   errors?: any;
+  isSubmitting: boolean;
   validationSchema: any;
   action: "create" | "update";
   onUpload: any;
   setActiveUploadCounter?: Function;
 }) => {
+  const [showMappingTable, setShowMappingTable] = useState(true);
+  const [justDeleted, setJustDeleted] = useState(false);
   const [file, setFile] = useState(null);
   const [parseResult, setParseResult] = useState<any>();
 
@@ -39,7 +59,7 @@ export const ModuleImportUpdateForm = ({
 
   const { importRead } = data;
 
-  const { getValues, setValue } = useFormContext();
+  const { setValue, getValues } = useFormContext();
 
   useEffect(() => {
     if (importRead && importRead?.file) {
@@ -57,15 +77,38 @@ export const ModuleImportUpdateForm = ({
     errorList = parseResult.errors.map((err: any, index: number) => (
       <ListItem key={`error-${index}`}>{err}</ListItem>
     ));
-    errorValue = parseResult.errors.join("\n");
+    errorValue = parseResult.errors
+      .map((e: string, index: number) => `${index + 1}. ${e}`)
+      .join("\n");
   } else if (importRead.errors.length > 0) {
     errorList = importRead.errors.map((err: any, index: number) => (
       <ListItem key={`error-${index}`}>{err}</ListItem>
     ));
-    errorValue = importRead.errors.join("\n");
+    errorValue = importRead.errors
+      .map((e: string, index: number) => `${index + 1}. ${e}`)
+      .join("\n");
+  }
+  const clipboardErrors = useClipboard(errorValue);
+
+  let warningList = undefined;
+  let warningValue = "";
+  if (parseResult && parseResult?.warnings?.length > 0) {
+    warningList = parseResult.warnings.map((err: any, index: number) => (
+      <ListItem key={`warning-${index}`}>{err}</ListItem>
+    ));
+    warningValue = parseResult.warnings
+      .map((w: string, index: number) => `${index + 1}. ${w}`)
+      .join("\n");
+  } else if (importRead.warnings.length > 0) {
+    warningList = importRead.warnings.map((err: any, index: number) => (
+      <ListItem key={`warning-${index}`}>{err}</ListItem>
+    ));
+    warningValue = importRead.warnings
+      .map((w: string, index: number) => `${index + 1}. ${w}`)
+      .join("\n");
   }
 
-  const clipboardErrors = useClipboard(errorValue);
+  const clipboardWarnings = useClipboard(warningValue);
 
   let logList = undefined;
   let logValue = "";
@@ -82,9 +125,27 @@ export const ModuleImportUpdateForm = ({
   }
   const clipboardLog = useClipboard(logValue);
 
+  const options = Object.keys(importHeaders).reduce(
+    (agg: any, key: string) => {
+      agg.push({
+        value: key,
+        label: getMultilangValue(importHeaders[key]),
+      });
+      return agg;
+    },
+    [
+      {
+        value: "",
+        label: t(
+          "module.locations.forms.import.select",
+          "Select target column"
+        ),
+      },
+    ] as any
+  );
+
   const mapping = parseResult?.mapping ?? importRead?.mapping ?? undefined;
 
-  console.log(importRead, file, parseResult, parseResult?.errors, mapping);
   return (
     <>
       {action === "create" && (
@@ -105,6 +166,12 @@ export const ModuleImportUpdateForm = ({
           type="text"
           label={t("module.locations.forms.import.field.label.title", "Title")}
           isRequired={true}
+          isDisabled={[
+            ImportStatus.ERROR,
+            ImportStatus.PROCESS,
+            ImportStatus.PROCESSING,
+            ImportStatus.PROCESSED,
+          ].includes(importRead.status)}
           settings={{
             placeholder: t(
               "module.locations.forms.location.field.placeholder.title",
@@ -125,18 +192,30 @@ export const ModuleImportUpdateForm = ({
           onUpload={(data, formFunctions) => {
             setFile(data?.file);
             setParseResult(data?.initialParseResult);
+            setJustDeleted(false);
 
             if (typeof onUpload === "function")
               onUpload.call(null, data, formFunctions);
+
+            setShowMappingTable(true);
           }}
-          canDelete={[
-            ImportStatus.UPLOADED,
-            ImportStatus.ASSIGN,
-            ImportStatus.CREATED,
-          ].includes(importRead.status)}
+          canDelete={[ImportStatus.ASSIGN, ImportStatus.CREATED].includes(
+            importRead.status
+          )}
           onDelete={() => {
             setParseResult(undefined);
             setValue("status", ImportStatus.CREATED);
+
+            const mapping = getValues("mapping");
+            if (Array.isArray(mapping)) {
+              mapping.forEach((map, index) => {
+                setValue(`mapping-col-${index}`, undefined);
+              });
+            }
+            setValue("mapping", []);
+            setValue("file", undefined);
+            setJustDeleted(true);
+            setShowMappingTable(false);
           }}
           connectWith={{
             imports: {
@@ -157,12 +236,134 @@ export const ModuleImportUpdateForm = ({
       </FieldRow>
 
       {errorValue === "" &&
+        showMappingTable &&
         mapping &&
-        (importRead.status === ImportStatus.ASSIGN || parseResult?.mapping) && (
-          <Box>{JSON.stringify(mapping)}</Box>
+        !justDeleted &&
+        Array.isArray(mapping) &&
+        mapping.length > 0 && (
+          <FieldRow>
+            <Box w="100%">
+              <Box w="100%">
+                <b>
+                  {t(
+                    "module.locations.forms.import.mapping.title",
+                    "CSV column(s) to database columns mapping"
+                  )}
+                </b>
+                <Table position="relative" mb="6" w="100%" mt="2">
+                  <Thead>
+                    <Tr>
+                      <Th
+                        pl="0"
+                        borderColor="gray.300"
+                        fontSize="md"
+                        color="gray.800"
+                      >
+                        {t(
+                          "module.locations.forms.import.mapping.columCSV",
+                          "Header in CSV"
+                        )}
+                      </Th>
+                      <Th
+                        pl="0"
+                        borderColor="gray.300"
+                        fontSize="md"
+                        color="gray.800"
+                      >
+                        {t(
+                          "module.locations.forms.import.mapping.firstRow",
+                          "Example (1st row in CSV)"
+                        )}
+                      </Th>
+
+                      <Th
+                        textAlign="center"
+                        px="0"
+                        borderColor="gray.300"
+                        fontSize="md"
+                        color="gray.800"
+                        _last={{
+                          position: "sticky",
+                          right: 0,
+                          p: 0,
+                          "> div": {
+                            p: 4,
+                            h: "100%",
+                            bg: "rgba(255,255,255,0.9)",
+                          },
+                        }}
+                      >
+                        {t(
+                          "module.locations.forms.import.mapping.columnInDb",
+                          "Column in DB"
+                        )}
+                      </Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                    {mapping.map((col: any, index: number) => {
+                      
+                      console.log(getValues(`mapping-col-${index}`));
+                      return (
+                        <Tr key={`col-${index}`}>
+                          <Td pl="0">{col.header}</Td>
+                          <Td pl="0">{col.row}</Td>
+                          <Td px="0">
+                            {/* the awful isSubmitting hack forces a full rebuild of the select form field, it would alway jump back to the intitial defaultValue on form submit */}
+                            {data?.importRead && !isSubmitting && (
+                              <FieldSelect
+                                isRequired={true}
+                                name={`mapping-col-${index}`}
+                                id={`mapping-col-${index}`}
+                                label={`CSV ${index + 1}`}
+                                options={options}
+                                isDisabled={
+                                  ![
+                                    ImportStatus.CREATED,
+                                    ImportStatus.ASSIGN,
+                                  ].includes(data?.importRead?.status)
+                                }
+                                settings={{
+                                  defaultValue: getValues(
+                                    `mapping-col-${index}`
+                                  ),
+                                  hideLabel: true,
+                                }}
+                              />
+                            )}
+                            {(!data || isSubmitting) && (
+                              <FieldSelect
+                                isRequired={true}
+                                name={`mapping-col-${index}`}
+                                id={`mapping-col-${index}`}
+                                label={`CSV ${index + 1}`}
+                                options={options}
+                                isDisabled={
+                                  ![
+                                    ImportStatus.CREATED,
+                                    ImportStatus.ASSIGN,
+                                  ].includes(data?.importRead?.status)
+                                }
+                                settings={{
+                                  defaultValue: getValues(
+                                    `mapping-col-${index}`
+                                  ),
+                                  hideLabel: true,
+                                }}
+                              />
+                            )}
+                          </Td>
+                        </Tr>
+                      );
+                    })}
+                  </Tbody>
+                </Table>
+              </Box>
+            </Box>
+          </FieldRow>
         )}
 
-      {errorList && (
+      {errorList && !justDeleted && (
         <FieldRow>
           <Box w="100%">
             <Box w="100%">
@@ -196,7 +397,7 @@ export const ModuleImportUpdateForm = ({
             </Box>
 
             <Box w="100%">
-              <Box h="300px" w="100%" overflowY="auto" color="red.600">
+              <Box maxH="600px" w="100%" overflowY="auto" color="red.600">
                 <OrderedList>{errorList}</OrderedList>
               </Box>
             </Box>
@@ -204,7 +405,49 @@ export const ModuleImportUpdateForm = ({
         </FieldRow>
       )}
 
-      {logList && (
+      {warningList && !justDeleted && (
+        <FieldRow>
+          <Box w="100%">
+            <Box w="100%">
+              <b>{t("module.locations.forms.import.warnings", "Warnings")}</b>
+              <IconButton
+                onClick={clipboardWarnings.onCopy}
+                ml={2}
+                mt={-1}
+                icon={<MdContentCopy />}
+                aria-label="copy"
+                border="none"
+                color="#000"
+                bg="transparent"
+                _hover={{
+                  bg: "none",
+                  opacity: 0.6,
+                }}
+                _active={{
+                  bg: "transparent",
+                  color: "green.600",
+                }}
+                h="30px"
+                w="30px"
+                fontSize="md"
+                justifyContent="flex-start"
+              >
+                {clipboardWarnings.hasCopied
+                  ? t("copied", "Copied")
+                  : t("copy", "Copy")}
+              </IconButton>
+            </Box>
+
+            <Box w="100%">
+              <Box maxH="600px" w="100%" overflowY="auto" color="orange.600">
+                <OrderedList>{warningList}</OrderedList>
+              </Box>
+            </Box>
+          </Box>
+        </FieldRow>
+      )}
+
+      {logList && !justDeleted && (
         <FieldRow>
           <Box w="100%">
             <Box w="100%">
@@ -239,7 +482,7 @@ export const ModuleImportUpdateForm = ({
             </Box>
 
             <Box w="100%">
-              <Box h="300px" w="100%" overflowY="auto">
+              <Box maxH="600px" w="100%" overflowY="auto">
                 <UnorderedList>{logList}</UnorderedList>
               </Box>
             </Box>

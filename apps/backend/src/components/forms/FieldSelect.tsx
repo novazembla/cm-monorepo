@@ -1,7 +1,12 @@
 import React, { ChangeEventHandler, ChangeEvent } from "react";
 import { useFormContext, Controller } from "react-hook-form";
 
-import { FormControl, FormLabel, Select } from "@chakra-ui/react";
+import {
+  FormControl,
+  FormLabel,
+  Select,
+  VisuallyHidden,
+} from "@chakra-ui/react";
 
 import FieldErrorMessage from "./FieldErrorMessage";
 
@@ -14,6 +19,7 @@ export interface FieldSelectSettings {
   placeholder?: string;
   defaultValue?: any;
   valid?: boolean;
+  hideLabel?: boolean;
 }
 
 export interface FieldSelectOption {
@@ -49,8 +55,6 @@ export const FieldSelect = ({
     name: name,
   };
 
-  if (settings?.defaultValue) fieldProps.defaultValue = settings?.defaultValue;
-
   fieldProps.className = settings?.className ?? undefined;
 
   fieldProps.placeholder = settings?.placeholder ?? undefined;
@@ -63,9 +67,17 @@ export const FieldSelect = ({
       isInvalid={errors[name]?.message}
       {...{ isRequired, isDisabled }}
     >
-      <FormLabel htmlFor={id} mb="0.5">
-        {label}
-      </FormLabel>
+      {settings?.hideLabel ? (
+        <VisuallyHidden>
+          <FormLabel htmlFor={id} mb="0.5">
+            {label}
+          </FormLabel>
+        </VisuallyHidden>
+      ) : (
+        <FormLabel htmlFor={id} mb="0.5">
+          {label}
+        </FormLabel>
+      )}
 
       <Controller
         control={control}
@@ -74,32 +86,37 @@ export const FieldSelect = ({
           field: { onChange, onBlur, value, name, ref },
           fieldState: { invalid, isTouched, isDirty, error },
           formState,
-        }) => (
-          <Select
-            onBlur={onBlur}
-            onChange={(event: ChangeEvent) => {
-              onChange(event);
-              settings?.onChange && settings?.onChange.call(null, event);
-            }}
-            {...fieldProps}
-            size="md"
-            ref={ref}
-            defaultValue={settings?.defaultValue}
-          >
-
-            {options &&
-              options.map((option, i) => (
-                <option key={`${id}-o-${i}`} value={option.value} disabled={option.disabled}>
-                  {option.label}
-                </option>
-              ))}
-          </Select>
-        )}
+        }) => {
+          return (
+            <Select
+              onBlur={onBlur}
+              onChange={(event: ChangeEvent) => {
+                onChange(event);
+                settings?.onChange && settings?.onChange.call(null, event);
+              }}
+              {...fieldProps}
+              size="md"
+              ref={ref}
+              defaultValue={settings?.defaultValue}
+            >
+              {options &&
+                options.map((option, i) => (
+                  <option
+                    key={`${id}-o-${i}`}
+                    value={option.value}
+                    disabled={option.disabled}
+                  >
+                    {option.label}
+                  </option>
+                ))}
+            </Select>
+          );
+        }}
       />
 
       <FieldErrorMessage error={errors[name]?.message} />
     </FormControl>
-  ); 
+  );
 };
 
 export default FieldSelect;

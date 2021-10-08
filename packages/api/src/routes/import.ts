@@ -104,6 +104,7 @@ export const postImportFile = async (req: Request, res: Response) => {
                 await daoImportUpdate(ids[0], {
                   log: initialParseResult.log,
                   errors: initialParseResult.errors,
+                  warnings: initialParseResult.warnings,
                   mapping: initialParseResult.mapping,
                   status: ImportStatus.ASSIGN,
                 });

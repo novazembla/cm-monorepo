@@ -22,7 +22,5 @@ export const ApiFile = ({ id, meta, status, allowDownload }: ApiFileProps) => {
     </Box>;
   }
 
-  console.log(id, meta, status);
-
   return <Flex h="80px" alignItems="center" p="4" pr="60px" border="1px solid " borderColor="gray.400" borderRadius="md">{content}</Flex>;
 };

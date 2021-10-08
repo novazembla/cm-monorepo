@@ -14,6 +14,7 @@ const trimString = (str: string, length: number) =>
 export const importParseInitialCsv = async (file: string, numRows: number) => {
   const log: any[] = [];
   const errors: any[] = [];
+  const warnings: any[] = [];
   const rows: any[] = [];
   let mapping: any[] = [];
   let headers: any[] = [];
@@ -51,7 +52,9 @@ export const importParseInitialCsv = async (file: string, numRows: number) => {
                   return k;
                 } else {
                   unknownHeadersCounter += 1;
-                  errors.push(`Unknown column header "${h}"`);
+                  warnings.push(
+                    `Unknown column header "${h}" please assign tagret database column`
+                  );
 
                   const uKey = `unkown-${unknownHeadersCounter}`;
                   headersUnparsed[uKey] = h;
@@ -73,11 +76,11 @@ export const importParseInitialCsv = async (file: string, numRows: number) => {
               Object.keys(requiredHeadersCheck).forEach((key) => {
                 if (!requiredHeadersCheck[key]) {
                   missingRequiredHeadersCounter += 1;
-                  const keys = importRequiredHeaders[key].map(
-                    (k) => importHeaders[k].en
-                  );
-                  errors.push(
-                    `Missing required column "${keys.join('" or "')}"`
+                  const keys = importRequiredHeaders[key].map((k) => {
+                    return importHeaders[k].en;
+                  });
+                  warnings.push(
+                    `Required column "${keys.join('" or "')}" not found in CSV.`
                   );
                 }
               });
@@ -94,6 +97,17 @@ export const importParseInitialCsv = async (file: string, numRows: number) => {
         })
         .on("headers", (hdrs) => {
           headers = hdrs;
+
+          if (
+            !Array.isArray(headers) ||
+            headers.length - 1 < Object.keys(importRequiredHeaders).length
+          ) {
+            errors.push(
+              `The uploaded CSV did not contain the minimum number of columns. Please ensure to only upload documents that contain at least ${
+                Object.keys(importRequiredHeaders).length
+              } content columns and one ID column`
+            );
+          }
         })
         .on("data-invalid", (row) => {
           errors.push(`Invalid row ${trimString(JSON.stringify(row), 120)}`);
@@ -102,8 +116,8 @@ export const importParseInitialCsv = async (file: string, numRows: number) => {
           rows.push(row);
         })
         .on("end", (rowCount: number) => {
-          log.push(`Parsed ${rowCount} rows`);
-          logger.debug(`Parsed ${rowCount} rows`);
+          log.push(`Parsed first ${rowCount} rows`);
+          logger.debug(`Parsed first ${rowCount} rows`);
           resolve(true);
         });
     });
@@ -118,12 +132,13 @@ export const importParseInitialCsv = async (file: string, numRows: number) => {
   if (headers.length > 0 && rows.length) {
     if (headers.length === Object.keys(rows[0]).length) {
       mapping = headers.reduce((agg, col) => {
+        if (headersUnparsed[col] === "###") return agg;
+
         agg.push({
           header: headersUnparsed[col],
           headerKey: col,
           row: rows[0][col],
-          match: "",
-          isId: "",
+          match: col,
         });
         return agg;
       }, [] as any[]);
@@ -142,6 +157,7 @@ export const importParseInitialCsv = async (file: string, numRows: number) => {
     missingRequiredHeadersCounter,
     unknownHeadersCounter,
     log,
+    warnings,
     errors,
     mapping,
   };

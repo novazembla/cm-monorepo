@@ -14,12 +14,16 @@ import { ModuleImportUpdateSchema } from "./forms";
 import { useImportUpdateMutation } from "./hooks";
 import {
   useAuthentication,
-  useConfig,
   useSuccessfullySavedToast,
   useRouter,
 } from "~/hooks";
-import { Divider } from "@chakra-ui/react";
-import { importReadQueryGQL } from "@culturemap/core";
+import { Divider, Alert, AlertIcon } from "@chakra-ui/react";
+import {
+  importReadQueryGQL,
+  importHeaders,
+  ImportStatus,
+  importRequiredHeaders,
+} from "@culturemap/core";
 
 import { useQuery } from "@apollo/client";
 
@@ -35,7 +39,7 @@ import { ModuleImportUpdateForm } from "./forms";
 
 const Update = () => {
   const router = useRouter();
-  const config = useConfig();
+
   const [appUser] = useAuthentication();
   const { t } = useTranslation();
   const successToast = useSuccessfullySavedToast();
@@ -61,23 +65,47 @@ const Update = () => {
   const {
     handleSubmit,
     reset,
-    formState: { isSubmitting, isDirty, dirtyFields },
+    getValues,
+    setValue,
+    watch,
+    formState: { isSubmitting, isDirty },
   } = formMethods;
 
   useEffect(() => {
     if (!data || !data.importRead) return;
 
+    let mappedValues = {};
+    if (Array.isArray(data.importRead.mapping))
+      mappedValues = data.importRead.mapping.reduce(
+        (agg: any, mapping: any, index: number) => ({
+          ...agg,
+          [`mapping-col-${index}`]: mapping.match,
+        }),
+        {}
+      );
+
     reset({
       title: data.importRead.title,
       status: parseInt(data.importRead.status),
       file: data.importRead.fileId,
-      mapping: [], // TODO: ....
+      mapping: data.importRead.mapping,
+      ...mappedValues,
     });
-  }, [reset, data, config.activeLanguages]);
+
+  }, [reset, data]);
 
   const onSubmit = async (
     newData: yup.InferType<typeof ModuleImportUpdateSchema>
   ) => {
+    let newMapping = {};
+    if (Array.isArray(newData.mapping))
+      newMapping = (newData.mapping as any[]).map(
+        (mapping: any, index: number) => ({
+          ...mapping,
+          match: getValues(`mapping-col-${index}`),
+        })
+      );
+
     setHasFormError(false);
     setIsNavigatingAway(false);
     try {
@@ -85,7 +113,7 @@ const Update = () => {
         const { errors } = await firstMutation(parseInt(router.query.id, 10), {
           title: newData.title,
           status: newData.status,
-          mapping: newData.mapping, // TODO: if file deleted status has to change ...
+          mapping: newMapping,
         });
 
         if (!errors) {
@@ -115,6 +143,39 @@ const Update = () => {
     },
   ];
 
+  const mapping = watch("mapping");
+  let canProcess = false;
+  let allRequiredErrors: string[] = [];
+  if (mapping && Array.isArray(mapping)) {
+    const allSet = !mapping.find(
+      (m) => m.match === "" || !Object.keys(importHeaders).includes(m.match)
+    );
+
+    const matchedKeys = mapping.map((m) => m.match);
+
+    const requiredHeadersCheck = Object.keys(importRequiredHeaders).reduce(
+      (agg, rhKey) => {
+        return {
+          ...agg,
+          [rhKey]: !!importRequiredHeaders[rhKey].find((key) =>
+            matchedKeys.includes(key)
+          ),
+        };
+      },
+      {} as any
+    );
+
+    Object.keys(requiredHeadersCheck).forEach((key) => {
+      if (!requiredHeadersCheck[key]) {
+        const keys = importRequiredHeaders[key].map((k) => {
+          return importHeaders[k].en;
+        });
+        allRequiredErrors.push(`"${keys.join('" or "')}"`);
+      }
+    });
+
+    canProcess = allSet && allRequiredErrors.length === 0;
+  }
   const buttonList: ButtonListElement[] = [
     {
       type: "back",
@@ -126,6 +187,20 @@ const Update = () => {
       type: "submit",
       isLoading: isSubmitting,
       label: t("module.button.update", "Update"),
+      userCan: "locationCreate",
+      isDisabled: ![ImportStatus.CREATED, ImportStatus.ASSIGN].includes(
+        data?.importRead?.status
+      ),
+    },
+    {
+      type: "button",
+      onClick: () => {
+        setValue("status", ImportStatus.PROCESS);
+        handleSubmit(onSubmit)();
+      },
+      isLoading: isSubmitting,
+      label: t("module.button.import", "Schedule import"),
+      isDisabled: !canProcess || isDirty,
       userCan: "locationCreate",
     },
   ];
@@ -150,9 +225,32 @@ const Update = () => {
                   <Divider />
                 </>
               )}
+              {data?.importRead?.status === ImportStatus.ASSIGN &&
+                allRequiredErrors.length > 0 && (
+                  <Alert borderRadius="lg" status="error" mb="4">
+                    <AlertIcon />
+                    {t(
+                      "module.locations.imports.requiredMissing",
+                      "The following required columns are not assigned: "
+                    )}
+                    {allRequiredErrors.join(", ")}
+                  </Alert>
+                )}
+
+              {data?.importRead?.status === ImportStatus.ASSIGN &&
+                (!canProcess || isDirty) && (
+                  <Alert borderRadius="lg" status="warning" mb="4">
+                    <AlertIcon />
+                    {t(
+                      "module.locations.imports.assignColumnsToTriggerImport",
+                      "To be able to schedule the import you need to assign all (required) columns"
+                    )}
+                  </Alert>
+                )}
               <ModuleImportUpdateForm
                 action="update"
                 data={data}
+                isSubmitting={isSubmitting}
                 setActiveUploadCounter={setActiveUploadCounter}
                 validationSchema={ModuleImportUpdateSchema}
                 onUpload={(data: any, formFunctions: any) => {
@@ -162,6 +260,47 @@ const Update = () => {
                       shouldDirty: false,
                     });
                     formFunctions.setUploadedFileId(data?.file?.id);
+                  }
+
+                  const hasErrors =
+                    Array.isArray(data?.initialParseResult?.errors) &&
+                    data?.initialParseResult?.errors?.length > 0;
+
+                  if (data?.initialParseResult?.mapping && !hasErrors) {
+                    console.log("Reseon on new file upload", {
+                      status: ImportStatus.ASSIGN,
+                      title: getValues("title"),
+                      file: getValues("file"),
+                      mapping: data?.initialParseResult?.mapping,
+                      ...data?.initialParseResult?.mapping.reduce(
+                        (agg: any, col: any, index: number) => ({
+                          ...agg,
+                          [`mapping-col-${index}`]:
+                            col.match.indexOf("unknown-") === -1
+                              ? col.match
+                              : undefined,
+                        }),
+                        {} as any
+                      ),
+                    });
+                    reset({
+                      status: ImportStatus.ASSIGN,
+                      title: getValues("title"),
+                      file: getValues("file"),
+                      mapping: data?.initialParseResult?.mapping,
+                      ...data?.initialParseResult?.mapping.reduce(
+                        (agg: any, col: any, index: number) => ({
+                          ...agg,
+                          [`mapping-col-${index}`]:
+                            col.match.indexOf("unknown-") === -1
+                              ? col.match
+                              : undefined,
+                        }),
+                        {} as any
+                      ),
+                    });
+
+                    setValue("mapping-col-0", "title-de");
                   }
                 }}
               />

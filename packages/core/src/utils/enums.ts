@@ -28,11 +28,10 @@ export enum PublishStatus {
 
 export enum ImportStatus {
   CREATED,
-  UPLOADED,
   ASSIGN,
   PROCESS,
   PROCESSING,
-  OK,
+  PROCESSED,
   ERROR,
   DELETED,
 }

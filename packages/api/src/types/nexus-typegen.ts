@@ -80,6 +80,7 @@ export interface NexusGenInputs {
     mapping?: NexusGenScalars['JSON'] | null; // JSON
     status: number; // Int!
     title: string; // String!
+    warnings?: NexusGenScalars['JSON'] | null; // JSON
   }
   LocationUpsertInput: { // input type
     address?: NexusGenScalars['JSON'] | null; // JSON
@@ -298,6 +299,7 @@ export interface NexusGenObjects {
     status?: number | null; // Int
     title?: NexusGenScalars['JSON'] | null; // JSON
     updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
+    warnings?: NexusGenScalars['JSON'] | null; // JSON
   }
   ImportQueryResult: { // root type
     imports?: Array<NexusGenRootTypes['Import'] | null> | null; // [Import]
@@ -578,6 +580,7 @@ export interface NexusGenFieldTypes {
     status: number | null; // Int
     title: NexusGenScalars['JSON'] | null; // JSON
     updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
+    warnings: NexusGenScalars['JSON'] | null; // JSON
   }
   ImportQueryResult: { // field return type
     imports: Array<NexusGenRootTypes['Import'] | null> | null; // [Import]
@@ -937,6 +940,7 @@ export interface NexusGenFieldTypeNames {
     status: 'Int'
     title: 'JSON'
     updatedAt: 'DateTime'
+    warnings: 'JSON'
   }
   ImportQueryResult: { // field return type name
     imports: 'Import'

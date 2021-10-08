@@ -42,6 +42,7 @@ export const Import = objectType({
     t.json("title");
     t.json("log");
     t.json("errors");
+    t.json("warnings");
     t.json("mapping");
     t.int("status");
     t.json("file");
@@ -152,6 +153,7 @@ export const ImportUpsertInput = inputObjectType({
     t.nonNull.string("title");
     t.json("log");
     t.json("errors");
+    t.json("warnings");
     t.json("mapping");
     t.nonNull.int("status");
   },
@@ -239,6 +241,7 @@ export const ImportMutations = extendType({
               log: [],
               errors: [],
               mapping: [],
+              warnings: [],
               status: ImportStatus.CREATED,
             });
         }
