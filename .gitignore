@@ -147,3 +147,4 @@ data/*
 !data/postgres/.keep
 !data/postgres-test/.keep
 public/*
+csv/*
