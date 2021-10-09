@@ -22,22 +22,19 @@ export class GeoCoderKomoot {
     const query = [];
 
     if (address.city && address.city.trim() !== "")
-      query.push(address.city.trim());
+      query.push(encodeURIComponent(address.city.trim()));
 
-    if (address.street && address.street.trim() !== "")
-      query.push(address.street.trim());
+    if (address.street1 && address.street1.trim() !== "")
+      query.push(encodeURIComponent(address.street1.trim()));
 
     if (address.street2 && address.street2.trim() !== "")
-      query.push(address.street2.trim());
+      query.push(encodeURIComponent(address.street2.trim()));
 
-    if (address.street3 && address.street3.trim() !== "")
-      query.push(address.street3.trim());
-
-    if (address.postcode && address.postcode.trim() !== "")
-      query.push(address.postcode.trim());
+    if (address.postCode && address.postCode.trim() !== "")
+      query.push(encodeURIComponent(address.postCode.trim()));
 
     if (address.country && address.country.trim() !== "")
-      query.push(address.country.trim());
+      query.push(encodeURIComponent(address.country.trim()));
 
     let latLon = "";
     if (centerOfGravity)

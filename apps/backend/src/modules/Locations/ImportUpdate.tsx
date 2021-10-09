@@ -91,7 +91,6 @@ const Update = () => {
       mapping: data.importRead.mapping,
       ...mappedValues,
     });
-
   }, [reset, data]);
 
   const onSubmit = async (
@@ -200,7 +199,12 @@ const Update = () => {
       },
       isLoading: isSubmitting,
       label: t("module.button.import", "Schedule import"),
-      isDisabled: !canProcess || isDirty,
+      isDisabled:
+        !canProcess ||
+        isDirty ||
+        ![ImportStatus.CREATED, ImportStatus.ASSIGN].includes(
+          data?.importRead?.status
+        ),
       userCan: "locationCreate",
     },
   ];
@@ -247,6 +251,18 @@ const Update = () => {
                     )}
                   </Alert>
                 )}
+
+              {[ImportStatus.PROCESS, ImportStatus.PROCESSING].includes(
+                data?.importRead?.status
+              ) && (
+                <Alert borderRadius="lg">
+                  <AlertIcon />
+                  {t(
+                    "module.locations.imports.importIsProcessing",
+                    "Your import is being processed on the server."
+                  )}
+                </Alert>
+              )}
               <ModuleImportUpdateForm
                 action="update"
                 data={data}
@@ -267,22 +283,6 @@ const Update = () => {
                     data?.initialParseResult?.errors?.length > 0;
 
                   if (data?.initialParseResult?.mapping && !hasErrors) {
-                    console.log("Reseon on new file upload", {
-                      status: ImportStatus.ASSIGN,
-                      title: getValues("title"),
-                      file: getValues("file"),
-                      mapping: data?.initialParseResult?.mapping,
-                      ...data?.initialParseResult?.mapping.reduce(
-                        (agg: any, col: any, index: number) => ({
-                          ...agg,
-                          [`mapping-col-${index}`]:
-                            col.match.indexOf("unknown-") === -1
-                              ? col.match
-                              : undefined,
-                        }),
-                        {} as any
-                      ),
-                    });
                     reset({
                       status: ImportStatus.ASSIGN,
                       title: getValues("title"),

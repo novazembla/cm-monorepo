@@ -145,7 +145,9 @@ export const ModuleImportUpdateForm = ({
   );
 
   const mapping = parseResult?.mapping ?? importRead?.mapping ?? undefined;
-
+  const isProcessing = [ImportStatus.PROCESS, ImportStatus.PROCESSING].includes(
+    data?.importRead?.status
+  )
   return (
     <>
       {action === "create" && (
@@ -302,15 +304,17 @@ export const ModuleImportUpdateForm = ({
                   </Thead>
                   <Tbody>
                     {mapping.map((col: any, index: number) => {
-                      
-                      console.log(getValues(`mapping-col-${index}`));
+                      const isUndefined =
+                        typeof getValues(`mapping-col-${index}`) ===
+                        "undefined";
+
                       return (
                         <Tr key={`col-${index}`}>
                           <Td pl="0">{col.header}</Td>
                           <Td pl="0">{col.row}</Td>
-                          <Td px="0">
+                          <Td px="0" w="33.33%" minW="250px">
                             {/* the awful isSubmitting hack forces a full rebuild of the select form field, it would alway jump back to the intitial defaultValue on form submit */}
-                            {data?.importRead && !isSubmitting && (
+                            {!isUndefined && data?.importRead && !isSubmitting && (
                               <FieldSelect
                                 isRequired={true}
                                 name={`mapping-col-${index}`}
@@ -331,7 +335,7 @@ export const ModuleImportUpdateForm = ({
                                 }}
                               />
                             )}
-                            {(!data || isSubmitting) && (
+                            {(!isUndefined && (!data || isSubmitting)) && (
                               <FieldSelect
                                 isRequired={true}
                                 name={`mapping-col-${index}`}
@@ -363,7 +367,7 @@ export const ModuleImportUpdateForm = ({
           </FieldRow>
         )}
 
-      {errorList && !justDeleted && (
+      {errorList && !justDeleted && !isProcessing && (
         <FieldRow>
           <Box w="100%">
             <Box w="100%">
@@ -405,7 +409,7 @@ export const ModuleImportUpdateForm = ({
         </FieldRow>
       )}
 
-      {warningList && !justDeleted && (
+      {warningList && !justDeleted && !isProcessing && (
         <FieldRow>
           <Box w="100%">
             <Box w="100%">
@@ -447,7 +451,7 @@ export const ModuleImportUpdateForm = ({
         </FieldRow>
       )}
 
-      {logList && !justDeleted && (
+      {logList && !justDeleted && !isProcessing && (
         <FieldRow>
           <Box w="100%">
             <Box w="100%">

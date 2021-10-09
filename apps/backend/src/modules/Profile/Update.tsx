@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import type * as yup from "yup";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -57,7 +57,6 @@ const Update = () => {
     },
   });
 
-  const history = useHistory();
   const [firstMutation, firstMutationResults] = useUserProfileUpdateMutation();
   const [hasFormError, setHasFormError] = useState(false);
 

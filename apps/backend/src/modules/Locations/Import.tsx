@@ -52,16 +52,12 @@ export const AdminTableImportStatusCell = (cell: Cell) => {
     label = t("import.status.forreview", "Assign columns");
   }
 
-  if (
-    cell.value === ImportStatus.PROCESS
-  ) {
+  if (cell.value === ImportStatus.PROCESS) {
     color = "cyan";
     label = t("import.status.rejected", "Scheduled");
   }
 
-  if (
-    cell.value === ImportStatus.PROCESSING
-  ) {
+  if (cell.value === ImportStatus.PROCESSING) {
     color = "cyan";
     label = t("import.status.rejected", "Processing");
   }
@@ -197,12 +193,20 @@ const Import = () => {
       // editButtonComponent: undefined,
 
       showDelete: true,
-      canDelete: (cell, appUser) =>
-        appUser?.can("locationDelete") ||
-        (appUser.can("locationDeleteOwn") &&
-          appUser.id === (cell?.row?.original as any)?.ownerId),
+      canDelete: (cell, appUser) => {
+        console.log((cell?.row?.original as any).status);
+        return (
+          (appUser?.can("locationDelete") ||
+            (appUser.can("locationDeleteOwn") &&
+              appUser.id === (cell?.row?.original as any)?.ownerId)) &&
+          (cell?.row?.original as any).status !== ImportStatus.PROCESSING
+        );
+      },
 
-      deleteButtonLabel: t("module.locations.import.button.delete", "Delete import"),
+      deleteButtonLabel: t(
+        "module.locations.import.button.delete",
+        "Delete import"
+      ),
       // deleteButtonComponent?: React.FC<any>;
 
       deleteButtonOnClick: (cell) => {

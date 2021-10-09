@@ -83,15 +83,19 @@ export interface NexusGenInputs {
     warnings?: NexusGenScalars['JSON'] | null; // JSON
   }
   LocationUpsertInput: { // input type
+    accessibilityInformation?: NexusGenScalars['JSON'] | null; // JSON
     address?: NexusGenScalars['JSON'] | null; // JSON
+    agency?: string | null; // String
     contactInfo?: NexusGenScalars['JSON'] | null; // JSON
     description?: NexusGenScalars['JSON'] | null; // JSON
+    eventLocationId?: number | null; // Int
     heroImage?: NexusGenScalars['JSON'] | null; // JSON
     lat?: number | null; // Float
     lng?: number | null; // Float
     offers?: NexusGenScalars['JSON'] | null; // JSON
     owner: NexusGenScalars['JSON']; // JSON!
     slug: NexusGenScalars['JSON']; // JSON!
+    socialMedia?: NexusGenScalars['JSON'] | null; // JSON
     status: number; // Int!
     terms?: NexusGenScalars['JSON'] | null; // JSON
     title: NexusGenScalars['JSON']; // JSON!
@@ -306,11 +310,15 @@ export interface NexusGenObjects {
     totalCount?: number | null; // Int
   }
   Location: { // root type
+    accessibilityInformation?: NexusGenScalars['JSON'] | null; // JSON
     address?: NexusGenScalars['JSON'] | null; // JSON
+    agency?: string | null; // String
     contactInfo?: NexusGenScalars['JSON'] | null; // JSON
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
     description?: NexusGenScalars['JSON'] | null; // JSON
+    eventLocationId?: number | null; // Int
     events?: Array<NexusGenRootTypes['Event'] | null> | null; // [Event]
+    geoCodingInfo?: NexusGenScalars['JSON'] | null; // JSON
     heroImage?: NexusGenRootTypes['Image'] | null; // Image
     id: number; // Int!
     lat?: number | null; // Float
@@ -318,6 +326,7 @@ export interface NexusGenObjects {
     offers?: NexusGenScalars['JSON'] | null; // JSON
     ownerId: number; // Int!
     slug?: NexusGenScalars['JSON'] | null; // JSON
+    socialMedia?: NexusGenScalars['JSON'] | null; // JSON
     status: number; // Int!
     terms?: Array<NexusGenRootTypes['Term'] | null> | null; // [Term]
     title?: NexusGenScalars['JSON'] | null; // JSON
@@ -587,12 +596,16 @@ export interface NexusGenFieldTypes {
     totalCount: number | null; // Int
   }
   Location: { // field return type
+    accessibilityInformation: NexusGenScalars['JSON'] | null; // JSON
     address: NexusGenScalars['JSON'] | null; // JSON
+    agency: string | null; // String
     author: NexusGenRootTypes['User'] | null; // User
     contactInfo: NexusGenScalars['JSON'] | null; // JSON
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
     description: NexusGenScalars['JSON'] | null; // JSON
+    eventLocationId: number | null; // Int
     events: Array<NexusGenRootTypes['Event'] | null> | null; // [Event]
+    geoCodingInfo: NexusGenScalars['JSON'] | null; // JSON
     heroImage: NexusGenRootTypes['Image'] | null; // Image
     id: number; // Int!
     lat: number | null; // Float
@@ -600,6 +613,7 @@ export interface NexusGenFieldTypes {
     offers: NexusGenScalars['JSON'] | null; // JSON
     ownerId: number; // Int!
     slug: NexusGenScalars['JSON'] | null; // JSON
+    socialMedia: NexusGenScalars['JSON'] | null; // JSON
     status: number; // Int!
     terms: Array<NexusGenRootTypes['Term'] | null> | null; // [Term]
     title: NexusGenScalars['JSON'] | null; // JSON
@@ -947,12 +961,16 @@ export interface NexusGenFieldTypeNames {
     totalCount: 'Int'
   }
   Location: { // field return type name
+    accessibilityInformation: 'JSON'
     address: 'JSON'
+    agency: 'String'
     author: 'User'
     contactInfo: 'JSON'
     createdAt: 'DateTime'
     description: 'JSON'
+    eventLocationId: 'Int'
     events: 'Event'
+    geoCodingInfo: 'JSON'
     heroImage: 'Image'
     id: 'Int'
     lat: 'Float'
@@ -960,6 +978,7 @@ export interface NexusGenFieldTypeNames {
     offers: 'JSON'
     ownerId: 'Int'
     slug: 'JSON'
+    socialMedia: 'JSON'
     status: 'Int'
     terms: 'Term'
     title: 'JSON'

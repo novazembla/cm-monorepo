@@ -31,7 +31,7 @@ export const MapQueries = extendType({
 
         if (apiConfig.geoCodingProvider.autocomplete === "komoot") {
           const result = await new GeoCoderKomoot().query({
-            street: args.q,
+            street1: args.q,
           });
           return {
             geojson: result,
@@ -43,7 +43,7 @@ export const MapQueries = extendType({
 
         if (apiConfig.geoCodingProvider.autocomplete === "here") {
           const result = await new GeoCoderHere().query({
-            street: args.q,
+            street1: args.q,
           });
           return {
             geojson: result,
@@ -55,7 +55,7 @@ export const MapQueries = extendType({
 
         if (apiConfig.geoCodingProvider.autocomplete === "nominatim") {
           const result = await new GeoCoderNominatim().query({
-            street: args.q,
+            street1: args.q,
           });
           return {
             geojson: result,

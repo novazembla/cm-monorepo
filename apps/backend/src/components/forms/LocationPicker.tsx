@@ -147,8 +147,6 @@ export const LocationPicker = ({
     lng,
   });
 
-
-
   const [initialState, setInitialState] = useState<GeoLocation>();
 
   const { setValue } = useFormContext();
@@ -290,7 +288,7 @@ export const LocationPicker = ({
                   []
                 );
 
-                if (result.length > 0) {
+                if (result.length > 1) {
                   result.sort(
                     (
                       item: FieldAutocompleteItem,

@@ -31,38 +31,43 @@ export class GeoCoderHere {
 
     let query = "";
     if (type === "autocomplete") {
-      if (address.street && address.street.trim() !== "")
-        query = `q=${address.street.trim()}`;
+      if (address.street1 && address.street1.trim() !== "")
+        query = `q=${encodeURIComponent(address.street1.trim())}`;
     } else {
       const queryParams = [];
       const streetParts = [];
 
-      if (address.street && address.street.trim() !== "")
-        streetParts.push(address.street.trim());
+      if (address.street1 && address.street1.trim() !== "")
+        streetParts.push(encodeURIComponent(address.street1.trim()));
 
       if (address.street2 && address.street2.trim() !== "")
-        streetParts.push(address.street2.trim());
-
-      if (address.street3 && address.street3.trim() !== "")
-        streetParts.push(address.street3.trim());
+        streetParts.push(encodeURIComponent(address.street2.trim()));
 
       if (streetParts.length > 0)
-        queryParams.push(`street=${streetParts.join(", ")}`);
+        queryParams.push(
+          `street=${encodeURIComponent(streetParts.join(", "))}`
+        );
 
       if (address.houseNumber && address.houseNumber.trim() !== "")
-        queryParams.push(`houseNumber=${address.houseNumber.trim()}`);
+        queryParams.push(
+          `houseNumber=${encodeURIComponent(address.houseNumber.trim())}`
+        );
 
-      if (address.postcode && address.postcode.trim() !== "")
-        queryParams.push(`postalCode=${address.postcode.trim()}`);
+      if (address.postCode && address.postCode.trim() !== "")
+        queryParams.push(
+          `postalCode=${encodeURIComponent(address.postCode.trim())}`
+        );
 
       if (address.city && address.city.trim() !== "")
-        queryParams.push(`city=${address.city.trim()}`);
+        queryParams.push(`city=${encodeURIComponent(address.city.trim())}`);
 
       if (address.state && address.state.trim() !== "")
-        queryParams.push(`state=${address.state.trim()}`);
+        queryParams.push(`state=${encodeURIComponent(address.state.trim())}`);
 
       if (address.country && address.country.trim() !== "")
-        queryParams.push(`country=${address.country.trim()}`);
+        queryParams.push(
+          `country=${encodeURIComponent(address.country.trim())}`
+        );
 
       query = `qq=${queryParams.join(";")}`;
     }
@@ -100,7 +105,6 @@ export class GeoCoderHere {
                   houseNumberType: item.houseNumberType,
                 },
               }));
-              result.count = result.features.length;
             }
           })
           .catch((err) => {
@@ -118,9 +122,6 @@ export class GeoCoderHere {
       logger.debug(err);
     }
 
-    return {
-      geojson: { features: [], type: "FeatureCollection" },
-      count: 0,
-    } as any;
+    return { features: [], type: "FeatureCollection" };
   }
 }

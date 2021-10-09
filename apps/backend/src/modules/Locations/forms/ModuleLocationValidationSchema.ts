@@ -12,22 +12,34 @@ export const ModuleLocationCreateSchema = object().shape(
         .matches(/^[a-z\-\d]+$/, "validation.slug.invalidcharacters")
         .required(),
 
-      [`address_${lang}`]:
-        lang === defaultLanguage
-          ? string().nonEmptyHtml({ max: 500 }).required()
-          : string().html({ max: 500 }),
       [`description_${lang}`]:
         lang === defaultLanguage
           ? string().nonEmptyHtml({ max: 1000 }).required()
           : string().html({ max: 1000 }),
       [`offers_${lang}`]: string().html({ max: 500 }),
-      [`contactInfo_${lang}`]: string().html({ max: 500 }),
+      [`accessibilityInformation_${lang}`]: string().html({ max: 500 }),
     }),
     {
       lat: number().required().latitude(),
       lng: number().longitude().required(),
+      co: string(),
+      street1: string().required(),
+      street2: string(),
+      houseNumber: string().required(),
+      city: string().required(),
+      postCode: string().required(),
       ownerId: number(),
       status: number(),
+      phone1: string(),
+      phone2: string(),
+      email1: string().email(),
+      email2: string().email(),
+      facebook: string().url(),
+      twitter: string().url(),
+      instagram: string().url(),
+      youtube: string().url(),
+      website: string().url(),
+      agency: string(),
     }
   )
 );

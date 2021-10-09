@@ -11,9 +11,11 @@ import {
   TwoColFieldRow,
   FieldSingleImage,
   FieldRadioOrCheckboxGroup,
+  FieldInput,
 } from "~/components/forms";
 import { MultiLangValue } from "~/components/ui";
 import { useAuthentication } from "~/hooks";
+import { yupIsFieldRequired } from "~/validation";
 
 export const ModuleForm = ({
   data,
@@ -75,6 +77,7 @@ export const ModuleForm = ({
               />
             </FieldRow>
           </TwoColFieldRow>
+
           <Divider mt="10" />
           <FieldSingleImage
             id="heroImage"
@@ -105,13 +108,17 @@ export const ModuleForm = ({
   }
   return (
     <>
-      {action === "create" && <>
-      
-      <Alert borderRadius="lg">
-      <AlertIcon />
-  {t("form.info.pleasesafedraft", "Please save a draft to unlock further functionality")}
-      </Alert>
-    </>}
+      {action === "create" && (
+        <>
+          <Alert borderRadius="lg">
+            <AlertIcon />
+            {t(
+              "form.info.pleasesafedraft",
+              "Please save a draft to unlock further functionality"
+            )}
+          </Alert>
+        </>
+      )}
 
       <FieldMultiLangInput
         name="title"
@@ -142,6 +149,128 @@ export const ModuleForm = ({
         }}
       />
       {updateActions}
+      <Divider mt="10" />
+      <chakra.fieldset
+        border="1px solid"
+        borderColor="gray.400"
+        p="4"
+        borderRadius="md"
+        w="100%"
+      >
+        <legend>
+          <chakra.span px="2">
+            {t("module.locations.forms.field.label.address", "Address")}
+          </chakra.span>
+        </legend>
+        <TwoColFieldRow>
+          <FieldRow>
+            <FieldInput
+              id="street1"
+              type="text"
+              name="street1"
+              label={t(
+                "module.locations.forms.field.label.street1",
+                "Street (1)"
+              )}
+              isRequired={yupIsFieldRequired("street1", validationSchema)}
+              settings={{
+                placeholder: t(
+                  "locations.forms.field.placeholder.street1",
+                  "Street (1)"
+                ),
+              }}
+            />
+          </FieldRow>
+          <FieldRow>
+            <FieldInput
+              id="houseNumber"
+              type="text"
+              name="houseNumber"
+              label={t(
+                "module.locations.forms.field.label.houseNumber",
+                "House Number"
+              )}
+              isRequired={yupIsFieldRequired("houseNumber", validationSchema)}
+              settings={{
+                placeholder: t(
+                  "locations.forms.field.placeholder.houseNumber",
+                  "126a"
+                ),
+              }}
+            />
+          </FieldRow>
+        </TwoColFieldRow>
+        <TwoColFieldRow>
+          <FieldRow>
+            <FieldInput
+              id="street2"
+              type="text"
+              name="street2"
+              label={t(
+                "module.locations.forms.field.label.street2",
+                "Street (2)"
+              )}
+              isRequired={yupIsFieldRequired("street2", validationSchema)}
+              settings={{
+                placeholder: t(
+                  "locations.forms.field.placeholder.street2",
+                  "Street (2)"
+                ),
+              }}
+            />
+          </FieldRow>
+          <FieldRow>
+            <FieldInput
+              id="co"
+              type="text"
+              name="co"
+              label={t("module.locations.forms.field.label.co", "C/O")}
+              isRequired={yupIsFieldRequired("co", validationSchema)}
+              settings={{
+                placeholder: t(
+                  "locations.forms.field.placeholder.co",
+                  "C/O ..."
+                ),
+              }}
+            />
+          </FieldRow>
+        </TwoColFieldRow>
+        <TwoColFieldRow>
+          <FieldRow>
+            <FieldInput
+              id="postCode"
+              type="text"
+              name="postCode"
+              label={t(
+                "module.locations.forms.field.label.postCode",
+                "Post Code"
+              )}
+              isRequired={yupIsFieldRequired("postCode", validationSchema)}
+              settings={{
+                placeholder: t(
+                  "locations.forms.field.placeholder.postCode",
+                  "Post code"
+                ),
+              }}
+            />
+          </FieldRow>
+          <FieldRow>
+            <FieldInput
+              id="city"
+              type="text"
+              name="city"
+              label={t("module.locations.forms.field.label.city", "City")}
+              isRequired={yupIsFieldRequired("city", validationSchema)}
+              settings={{
+                placeholder: t(
+                  "locations.forms.field.placeholder.city",
+                  "City"
+                ),
+              }}
+            />
+          </FieldRow>
+        </TwoColFieldRow>
+      </chakra.fieldset>
       <Divider mt="10" />
       <chakra.fieldset
         border="1px solid"
@@ -186,27 +315,6 @@ export const ModuleForm = ({
         </>
       )}
       <Divider mt="10" />
-
-      <FieldMultiLangTextEditor
-        name="address"
-        id="address"
-        type="basic"
-        label={t(
-          "module.locations.forms.location.field.label.address",
-          "Address"
-        )}
-        isRequired={false}
-        settings={{
-          defaultRequired: true,
-          defaultValues: data?.locationRead?.address,
-          maxLength: 500,
-          placeholder: t(
-            "module.locations.forms.location.field.placeholder.address",
-            "Location address"
-          ),
-        }}
-      />
-
       <FieldMultiLangTextEditor
         name="description"
         id="description"
@@ -228,24 +336,6 @@ export const ModuleForm = ({
       />
 
       <FieldMultiLangTextEditor
-        name="contactInfo"
-        id="contactInfo"
-        type="basic"
-        label={t(
-          "module.locations.forms.location.field.label.contactInfo",
-          "Contact Information"
-        )}
-        isRequired={false}
-        settings={{
-          defaultValues: data?.locationRead?.contactInfo,
-          maxLength: 500,
-          placeholder: t(
-            "module.locations.forms.location.field.placeholder.contactInfo",
-            "Location contactInfo"
-          ),
-        }}
-      />
-      <FieldMultiLangTextEditor
         name="offers"
         id="offers"
         type="basic"
@@ -263,6 +353,178 @@ export const ModuleForm = ({
           ),
         }}
       />
+      <FieldMultiLangTextEditor
+        name="accessibilityInformation"
+        id="accessibilityInformation"
+        type="basic"
+        label={t(
+          "module.locations.forms.location.field.label.accessibilityInformation",
+          "Accessibility Information"
+        )}
+        isRequired={false}
+        settings={{
+          defaultRequired: true,
+          defaultValues: data?.locationRead?.accessibilityInformation,
+          maxLength: 500,
+          placeholder: t(
+            "module.locations.forms.location.field.placeholder.accessibilityInformation",
+            "Location accessibilityInformation"
+          ),
+        }}
+      />
+      <Divider mt="10" />
+      <chakra.fieldset
+        border="1px solid"
+        borderColor="gray.400"
+        p="4"
+        borderRadius="md"
+        w="100%"
+      >
+        <legend>
+          <chakra.span px="2">
+            {t(
+              "module.locations.forms.field.label.socialMedia",
+              "Website/Social Media"
+            )}
+          </chakra.span>
+        </legend>
+        <FieldRow>
+          <FieldInput
+            id="website"
+            type="text"
+            name="website"
+            label={t("module.locations.forms.field.label.website", "Website")}
+            isRequired={yupIsFieldRequired("website", validationSchema)}
+            settings={{
+              placeholder: t(
+                "locations.forms.field.placeholder.url",
+                "https://...."
+              ),
+            }}
+          />
+        </FieldRow>
+        <TwoColFieldRow>
+          <FieldRow>
+            <FieldInput
+              id="facebook"
+              type="text"
+              name="facebook"
+              label={t(
+                "module.locations.forms.field.label.facebook",
+                "Facebook page"
+              )}
+              isRequired={yupIsFieldRequired("facebook", validationSchema)}
+              settings={{
+                placeholder: t(
+                  "locations.forms.field.placeholder.url",
+                  "https://...."
+                ),
+              }}
+            />
+          </FieldRow>
+          <FieldRow>
+            <FieldInput
+              id="instagram"
+              type="text"
+              name="instagram"
+              label={t(
+                "module.locations.forms.field.label.instagram",
+                "Instagram"
+              )}
+              isRequired={yupIsFieldRequired("instagram", validationSchema)}
+              settings={{
+                placeholder: t(
+                  "locations.forms.field.placeholder.url",
+                  "https://...."
+                ),
+              }}
+            />
+          </FieldRow>
+        </TwoColFieldRow>
+        <TwoColFieldRow>
+          <FieldRow>
+            <FieldInput
+              id="twitter"
+              type="text"
+              name="twitter"
+              label={t("module.locations.forms.field.label.twitter", "Twitter")}
+              isRequired={yupIsFieldRequired("twitter", validationSchema)}
+              settings={{
+                placeholder: t(
+                  "locations.forms.field.placeholder.url",
+                  "https://...."
+                ),
+              }}
+            />
+          </FieldRow>
+          <FieldRow>
+            <FieldInput
+              id="youtube"
+              type="text"
+              name="youtube"
+              label={t("module.locations.forms.field.label.youtube", "YouTube")}
+              isRequired={yupIsFieldRequired("youtube", validationSchema)}
+              settings={{
+                placeholder: t(
+                  "locations.forms.field.placeholder.url",
+                  "https://...."
+                ),
+              }}
+            />
+          </FieldRow>
+        </TwoColFieldRow>
+      </chakra.fieldset>
+      <Divider mt="10" />
+      <chakra.fieldset
+        border="1px solid"
+        borderColor="gray.400"
+        p="4"
+        borderRadius="md"
+        w="100%"
+      >
+        <legend>
+          <chakra.span px="2">
+            {t(
+              "module.locations.forms.field.label.additionalInformation",
+              "Additional Information"
+            )}
+          </chakra.span>
+        </legend>
+        <FieldRow>
+          <FieldInput
+            id="agency"
+            type="text"
+            name="agency"
+            label={t("module.locations.forms.field.label.agency", "Agency")}
+            isRequired={yupIsFieldRequired("agency", validationSchema)}
+            settings={{
+              placeholder: t(
+                "locations.forms.field.placeholder.agency",
+                "Agency"
+              ),
+            }}
+          />
+        </FieldRow>
+
+        <FieldRow>
+          <FieldInput
+            id="eventLocationId"
+            type="text"
+            name="eventLocationId"
+            label={t(
+              "module.locations.forms.field.label.eventLocationId",
+              "berlin.de Event Location ID"
+            )}
+            isRequired={yupIsFieldRequired("eventLocationId", validationSchema)}
+            settings={{
+              placeholder: t(
+                "locations.forms.field.placeholder.eventLocationId",
+                "berlin.de Event Location ID"
+              ),
+            }}
+          />
+        </FieldRow>
+      </chakra.fieldset>
     </>
   );
 };

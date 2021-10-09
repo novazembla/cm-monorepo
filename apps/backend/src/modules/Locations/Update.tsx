@@ -4,6 +4,7 @@ import { Link as RouterLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import pick from "lodash/pick";
 
 import {
   TextErrorMessage,
@@ -69,11 +70,18 @@ export const locationReadAndContentAuthorsQueryGQL = gql`
       description
       address
       contactInfo
+      accessibilityInformation
+      socialMedia
+      geoCodingInfo
+
       offers
       lat
       lng
+      eventLocationId
+      agency
       status
       ownerId
+
       createdAt
       updatedAt
       terms {
@@ -147,6 +155,8 @@ const Update = () => {
   useEffect(() => {
     if (!data || !data.locationRead) return;
 
+    console.log(data?.locationRead, data?.locationRead?.address);
+
     reset({
       ...multiLangJsonToRHFormData(
         filteredOutputByWhitelist(
@@ -164,6 +174,29 @@ const Update = () => {
       heroImage: data.locationRead.heroImage?.id,
       lat: data.locationRead?.lat,
       lng: data.locationRead?.lng,
+      eventLocationId: data.locationRead?.eventLocationId ? parseInt(data.locationRead?.eventLocationId) : undefined,
+      agency: data.locationRead?.agency,
+      ...pick(data?.locationRead?.address, [
+        "co",
+        "street1",
+        "street2",
+        "houseNumber",
+        "city",
+        "postCode",
+      ]),
+      ...pick(data?.locationRead?.contactInfo, [
+        "email1",
+        "email2",
+        "phone1",
+        "phone2",
+      ]),
+      ...pick(data?.locationRead?.socialMedia, [
+        "facebook",
+        "twitter",
+        "instagram",
+        "youtube",
+        "website",
+      ]),
       ...multiLangImageTranslationsJsonRHFormData(
         data.locationRead,
         ["heroImage"],
@@ -171,6 +204,7 @@ const Update = () => {
         config.activeLanguages
       ),
     });
+
   }, [reset, data, config.activeLanguages]);
 
   const onSubmit = async (
@@ -204,12 +238,35 @@ const Update = () => {
             status: newData.status,
             lat: newData.lat,
             lng: newData.lng,
+            eventLocationId: newData.eventLocationId ? parseInt(newData.eventLocationId) : undefined,
+            agency: newData.agency,
             terms: {
               set: mapModulesCheckboxArrayToData(
                 newData,
                 data?.moduleTaxonomies
               ),
             },
+            address: pick(newData, [
+              "co",
+              "street1",
+              "street2",
+              "houseNumber",
+              "city",
+              "postCode",
+            ]),
+            contactInfo: pick(newData, [
+              "email1",
+              "email2",
+              "phone1",
+              "phone2",
+            ]),
+            socialMedia: pick(newData, [
+              "facebook",
+              "twitter",
+              "instagram",
+              "youtube",
+              "website",
+            ]),
             ...heroImage,
             ...filteredOutputByWhitelist(
               multiLangRHFormDataToJson(
@@ -304,6 +361,7 @@ const Update = () => {
 
               {data && Array.isArray(data?.locationRead?.events) && (
                 <Box mt="6">
+                  <Divider mt="10" />
                   <Heading as="h2" mb="3">
                     {t(
                       "module.locations.associatedevents.title",

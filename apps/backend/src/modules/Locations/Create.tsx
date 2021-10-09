@@ -5,6 +5,7 @@ import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { filteredOutputByWhitelist, PublishStatus } from "@culturemap/core";
 import { useQuery, gql } from "@apollo/client";
+import pick from "lodash/pick";
 
 import {
   TextErrorMessage,
@@ -94,12 +95,35 @@ const Create = () => {
           lat: newData.lat,
           lng: newData.lng,
           status: PublishStatus.DRAFT,
+          eventLocationId: newData.eventLocationId ? parseInt(newData.eventLocationId) : undefined,
+          agency: newData.agency,
           terms: {
             connect: mapModulesCheckboxArrayToData(
               newData,
               data?.moduleTaxonomies
             ),
           },
+          address: pick(newData, [
+            "co",
+            "street1",
+            "street2",
+            "houseNumber",
+            "city",
+            "postCode",
+          ]),
+          contactInfo: pick(newData, [
+            "email1",
+            "email2",
+            "phone1",
+            "phone2",
+          ]),
+          socialMedia: pick(newData, [
+            "facebook",
+            "twitter",
+            "instagram",
+            "youtube",
+            "website",
+          ]),
           ...filteredOutputByWhitelist(
             multiLangRHFormDataToJson(
               newData,

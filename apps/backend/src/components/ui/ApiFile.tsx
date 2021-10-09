@@ -17,7 +17,7 @@ export const ApiFile = ({ id, meta, status, allowDownload }: ApiFileProps) => {
   let content;
 
   if (status === FileStatus.UPLOADED) {
-    content = <Box><chakra.span pr="1">{t("apifile.fileUploadedWithFilename", "File uploaded with the file name:")}</chakra.span><b>{meta?.originalFileName}</b>
+    content = <Box><chakra.span pr="1">{t("apifile.fileUploadedWithFilename", "File uploaded and saved with the file name:")}</chakra.span><b>{meta?.originalFileName}</b>
       {allowDownload && <a href={meta?.originalFileUrl}>{t("apifile.linkDownload", "download")}</a>}
     </Box>;
   }

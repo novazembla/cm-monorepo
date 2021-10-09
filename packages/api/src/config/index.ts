@@ -103,6 +103,7 @@ export interface ApiConfig {
   mapOuterBounds: [GeoLocation, GeoLocation];
   geoCodingProvider: Record<CulturemapGeoCodingScopes, string>;
   geoCodingRegions: string[];
+  geoCodingThrottle: number;
 }
 
 export interface ApiConfigOverwrite {
@@ -125,6 +126,7 @@ export interface ApiConfigOverwrite {
   geoCodingProvider?: Record<CulturemapGeoCodingScopes, string>;
   // https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3 country codes
   geoCodingRegions?: string[];
+  geoCodingThrottle?: number;
 }
 
 const db: ApiConfigDB = {
@@ -389,9 +391,10 @@ let apiConfig = {
     },
   ],
   geoCodingProvider: {
-    autocomplete: "komoot",
-    import: "komoot",
+    autocomplete: "here",
+    import: "here",
   },
+  geoCodingThrottle: 500,
   geoCodingRegions: ["DEU"],
 };
 

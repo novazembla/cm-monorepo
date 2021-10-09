@@ -177,12 +177,16 @@ A field whose value is a JSON Web Token (JWT): https://jwt.io/introduction.
 scalar JWT
 
 type Location {
+  accessibilityInformation: JSON
   address: JSON
+  agency: String
   author: User
   contactInfo: JSON
   createdAt: DateTime
   description: JSON
+  eventLocationId: Int
   events: [Event]
+  geoCodingInfo: JSON
   heroImage: Image
   id: Int!
   lat: Float
@@ -190,6 +194,7 @@ type Location {
   offers: JSON
   ownerId: Int!
   slug: JSON
+  socialMedia: JSON
   status: Int!
   terms: [Term]
   title: JSON
@@ -207,15 +212,19 @@ type LocationQueryResult {
 }
 
 input LocationUpsertInput {
+  accessibilityInformation: JSON
   address: JSON
+  agency: String
   contactInfo: JSON
   description: JSON
+  eventLocationId: Int
   heroImage: JSON
   lat: Float
   lng: Float
   offers: JSON
   owner: JSON!
   slug: JSON!
+  socialMedia: JSON
   status: Int!
   terms: JSON
   title: JSON!

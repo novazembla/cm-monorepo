@@ -22,45 +22,44 @@ export class GeoCoderNominatim {
 
     let query = "";
     if (type === "autocomplete") {
-      if (address.street && address.street.trim() !== "")
-        query = `q=${address.street.trim()}`;
+      if (address.street1 && address.street1.trim() !== "")
+        query = `q=${address.street1.trim()}`;
     } else {
       const queryParams = [];
       let street = "";
       let houseNumber = "";
 
       if (address.houseNumber && address.houseNumber.trim() !== "")
-        houseNumber = `${address.houseNumber.trim()}`;
+        houseNumber = `${encodeURIComponent(address.houseNumber.trim())}`;
 
-      if (address.street && address.street.trim() !== "")
-        street = `${address.street.trim()}`;
+      if (address.street1 && address.street1.trim() !== "")
+        street = `${encodeURIComponent(address.street1.trim())}`;
 
       if (address.street2 && address.street2.trim() !== "")
         street = `${street}${
           street.length > 0 ? ", " : ""
-        } ${address.street2.trim()}`;
-
-      if (address.street3 && address.street3.trim() !== "")
-        street = `${street}${
-          street.length > 0 ? ", " : ""
-        } ${address.street3.trim()}`;
+        } ${encodeURIComponent(address.street2.trim())}`;
 
       if (street.length > 0)
         queryParams.push(
           `street=${houseNumber}${houseNumber.length > 0 ? " " : ""}${street}`
         );
 
-      if (address.postcode && address.postcode.trim() !== "")
-        queryParams.push(`postalCode=${address.postcode.trim()}`);
+      if (address.postCode && address.postCode.trim() !== "")
+        queryParams.push(
+          `postalCode=${encodeURIComponent(address.postCode.trim())}`
+        );
 
       if (address.city && address.city.trim() !== "")
-        queryParams.push(`city=${address.city.trim()}`);
+        queryParams.push(`city=${encodeURIComponent(address.city.trim())}`);
 
       if (address.state && address.state.trim() !== "")
-        queryParams.push(`state=${address.state.trim()}`);
+        queryParams.push(`state=${encodeURIComponent(address.state.trim())}`);
 
       if (address.country && address.country.trim() !== "")
-        queryParams.push(`country=${address.country.trim()}`);
+        queryParams.push(
+          `country=${encodeURIComponent(address.country.trim())}`
+        );
 
       query = `qq=${queryParams.join("&")}`;
     }
@@ -107,9 +106,6 @@ export class GeoCoderNominatim {
       logger.debug(err);
     }
 
-    return {
-      geojson: { features: [], type: "FeatureCollection" },
-      count: 0,
-    } as any;
+    return { features: [], type: "FeatureCollection" };
   }
 }

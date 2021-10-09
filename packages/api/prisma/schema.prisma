@@ -54,8 +54,11 @@ model Location {
   slug          Json    
   description   Json   @default("{}")
   address       Json?  @default("{}")
+  accessibilityInformation       Json?  @default("{}")
   contactInfo   Json?  @default("{}")
   offers        Json?  @default("{}")
+  geoCodingInfo Json?  @default("{}")
+  socialMedia   Json?  @default("{}")
 
   visibleFrom   DateTime?
   visibleFromTime   DateTime?
@@ -85,6 +88,7 @@ model Location {
   updatedAt DateTime @default(now()) @updatedAt
 
   eventLocationId  Int? 
+  
   agency      String? 
 
   primaryTypeId    Int?
@@ -120,6 +124,8 @@ model Event {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
+  importedEventId  Int? 
+
   @@index([ownerId], name: "indexEventOwnerId")
 }
 
@@ -129,7 +135,7 @@ model EventDate {
   begin   DateTime
   end     DateTime
   eventId    Int?
-  event      Event?    @relation(fields: [eventId], references: [id])
+  event      Event?    @relation(fields: [eventId], references: [id], onDelete: Cascade)
 }
 
 model Token {

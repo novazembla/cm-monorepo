@@ -74,7 +74,12 @@ export const Location = objectType({
     t.json("description");
     t.json("address");
     t.json("contactInfo");
+    t.json("geoCodingInfo");
+    t.json("accessibilityInformation");
+    t.json("socialMedia");
     t.json("offers");
+    t.int("eventLocationId");
+    t.string("agency");
     t.field("heroImage", {
       type: "Image",
     });
@@ -314,7 +319,11 @@ export const LocationUpsertInput = inputObjectType({
     t.json("description");
     t.json("address");
     t.json("contactInfo");
+    t.json("accessibilityInformation");
+    t.json("socialMedia");
     t.json("offers");
+    t.int("eventLocationId");
+    t.string("agency");
     t.nonNull.json("owner");
     t.float("lat");
     t.float("lng");

@@ -30,6 +30,7 @@ export const importParseInitialCsv = async (file: string, numRows: number) => {
         .pipe(
           parse({
             strictColumnHandling: true,
+            delimiter: ";",
             headers: (hdrs) => {
               const mappedHeaders = hdrs.map((h) => {
                 if (h === "###") {
