@@ -17,7 +17,7 @@ export const FieldRadioOrCheckboxGroup = ({
   options,
   defaultValues,
   isRequired,
-  isDisabled,
+  isDisabled
 }: {
   id: string;
   isRequired?: boolean;

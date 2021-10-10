@@ -48,22 +48,33 @@ const format = winston.format.combine(
 
 const transports: Array<winston.transport> = [new winston.transports.Console()];
 
+transports.push(
+  new winston.transports.File({
+    filename: `./logs/error.log`,
+    level: "error",
+    handleExceptions: true,
+    maxsize: 1048576, // 1MB
+    maxFiles: 8,
+  })
+);
+
+transports.push(
+  new winston.transports.File({
+    filename: `./logs/info.log`,
+    level: "info",
+    handleExceptions: true,
+    maxsize: 1048576, // 1MB
+    maxFiles: 5,
+  })
+);
+
 if (process.env.NODE_ENV && process.env.NODE_ENV !== "production") {
-  transports.push(
-    new winston.transports.File({
-      filename: `./logs/error.log`,
-      level: "error",
-      handleExceptions: true,
-      maxsize: 1048576, // 1MB
-      maxFiles: 2,
-    })
-  );
   transports.push(
     new winston.transports.File({
       filename: `./logs/debug.log`,
       level: "debug",
       maxsize: 1048576, // 1MB
-      maxFiles: 1,
+      maxFiles: 5,
     })
   );
 }

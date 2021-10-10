@@ -845,14 +845,6 @@ async function main() {
                       rndBetween(15, 50)
                     )}`,
                   },
-                  descriptionLocation: {
-                    en: `Location Desription EN: ${keywordSelection} ${lorem.generateWords(
-                      rndBetween(15, 50)
-                    )}`,
-                    de: `Genauere Ortsbeschreibung DE: ${lorem.generateWords(
-                      rndBetween(15, 50)
-                    )}`,
-                  },
 
                   locations: {
                     connect: getRandomElements(locationIds, rndBetween(1, 3)),
@@ -902,7 +894,6 @@ async function main() {
                       "title",
                       "slug",
                       "description",
-                      "descriptionLocation",
                     ]),
                   },
                 });

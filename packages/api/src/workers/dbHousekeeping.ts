@@ -119,6 +119,10 @@ const doChores = async () => {
     }
     postMessage(`[WORKER:dbHousekeeping]: Removed ${files.length} file(s)`);
 
+    // TODO: 
+    // - delete imports older than 3 month
+    // - delete event import logs older than 3 month
+    
     // const models = await prisma.arModel.findMany({
     //   where: {
     //     status: ArModelStatusEnum.DELETED,

@@ -53,10 +53,12 @@ type Event {
   createdAt: DateTime
   dates: [EventDate]
   description: JSON
-  descriptionLocation: JSON
   heroImage: Image
   id: Int!
+  isFree: Boolean
+  isImported: Boolean
   locations: [Location]
+  meta: JSON
   ownerId: Int!
   slug: JSON
   status: Int!
@@ -83,8 +85,9 @@ type EventQueryResult {
 input EventUpsertInput {
   dates: JSON
   description: JSON
-  descriptionLocation: JSON
   heroImage: JSON
+  isFree: Boolean!
+  isImported: Boolean!
   locations: JSON
   owner: JSON!
   slug: JSON!
@@ -544,6 +547,8 @@ type User implements UserBaseNode {
   firstName: String
   id: Int!
   lastName: String
+  ownsConentOnDelete: Boolean
+  ownsEventImports: Boolean
   profileImageId: Int
   role: String
   updatedAt: DateTime
@@ -564,6 +569,8 @@ input UserCreateInput {
   email: String!
   firstName: String!
   lastName: String!
+  ownsConentOnDelete: Boolean!
+  ownsEventImports: Boolean!
   password: String!
   role: String!
   userBanned: Boolean!
@@ -587,6 +594,8 @@ input UserUpdateInput {
   email: String!
   firstName: String!
   lastName: String!
+  ownsConentOnDelete: Boolean!
+  ownsEventImports: Boolean!
   role: String!
   userBanned: Boolean!
 }

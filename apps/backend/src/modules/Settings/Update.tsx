@@ -117,6 +117,10 @@ const Update = () => {
           dispatch(settingsSet(settingInRedux));
 
           successToast();
+          reset({
+            keepValues: true, 
+            keepDefaultValus: true
+          });
         } else {
           setHasFormError(true);
         }

@@ -68,6 +68,8 @@ export const User = objectType({
     t.implements(UserBaseNode);
     t.string("role");
     t.boolean("userBanned");
+    t.boolean("ownsEventImports");
+    t.boolean("ownsConentOnDelete");
     t.date("createdAt");
     t.date("updatedAt");
   },
@@ -252,6 +254,8 @@ export const UserCreateInput = inputObjectType({
     t.nonNull.string("password");
     t.nonNull.string("role");
     t.nonNull.boolean("userBanned");
+    t.nonNull.boolean("ownsEventImports");
+    t.nonNull.boolean("ownsConentOnDelete");
     t.nonNull.boolean("acceptedTerms");
   },
 });
@@ -263,6 +267,8 @@ export const UserUpdateInput = inputObjectType({
     t.nonNull.string("email");
     t.nonNull.string("role");
     t.nonNull.boolean("userBanned");
+    t.nonNull.boolean("ownsEventImports");
+    t.nonNull.boolean("ownsConentOnDelete");
   },
 });
 

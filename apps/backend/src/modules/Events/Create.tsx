@@ -110,14 +110,20 @@ const Create = () => {
               id: appUser.id,
             },
           },
-          locations: {
-            connect: {
-              id: newData.locationId,
-            },
-          },
+          ...(newData.locationId
+            ? {
+                locations: {
+                  connect: {
+                    id: newData.locationId,
+                  },
+                },
+              }
+            : {}),
           dates: {
             create: newData.dates,
           },
+          isFree: !!newData.isFree,
+          isImported: false,
           lat: newData.lat,
           lng: newData.lng,
           status: PublishStatus.DRAFT,
@@ -142,7 +148,7 @@ const Create = () => {
 
         if (!mutationResults.errors) {
           successToast();
-
+          
           setIsNavigatingAway(true);
           router.push(
             `${moduleRootPath}/update/${mutationResults.data?.eventCreate?.id}`

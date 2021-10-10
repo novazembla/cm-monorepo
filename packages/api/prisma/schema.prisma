@@ -20,6 +20,8 @@ model User {
   emailVerified Boolean    @default(false)
   acceptedTerms  Boolean    @default(false)
   userBanned     Boolean    @default(false)
+  ownsEventImports     Boolean    @default(false)
+  ownsConentOnDelete   Boolean    @default(false)
   password       String
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @default(now()) @updatedAt
@@ -100,11 +102,14 @@ model Location {
 
 model Event {
   id            Int    @id @default(autoincrement())
+  hash          String @default("")
   title           Json     
   slug           Json    
   description   Json?  @default("{}")
-  descriptionLocation Json?  @default("{}")
+  meta Json?    @default("{}")
   
+  isFree        Boolean @default(false)
+  isImported        Boolean @default(false)
   locations      Location[]
 
   ownerId     Int    
@@ -124,7 +129,7 @@ model Event {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
-  importedEventId  Int? 
+  importedEventHash  String? 
 
   @@index([ownerId], name: "indexEventOwnerId")
 }
@@ -136,6 +141,15 @@ model EventDate {
   end     DateTime
   eventId    Int?
   event      Event?    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+}
+
+model EventImportLog {
+  id      Int    @id @default(autoincrement())
+  log     Json?    @default("[]") 
+  errors    Json?    @default("[]") 
+  warnings Json?    @default("[]") 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 }
 
 model Token {

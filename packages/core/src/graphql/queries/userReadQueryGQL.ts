@@ -10,6 +10,8 @@ export const userReadQueryGQL = gql`
       emailVerified
       role
       userBanned
+      ownsEventImports
+      ownsConentOnDelete
       createdAt
       updatedAt
     }

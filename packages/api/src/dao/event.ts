@@ -15,12 +15,7 @@ import {
 const prisma = getPrismaClient();
 const apiConfig = getApiConfig();
 
-const eventFullTextKeys = [
-  "title",
-  "slug",
-  "description",
-  "descriptionLocation",
-];
+const eventFullTextKeys = ["title", "slug", "description"];
 
 export const daoEventCheckSlugUnique = async (
   slug: Record<string, string>,
@@ -327,7 +322,7 @@ export const daoEventGetBySlug = async (
   );
 };
 
-export default {
+const defaults = {
   daoEventQuery,
   daoEventQueryFirst,
   daoEventQueryCount,
@@ -340,3 +335,5 @@ export default {
   daoEventSearchQuery,
   daoEventGetDatesById,
 };
+
+export default defaults;

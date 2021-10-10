@@ -76,6 +76,8 @@ const Update = () => {
         "email",
         "role",
         "userBanned",
+        "ownsEventImports",
+        "ownsConentOnDelete",
       ])
     );
   }, [reset, data]);
@@ -108,6 +110,10 @@ const Update = () => {
             );
 
           successToast();
+          reset({
+            keepValues: true, 
+            keepDefaultValus: true
+          });
         } else {
           setHasFormError(true);
         }

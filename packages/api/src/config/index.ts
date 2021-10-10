@@ -104,6 +104,8 @@ export interface ApiConfig {
   geoCodingProvider: Record<CulturemapGeoCodingScopes, string>;
   geoCodingRegions: string[];
   geoCodingThrottle: number;
+  eventImportUrl: string;
+  eventImportScriptName: string;
 }
 
 export interface ApiConfigOverwrite {
@@ -127,8 +129,9 @@ export interface ApiConfigOverwrite {
   // https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3 country codes
   geoCodingRegions?: string[];
   geoCodingThrottle?: number;
+  eventImportUrl?: string;
+  eventImportScriptName?: string;
 }
-
 const db: ApiConfigDB = {
   url: safeGuardVariable(
     logger,
@@ -396,6 +399,8 @@ let apiConfig = {
   },
   geoCodingThrottle: 500,
   geoCodingRegions: ["DEU"],
+  eventImportUrl: "https://www.berlin.de/land/kalender/json.php?c=5",
+  eventImportScriptName: "import.berlin.de.js",
 };
 
 export const updateApiConfig = (aCfg: ApiConfigOverwrite) => {

@@ -15,6 +15,7 @@ import {
 } from "~/components/forms";
 import { MultiLangValue } from "~/components/ui";
 import { useAuthentication } from "~/hooks";
+import { getMultilangSortedList } from "~/utils";
 import { yupIsFieldRequired } from "~/validation";
 
 export const ModuleForm = ({
@@ -305,10 +306,13 @@ export const ModuleForm = ({
                 isRequired={false}
                 label={<MultiLangValue json={taxonomy.name} />}
                 type="checkbox"
-                options={taxonomy.terms.map((term: any) => ({
-                  label: term.name,
-                  key: term.id,
-                }))}
+                options={getMultilangSortedList(
+                  taxonomy.terms.map((term: any) => ({
+                    label: term.name,
+                    key: term.id,
+                  })),
+                  "label"
+                )}
               />
             </FieldRow>
           ))}

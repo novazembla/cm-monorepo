@@ -16,6 +16,8 @@ export const usersQueryGQL = gql`
         emailVerified
         role
         userBanned
+        ownsEventImports
+        ownsConentOnDelete
         createdAt
         updatedAt
       }

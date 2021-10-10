@@ -14,6 +14,7 @@ import {
   Tr,
   Td,
   Th,
+  chakra,
 } from "@chakra-ui/react";
 
 import {
@@ -310,8 +311,8 @@ export const ModuleImportUpdateForm = ({
 
                       return (
                         <Tr key={`col-${index}`}>
-                          <Td pl="0">{col.header}</Td>
-                          <Td pl="0">{col.row}</Td>
+                          <Td pl="0" w="10%" whiteSpace="nowrap" verticalAlign="top">{col.header}</Td>
+                          <Td pl="0" verticalAlign="top" ><chakra.pre fontSize="xs" whiteSpace="pre-wrap">{col.row}</chakra.pre></Td>
                           <Td px="0" w="33.33%" minW="250px">
                             {/* the awful isSubmitting hack forces a full rebuild of the select form field, it would alway jump back to the intitial defaultValue on form submit */}
                             {!isUndefined && data?.importRead && !isSubmitting && (

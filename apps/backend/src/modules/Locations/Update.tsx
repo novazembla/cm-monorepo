@@ -293,7 +293,10 @@ const Update = () => {
 
         if (!errors) {
           successToast();
-          setIsNavigatingAway(true);
+          reset({
+            keepValues: true, 
+            keepDefaultValus: true
+          });
         } else {
           let slugError = multiLangSlugUniqueError(errors, setError);
 

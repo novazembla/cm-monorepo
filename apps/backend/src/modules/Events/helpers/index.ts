@@ -1,3 +1,5 @@
+import { getMultilangSortedList } from "~/utils";
+
 export const mapModulesCheckboxArrayToData = (newData: any, taxonomies: any) => {
 
   if (!newData || !taxonomies) 
@@ -10,7 +12,7 @@ export const mapModulesCheckboxArrayToData = (newData: any, taxonomies: any) => 
     if (!(`tax_${taxonomy.id}` in newData))
       return accTerms;
 
-    return taxonomy?.terms.reduce((selectedTerms: any[], term: any, i: number) => {
+    return getMultilangSortedList(taxonomy?.terms, "name").reduce((selectedTerms: any[], term: any, i: number) => {
       if (!newData[`tax_${taxonomy.id}`][i])
         return selectedTerms;
 
@@ -33,7 +35,7 @@ export const mapDataToModulesCheckboxArray = (data: any, taxonomies: any) => {
 
     return {
       ...accTax,
-      [`tax_${taxonomy.id}`]: taxonomy?.terms.map((term: any) => data.findIndex((t: any) => t.id === term.id) > -1)
+      [`tax_${taxonomy.id}`]: getMultilangSortedList(taxonomy?.terms, "name").map((term: any) => data.findIndex((t: any) => t.id === term.id) > -1)
     }
   }, {});
 }

@@ -21,7 +21,7 @@ import { useTranslation } from "react-i18next";
 import i18n from "i18next";
 
 import { locationsSearchGQL } from "@culturemap/core";
-
+import { yupIsFieldRequired } from "~/validation";
 import {
   FieldMultiLangInput,
   FieldMultiLangTextEditor,
@@ -33,6 +33,7 @@ import {
   FieldRadioOrCheckboxGroup,
   TimeField,
   FieldSingleSelectAutocomplete,
+  FieldSwitch,
 } from "~/components/forms";
 
 import { HiOutlineTrash } from "react-icons/hi";
@@ -40,7 +41,7 @@ import { MdPlusOne } from "react-icons/md";
 
 import { MultiLangValue } from "~/components/ui";
 import { useAuthentication } from "~/hooks";
-import { getMultilangValue } from "~/utils";
+import { getMultilangValue, getMultilangSortedList } from "~/utils";
 
 const isValidDate = (d: any) => {
   if (Object.prototype.toString.call(d) === "[object Date]") {
@@ -138,6 +139,7 @@ export const ModuleForm = ({
             </FieldRow>
           </TwoColFieldRow>
           <Divider mt="10" />
+
           <FieldSingleImage
             id="heroImage"
             name="heroImage"
@@ -208,6 +210,40 @@ export const ModuleForm = ({
           ),
         }}
       />
+      <Divider mt="10" />
+      <TwoColFieldRow>
+        <FieldRow>
+          <FieldSwitch
+            name="isFree"
+            label={
+              <span>
+                {t(
+                  "module.events.forms.field.label.isFree",
+                  "This event is free"
+                )}
+              </span>
+            }
+            isRequired={yupIsFieldRequired("isFree", validationSchema)}
+          />
+        </FieldRow>
+        {action === "update" && (
+          <FieldRow>
+            <FieldSwitch
+              name="isImported"
+              label={
+                <span>
+                  {t(
+                    "module.events.forms.field.label.isImported",
+                    "This event is automatically imported and updated"
+                  )}
+                </span>
+              }
+              isRequired={yupIsFieldRequired("isImported", validationSchema)}
+            />
+          </FieldRow>
+        )}
+      </TwoColFieldRow>
+
       {updateActions}
 
       {data && data?.moduleTaxonomies && (
@@ -221,10 +257,13 @@ export const ModuleForm = ({
                 isRequired={false}
                 label={<MultiLangValue json={taxonomy.name} />}
                 type="checkbox"
-                options={taxonomy.terms.map((term: any) => ({
-                  label: term.name,
-                  key: term.id,
-                }))}
+                options={getMultilangSortedList(
+                  taxonomy.terms.map((term: any) => ({
+                    label: term.name,
+                    key: term.id,
+                  })),
+                  "label"
+                )}
               />
             </FieldRow>
           ))}
@@ -237,7 +276,7 @@ export const ModuleForm = ({
           name="locationId"
           id="locationId"
           label={t("forms.field.label.location", "Location")}
-          isRequired={true}
+          isRequired={false}
           item={
             data?.eventRead?.locations && data?.eventRead?.locations?.length > 0
               ? {
@@ -278,24 +317,6 @@ export const ModuleForm = ({
         }}
       />
 
-      <FieldMultiLangTextEditor
-        name="descriptionLocation"
-        id="descriptionLocation"
-        type="basic"
-        label={t(
-          "module.events.forms.event.field.label.descriptionLocation",
-          "Event location Information"
-        )}
-        isRequired={false}
-        settings={{
-          defaultValues: data?.eventRead?.descriptionLocation,
-          maxLength: 500,
-          placeholder: t(
-            "module.events.forms.event.field.placeholder.descriptionLocation",
-            "Event loaction information (room, access, address, directions, ...)"
-          ),
-        }}
-      />
       <Divider mt="10" />
 
       <Box>
@@ -355,6 +376,10 @@ export const ModuleForm = ({
                         field: { onChange, onBlur, value, name, ref },
                       }) => {
                         const date = isValidDate(value) ? value : field.date;
+                        if (date instanceof Date) {
+                          date.setHours(0, 0, 0);
+                        }
+
                         return (
                           <DateSingleInput
                             onDateChange={(date) => {
@@ -437,6 +462,15 @@ export const ModuleForm = ({
                                 const date = getValues(`dates[${index}].date`);
                                 const hm = time.split(":");
                                 if (isValidDate(date)) {
+                                  console.log(
+                                    new Date(
+                                      date.setHours(
+                                        parseInt(hm[0]),
+                                        parseInt(hm[1]),
+                                        0
+                                      )
+                                    )
+                                  );
                                   onChange(
                                     new Date(
                                       date.setHours(

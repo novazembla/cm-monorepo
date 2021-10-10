@@ -15,7 +15,9 @@ export const eventsQueryGQL = gql`
         slug
         status
         description
-        descriptionLocation
+        isFree
+        isImported
+        meta
         dates {
           id
           date
@@ -37,7 +39,9 @@ export const eventReadGQL = gql`
       slug
       status
       description
-      descriptionLocation
+      isFree
+      isImported
+      meta
       dates {
         id
         date

@@ -1,4 +1,4 @@
-import { string, object, number, mixed } from "yup";
+import { string, object, number, mixed, boolean } from "yup";
 
 import { activeLanguages, defaultLanguage } from "~/config";
 
@@ -16,15 +16,15 @@ export const ModuleEventCreateSchema = object().shape(
         lang === defaultLanguage
           ? string().nonEmptyHtml({ max: 1000 }).required()
           : string().html({ max: 1000 }),
-      [`descriptionLocation_${lang}`]: string().html({max: 500}),
-      
-        
+      [`descriptionLocation_${lang}`]: string().html({ max: 500 }),
     }),
     {
       ownerId: number(),
+      isImported: boolean(),
       // t("validation.slug.chooselocation", "Please choose a location")
-      locationId: number().typeError("validation.slug.chooselocation").required(),
+      locationId: mixed(),
       status: number(),
+      isFree: boolean(),
     }
   )
 );

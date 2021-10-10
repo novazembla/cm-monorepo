@@ -205,6 +205,10 @@ const Update = () => {
 
         if (!errors) {
           successToast();
+          reset({
+            keepValues: true, 
+            keepDefaultValus: true
+          });
         } else {
           let slugError = multiLangSlugUniqueError(errors, setError);
 

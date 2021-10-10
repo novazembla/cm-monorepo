@@ -57,8 +57,9 @@ export interface NexusGenInputs {
   EventUpsertInput: { // input type
     dates?: NexusGenScalars['JSON'] | null; // JSON
     description?: NexusGenScalars['JSON'] | null; // JSON
-    descriptionLocation?: NexusGenScalars['JSON'] | null; // JSON
     heroImage?: NexusGenScalars['JSON'] | null; // JSON
+    isFree: boolean; // Boolean!
+    isImported: boolean; // Boolean!
     locations?: NexusGenScalars['JSON'] | null; // JSON
     owner: NexusGenScalars['JSON']; // JSON!
     slug: NexusGenScalars['JSON']; // JSON!
@@ -171,6 +172,8 @@ export interface NexusGenInputs {
     email: string; // String!
     firstName: string; // String!
     lastName: string; // String!
+    ownsConentOnDelete: boolean; // Boolean!
+    ownsEventImports: boolean; // Boolean!
     password: string; // String!
     role: string; // String!
     userBanned: boolean; // Boolean!
@@ -191,6 +194,8 @@ export interface NexusGenInputs {
     email: string; // String!
     firstName: string; // String!
     lastName: string; // String!
+    ownsConentOnDelete: boolean; // Boolean!
+    ownsEventImports: boolean; // Boolean!
     role: string; // String!
     userBanned: boolean; // Boolean!
   }
@@ -241,10 +246,12 @@ export interface NexusGenObjects {
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
     dates?: Array<NexusGenRootTypes['EventDate'] | null> | null; // [EventDate]
     description?: NexusGenScalars['JSON'] | null; // JSON
-    descriptionLocation?: NexusGenScalars['JSON'] | null; // JSON
     heroImage?: NexusGenRootTypes['Image'] | null; // Image
     id: number; // Int!
+    isFree?: boolean | null; // Boolean
+    isImported?: boolean | null; // Boolean
     locations?: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
+    meta?: NexusGenScalars['JSON'] | null; // JSON
     ownerId: number; // Int!
     slug?: NexusGenScalars['JSON'] | null; // JSON
     status: number; // Int!
@@ -474,6 +481,8 @@ export interface NexusGenObjects {
     firstName?: string | null; // String
     id: number; // Int!
     lastName?: string | null; // String
+    ownsConentOnDelete?: boolean | null; // Boolean
+    ownsEventImports?: boolean | null; // Boolean
     profileImageId?: number | null; // Int
     role?: string | null; // String
     updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
@@ -527,10 +536,12 @@ export interface NexusGenFieldTypes {
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
     dates: Array<NexusGenRootTypes['EventDate'] | null> | null; // [EventDate]
     description: NexusGenScalars['JSON'] | null; // JSON
-    descriptionLocation: NexusGenScalars['JSON'] | null; // JSON
     heroImage: NexusGenRootTypes['Image'] | null; // Image
     id: number; // Int!
+    isFree: boolean | null; // Boolean
+    isImported: boolean | null; // Boolean
     locations: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
+    meta: NexusGenScalars['JSON'] | null; // JSON
     ownerId: number; // Int!
     slug: NexusGenScalars['JSON'] | null; // JSON
     status: number; // Int!
@@ -842,6 +853,8 @@ export interface NexusGenFieldTypes {
     firstName: string | null; // String
     id: number; // Int!
     lastName: string | null; // String
+    ownsConentOnDelete: boolean | null; // Boolean
+    ownsEventImports: boolean | null; // Boolean
     profileImageId: number | null; // Int
     role: string | null; // String
     updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
@@ -892,10 +905,12 @@ export interface NexusGenFieldTypeNames {
     createdAt: 'DateTime'
     dates: 'EventDate'
     description: 'JSON'
-    descriptionLocation: 'JSON'
     heroImage: 'Image'
     id: 'Int'
+    isFree: 'Boolean'
+    isImported: 'Boolean'
     locations: 'Location'
+    meta: 'JSON'
     ownerId: 'Int'
     slug: 'JSON'
     status: 'Int'
@@ -1207,6 +1222,8 @@ export interface NexusGenFieldTypeNames {
     firstName: 'String'
     id: 'Int'
     lastName: 'String'
+    ownsConentOnDelete: 'Boolean'
+    ownsEventImports: 'Boolean'
     profileImageId: 'Int'
     role: 'String'
     updatedAt: 'DateTime'

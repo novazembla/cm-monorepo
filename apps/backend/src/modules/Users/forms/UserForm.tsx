@@ -10,7 +10,17 @@ import { useFormContext } from "react-hook-form";
 
 import { yupIsFieldRequired } from "~/validation";
 
-export const UserForm = ({ data, errors, action, validationSchema }: { data?: any; errors?: any; validationSchema: any; action: "create" | "update" }) => {
+export const UserForm = ({
+  data,
+  errors,
+  action,
+  validationSchema,
+}: {
+  data?: any;
+  errors?: any;
+  validationSchema: any;
+  action: "create" | "update";
+}) => {
   const { t } = useTranslation();
   const { watch } = useFormContext();
 
@@ -28,10 +38,7 @@ export const UserForm = ({ data, errors, action, validationSchema }: { data?: an
               "module.users.forms.update.field.label.firstName",
               "First Name"
             )}
-            isRequired={yupIsFieldRequired(
-              "firstName",
-              validationSchema
-            )}
+            isRequired={yupIsFieldRequired("firstName", validationSchema)}
             settings={{
               // defaultValue: data.abc.key
               placeholder: t(
@@ -111,64 +118,109 @@ export const UserForm = ({ data, errors, action, validationSchema }: { data?: an
           }}
         />
       </FieldRow>
-      {action === "create" && <>
-        <FieldRow>
-          <FieldInput
-            name="password"
-            id="password"
-            type="password"
-            label={t(
-              "module.users.forms.create.field.label.password",
-              "Password"
-            )}
-            isRequired={yupIsFieldRequired("password",validationSchema)}
-            settings={{
-              autoComplete: "new-password",
-              placeholder: t(
-                "module.users.forms.create.field.placeholder.password",
-                "Please enter the user's initial password"
-              ),
-            }}
-          />
-        </FieldRow>
+      {action === "create" && (
+        <>
+          <FieldRow>
+            <FieldInput
+              name="password"
+              id="password"
+              type="password"
+              label={t(
+                "module.users.forms.create.field.label.password",
+                "Password"
+              )}
+              isRequired={yupIsFieldRequired("password", validationSchema)}
+              settings={{
+                autoComplete: "new-password",
+                placeholder: t(
+                  "module.users.forms.create.field.placeholder.password",
+                  "Please enter the user's initial password"
+                ),
+              }}
+            />
+          </FieldRow>
 
-        <FieldRow>
-          <FieldInput
-            name="confirmPassword"
-            id="confirmPassword"
-            type="password"
-            label={t(
-              "module.users.forms.create.field.label.passwordConfirmation",
-              "Password confirmation"
-            )}
-            isRequired={yupIsFieldRequired("confirmPassword", validationSchema)}
-            settings={{
-              autoComplete: "new-password",
-              placeholder: t(
-                "module.users.forms.create.field.placeholder.passwordConfirmation",
-                "Please confirm the user's initial password"
-              ),
-            }}
-          />
-        </FieldRow>
-      
-      
-      </>}
-      {action === "update" && <FieldRow isDangerZone={userBanned? t("module.users.forms.messageUserBanned", "The user is/will be banned on the platform"):undefined}>
+          <FieldRow>
+            <FieldInput
+              name="confirmPassword"
+              id="confirmPassword"
+              type="password"
+              label={t(
+                "module.users.forms.create.field.label.passwordConfirmation",
+                "Password confirmation"
+              )}
+              isRequired={yupIsFieldRequired(
+                "confirmPassword",
+                validationSchema
+              )}
+              settings={{
+                autoComplete: "new-password",
+                placeholder: t(
+                  "module.users.forms.create.field.placeholder.passwordConfirmation",
+                  "Please confirm the user's initial password"
+                ),
+              }}
+            />
+          </FieldRow>
+        </>
+      )}
+
+      <FieldRow>
         <FieldSwitch
-          name="userBanned"
+          name="ownsEventImports"
           label={
             <span>
               {t(
-                "module.users.forms.update.field.label.userBanned",
-                "Ban user on the platform"
+                "module.users.forms.update.field.label.ownsEventImports",
+                "Owns newly created imported events"
               )}
             </span>
           }
-          colorScheme="red"
-          isRequired={yupIsFieldRequired("userBanned", validationSchema)}
+          isRequired={yupIsFieldRequired("ownsEventImports", validationSchema)}
         />
-      </FieldRow>}
+      </FieldRow>
+
+      <FieldRow>
+        <FieldSwitch
+          name="ownsConentOnDelete"
+          label={
+            <span>
+              {t(
+                "module.users.forms.update.field.label.ownsConentOnDelete",
+                "This user will take over ownership of deleted users' content"
+              )}
+            </span>
+          }
+          isRequired={yupIsFieldRequired("ownsConentOnDelete", validationSchema)}
+        />
+      </FieldRow>
+
+      {action === "update" && (
+        <FieldRow
+          isDangerZone={
+            userBanned
+              ? t(
+                  "module.users.forms.messageUserBanned",
+                  "The user is/will be banned on the platform"
+                )
+              : undefined
+          }
+        >
+          <FieldSwitch
+            name="userBanned"
+            label={
+              <span>
+                {t(
+                  "module.users.forms.update.field.label.userBanned",
+                  "Ban user on the platform"
+                )}
+              </span>
+            }
+            colorScheme="red"
+            isRequired={yupIsFieldRequired("userBanned", validationSchema)}
+          />
+        </FieldRow>
+      )}
     </>
   );
 };

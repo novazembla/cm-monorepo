@@ -53,8 +53,10 @@ export const eventReadAndContentAuthorsQueryGQL = gql`
       title
       slug
       description
-      descriptionLocation
       status
+      isFree
+      isImported
+      meta
       ownerId
       createdAt
       updatedAt
@@ -126,6 +128,7 @@ const Update = () => {
     resolver: yupResolver(ModuleEventUpdateSchema),
     defaultValues: {
       dates: [],
+      locationId: undefined,
     },
   });
 
@@ -154,9 +157,14 @@ const Update = () => {
 
     return [];
   };
-
+  
   useEffect(() => {
     if (!data || !data.eventRead) return;
+
+    console.log(mapDataToModulesCheckboxArray(
+      data.eventRead.terms,
+      data.moduleTaxonomies
+    ), data.eventRead.terms)
 
     reset({
       ...multiLangJsonToRHFormData(
@@ -172,12 +180,14 @@ const Update = () => {
         data.eventRead.terms,
         data.moduleTaxonomies
       ),
+      isFree: !!data.eventRead.isFree,
+      isImported: !!data.eventRead.isImported,
       date: new Date("12/20/2021"),
       dates: parseIncomingDates(data?.eventRead?.dates),
       locationId:
         data?.eventRead?.locations && data?.eventRead?.locations.length
           ? data?.eventRead?.locations[0].id
-          : undefined,
+          : 0,
       heroImage: data.eventRead.heroImage?.id,
       ...multiLangImageTranslationsJsonRHFormData(
         data.eventRead,
@@ -216,13 +226,21 @@ const Update = () => {
                 id: newData.ownerId,
               },
             },
-            locations: {
-              set: [
-                {
-                  id: newData.locationId,
+            ...(newData.locationId
+              ? {
+                  locations: {
+                    set: {
+                      id: newData.locationId,
+                    },
+                  },
+                }
+              : {
+                locations: {
+                  set: [],
                 },
-              ],
-            },
+              }),
+            isFree: !!newData.isFree,
+            isImported: !!newData.isImported,
             dates: newData.dates,
             status: newData.status,
             terms: {
@@ -255,8 +273,13 @@ const Update = () => {
           )
         );
 
+        
         if (!errors) {
           successToast();
+          // reset({
+          //   keepValues: true, 
+          //   keepDefaultValus: true
+          // });
         } else {
           let slugError = multiLangSlugUniqueError(errors, setError);
 

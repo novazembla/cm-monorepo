@@ -62,6 +62,7 @@
     "multer": "^1.4.3",
     "nanoid": "^3.1.23",
     "nodemailer": "^6.6.3",
+    "object-hash": "^2.2.0",
     "p-map": "^5.1.0",
     "passport": "^0.5.0",
     "passport-jwt": "^4.0.0",
@@ -74,6 +75,7 @@
   },
   "devDependencies": {
     "@types/dedent": "^0.7.0",
+    "@types/object-hash": "^2.2.1",
     "prisma": "^3.1.1"
   },
   "prisma": {

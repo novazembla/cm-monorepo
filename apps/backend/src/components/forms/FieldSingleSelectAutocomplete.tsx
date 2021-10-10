@@ -223,6 +223,7 @@ export const FieldSingleSelectAutocomplete = ({
             <Input
               {...getInputProps()}
               placeholder={settings?.placeholder ?? ""}
+              h="50px"
             />
           </Box>
           <Box ref={popperRef} zIndex={1000}>

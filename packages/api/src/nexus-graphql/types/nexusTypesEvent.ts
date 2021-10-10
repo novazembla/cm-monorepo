@@ -77,7 +77,9 @@ export const Event = objectType({
       },
     });
     t.json("description");
-    t.json("descriptionLocation");
+    t.json("meta");
+    t.boolean("isFree");
+    t.boolean("isImported");
 
     t.list.field("dates", {
       type: "EventDate",
@@ -336,8 +338,9 @@ export const EventUpsertInput = inputObjectType({
     t.nonNull.json("title");
     t.nonNull.json("slug");
     t.nonNull.int("status");
+    t.nonNull.boolean("isFree");
+    t.nonNull.boolean("isImported");
     t.json("description");
-    t.json("descriptionLocation");
     t.nonNull.json("owner");
     t.json("terms");
     t.json("dates");

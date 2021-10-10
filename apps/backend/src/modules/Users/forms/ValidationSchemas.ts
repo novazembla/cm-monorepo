@@ -1,14 +1,14 @@
-import { string, object, ref } from "yup";
+import { string, object, ref, boolean } from "yup";
+
 import { passwordMinimumLength } from "~/config";
 
 export const ModuleUsersUpdateSchema = object().shape({
   firstName: string().required(),
   lastName: string().required(),
-  email: string()
-    .required()
-    .email(),
-  role: string()
-    .required()  
+  email: string().required().email(),
+  role: string().required(),
+  ownsEventImports: boolean(),
+  ownsConentOnDelete: boolean(),
 });
 
 export const ModuleUsersCreateSchema = ModuleUsersUpdateSchema.concat(
@@ -17,7 +17,9 @@ export const ModuleUsersCreateSchema = ModuleUsersUpdateSchema.concat(
     confirmPassword: string()
       .required()
       // t("module.users.forms.create.field.confirmPasswordNoMatch", "The passwords do not match")
-      .oneOf([ref("password"), null], "module.users.forms.create.field.confirmPasswordNoMatch"),
-  
+      .oneOf(
+        [ref("password"), null],
+        "module.users.forms.create.field.confirmPasswordNoMatch"
+      ),
   })
 );
