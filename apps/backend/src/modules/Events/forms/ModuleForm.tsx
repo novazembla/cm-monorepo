@@ -462,15 +462,6 @@ export const ModuleForm = ({
                                 const date = getValues(`dates[${index}].date`);
                                 const hm = time.split(":");
                                 if (isValidDate(date)) {
-                                  console.log(
-                                    new Date(
-                                      date.setHours(
-                                        parseInt(hm[0]),
-                                        parseInt(hm[1]),
-                                        0
-                                      )
-                                    )
-                                  );
                                   onChange(
                                     new Date(
                                       date.setHours(

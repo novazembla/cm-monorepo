@@ -223,7 +223,6 @@ const Logs = () => {
         )
       : 0;
 
-  console.log(data);
   return (
     <>
       <ModuleSubNav breadcrumb={breadcrumb} buttonList={buttonList} />

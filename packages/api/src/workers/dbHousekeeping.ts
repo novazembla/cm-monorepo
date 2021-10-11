@@ -119,44 +119,66 @@ const doChores = async () => {
     }
     postMessage(`[WORKER:dbHousekeeping]: Removed ${files.length} file(s)`);
 
-    // TODO: 
-    // - delete imports older than 3 month
-    // - delete event import logs older than 3 month
-    
-    // const models = await prisma.arModel.findMany({
-    //   where: {
-    //     status: ArModelStatusEnum.DELETED,
-    //   },
-    //   take: 10,
-    //   select: {
-    //     id: true,
-    //     meta: true,
-    //   },
-    // });
+    // delete event import logs older than 120 days
+    const eventImportEventLogCleanup = await prisma.eventImportLog.deleteMany({
+      where: {
+        updatedAt: {
+          lt: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 120),
+        },
+      },
+    });
 
-    // if (models && models.length > 0) {
-    //   await Promise.all(
-    //     models.map(async (model) => {
-    //       if (model?.meta) {
-    //         const meta = model?.meta as any;
-    //         try {
-    //           unlinkSync(`${meta.originalFilePath}`);
+    postMessage(
+      `[WORKER:dbHousekeeping]: Deleted ${eventImportEventLogCleanup.count} expired event import logs`
+    );
 
-    //           await prisma.arModel.delete({
-    //             where: {
-    //               id: model.id,
-    //             },
-    //           });
-    //         } catch (err: any) {
-    //           postMessage(`Error ${err.message}`);
-    //         }
-    //       }
-    //     })
-    //   );
-    // }
-    // postMessage(
-    //   `[WORKER:dbHousekeeping]: Removed ${models.length} models(s) and their files`
-    // );
+    const importsToDelete = await prisma.import.findMany({
+      where: {
+        updatedAt: {
+          lt: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 60),
+        },
+      },
+      include: {
+        file: true,
+      },
+    });
+
+    if (importsToDelete && importsToDelete.length) {
+      const fileIds: number[] = importsToDelete.reduce((acc, imp) => {
+        if (imp?.file && imp?.file?.id) {
+          acc.push(imp?.file?.id);
+        }
+        return acc;
+      }, [] as number[]);
+
+      if (fileIds.length > 0) {
+        await prisma.file.updateMany({
+          data: {
+            status: FileStatus.DELETED,
+          },
+          where: {
+            id: {
+              in: fileIds,
+            },
+          },
+        });
+        postMessage(
+          `[WORKER:dbHousekeeping]: Sheduled ${fileIds.length} uploaded import files to be deleted`
+        );
+      }
+
+      const importCleanup = await prisma.import.deleteMany({
+        where: {
+          updatedAt: {
+            lt: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 60),
+          },
+        },
+      });
+
+      postMessage(
+        `[WORKER:dbHousekeeping]: Deleted ${importCleanup.count} expired import(s)`
+      );
+    }
   } catch (Err: any) {
     postMessage(
       `[WORKER:dbHousekeeping]: Failed to run worker. ${Err.name} ${Err.message}`

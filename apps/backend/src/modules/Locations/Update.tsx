@@ -155,8 +155,6 @@ const Update = () => {
   useEffect(() => {
     if (!data || !data.locationRead) return;
 
-    console.log(data?.locationRead, data?.locationRead?.address);
-
     reset({
       ...multiLangJsonToRHFormData(
         filteredOutputByWhitelist(

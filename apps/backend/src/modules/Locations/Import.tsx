@@ -194,7 +194,6 @@ const Import = () => {
 
       showDelete: true,
       canDelete: (cell, appUser) => {
-        console.log((cell?.row?.original as any).status);
         return (
           (appUser?.can("locationDelete") ||
             (appUser.can("locationDeleteOwn") &&

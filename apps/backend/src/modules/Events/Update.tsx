@@ -161,14 +161,6 @@ const Update = () => {
   useEffect(() => {
     if (!data || !data.eventRead) return;
 
-    console.log(
-      mapDataToModulesCheckboxArray(
-        data.eventRead.terms,
-        data.moduleTaxonomies
-      ),
-      data.eventRead.terms
-    );
-
     reset({
       ...multiLangJsonToRHFormData(
         filteredOutputByWhitelist(
