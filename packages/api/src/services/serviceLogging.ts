@@ -10,7 +10,7 @@ const levels = {
 };
 
 const getLogLevel = () =>
-  process?.env?.NODE_ENV === "development" ? "debug" : "warn";
+  process?.env?.NODE_ENV === "development" ? "debug" : "info";
 
 const colors = {
   error: "red",

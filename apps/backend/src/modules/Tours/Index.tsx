@@ -101,11 +101,6 @@ const Index = () => {
       accessor: "title",
     } as AdminTableColumn,
     {
-      Cell: AdminTableMultiLangCell,
-      Header: t("table.label.slug", "Slug"),
-      accessor: "slug",
-    } as AdminTableColumn,
-    {
       Header: t("tours.fields.label.tourStopCount", "Tour Stops"),
       accessor: "tourStopCount",
       isNumeric: true,

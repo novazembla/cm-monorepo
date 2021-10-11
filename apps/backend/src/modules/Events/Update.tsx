@@ -157,14 +157,17 @@ const Update = () => {
 
     return [];
   };
-  
+
   useEffect(() => {
     if (!data || !data.eventRead) return;
 
-    console.log(mapDataToModulesCheckboxArray(
-      data.eventRead.terms,
-      data.moduleTaxonomies
-    ), data.eventRead.terms)
+    console.log(
+      mapDataToModulesCheckboxArray(
+        data.eventRead.terms,
+        data.moduleTaxonomies
+      ),
+      data.eventRead.terms
+    );
 
     reset({
       ...multiLangJsonToRHFormData(
@@ -235,10 +238,10 @@ const Update = () => {
                   },
                 }
               : {
-                locations: {
-                  set: [],
-                },
-              }),
+                  locations: {
+                    set: [],
+                  },
+                }),
             isFree: !!newData.isFree,
             isImported: !!newData.isImported,
             dates: newData.dates,
@@ -273,13 +276,15 @@ const Update = () => {
           )
         );
 
-        
         if (!errors) {
           successToast();
-          // reset({
-          //   keepValues: true, 
-          //   keepDefaultValus: true
-          // });
+          reset(
+            {},
+            {
+              keepValues: true,
+              keepDefaultValues: true,
+            }
+          );
         } else {
           let slugError = multiLangSlugUniqueError(errors, setError);
 

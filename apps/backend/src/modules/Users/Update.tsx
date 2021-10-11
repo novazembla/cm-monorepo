@@ -110,10 +110,13 @@ const Update = () => {
             );
 
           successToast();
-          reset({
-            keepValues: true, 
-            keepDefaultValus: true
-          });
+          reset(
+            {},
+            {
+              keepValues: true,
+              keepDefaultValues: true,
+            }
+          );
         } else {
           setHasFormError(true);
         }

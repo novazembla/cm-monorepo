@@ -142,7 +142,7 @@ const eventCategories = [
   ["Tanz", "Dance"],
   ["Klassische Musik", "Classical Music"],
   ["Moderne Musik", "Modern Music"],
-  ["Expreimentelle Musik", "Experimental Music"],
+  ["Experimentelle Musik", "Experimental Music"],
   ["Lesung", "Lecture"],
   ["Workshop", "Workshop"],
   ["Ausstellungen", "Exhibitions"],

@@ -108,10 +108,13 @@ const UpdateTerm = () => {
 
         if (!errors) {
           successToast();
-          reset({
-            keepValues: true, 
-            keepDefaultValus: true
-          });
+          reset(
+            {},
+            {
+              keepValues: true,
+              keepDefaultValues: true,
+            }
+          );
         } else {
           let slugError = multiLangSlugUniqueError(errors, setError);
 

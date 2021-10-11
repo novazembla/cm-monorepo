@@ -118,11 +118,6 @@ const Index = () => {
       accessor: "title",
     } as AdminTableColumn,
     {
-      Cell: AdminTableMultiLangCell,
-      Header: t("table.label.slug", "Slug"),
-      accessor: "slug",
-    } as AdminTableColumn,
-    {
       Cell: AdminTableActionCell,
       Header: t("table.label.actions", "Actions"),
       isStickyToTheRight: true,

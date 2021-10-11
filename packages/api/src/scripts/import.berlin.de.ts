@@ -93,15 +93,30 @@ const saveImportLog = async (prisma: Prisma.PrismaClient) => {
   }
 };
 
+const locations: Record<string, Prisma.Location | null> = {};
+
 const findLocationByEventLocationId = async (
   prisma: Prisma.PrismaClient,
-  eventLocationId: number
+  eventLocationId: number,
+  name: string
 ): Promise<Prisma.Location | null> => {
-  return prisma.location.findFirst({
+  if (eventLocationId.toString() in locations)
+    return locations[eventLocationId.toString()];
+
+  const location = await prisma.location.findFirst({
     where: {
       eventLocationId,
     },
   });
+
+  if (!location) {
+    warnings.push(
+      `Could not find matching location in database. Please ensure that one of the locations has the correct event location id For berlin.de Veranstaltungsort id: ${eventLocationId}, Veranstaltungsort Name: "${name}"`
+    );
+  }
+
+  locations[eventLocationId.toString()] = location;
+  return location;
 };
 
 const extractFullText = (data: any) => {
@@ -115,6 +130,15 @@ const extractFullText = (data: any) => {
   }
   ${data?.meta?.veranstalter?.name} ${data?.meta?.veranstalter?.strasse}
 `;
+};
+
+const convertToHtml = (str: string) => {
+  let out = str.replace(/\r\n/g, "\n");
+  out = out.replace(/\r/g, "\n");
+
+  return (
+    "<p>" + out.replace(/\n{2,}/g, "</p><p>").replace(/\n/g, "<br>") + "</p>"
+  );
 };
 
 const findEventOwner = async (
@@ -287,6 +311,9 @@ const doChores = async () => {
                 where: {
                   importedEventHash: eventHash,
                 },
+                include: {
+                  locations: true,
+                },
               });
 
               const locationId =
@@ -296,18 +323,11 @@ const doChores = async () => {
 
               const location = await findLocationByEventLocationId(
                 prisma,
-                locationId
+                locationId,
+                response?.data?.veranstaltungsorte[
+                  event.event_veranstaltungsort_id
+                ]?.name
               );
-
-              if (!location) {
-                warnings.push(
-                  `Could not find matching location in database. Please ensure that one of the locations has the correct event location id For berlin.de Veranstaltungsort id: ${locationId}, Veranstaltungsort Name: "${
-                    response?.data?.veranstaltungsorte[
-                      event.event_veranstaltungsort_id
-                    ]?.name
-                  }"`
-                );
-              }
 
               let dates = [];
               today = getTodayInCurrentTZ();
@@ -319,34 +339,25 @@ const doChores = async () => {
                 dates = dates.filter((dF) => new Date(dF.tag_von) >= today);
               }
 
+              let mappedIds = [];
               let terms = {};
               if (
                 event.kategorie_ids &&
                 Object.keys(event.kategorie_ids).length > 0
               ) {
-                const mappedIds = Object.keys(event.kategorie_ids).reduce(
+                mappedIds = Object.keys(event.kategorie_ids).reduce(
                   (agg, kKey) => {
                     if (eventCategories[kKey]) agg.push(eventCategories[kKey]);
                     return agg;
                   },
                   [] as any
                 );
-
-                if (mappedIds.length > 0) {
-                  terms = {
-                    terms: {
-                      connect: mappedIds.map((id: number) => ({
-                        id,
-                      })),
-                    },
-                  };
-                }
               }
 
               const sharedData = {
                 description: {
-                  de: event.event_beschreibung_de,
-                  en: event.event_beschreibung_en,
+                  de: convertToHtml(event.event_beschreibung_de),
+                  en: convertToHtml(event.event_beschreibung_en),
                 },
                 title: {
                   de: event.event_titel_de,
@@ -364,6 +375,7 @@ const doChores = async () => {
                   }`,
                 },
                 meta: {
+                  event,
                   veranstalter:
                     response?.data?.veranstalter && event?.event_veranstalter_id
                       ? response?.data?.veranstalter[
@@ -381,24 +393,25 @@ const doChores = async () => {
                 } as any,
                 isFree: event?.event_ist_gratis === "1",
                 isImported: true,
-                ...terms,
-                ...(location
-                  ? {
-                      locations: {
-                        connect: {
-                          id: location.id,
-                        },
-                      },
-                    }
-                  : {}),
               };
 
               const datesForDb = prepareDatesForDb(dates);
 
               if (!eventInDb) {
                 if (dates.length > 0) {
+                  if (mappedIds.length > 0) {
+                    terms = {
+                      terms: {
+                        connect: mappedIds.map((id: number) => ({
+                          id,
+                        })),
+                      },
+                    };
+                  }
+
                   const data = {
                     ...sharedData,
+                    ...terms,
                     dates: {
                       create: datesForDb,
                     },
@@ -409,6 +422,15 @@ const doChores = async () => {
                         id: eventOwner.id,
                       },
                     },
+                    ...(location
+                      ? {
+                          locations: {
+                            connect: {
+                              id: location.id,
+                            },
+                          },
+                        }
+                      : {}),
                   };
 
                   eventInDb = await prisma.event.create({
@@ -424,59 +446,105 @@ const doChores = async () => {
                     );
                   }
                 } else {
-                  warnings.push(
+                  log.push(
                     `Skipped creation of new event as event with event_id ${event?.event_id} has got no upcomming dates`
                   );
                 }
               } else {
-                log.push(`Found event in database with ID: ${eventInDb?.id}`);
-
                 if (!eventInDb.isImported) {
                   log.push(
                     `Skipped event ID: ${eventInDb?.id} (berlin.de id: ${event.event_id}) as isImported is set to false`
                   );
                 } else {
-                  let skip = false;
-                  if (eventInDb.meta.lastUpdate) {
-                    const updated = new Date(eventInDb.meta.lastUpdate);
-                    const modified = new Date(
-                      new Date().setTime(event.event_last_mod)
-                    );
-                    skip = true;
-                    if (modified > updated) skip = false;
-                  }
+                  if (dates.length > 0) {
+                    let skip = false;
+                    if (eventInDb.meta.lastUpdate) {
+                      const updated = new Date(eventInDb.meta.lastUpdate);
+                      const modified = new Date(
+                        new Date().setTime(
+                          parseInt(event.event_last_mod) * 1000
+                        )
+                      );
+                      skip = true;
+                      if (modified > updated) skip = false;
+                    }
 
-                  if (!skip) {
-                    await prisma.eventDate.deleteMany({
-                      where: {
-                        event: {
+                    if (
+                      location &&
+                      (!eventInDb.locations || eventInDb.locations.length === 0 ||
+                        (eventInDb.locations.length &&
+                          !eventInDb.locations.find(
+                            (l: any) => l.id === location.id
+                          )))
+                    ) {
+                      // location needs update
+                      skip = false;
+                    }
+
+                    if (!skip) {
+                      await prisma.eventDate.deleteMany({
+                        where: {
+                          event: {
+                            id: eventInDb.id,
+                          },
+                        },
+                      });
+
+                      if (mappedIds.length > 0) {
+                        terms = {
+                          terms: {
+                            set: mappedIds.map((id: number) => ({
+                              id,
+                            })),
+                          },
+                        };
+                      }
+
+                      const data = {
+                        ...sharedData,
+                        ...terms,
+                        dates: {
+                          create: datesForDb,
+                        },
+                        locations: {
+                          set: location
+                            ? [
+                                {
+                                  id: location.id,
+                                },
+                              ]
+                            : [],
+                        },
+                      };
+
+                      eventInDb = await prisma.event.update({
+                        data: {
+                          ...data,
+                          fullText: extractFullText(data),
+                        },
+                        where: {
                           id: eventInDb.id,
                         },
-                      },
-                    });
+                      });
 
-                    const data = {
-                      ...sharedData,
-                      dates: {
-                        create: datesForDb,
-                      },
-                    };
-
-                    eventInDb = await prisma.event.update({
-                      data: {
-                        ...data,
-                        fullText: extractFullText(data),
-                      },
+                      // TODO: that next.js trigger updates on frontend via get request
+                      log.push(
+                        `Updated event ID: ${eventInDb?.id} (berlin.de id: ${event.event_id})`
+                      );
+                    } else {
+                      log.push(
+                        `Skipped event ID: ${eventInDb?.id} (berlin.de id: ${event.event_id}) as last modified < update date`
+                      );
+                    }
+                  } else {
+                    // TODO: that next.js trigger updates on frontend via get request
+                    await prisma.event.delete({
                       where: {
                         id: eventInDb.id,
                       },
                     });
                     log.push(
-                      `Updated event  ID: ${eventInDb?.id} (berlin.de id: ${event.event_id})`
-                    );
-                  } else {
-                    log.push(
-                      `Skipped event  ID: ${eventInDb?.id} (berlin.de id: ${event.event_id}) as last modified < update date`
+                      `Deleted event ID: ${eventInDb?.id} (berlin.de id: ${event.event_id}) as next upcoming events = 0`
                     );
                   }
                 }
@@ -488,14 +556,42 @@ const doChores = async () => {
             await saveImportLog(prisma);
           };
 
-          // TODO: unslice
-          await pMap(
-            Object.keys(response?.data?.events).slice(5, 8),
-            processEvent,
-            {
-              concurrency: 1,
-            }
-          );
+          await pMap(Object.keys(response?.data?.events), processEvent, {
+            concurrency: 1,
+          });
+
+          const toBeDeleted = await prisma.event.findMany({
+            select: {
+              id: true,
+              slug: true,
+            },
+            where: {
+              isImported: true,
+              importedEventHash: {
+                not: {
+                  in: Object.keys(response?.data?.events).map((eKey) =>
+                    hash({
+                      id: response.data.events[eKey].event_id,
+                    })
+                  ),
+                },
+              },
+            },
+          });
+
+          if (toBeDeleted && toBeDeleted.length > 0) {
+            // TODO: that next.js trigger updates on frontend via get request
+            const deleteResult = await prisma.event.deleteMany({
+              where: {
+                id: {
+                  in: toBeDeleted.map((e) => e.id),
+                },
+              },
+            });
+            log.push(
+              `Removed ${deleteResult.count} event(s) as they did not appear in the import data anymore`
+            );
+          }
         }
       })
       .catch((err) => {
@@ -518,10 +614,6 @@ doChores()
       `import.berlin.de: errors: ${errors.length}, warnings: ${warnings.length}, log: ${log.length}`
     );
     logger.info("import.berlin.de: done");
-    // TODO: remove
-    console.log(errors);
-    console.log(warnings);
-    console.log(log);
     process.exit(0);
   })
   .catch((err: any) => {
