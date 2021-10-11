@@ -236,7 +236,7 @@
     },
     "events": {
       "title": "Events",
-      "mneuitem": {
+      "menuitem": {
         "createevent": "Add new event"
       },
       "forms": {
@@ -316,7 +316,7 @@
     },
     "locations": {
       "title": "Locations",
-      "mneuitem": {
+      "menuitem": {
         "createlocation": "Add new location"
       },
       "forms": {

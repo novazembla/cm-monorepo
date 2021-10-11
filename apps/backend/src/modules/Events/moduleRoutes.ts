@@ -3,6 +3,8 @@ import type { RoutePrivateParams } from '~/types';
 import Create from "./Create";
 import Update from "./Update";
 import Index from "./Index";
+import Logs from "./Logs";
+import Log from "./Log";
 
 import { moduleRootPath } from './moduleConfig';
 
@@ -20,6 +22,21 @@ export const moduleRoutes: RoutePrivateParams[] = [
     component: Update,
     exact: true,
     userCan: "eventUpdate",
+  },
+  {
+    key: "logs",
+    path: `${moduleRootPath}/logs`,
+    component: Logs,
+    exact: true,
+    userCan: "eventRead",
+  },
+  
+  {
+    key: "log",
+    path: `${moduleRootPath}/log/:id`,
+    component: Log,
+    exact: true,
+    userCan: "eventRead",
   },
   {
     key: "index",

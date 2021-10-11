@@ -175,7 +175,7 @@ const Create = () => {
       title: t("module.events.title", "Events"),
     },
     {
-      title: t("module.events.mneuitem.createevent", "Add new event"),
+      title: t("module.events.menuitem.createevent", "Add new event"),
     },
   ];
 

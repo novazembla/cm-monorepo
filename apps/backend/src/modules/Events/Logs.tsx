@@ -1,8 +1,13 @@
 import { useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { eventsQueryGQL, eventDeleteMutationGQL } from "@culturemap/core";
+import { eventImportLogsQueryGQL } from "@culturemap/core";
 import { useQuery } from "@apollo/client";
 
+import { Cell } from "react-table";
+
+import { 
+  Badge
+} from "@chakra-ui/react";
 
 import {
   ModuleSubNav,
@@ -11,11 +16,7 @@ import {
 } from "~/components/modules";
 
 import { moduleRootPath, multiLangFields } from "./moduleConfig";
-import {
-  useDeleteByIdButton,
-  useAuthentication,
-  useLocalStorage,
-} from "~/hooks";
+import { useAuthentication, useLocalStorage } from "~/hooks";
 
 import {
   AdminTable,
@@ -25,11 +26,11 @@ import {
   adminTableCreateNewTableState,
   AdminTableActionCell,
   AdminTableMultiLangCell,
-  AdminTablePublishStatusCell,
+  AdminTableDateCell,
 } from "~/components/ui";
 import { config } from "~/config";
 import { SortingRule } from "react-table";
-import {filterColumnKeys} from "./moduleConfig";
+import { filterColumnKeys } from "./moduleConfig";
 
 const intitalTableState: AdminTableState = {
   pageIndex: 0,
@@ -42,8 +43,53 @@ let refetchDataCache: any[] = [];
 let refetchTotalCount = 0;
 let refetchPageIndex: number | undefined = undefined;
 
+export const AdminTableErrorsCountCell = (cell: Cell) => {
+  let count = 0;
+  let color = "gray";
 
-const Index = () => {
+  if (Array.isArray(cell.value) && cell.value.length > 0) {
+    color = "red";
+    count = cell.value.length;
+  }
+
+  return (
+    <Badge
+      minW="8rem"
+      variant="subtle"
+      textAlign="center"
+      colorScheme={color}
+      p="2"
+      borderRadius="lg"
+    >
+      {count}
+    </Badge>
+  );
+};
+
+export const AdminTableWarningsCountCell = (cell: Cell) => {
+  let count = 0;
+  let color = "gray";
+
+  if (Array.isArray(cell.value) && cell.value.length > 0) {
+    color = "orange";
+    count = cell.value.length;
+  }
+
+  return (
+    <Badge
+      minW="8rem"
+      variant="subtle"
+      textAlign="center"
+      colorScheme={color}
+      p="2"
+      borderRadius="lg"
+    >
+      {count}
+    </Badge>
+  );
+};
+
+const Logs = () => {
   const { t } = useTranslation();
   const [appUser] = useAuthentication();
   const [tableState, setTableState] = useLocalStorage(
@@ -52,8 +98,8 @@ const Index = () => {
   );
 
   const [isRefetching, setIsRefetching] = useState(false);
-  
-  const { loading, error, data, refetch } = useQuery(eventsQueryGQL, {
+
+  const { loading, error, data, refetch } = useQuery(eventImportLogsQueryGQL, {
     onCompleted: () => {
       setIsRefetching(false);
     },
@@ -61,38 +107,29 @@ const Index = () => {
       setIsRefetching(false);
     },
     notifyOnNetworkStatusChange: true,
-    variables: adminTableCreateQueryVariables(tableState, filterColumnKeys, multiLangFields, config.activeLanguages),
+    variables: adminTableCreateQueryVariables(
+      tableState,
+      filterColumnKeys,
+      multiLangFields,
+      config.activeLanguages
+    ),
   });
-
-  const [adminTableDeleteButtonOnClick, DeleteAlertDialog, isDeleteError] =
-    useDeleteByIdButton(
-      eventDeleteMutationGQL,
-      () => {
-        refetch(tableState);
-      },
-      {
-        requireTextualConfirmation: true,
-      }
-    );
 
   const breadcrumb = [
     {
       path: moduleRootPath,
       title: t("module.events.title", "Events"),
     },
+    {
+      title: t("module.events.menuitem.importLogs", "Import Logs"),
+    },
   ];
 
   const buttonList: ButtonListElement[] = [
     {
-      type: "navigation",
-      to: `${moduleRootPath}/create`,
-      label: t("module.events.button.create", "Add new event"),
-      userCan: "eventCreate",
-    },
-    {
-      type: "navigation",
-      to: `${moduleRootPath}/logs`,
-      label: t("module.locations.menuitem.importLogs", "Import Logs"),
+      type: "back",
+      to: moduleRootPath,
+      label: t("module.button.back", "Back"),
       userCan: "eventRead",
     },
   ];
@@ -104,14 +141,20 @@ const Index = () => {
       accessor: "id",
     } as AdminTableColumn,
     {
-      Cell: AdminTablePublishStatusCell,
-      Header: t("table.label.status", "status"),
-      accessor: "status",
+      Cell: AdminTableDateCell,
+      Header: t("table.label.date", "date"),
+      accessor: "updatedAt",
+    } as AdminTableColumn,
+
+    {
+      Cell: AdminTableErrorsCountCell,
+      Header: t("table.label.errors", "Errors"),
+      accessor: "errors",
     } as AdminTableColumn,
     {
-      Cell: AdminTableMultiLangCell,
-      Header: t("table.label.title", "title"),
-      accessor: "title",
+      Cell: AdminTableWarningsCountCell,
+      Header: t("table.label.warnings", "Warnings"),
+      accessor: "warnings",
     } as AdminTableColumn,
     {
       Cell: AdminTableActionCell,
@@ -121,24 +164,12 @@ const Index = () => {
       isCentered: true,
       appUser,
 
-      showEdit: true,
-      canEdit: (cell, appUser) =>
-        appUser?.can("eventUpdate"),
-      editPath: `${moduleRootPath}/update/:id`,
-      editButtonLabel: t("module.events.button.edit", "Edit event"),
-      // editButtonComponent: undefined,
+      showView: true,
+      canView: (cell, appUser) => appUser?.can("eventRead"),
+      viewPath: `${moduleRootPath}/log/:id`,
+      viewButtonLabel: t("module.events.button.viewLog", "View log"),
 
-      showDelete: true,
-      canDelete: (cell, appUser) => appUser?.can("eventDelete") ||
-      (appUser.can("eventDeleteOwn") &&
-        appUser.id === (cell?.row?.original as any)?.ownerId),
-        
-      deleteButtonLabel: t("module.events.button.delete", "Delete event"),
-      // deleteButtonComponent?: React.FC<any>;
-
-      deleteButtonOnClick: (cell) => {
-        adminTableDeleteButtonOnClick(cell?.row?.values?.id ?? 0);
-      },
+      showDelete: false,
     } as AdminTableColumn,
   ]);
 
@@ -161,12 +192,19 @@ const Index = () => {
 
     if (doRefetch) {
       refetchPageIndex = pageIndex !== newPageIndex ? newPageIndex : undefined;
-      refetchDataCache = data?.events?.events ?? [];
-      refetchTotalCount = data?.events?.totalCount ?? 0;
+      refetchDataCache = data?.eventImportLogs?.eventImportLogs ?? [];
+      refetchTotalCount = data?.eventImportLogs?.totalCount ?? 0;
 
       setIsRefetching(true);
 
-      refetch(adminTableCreateQueryVariables(newTableState, filterColumnKeys, multiLangFields, config.activeLanguages));
+      refetch(
+        adminTableCreateQueryVariables(
+          newTableState,
+          filterColumnKeys,
+          multiLangFields,
+          config.activeLanguages
+        )
+      );
 
       setTableState(newTableState);
     }
@@ -174,22 +212,22 @@ const Index = () => {
     return doRefetch;
   };
 
-  const tableTotalCount = data?.events?.totalCount ?? refetchTotalCount;
+  const tableTotalCount =
+    data?.eventImportLogs?.totalCount ?? refetchTotalCount;
 
   const tablePageCount =
     tableTotalCount > 0
       ? Math.ceil(
-          (data?.events?.totalCount ?? refetchTotalCount) / tableState.pageSize
+          (data?.eventImportLogs?.totalCount ?? refetchTotalCount) /
+            tableState.pageSize
         )
       : 0;
 
+  console.log(data);
   return (
     <>
       <ModuleSubNav breadcrumb={breadcrumb} buttonList={buttonList} />
-      <ModulePage
-        isLoading={loading && !isRefetching}
-        isError={!!error || !!isDeleteError}
-      >
+      <ModulePage isLoading={loading && !isRefetching} isError={!!error}>
         <AdminTable
           columns={AdminTableColumns}
           isLoading={loading}
@@ -200,12 +238,15 @@ const Index = () => {
             onFetchData,
             refetchPageIndex,
           }}
-          data={isRefetching ? refetchDataCache : data?.events?.events ?? []}
+          data={
+            isRefetching
+              ? refetchDataCache
+              : data?.eventImportLogs?.eventImportLogs ?? []
+          }
           intitalTableState={tableState}
         />
       </ModulePage>
-      {DeleteAlertDialog}
     </>
   );
 };
-export default Index;
+export default Logs;

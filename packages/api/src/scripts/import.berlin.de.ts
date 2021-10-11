@@ -471,7 +471,8 @@ const doChores = async () => {
 
                     if (
                       location &&
-                      (!eventInDb.locations || eventInDb.locations.length === 0 ||
+                      (!eventInDb.locations ||
+                        eventInDb.locations.length === 0 ||
                         (eventInDb.locations.length &&
                           !eventInDb.locations.find(
                             (l: any) => l.id === location.id

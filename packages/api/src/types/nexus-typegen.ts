@@ -267,6 +267,18 @@ export interface NexusGenObjects {
     id: number; // Int!
     updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
   }
+  EventImportLog: { // root type
+    createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
+    errors?: NexusGenScalars['JSON'] | null; // JSON
+    id: number; // Int!
+    log?: NexusGenScalars['JSON'] | null; // JSON
+    updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
+    warnings?: NexusGenScalars['JSON'] | null; // JSON
+  }
+  EventImportLogQueryResult: { // root type
+    eventImportLogs?: Array<NexusGenRootTypes['EventImportLog'] | null> | null; // [EventImportLog]
+    totalCount?: number | null; // Int
+  }
   EventQueryResult: { // root type
     events?: Array<NexusGenRootTypes['Event'] | null> | null; // [Event]
     totalCount?: number | null; // Int
@@ -557,6 +569,18 @@ export interface NexusGenFieldTypes {
     id: number; // Int!
     updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
   }
+  EventImportLog: { // field return type
+    createdAt: NexusGenScalars['DateTime'] | null; // DateTime
+    errors: NexusGenScalars['JSON'] | null; // JSON
+    id: number; // Int!
+    log: NexusGenScalars['JSON'] | null; // JSON
+    updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
+    warnings: NexusGenScalars['JSON'] | null; // JSON
+  }
+  EventImportLogQueryResult: { // field return type
+    eventImportLogs: Array<NexusGenRootTypes['EventImportLog'] | null> | null; // [EventImportLog]
+    totalCount: number | null; // Int
+  }
   EventQueryResult: { // field return type
     events: Array<NexusGenRootTypes['Event'] | null> | null; // [Event]
     totalCount: number | null; // Int
@@ -719,6 +743,8 @@ export interface NexusGenFieldTypes {
   Query: { // field return type
     adminUsers: Array<NexusGenRootTypes['AdminUser'] | null> | null; // [AdminUser]
     event: NexusGenRootTypes['Event']; // Event!
+    eventImportLog: NexusGenRootTypes['EventImportLog']; // EventImportLog!
+    eventImportLogs: NexusGenRootTypes['EventImportLogQueryResult'] | null; // EventImportLogQueryResult
     eventRead: NexusGenRootTypes['Event']; // Event!
     events: NexusGenRootTypes['EventQueryResult'] | null; // EventQueryResult
     geocode: NexusGenRootTypes['GeoCodeResult'] | null; // GeoCodeResult
@@ -926,6 +952,18 @@ export interface NexusGenFieldTypeNames {
     id: 'Int'
     updatedAt: 'DateTime'
   }
+  EventImportLog: { // field return type name
+    createdAt: 'DateTime'
+    errors: 'JSON'
+    id: 'Int'
+    log: 'JSON'
+    updatedAt: 'DateTime'
+    warnings: 'JSON'
+  }
+  EventImportLogQueryResult: { // field return type name
+    eventImportLogs: 'EventImportLog'
+    totalCount: 'Int'
+  }
   EventQueryResult: { // field return type name
     events: 'Event'
     totalCount: 'Int'
@@ -1088,6 +1126,8 @@ export interface NexusGenFieldTypeNames {
   Query: { // field return type name
     adminUsers: 'AdminUser'
     event: 'Event'
+    eventImportLog: 'EventImportLog'
+    eventImportLogs: 'EventImportLogQueryResult'
     eventRead: 'Event'
     events: 'EventQueryResult'
     geocode: 'GeoCodeResult'
@@ -1411,6 +1451,15 @@ export interface NexusGenArgTypes {
     }
     event: { // args
       slug: string; // String!
+    }
+    eventImportLog: { // args
+      id: number; // Int!
+    }
+    eventImportLogs: { // args
+      orderBy?: NexusGenScalars['JSON'] | null; // JSON
+      pageIndex?: number | null; // Int
+      pageSize: number | null; // Int
+      where?: NexusGenScalars['JSON'] | null; // JSON
     }
     eventRead: { // args
       id: number; // Int!

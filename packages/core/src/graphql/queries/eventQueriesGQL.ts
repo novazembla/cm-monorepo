@@ -60,4 +60,42 @@ export const eventReadGQL = gql`
   }
 `;
 
+export const eventImportLogsQueryGQL = gql`
+  query eventImportLogs(
+    $where: JSON
+    $orderBy: JSON
+    $pageIndex: Int
+    $pageSize: Int
+  ) {
+    eventImportLogs(
+      where: $where
+      orderBy: $orderBy
+      pageIndex: $pageIndex
+      pageSize: $pageSize
+    ) {
+      eventImportLogs {
+        id
+        warnings
+        errors
+        createdAt
+        updatedAt
+      }
+      totalCount
+    }
+  }
+`;
+
+export const eventImportLogReadGQL = gql`
+  query eventImportLogRead($id: Int!) {
+    eventImportLogs(id: $id) {
+      id
+      log
+      warnings
+      errors
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
 export default eventsQueryGQL;

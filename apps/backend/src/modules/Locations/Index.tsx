@@ -89,16 +89,16 @@ const Index = () => {
   const buttonList: ButtonListElement[] = [
     {
       type: "navigation",
-      to: `${moduleRootPath}/import`,
-      label: t("module.locations.mneuitem.imports", "Imports"),
-      userCan: "locationCreate",
-    },
-    {
-      type: "navigation",
       to: `${moduleRootPath}/create`,
       label: t("module.locations.button.create", "Add new location"),
       userCan: "locationCreate",
     },
+    {
+      type: "navigation",
+      to: `${moduleRootPath}/import`,
+      label: t("module.locations.menuitem.imports", "Imports"),
+      userCan: "locationCreate",
+    },    
   ];
 
   // columns need to be a ref!

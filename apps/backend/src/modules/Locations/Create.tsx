@@ -164,7 +164,7 @@ const Create = () => {
       title: t("module.locations.title", "Locations"),
     },
     {
-      title: t("module.locations.mneuitem.createlocation", "Add new location"),
+      title: t("module.locations.menuitem.createlocation", "Add new location"),
     },
   ];
 

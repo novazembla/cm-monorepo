@@ -76,6 +76,21 @@ type EventDate {
   updatedAt: DateTime
 }
 
+type EventImportLog {
+  createdAt: DateTime
+  errors: JSON
+  id: Int!
+  log: JSON
+  updatedAt: DateTime
+  warnings: JSON
+}
+
+"""List all the event import logs in the database."""
+type EventImportLogQueryResult {
+  eventImportLogs: [EventImportLog]
+  totalCount: Int
+}
+
 """List all the events in the database."""
 type EventQueryResult {
   events: [Event]
@@ -330,6 +345,8 @@ type ProfileUser implements UserBaseNode {
 type Query {
   adminUsers(roles: [String]!): [AdminUser] @deprecated(reason: "A publicly accessible list Lists all users that have a the given roles")
   event(slug: String!): Event!
+  eventImportLog(id: Int!): EventImportLog!
+  eventImportLogs(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): EventImportLogQueryResult
   eventRead(id: Int!): Event!
   events(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): EventQueryResult
   geocode(q: String!): GeoCodeResult

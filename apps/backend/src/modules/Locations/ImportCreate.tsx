@@ -91,7 +91,7 @@ const Create = () => {
       title: t("module.locations.imports.title", "Imports"),
     },
     {
-      title: t("module.locations.mneuitem.createimport", "Add new import"),
+      title: t("module.locations.menuitem.createimport", "Add new import"),
     },
   ];
 

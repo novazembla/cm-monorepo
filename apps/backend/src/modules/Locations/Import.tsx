@@ -143,7 +143,7 @@ const Import = () => {
       title: t("module.locations.title", "Locations"),
     },
     {
-      title: t("module.locations.mneuitem.imports", "Imports"),
+      title: t("module.locations.menuitem.imports", "Imports"),
     },
   ];
 

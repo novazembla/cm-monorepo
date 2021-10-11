@@ -9,6 +9,7 @@ export * from "./image";
 export * from "./setting";
 export * from "./location";
 export * from "./event";
+export * from "./eventImportLog";
 export * from "./tour";
 export * from "./tourStop";
 export * from "./import";

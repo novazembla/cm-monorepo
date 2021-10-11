@@ -402,7 +402,7 @@ export const ModuleImportUpdateForm = ({
             </Box>
 
             <Box w="100%">
-              <Box maxH="600px" w="100%" overflowY="auto" color="red.600">
+              <Box maxH="1000px" w="100%" overflowY="auto" color="red.600" border="1px solid" borderColor="gray.400" borderRadius="md" p="3" px="6">
                 <OrderedList>{errorList}</OrderedList>
               </Box>
             </Box>
@@ -444,7 +444,7 @@ export const ModuleImportUpdateForm = ({
             </Box>
 
             <Box w="100%">
-              <Box maxH="600px" w="100%" overflowY="auto" color="orange.600">
+              <Box maxH="1000px" w="100%" overflowY="auto" color="orange.600" border="1px solid" borderColor="gray.400" borderRadius="md" p="3" px="6">
                 <OrderedList>{warningList}</OrderedList>
               </Box>
             </Box>
@@ -487,7 +487,7 @@ export const ModuleImportUpdateForm = ({
             </Box>
 
             <Box w="100%">
-              <Box maxH="600px" w="100%" overflowY="auto">
+              <Box maxH="1000px" w="100%" overflowY="auto" border="1px solid" borderColor="gray.400" borderRadius="md" p="3" px="4">
                 <UnorderedList>{logList}</UnorderedList>
               </Box>
             </Box>

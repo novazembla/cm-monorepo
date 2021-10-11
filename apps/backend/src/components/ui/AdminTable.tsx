@@ -388,6 +388,17 @@ export const AdminTablePublishStatusCell = (cell: Cell) => {
   );
 };
 
+
+export const AdminTableDateCell = (cell: Cell) => {
+  let date = "-";
+
+  try {
+    date = new Date(cell.value).toLocaleString()
+  } catch(err){}
+
+  return <>{date}</>;
+};
+
 export const AdminTableMultiLangCell = (cell: Cell) => (
   <MultiLangValue json={cell.value} />
 );
@@ -402,11 +413,13 @@ export const AdminTable = ({
   tablePageCount,
   tableTotalCount,
   refetchPageIndex,
+  showKeywordSearch = false,
 }: {
   data: any[];
   columns: AdminTableColumn[];
   isLoading: boolean;
   isRefetching: boolean;
+  showKeywordSearch?: boolean;
   onFetchData: (
     page: number,
     pageSize: number,
@@ -527,27 +540,29 @@ export const AdminTable = ({
         </Link>
       </VisuallyHidden>
 
-      <Flex
-        mb="5"
-        py="2"
-        justifyContent="flex-end"
-        borderY="1px solid"
-        borderColor="gray.300"
-      >
-        <FormLabel htmlFor="filter" w="25%" m="0">
-          <VisuallyHidden>
-            {t("admintable.search", "Keyword search")}
-          </VisuallyHidden>
-          <Input
-            name="filter"
-            id="filter"
-            onChange={onFilterChange}
-            onBlur={onFilterChange}
-            defaultValue={intitalTableState.filterKeyword}
-            placeholder={t("admintable.search", "Keyword search")}
-          />
-        </FormLabel>
-      </Flex>
+      {showKeywordSearch && (
+        <Flex
+          mb="5"
+          py="2"
+          justifyContent="flex-end"
+          borderY="1px solid"
+          borderColor="gray.300"
+        >
+          <FormLabel htmlFor="filter" w="25%" m="0">
+            <VisuallyHidden>
+              {t("admintable.search", "Keyword search")}
+            </VisuallyHidden>
+            <Input
+              name="filter"
+              id="filter"
+              onChange={onFilterChange}
+              onBlur={onFilterChange}
+              defaultValue={intitalTableState.filterKeyword}
+              placeholder={t("admintable.search", "Keyword search")}
+            />
+          </FormLabel>
+        </Flex>
+      )}
       <Box className="admin-table-wrapper" w="100%" overflowX="auto">
         <Table
           {...getTableProps()}
