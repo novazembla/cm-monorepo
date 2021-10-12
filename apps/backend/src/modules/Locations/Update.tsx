@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import type * as yup from "yup";
+import { object, boolean, mixed, number } from "yup";
 import { Link as RouterLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useForm, FormProvider } from "react-hook-form";
@@ -53,12 +54,12 @@ import {
   multiLangSlugUniqueError,
   multiLangImageTranslationsRHFormDataToJson,
   multiLangImageTranslationsJsonRHFormData,
+  mapGroupOptionsToData,
+  mapDataToPrimaryTerms,
+  mapPrimaryTermsToData,
+  mapDataToGroupOptions,
 } from "~/utils";
 
-import {
-  mapModulesCheckboxArrayToData,
-  mapDataToModulesCheckboxArray,
-} from "./helpers";
 import { MultiLangValue } from "~/components/ui";
 
 export const locationReadAndContentAuthorsQueryGQL = gql`
@@ -89,6 +90,11 @@ export const locationReadAndContentAuthorsQueryGQL = gql`
         name
         slug
       }
+      primaryTerms {
+        id
+        name
+        slug
+      }
       events {
         id
         title
@@ -109,8 +115,12 @@ export const locationReadAndContentAuthorsQueryGQL = gql`
     moduleTaxonomies(key: "location") {
       id
       name
+      slug
+      isRequired
+      collectPrimaryTerm
       terms {
         id
+        slug
         name
       }
     }
@@ -125,6 +135,9 @@ const Update = () => {
   const successToast = useSuccessfullySavedToast();
   const [isNavigatingAway, setIsNavigatingAway] = useState(false);
   const [activeUploadCounter, setActiveUploadCounter] = useState<number>(0);
+  const [extendedValidationSchema, setExtendedValidationSchema] = useState(
+    ModuleLocationUpdateSchema
+  );
 
   const { data, loading, error } = useQuery(
     locationReadAndContentAuthorsQueryGQL,
@@ -142,7 +155,7 @@ const Update = () => {
 
   const formMethods = useForm<any>({
     mode: "onTouched",
-    resolver: yupResolver(ModuleLocationUpdateSchema),
+    resolver: yupResolver(extendedValidationSchema),
   });
 
   const {
@@ -155,6 +168,63 @@ const Update = () => {
   useEffect(() => {
     if (!data || !data.locationRead) return;
 
+    let moduleTerms = {};
+
+    if (data?.moduleTaxonomies) {
+
+      console.log(data?.moduleTaxonomies);
+
+      let requiredModules = data.moduleTaxonomies.reduce((acc: any, m: any) => {
+        if (!m?.isRequired || !Array.isArray(m.terms) || m.terms.length === 0)
+          return acc;
+
+        const keys = m.terms.map((t: any) => `tax_${m.id}_${t.id}`);
+
+        return {
+          ...acc,
+          ...keys.reduce(
+            (acc: any, m: any) => ({
+              ...acc,
+              [m]: boolean(),
+            }),
+            {}
+          ),
+          [`tax_${m.id}`]: mixed().when(keys, {
+            is: (...args: any[]) => {
+              return !!args.find((a) => a);
+            },
+            then: boolean(),
+            otherwise: number()
+              .typeError("validation.array.minOneItem")
+              .required(),
+          }),
+        };
+      }, {});
+
+      if (Object.keys(requiredModules).length > 0) {
+        setExtendedValidationSchema(
+          ModuleLocationUpdateSchema.concat(
+            object().shape({
+              // t("validation.array.minOneItem", "Please select at least one item")
+              ...requiredModules,
+            })
+          )
+        );
+      }
+
+      moduleTerms = data.moduleTaxonomies.reduce((acc: any, m: any) => {
+        if (!Array.isArray(m.terms) || m.terms.length === 0)
+          return acc;
+
+        return {
+          ...acc,
+          ...mapDataToGroupOptions(data.locationRead.terms, m.terms, `tax_${m.id}` ),
+        }
+      }, {});      
+    }
+
+    console.log(moduleTerms);
+    
     reset({
       ...multiLangJsonToRHFormData(
         filteredOutputByWhitelist(
@@ -165,14 +235,17 @@ const Update = () => {
         multiLangFields,
         config.activeLanguages
       ),
-      ...mapDataToModulesCheckboxArray(
-        data.locationRead.terms,
+      ...moduleTerms,
+      ...mapDataToPrimaryTerms(
+        data.locationRead.primaryTerms,
         data.moduleTaxonomies
       ),
       heroImage: data.locationRead.heroImage?.id,
       lat: data.locationRead?.lat,
       lng: data.locationRead?.lng,
-      eventLocationId: data.locationRead?.eventLocationId ? parseInt(data.locationRead?.eventLocationId) : undefined,
+      eventLocationId: data.locationRead?.eventLocationId
+        ? parseInt(data.locationRead?.eventLocationId)
+        : undefined,
       agency: data.locationRead?.agency,
       ...pick(data?.locationRead?.address, [
         "co",
@@ -202,11 +275,10 @@ const Update = () => {
         config.activeLanguages
       ),
     });
-
   }, [reset, data, config.activeLanguages]);
 
   const onSubmit = async (
-    newData: yup.InferType<typeof ModuleLocationUpdateSchema>
+    newData: yup.InferType<typeof extendedValidationSchema>
   ) => {
     setHasFormError(false);
     setIsNavigatingAway(false);
@@ -225,6 +297,42 @@ const Update = () => {
               }
             : undefined;
 
+        let terms = [];
+        if (Array.isArray(data?.moduleTaxonomies)) {
+          terms = data?.moduleTaxonomies.reduce((acc: any, module: any) => {
+            if (Array.isArray(module.terms) && module.terms.length > 0) {
+              return [
+                ...acc,
+                ...mapGroupOptionsToData(
+                  newData,
+                  module.terms,
+                  `tax_${module.id}`
+                ),
+              ];
+            }
+            return acc;
+          }, []);
+        }
+
+        const primaryTerms = mapPrimaryTermsToData(
+          "set",
+          newData,
+          data?.moduleTaxonomies
+        );
+
+        if (primaryTerms?.primaryTerms?.set) {
+          terms = primaryTerms?.primaryTerms?.set.reduce(
+            (acc: any, term: any) => {
+              if (!acc.find((t: any) => t.id === term.id))
+                acc.push({
+                  id: term.id,
+                });
+              return acc;
+            },
+            terms
+          );
+        }
+
         const { errors } = await firstMutation(
           parseInt(router.query.id, 10),
           {
@@ -236,14 +344,15 @@ const Update = () => {
             status: newData.status,
             lat: newData.lat,
             lng: newData.lng,
-            eventLocationId: newData.eventLocationId ? parseInt(newData.eventLocationId) : undefined,
+            eventLocationId: newData.eventLocationId
+              ? parseInt(newData.eventLocationId)
+              : undefined,
             agency: newData.agency,
+
             terms: {
-              set: mapModulesCheckboxArrayToData(
-                newData,
-                data?.moduleTaxonomies
-              ),
+              set: terms,
             },
+            ...primaryTerms,
             address: pick(newData, [
               "co",
               "street1",
@@ -360,7 +469,7 @@ const Update = () => {
                 action="update"
                 data={data}
                 setActiveUploadCounter={setActiveUploadCounter}
-                validationSchema={ModuleLocationUpdateSchema}
+                validationSchema={extendedValidationSchema}
               />
 
               {data && Array.isArray(data?.locationRead?.events) && (

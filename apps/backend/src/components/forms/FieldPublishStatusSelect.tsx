@@ -31,6 +31,14 @@ export const FieldPublishStatusSelect = ({
 
   const options = [
     {
+      value: PublishStatus.IMPORTED,
+      label: t("publish.status.imported", "Imported"),
+    },
+    {
+      value: PublishStatus.IMPORTEDWARNINGS,
+      label: t("publish.status.importedwarning", "Imported with warning(s)"),
+    },
+    {
       value: PublishStatus.DRAFT,
       label: t("publish.status.draft", "Draft"),
     },

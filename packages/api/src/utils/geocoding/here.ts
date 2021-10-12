@@ -105,6 +105,7 @@ export class GeoCoderHere {
                   houseNumberType: item.houseNumberType,
                 },
               }));
+              result.count = result.features.length;
             }
           })
           .catch((err) => {
@@ -122,6 +123,9 @@ export class GeoCoderHere {
       logger.debug(err);
     }
 
-    return { features: [], type: "FeatureCollection" };
+    return {
+      geojson: { features: [], type: "FeatureCollection" },
+      count: 0,
+    } as any;
   }
 }

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type * as yup from "yup";
+import { object, boolean, mixed, number } from "yup";
 import { useTranslation } from "react-i18next";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -32,9 +33,7 @@ import {
 import { moduleRootPath, multiLangFields } from "./moduleConfig";
 
 import { TaxonomyForm } from "./forms";
-import { multiLangRHFormDataToJson, multiLangSlugUniqueError } from "~/utils";
-
-import { mapModulesCheckboxSelectionToData } from "./helpers";
+import { multiLangRHFormDataToJson, multiLangSlugUniqueError, mapGroupOptionsToData } from "~/utils";
 
 const Create = () => {
   const config = useConfig();
@@ -46,14 +45,43 @@ const Create = () => {
 
   const [firstMutation, firstMutationResults] = useTaxonomyCreateMutation();
   const [hasFormError, setHasFormError] = useState(false);
-
+  
   const modules = useModules();
 
   const disableForm = firstMutationResults.loading;
 
+  const activeModules = Object.keys(modules).reduce((acc: any, k: string) => {
+    if (modules[k].withTaxonomies) acc.push(modules[k]);
+    return acc;
+  }, []);
+
+  const moduleKeys = activeModules.map((m: any) => `modules_${m.id}`);
+
+  const ExtendedModuleTaxonomySchema = ModuleTaxonomySchema.concat(
+    object().shape({
+      // t("validation.array.minOneItem", "Please select at least one item")
+
+      ...moduleKeys.reduce(
+        (acc: any, m: any) => ({
+          ...acc,
+          [m]: boolean(),
+        }),
+        {}
+      ),
+
+      modules: mixed().when(moduleKeys, {
+        is: (...args: any[]) => {
+          return !!args.find((a) => a);
+        },
+        then: boolean(),
+        otherwise: number().typeError("validation.array.minOneItem").required("validation.array.minOneItem"),
+      }),
+    })
+  );
+
   const formMethods = useForm<any>({
     mode: "onTouched",
-    resolver: yupResolver(ModuleTaxonomySchema),
+    resolver: yupResolver(ExtendedModuleTaxonomySchema),
   });
 
   const {
@@ -63,7 +91,7 @@ const Create = () => {
   } = formMethods;
 
   const onSubmit = async (
-    newData: yup.InferType<typeof ModuleTaxonomySchema>
+    newData: yup.InferType<typeof ExtendedModuleTaxonomySchema>
   ) => {
     setHasFormError(false);
     try {
@@ -79,8 +107,17 @@ const Create = () => {
             multiLangFields
           ),
           hasColor: newData.hasColor,
+          collectPrimaryTerm: newData.collectPrimaryTerm,
+          isRequired: newData.isRequired,
           modules: {
-            connect: mapModulesCheckboxSelectionToData(newData, modules),
+            connect: mapGroupOptionsToData(
+              newData,
+              Object.keys(modules).reduce((acc: any, k: string) => {
+                if (modules[k].withTaxonomies) acc.push(modules[k]);
+                return acc;
+              }, []),
+              "modules"
+            ),
           },
         });
 
@@ -146,7 +183,7 @@ const Create = () => {
               <TaxonomyForm
                 type="taxonomy"
                 action="create"
-                validationSchema={ModuleTaxonomySchema}
+                validationSchema={ExtendedModuleTaxonomySchema}
               />
             </ModulePage>
           </fieldset>

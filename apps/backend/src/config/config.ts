@@ -47,7 +47,7 @@ const configDefault: AppConfig = {
     },
   ],
   mapStyleUrl:
-    "https://www.vincentvanuffelen.com/lichtenberg/osm_liberty_berlin.json",
+    "https://www.vincentvanuffelen.com/lichtenberg/osm_liberty_culturemap.json",
 };
 
 export let config: AppConfig;

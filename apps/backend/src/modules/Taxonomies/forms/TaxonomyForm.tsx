@@ -68,13 +68,13 @@ export const TaxonomyForm = ({
               )}
               name="modules"
               type="checkbox"
-              isRequired={yupIsFieldRequired("modules", validationSchema)}
+              isRequired={true}
               options={Object.keys(modules).reduce((acc, key) => {
                 const module: any = modules[key];
                 if (!module.withTaxonomies) return acc;
                 acc.push({
                   label: module.name,
-                  key: module.key,
+                  id: module.id,
                 });
                 return acc;
               }, [] as FieldRadioOrCheckboxGroupOption[])}
@@ -88,6 +88,28 @@ export const TaxonomyForm = ({
                 "Show color fields"
               )}
               defaultChecked={!!data?.hasColor}
+              colorScheme="wine"
+            />
+          </FieldRow>
+          <FieldRow>
+            <FieldSwitch
+              name="collectPrimaryTerm"
+              label={t(
+                "module.taxonomies.forms.field.collectPrimaryTerm.label",
+                "Show primary term select element"
+              )}
+              defaultChecked={!!data?.collectPrimaryTerm}
+              colorScheme="wine"
+            />
+          </FieldRow>
+          <FieldRow>
+            <FieldSwitch
+              name="isRequired"
+              label={t(
+                "module.taxonomies.forms.field.isRequired.label",
+                "Selection of at least one term is required"
+              )}
+              defaultChecked={!!data?.isRequired}
               colorScheme="wine"
             />
           </FieldRow>

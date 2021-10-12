@@ -40,6 +40,8 @@ export const Taxonomy = objectType({
     t.json("name");
     t.json("slug");
     t.boolean("hasColor");
+    t.boolean("isRequired");
+    t.boolean("collectPrimaryTerm");
     t.date("createdAt");
     t.date("updatedAt");
     t.int("termCount", {
@@ -191,6 +193,8 @@ export const TaxonomyUpsertInput = inputObjectType({
     t.nonNull.json("name");
     t.nonNull.json("slug");
     t.nonNull.boolean("hasColor");
+    t.nonNull.boolean("isRequired");
+    t.nonNull.boolean("collectPrimaryTerm");
     t.nonNull.json("modules");
   },
 });

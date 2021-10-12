@@ -1,4 +1,5 @@
 import "./missing/graceful";
+import "./missing/isEmail";
 
 export type Complete<T> = {
   [P in keyof Required<T>]: Pick<T, P> extends Required<Pick<T, P>>

@@ -60,6 +60,7 @@ type Event {
   locations: [Location]
   meta: JSON
   ownerId: Int!
+  primaryTerms: [Term]
   slug: JSON
   status: Int!
   terms: [Term]
@@ -105,6 +106,7 @@ input EventUpsertInput {
   isImported: Boolean!
   locations: JSON
   owner: JSON!
+  primaryTerms: JSON
   slug: JSON!
   status: Int!
   terms: JSON
@@ -211,6 +213,7 @@ type Location {
   lng: Float
   offers: JSON
   ownerId: Int!
+  primaryTerms: [Term]
   slug: JSON
   socialMedia: JSON
   status: Int!
@@ -241,6 +244,7 @@ input LocationUpsertInput {
   lng: Float
   offers: JSON
   owner: JSON!
+  primaryTerms: JSON
   slug: JSON!
   socialMedia: JSON
   status: Int!
@@ -410,9 +414,11 @@ input SettingsUpdateInput {
 }
 
 type Taxonomy {
+  collectPrimaryTerm: Boolean
   createdAt: DateTime
   hasColor: Boolean
   id: Int!
+  isRequired: Boolean
   modules: [Module]
   name: JSON
   slug: JSON
@@ -428,7 +434,9 @@ type TaxonomyQueryResult {
 }
 
 input TaxonomyUpsertInput {
+  collectPrimaryTerm: Boolean!
   hasColor: Boolean!
+  isRequired: Boolean!
   modules: JSON!
   name: JSON!
   slug: JSON!

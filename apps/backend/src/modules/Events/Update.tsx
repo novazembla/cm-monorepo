@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import type * as yup from "yup";
+import { object, boolean, mixed, number } from "yup";
+
 import { useTranslation } from "react-i18next";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -39,12 +41,10 @@ import {
   multiLangSlugUniqueError,
   multiLangImageTranslationsRHFormDataToJson,
   multiLangImageTranslationsJsonRHFormData,
+  mapGroupOptionsToData,
+  mapDataToGroupOptions,
+  mapDataToPrimaryTerms,
 } from "~/utils";
-
-import {
-  mapModulesCheckboxArrayToData,
-  mapDataToModulesCheckboxArray,
-} from "./helpers";
 
 export const eventReadAndContentAuthorsQueryGQL = gql`
   query eventRead($id: Int!) {
@@ -61,6 +61,11 @@ export const eventReadAndContentAuthorsQueryGQL = gql`
       createdAt
       updatedAt
       terms {
+        id
+        name
+        slug
+      }
+      primaryTerms {
         id
         name
         slug
@@ -91,6 +96,8 @@ export const eventReadAndContentAuthorsQueryGQL = gql`
     moduleTaxonomies(key: "event") {
       id
       name
+      collectPrimaryTerm
+      isRequired
       terms {
         id
         name
@@ -108,6 +115,9 @@ const Update = () => {
 
   const [isNavigatingAway, setIsNavigatingAway] = useState(false);
   const [activeUploadCounter, setActiveUploadCounter] = useState<number>(0);
+  const [extendedValidationSchema, setExtendedValidationSchema] = useState(
+    ModuleEventUpdateSchema
+  );
 
   const { data, loading, error } = useQuery(
     eventReadAndContentAuthorsQueryGQL,
@@ -125,7 +135,7 @@ const Update = () => {
 
   const formMethods = useForm<any>({
     mode: "onTouched",
-    resolver: yupResolver(ModuleEventUpdateSchema),
+    resolver: yupResolver(extendedValidationSchema),
     defaultValues: {
       dates: [],
       locationId: undefined,
@@ -161,6 +171,59 @@ const Update = () => {
   useEffect(() => {
     if (!data || !data.eventRead) return;
 
+    let moduleTerms = {};
+
+    if (data?.moduleTaxonomies) {
+      let requiredModules = data.moduleTaxonomies.reduce((acc: any, m: any) => {
+        if (!m?.isRequired || !Array.isArray(m.terms) || m.terms.length === 0)
+          return acc;
+
+        const keys = m.terms.map((t: any) => `tax_${m.id}_${t.id}`);
+
+        return {
+          ...acc,
+          ...keys.reduce(
+            (acc: any, m: any) => ({
+              ...acc,
+              [m]: boolean(),
+            }),
+            {}
+          ),
+          [`tax_${m.id}`]: mixed().when(keys, {
+            is: (...args: any[]) => {
+              return !!args.find((a) => a);
+            },
+            then: boolean(),
+            otherwise: number()
+              .typeError("validation.array.minOneItem")
+              .required(),
+          }),
+        };
+      }, {});
+
+      if (Object.keys(requiredModules).length > 0) {
+        setExtendedValidationSchema(
+          ModuleEventUpdateSchema.concat(
+            object().shape({
+              // t("validation.array.minOneItem", "Please select at least one item")
+              ...requiredModules,
+            })
+          )
+        );
+      }
+
+      moduleTerms = data.moduleTaxonomies.reduce((acc: any, m: any) => {
+        if (!Array.isArray(m.terms) || m.terms.length === 0)
+          return acc;
+
+        return {
+          ...acc,
+          ...mapDataToGroupOptions(data.eventRead.terms, m.terms, `tax_${m.id}` ),
+        }
+      }, {});      
+    }
+
+
     reset({
       ...multiLangJsonToRHFormData(
         filteredOutputByWhitelist(
@@ -171,8 +234,9 @@ const Update = () => {
         multiLangFields,
         config.activeLanguages ?? ["en"]
       ),
-      ...mapDataToModulesCheckboxArray(
-        data.eventRead.terms,
+      ...moduleTerms,
+      ...mapDataToPrimaryTerms(
+        data.eventRead.primaryTerms,
         data.moduleTaxonomies
       ),
       isFree: !!data.eventRead.isFree,
@@ -191,10 +255,10 @@ const Update = () => {
         config.activeLanguages ?? ["en"]
       ),
     });
-  }, [reset, data, config.activeLanguages]);
+  }, [reset, data, config.activeLanguages, setExtendedValidationSchema]);
 
   const onSubmit = async (
-    newData: yup.InferType<typeof ModuleEventUpdateSchema>
+    newData: yup.InferType<typeof extendedValidationSchema>
   ) => {
     setHasFormError(false);
     setIsNavigatingAway(false);
@@ -212,6 +276,23 @@ const Update = () => {
                 },
               }
             : undefined;
+
+        let terms = [];
+        if (Array.isArray(data?.moduleTaxonomies)) {
+          terms = data?.moduleTaxonomies.reduce((acc: any, module: any) => {
+            if (Array.isArray(module.terms) && module.terms.length > 0) {
+              return [
+                ...acc,
+                ...mapGroupOptionsToData(
+                  newData,
+                  module.terms,
+                  `tax_${module.id}`
+                ),
+              ];
+            }
+            return acc;
+          }, []);
+        }
 
         const { errors } = await firstMutation(
           parseInt(router.query.id, 10),
@@ -239,10 +320,7 @@ const Update = () => {
             dates: newData.dates,
             status: newData.status,
             terms: {
-              set: mapModulesCheckboxArrayToData(
-                newData,
-                data?.moduleTaxonomies
-              ),
+              set: terms,
             },
             ...heroImage,
             ...filteredOutputByWhitelist(
@@ -339,7 +417,7 @@ const Update = () => {
                 action="update"
                 data={data}
                 setActiveUploadCounter={setActiveUploadCounter}
-                validationSchema={ModuleEventUpdateSchema}
+                validationSchema={extendedValidationSchema}
               />
             </ModulePage>
           </fieldset>

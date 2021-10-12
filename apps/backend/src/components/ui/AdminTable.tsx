@@ -359,6 +359,16 @@ export const AdminTablePublishStatusCell = (cell: Cell) => {
     label = t("publish.status.forreview", "For review");
   }
 
+  if (cell.value === PublishStatus.IMPORTED) {
+    color = "orange";
+    label = t("publish.status.imported", "Imported");
+  }
+
+  if (cell.value === PublishStatus.IMPORTEDWARNINGS) {
+    color = "orange";
+    label = t("publish.status.importedwrning", "Imported with warning(s)");
+  }
+
   if (cell.value === PublishStatus.REJECTED) {
     color = "orange";
     label = t("publish.status.rejected", "Rejected");

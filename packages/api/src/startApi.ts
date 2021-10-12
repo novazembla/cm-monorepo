@@ -56,6 +56,10 @@ export const startApi = async () => {
             name: "dbConvertImages",
             interval: process.env.NODE_ENV === "production" ? "13s" : "37s",
           },
+          {
+            name: "importCalendar",
+            cron: "0 6 * * *",
+          },
         ],
       });
       bree.start();

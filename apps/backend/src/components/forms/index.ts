@@ -23,3 +23,4 @@ export * from "./FieldSingleSelectAutocomplete";
 export * from "./FieldAutocomplete";
 export * from "./FieldHidden";
 export * from "./FieldFileUpload";
+export * from "./FieldModuleTaxonomies";

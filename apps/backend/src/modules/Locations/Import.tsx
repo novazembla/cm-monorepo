@@ -68,7 +68,13 @@ export const AdminTableImportStatusCell = (cell: Cell) => {
   }
 
   if (
-    cell.value === ImportStatus.ERROR ||
+    cell.value === ImportStatus.ERROR
+  ) {
+    color = "red";
+    label = t("import.status.error", "Error");
+  }
+
+  if (
     cell.value === ImportStatus.DELETED
   ) {
     color = "red";
@@ -92,7 +98,11 @@ export const AdminTableImportStatusCell = (cell: Cell) => {
 const intitalTableState: AdminTableState = {
   pageIndex: 0,
   pageSize: config.defaultPageSize ?? 30,
-  sortBy: [],
+  sortBy: [{
+    id: "updatedAt",
+    desc: true
+
+  }],
   filterKeyword: "",
 };
 

@@ -33,23 +33,33 @@ export const importParseInitialCsv = async (file: string, numRows: number) => {
             delimiter: ";",
             headers: (hdrs) => {
               const mappedHeaders = hdrs.map((h) => {
-                if (h === "###") {
-                  headersUnparsed[h] = h;
-                  return h;
+                const hTrimmed = h ? h.trim() : "";
+
+                if (hTrimmed === "") {
+                  unknownHeadersCounter += 1;
+
+                  const uKey = `unkown-${unknownHeadersCounter}`;
+                  headersUnparsed[uKey] = hTrimmed;
+                  return uKey;
+                }
+
+                if (hTrimmed === "###") {
+                  headersUnparsed[hTrimmed] = hTrimmed;
+                  return hTrimmed;
                 }
 
                 const k = Object.keys(importHeaders).find((iHk) => {
                   const t = Object.keys(importHeaders[iHk]).find((lang) => {
                     return (
                       importHeaders[iHk][lang].toLowerCase() ===
-                      h?.toLowerCase()
+                      hTrimmed.toLowerCase()
                     );
                   });
                   return !!t;
                 });
 
                 if (k) {
-                  headersUnparsed[k] = h;
+                  headersUnparsed[k] = hTrimmed;
                   return k;
                 } else {
                   unknownHeadersCounter += 1;
@@ -58,7 +68,7 @@ export const importParseInitialCsv = async (file: string, numRows: number) => {
                   );
 
                   const uKey = `unkown-${unknownHeadersCounter}`;
-                  headersUnparsed[uKey] = h;
+                  headersUnparsed[uKey] = hTrimmed;
                   return uKey;
                 }
               });

@@ -1,11 +1,15 @@
+import { PrismaClient } from "@prisma/client";
 import { getApiConfig } from "../../config";
-import { daoSettingGetByKey } from "../../dao";
 import { GeoLocation } from "../../types";
 
-export const geocodingGetCenterOfGravity = async (): Promise<GeoLocation> => {
+export const geocodingGetCenterOfGravity = async (
+  prisma: PrismaClient
+): Promise<GeoLocation> => {
   const apiConfig = getApiConfig();
 
-  const centerOfGravity = await daoSettingGetByKey("centerOfGravity");
+  const centerOfGravity = await prisma.setting.findFirst({
+    where: { key: "centerOfGravity" },
+  });
 
   const center: GeoLocation = {
     lat: undefined,
@@ -57,7 +61,7 @@ export const geocodingGetBestMatchingLocation = (
     if (
       result.geojson.features.length > 1 &&
       postCode &&
-      postCode.trim() !== ""
+      `${postCode}`.trim() !== ""
     ) {
       const firstPostCodeMatch = result.geojson.features.find((f: any) => {
         return (

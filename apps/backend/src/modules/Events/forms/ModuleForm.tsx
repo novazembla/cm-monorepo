@@ -30,7 +30,7 @@ import {
   FieldRow,
   FieldSingleImage,
   TwoColFieldRow,
-  FieldRadioOrCheckboxGroup,
+  FieldModuleTaxonomies,
   TimeField,
   FieldSingleSelectAutocomplete,
   FieldSwitch,
@@ -39,9 +39,8 @@ import {
 import { HiOutlineTrash } from "react-icons/hi";
 import { MdPlusOne } from "react-icons/md";
 
-import { MultiLangValue } from "~/components/ui";
 import { useAuthentication } from "~/hooks";
-import { getMultilangValue, getMultilangSortedList } from "~/utils";
+import { getMultilangValue } from "~/utils";
 
 const isValidDate = (d: any) => {
   if (Object.prototype.toString.call(d) === "[object Date]") {
@@ -247,27 +246,8 @@ export const ModuleForm = ({
       {updateActions}
 
       {data && data?.moduleTaxonomies && (
-        <>
-          <Divider mt="10" />
-          {data?.moduleTaxonomies.map((taxonomy: any) => (
-            <FieldRow key={`tax_${taxonomy.id}`}>
-              <FieldRadioOrCheckboxGroup
-                id={`tax_${taxonomy.id}`}
-                name={`tax_${taxonomy.id}`}
-                isRequired={false}
-                label={<MultiLangValue json={taxonomy.name} />}
-                type="checkbox"
-                options={getMultilangSortedList(
-                  taxonomy.terms.map((term: any) => ({
-                    label: term.name,
-                    key: term.id,
-                  })),
-                  "label"
-                )}
-              />
-            </FieldRow>
-          ))}
-        </>
+        <FieldModuleTaxonomies data={data} />
+          
       )}
 
       <Divider mt="10" />

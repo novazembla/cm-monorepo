@@ -1,3 +1,4 @@
+import { PrismaClient } from "@prisma/client";
 import {
   GeoCoderKomoot,
   GeoCoderHere,
@@ -29,19 +30,19 @@ const distance = (p1: GeoLocation, p2: GeoLocation) => {
   return d;
 };
 
-export const geocodingGetAddressCandidates = async (address: Address) => {
+export const geocodingGetAddressCandidates = async (
+  address: Address,
+  prisma: PrismaClient
+) => {
   const apiConfig = getApiConfig();
   let result = { features: [], type: "FeatureCollection" };
-
-  try {
-    if (apiConfig.geoCodingProvider.autocomplete === "here") {
-      result = await new GeoCoderHere().query(address, "import");
-    } else if (apiConfig.geoCodingProvider.autocomplete === "komoot") {
-      result = await new GeoCoderKomoot().query(address);
-    } else if (apiConfig.geoCodingProvider.autocomplete === "nominatim") {
-      result = await new GeoCoderNominatim().query(address, "import");
-    }
-  } catch (err) {}
+  if (apiConfig.geoCodingProvider.autocomplete === "here") {
+    result = await new GeoCoderHere().query(address, "import");
+  } else if (apiConfig.geoCodingProvider.autocomplete === "komoot") {
+    result = await new GeoCoderKomoot().query(address, prisma);
+  } else if (apiConfig.geoCodingProvider.autocomplete === "nominatim") {
+    result = await new GeoCoderNominatim().query(address, "import");
+  }
 
   if (Array.isArray(result?.features) && result.features.length > 0) {
     const bounds = [
@@ -55,7 +56,7 @@ export const geocodingGetAddressCandidates = async (address: Address) => {
       ],
     ];
 
-    const centerOfGravity = await geocodingGetCenterOfGravity();
+    const centerOfGravity = await geocodingGetCenterOfGravity(prisma);
 
     const features = result.features.reduce(
       (agg: any, item: any) => {

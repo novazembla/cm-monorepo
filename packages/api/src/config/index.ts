@@ -422,3 +422,10 @@ export const getApiConfig = () => apiConfig;
 export const updateCors = (newCorsSettings: CorsOptions) => {
   apiConfig.corsOptions = newCorsSettings;
 };
+
+const defaults = {
+  updateApiConfig,
+  getApiConfig,
+  updateCors,
+};
+export default defaults;

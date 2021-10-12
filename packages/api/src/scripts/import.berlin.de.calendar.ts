@@ -11,11 +11,7 @@ import Prisma, { EventImportLog } from "@prisma/client";
 
 import { getApiConfig } from "../config";
 
-const isObject = (objValue: any) => {
-  return (
-    objValue && typeof objValue === "object" && objValue.constructor === Object
-  );
-};
+import { slugify, convertToHtml, isObject } from "../utils";
 
 const getTodayInCurrentTZ = () => {
   let today = new Date();
@@ -47,17 +43,6 @@ const prepareDatesForDb = (dates: any[]) => {
       };
     });
   return dates;
-};
-
-const slugify = (text: string) => {
-  return text
-    .toString()
-    .toLowerCase()
-    .replace(/\s+/g, "-") // Replace spaces with -
-    .replace(/[^\w-]+/g, "") // Remove all non-word chars
-    .replace(/--+/g, "-") // Replace multiple - with single -
-    .replace(/^-+/, "") // Trim - from start of text
-    .replace(/-+$/, ""); // Trim - from end of text
 };
 
 const eventCategoriesSlugDE = "veranstaltungsarten";
@@ -130,15 +115,6 @@ const extractFullText = (data: any) => {
   }
   ${data?.meta?.veranstalter?.name} ${data?.meta?.veranstalter?.strasse}
 `;
-};
-
-const convertToHtml = (str: string) => {
-  let out = str.replace(/\r\n/g, "\n");
-  out = out.replace(/\r/g, "\n");
-
-  return (
-    "<p>" + out.replace(/\n{2,}/g, "</p><p>").replace(/\n/g, "<br>") + "</p>"
-  );
 };
 
 const findEventOwner = async (

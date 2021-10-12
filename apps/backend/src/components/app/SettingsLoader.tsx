@@ -13,6 +13,7 @@ const QUERY_SETTINGS = gql`
       value
     }
     modules {
+      id
       key
       name
       withTaxonomies
@@ -45,6 +46,7 @@ export const SettingsLoader = ({ type = "full" }: { type?: string }) => {
           (acc: any, mod: any) => ({
             ...acc,
             [mod.key]: {
+              id: mod.id,
               key: mod.key,
               name: mod.name,
               withTaxonomies: !!mod.withTaxonomies,

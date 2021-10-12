@@ -24,16 +24,18 @@ export enum PublishStatus {
   PUBLISHED,
   TRASHED,
   DELETED,
+  IMPORTED,
+  IMPORTEDWARNINGS,
 }
 
 export enum ImportStatus {
-  CREATED,
-  ASSIGN,
-  PROCESS,
-  PROCESSING,
-  PROCESSED,
-  ERROR,
-  DELETED,
+  CREATED, // 0
+  ASSIGN, // 1
+  PROCESS, // 2
+  PROCESSING, // 3
+  PROCESSED, // 4
+  ERROR, // 5
+  DELETED, // 6
 }
 
 export default ImageStatus;

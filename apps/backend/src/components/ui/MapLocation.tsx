@@ -84,6 +84,8 @@ export const MapLocation = ({
   const refMapContainer = useRef<HTMLDivElement>(null);
   const refMap = useRef<LeafletLocationDisplay>();
 
+  console.log(config);
+  
   useEffect(() => {
     if (
       !window ||

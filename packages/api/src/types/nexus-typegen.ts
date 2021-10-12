@@ -62,6 +62,7 @@ export interface NexusGenInputs {
     isImported: boolean; // Boolean!
     locations?: NexusGenScalars['JSON'] | null; // JSON
     owner: NexusGenScalars['JSON']; // JSON!
+    primaryTerms?: NexusGenScalars['JSON'] | null; // JSON
     slug: NexusGenScalars['JSON']; // JSON!
     status: number; // Int!
     terms?: NexusGenScalars['JSON'] | null; // JSON
@@ -95,6 +96,7 @@ export interface NexusGenInputs {
     lng?: number | null; // Float
     offers?: NexusGenScalars['JSON'] | null; // JSON
     owner: NexusGenScalars['JSON']; // JSON!
+    primaryTerms?: NexusGenScalars['JSON'] | null; // JSON
     slug: NexusGenScalars['JSON']; // JSON!
     socialMedia?: NexusGenScalars['JSON'] | null; // JSON
     status: number; // Int!
@@ -115,7 +117,9 @@ export interface NexusGenInputs {
     value: NexusGenScalars['JSON']; // JSON!
   }
   TaxonomyUpsertInput: { // input type
+    collectPrimaryTerm: boolean; // Boolean!
     hasColor: boolean; // Boolean!
+    isRequired: boolean; // Boolean!
     modules: NexusGenScalars['JSON']; // JSON!
     name: NexusGenScalars['JSON']; // JSON!
     slug: NexusGenScalars['JSON']; // JSON!
@@ -253,6 +257,7 @@ export interface NexusGenObjects {
     locations?: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
     meta?: NexusGenScalars['JSON'] | null; // JSON
     ownerId: number; // Int!
+    primaryTerms?: Array<NexusGenRootTypes['Term'] | null> | null; // [Term]
     slug?: NexusGenScalars['JSON'] | null; // JSON
     status: number; // Int!
     terms?: Array<NexusGenRootTypes['Term'] | null> | null; // [Term]
@@ -344,6 +349,7 @@ export interface NexusGenObjects {
     lng?: number | null; // Float
     offers?: NexusGenScalars['JSON'] | null; // JSON
     ownerId: number; // Int!
+    primaryTerms?: Array<NexusGenRootTypes['Term'] | null> | null; // [Term]
     slug?: NexusGenScalars['JSON'] | null; // JSON
     socialMedia?: NexusGenScalars['JSON'] | null; // JSON
     status: number; // Int!
@@ -415,9 +421,11 @@ export interface NexusGenObjects {
     value?: NexusGenScalars['JSON'] | null; // JSON
   }
   Taxonomy: { // root type
+    collectPrimaryTerm?: boolean | null; // Boolean
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
     hasColor?: boolean | null; // Boolean
     id: number; // Int!
+    isRequired?: boolean | null; // Boolean
     modules?: Array<NexusGenRootTypes['Module'] | null> | null; // [Module]
     name?: NexusGenScalars['JSON'] | null; // JSON
     slug?: NexusGenScalars['JSON'] | null; // JSON
@@ -555,6 +563,7 @@ export interface NexusGenFieldTypes {
     locations: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
     meta: NexusGenScalars['JSON'] | null; // JSON
     ownerId: number; // Int!
+    primaryTerms: Array<NexusGenRootTypes['Term'] | null> | null; // [Term]
     slug: NexusGenScalars['JSON'] | null; // JSON
     status: number; // Int!
     terms: Array<NexusGenRootTypes['Term'] | null> | null; // [Term]
@@ -647,6 +656,7 @@ export interface NexusGenFieldTypes {
     lng: number | null; // Float
     offers: NexusGenScalars['JSON'] | null; // JSON
     ownerId: number; // Int!
+    primaryTerms: Array<NexusGenRootTypes['Term'] | null> | null; // [Term]
     slug: NexusGenScalars['JSON'] | null; // JSON
     socialMedia: NexusGenScalars['JSON'] | null; // JSON
     status: number; // Int!
@@ -799,9 +809,11 @@ export interface NexusGenFieldTypes {
     value: NexusGenScalars['JSON'] | null; // JSON
   }
   Taxonomy: { // field return type
+    collectPrimaryTerm: boolean | null; // Boolean
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
     hasColor: boolean | null; // Boolean
     id: number; // Int!
+    isRequired: boolean | null; // Boolean
     modules: Array<NexusGenRootTypes['Module'] | null> | null; // [Module]
     name: NexusGenScalars['JSON'] | null; // JSON
     slug: NexusGenScalars['JSON'] | null; // JSON
@@ -938,6 +950,7 @@ export interface NexusGenFieldTypeNames {
     locations: 'Location'
     meta: 'JSON'
     ownerId: 'Int'
+    primaryTerms: 'Term'
     slug: 'JSON'
     status: 'Int'
     terms: 'Term'
@@ -1030,6 +1043,7 @@ export interface NexusGenFieldTypeNames {
     lng: 'Float'
     offers: 'JSON'
     ownerId: 'Int'
+    primaryTerms: 'Term'
     slug: 'JSON'
     socialMedia: 'JSON'
     status: 'Int'
@@ -1182,9 +1196,11 @@ export interface NexusGenFieldTypeNames {
     value: 'JSON'
   }
   Taxonomy: { // field return type name
+    collectPrimaryTerm: 'Boolean'
     createdAt: 'DateTime'
     hasColor: 'Boolean'
     id: 'Int'
+    isRequired: 'Boolean'
     modules: 'Module'
     name: 'JSON'
     slug: 'JSON'

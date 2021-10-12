@@ -25,7 +25,6 @@ import {
   adminTableCreateQueryVariables,
   adminTableCreateNewTableState,
   AdminTableActionCell,
-  AdminTableMultiLangCell,
   AdminTableDateCell,
 } from "~/components/ui";
 import { config } from "~/config";

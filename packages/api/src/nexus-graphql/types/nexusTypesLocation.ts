@@ -79,12 +79,17 @@ export const Location = objectType({
     t.json("socialMedia");
     t.json("offers");
     t.int("eventLocationId");
+    t.int("eventLocationId");
     t.string("agency");
     t.field("heroImage", {
       type: "Image",
     });
 
     t.list.field("terms", {
+      type: "Term",
+    });
+
+    t.list.field("primaryTerms", {
       type: "Term",
     });
 
@@ -168,6 +173,13 @@ export const LocationQueries = extendType({
                 slug: true,
               },
             },
+            primaryTerms: {
+              select: {
+                id: true,
+                name: true,
+                slug: true,
+              },
+            },
           };
         }
 
@@ -207,6 +219,13 @@ export const LocationQueries = extendType({
             },
             orderBy: {
               name: "asc",
+            },
+          },
+          primaryTerms: {
+            select: {
+              id: true,
+              name: true,
+              slug: true,
             },
           },
           events: {
@@ -275,6 +294,13 @@ export const LocationQueries = extendType({
                 slug: true,
               },
             },
+            primaryTerms: {
+              select: {
+                id: true,
+                name: true,
+                slug: true,
+              },
+            },
           };
 
         if ((pRI?.fieldsByTypeName?.Location as any)?.events)
@@ -328,6 +354,7 @@ export const LocationUpsertInput = inputObjectType({
     t.float("lat");
     t.float("lng");
     t.json("terms");
+    t.json("primaryTerms");
     t.json("heroImage");
   },
 });

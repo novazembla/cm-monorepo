@@ -659,7 +659,8 @@ async function main() {
               let ownerId;
 
               const geoCodeCandidates = await geocodingGetAddressCandidates(
-                addresses[i]
+                addresses[i],
+                prisma
               );
 
               console.log(geoCodeCandidates);

@@ -10,12 +10,11 @@ import {
   LocationPicker,
   TwoColFieldRow,
   FieldSingleImage,
-  FieldRadioOrCheckboxGroup,
+  FieldModuleTaxonomies,
   FieldInput,
 } from "~/components/forms";
-import { MultiLangValue } from "~/components/ui";
 import { useAuthentication } from "~/hooks";
-import { getMultilangSortedList } from "~/utils";
+
 import { yupIsFieldRequired } from "~/validation";
 
 export const ModuleForm = ({
@@ -150,6 +149,7 @@ export const ModuleForm = ({
         }}
       />
       {updateActions}
+      <FieldModuleTaxonomies data={data} />
       <Divider mt="10" />
       <chakra.fieldset
         border="1px solid"
@@ -295,29 +295,7 @@ export const ModuleForm = ({
         />
       </chakra.fieldset>
 
-      {data && data?.moduleTaxonomies && (
-        <>
-          <Divider mt="10" />
-          {data?.moduleTaxonomies.map((taxonomy: any) => (
-            <FieldRow key={`tax_${taxonomy.id}`}>
-              <FieldRadioOrCheckboxGroup
-                id={`tax_${taxonomy.id}`}
-                name={`tax_${taxonomy.id}`}
-                isRequired={false}
-                label={<MultiLangValue json={taxonomy.name} />}
-                type="checkbox"
-                options={getMultilangSortedList(
-                  taxonomy.terms.map((term: any) => ({
-                    label: term.name,
-                    key: term.id,
-                  })),
-                  "label"
-                )}
-              />
-            </FieldRow>
-          ))}
-        </>
-      )}
+      
       <Divider mt="10" />
       <FieldMultiLangTextEditor
         name="description"

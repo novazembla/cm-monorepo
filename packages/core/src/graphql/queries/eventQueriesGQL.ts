@@ -48,6 +48,16 @@ export const eventReadGQL = gql`
         begin
         end
       }
+      terms {
+        id
+        name
+        slug
+      }
+      primaryTerms {
+        id
+        name
+        slug
+      }
       locations {
         id
         title

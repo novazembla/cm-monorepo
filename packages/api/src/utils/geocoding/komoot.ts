@@ -1,19 +1,22 @@
 import axios, { AxiosResponse } from "axios";
 import axiosRetry from "axios-retry";
-import { GeoLocation, Address } from "../../types";
 
+import { PrismaClient } from "@prisma/client";
 import pkg from "lodash";
 
+import { GeoLocation, Address } from "../../types";
 import { geocodingGetCenterOfGravity } from ".";
 import logger from "../../services/serviceLogging";
 const { pick } = pkg;
+
 axiosRetry(axios, { retries: 3, retryDelay: axiosRetry.exponentialDelay });
 
 // https://photon.komoot.io/
 
 export class GeoCoderKomoot {
-  async query(address: Address, point?: GeoLocation) {
-    const centerOfGravity = point ?? (await geocodingGetCenterOfGravity());
+  async query(address: Address, prisma: PrismaClient, point?: GeoLocation) {
+    const centerOfGravity =
+      point ?? (await geocodingGetCenterOfGravity(prisma));
 
     const client = axios.create({ baseURL: "https://photon.komoot.io/api/" });
     axiosRetry(client, { retries: 3 });

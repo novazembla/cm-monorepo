@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import type * as yup from "yup";
+import { object, boolean, mixed, number } from "yup";
+
 import { useTranslation } from "react-i18next";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -41,9 +43,9 @@ import {
   multiLangJsonToRHFormData,
   multiLangRHFormDataToJson,
   multiLangSlugUniqueError,
+  mapGroupOptionsToData,
+  mapDataToGroupOptions,
 } from "~/utils";
-
-import { mapModulesCheckboxSelectionToData } from "./helpers";
 
 const Update = () => {
   const router = useRouter();
@@ -63,12 +65,14 @@ const Update = () => {
 
   const [firstMutation, firstMutationResults] = useTaxonomyUpdateMutation();
   const [hasFormError, setHasFormError] = useState(false);
+  const [extendedValidationSchema, setExtendedValidationSchema] =
+    useState(ModuleTaxonomySchema);
 
   const disableForm = firstMutationResults.loading;
 
   const formMethods = useForm<any>({
     mode: "onTouched",
-    resolver: yupResolver(ModuleTaxonomySchema),
+    resolver: yupResolver(extendedValidationSchema),
   });
 
   const {
@@ -81,24 +85,41 @@ const Update = () => {
   useEffect(() => {
     if (!data || !data.taxonomyRead) return;
 
-    const currentModuleSelection = Object.keys(modules).reduce((acc, key) => {
-      if (!modules[key].withTaxonomies) return acc;
-
-      let flag;
-      if (
-        !data.taxonomyRead?.modules ||
-        data.taxonomyRead?.modules.length === 0
-      ) {
-        flag = false;
-      } else {
-        flag =
-          data.taxonomyRead?.modules.findIndex((m: any) => m.key === key) > -1;
-      }
-
-      acc.push(flag);
+    const activeModules = Object.keys(modules).reduce((acc: any, k: string) => {
+      if (modules[k].withTaxonomies) acc.push(modules[k]);
       return acc;
-    }, [] as boolean[]);
+    }, []);
 
+    const moduleKeys = activeModules.map((m: any) => `modules_${m.id}`);
+
+    if (moduleKeys.length) {
+      setExtendedValidationSchema(
+        ModuleTaxonomySchema.concat(
+          object().shape({
+            // t("validation.array.minOneItem", "Please select at least one item")
+  
+            ...moduleKeys.reduce(
+              (acc: any, m: any) => ({
+                ...acc,
+                [m]: boolean(),
+              }),
+              {}
+            ),
+  
+            modules: mixed().when(moduleKeys, {
+              is: (...args: any[]) => {
+                return !!args.find((a) => a);
+              },
+              then: boolean(),
+              otherwise: number()
+                .typeError("validation.array.minOneItem")
+                .required(),
+            }),
+          })
+        )
+      );  
+    }
+    
     reset({
       ...multiLangJsonToRHFormData(
         filteredOutputByWhitelist(data.taxonomyRead, [], multiLangFields),
@@ -106,12 +127,25 @@ const Update = () => {
         config.activeLanguages
       ),
       hasColor: !!data.taxonomyRead.hasColor,
-      modules: currentModuleSelection,
+      collectPrimaryTerm: !!data.taxonomyRead.collectPrimaryTerm,
+      isRequired: !!data.taxonomyRead.isRequired,
+      modules: false,
+      ...mapDataToGroupOptions(
+        data?.taxonomyRead?.modules,
+        activeModules,
+        "modules"
+      ),
     });
-  }, [reset, data, config.activeLanguages, modules]);
+  }, [
+    reset,
+    data,
+    config.activeLanguages,
+    modules,
+    setExtendedValidationSchema,
+  ]);
 
   const onSubmit = async (
-    newData: yup.InferType<typeof ModuleTaxonomySchema>
+    newData: yup.InferType<typeof extendedValidationSchema>
   ) => {
     setHasFormError(false);
     setIsNavigatingAway(false);
@@ -127,9 +161,18 @@ const Update = () => {
             [],
             multiLangFields
           ),
-          hasColor: newData.hasColor,
+          hasColor: !!newData.hasColor,
+          collectPrimaryTerm: !!newData.collectPrimaryTerm,
+          isRequired: !!newData.isRequired,
           modules: {
-            set: mapModulesCheckboxSelectionToData(newData, modules),
+            set: mapGroupOptionsToData(
+              newData,
+              Object.keys(modules).reduce((acc: any, k: string) => {
+                if (modules[k].withTaxonomies) acc.push(modules[k]);
+                return acc;
+              }, []),
+              "modules"
+            ),
           },
         });
 
@@ -204,7 +247,7 @@ const Update = () => {
                 type="taxonomy"
                 action="update"
                 data={data?.taxonomyRead}
-                validationSchema={ModuleTaxonomySchema}
+                validationSchema={extendedValidationSchema}
               />
             </ModulePage>
           </fieldset>

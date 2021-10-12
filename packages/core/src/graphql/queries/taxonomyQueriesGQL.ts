@@ -18,6 +18,8 @@ export const taxonomiesQueryGQL = gql`
         name
         slug
         hasColor
+        isRequired
+        collectPrimaryTerm
         termCount
       }
       totalCount
@@ -32,8 +34,11 @@ export const taxonomyReadQueryGQL = gql`
       name
       slug
       hasColor
+      isRequired
+      collectPrimaryTerm
       termCount
       modules {
+        id
         key
       }
       createdAt

@@ -14,6 +14,7 @@ export type MutationProgressInfo = {
 }
 
 export type AppModule = {
+  id: number;
   key: string;
   name: Record<string, string>
   withTaxonomies: boolean;

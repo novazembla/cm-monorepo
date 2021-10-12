@@ -36,6 +36,6 @@ export const appConfig: AppConfigSettings = {
     },
   ],
   mapStyleUrl:
-    "https://example.com/lichtenberg/osm_liberty_berlin.json",
+    "https://example.com/lichtenberg/osm_liberty_culturemap.json",
 };
 export default appConfig;

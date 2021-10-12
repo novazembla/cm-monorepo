@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type * as yup from "yup";
+import { object, boolean, mixed, number } from "yup";
 import { useTranslation } from "react-i18next";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -33,16 +34,24 @@ import {
 import { moduleRootPath, multiLangFields } from "./moduleConfig";
 
 import { ModuleForm } from "./forms";
-import { multiLangRHFormDataToJson, multiLangSlugUniqueError } from "~/utils";
-import { mapModulesCheckboxArrayToData } from "./helpers";
+import {
+  multiLangRHFormDataToJson,
+  multiLangSlugUniqueError,
+  mapGroupOptionsToData,
+  mapPrimaryTermsToData
+} from "~/utils";
 
 export const locationReadGetTaxonomies = gql`
   query locationRead {
     moduleTaxonomies(key: "location") {
       id
       name
+      slug
+      isRequired
+      collectPrimaryTerm
       terms {
         id
+        slug
         name
       }
     }
@@ -59,18 +68,63 @@ const Create = () => {
 
   const [firstMutation, firstMutationResults] = useLocationCreateMutation();
   const [hasFormError, setHasFormError] = useState(false);
+  const [extendedValidationSchema, setExtendedValidationSchema] = useState(
+    ModuleLocationCreateSchema
+  );
 
   const disableForm = firstMutationResults.loading;
-
-  const formMethods = useForm<any>({
-    mode: "onTouched",
-    resolver: yupResolver(ModuleLocationCreateSchema),
-  });
 
   const { data, loading, error } = useQuery(locationReadGetTaxonomies, {
     variables: {
       id: parseInt(router.query.id, 10),
     },
+  });
+
+  useEffect(() => {
+    if (!data || !Array.isArray(data.moduleTaxonomies)) return;
+
+    let requiredModules = data.moduleTaxonomies.reduce((acc: any, m: any) => {
+      if (!m?.isRequired || !Array.isArray(m.terms) || m.terms.length === 0)
+        return acc;
+
+      const keys = m.terms.map((t: any) => `tax_${m.id}_${t.id}`);
+
+      return {
+        ...acc,
+        ...keys.reduce(
+          (acc: any, m: any) => ({
+            ...acc,
+            [m]: boolean(),
+          }),
+          {}
+        ),
+        [`tax_${m.id}`]: mixed().when(keys, {
+          is: (...args: any[]) => {
+            return !!args.find((a) => a);
+          },
+          then: boolean(),
+          otherwise: number()
+            .typeError("validation.array.minOneItem")
+            .required(),
+        }),
+      };
+    }, {});
+
+    if (Object.keys(requiredModules).length > 0) {
+      setExtendedValidationSchema(
+        ModuleLocationCreateSchema.concat(
+          object().shape({
+            // t("validation.array.minOneItem", "Please select at least one item")
+            ...requiredModules,
+          })
+        )
+      );
+    }
+  }, [data, setExtendedValidationSchema]);
+
+  const formMethods = useForm<any>({
+    mode: "onTouched",
+    resolver: yupResolver(extendedValidationSchema),
   });
 
   const {
@@ -80,12 +134,48 @@ const Create = () => {
   } = formMethods;
 
   const onSubmit = async (
-    newData: yup.InferType<typeof ModuleLocationCreateSchema>
+    newData: yup.InferType<typeof extendedValidationSchema>
   ) => {
     setHasFormError(false);
     setIsNavigatingAway(false);
     try {
       if (appUser) {
+        let terms = [];
+        if (Array.isArray(data?.moduleTaxonomies)) {
+          terms = data?.moduleTaxonomies.reduce((acc: any, module: any) => {
+            if (Array.isArray(module.terms) && module.terms.length > 0) {
+              return [
+                ...acc,
+                ...mapGroupOptionsToData(
+                  newData,
+                  module.terms,
+                  `tax_${module.id}`
+                ),
+              ];
+            }
+            return acc;
+          }, []);
+        }
+
+        const primaryTerms = mapPrimaryTermsToData(
+          "connect",
+          newData,
+          data?.moduleTaxonomies
+        );
+
+        if (primaryTerms?.primaryTerms?.connect) {
+          terms = primaryTerms?.primaryTerms?.connect.reduce(
+            (acc: any, term: any) => {
+              if (!acc.find((t: any) => t.id === term.id))
+                acc.push({
+                  id: term.id,
+                });
+              return acc;
+            },
+            terms
+          );
+        }
+
         const mutationResults = await firstMutation({
           owner: {
             connect: {
@@ -95,14 +185,14 @@ const Create = () => {
           lat: newData.lat,
           lng: newData.lng,
           status: PublishStatus.DRAFT,
-          eventLocationId: newData.eventLocationId ? parseInt(newData.eventLocationId) : undefined,
+          eventLocationId: newData.eventLocationId
+            ? parseInt(newData.eventLocationId)
+            : undefined,
           agency: newData.agency,
           terms: {
-            connect: mapModulesCheckboxArrayToData(
-              newData,
-              data?.moduleTaxonomies
-            ),
+            connect: terms,
           },
+          ...primaryTerms,
           address: pick(newData, [
             "co",
             "street1",
@@ -111,12 +201,7 @@ const Create = () => {
             "city",
             "postCode",
           ]),
-          contactInfo: pick(newData, [
-            "email1",
-            "email2",
-            "phone1",
-            "phone2",
-          ]),
+          contactInfo: pick(newData, ["email1", "email2", "phone1", "phone2"]),
           socialMedia: pick(newData, [
             "facebook",
             "twitter",
@@ -146,7 +231,6 @@ const Create = () => {
             mutationResults.errors,
             setError
           );
-            
 
           if (!slugError) setHasFormError(true);
         }
@@ -203,7 +287,7 @@ const Create = () => {
               <ModuleForm
                 action="create"
                 data={data}
-                validationSchema={ModuleLocationCreateSchema}
+                validationSchema={extendedValidationSchema}
               />
             </ModulePage>
           </fieldset>

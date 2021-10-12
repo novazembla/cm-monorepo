@@ -7,177 +7,178 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["filterJson"]
 }
 
 model User {
-  id             Int        @id @default(autoincrement())
-  email          String     @unique
-  firstName      String
-  lastName       String
-  role           String     @default("user")
-  emailVerified Boolean    @default(false)
-  acceptedTerms  Boolean    @default(false)
-  userBanned     Boolean    @default(false)
-  ownsEventImports     Boolean    @default(false)
-  ownsConentOnDelete   Boolean    @default(false)
-  password       String
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @default(now()) @updatedAt
-  
-  locations      Location[]
-  
-  tokens         Token[]
-  
-  pages          Page[]
-  
-  events      Event[]
+  id                 Int      @id @default(autoincrement())
+  email              String   @unique
+  firstName          String
+  lastName           String
+  role               String   @default("user")
+  emailVerified      Boolean  @default(false)
+  acceptedTerms      Boolean  @default(false)
+  userBanned         Boolean  @default(false)
+  ownsEventImports   Boolean  @default(false)
+  ownsConentOnDelete Boolean  @default(false)
+  password           String
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @default(now()) @updatedAt
 
-  images         Image[]    @relation("images")
-  
-  tours         Tour[]
-  
-  files         File[]
+  locations Location[]
 
-  tourStops     TourStop[]
+  tokens Token[]
 
-  fullText      String? @default("")
+  pages Page[]
 
-  imports      Import[]
+  events Event[]
 
-  profileImageId Int?           
-  profileImage   Image?  @relation(fields: [profileImageId], references: [id], name: "profileImage", onDelete: Cascade)
+  images Image[] @relation("images")
+
+  tours Tour[]
+
+  files File[]
+
+  tourStops TourStop[]
+
+  fullText String? @default("")
+
+  imports Import[]
+
+  profileImageId Int?
+  profileImage   Image? @relation(fields: [profileImageId], references: [id], name: "profileImage", onDelete: Cascade)
 }
 
 model Location {
-  id            Int    @id @default(autoincrement())
-  title         Json     
-  slug          Json    
-  description   Json   @default("{}")
-  address       Json?  @default("{}")
-  accessibilityInformation       Json?  @default("{}")
-  contactInfo   Json?  @default("{}")
-  offers        Json?  @default("{}")
-  geoCodingInfo Json?  @default("{}")
-  socialMedia   Json?  @default("{}")
+  id                       Int   @id @default(autoincrement())
+  title                    Json
+  slug                     Json
+  description              Json  @default("{}")
+  address                  Json? @default("{}")
+  accessibilityInformation Json? @default("{}")
+  contactInfo              Json? @default("{}")
+  offers                   Json? @default("{}")
+  geoCodingInfo            Json? @default("{}")
+  socialMedia              Json? @default("{}")
 
-  visibleFrom   DateTime?
-  visibleFromTime   DateTime?
+  visibleFrom     DateTime?
+  visibleFromTime DateTime?
 
-  visibleUntil  DateTime?
-  visibleUntilTime  DateTime?
+  visibleUntil     DateTime?
+  visibleUntilTime DateTime?
 
-  status      Int  
+  status Int
 
-  lat         Float?
-  lng         Float?
+  lat Float?
+  lng Float?
 
-  events      Event[]
-  images      Image[]
-  terms       Term[]        @relation(name: "locationTerms")
-  tourStops   TourStop[]
+  events    Event[]
+  images    Image[]
+  terms     Term[]     @relation(name: "locationTerms")
+  tourStops TourStop[]
 
-  fullText      String? @default("")
+  fullText String? @default("")
 
-  ownerId     Int    
-  owner       User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId Int
+  owner   User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
-  heroImageId    Int?
-  heroImage      Image?    @relation(fields: [heroImageId], references: [id], name: "locationHeroImage", onDelete: Cascade)
+  heroImageId Int?
+  heroImage   Image? @relation(fields: [heroImageId], references: [id], name: "locationHeroImage", onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
-  eventLocationId  Int? 
-  
-  agency      String? 
+  eventLocationId Int?
 
-  primaryTypeId    Int?
-  primaryType      Term?    @relation(fields: [primaryTypeId], references: [id], name: "locationPrimaryType", onDelete: Cascade)
+  agency String?
+
+  primaryTerms  Term[] @relation(name: "locationPrimaryTerms")
+
+  importedLocationHash String?
 
   @@index([ownerId], name: "indexLocationOwnerId")
 }
 
-
 model Event {
-  id            Int    @id @default(autoincrement())
-  hash          String @default("")
-  title           Json     
-  slug           Json    
-  description   Json?  @default("{}")
-  meta Json?    @default("{}")
-  
-  isFree        Boolean @default(false)
-  isImported        Boolean @default(false)
-  locations      Location[]
+  id          Int   @id @default(autoincrement())
+  title       Json
+  slug        Json
+  description Json? @default("{}")
+  meta        Json? @default("{}")
 
-  ownerId     Int    
-  owner       User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  isFree     Boolean    @default(false)
+  isImported Boolean    @default(false)
+  locations  Location[]
 
-  status      Int  
-  
-  images   Image[]
+  ownerId Int
+  owner   User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  status Int
+
+  images Image[]
   dates  EventDate[]
-  terms       Term[]
+  terms  Term[]
 
-  heroImageId    Int?
-  heroImage      Image?    @relation(fields: [heroImageId], references: [id], name: "eventHeroImage", onDelete: Cascade)
+  heroImageId Int?
+  heroImage   Image? @relation(fields: [heroImageId], references: [id], name: "eventHeroImage", onDelete: Cascade)
 
-  fullText      String? @default("")
+  fullText String? @default("")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
-  importedEventHash  String? 
+  primaryTerms  Term[] @relation(name: "eventPrimaryTerms")
+
+  importedEventHash String?
 
   @@index([ownerId], name: "indexEventOwnerId")
 }
 
 model EventDate {
-  id      Int    @id @default(autoincrement())
-  date    DateTime 
+  id      Int      @id @default(autoincrement())
+  date    DateTime
   begin   DateTime
   end     DateTime
-  eventId    Int?
-  event      Event?    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  eventId Int?
+  event   Event?   @relation(fields: [eventId], references: [id], onDelete: Cascade)
 }
 
 model EventImportLog {
-  id      Int    @id @default(autoincrement())
-  log     Json?    @default("[]") 
-  errors    Json?    @default("[]") 
-  warnings Json?    @default("[]") 
+  id        Int      @id @default(autoincrement())
+  log       Json?    @default("[]")
+  errors    Json?    @default("[]")
+  warnings  Json?    @default("[]")
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 }
 
 model Token {
-  id     Int    @id @default(autoincrement())
-  token  String
-  type   String @db.VarChar(16)
-  userId Int
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  expires     DateTime
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @default(now()) @updatedAt
+  id      Int      @id @default(autoincrement())
+  token   String
+  type    String   @db.VarChar(16)
+  userId  Int
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expires DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 
   @@index([userId], name: "indexTokenUserId")
 }
 
 model Setting {
-  id     Int    @id @default(autoincrement())
-  key    String @db.VarChar(128) @unique
-  value   Json
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @default(now()) @updatedAt
+  id    Int    @id @default(autoincrement())
+  key   String @unique @db.VarChar(128)
+  value Json
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 }
 
 model Module {
   id             Int        @id @default(autoincrement())
-  key            String     @db.VarChar(12) @unique
+  key            String     @unique @db.VarChar(12)
   name           Json
   withTaxonomies Boolean    @default(false)
   createdAt      DateTime   @default(now())
@@ -186,155 +187,157 @@ model Module {
 }
 
 model Taxonomy {
-  id             Int        @id @default(autoincrement())
-  name           Json     
-  slug           Json     
-  multiTerm      Boolean    @default(false)
-  hasColor       Boolean    @default(false)
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @default(now()) @updatedAt
+  id        Int      @id @default(autoincrement())
+  name      Json
+  slug      Json
+  multiTerm Boolean  @default(false)
+  hasColor  Boolean  @default(false)
+  collectPrimaryTerm  Boolean  @default(false)
+  isRequired  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 
-  fullText      String? @default("")
+  fullText String? @default("")
 
-  terms          Term[]
-  modules        Module[]
+  terms   Term[]
+  modules Module[]
 
 }
 
 model Term {
-  id             Int        @id @default(autoincrement())
-  name           Json     
-  slug           Json   
+  id   Int  @id @default(autoincrement())
+  name Json
+  slug Json
 
-  color          String @default("")
-  colorDark      String @default("")
-  taxonomyId     Int
-  taxonomy       Taxonomy   @relation(fields: [taxonomyId], references: [id], onDelete: Cascade)
+  color      String   @default("")
+  colorDark  String   @default("")
+  taxonomyId Int
+  taxonomy   Taxonomy @relation(fields: [taxonomyId], references: [id], onDelete: Cascade)
 
-  locations      Location[] @relation(name: "locationTerms", onDelete: Cascade)
+  locations Location[] @relation(name: "locationTerms", onDelete: Cascade)
 
-  primaryTypeLocation Location? @relation(name: "locationPrimaryType")
+  primaryTermsLocations  Location[] @relation(name: "locationPrimaryTerms", onDelete: Cascade)
+  primaryTermsEvents  Event[] @relation(name: "eventPrimaryTerms", onDelete: Cascade)
 
-  events         Event[]
+  events Event[]
 
-  fullText      String? @default("")
+  fullText String? @default("")
 
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @default(now()) @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 
   @@index([taxonomyId], name: "indexTermTaxonomyId")
 }
 
-
 model Tour {
-  id             Int        @id @default(autoincrement())
-  
-  title          Json     
-  slug           Json     
-  duration       Json
-  distance       Json    
-  teaser         Json
-  description    Json
-  path           Json
+  id Int @id @default(autoincrement())
 
-  heroImageId    Int?
-  heroImage      Image?    @relation(fields: [heroImageId], references: [id], name: "tourHeroImage", onDelete: Cascade)
+  title       Json
+  slug        Json
+  duration    Json
+  distance    Json
+  teaser      Json
+  description Json
+  path        Json
 
-  status         Int  
+  heroImageId Int?
+  heroImage   Image? @relation(fields: [heroImageId], references: [id], name: "tourHeroImage", onDelete: Cascade)
 
-  fullText       String    @default("")
+  status Int
 
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @default(now()) @updatedAt
+  fullText String @default("")
 
-  ownerId     Int    
-  owner       User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  ownerId Int
+  owner   User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+
+  tourStops TourStop[]
   @@index([ownerId], name: "indexTourOwnerId")
-
-  tourStops          TourStop[]  
 }
 
 model TourStop {
-  id             Int        @id @default(autoincrement())
-  
-  title          Json     
-  number         Int?        @default(1)
+  id Int @id @default(autoincrement())
+
+  title  Json
+  number Int? @default(1)
 
 
-  loactionId     Int
-  location       Location?    @relation(fields: [loactionId], references: [id], onDelete: Cascade)
+  loactionId Int
+  location   Location? @relation(fields: [loactionId], references: [id], onDelete: Cascade)
 
-  teaser         Json
-  description    Json
-  
-  tourId        Int?
-  tour          Tour?    @relation(fields: [tourId], references: [id])
+  teaser      Json
+  description Json
 
-  heroImageId    Int?
-  heroImage      Image?    @relation(fields: [heroImageId], references: [id], name: "tourStopHeroImage", onDelete: Cascade)
+  tourId Int?
+  tour   Tour? @relation(fields: [tourId], references: [id])
 
-  fullText       String    @default("")
+  heroImageId Int?
+  heroImage   Image? @relation(fields: [heroImageId], references: [id], name: "tourStopHeroImage", onDelete: Cascade)
 
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @default(now()) @updatedAt
-  
-  ownerId     Int    
-  owner       User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  
+  fullText String @default("")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  ownerId Int
+  owner   User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+
   @@index([ownerId], name: "indexTourStopOwnerId")
-
 }
 
 model Page {
-  id             Int        @id @default(autoincrement())
-  
-  title          Json     
-  slug           Json     
-  intro          Json
-  content        Json
+  id Int @id @default(autoincrement())
 
-  heroImageId    Int?
-  heroImage      Image?    @relation(fields: [heroImageId], references: [id], name: "pageHeroImage", onDelete: Cascade)
+  title   Json
+  slug    Json
+  intro   Json
+  content Json
 
-  status         Int  
+  heroImageId Int?
+  heroImage   Image? @relation(fields: [heroImageId], references: [id], name: "pageHeroImage", onDelete: Cascade)
 
-  fullText       String    @default("")
+  status Int
 
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @default(now()) @updatedAt
-  ownerId     Int    
-  owner       User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  
+  fullText String @default("")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  ownerId   Int
+  owner     User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
   @@index([ownerId], name: "indexPageOwnerId")
 }
 
-// TODO: add a retry mechanism 
+// TODO: add a retry mechanism
 model Image {
-  id             Int        @id @default(autoincrement())
-  
-  nanoid         String     @db.VarChar(48) @unique
-  meta           Json
-  status         Int        @default(0)
-  orderNumber    Int        @default(0)
-  
-  retryCount     Int        @default(0)
-  type           String     @db.VarChar(16) @default("image")
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @default(now()) @updatedAt
-  ownerId        Int           
-  owner          User   @relation(fields: [ownerId], references: [id], name: "images", onDelete: Cascade)
+  id Int @id @default(autoincrement())
 
-  events         Event[]
-  locations      Location[]
-  translations   ImageTranslation[]
+  nanoid      String @unique @db.VarChar(48)
+  meta        Json
+  status      Int    @default(0)
+  orderNumber Int    @default(0)
 
-  profileImageUsers   User[]  @relation("profileImage")
-  heroImagePages      Page[]  @relation("pageHeroImage")
-  heroImageEvents     Event[]  @relation("eventHeroImage")
-  heroImageLocations  Location[]  @relation("locationHeroImage")
-  heroImageTours      Tour[]  @relation("tourHeroImage")
-  heroImageTourStops  TourStop[]  @relation("tourStopHeroImage")
+  retryCount Int      @default(0)
+  type       String   @default("image") @db.VarChar(16)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+  ownerId    Int
+  owner      User     @relation(fields: [ownerId], references: [id], name: "images", onDelete: Cascade)
+
+  events       Event[]
+  locations    Location[]
+  translations ImageTranslation[]
+
+  profileImageUsers  User[]     @relation("profileImage")
+  heroImagePages     Page[]     @relation("pageHeroImage")
+  heroImageEvents    Event[]    @relation("eventHeroImage")
+  heroImageLocations Location[] @relation("locationHeroImage")
+  heroImageTours     Tour[]     @relation("tourHeroImage")
+  heroImageTourStops TourStop[] @relation("tourStopHeroImage")
 
   @@index([ownerId], name: "indexImageOwnerId")
   @@index([ownerId, type], name: "indexImageOwnerIdType")
@@ -342,48 +345,48 @@ model Image {
 }
 
 model ImageTranslation {
-  id              Int        @id @default(autoincrement())
-  key             String     @db.VarChar(24)
-  lang            String     @db.VarChar(4)
-  translation     String
-  
-  imageId    Int     
-  image           Image?     @relation(fields: [imageId], references: [id], onDelete: Cascade)
+  id          Int    @id @default(autoincrement())
+  key         String @db.VarChar(24)
+  lang        String @db.VarChar(4)
+  translation String
+
+  imageId Int
+  image   Image? @relation(fields: [imageId], references: [id], onDelete: Cascade)
 
   @@unique([imageId, key, lang], name: "uniqueTransKeys")
 }
 
 model Import {
-  id             Int        @id @default(autoincrement())
-  title          String     
-  log            Json?      @default("[]")
-  errors         Json?      @default("[]")
-  mapping        Json?      @default("[]")
-  warnings        Json?      @default("[]")
-  status         Int        @default(0)
+  id       Int    @id @default(autoincrement())
+  title    String
+  log      Json?  @default("[]")
+  errors   Json?  @default("[]")
+  mapping  Json?  @default("[]")
+  warnings Json?  @default("[]")
+  status   Int    @default(0)
 
-  fileId         Int?
-  file           File?    @relation(fields: [fileId], references: [id], name: "importFiles")
-  
-  ownerId        Int    
-  owner          User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  fileId Int?
+  file   File? @relation(fields: [fileId], references: [id], name: "importFiles")
 
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @default(now()) @updatedAt
+  ownerId Int
+  owner   User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 }
 
 model File {
-  id             Int        @id @default(autoincrement())
-  
-  nanoid         String     @db.VarChar(48) @unique
-  status         Int        @default(0)
-  meta           Json
+  id Int @id @default(autoincrement())
 
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @default(now()) @updatedAt
-  
-  ownerId        Int           
-  owner          User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  nanoid String @unique @db.VarChar(48)
+  status Int    @default(0)
+  meta   Json
 
-  imports        Import[]  @relation("importFiles")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  ownerId Int
+  owner   User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  imports Import[] @relation("importFiles")
 }

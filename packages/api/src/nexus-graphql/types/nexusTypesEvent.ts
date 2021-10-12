@@ -89,6 +89,10 @@ export const Event = objectType({
       type: "Term",
     });
 
+    t.list.field("primaryTerms", {
+      type: "Term",
+    });
+
     t.list.field("locations", {
       type: "Location",
     });
@@ -164,6 +168,13 @@ export const EventQueries = extendType({
           include = {
             ...include,
             terms: {
+              select: {
+                id: true,
+                name: true,
+                slug: true,
+              },
+            },
+            primaryTerms: {
               select: {
                 id: true,
                 name: true,
@@ -276,6 +287,13 @@ export const EventQueries = extendType({
                 slug: true,
               },
             },
+            primaryTerms: {
+              select: {
+                id: true,
+                name: true,
+                slug: true,
+              },
+            },
           };
 
         if ((pRI?.fieldsByTypeName?.Event as any)?.dates)
@@ -343,6 +361,7 @@ export const EventUpsertInput = inputObjectType({
     t.json("description");
     t.nonNull.json("owner");
     t.json("terms");
+    t.json("primaryTerms");
     t.json("dates");
     t.json("locations");
     t.json("heroImage");

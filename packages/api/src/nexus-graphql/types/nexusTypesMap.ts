@@ -1,6 +1,7 @@
 /// <reference path="../../types/nexus-typegen.ts" />
 import { objectType, extendType, nonNull, stringArg } from "nexus";
 import { getApiConfig } from "../../config";
+import { getPrismaClient } from "../../db";
 
 import {
   GeoCoderKomoot,
@@ -30,9 +31,12 @@ export const MapQueries = extendType({
         const apiConfig = getApiConfig();
 
         if (apiConfig.geoCodingProvider.autocomplete === "komoot") {
-          const result = await new GeoCoderKomoot().query({
-            street1: args.q,
-          });
+          const result = await new GeoCoderKomoot().query(
+            {
+              street1: args.q,
+            },
+            getPrismaClient()
+          );
           return {
             geojson: result,
             count: Array.isArray(result?.features)

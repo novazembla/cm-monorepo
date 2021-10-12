@@ -235,7 +235,7 @@ export const daoLocationGetBySlug = async (
   );
 };
 
-export default {
+const defaults = {
   daoLocationQuery,
   daoLocationQueryFirst,
   daoLocationQueryCount,
@@ -247,3 +247,5 @@ export default {
   daoLocationSearchQuery,
   daoLocationGetBySlug,
 };
+
+export default defaults;

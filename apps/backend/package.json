@@ -52,6 +52,7 @@
     "lodash": "^4.17.21",
     "maplibre-gl": "^2.0.0-pre.1",
     "npm": "^7.20.5",
+    "object-hash": "^2.2.0",
     "react": "^17.0.2",
     "react-beautiful-dnd": "^13.1.0",
     "react-cookie": "^4.0.3",

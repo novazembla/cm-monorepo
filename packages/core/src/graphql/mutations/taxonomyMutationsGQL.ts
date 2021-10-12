@@ -7,6 +7,8 @@ export const taxonomyCreateMutationGQL = gql`
       name
       slug
       hasColor
+      collectPrimaryTerm
+      isRequired
     }
   }
 `;
@@ -18,6 +20,8 @@ export const taxonomyUpdateMutationGQL = gql`
       name
       slug
       hasColor
+      collectPrimaryTerm
+      isRequired
     }
   }
 `;

@@ -84,6 +84,7 @@ const UpdateTerm = () => {
       color: data?.termRead?.color ?? "",
       colorDark: data?.termRead?.colorDark ?? "",
       hasColor: !!data?.termRead?.taxonomy?.hasColor,
+      collectPrimaryTerm: !!data?.termRead?.taxonomy?.collectPrimaryTerm,
     });
   }, [reset, data, config.activeLanguages]);
 

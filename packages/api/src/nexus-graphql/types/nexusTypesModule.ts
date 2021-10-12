@@ -44,7 +44,6 @@ export const ModuleQuery = extendType({
       args: {
         key: nonNull(stringArg()),
       },
-      // TODO: access control???
 
       // resolve(root, args, ctx, info)
       async resolve(...[, args]) {
@@ -61,6 +60,9 @@ export const ModuleQuery = extendType({
               select: {
                 id: true,
                 name: true,
+                collectPrimaryTerm: true,
+                isRequired: true,
+                hasColor: true,
                 slug: true,
                 terms: {
                   orderBy: {
@@ -82,7 +84,15 @@ export const ModuleQuery = extendType({
         return filteredOutputByWhitelist(
           (module as any).taxonomies,
           FIELD_KEYS_SETTING,
-          ["id", "name", "slug", "terms"]
+          [
+            "id",
+            "name",
+            "slug",
+            "hasColor",
+            "isRequired",
+            "collectPrimaryTerm",
+            "terms",
+          ]
         );
       },
     });

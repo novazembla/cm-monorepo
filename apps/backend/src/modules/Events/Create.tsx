@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type * as yup from "yup";
+import { object, boolean, mixed, number } from "yup";
 import { useTranslation } from "react-i18next";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -32,14 +33,19 @@ import {
 import { moduleRootPath, multiLangFields } from "./moduleConfig";
 
 import { ModuleForm } from "./forms";
-import { multiLangRHFormDataToJson, multiLangSlugUniqueError } from "~/utils";
-import { mapModulesCheckboxArrayToData } from "./helpers";
+import {
+  multiLangRHFormDataToJson,
+  multiLangSlugUniqueError,
+  mapGroupOptionsToData,
+} from "~/utils";
 
 export const eventReadGetTaxonomies = gql`
   query eventRead {
     moduleTaxonomies(key: "event") {
       id
       name
+      collectPrimaryTerm
+      isRequired
       terms {
         id
         name
@@ -68,11 +74,63 @@ const Create = () => {
   const [firstMutation, firstMutationResults] = useEventCreateMutation();
   const [hasFormError, setHasFormError] = useState(false);
 
+  const [extendedValidationSchema, setExtendedValidationSchema] = useState(
+    ModuleEventCreateSchema
+  );
+
   const disableForm = firstMutationResults.loading;
+
+  const { data, loading, error } = useQuery(eventReadGetTaxonomies, {
+    variables: {
+      id: parseInt(router.query.id, 10),
+    },
+  });
+
+  useEffect(() => {
+    if (!data || !Array.isArray(data.moduleTaxonomies)) return;
+
+    let requiredModules = data.moduleTaxonomies.reduce((acc: any, m: any) => {
+      if (!m?.isRequired || !Array.isArray(m.terms) || m.terms.length === 0)
+        return acc;
+
+      const keys = m.terms.map((t: any) => `tax_${m.id}_${t.id}`);
+
+      return {
+        ...acc,
+        ...keys.reduce(
+          (acc: any, m: any) => ({
+            ...acc,
+            [m]: boolean(),
+          }),
+          {}
+        ),
+        [`tax_${m.id}`]: mixed().when(keys, {
+          is: (...args: any[]) => {
+            return !!args.find((a) => a);
+          },
+          then: boolean(),
+          otherwise: number()
+            .typeError("validation.array.minOneItem")
+            .required(),
+        }),
+      };
+    }, {});
+
+    if (Object.keys(requiredModules).length > 0) {
+      setExtendedValidationSchema(
+        ModuleEventCreateSchema.concat(
+          object().shape({
+            // t("validation.array.minOneItem", "Please select at least one item")
+            ...requiredModules,
+          })
+        )
+      );
+    }
+  }, [data, setExtendedValidationSchema]);
 
   const formMethods = useForm<any>({
     mode: "onTouched",
-    resolver: yupResolver(ModuleEventCreateSchema),
+    resolver: yupResolver(extendedValidationSchema),
     defaultValues: {
       dates: [
         {
@@ -84,12 +142,6 @@ const Create = () => {
     },
   });
 
-  const { data, loading, error } = useQuery(eventReadGetTaxonomies, {
-    variables: {
-      id: parseInt(router.query.id, 10),
-    },
-  });
-
   const {
     handleSubmit,
     setError,
@@ -97,10 +149,23 @@ const Create = () => {
   } = formMethods;
 
   const onSubmit = async (
-    newData: yup.InferType<typeof ModuleEventCreateSchema>
+    newData: yup.InferType<typeof extendedValidationSchema>
   ) => {
     setHasFormError(false);
     setIsNavigatingAway(false);
+
+    let terms = [];
+    if (Array.isArray(data?.moduleTaxonomies)) {
+      terms = data?.moduleTaxonomies.reduce((acc: any, module: any) => {
+        if (Array.isArray(module.terms) && module.terms.length > 0) {
+          return [
+            ...acc,
+            ...mapGroupOptionsToData(newData, module.terms, `tax_${module.id}`),
+          ];
+        }
+        return acc;
+      }, []);
+    }
 
     try {
       if (appUser) {
@@ -128,10 +193,7 @@ const Create = () => {
           lng: newData.lng,
           status: PublishStatus.DRAFT,
           terms: {
-            connect: mapModulesCheckboxArrayToData(
-              newData,
-              data?.moduleTaxonomies
-            ),
+            connect: terms,
           },
           ...filteredOutputByWhitelist(
             multiLangRHFormDataToJson(
@@ -148,7 +210,7 @@ const Create = () => {
 
         if (!mutationResults.errors) {
           successToast();
-          
+
           setIsNavigatingAway(true);
           router.push(
             `${moduleRootPath}/update/${mutationResults.data?.eventCreate?.id}`
@@ -214,7 +276,7 @@ const Create = () => {
               <ModuleForm
                 action="create"
                 data={data}
-                validationSchema={ModuleEventCreateSchema}
+                validationSchema={extendedValidationSchema}
               />
             </ModulePage>
           </fieldset>
