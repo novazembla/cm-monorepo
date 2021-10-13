@@ -75,7 +75,7 @@ export const authAuthenticateUserByToken = (
         );
       }
     }
-  } catch (err) {
+  } catch (err: any) {
     logger.debug(`[auth.authenticateUserByToken]: ${err.name}: ${err.message}`);
   }
 

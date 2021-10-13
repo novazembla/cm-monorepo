@@ -8,11 +8,11 @@ name: app
 # in multiple versions. Check the Node.js documentation
 # (https://docs.platform.sh/languages/nodejs.html#supported-versions)
 # to find the supported versions for the 'nodejs' type.
-type: 'nodejs:14'
+type: 'nodejs:16'
       
 dependencies:
   nodejs:
-    npm: "^7.20.6"
+    npm: "^7.24.1"
     
 disk: 512
 
@@ -50,6 +50,10 @@ mounts:
   'logs':
     source: local
     source_path: log
+  'csv':
+    source: service
+    service: files
+    source_path: csv
   'public/img':
     source: service
     service: files
