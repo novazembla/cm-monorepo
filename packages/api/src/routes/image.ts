@@ -77,58 +77,61 @@ export const postImage = async (
   res: Response,
   next: NextFunction
 ) => {
-  const refreshToken = req?.cookies?.refreshToken ?? "";
-
-  if (refreshToken) {
-    try {
-      const apiUserInRefreshToken = authAuthenticateUserByToken(refreshToken);
-      if (apiUserInRefreshToken) {
-        if (apiUserInRefreshToken.id !== parseInt(req.body.ownerId)) {
-          // TODO: openar
-          next(new ApiError(httpStatus.FORBIDDEN, "Access denied"));
-        }
-      }
-    } catch (Err) {
-      next(new ApiError(httpStatus.FORBIDDEN, "Access denied"));
-    }
-  } else {
-    next(new ApiError(httpStatus.FORBIDDEN, "Access denied"));
-  }
-
   try {
-    if (req.body.ownerId && !Number.isNaN(req.body.ownerId)) {
-      if (req.file) {
-        const { fileNanoId, metainfo } = createImageMetaInfo(req.file);
-
-        let connectWith;
-        try {
-          connectWith = req?.body?.connectWith
-            ? JSON.parse(req?.body?.connectWith)
-            : {};
-        } catch (err) {
-          // nothing to be done ...
+    const refreshToken = req?.cookies?.refreshToken ?? "";
+    if (refreshToken) {
+      try {
+        const apiUserInRefreshToken = authAuthenticateUserByToken(refreshToken);
+        if (apiUserInRefreshToken) {
+          if (apiUserInRefreshToken.id !== parseInt(req.body.ownerId)) {
+            throw new ApiError(httpStatus.FORBIDDEN, "Access denied");
+          }
         }
-
-        const image = await imageCreate(
-          parseInt(req.body.ownerId, 10),
-          fileNanoId,
-          metainfo,
-          "image",
-          connectWith
-        );
-
-        res.json(image);
-      } else {
-        next(new ApiError(httpStatus.BAD_REQUEST, "Image upload failed #1"));
+      } catch (Err) {
+        throw new ApiError(httpStatus.FORBIDDEN, "Access denied");
       }
     } else {
-      next(new ApiError(httpStatus.BAD_REQUEST, "Image upload failed #2"));
+      throw new ApiError(httpStatus.FORBIDDEN, "Access denied");
+    }
+
+    try {
+      if (req.body.ownerId && !Number.isNaN(req.body.ownerId)) {
+        if (req.file) {
+          const { fileNanoId, metainfo } = createImageMetaInfo(req.file);
+
+          let connectWith;
+          try {
+            connectWith = req?.body?.connectWith
+              ? JSON.parse(req?.body?.connectWith)
+              : {};
+          } catch (err) {
+            // nothing to be done ...
+          }
+
+          const image = await imageCreate(
+            parseInt(req.body.ownerId, 10),
+            fileNanoId,
+            metainfo,
+            "image",
+            connectWith
+          );
+
+          res.json(image);
+        } else {
+          throw new ApiError(httpStatus.BAD_REQUEST, "Image upload failed #1");
+        }
+      } else {
+        throw new ApiError(httpStatus.BAD_REQUEST, "Image upload failed #2");
+      }
+    } catch (err) {
+      logger.error(err);
+      throw new ApiError(
+        httpStatus.INTERNAL_SERVER_ERROR,
+        "Image upload failed #3"
+      );
     }
   } catch (err) {
-    logger.error(err);
-    next(
-      new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Image upload failed #3")
-    );
+    next(err);
   }
 };
 
@@ -137,53 +140,57 @@ export const postProfileImage = async (
   res: Response,
   next: NextFunction
 ) => {
-  const refreshToken = req?.cookies?.refreshToken ?? "";
-  if (refreshToken) {
-    try {
-      const apiUserInRefreshToken = authAuthenticateUserByToken(refreshToken);
-      if (apiUserInRefreshToken) {
-        if (apiUserInRefreshToken.id !== parseInt(req.body.ownerId)) {
-          next(new ApiError(httpStatus.FORBIDDEN, "Access denied"));
-        }
-      }
-    } catch (Err) {
-      next(new ApiError(httpStatus.FORBIDDEN, "Access denied"));
-    }
-  } else {
-    next(new ApiError(httpStatus.FORBIDDEN, "Access denied"));
-  }
-
   try {
-    if (req.body.ownerId && !Number.isNaN(req.body.ownerId)) {
-      if (req.file) {
-        const { fileNanoId, metainfo } = createImageMetaInfo(req.file);
-
-        const image = await imageCreate(
-          parseInt(req.body.ownerId, 10),
-          fileNanoId,
-          metainfo,
-          "profile"
-        );
-
-        res.json(image);
-      } else {
-        next(
-          new ApiError(httpStatus.BAD_REQUEST, "Profile image upload failed #1")
-        );
+    const refreshToken = req?.cookies?.refreshToken ?? "";
+    if (refreshToken) {
+      try {
+        const apiUserInRefreshToken = authAuthenticateUserByToken(refreshToken);
+        if (apiUserInRefreshToken) {
+          if (apiUserInRefreshToken.id !== parseInt(req.body.ownerId)) {
+            throw new ApiError(httpStatus.FORBIDDEN, "Access denied");
+          }
+        }
+      } catch (Err) {
+        throw new ApiError(httpStatus.FORBIDDEN, "Access denied");
       }
     } else {
-      next(
-        new ApiError(httpStatus.BAD_REQUEST, "Profile image upload failed #2")
+      throw new ApiError(httpStatus.FORBIDDEN, "Access denied");
+    }
+
+    try {
+      if (req.body.ownerId && !Number.isNaN(req.body.ownerId)) {
+        if (req.file) {
+          const { fileNanoId, metainfo } = createImageMetaInfo(req.file);
+
+          const image = await imageCreate(
+            parseInt(req.body.ownerId, 10),
+            fileNanoId,
+            metainfo,
+            "profile"
+          );
+
+          res.json(image);
+        } else {
+          throw new ApiError(
+            httpStatus.BAD_REQUEST,
+            "Profile image upload failed #1"
+          );
+        }
+      } else {
+        throw new ApiError(
+          httpStatus.BAD_REQUEST,
+          "Profile image upload failed #2"
+        );
+      }
+    } catch (err) {
+      logger.error(err);
+      throw new ApiError(
+        httpStatus.INTERNAL_SERVER_ERROR,
+        "Profile image upload failed #3"
       );
     }
   } catch (err) {
-    logger.error(err);
-    next(
-      new ApiError(
-        httpStatus.INTERNAL_SERVER_ERROR,
-        "Profile image upload failed #3"
-      )
-    );
+    next(err);
   }
 };
 

@@ -65,7 +65,10 @@ export const initializeExpressApp = () => {
             name: err.name,
             message: err.message,
             statusCode: err?.statusCode,
-            isOperational: err?.statusCode,
+            isOperational:
+              typeof err?.isOperational !== "undefined"
+                ? !!err?.isOperational
+                : true,
           },
         });
       } else {
