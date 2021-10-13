@@ -50,7 +50,8 @@ export const startApi = async () => {
         jobs: [
           {
             name: "dbHouseKeeping",
-            interval: process.env.NODE_ENV === "production" ? "1m" : "1h",
+            // TODO: make better, how to detect
+            interval: process.env.NODE_ENV === "production" ? "1m" : "1m",
           },
           {
             name: "dbConvertImages",
