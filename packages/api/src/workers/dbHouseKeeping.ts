@@ -1,11 +1,12 @@
 import { parentPort } from "worker_threads";
 import { unlinkSync } from "fs";
+import { spawn } from "child_process";
 
 // !!!! ALWAY REMEMBER TO CLOSE YOU DB CONNECTION !!!
 import Prisma from "@prisma/client";
 
 import { getApiConfig } from "../config";
-import { ImageStatus, FileStatus } from "@culturemap/core";
+import { ImageStatus, FileStatus, ImportStatus } from "@culturemap/core";
 
 // https://github.com/breejs/bree#long-running-jobs
 // Or use https://threads.js.org/usage for a queing experience .. .
@@ -163,7 +164,7 @@ const doChores = async () => {
           },
         });
         postMessage(
-          `[WORKER:dbHousekeeping]: Sheduled ${fileIds.length} uploaded import files to be deleted`
+          `[WORKER:dbHousekeeping]: Scheduled ${fileIds.length} uploaded import files to be deleted`
         );
       }
 
@@ -178,6 +179,54 @@ const doChores = async () => {
       postMessage(
         `[WORKER:dbHousekeeping]: Deleted ${importCleanup.count} expired import(s)`
       );
+    }
+
+    const scheduledImport = await prisma.import.findFirst({
+      where: {
+        status: {
+          in: [ImportStatus.PROCESS],
+        },
+      },
+      orderBy: {
+        updatedAt: "asc",
+      },
+    });
+
+    await prisma.$disconnect();
+
+    if (scheduledImport) {
+      try {
+        // TODO: adjust to production server configuration
+        const buildFolder =
+          process.env.NODE_ENV !== "production" ? "dist" : "dist";
+
+        spawn(
+          "node",
+          [
+            `${apiConfig.packageBaseDir}/${buildFolder}/scripts/processImportFile.js`,
+            `--importId=${scheduledImport.id}`,
+          ],
+          {
+            detached: true,
+          }
+        );
+        postMessage(
+          `[WORKER:dbHousekeeping]: Triggered import script for import: ${scheduledImport.id}`
+        );
+      } catch (err) {
+        await prisma.import.update({
+          data: {
+            status: ImportStatus.ERROR,
+            errors: ["Could not execute import script"],
+          },
+          where: {
+            id: scheduledImport.id,
+          },
+        });
+        postMessage(
+          `[WORKER:dbHousekeeping]: could not trigger script for import: ${scheduledImport.id}`
+        );
+      }
     }
   } catch (Err: any) {
     postMessage(

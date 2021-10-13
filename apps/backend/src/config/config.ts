@@ -10,7 +10,6 @@ import type { Complete, GeoLocation } from "~/types";
 export type AppConfigSettings = {
   apiUrl?: string | undefined;
   apiGraphQLUrl?: string | undefined;
-  apiDomain?: string | undefined;
   scope?: string | undefined;
   enableOpenRegistration?: boolean;
   enableProfilePicture?: boolean;
@@ -27,7 +26,6 @@ export type AppConfig = Complete<AppConfigSettings>;
 const configDefault: AppConfig = {
   apiUrl: `${process.env.REACT_APP_API_URL}`,
   apiGraphQLUrl: `${process.env.REACT_APP_API_URL}/graphql`,
-  apiDomain: `${process.env.REACT_APP_API_DOMAIN}`,
   scope: "backend",
   enableOpenRegistration: true,
   enableProfilePicture: true,
