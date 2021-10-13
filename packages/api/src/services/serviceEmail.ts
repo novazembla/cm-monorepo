@@ -8,18 +8,6 @@ import { getApiConfig } from "../config";
 
 const apiConfigOnBoot = getApiConfig();
 
-logger.debug(
-  `connecting email ${JSON.stringify({
-    host: apiConfigOnBoot.smtp.host,
-    port: apiConfigOnBoot.smtp.port,
-    secure: apiConfigOnBoot.smtp.secure, // true for 465, false for other ports
-    auth: {
-      user: apiConfigOnBoot.smtp.user, // generated ethereal user
-      pass: apiConfigOnBoot.smtp.password, // generated ethereal password
-    },
-  })}`
-);
-
 const transport = nodemailer.createTransport({
   host: apiConfigOnBoot.smtp.host,
   port: apiConfigOnBoot.smtp.port,

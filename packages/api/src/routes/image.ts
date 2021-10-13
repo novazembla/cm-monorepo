@@ -84,6 +84,7 @@ export const postImage = async (
       const apiUserInRefreshToken = authAuthenticateUserByToken(refreshToken);
       if (apiUserInRefreshToken) {
         if (apiUserInRefreshToken.id !== parseInt(req.body.ownerId)) {
+          // TODO: openar
           next(new ApiError(httpStatus.FORBIDDEN, "Access denied"));
         }
       }

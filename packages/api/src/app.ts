@@ -1,4 +1,10 @@
-import express, { Application, urlencoded } from "express";
+import express, {
+  Application,
+  NextFunction,
+  Request,
+  Response,
+  urlencoded,
+} from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
@@ -10,6 +16,7 @@ import {
 } from "./middlewares/error";
 
 import { morganErrorHandler, morganSuccessHandler } from "./middlewares/morgan";
+import { ApiError } from "./utils";
 import {
   postImage,
   postProfileImage,
@@ -38,6 +45,40 @@ export const initializeExpressApp = () => {
   app.post("/image", postImageUpload.single("image"), postImage);
   app.post("/file", postFileUpload.single("file"), postFile);
   app.post("/import", postImportFileUpload.single("file"), postImportFile);
+
+  // TODO: openar
+  app.use(
+    (
+      err: Error | ApiError,
+      req: Request,
+      res: Response,
+      next: NextFunction
+    ) => {
+      if (res.headersSent) {
+        return next(err);
+      }
+
+      if (err instanceof ApiError) {
+        res.status(err?.statusCode ?? 500);
+        res.json({
+          error: {
+            name: err.name,
+            message: err.message,
+            statusCode: err?.statusCode,
+            isOperational: err?.statusCode,
+          },
+        });
+      } else {
+        res.status(500);
+        res.json({
+          error: {
+            name: err.name,
+            message: err.message,
+          },
+        });
+      }
+    }
+  );
 };
 
 export const addTerminatingErrorHandlingToApp = () => {

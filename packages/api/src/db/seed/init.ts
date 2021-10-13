@@ -2,25 +2,13 @@
 
 import Prisma from "@prisma/client";
 import bcrypt from "bcrypt";
-import pMap from "p-map";
 
 import { LoremIpsum } from "lorem-ipsum";
 import type { Address } from "../../types";
 
-import {
-  geocodingGetAddressCandidates,
-  geocodingGetBestMatchingLocation,
-} from "../../utils/geocoding";
-import { getApiConfig } from "../../config";
-
-const apiConfig = getApiConfig();
-
 const { PrismaClient } = Prisma;
 
 const prisma = new PrismaClient();
-
-const awaitTimeout = (delay: number) =>
-  new Promise((resolve) => setTimeout(resolve, delay));
 
 const lorem = new LoremIpsum({
   sentencesPerParagraph: {
@@ -177,95 +165,6 @@ const keywords = [
   "Eröffnung",
   "Kultur",
   "Gedenken",
-];
-
-const months = [
-  "01",
-  "02",
-  "03",
-  "04",
-  "05",
-  "06",
-  "07",
-  "08",
-  "09",
-  "10",
-  "11",
-  "12",
-];
-
-const days = [
-  "01",
-  "02",
-  "03",
-  "04",
-  "05",
-  "06",
-  "07",
-  "08",
-  "09",
-  "10",
-  "11",
-  "12",
-  "13",
-  "14",
-  "15",
-  "16",
-  "17",
-  "18",
-  "19",
-  "20",
-  "21",
-  "22",
-  "23",
-  "24",
-  "25",
-  "26",
-  "27",
-  "28",
-];
-
-const addresses: Address[] = [
-  {
-    co: "C/O Peter Pan",
-    street1: "Hentigstraße",
-    street2: "",
-    houseNumber: "24a",
-    postCode: "10318",
-    city: "Berlin",
-  },
-  {
-    co: "",
-    street1: "Gundelfinger Straße",
-    street2: "",
-    houseNumber: "81",
-    postCode: "10318",
-    city: "Berlin",
-  },
-  {
-    co: "",
-    street1: "John-Sieg-Straße",
-    street2: "",
-    houseNumber: "1-3",
-    postCode: "10365",
-    city: "Berlin",
-  },
-  {
-    co: "",
-    street1: "Wandlitzstraße",
-    street2: "",
-    houseNumber: "13",
-    postCode: "10318",
-    city: "Berlin",
-  },
-  {
-    co: "",
-    street1: "Hirschberger Straße",
-    street2: "",
-    houseNumber: "2",
-    postCode: "10317",
-    city: "Berlin",
-  },
 ];
 
 const upsertUser = async (
