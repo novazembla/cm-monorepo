@@ -46,9 +46,12 @@ export const postImportFileUpload = multer({ storage: storagePrivate });
 
 export const postImportFile = async (req: Request, res: Response) => {
   const refreshToken = req?.cookies?.refreshToken ?? "";
+  logger.info("RT 1", refreshToken);
   if (refreshToken) {
+    logger.info("RT 2", refreshToken);
     try {
       const apiUserInRefreshToken = authAuthenticateUserByToken(refreshToken);
+      logger.info("RT 3", apiUserInRefreshToken);
       if (apiUserInRefreshToken) {
         if (apiUserInRefreshToken.id !== parseInt(req.body.ownerId)) {
           throw new ApiError(httpStatus.FORBIDDEN, "Access denied");
