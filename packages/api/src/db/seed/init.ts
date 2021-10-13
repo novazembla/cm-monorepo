@@ -132,14 +132,8 @@ const institutionType = [
 ];
 
 const eventCategories = [
-  ["Kunst", "Arts"],
-  ["Tanz", "Dance"],
-  ["Klassische Musik", "Classical Music"],
-  ["Moderne Musik", "Modern Music"],
-  ["Experimentelle Musik", "Experimental Music"],
+  ["Austellungen", "Exhibitions"],
   ["Lesung", "Lecture"],
-  ["Workshop", "Workshop"],
-  ["Ausstellungen", "Exhibitions"],
 ];
 
 const pages = [
@@ -390,19 +384,19 @@ async function main() {
         data: {
           name: {
             de: "Trägerart",
-            en: "Type of Institution",
+            en: "Type of Organisation",
           },
           multiTerm: true,
           slug: {
             de: "traegerart",
-            en: "type",
+            en: "type-of-organisation",
           },
           modules: {
             connect: {
               key: "location",
             },
           },
-          fullText: "Trägerart traegerart Type of Institution type",
+          fullText: "Trägerart traegerart Type of Organisation type",
           terms: {
             createMany: {
               data: institutionType.map((term) => ({

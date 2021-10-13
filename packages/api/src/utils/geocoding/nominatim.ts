@@ -19,7 +19,8 @@ export class GeoCoderNominatim {
     axiosRetry(client, { retries: 3 });
 
     let result = { features: [], type: "FeatureCollection" } as any;
-
+    if (!address) return result;
+    
     let query = "";
     if (type === "autocomplete") {
       if (address.street1 && address.street1.trim() !== "")

@@ -54,7 +54,7 @@ const trimString = (str: string, length: number) =>
 const mapKeyToHeader = (mapping: any[], key: string) => {
   const match = mapping.find((m) => m.match === key);
   if (!match || !match.headerKey || !headers.includes(match.headerKey))
-    throw Error(`${key} could not be resolved`);
+    return undefined;
 
   return match.headerKey;
 };
@@ -77,6 +77,9 @@ const getTermsOfRow = (mapping: any[], row: any[], primaryTermKey?: string) => {
     if (primaryTermKey && primaryTermKey !== key) return acc;
 
     const headerKey = mapKeyToHeader(mapping, key);
+
+    if (!headerKey) return acc;
+
     const value =
       row[headerKey] && row[headerKey].trim() !== ""
         ? row[headerKey].trim().toLowerCase()

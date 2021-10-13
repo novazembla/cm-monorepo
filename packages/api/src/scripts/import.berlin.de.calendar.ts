@@ -164,7 +164,7 @@ const registerEventCategoies = async (
             if (termEN === "") {
               termEN = termDE;
               warnings.push(
-                `Missing: No translation for term: ${category.EN}! Using German substitute`
+                `Missing: No translation for term! Using German substitute: ${termDE}`
               );
             }
 

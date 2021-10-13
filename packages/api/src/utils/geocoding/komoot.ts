@@ -22,6 +22,9 @@ export class GeoCoderKomoot {
     axiosRetry(client, { retries: 3 });
 
     let result = { features: [], type: "FeatureCollection" } as any;
+
+    if (!address) return result;
+    
     const query = [];
 
     if (address.city && address.city.trim() !== "")
