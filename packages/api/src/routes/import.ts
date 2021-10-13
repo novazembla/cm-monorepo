@@ -50,6 +50,7 @@ export const postImportFile = async (req: Request, res: Response) => {
   // TODO: remove
   logger.info("RT 1", refreshToken);
   logger.info("RT 1.1", req?.cookies);
+  logger.info("RT 1.2", req?.header);
   if (refreshToken) {
     logger.info("RT 2", refreshToken);
     try {

@@ -205,7 +205,7 @@ export const FieldImageUploader = ({
               headers: {
                 "Content-Type": "multipart/form-data",
                 ...(authentication.getAuthToken()
-                  ? { authorization: `Bearer ${authentication.getAuthToken()}` }
+                  ? { authorization: `Bearer ${authentication.getAuthToken()?.token}` }
                   : {}),
               },
               cancelToken,
