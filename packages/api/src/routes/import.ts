@@ -48,14 +48,15 @@ export const postImportFile = async (req: Request, res: Response) => {
   const refreshToken = req?.cookies?.refreshToken ?? "";
 
   // TODO: remove
-  logger.info("RT 1", refreshToken);
-  logger.info("RT 1.1", req?.cookies);
-  logger.info("RT 1.2", req?.header);
+  logger.info(`RT 1 ${JSON.stringify(refreshToken)}`);
+  logger.info(`RT 1.1 ${JSON.stringify(req?.cookies)}`);
+  logger.info(`RT 1.2 ${JSON.stringify(req?.header)}`);
+
   if (refreshToken) {
-    logger.info("RT 2", refreshToken);
+    logger.info(`RT 2 ${refreshToken}`);
     try {
       const apiUserInRefreshToken = authAuthenticateUserByToken(refreshToken);
-      logger.info("RT 3", apiUserInRefreshToken);
+      logger.info(`RT 3 ${JSON.stringify(apiUserInRefreshToken)}`);
       if (apiUserInRefreshToken) {
         if (apiUserInRefreshToken.id !== parseInt(req.body.ownerId)) {
           throw new ApiError(httpStatus.FORBIDDEN, "Access denied");
