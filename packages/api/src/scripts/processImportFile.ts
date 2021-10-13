@@ -58,7 +58,7 @@ const mapKeyToHeader = (mapping: any[], key: string) => {
 
   return match.headerKey;
 };
-const getTermsOfRow = (mapping: any[], row: any[], primaryTypeKey?: string) => {
+const getTermsOfRow = (mapping: any[], row: any[], primaryTermKey?: string) => {
   const keys = [
     "tax-agency-type-1",
     "tax-agency-type-2",
@@ -74,7 +74,7 @@ const getTermsOfRow = (mapping: any[], row: any[], primaryTypeKey?: string) => {
   ];
 
   return keys.reduce((acc, key) => {
-    if (primaryTypeKey && primaryTypeKey !== key) return acc;
+    if (primaryTermKey && primaryTermKey !== key) return acc;
 
     const headerKey = mapKeyToHeader(mapping, key);
     const value =
@@ -142,8 +142,8 @@ const processImportedRow = async (
       "eventLocationId"
     );
 
-    const primaryType = getTermsOfRow(mapping, row, "tax-type-1");
-    const terms = getTermsOfRow(mapping, row);
+    const primaryTerm = getTermsOfRow(mapping, row, "tax-type-1");
+    let terms = getTermsOfRow(mapping, row);
 
     const sharedData = {
       title: {
@@ -198,15 +198,6 @@ const processImportedRow = async (
         ),
       },
       importedLocationHash: locationHash,
-      ...(Array.isArray(primaryType) && primaryType.length > 0
-        ? {
-            primaryType: {
-              connect: {
-                id: primaryType[0].id,
-              },
-            },
-          }
-        : {}),
     };
 
     const socialMediaKeys = [
@@ -238,12 +229,31 @@ const processImportedRow = async (
         hasWarnings = true;
     });
 
+    if (Array.isArray(primaryTerm) && primaryTerm.length > 0) {
+      terms = primaryTerm.reduce((acc: any, term: any) => {
+        if (!acc.find((t: any) => t.id === term.id))
+          acc.push({
+            id: term.id,
+          });
+        return acc;
+      }, terms);
+    }
+
     if (locationInDb && locationInDb.id) {
       let data: any = {
         ...sharedData,
         terms: {
           set: terms,
         },
+        ...(Array.isArray(primaryTerm) && primaryTerm.length > 0
+          ? {
+              primaryTerms: {
+                set: {
+                  id: primaryTerm[0].id,
+                },
+              },
+            }
+          : {}),
       };
       const testAddress: any = locationInDb.address;
       if (
@@ -311,6 +321,15 @@ const processImportedRow = async (
           ? {
               terms: {
                 connect: terms,
+              },
+            }
+          : {}),
+        ...(Array.isArray(primaryTerm) && primaryTerm.length > 0
+          ? {
+              primaryTerms: {
+                connect: {
+                  id: primaryTerm[0].id,
+                },
               },
             }
           : {}),

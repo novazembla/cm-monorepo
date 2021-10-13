@@ -50,11 +50,11 @@ export const startApi = async () => {
         jobs: [
           {
             name: "dbHouseKeeping",
-            interval: process.env.NODE_ENV === "production" ? "1m" : "1hr",
+            interval: process.env.NODE_ENV === "production" ? "1m" : "1h",
           },
           {
             name: "dbConvertImages",
-            interval: process.env.NODE_ENV === "production" ? "13s" : "37s",
+            interval: process.env.NODE_ENV === "production" ? "37s" : "61s",
           },
           {
             name: "importCalendar",
