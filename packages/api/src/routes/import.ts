@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import httpStatus from "http-status";
 import path from "path";
 import multer from "multer";
@@ -44,7 +44,11 @@ const storagePrivate = multer.diskStorage({
 
 export const postImportFileUpload = multer({ storage: storagePrivate });
 
-export const postImportFile = async (req: Request, res: Response) => {
+export const postImportFile = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const refreshToken = req?.cookies?.refreshToken ?? "";
 
   // TODO: remove
@@ -59,14 +63,14 @@ export const postImportFile = async (req: Request, res: Response) => {
       logger.info(`RT 3 ${JSON.stringify(apiUserInRefreshToken)}`);
       if (apiUserInRefreshToken) {
         if (apiUserInRefreshToken.id !== parseInt(req.body.ownerId)) {
-          throw new ApiError(httpStatus.FORBIDDEN, "Access denied");
+          next(new ApiError(httpStatus.FORBIDDEN, "Access denied"));
         }
       }
     } catch (Err) {
-      throw new ApiError(httpStatus.FORBIDDEN, "Access denied");
+      next(new ApiError(httpStatus.FORBIDDEN, "Access denied"));
     }
   } else {
-    throw new ApiError(httpStatus.FORBIDDEN, "Access denied");
+    next(new ApiError(httpStatus.FORBIDDEN, "Access denied"));
   }
 
   try {
@@ -131,22 +135,22 @@ export const postImportFile = async (req: Request, res: Response) => {
           });
         }
       } else {
-        throw new ApiError(
-          httpStatus.BAD_REQUEST,
-          "Import file upload failed #1"
+        next(
+          new ApiError(httpStatus.BAD_REQUEST, "Import file upload failed #1")
         );
       }
     } else {
-      throw new ApiError(
-        httpStatus.BAD_REQUEST,
-        "Import file upload failed #2"
+      next(
+        new ApiError(httpStatus.BAD_REQUEST, "Import file upload failed #2")
       );
     }
   } catch (err) {
     logger.error(err);
-    throw new ApiError(
-      httpStatus.INTERNAL_SERVER_ERROR,
-      "Import file upload failed #3"
+    next(
+      new ApiError(
+        httpStatus.INTERNAL_SERVER_ERROR,
+        "Import file upload failed #3"
+      )
     );
   }
 };

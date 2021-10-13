@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status";
 import path from "path";
 import multer from "multer";
@@ -72,21 +72,26 @@ const createImageMetaInfo = (
   return { fileNanoId, metainfo };
 };
 
-export const postImage = async (req: Request, res: Response) => {
+export const postImage = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const refreshToken = req?.cookies?.refreshToken ?? "";
+
   if (refreshToken) {
     try {
       const apiUserInRefreshToken = authAuthenticateUserByToken(refreshToken);
       if (apiUserInRefreshToken) {
         if (apiUserInRefreshToken.id !== parseInt(req.body.ownerId)) {
-          throw new ApiError(httpStatus.FORBIDDEN, "Access denied");
+          next(new ApiError(httpStatus.FORBIDDEN, "Access denied"));
         }
       }
     } catch (Err) {
-      throw new ApiError(httpStatus.FORBIDDEN, "Access denied");
+      next(new ApiError(httpStatus.FORBIDDEN, "Access denied"));
     }
   } else {
-    throw new ApiError(httpStatus.FORBIDDEN, "Access denied");
+    next(new ApiError(httpStatus.FORBIDDEN, "Access denied"));
   }
 
   try {
@@ -113,35 +118,38 @@ export const postImage = async (req: Request, res: Response) => {
 
         res.json(image);
       } else {
-        throw new ApiError(httpStatus.BAD_REQUEST, "Image upload failed #1");
+        next(new ApiError(httpStatus.BAD_REQUEST, "Image upload failed #1"));
       }
     } else {
-      throw new ApiError(httpStatus.BAD_REQUEST, "Image upload failed #2");
+      next(new ApiError(httpStatus.BAD_REQUEST, "Image upload failed #2"));
     }
   } catch (err) {
     logger.error(err);
-    throw new ApiError(
-      httpStatus.INTERNAL_SERVER_ERROR,
-      "Image upload failed #3"
+    next(
+      new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Image upload failed #3")
     );
   }
 };
 
-export const postProfileImage = async (req: Request, res: Response) => {
+export const postProfileImage = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const refreshToken = req?.cookies?.refreshToken ?? "";
   if (refreshToken) {
     try {
       const apiUserInRefreshToken = authAuthenticateUserByToken(refreshToken);
       if (apiUserInRefreshToken) {
         if (apiUserInRefreshToken.id !== parseInt(req.body.ownerId)) {
-          throw new ApiError(httpStatus.FORBIDDEN, "Access denied");
+          next(new ApiError(httpStatus.FORBIDDEN, "Access denied"));
         }
       }
     } catch (Err) {
-      throw new ApiError(httpStatus.FORBIDDEN, "Access denied");
+      next(new ApiError(httpStatus.FORBIDDEN, "Access denied"));
     }
   } else {
-    throw new ApiError(httpStatus.FORBIDDEN, "Access denied");
+    next(new ApiError(httpStatus.FORBIDDEN, "Access denied"));
   }
 
   try {
@@ -158,22 +166,22 @@ export const postProfileImage = async (req: Request, res: Response) => {
 
         res.json(image);
       } else {
-        throw new ApiError(
-          httpStatus.BAD_REQUEST,
-          "Profile image upload failed #1"
+        next(
+          new ApiError(httpStatus.BAD_REQUEST, "Profile image upload failed #1")
         );
       }
     } else {
-      throw new ApiError(
-        httpStatus.BAD_REQUEST,
-        "Profile image upload failed #2"
+      next(
+        new ApiError(httpStatus.BAD_REQUEST, "Profile image upload failed #2")
       );
     }
   } catch (err) {
     logger.error(err);
-    throw new ApiError(
-      httpStatus.INTERNAL_SERVER_ERROR,
-      "Profile image upload failed #3"
+    next(
+      new ApiError(
+        httpStatus.INTERNAL_SERVER_ERROR,
+        "Profile image upload failed #3"
+      )
     );
   }
 };

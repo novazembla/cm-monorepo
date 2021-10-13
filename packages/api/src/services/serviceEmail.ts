@@ -8,7 +8,7 @@ import { getApiConfig } from "../config";
 
 const apiConfigOnBoot = getApiConfig();
 
-logger.info(
+logger.debug(
   `connecting email ${JSON.stringify({
     host: apiConfigOnBoot.smtp.host,
     port: apiConfigOnBoot.smtp.port,
