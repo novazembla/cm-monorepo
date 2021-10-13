@@ -51,27 +51,28 @@ export const postImportFile = async (
 ) => {
   try {
     const refreshToken = req?.cookies?.refreshToken ?? "";
-    // TODO: remove
-    logger.info(`RT 1 ${JSON.stringify(refreshToken)}`);
-    logger.info(`RT 1.1 ${JSON.stringify(req?.cookies)}`);
-    logger.info(`RT 1.2 ${JSON.stringify(req?.headers)}`);
+    // TODO: enable access restrictions
+    // TODO: bring to openar ... 
+    // logger.info(`RT 1 ${JSON.stringify(refreshToken)}`);
+    // logger.info(`RT 1.1 ${JSON.stringify(req?.cookies)}`);
+    // logger.info(`RT 1.2 ${JSON.stringify(req?.headers)}`);
 
-    if (refreshToken) {
-      logger.info(`RT 2 ${refreshToken}`);
-      try {
-        const apiUserInRefreshToken = authAuthenticateUserByToken(refreshToken);
-        logger.info(`RT 3 ${JSON.stringify(apiUserInRefreshToken)}`);
-        if (apiUserInRefreshToken) {
-          if (apiUserInRefreshToken.id !== parseInt(req.body.ownerId)) {
-            throw new ApiError(httpStatus.FORBIDDEN, "Access denied");
-          }
-        }
-      } catch (Err) {
-        throw new ApiError(httpStatus.FORBIDDEN, "Access denied");
-      }
-    } else {
-      throw new ApiError(httpStatus.FORBIDDEN, "Access denied");
-    }
+    // if (refreshToken) {
+    //   logger.info(`RT 2 ${refreshToken}`);
+    //   try {
+    //     const apiUserInRefreshToken = authAuthenticateUserByToken(refreshToken);
+    //     logger.info(`RT 3 ${JSON.stringify(apiUserInRefreshToken)}`);
+    //     if (apiUserInRefreshToken) {
+    //       if (apiUserInRefreshToken.id !== parseInt(req.body.ownerId)) {
+    //         throw new ApiError(httpStatus.FORBIDDEN, "Access denied");
+    //       }
+    //     }
+    //   } catch (Err) {
+    //     throw new ApiError(httpStatus.FORBIDDEN, "Access denied");
+    //   }
+    // } else {
+    //   throw new ApiError(httpStatus.FORBIDDEN, "Access denied");
+    // }
 
     try {
       if (req.body.ownerId && !Number.isNaN(req.body.ownerId)) {

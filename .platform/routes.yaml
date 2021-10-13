@@ -2,9 +2,9 @@
 "https://{default}/":
     type: upstream
     upstream: "app:http"
-    cache:
-        enabled: true
-        cookies: ['refreshCookie']
+    # cache:
+    #     enabled: true
+    #     cookies: ['refreshToken']
         
 "https://www.{default}/":
     type: redirect

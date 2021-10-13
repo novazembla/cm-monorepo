@@ -78,21 +78,22 @@ export const postImage = async (
   next: NextFunction
 ) => {
   try {
-    const refreshToken = req?.cookies?.refreshToken ?? "";
-    if (refreshToken) {
-      try {
-        const apiUserInRefreshToken = authAuthenticateUserByToken(refreshToken);
-        if (apiUserInRefreshToken) {
-          if (apiUserInRefreshToken.id !== parseInt(req.body.ownerId)) {
-            throw new ApiError(httpStatus.FORBIDDEN, "Access denied");
-          }
-        }
-      } catch (Err) {
-        throw new ApiError(httpStatus.FORBIDDEN, "Access denied");
-      }
-    } else {
-      throw new ApiError(httpStatus.FORBIDDEN, "Access denied");
-    }
+    // TODO: enable access restrictions
+    // const refreshToken = req?.cookies?.refreshToken ?? "";
+    // if (refreshToken) {
+    //   try {
+    //     const apiUserInRefreshToken = authAuthenticateUserByToken(refreshToken);
+    //     if (apiUserInRefreshToken) {
+    //       if (apiUserInRefreshToken.id !== parseInt(req.body.ownerId)) {
+    //         throw new ApiError(httpStatus.FORBIDDEN, "Access denied");
+    //       }
+    //     }
+    //   } catch (Err) {
+    //     throw new ApiError(httpStatus.FORBIDDEN, "Access denied");
+    //   }
+    // } else {
+    //   throw new ApiError(httpStatus.FORBIDDEN, "Access denied");
+    // }
 
     try {
       if (req.body.ownerId && !Number.isNaN(req.body.ownerId)) {
@@ -141,21 +142,22 @@ export const postProfileImage = async (
   next: NextFunction
 ) => {
   try {
-    const refreshToken = req?.cookies?.refreshToken ?? "";
-    if (refreshToken) {
-      try {
-        const apiUserInRefreshToken = authAuthenticateUserByToken(refreshToken);
-        if (apiUserInRefreshToken) {
-          if (apiUserInRefreshToken.id !== parseInt(req.body.ownerId)) {
-            throw new ApiError(httpStatus.FORBIDDEN, "Access denied");
-          }
-        }
-      } catch (Err) {
-        throw new ApiError(httpStatus.FORBIDDEN, "Access denied");
-      }
-    } else {
-      throw new ApiError(httpStatus.FORBIDDEN, "Access denied");
-    }
+    // TODO: enable access restrictions
+    // const refreshToken = req?.cookies?.refreshToken ?? "";
+    // if (refreshToken) {
+    //   try {
+    //     const apiUserInRefreshToken = authAuthenticateUserByToken(refreshToken);
+    //     if (apiUserInRefreshToken) {
+    //       if (apiUserInRefreshToken.id !== parseInt(req.body.ownerId)) {
+    //         throw new ApiError(httpStatus.FORBIDDEN, "Access denied");
+    //       }
+    //     }
+    //   } catch (Err) {
+    //     throw new ApiError(httpStatus.FORBIDDEN, "Access denied");
+    //   }
+    // } else {
+    //   throw new ApiError(httpStatus.FORBIDDEN, "Access denied");
+    // }
 
     try {
       if (req.body.ownerId && !Number.isNaN(req.body.ownerId)) {
