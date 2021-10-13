@@ -45,8 +45,10 @@ export const morganErrorHandler = morgan(
   }
 );
 
-export default {
+const defaults = {
   logger,
   morganSuccessHandler,
   morganErrorHandler,
 };
+
+export default defaults;

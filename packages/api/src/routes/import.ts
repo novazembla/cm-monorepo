@@ -50,7 +50,7 @@ export const postImportFile = async (req: Request, res: Response) => {
   // TODO: remove
   logger.info(`RT 1 ${JSON.stringify(refreshToken)}`);
   logger.info(`RT 1.1 ${JSON.stringify(req?.cookies)}`);
-  logger.info(`RT 1.2 ${JSON.stringify(req?.header)}`);
+  logger.info(`RT 1.2 ${JSON.stringify(req?.headers)}`);
 
   if (refreshToken) {
     logger.info(`RT 2 ${refreshToken}`);
