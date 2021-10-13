@@ -46,7 +46,10 @@ export const postImportFileUpload = multer({ storage: storagePrivate });
 
 export const postImportFile = async (req: Request, res: Response) => {
   const refreshToken = req?.cookies?.refreshToken ?? "";
+
+  // TODO: remove
   logger.info("RT 1", refreshToken);
+  logger.info("RT 1.1", req?.cookies);
   if (refreshToken) {
     logger.info("RT 2", refreshToken);
     try {

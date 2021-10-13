@@ -276,6 +276,16 @@ export const tokenProcessRefreshToken = (
   const apiConfig = getApiConfig();
 
   const secureCookie = apiConfig.baseUrl.api.indexOf("localhost") === -1;
+
+  // TODO: remove
+  logger.debug({
+    sameSite: secureCookie ? "none" : "lax",
+    secure: secureCookie ?? undefined,
+    httpOnly: true,
+    maxAge:
+      new Date((authPayload as any).tokens.refresh.expires).getTime() -
+      new Date().getTime(),
+  })
   res.cookie("refreshToken", (authPayload as any).tokens.refresh.token, {
     sameSite: secureCookie ? "none" : "lax",
     secure: secureCookie ?? undefined,
