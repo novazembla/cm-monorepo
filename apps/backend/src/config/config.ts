@@ -39,10 +39,10 @@ const configDefault: AppConfig = {
   mapOuterBounds: [
     {
       lat: 52.291884,
-      lng: 13.000360,
+      lng: 13.00036,
     },
     {
-      lat: 52.712187,      
+      lat: 52.712187,
       lng: 13.813182,
     },
   ],
