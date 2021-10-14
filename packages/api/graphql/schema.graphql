@@ -49,7 +49,6 @@ A field whose value conforms to the standard internet email address format as sp
 scalar EmailAddress @specifiedBy(url: "https://www.w3.org/Protocols/rfc822/")
 
 type Event {
-  author: User
   createdAt: DateTime
   dates: [EventDate]
   description: JSON
@@ -200,7 +199,6 @@ type Location {
   accessibilityInformation: JSON
   address: JSON
   agency: String
-  author: User
   contactInfo: JSON
   createdAt: DateTime
   description: JSON
@@ -306,7 +304,6 @@ type Mutation {
 }
 
 type Page {
-  author: User
   content: JSON
   createdAt: DateTime
   fullText: String
@@ -348,10 +345,9 @@ type ProfileUser implements UserBaseNode {
 
 type Query {
   adminUsers(roles: [String]!): [AdminUser] @deprecated(reason: "A publicly accessible list Lists all users that have a the given roles")
-  event(slug: String!): Event!
+  event(id: Int, slug: String): Event!
   eventImportLog(id: Int!): EventImportLog!
   eventImportLogs(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): EventImportLogQueryResult
-  eventRead(id: Int!): Event!
   events(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): EventQueryResult
   geocode(q: String!): GeoCodeResult
   imageRead(id: Int!): Image!
@@ -359,21 +355,20 @@ type Query {
   images(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, taxonomyId: Int, where: JSON): ImageQueryResult
   importRead(id: Int!): Import!
   imports(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): ImportQueryResult
-  location(id: Int, lang: String, slug: String): Location!
+  location(id: Int, slug: String): Location!
   locations(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): LocationQueryResult
   moduleTaxonomies(key: String!): [Taxonomy]
   modules: [Module]
-  page(slug: String!): Page!
-  pageRead(id: Int!): Page!
+  page(id: Int, slug: String): Page!
   pages(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): PageQueryResult
   quickSearch(modules: [String], search: String!, termIds: [Int]): [SearchResult]
   setting(id: Int!): [Setting]
   settings: [Setting]
   taxonomies(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): TaxonomyQueryResult
-  taxonomyRead(id: Int!): Taxonomy!
-  termRead(id: Int!): Term!
+  taxonomy(id: Int!): Taxonomy!
+  term(id: Int!): Term!
   terms(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, taxonomyId: Int!, where: JSON): TermQueryResult
-  tourRead(id: Int!): Tour!
+  tour(id: Int, slug: String): Tour!
   tourStopRead(id: Int!): TourStop!
   tours(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): TourQueryResult
   uniqueSlug(data: UniqueSlugInput!, id: Int!, type: String!): UniqueSlugResult
@@ -476,18 +471,19 @@ input TermUpdateInput {
 
 type Tour {
   createdAt: DateTime
-  description: JSON!
-  distance: JSON!
-  duration: JSON!
+  description: JSON
+  distance: JSON
+  duration: JSON
   heroImage: Image
   id: Int!
   modules: [Module]
+  orderNumber: Int
   ownerId: Int!
   path: JSON!
-  slug: JSON!
+  slug: JSON
   status: Int!
-  teaser: JSON!
-  title: JSON!
+  teaser: JSON
+  title: JSON
   tourStopCount: Int
   tourStops: [TourStop]
   updatedAt: DateTime
@@ -501,13 +497,13 @@ type TourQueryResult {
 
 type TourStop {
   createdAt: DateTime
-  description: JSON!
+  description: JSON
   heroImage: Image
   id: Int!
   location: Location
   locationId: Int
   number: Int
-  teaser: JSON!
+  teaser: JSON
   title: JSON
   tour: Tour
   tourId: Int

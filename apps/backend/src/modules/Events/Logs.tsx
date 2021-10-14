@@ -1,13 +1,11 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { eventImportLogsQueryGQL } from "@culturemap/core";
+import { eventImportLogsQueryGQL, tourUpdateMutationGQL } from "@culturemap/core";
 import { useQuery } from "@apollo/client";
 
 import { Cell } from "react-table";
 
-import { 
-  Badge
-} from "@chakra-ui/react";
+import { Badge } from "@chakra-ui/react";
 
 import {
   ModuleSubNav,
@@ -16,7 +14,7 @@ import {
 } from "~/components/modules";
 
 import { moduleRootPath, multiLangFields } from "./moduleConfig";
-import { useAuthentication, useLocalStorage } from "~/hooks";
+import { useAuthentication, useLocalStorage, useTypedSelector } from "~/hooks";
 
 import {
   AdminTable,
@@ -33,7 +31,10 @@ import { SortingRule } from "react-table";
 const intitalTableState: AdminTableState = {
   pageIndex: 0,
   pageSize: config.defaultPageSize ?? 30,
-  sortBy: [],
+  sortBy: [{
+    id: "updatedAt",
+    desc: true,
+  }],
   filterKeyword: "",
 };
 
@@ -96,6 +97,16 @@ const Logs = () => {
   );
 
   const [isRefetching, setIsRefetching] = useState(false);
+
+  const previousRoute = useTypedSelector(
+    ({ router }) => router.router.previous
+  );
+
+  useEffect(() => {
+    if (previousRoute?.indexOf(moduleRootPath) === -1) {
+      setTableState(intitalTableState);
+    }
+  }, [previousRoute, setTableState]);
 
   const { loading, error, data, refetch } = useQuery(eventImportLogsQueryGQL, {
     onCompleted: () => {
@@ -228,6 +239,8 @@ const Logs = () => {
         <AdminTable
           columns={AdminTableColumns}
           isLoading={loading}
+          showFilter={false}
+          showKeywordSearch={false}
           {...{
             tableTotalCount,
             tablePageCount,

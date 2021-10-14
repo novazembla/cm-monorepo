@@ -20,6 +20,7 @@ export const locationsQueryGQL = gql`
         slug
         status
         description
+        updatedAt
       }
       totalCount
     }

@@ -29,6 +29,8 @@ import {
   geocodingGetBestMatchingLocation,
 } from "../utils/geocoding";
 
+import { daoSharedGenerateFullText } from "../dao/shared";
+
 const { PrismaClient } = Prisma;
 
 const nanoid = customAlphabet("1234567890abcdef", 12);
@@ -251,6 +253,17 @@ const processImportedRow = async (
               },
             }
           : {}),
+        fullText: daoSharedGenerateFullText(
+          sharedData,
+          [
+            "title",
+            "slug",
+            "description",
+            "offers",
+            "accessibilityInformation",
+          ],
+          ["title", "slug", "description", "offers", "accessibilityInformation"]
+        ),
       };
       const testAddress: any = locationInDb.address;
       if (
@@ -343,6 +356,23 @@ const processImportedRow = async (
           status: hasWarnings
             ? PublishStatus.IMPORTEDWARNINGS
             : PublishStatus.IMPORTED,
+          fullText: daoSharedGenerateFullText(
+            data,
+            [
+              "title",
+              "slug",
+              "description",
+              "offers",
+              "accessibilityInformation",
+            ],
+            [
+              "title",
+              "slug",
+              "description",
+              "offers",
+              "accessibilityInformation",
+            ]
+          ),
         },
       });
 
@@ -456,10 +486,7 @@ const doChores = async () => {
 
         let tax = await prisma.taxonomy.findFirst({
           where: {
-            slug: {
-              path: ["de"],
-              string_contains: "einrichtungsart",
-            },
+            slug_de: "einrichtungsart",
           },
         });
 
@@ -489,10 +516,7 @@ const doChores = async () => {
 
         tax = await prisma.taxonomy.findFirst({
           where: {
-            slug: {
-              path: ["de"],
-              string_contains: "zielgruppe",
-            },
+            slug_de: "zielgruppe",
           },
         });
 
@@ -522,10 +546,7 @@ const doChores = async () => {
 
         tax = await prisma.taxonomy.findFirst({
           where: {
-            slug: {
-              path: ["de"],
-              string_contains: "traegerart",
-            },
+            slug_de: "traegerart",
           },
         });
 

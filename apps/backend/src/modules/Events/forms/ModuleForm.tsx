@@ -105,9 +105,9 @@ export const ModuleForm = ({
           <TwoColFieldRow>
             <FieldRow>
               <FieldPublishStatusSelect
-                ownerId={data.eventRead.ownerId}
+                ownerId={data.event.ownerId}
                 module="event"
-                status={data?.eventRead?.status}
+                status={data?.event?.status}
               />
             </FieldRow>
             <FieldRow>
@@ -124,11 +124,11 @@ export const ModuleForm = ({
                   !(
                     appUser &&
                     (appUser.has("editor") ||
-                      data.eventRead.ownerId === appUser.id)
+                      data.event.ownerId === appUser.id)
                   )
                 }
                 settings={{
-                  defaultValue: data.eventRead.ownerId,
+                  defaultValue: data.event.ownerId,
                   placeholder: t(
                     "module.forms.field.placeholder.author",
                     "Please choose the author"
@@ -143,7 +143,7 @@ export const ModuleForm = ({
             id="heroImage"
             name="heroImage"
             label={t("forms.heroImage.label", "Featured image")}
-            currentImage={data?.eventRead?.heroImage}
+            currentImage={data?.event?.heroImage}
             settings={{
               imageRequired: false,
               altRequired: false,
@@ -153,7 +153,7 @@ export const ModuleForm = ({
             connectWith={{
               heroImageEvents: {
                 connect: {
-                  id: data?.eventRead?.id,
+                  id: data?.event?.id,
                 },
               },
             }}
@@ -162,7 +162,7 @@ export const ModuleForm = ({
       );
     } else {
       updateActions = (
-        <input value={data?.eventRead?.ownerId} {...register("ownerId")} />
+        <input value={data?.event?.ownerId} {...register("ownerId")} />
       );
     }
   }
@@ -188,7 +188,7 @@ export const ModuleForm = ({
         label={t("module.events.forms.event.field.label.title", "Title")}
         isRequired={true}
         settings={{
-          defaultValues: data?.eventRead?.title,
+          defaultValues: data?.event?.title,
           placeholder: t(
             "module.events.forms.event.field.placeholder.title",
             "Event title"
@@ -202,7 +202,7 @@ export const ModuleForm = ({
         label={t("module.events.forms.event.field.label.slug", "Slug")}
         isRequired={true}
         settings={{
-          defaultValues: data?.eventRead?.slug,
+          defaultValues: data?.event?.slug,
           placeholder: t(
             "module.events.forms.event.field.placeholder.slug",
             "Slug / URL part"
@@ -258,10 +258,10 @@ export const ModuleForm = ({
           label={t("forms.field.label.location", "Location")}
           isRequired={false}
           item={
-            data?.eventRead?.locations && data?.eventRead?.locations?.length > 0
+            data?.event?.locations && data?.event?.locations?.length > 0
               ? {
-                  label: getMultilangValue(data?.eventRead?.locations[0].title),
-                  id: data?.eventRead?.locations[0].id,
+                  label: getMultilangValue(data?.event?.locations[0].title),
+                  id: data?.event?.locations[0].id,
                 }
               : undefined
           }
@@ -288,7 +288,7 @@ export const ModuleForm = ({
         isRequired={false}
         settings={{
           defaultRequired: true,
-          defaultValues: data?.eventRead?.description,
+          defaultValues: data?.event?.description,
           maxLength: 1000,
           placeholder: t(
             "module.events.forms.event.field.placeholder.description",

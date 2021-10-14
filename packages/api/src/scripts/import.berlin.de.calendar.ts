@@ -106,9 +106,9 @@ const findLocationByEventLocationId = async (
 
 const extractFullText = (data: any) => {
   return `
-  ${data.description.de} ${data.description.en} 
-  ${data.title.de} ${data.title.en} 
-  ${data.slug.de} ${data.slug.en} 
+  ${data.description_de} ${data.description_en} 
+  ${data.title_de} ${data.title_en} 
+  ${data.slug_de} ${data.slug_en} 
   ${data.isFree ? "free freier eintritt gratis" : ""}
   ${data?.meta?.veranstaltungsort?.name} ${
     data?.meta?.veranstaltungsort?.strasse
@@ -136,10 +136,7 @@ const registerEventCategoies = async (
 ) => {
   let taxonomy = await prisma.taxonomy.findFirst({
     where: {
-      slug: {
-        path: ["de"],
-        string_contains: eventCategoriesSlugDE,
-      },
+      slug_de: eventCategoriesSlugDE,
     },
   });
 
@@ -152,10 +149,7 @@ const registerEventCategoies = async (
         if (termDE !== "") {
           let term: any = await prisma.term.findFirst({
             where: {
-              name: {
-                path: ["de"],
-                string_contains: termDE,
-              },
+              name_de: termDE,
             },
           });
 
@@ -170,14 +164,13 @@ const registerEventCategoies = async (
 
             term = await prisma.term.create({
               data: {
-                slug: {
-                  de: `ecat-${slugify(termDE)}`,
-                  en: `ecat-en-${slugify(termEN)}`,
-                },
-                name: {
-                  de: termDE,
-                  en: termEN,
-                },
+                slug_de: `ecat-${slugify(termDE)}`,
+                slug_en: `ecat-en-${slugify(termEN)}`,
+                name_de: termDE,
+                name_en: termEN,
+                fullText: `ecat-${slugify(termDE)} ecat-en-${slugify(
+                  termDE
+                )} ${termDE} ${termEN}`,
                 taxonomy: {
                   connect: {
                     id: taxonomy.id,
@@ -331,25 +324,20 @@ const doChores = async () => {
               }
 
               const sharedData = {
-                description: {
-                  de: convertToHtml(event.event_beschreibung_de),
-                  en: convertToHtml(event.event_beschreibung_en),
-                },
-                title: {
-                  de: event.event_titel_de,
-                  en:
-                    event.event_titel_en !== ""
-                      ? event.event_titel_en
-                      : event.event_titel_de,
-                },
-                slug: {
-                  de: `veranstaltung-${slugify(event.event_titel_de)}-${
-                    event.event_id
-                  }`,
-                  en: `event-${slugify(event.event_titel_en)}-${
-                    event.event_id
-                  }`,
-                },
+                description_de: convertToHtml(event.event_beschreibung_de),
+                description_en: convertToHtml(event.event_beschreibung_en),
+                title_de: event.event_titel_de,
+                title_en:
+                  event.event_titel_en !== ""
+                    ? event.event_titel_en
+                    : event.event_titel_de,
+                slug_de: `veranstaltung-${slugify(event.event_titel_de)}-${
+                  event.event_id
+                }`,
+                slug_en: `event-${slugify(event.event_titel_en)}-${
+                  event.event_id
+                }`,
+
                 meta: {
                   event,
                   veranstalter:
@@ -540,7 +528,8 @@ const doChores = async () => {
           const toBeDeleted = await prisma.event.findMany({
             select: {
               id: true,
-              slug: true,
+              slug_de: true,
+              slug_en: true,
             },
             where: {
               isImported: true,

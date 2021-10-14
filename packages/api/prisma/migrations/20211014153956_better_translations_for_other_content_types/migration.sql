@@ -1,0 +1,57 @@
+-- AlterTable
+ALTER TABLE "Event" ADD COLUMN     "description_de" TEXT NOT NULL DEFAULT E'',
+ADD COLUMN     "description_en" TEXT NOT NULL DEFAULT E'',
+ADD COLUMN     "slug_de" TEXT NOT NULL DEFAULT E'',
+ADD COLUMN     "slug_en" TEXT NOT NULL DEFAULT E'',
+ADD COLUMN     "title_de" TEXT NOT NULL DEFAULT E'',
+ADD COLUMN     "title_en" TEXT NOT NULL DEFAULT E'';
+
+-- AlterTable
+ALTER TABLE "Image" ADD COLUMN     "alt_de" TEXT NOT NULL DEFAULT E'',
+ADD COLUMN     "alt_en" TEXT NOT NULL DEFAULT E'',
+ADD COLUMN     "credits_de" TEXT NOT NULL DEFAULT E'',
+ADD COLUMN     "credits_en" TEXT NOT NULL DEFAULT E'';
+
+-- AlterTable
+ALTER TABLE "Page" ADD COLUMN     "content_de" TEXT NOT NULL DEFAULT E'',
+ADD COLUMN     "content_en" TEXT NOT NULL DEFAULT E'',
+ADD COLUMN     "intro_de" TEXT NOT NULL DEFAULT E'',
+ADD COLUMN     "intro_en" TEXT NOT NULL DEFAULT E'',
+ADD COLUMN     "slug_de" TEXT NOT NULL DEFAULT E'',
+ADD COLUMN     "slug_en" TEXT NOT NULL DEFAULT E'',
+ADD COLUMN     "title_de" TEXT NOT NULL DEFAULT E'',
+ADD COLUMN     "title_en" TEXT NOT NULL DEFAULT E'';
+
+-- AlterTable
+ALTER TABLE "Taxonomy" ADD COLUMN     "name_de" TEXT NOT NULL DEFAULT E'',
+ADD COLUMN     "name_en" TEXT NOT NULL DEFAULT E'',
+ADD COLUMN     "slug_de" TEXT NOT NULL DEFAULT E'',
+ADD COLUMN     "slug_en" TEXT NOT NULL DEFAULT E'';
+
+-- AlterTable
+ALTER TABLE "Term" ADD COLUMN     "name_de" TEXT NOT NULL DEFAULT E'',
+ADD COLUMN     "name_en" TEXT NOT NULL DEFAULT E'',
+ADD COLUMN     "slug_de" TEXT NOT NULL DEFAULT E'',
+ADD COLUMN     "slug_en" TEXT NOT NULL DEFAULT E'';
+
+-- AlterTable
+ALTER TABLE "Tour" ADD COLUMN     "description_de" TEXT NOT NULL DEFAULT E'',
+ADD COLUMN     "description_en" TEXT NOT NULL DEFAULT E'',
+ADD COLUMN     "distance_de" TEXT NOT NULL DEFAULT E'',
+ADD COLUMN     "distance_en" TEXT NOT NULL DEFAULT E'',
+ADD COLUMN     "duration_de" TEXT NOT NULL DEFAULT E'',
+ADD COLUMN     "duration_en" TEXT NOT NULL DEFAULT E'',
+ADD COLUMN     "slug_de" TEXT NOT NULL DEFAULT E'',
+ADD COLUMN     "slug_en" TEXT NOT NULL DEFAULT E'',
+ADD COLUMN     "teaser_de" TEXT NOT NULL DEFAULT E'',
+ADD COLUMN     "teaser_en" TEXT NOT NULL DEFAULT E'',
+ADD COLUMN     "title_de" TEXT NOT NULL DEFAULT E'',
+ADD COLUMN     "title_en" TEXT NOT NULL DEFAULT E'';
+
+-- AlterTable
+ALTER TABLE "TourStop" ADD COLUMN     "description_de" TEXT NOT NULL DEFAULT E'',
+ADD COLUMN     "description_en" TEXT NOT NULL DEFAULT E'',
+ADD COLUMN     "teaser_de" TEXT NOT NULL DEFAULT E'',
+ADD COLUMN     "teaser_en" TEXT NOT NULL DEFAULT E'',
+ADD COLUMN     "title_de" TEXT NOT NULL DEFAULT E'',
+ADD COLUMN     "title_en" TEXT NOT NULL DEFAULT E'';

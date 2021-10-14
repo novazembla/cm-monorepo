@@ -9,7 +9,7 @@ import {
   extendType,
   inputObjectType,
   nonNull,
-  // stringArg,
+  stringArg,
   intArg,
   arg,
   list,
@@ -34,6 +34,8 @@ import {
   daoTourDelete,
   daoImageSaveImageTranslations,
   daoTourStopReorder,
+  daoSharedMapTranslatedColumnsInRowToJson,
+  daoSharedGetTranslatedSelectColumns,
 } from "../../dao";
 
 const apiConfig = getApiConfig();
@@ -45,10 +47,36 @@ export const Tour = objectType({
     t.nonNull.int("ownerId");
     t.nonNull.json("title");
     t.nonNull.json("slug");
-    t.nonNull.json("duration");
-    t.nonNull.json("distance");
     t.nonNull.json("teaser");
     t.nonNull.json("description");
+
+    t.json("title", {
+      resolve: (...[p]) => daoSharedMapTranslatedColumnsInRowToJson(p, "title"),
+    });
+
+    t.json("slug", {
+      resolve: (...[p]) => daoSharedMapTranslatedColumnsInRowToJson(p, "slug"),
+    });
+    t.json("teaser", {
+      resolve: (...[p]) =>
+        daoSharedMapTranslatedColumnsInRowToJson(p, "teaser"),
+    });
+
+    t.json("description", {
+      resolve: (...[p]) =>
+        daoSharedMapTranslatedColumnsInRowToJson(p, "description"),
+    });
+
+    t.json("duration", {
+      resolve: (...[p]) =>
+        daoSharedMapTranslatedColumnsInRowToJson(p, "duration"),
+    });
+
+    t.json("distance", {
+      resolve: (...[p]) =>
+        daoSharedMapTranslatedColumnsInRowToJson(p, "distance"),
+    });
+
     t.nonNull.json("path");
     t.field("heroImage", {
       type: "Image",
@@ -56,6 +84,7 @@ export const Tour = objectType({
     t.nonNull.int("status");
     t.date("createdAt");
     t.date("updatedAt");
+    t.int("orderNumber");
     t.int("tourStopCount", {
       resolve(...[parent]) {
         return (parent as any)?._count?.tourStops ?? 0;
@@ -107,20 +136,33 @@ export const TourQueries = extendType({
         }),
       },
 
+      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "tourReadOwn", true),
+
       // resolve(root, args, ctx, info)
       async resolve(...[, args, ctx, info]) {
         const pRI = parseResolveInfo(info);
 
         let totalCount;
         let tours;
-        let include = {};
+        let include: Prisma.TourInclude = {};
+        let where: Prisma.TourWhereInput = args.where;
 
-        let where: Prisma.TourWhereInput = args.where ?? {};
-        if (!apiUserCan(ctx, "tourRead"))
+        // here needs to be the preview access bypass TODO:
+        if (!apiUserCan(ctx, "tourReadOwn")) {
           where = {
             ...where,
             status: PublishStatus.PUBLISHED,
           };
+        } else {
+          if (!apiUserCan(ctx, "tourRead")) {
+            where = {
+              ...where,
+              owner: {
+                id: ctx?.apiUser?.id ?? 0,
+              },
+            };
+          }
+        }
 
         if ((pRI?.fieldsByTypeName?.TourQueryResult as any)?.totalCount) {
           totalCount = await daoTourQueryCount(where);
@@ -186,10 +228,13 @@ export const TourQueries = extendType({
             tourStops: {
               select: {
                 id: true,
-                title: true,
+                ...daoSharedGetTranslatedSelectColumns([
+                  "title",
+                  "teaser",
+                  "description",
+                ]),
+
                 number: true,
-                teaser: true,
-                description: true,
                 heroImage: {
                   select: {
                     id: true,
@@ -200,8 +245,7 @@ export const TourQueries = extendType({
                 location: {
                   select: {
                     id: true,
-                    title: true,
-                    slug: true,
+                    ...daoSharedGetTranslatedSelectColumns(["title", "slug"]),
                     lat: true,
                     lng: true,
                   },
@@ -226,27 +270,23 @@ export const TourQueries = extendType({
       },
     });
 
-    t.nonNull.field("tourRead", {
+    t.nonNull.field("tour", {
       type: "Tour",
 
       args: {
-        id: nonNull(intArg()),
+        slug: stringArg(),
+        id: intArg(),
       },
+
+      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "tourReadOwn", true),
 
       // resolve(root, args, ctx, info)
       async resolve(...[, args, ctx, info]) {
+        const config = getApiConfig();
         const pRI = parseResolveInfo(info);
 
         let include = {};
-        let where: Prisma.TourWhereInput = {
-          id: args.id,
-        };
-
-        if (!apiUserCan(ctx, "tourRead"))
-          where = {
-            ...where,
-            status: PublishStatus.PUBLISHED,
-          };
+        let where: Prisma.TourWhereInput[] = [];
 
         if ((pRI?.fieldsByTypeName?.Tour as any)?.tourStops) {
           include = {
@@ -254,10 +294,12 @@ export const TourQueries = extendType({
             tourStops: {
               select: {
                 id: true,
-                title: true,
                 number: true,
-                teaser: true,
-                description: true,
+                ...daoSharedGetTranslatedSelectColumns([
+                  "title",
+                  "teaser",
+                  "description",
+                ]),
                 heroImage: {
                   select: {
                     id: true,
@@ -269,8 +311,7 @@ export const TourQueries = extendType({
                 location: {
                   select: {
                     id: true,
-                    title: true,
-                    slug: true,
+                    ...daoSharedGetTranslatedSelectColumns(["title", "slug"]),
                     lat: true,
                     lng: true,
                   },
@@ -339,8 +380,37 @@ export const TourQueries = extendType({
           // };
         }
 
+        if (args.slug && args.slug.trim() !== "") {
+          where.push({
+            OR: config?.activeLanguages.map((lang) => ({
+              [`slug_${lang}`]: args.slug,
+            })),
+          });
+        }
+
+        if (args.id) {
+          where.push({
+            id: args.id,
+          });
+        }
+
+        // here needs to be the preview access bypass TODO:
+        if (!apiUserCan(ctx, "tourReadOwn")) {
+          where.push({
+            status: PublishStatus.PUBLISHED,
+          });
+        } else {
+          if (!apiUserCan(ctx, "tourRead")) {
+            where.push({
+              owner: {
+                id: ctx?.apiUser?.id ?? 0,
+              },
+            });
+          }
+        }
+
         const tour = await daoTourQueryFirst(
-          where,
+          where.length > 1 ? { AND: where } : where.shift() ?? {},
           Object.keys(include).length > 0 ? include : undefined
         );
 
@@ -409,7 +479,20 @@ export const TourMutations = extendType({
         imagesTranslations: list(arg({ type: "ImageTranslationInput" })),
       },
 
-      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "tourUpdate"),
+      authorize: async (...[, args, ctx]) => {
+        if (!authorizeApiUser(ctx, "tourUpdateOwn")) return false;
+
+        if (apiUserCan(ctx, "tourUpdate")) return true;
+
+        const count = await daoTourQueryCount({
+          id: args.id,
+          owner: {
+            id: ctx.apiUser?.id ?? 0,
+          },
+        });
+
+        return count === 1;
+      },
 
       async resolve(...[, args]) {
         const tour = await daoTourUpdate(args.id, args.data);
@@ -432,7 +515,20 @@ export const TourMutations = extendType({
         data: nonNull(list("TourStopOrderInput")),
       },
 
-      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "tourUpdate"),
+      authorize: async (...[, args, ctx]) => {
+        if (!authorizeApiUser(ctx, "tourUpdateOwn")) return false;
+
+        if (apiUserCan(ctx, "tourUpdate")) return true;
+
+        const count = await daoTourQueryCount({
+          id: args.id,
+          owner: {
+            id: ctx.apiUser?.id ?? 0,
+          },
+        });
+
+        return count === 1;
+      },
 
       async resolve(...[, args]) {
         const currentTour = await daoTourGetById(args.id);
@@ -456,7 +552,20 @@ export const TourMutations = extendType({
         id: nonNull(intArg()),
       },
 
-      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "tourDelete"),
+      authorize: async (...[, args, ctx]) => {
+        if (!authorizeApiUser(ctx, "tourDeleteOwn")) return false;
+
+        if (apiUserCan(ctx, "tourDelete")) return true;
+
+        const count = await daoTourQueryCount({
+          id: args.id,
+          owner: {
+            id: ctx.apiUser?.id ?? 0,
+          },
+        });
+
+        return count === 1;
+      },
 
       async resolve(...[, args]) {
         const tour = await daoTourDelete(args.id);

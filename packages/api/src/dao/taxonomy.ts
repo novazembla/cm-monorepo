@@ -9,12 +9,18 @@ import {
   daoTermGetTermsByTaxonomyId,
   daoTermGetTermsCountByTaxonomyId,
 } from "./term";
-import { daoSharedCheckSlugUnique, daoSharedGenerateFullText } from "./shared";
+import {
+  daoSharedCheckSlugUnique,
+  daoSharedGenerateFullText,
+  daoSharedMapJsonToTranslatedColumns,
+} from "./shared";
 
 const prisma = getPrismaClient();
 const apiConfig = getApiConfig();
 
-const taxFullTextKeys = ["name", "slug"];
+export const daoTaxonomyFullTextKeys = ["name", "slug"];
+
+export const daoTaxonomyTranslatedColumns = ["name", "slug"];
 
 export const daoTaxonomyCheckSlugUnique = async (
   slug: Record<string, string>,
@@ -102,7 +108,7 @@ export const daoTaxonomyCreate = async (
 ): Promise<Taxonomy> => {
   const result = await daoSharedCheckSlugUnique(
     prisma.taxonomy.findMany,
-    data.slug as Record<string, string>
+    (data as any).slug
   );
 
   if (!result.ok)
@@ -111,10 +117,18 @@ export const daoTaxonomyCreate = async (
       `Slug is not unique in [${Object.keys(result.errors).join(",")}]`
     );
 
+  let dbData = daoSharedMapJsonToTranslatedColumns(
+    data,
+    daoTaxonomyTranslatedColumns
+  );
   const taxonomy: Taxonomy = await prisma.taxonomy.create({
     data: {
-      ...data,
-      fullText: daoSharedGenerateFullText(data, taxFullTextKeys),
+      ...dbData,
+      fullText: daoSharedGenerateFullText(
+        dbData,
+        daoTaxonomyFullTextKeys,
+        daoTaxonomyTranslatedColumns
+      ),
     },
   });
 
@@ -130,7 +144,7 @@ export const daoTaxonomyUpdate = async (
 ): Promise<Taxonomy> => {
   const result = await daoSharedCheckSlugUnique(
     prisma.taxonomy.findMany,
-    data.slug as Record<string, string>,
+    (data as any).slug,
     true,
     id
   );
@@ -141,10 +155,19 @@ export const daoTaxonomyUpdate = async (
       `Slug is not unique in [${Object.keys(result.errors).join(",")}]`
     );
 
+  let dbData = daoSharedMapJsonToTranslatedColumns(
+    data,
+    daoTaxonomyTranslatedColumns
+  );
+
   const taxonomy: Taxonomy = await prisma.taxonomy.update({
     data: {
-      ...data,
-      fullText: daoSharedGenerateFullText(data, taxFullTextKeys),
+      ...dbData,
+      fullText: daoSharedGenerateFullText(
+        dbData,
+        daoTaxonomyFullTextKeys,
+        daoTaxonomyTranslatedColumns
+      ),
     },
     where: {
       id,

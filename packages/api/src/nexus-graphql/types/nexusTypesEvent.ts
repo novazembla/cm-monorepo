@@ -1,6 +1,7 @@
 /// <reference path="../../types/nexus-typegen.ts" />
 import { parseResolveInfo } from "graphql-parse-resolve-info";
-import { filteredOutputByWhitelist } from "@culturemap/core";
+import { PublishStatus } from "@culturemap/core";
+import { Prisma } from "@prisma/client";
 
 import dedent from "dedent";
 import {
@@ -18,7 +19,7 @@ import { ApiError } from "../../utils";
 
 import { GQLJson } from "./nexusTypesShared";
 
-import { authorizeApiUser } from "../helpers";
+import { authorizeApiUser, apiUserCan } from "../helpers";
 
 import { getApiConfig } from "../../config";
 
@@ -28,9 +29,9 @@ import {
   daoEventQueryFirst,
   daoEventCreate,
   daoEventDelete,
-  daoUserGetById,
-  daoEventGetBySlug,
+  daoSharedMapTranslatedColumnsInRowToJson,
   daoImageSaveImageTranslations,
+  daoSharedGetTranslatedSelectColumns,
 } from "../../dao";
 
 import { eventUpdate } from "../../services/serviceEvent";
@@ -54,29 +55,23 @@ export const Event = objectType({
   name: "Event",
   definition(t) {
     t.nonNull.int("id");
-    t.json("title");
-    t.json("slug");
+
+    t.json("title", {
+      resolve: (...[p]) => daoSharedMapTranslatedColumnsInRowToJson(p, "title"),
+    });
+
+    t.json("slug", {
+      resolve: (...[p]) => daoSharedMapTranslatedColumnsInRowToJson(p, "slug"),
+    });
+
+    t.json("description", {
+      resolve: (...[p]) =>
+        daoSharedMapTranslatedColumnsInRowToJson(p, "description"),
+    });
 
     t.nonNull.int("ownerId");
     t.nonNull.int("status");
-    t.field("author", {
-      type: "User",
 
-      // resolve(root, args, ctx, info)
-      async resolve(...[p]) {
-        if (p.ownerId) {
-          const user = await daoUserGetById(p.ownerId);
-          if (user)
-            return filteredOutputByWhitelist(user, [
-              "id",
-              "firstName",
-              "lastName",
-            ]);
-        }
-        return null;
-      },
-    });
-    t.json("description");
     t.json("meta");
     t.boolean("isFree");
     t.boolean("isImported");
@@ -142,17 +137,35 @@ export const EventQueries = extendType({
         }),
       },
 
-      // TODO: enable! authorize: (...[, , ctx]) => authorizeApiUser(ctx, "eventRead"),
+      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "eventReadOwn", true),
 
-      async resolve(...[, args, , info]) {
+      async resolve(...[, args, ctx, info]) {
         const pRI = parseResolveInfo(info);
 
         let totalCount;
         let events;
-        let include = {};
+        let include: Prisma.EventInclude = {};
+        let where: Prisma.EventWhereInput = args.where;
+
+        // here needs to be the preview access bypass TODO:
+        if (!apiUserCan(ctx, "eventReadOwn")) {
+          where = {
+            ...where,
+            status: PublishStatus.PUBLISHED,
+          };
+        } else {
+          if (!apiUserCan(ctx, "eventRead")) {
+            where = {
+              ...where,
+              owner: {
+                id: ctx?.apiUser?.id ?? 0,
+              },
+            };
+          }
+        }
 
         if ((pRI?.fieldsByTypeName?.EventQueryResult as any)?.totalCount) {
-          totalCount = await daoEventQueryCount(args.where);
+          totalCount = await daoEventQueryCount(where);
 
           if (totalCount === 0)
             return {
@@ -170,15 +183,13 @@ export const EventQueries = extendType({
             terms: {
               select: {
                 id: true,
-                name: true,
-                slug: true,
+                ...daoSharedGetTranslatedSelectColumns(["name", "slug"]),
               },
             },
             primaryTerms: {
               select: {
                 id: true,
-                name: true,
-                slug: true,
+                ...daoSharedGetTranslatedSelectColumns(["name", "slug"]),
               },
             },
           };
@@ -210,8 +221,10 @@ export const EventQueries = extendType({
             locations: {
               select: {
                 id: true,
-                title: true,
-                description: true,
+                ...daoSharedGetTranslatedSelectColumns([
+                  "title",
+                  "description",
+                ]),
                 lat: true,
                 lng: true,
               },
@@ -221,7 +234,7 @@ export const EventQueries = extendType({
 
         if ((pRI?.fieldsByTypeName?.EventQueryResult as any)?.events)
           events = await daoEventQuery(
-            args.where,
+            where,
             Object.keys(include).length > 0 ? include : undefined,
             args.orderBy,
             args.pageIndex as number,
@@ -239,43 +252,19 @@ export const EventQueries = extendType({
       type: "Event",
 
       args: {
-        slug: nonNull(stringArg()),
+        slug: stringArg(),
+        id: intArg(),
       },
+
+      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "eventReadOwn", true),
 
       // resolve(root, args, ctx, info)
-      async resolve(...[, args, , info]) {
+      async resolve(...[, args, ctx, info]) {
+        const config = getApiConfig();
         const pRI = parseResolveInfo(info);
 
-        let include = {};
-
-        if ((pRI?.fieldsByTypeName?.Event as any)?.heroImage)
-          include = {
-            ...include,
-            heroImage: {
-              include: {
-                translations: true,
-              },
-            },
-          };
-
-        return daoEventGetBySlug(args.slug, include);
-      },
-    });
-
-    t.nonNull.field("eventRead", {
-      type: "Event",
-
-      args: {
-        id: nonNull(intArg()),
-      },
-
-      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "eventRead"),
-
-      // resolve(root, args, ctx, info)
-      async resolve(...[, args, , info]) {
-        const pRI = parseResolveInfo(info);
-
-        let include = {};
+        let where: Prisma.EventWhereInput[] = [];
+        let include: Prisma.EventInclude = {};
 
         if ((pRI?.fieldsByTypeName?.Event as any)?.terms)
           include = {
@@ -283,18 +272,35 @@ export const EventQueries = extendType({
             terms: {
               select: {
                 id: true,
-                name: true,
-                slug: true,
+                ...daoSharedGetTranslatedSelectColumns(["name", "slug"]),
               },
             },
             primaryTerms: {
               select: {
                 id: true,
-                name: true,
-                slug: true,
+                ...daoSharedGetTranslatedSelectColumns(["name", "slug"]),
               },
             },
           };
+
+        if ((pRI?.fieldsByTypeName?.Event as any)?.heroImage)
+          include = {
+            ...include,
+            heroImage: {
+              include: {
+                // TODO: change xxxx
+                translations: true,
+              },
+            },
+          };
+
+        if (args.slug && args.slug.trim() !== "") {
+          where.push({
+            OR: config?.activeLanguages.map((lang) => ({
+              [`slug_${lang}`]: args.slug,
+            })),
+          });
+        }
 
         if ((pRI?.fieldsByTypeName?.Event as any)?.dates)
           include = {
@@ -318,33 +324,42 @@ export const EventQueries = extendType({
             locations: {
               select: {
                 id: true,
-                title: true,
-                description: true,
+                ...daoSharedGetTranslatedSelectColumns(["title", "slug"]),
                 lat: true,
                 lng: true,
               },
-              orderBy: {
-                title: "asc",
-              },
             },
           };
 
-        if ((pRI?.fieldsByTypeName?.Event as any)?.heroImage)
-          include = {
-            ...include,
-            heroImage: {
-              include: {
-                translations: true,
-              },
-            },
-          };
-
-        return daoEventQueryFirst(
-          {
+        if (args.id) {
+          where.push({
             id: args.id,
-          },
-          Object.keys(include).length > 0 ? include : undefined
-        );
+          });
+        }
+
+        // here needs to be the preview access bypass TODO:
+        if (!apiUserCan(ctx, "eventReadOwn")) {
+          where.push({
+            status: PublishStatus.PUBLISHED,
+          });
+        } else {
+          if (!apiUserCan(ctx, "eventRead")) {
+            where.push({
+              owner: {
+                id: ctx?.apiUser?.id ?? 0,
+              },
+            });
+          }
+        }
+
+        if (Object.keys(where).length > 0) {
+          return daoEventQueryFirst(
+            where.length > 1 ? { AND: where } : where.shift() ?? {},
+            Object.keys(include).length > 0 ? include : undefined
+          );
+        } else {
+          throw new ApiError(httpStatus.NOT_FOUND, "Not found");
+        }
       },
     });
   },
@@ -403,7 +418,20 @@ export const EventMutations = extendType({
         imagesTranslations: list(arg({ type: "ImageTranslationInput" })),
       },
 
-      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "eventUpdate"),
+      authorize: async (...[, args, ctx]) => {
+        if (!authorizeApiUser(ctx, "eventUpdateOwn")) return false;
+
+        if (apiUserCan(ctx, "eventUpdate")) return true;
+
+        const count = await daoEventQueryCount({
+          id: args.id,
+          owner: {
+            id: ctx.apiUser?.id ?? 0,
+          },
+        });
+
+        return count === 1;
+      },
 
       async resolve(...[, args]) {
         const event = await eventUpdate(args.id, args.data);
@@ -425,7 +453,20 @@ export const EventMutations = extendType({
         id: nonNull(intArg()),
       },
 
-      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "eventDelete"),
+      authorize: async (...[, args, ctx]) => {
+        if (!authorizeApiUser(ctx, "eventDeleteOwn")) return false;
+
+        if (apiUserCan(ctx, "eventDelete")) return true;
+
+        const count = await daoEventQueryCount({
+          id: args.id,
+          owner: {
+            id: ctx.apiUser?.id ?? 0,
+          },
+        });
+
+        return count === 1;
+      },
 
       async resolve(...[, args]) {
         const event = await daoEventDelete(args.id);

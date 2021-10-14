@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { pagesQueryGQL, pageDeleteMutationGQL } from "@culturemap/core";
 import { useQuery } from "@apollo/client";
@@ -14,6 +14,7 @@ import {
   useDeleteByIdButton,
   useAuthentication,
   useLocalStorage,
+  useTypedSelector,
 } from "~/hooks";
 
 import {
@@ -49,6 +50,15 @@ const Index = () => {
   );
 
   const [isRefetching, setIsRefetching] = useState(false);
+
+  const previousRoute = useTypedSelector(({router}) => router.router.previous);
+
+  useEffect(() => {
+    if (previousRoute?.indexOf(moduleRootPath) === -1) {
+      setTableState(intitalTableState);
+    }    
+  }, [previousRoute, setTableState])
+
 
   const { loading, error, data, refetch } = useQuery(pagesQueryGQL, {
     onCompleted: () => {
@@ -199,6 +209,8 @@ const Index = () => {
         <AdminTable
           columns={AdminTableColumns}
           isLoading={loading}
+          showFilter={true}
+          showKeywordSearch={true}
           {...{
             tableTotalCount,
             tablePageCount,

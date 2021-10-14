@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { termsQueryGQL, termDeleteMutationGQL } from "@culturemap/core";
 import { useQuery } from "@apollo/client";
@@ -16,6 +16,7 @@ import {
   useAuthentication,
   useLocalStorage,
   useRouter,
+  useTypedSelector,
 } from "~/hooks";
 
 import {
@@ -52,6 +53,16 @@ const Terms = () => {
   );
 
   const [isRefetching, setIsRefetching] = useState(false);
+
+  const previousRoute = useTypedSelector(
+    ({ router }) => router.router.previous
+  );
+
+  useEffect(() => {
+    if (previousRoute?.indexOf(moduleRootPath) === -1) {
+      setTableState(intitalTableState);
+    }
+  }, [previousRoute, setTableState]);
 
   const { loading, error, data, refetch } = useQuery(termsQueryGQL, {
     onCompleted: () => {
@@ -90,8 +101,8 @@ const Terms = () => {
     },
     {
       title:
-        data && data.taxonomyRead ? (
-          <MultiLangValue json={data.taxonomyRead.name} />
+        data && data.taxonomy ? (
+          <MultiLangValue json={data.taxonomy.name} />
         ) : (
           <BeatLoader size="10px" color="#666" />
         ),
@@ -208,6 +219,8 @@ const Terms = () => {
         <AdminTable
           columns={AdminTableColumns}
           isLoading={loading}
+          showFilter={true}
+          showKeywordSearch={true}
           {...{
             tableTotalCount,
             tablePageCount,

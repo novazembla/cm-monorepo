@@ -14,12 +14,23 @@ import {
   daoSharedGenerateFullText,
   daoSharedWrapImageWithTranslationImage,
   daoImageTranslatedColumns,
+  daoSharedMapJsonToTranslatedColumns,
+  daoSharedGetTranslatedSelectColumns,
 } from ".";
 
 const prisma = getPrismaClient();
 const apiConfig = getApiConfig();
 
-const fullTextKeys = [
+export const daoTourFullTextKeys = [
+  "title",
+  "slug",
+  "duration",
+  "distance",
+  "teaser",
+  "description",
+];
+
+export const daoTourTranslatedColumns = [
   "title",
   "slug",
   "duration",
@@ -99,6 +110,32 @@ export const daoTourQueryCount = async (
   });
 };
 
+export const daoTourSearchQuery = async (
+  where: Prisma.TourWhereInput,
+  pageIndex: number = 0,
+  pageSize: number = apiConfig.db.defaultPageSize * 3
+): Promise<Event[]> => {
+  const tours = await prisma.tour.findMany({
+    where,
+    select: {
+      id: true,
+      ...daoSharedGetTranslatedSelectColumns(["title", "slug", "teaser"]),
+      orderNumber: true,
+      count: {
+        tourStops: true,
+      },
+    },
+
+    skip: pageIndex * pageSize,
+    take: Math.min(pageSize, apiConfig.db.maxPageSize),
+  });
+
+  return filteredOutputByBlacklist(
+    tours,
+    apiConfig.db.privateJSONDataKeys.tour
+  );
+};
+
 export const daoTourGetTourStops = async (id: number): Promise<TourStop[]> => {
   return daoTourStopGetTourStopsByTourId(id);
 };
@@ -123,7 +160,7 @@ export const daoTourCreate = async (
 ): Promise<Tour> => {
   const result = await daoSharedCheckSlugUnique(
     prisma.tour.findMany,
-    data.slug as Record<string, string>
+    (data as any).slug
   );
 
   if (!result.ok)
@@ -132,10 +169,19 @@ export const daoTourCreate = async (
       `Slug is not unique in [${Object.keys(result.errors).join(",")}]`
     );
 
+  let dbData = daoSharedMapJsonToTranslatedColumns(
+    data,
+    daoTourTranslatedColumns
+  );
+
   const tour: Tour = await prisma.tour.create({
     data: {
-      ...data,
-      fullText: daoSharedGenerateFullText(data, fullTextKeys),
+      ...dbData,
+      fullText: daoSharedGenerateFullText(
+        dbData,
+        daoTourFullTextKeys,
+        daoTourTranslatedColumns
+      ),
     },
   });
 
@@ -151,7 +197,7 @@ export const daoTourUpdate = async (
 ): Promise<Tour> => {
   const result = await daoSharedCheckSlugUnique(
     prisma.tour.findMany,
-    data.slug as Record<string, string>,
+    (data as any).slug,
     true,
     id
   );
@@ -162,10 +208,19 @@ export const daoTourUpdate = async (
       `Slug is not unique in [${Object.keys(result.errors).join(",")}]`
     );
 
+  let dbData = daoSharedMapJsonToTranslatedColumns(
+    data,
+    daoTourTranslatedColumns
+  );
+
   const tour: Tour = await prisma.tour.update({
     data: {
-      ...data,
-      fullText: daoSharedGenerateFullText(data, fullTextKeys),
+      ...dbData,
+      fullText: daoSharedGenerateFullText(
+        dbData,
+        daoTourFullTextKeys,
+        daoTourTranslatedColumns
+      ),
     },
     where: {
       id,
@@ -210,6 +265,7 @@ const defaults = {
   daoTourCheckSlugUnique,
   daoTourCreate,
   daoTourUpdate,
+  daoTourSearchQuery,
   daoTourDelete,
 };
 export default defaults;

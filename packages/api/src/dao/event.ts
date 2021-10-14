@@ -5,17 +5,22 @@ import { filteredOutputByBlacklist } from "@culturemap/core";
 import { ApiError, filteredOutputByBlacklistOrNotFound } from "../utils";
 import { getApiConfig } from "../config";
 import { getPrismaClient } from "../db/client";
+
 import {
   daoSharedCheckSlugUnique,
   daoSharedGenerateFullText,
   daoSharedWrapImageWithTranslationImage,
   daoImageTranslatedColumns,
+  daoSharedMapJsonToTranslatedColumns,
+  daoSharedGetTranslatedSelectColumns,
 } from ".";
 
 const prisma = getPrismaClient();
 const apiConfig = getApiConfig();
 
-const eventFullTextKeys = ["title", "slug", "description"];
+export const daoEventFullTextKeys = ["title", "slug", "description"];
+
+export const daoEventTranslatedColumns = ["title", "slug", "description"];
 
 export const daoEventCheckSlugUnique = async (
   slug: Record<string, string>,
@@ -60,9 +65,7 @@ export const daoEventSearchQuery = async (
     where,
     select: {
       id: true,
-      title: true,
-      slug: true,
-      description: true,
+      ...daoSharedGetTranslatedSelectColumns(["title", "slug", "description"]),
       dates: {
         select: {
           date: true,
@@ -73,8 +76,7 @@ export const daoEventSearchQuery = async (
       locations: {
         select: {
           id: true,
-          title: true,
-          slug: true,
+          ...daoSharedGetTranslatedSelectColumns(["title", "slug"]),
           lng: true,
           lat: true,
         },
@@ -123,7 +125,7 @@ export const daoEventCreate = async (
 ): Promise<Event> => {
   const result = await daoSharedCheckSlugUnique(
     prisma.event.findMany,
-    data.slug as Record<string, string>
+    (data as any).slug
   );
 
   if (!result.ok)
@@ -132,10 +134,19 @@ export const daoEventCreate = async (
       `Slug is not unique in [${Object.keys(result.errors).join(",")}]`
     );
 
+  let createData = daoSharedMapJsonToTranslatedColumns(
+    data,
+    daoEventTranslatedColumns
+  );
+
   const event: Event = await prisma.event.create({
     data: {
-      ...data,
-      fullText: daoSharedGenerateFullText(data, eventFullTextKeys),
+      ...createData,
+      fullText: daoSharedGenerateFullText(
+        createData,
+        daoEventFullTextKeys,
+        daoEventTranslatedColumns
+      ),
     },
   });
 
@@ -170,7 +181,7 @@ export const daoEventUpdate = async (
 ): Promise<Event> => {
   const result = await daoSharedCheckSlugUnique(
     prisma.event.findMany,
-    data.slug as Record<string, string>,
+    (data as any).slug,
     true,
     id
   );
@@ -181,10 +192,19 @@ export const daoEventUpdate = async (
       `Slug is not unique in [${Object.keys(result.errors).join(",")}]`
     );
 
-  const term: Event = await prisma.event.update({
+  let updateData = daoSharedMapJsonToTranslatedColumns(
+    data,
+    daoEventTranslatedColumns
+  );
+
+  const event: Event = await prisma.event.update({
     data: {
-      ...data,
-      fullText: daoSharedGenerateFullText(data, eventFullTextKeys),
+      ...updateData,
+      fullText: daoSharedGenerateFullText(
+        updateData,
+        daoEventFullTextKeys,
+        daoEventTranslatedColumns
+      ),
     },
     where: {
       id,
@@ -192,7 +212,7 @@ export const daoEventUpdate = async (
   });
 
   return filteredOutputByBlacklistOrNotFound(
-    term,
+    event,
     apiConfig.db.privateJSONDataKeys.event
   );
 };
@@ -206,14 +226,14 @@ export const daoEventDelete = async (id: number): Promise<Event> => {
     },
   });
 
-  const term: Event = await prisma.event.delete({
+  const event: Event = await prisma.event.delete({
     where: {
       id,
     },
   });
 
   return filteredOutputByBlacklistOrNotFound(
-    term,
+    event,
     apiConfig.db.privateJSONDataKeys.event
   );
 };
@@ -257,22 +277,13 @@ export const daoEventGetBySlug = async (
   slug: string,
   include?: Prisma.EventInclude | undefined
 ): Promise<Event> => {
+  const config = getApiConfig();
+
   const event = await prisma.event.findFirst({
     where: {
-      OR: [
-        {
-          slug: {
-            path: ["en"],
-            equals: slug,
-          },
-        },
-        {
-          slug: {
-            path: ["de"],
-            equals: slug,
-          },
-        },
-      ],
+      OR: config?.activeLanguages.map((lang) => ({
+        [`slug_${lang}`]: slug,
+      })),
     },
 
     include: {
@@ -280,11 +291,7 @@ export const daoEventGetBySlug = async (
       terms: {
         select: {
           id: true,
-          name: true,
-          slug: true,
-        },
-        orderBy: {
-          name: "asc",
+          ...daoSharedGetTranslatedSelectColumns(["name", "slug"]),
         },
       },
       dates: {
@@ -301,13 +308,9 @@ export const daoEventGetBySlug = async (
       locations: {
         select: {
           id: true,
-          slug: true,
-          title: true,
+          ...daoSharedGetTranslatedSelectColumns(["title", "slug"]),
           lat: true,
           lng: true,
-        },
-        orderBy: {
-          title: "asc",
         },
       },
     },

@@ -7,7 +7,7 @@ import { useQuery } from "@apollo/client";
 import { BeatLoader } from "react-spinners";
 import {
   filteredOutputByWhitelist,
-  tourReadQueryGQL,
+  tourQueryGQL,
 } from "@culturemap/core";
 
 import {
@@ -51,7 +51,7 @@ const CreateTourStop = () => {
   const [firstMutation, firstMutationResults] = useTourStopCreateMutation();
   const [hasFormError, setHasFormError] = useState(false);
 
-  const { data, loading, error } = useQuery(tourReadQueryGQL, {
+  const { data, loading, error } = useQuery(tourQueryGQL, {
     variables: {
       id: parseInt(router.query.tourId, 10),
     },
@@ -114,8 +114,8 @@ const CreateTourStop = () => {
     {
       path: `${moduleRootPath}/update/${router.query.tourId}/`,
       title:
-        data && data.tourRead ? (
-          <MultiLangValue json={data.tourRead.title} />
+        data && data.tour ? (
+          <MultiLangValue json={data.tour.title} />
         ) : (
           <BeatLoader size="10px" color="#666" />
         ),
@@ -159,7 +159,7 @@ const CreateTourStop = () => {
               )}
               <TourStopForm
                 action="create"
-                data={data?.tourRead}
+                data={data?.tour}
                 validationSchema={ModuleTourStopCreateSchema}
               />
             </ModulePage>

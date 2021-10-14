@@ -42,15 +42,38 @@ const getRandomElements = (arr: any[], n: number) => {
   return result.filter((r) => r);
 };
 
-const daoSharedGenerateFullText = (data: any, keys: string[]) => {
-  return keys.reduce((fullText: string, key) => {
-    if (!(key in data)) return fullText;
-
-    if (typeof data[key] !== "object") return fullText;
+const daoSharedGenerateFullText = (
+  data: any,
+  keys: string[],
+  translatedColumns?: string[]
+) => {
+  const processElement = (fullText: string, key: string) => {
+    if (typeof data[key] !== "object") {
+      if (data[key]) {
+        return `${fullText} ${data[key]}`;
+      } else {
+        return fullText;
+      }
+    }
 
     return `${fullText} ${Object.keys(data[key])
       .map((oKey) => data[key][oKey])
       .join("\n")}`;
+  };
+
+  return keys.reduce((fullText: string, key) => {
+    if (translatedColumns && translatedColumns.includes(key)) {
+      return ["de", "en"].reduce((fT: string, lang: any) => {
+        if (`${key}_${lang}` in data) {
+          return `${fT} ${data[`${key}_${lang}`]}`;
+        }
+        return fT;
+      }, fullText);
+    } else {
+      if (!(key in data)) return fullText;
+
+      return processElement(fullText, key);
+    }
   }, "");
 };
 
@@ -200,9 +223,17 @@ async function main() {
     await prisma.module.deleteMany();
     await prisma.token.deleteMany();
     await prisma.term.deleteMany();
+    await prisma.tour.deleteMany();
+    await prisma.tourStop.deleteMany();
     await prisma.taxonomy.deleteMany();
     await prisma.image.deleteMany();
     await prisma.event.deleteMany();
+    await prisma.eventDate.deleteMany();
+    await prisma.eventImportLog.deleteMany();
+    await prisma.file.deleteMany();
+    await prisma.import.deleteMany();
+    await prisma.image.deleteMany();
+    await prisma.imageTranslation.deleteMany();
     await prisma.location.deleteMany();
     await prisma.page.deleteMany();
     await prisma.user.deleteMany();
@@ -269,10 +300,7 @@ async function main() {
   if (administrator) {
     let testTaxonomy = await prisma.taxonomy.findFirst({
       where: {
-        slug: {
-          path: ["de"],
-          string_contains: "einrichtungsart",
-        },
+        slug_de: "einrichtungsart",
       },
     });
 
@@ -281,15 +309,11 @@ async function main() {
 
       await prisma.taxonomy.create({
         data: {
-          name: {
-            de: "Einrichtungsart",
-            en: "Type of Institution",
-          },
+          name_de: "Einrichtungsart",
+          name_en: "Type of Institution",
+          slug_de: "einrichtungsart",
+          slug_en: "type",
           multiTerm: true,
-          slug: {
-            de: "einrichtungsart",
-            en: "type",
-          },
           modules: {
             connect: {
               key: "location",
@@ -299,14 +323,10 @@ async function main() {
           terms: {
             createMany: {
               data: categories.map((term) => ({
-                name: {
-                  de: term[0],
-                  en: term[1],
-                },
-                slug: {
-                  de: slugify(term[0]),
-                  en: slugify(term[1]),
-                },
+                name_de: term[0],
+                name_en: term[1],
+                slug_de: slugify(term[0]),
+                slug_en: slugify(term[1]),
                 fullText: `${term[0]} ${term[1]} ${slugify(term[0])} ${slugify(
                   term[1]
                 )}`,
@@ -319,10 +339,7 @@ async function main() {
 
     testTaxonomy = await prisma.taxonomy.findFirst({
       where: {
-        slug: {
-          path: ["de"],
-          string_contains: "zielgruppe",
-        },
+        slug_de: "zielgruppe",
       },
     });
 
@@ -331,15 +348,11 @@ async function main() {
 
       await prisma.taxonomy.create({
         data: {
-          name: {
-            de: "Zielgruppe",
-            en: "Target Audience",
-          },
+          name_de: "Zielgruppe",
+          name_en: "Target Audience",
           multiTerm: true,
-          slug: {
-            de: "zielgruppe",
-            en: "target-audience",
-          },
+          slug_de: "zielgruppe",
+          slug_en: "target-audience",
           modules: {
             connect: {
               key: "location",
@@ -349,14 +362,10 @@ async function main() {
           terms: {
             createMany: {
               data: targetAudience.map((term) => ({
-                name: {
-                  de: term[0],
-                  en: term[1],
-                },
-                slug: {
-                  de: slugify(term[0]),
-                  en: slugify(term[1]),
-                },
+                name_de: term[0],
+                name_en: term[1],
+                slug_de: slugify(term[0]),
+                slug_en: slugify(term[1]),
                 fullText: `${term[0]} ${term[1]} ${slugify(term[0])} ${slugify(
                   term[1]
                 )}`,
@@ -369,10 +378,7 @@ async function main() {
 
     testTaxonomy = await prisma.taxonomy.findFirst({
       where: {
-        slug: {
-          path: ["de"],
-          string_contains: "traegerart",
-        },
+        slug_de: "traegerart",
       },
     });
 
@@ -381,15 +387,11 @@ async function main() {
 
       await prisma.taxonomy.create({
         data: {
-          name: {
-            de: "Trägerart",
-            en: "Type of Organisation",
-          },
+          name_de: "Trägerart",
+          name_en: "Type of Organisation",
           multiTerm: true,
-          slug: {
-            de: "traegerart",
-            en: "type-of-organisation",
-          },
+          slug_de: "traegerart",
+          slug_en: "type-of-organisation",
           modules: {
             connect: {
               key: "location",
@@ -399,14 +401,10 @@ async function main() {
           terms: {
             createMany: {
               data: institutionType.map((term) => ({
-                name: {
-                  de: term[0],
-                  en: term[1],
-                },
-                slug: {
-                  de: slugify(term[0]),
-                  en: slugify(term[1]),
-                },
+                name_de: term[0],
+                name_en: term[1],
+                slug_de: slugify(term[0]),
+                slug_en: slugify(term[1]),
                 fullText: `${term[0]} ${term[1]} ${slugify(term[0])} ${slugify(
                   term[1]
                 )}`,
@@ -419,10 +417,7 @@ async function main() {
 
     const eventTaxonomy = await prisma.taxonomy.findFirst({
       where: {
-        slug: {
-          path: ["de"],
-          string_contains: "veranstaltungsarten",
-        },
+        slug_de: "veranstaltungsarten",
       },
     });
 
@@ -431,15 +426,11 @@ async function main() {
 
       await prisma.taxonomy.create({
         data: {
-          name: {
-            de: "Veranstaltungsart",
-            en: "Event Categories",
-          },
+          name_de: "Veranstaltungsart",
+          name_en: "Event Categories",
           multiTerm: true,
-          slug: {
-            de: "veranstaltungsarten",
-            en: "event-categories",
-          },
+          slug_de: "veranstaltungsarten",
+          slug_en: "event-categories",
           modules: {
             connect: {
               key: "event",
@@ -450,14 +441,10 @@ async function main() {
           terms: {
             createMany: {
               data: eventCategories.map((term) => ({
-                name: {
-                  de: term[0],
-                  en: term[1],
-                },
-                slug: {
-                  de: slugify(term[0]),
-                  en: slugify(term[1]),
-                },
+                name_de: term[0],
+                name_en: term[1],
+                slug_de: slugify(term[0]),
+                slug_en: slugify(term[1]),
                 fullText: `${term[0]} ${term[1]} ${slugify(term[0])} ${slugify(
                   term[1]
                 )}`,
@@ -475,10 +462,7 @@ async function main() {
       pages.map(async (page) => {
         const pageTest = await prisma.page.findFirst({
           where: {
-            slug: {
-              path: ["de"],
-              string_contains: slugify(page[0]),
-            },
+            slug_de: slugify(page[0]),
           },
         });
 
@@ -489,30 +473,22 @@ async function main() {
           ).join(" ");
           const data = {
             status: Math.random() > 0.3 ? 4 : rndBetween(1, 4),
-            title: {
-              de: page[0],
-              en: page[1],
-            },
-            slug: {
-              de: slugify(page[0]),
-              en: slugify(page[1]),
-            },
-            intro: {
-              de: `${keywordSelection} ${lorem
-                .generateParagraphs(rndBetween(1, 5))
-                .replace(/(\r\n|\n|\r)/g, "<br/><br/>")}`,
-              en: lorem
-                .generateParagraphs(rndBetween(1, 5))
-                .replace(/(\r\n|\n|\r)/g, "<br/><br/>"),
-            },
-            content: {
-              de: `${keywordSelection} ${lorem
-                .generateParagraphs(rndBetween(5, 10))
-                .replace(/(\r\n|\n|\r)/g, "<br/><br/>")}`,
-              en: lorem
-                .generateParagraphs(rndBetween(5, 10))
-                .replace(/(\r\n|\n|\r)/g, "<br/><br/>"),
-            },
+            title_de: page[0],
+            title_en: page[1],
+            slug_de: slugify(page[0]),
+            slug_en: slugify(page[1]),
+            intro_de: `${keywordSelection} ${lorem
+              .generateParagraphs(rndBetween(1, 5))
+              .replace(/(\r\n|\n|\r)/g, "<br/><br/>")}`,
+            intro_en: lorem
+              .generateParagraphs(rndBetween(1, 5))
+              .replace(/(\r\n|\n|\r)/g, "<br/><br/>"),
+            content_de: `${keywordSelection} ${lorem
+              .generateParagraphs(rndBetween(5, 10))
+              .replace(/(\r\n|\n|\r)/g, "<br/><br/>")}`,
+            content_en: lorem
+              .generateParagraphs(rndBetween(5, 10))
+              .replace(/(\r\n|\n|\r)/g, "<br/><br/>"),
             owner: {
               connect: {
                 id: Math.random() > 0.5 ? contributor.id : editor.id,
@@ -522,11 +498,11 @@ async function main() {
           await prisma.page.create({
             data: {
               ...data,
-              fullText: daoSharedGenerateFullText(data, [
-                "title",
-                "slug",
-                "content",
-              ]),
+              fullText: daoSharedGenerateFullText(
+                data,
+                ["title", "slug", "intro", "content"],
+                ["title", "slug", "intro", "content"]
+              ),
             },
           });
         }

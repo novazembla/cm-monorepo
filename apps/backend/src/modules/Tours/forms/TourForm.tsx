@@ -52,7 +52,7 @@ export const TourForm = ({
         label={t("module.tours.forms.tour.field.label.title", "Title")}
         isRequired={true}
         settings={{
-          defaultValues: data?.tourRead?.title,
+          defaultValues: data?.tour?.title,
           placeholder: t(
             "module.tours.forms.tour.field.placeholder.title",
             "Tour name"
@@ -66,7 +66,7 @@ export const TourForm = ({
         label={t("module.tours.forms.tour.field.label.slug", "Slug")}
         isRequired={true}
         settings={{
-          defaultValues: data?.tourRead?.slug,
+          defaultValues: data?.tour?.slug,
           placeholder: t(
             "module.tours.forms.tour.field.placeholder.slug",
             "Slug / URL part"
@@ -79,9 +79,9 @@ export const TourForm = ({
           <TwoColFieldRow>
             <FieldRow>
               <FieldPublishStatusSelect
-                ownerId={data?.tourRead.ownerId}
+                ownerId={data?.tour.ownerId}
                 module="page"
-                status={data?.tourRead?.status}
+                status={data?.tour?.status}
               />
             </FieldRow>
             <FieldRow>
@@ -105,7 +105,7 @@ export const TourForm = ({
                   label: `${authUser.firstName} ${authUser.lastName}`,
                 }))}
                 settings={{
-                  defaultValue: data?.tourRead?.ownerId,
+                  defaultValue: data?.tour?.ownerId,
                   placeholder: t(
                     "module.forms.field.placeholder.author",
                     "Please choose the author"
@@ -119,7 +119,7 @@ export const TourForm = ({
             id="heroImage"
             name="heroImage"
             label={t("forms.heroImage.label", "Featured image")}
-            currentImage={data?.tourRead?.heroImage}
+            currentImage={data?.tour?.heroImage}
             setActiveUploadCounter={setActiveUploadCounter}
             settings={{
               imageRequired: true,
@@ -129,7 +129,7 @@ export const TourForm = ({
             connectWith={{
               heroImageTours: {
                 connect: {
-                  id: data?.tourRead?.id,
+                  id: data?.tour?.id,
                 },
               },
             }}
@@ -145,7 +145,7 @@ export const TourForm = ({
         label={t("module.tours.forms.tour.field.label.duration", "Duration")}
         isRequired={true}
         settings={{
-          defaultValues: data?.tourRead?.duration,
+          defaultValues: data?.tour?.duration,
           placeholder: t(
             "module.tours.forms.tour.field.placeholder.duration",
             "1 hr"
@@ -160,7 +160,7 @@ export const TourForm = ({
         label={t("module.tours.forms.tour.field.label.distance", "Distance")}
         isRequired={true}
         settings={{
-          defaultValues: data?.tourRead?.distance,
+          defaultValues: data?.tour?.distance,
           placeholder: t(
             "module.tours.forms.tour.field.placeholder.distance",
             "3 Kilometer"
@@ -177,7 +177,7 @@ export const TourForm = ({
         isRequired={false}
         settings={{
           defaultRequired: true,
-          defaultValues: data?.tourRead?.teaser,
+          defaultValues: data?.tour?.teaser,
           maxLength: 200,
           placeholder: t(
             "module.tours.forms.tour.field.placeholder.teaser",
@@ -198,7 +198,7 @@ export const TourForm = ({
         isRequired={false}
         settings={{
           defaultRequired: true,
-          defaultValues: data?.tourRead?.description,
+          defaultValues: data?.tour?.description,
           placeholder: t(
             "module.tours.forms.tour.field.placeholder.description",
             "Full tour description"

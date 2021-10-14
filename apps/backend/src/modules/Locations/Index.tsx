@@ -1,7 +1,7 @@
 // TODO: visibility
 //
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { locationsQueryGQL, locationDeleteMutationGQL } from "@culturemap/core";
 import { useQuery } from "@apollo/client";
@@ -17,6 +17,7 @@ import {
   useDeleteByIdButton,
   useAuthentication,
   useLocalStorage,
+  useTypedSelector,
 } from "~/hooks";
 
 import {
@@ -28,6 +29,7 @@ import {
   AdminTableActionCell,
   AdminTableMultiLangCell,
   AdminTablePublishStatusCell,
+  AdminTableDateCell,
 } from "~/components/ui";
 import { config } from "~/config";
 import { SortingRule } from "react-table";
@@ -45,11 +47,22 @@ let refetchPageIndex: number | undefined = undefined;
 
 const Index = () => {
   const { t, i18n } = useTranslation();
+
   const [appUser] = useAuthentication();
   const [tableState, setTableState] = useLocalStorage(
     `${moduleRootPath}/Index`,
     intitalTableState
   );
+
+  const previousRoute = useTypedSelector(
+    ({ router }) => router.router.previous
+  );
+
+  useEffect(() => {
+    if (previousRoute?.indexOf(moduleRootPath) === -1) {
+      setTableState(intitalTableState);
+    }
+  }, [previousRoute, setTableState]);
 
   const [isRefetching, setIsRefetching] = useState(false);
 
@@ -107,6 +120,11 @@ const Index = () => {
     {
       Header: t("table.label.id", "Id"),
       accessor: "id",
+    } as AdminTableColumn,
+    {
+      Cell: AdminTableDateCell,
+      Header: t("table.label.lastUpdate", "Last update"),
+      accessor: "updatedAt",
     } as AdminTableColumn,
     {
       Cell: AdminTablePublishStatusCell,
@@ -209,6 +227,8 @@ const Index = () => {
         <AdminTable
           columns={AdminTableColumns}
           isLoading={loading}
+          showFilter={true}
+          showKeywordSearch={true}
           {...{
             tableTotalCount,
             tablePageCount,

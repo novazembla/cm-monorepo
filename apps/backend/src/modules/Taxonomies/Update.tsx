@@ -25,7 +25,7 @@ import {
 import { Divider } from "@chakra-ui/react";
 import {
   filteredOutputByWhitelist,
-  taxonomyReadQueryGQL,
+  taxonomyQueryGQL,
 } from "@culturemap/core";
 
 import { useQuery } from "@apollo/client";
@@ -57,7 +57,7 @@ const Update = () => {
 
   const modules = useModules();
 
-  const { data, loading, error } = useQuery(taxonomyReadQueryGQL, {
+  const { data, loading, error } = useQuery(taxonomyQueryGQL, {
     variables: {
       id: parseInt(router.query.id, 10),
     },
@@ -83,7 +83,7 @@ const Update = () => {
   } = formMethods;
 
   useEffect(() => {
-    if (!data || !data.taxonomyRead) return;
+    if (!data || !data.taxonomy) return;
 
     const activeModules = Object.keys(modules).reduce((acc: any, k: string) => {
       if (modules[k].withTaxonomies) acc.push(modules[k]);
@@ -122,16 +122,16 @@ const Update = () => {
     
     reset({
       ...multiLangJsonToRHFormData(
-        filteredOutputByWhitelist(data.taxonomyRead, [], multiLangFields),
+        filteredOutputByWhitelist(data.taxonomy, [], multiLangFields),
         multiLangFields,
         config.activeLanguages
       ),
-      hasColor: !!data.taxonomyRead.hasColor,
-      collectPrimaryTerm: !!data.taxonomyRead.collectPrimaryTerm,
-      isRequired: !!data.taxonomyRead.isRequired,
+      hasColor: !!data.taxonomy.hasColor,
+      collectPrimaryTerm: !!data.taxonomy.collectPrimaryTerm,
+      isRequired: !!data.taxonomy.isRequired,
       modules: false,
       ...mapDataToGroupOptions(
-        data?.taxonomyRead?.modules,
+        data?.taxonomy?.modules,
         activeModules,
         "modules"
       ),
@@ -246,7 +246,7 @@ const Update = () => {
               <TaxonomyForm
                 type="taxonomy"
                 action="update"
-                data={data?.taxonomyRead}
+                data={data?.taxonomy}
                 validationSchema={extendedValidationSchema}
               />
             </ModulePage>

@@ -7,7 +7,7 @@ import { useQuery } from "@apollo/client";
 import { BeatLoader } from "react-spinners";
 import {
   filteredOutputByWhitelist,
-  taxonomyReadQueryGQL,
+  taxonomyQueryGQL,
 } from "@culturemap/core";
 
 import {
@@ -51,7 +51,7 @@ const CreateTerm = () => {
   const [firstMutation, firstMutationResults] = useTermCreateMutation();
   const [hasFormError, setHasFormError] = useState(false);
 
-  const { data, loading, error } = useQuery(taxonomyReadQueryGQL, {
+  const { data, loading, error } = useQuery(taxonomyQueryGQL, {
     variables: {
       id: parseInt(router.query.taxId, 10),
     },
@@ -115,8 +115,8 @@ const CreateTerm = () => {
     {
       path: `${moduleRootPath}/${router.query.taxId}/terms`,
       title:
-        data && data.taxonomyRead ? (
-          <MultiLangValue json={data.taxonomyRead.name} />
+        data && data.taxonomy ? (
+          <MultiLangValue json={data.taxonomy.name} />
         ) : (
           <BeatLoader size="10px" color="#666" />
         ),
@@ -161,7 +161,7 @@ const CreateTerm = () => {
               <TaxonomyForm
                 type="term"
                 action="create"
-                data={data?.taxonomyRead}
+                data={data?.taxonomy}
                 validationSchema={ModuleTermSchema}
               />
             </ModulePage>

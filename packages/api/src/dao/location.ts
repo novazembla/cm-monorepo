@@ -10,8 +10,8 @@ import {
   daoSharedGenerateFullText,
   daoSharedWrapImageWithTranslationImage,
   daoImageTranslatedColumns,
-  daoSharedMapTranslatedColumnsToJson,
   daoSharedMapJsonToTranslatedColumns,
+  daoSharedGetTranslatedSelectColumns,
 } from ".";
 
 const prisma = getPrismaClient();
@@ -38,7 +38,6 @@ export const daoLocationCheckSlugUnique = async (
   uniqueInObject: boolean,
   id?: number
 ): Promise<{ ok: boolean; errors: Record<string, boolean> }> => {
-  // xxx fix
   return daoSharedCheckSlugUnique(
     prisma.location.findMany,
     slug,
@@ -63,10 +62,7 @@ export const daoLocationQuery = async (
   });
 
   return filteredOutputByBlacklist(
-    daoSharedMapTranslatedColumnsToJson(
-      locations,
-      daoLocationTranslatedColumns
-    ),
+    locations,
     apiConfig.db.privateJSONDataKeys.location
   );
 };
@@ -80,9 +76,7 @@ export const daoLocationSearchQuery = async (
     where,
     select: {
       id: true,
-      title: true,
-      slug: true,
-      description: true,
+      ...daoSharedGetTranslatedSelectColumns(["title", "slug", "description"]),
       lat: true,
       lng: true,
     },
@@ -91,10 +85,7 @@ export const daoLocationSearchQuery = async (
   });
 
   return filteredOutputByBlacklist(
-    daoSharedMapTranslatedColumnsToJson(
-      locations,
-      daoLocationTranslatedColumns
-    ),
+    locations,
     apiConfig.db.privateJSONDataKeys.location
   );
 };
@@ -110,10 +101,7 @@ export const daoLocationQueryFirst = async (
   return filteredOutputByBlacklistOrNotFound(
     daoSharedWrapImageWithTranslationImage(
       "heroImage",
-      daoSharedMapTranslatedColumnsToJson(
-        location,
-        daoLocationTranslatedColumns
-      ),
+      location,
       daoImageTranslatedColumns
     ),
     apiConfig.db.privateJSONDataKeys.location
@@ -133,7 +121,7 @@ export const daoLocationCreate = async (
 ): Promise<Location> => {
   const result = await daoSharedCheckSlugUnique(
     prisma.location.findMany,
-    data.slug as Record<string, string>
+    (data as any).slug
   );
 
   if (!result.ok)
@@ -142,18 +130,24 @@ export const daoLocationCreate = async (
       `Slug is not unique in [${Object.keys(result.errors).join(",")}]`
     );
 
+  let createData = daoSharedMapJsonToTranslatedColumns(
+    data,
+    daoLocationTranslatedColumns
+  );
+
   const location: Location = await prisma.location.create({
-    data: daoSharedMapJsonToTranslatedColumns(
-      {
-        ...data,
-        fullText: daoSharedGenerateFullText(data, daoLocationFullTextKeys),
-      },
-      daoLocationTranslatedColumns
-    ),
+    data: {
+      ...createData,
+      fullText: daoSharedGenerateFullText(
+        createData,
+        daoLocationFullTextKeys,
+        daoLocationTranslatedColumns
+      ),
+    },
   });
 
   return filteredOutputByBlacklistOrNotFound(
-    daoSharedMapTranslatedColumnsToJson(location, daoLocationTranslatedColumns),
+    location,
     apiConfig.db.privateJSONDataKeys.location
   );
 };
@@ -170,10 +164,7 @@ export const daoLocationGetById = async (
   return filteredOutputByBlacklistOrNotFound(
     daoSharedWrapImageWithTranslationImage(
       "heroImage",
-      daoSharedMapTranslatedColumnsToJson(
-        location,
-        daoLocationTranslatedColumns
-      ),
+      location,
       daoImageTranslatedColumns
     ),
     apiConfig.db.privateJSONDataKeys.location
@@ -186,7 +177,7 @@ export const daoLocationUpdate = async (
 ): Promise<Location> => {
   const result = await daoSharedCheckSlugUnique(
     prisma.location.findMany,
-    data.slug as Record<string, string>,
+    (data as any).slug,
     true,
     id
   );
@@ -197,27 +188,28 @@ export const daoLocationUpdate = async (
       `Slug is not unique in [${Object.keys(result.errors).join(",")}]`
     );
 
+  let updateData = daoSharedMapJsonToTranslatedColumns(
+    data,
+    daoLocationTranslatedColumns
+  );
+
   const location: Location = await prisma.location.update({
-    data: daoSharedMapJsonToTranslatedColumns(
-      {
-        ...data,
-        fullText: daoSharedGenerateFullText(data, daoLocationFullTextKeys),
-      },
-      daoLocationTranslatedColumns
-    ),
+    data: {
+      ...updateData,
+      fullText: daoSharedGenerateFullText(
+        updateData,
+        daoLocationFullTextKeys,
+        daoLocationTranslatedColumns
+      ),
+    },
+
     where: {
       id,
     },
   });
 
   return filteredOutputByBlacklistOrNotFound(
-    daoSharedMapTranslatedColumnsToJson(
-      daoSharedMapTranslatedColumnsToJson(
-        location,
-        daoLocationTranslatedColumns
-      ),
-      daoLocationTranslatedColumns
-    ),
+    location,
     apiConfig.db.privateJSONDataKeys.location
   );
 };
@@ -230,13 +222,7 @@ export const daoLocationDelete = async (id: number): Promise<Location> => {
   });
 
   return filteredOutputByBlacklistOrNotFound(
-    daoSharedMapTranslatedColumnsToJson(
-      daoSharedMapTranslatedColumnsToJson(
-        location,
-        daoLocationTranslatedColumns
-      ),
-      daoLocationTranslatedColumns
-    ),
+    location,
     apiConfig.db.privateJSONDataKeys.location
   );
 };
@@ -259,10 +245,7 @@ export const daoLocationGetBySlug = async (
   return filteredOutputByBlacklistOrNotFound(
     daoSharedWrapImageWithTranslationImage(
       "heroImage",
-      daoSharedMapTranslatedColumnsToJson(
-        location,
-        daoLocationTranslatedColumns
-      ),
+      location,
       daoImageTranslatedColumns
     ),
     apiConfig.db.privateJSONDataKeys.location

@@ -18,6 +18,7 @@ export const eventsQueryGQL = gql`
         isFree
         isImported
         meta
+        updatedAt
         dates {
           id
           date
@@ -30,9 +31,9 @@ export const eventsQueryGQL = gql`
   }
 `;
 
-export const eventReadGQL = gql`
-  query eventRead($id: Int!) {
-    events(id: $id) {
+export const eventGQL = gql`
+  query event($id: Int!) {
+    event(id: $id) {
       id
       ownerId
       title
@@ -65,7 +66,6 @@ export const eventReadGQL = gql`
         lat
         lng
       }
-      totalCount
     }
   }
 `;

@@ -5,12 +5,18 @@ import { filteredOutputByBlacklist } from "@culturemap/core";
 import { ApiError, filteredOutputByBlacklistOrNotFound } from "../utils";
 import { getApiConfig } from "../config";
 import { getPrismaClient } from "../db/client";
-import { daoSharedCheckSlugUnique, daoSharedGenerateFullText } from "./shared";
+import {
+  daoSharedCheckSlugUnique,
+  daoSharedGenerateFullText,
+  daoSharedMapJsonToTranslatedColumns,
+} from "./shared";
 
 const prisma = getPrismaClient();
 const apiConfig = getApiConfig();
 
-const termFullTextKeys = ["name", "slug"];
+export const daoTermFullTextKeys = ["name", "slug"];
+
+export const daoTermTranslatedColumns = ["name", "slug"];
 
 export const daoTermCheckSlugUnique = async (
   slug: Record<string, string>,
@@ -117,7 +123,7 @@ export const daoTermCreate = async (
 ): Promise<Term> => {
   const result = await daoSharedCheckSlugUnique(
     prisma.term.findMany,
-    data.slug as Record<string, string>
+    (data as any).slug
   );
 
   if (!result.ok)
@@ -126,10 +132,19 @@ export const daoTermCreate = async (
       `Slug is not unique in [${Object.keys(result.errors).join(",")}]`
     );
 
+  let dbData = daoSharedMapJsonToTranslatedColumns(
+    data,
+    daoTermTranslatedColumns
+  );
+
   const term: Term = await prisma.term.create({
     data: {
-      ...data,
-      fullText: daoSharedGenerateFullText(data, termFullTextKeys),
+      ...dbData,
+      fullText: daoSharedGenerateFullText(
+        dbData,
+        daoTermFullTextKeys,
+        daoTermTranslatedColumns
+      ),
     },
   });
 
@@ -145,7 +160,7 @@ export const daoTermUpdate = async (
 ): Promise<Term> => {
   const result = await daoSharedCheckSlugUnique(
     prisma.term.findMany,
-    data.slug as Record<string, string>,
+    (data as any).slug,
     true,
     id
   );
@@ -156,10 +171,19 @@ export const daoTermUpdate = async (
       `Slug is not unique in [${Object.keys(result.errors).join(",")}]`
     );
 
+  let dbData = daoSharedMapJsonToTranslatedColumns(
+    data,
+    daoTermTranslatedColumns
+  );
+
   const term: Term = await prisma.term.update({
     data: {
-      ...data,
-      fullText: daoSharedGenerateFullText(data, termFullTextKeys),
+      ...dbData,
+      fullText: daoSharedGenerateFullText(
+        dbData,
+        daoTermFullTextKeys,
+        daoTermTranslatedColumns
+      ),
     },
     where: {
       id,

@@ -29,6 +29,7 @@ import {
   daoTaxonomyCreate,
   daoTaxonomyUpdate,
   daoTaxonomyDelete,
+  daoSharedMapTranslatedColumnsInRowToJson,
 } from "../../dao";
 
 const apiConfig = getApiConfig();
@@ -37,8 +38,15 @@ export const Taxonomy = objectType({
   name: "Taxonomy",
   definition(t) {
     t.nonNull.int("id");
-    t.json("name");
-    t.json("slug");
+
+    t.json("name", {
+      resolve: (...[p]) => daoSharedMapTranslatedColumnsInRowToJson(p, "name"),
+    });
+
+    t.json("slug", {
+      resolve: (...[p]) => daoSharedMapTranslatedColumnsInRowToJson(p, "slug"),
+    });
+
     t.boolean("hasColor");
     t.boolean("isRequired");
     t.boolean("collectPrimaryTerm");
@@ -95,8 +103,6 @@ export const TaxonomyQueries = extendType({
         }),
       },
 
-      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "taxRead"),
-
       async resolve(...[, args, , info]) {
         const pRI = parseResolveInfo(info);
 
@@ -152,14 +158,12 @@ export const TaxonomyQueries = extendType({
       },
     });
 
-    t.nonNull.field("taxonomyRead", {
+    t.nonNull.field("taxonomy", {
       type: "Taxonomy",
 
       args: {
         id: nonNull(intArg()),
       },
-
-      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "taxRead"),
 
       // resolve(root, args, ctx, info)
       async resolve(...[, args, , info]) {

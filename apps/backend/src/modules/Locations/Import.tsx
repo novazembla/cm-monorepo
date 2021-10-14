@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import {
   importsQueryGQL,
@@ -18,6 +18,7 @@ import {
   useDeleteByIdButton,
   useAuthentication,
   useLocalStorage,
+  useTypedSelector,
 } from "~/hooks";
 
 import { Badge } from "@chakra-ui/react";
@@ -30,6 +31,7 @@ import {
   adminTableCreateNewTableState,
   AdminTableActionCell,
   AdminTableMultiLangCell,
+  AdminTableDateCell,
 } from "~/components/ui";
 import { config } from "~/config";
 import { SortingRule, Cell } from "react-table";
@@ -65,16 +67,12 @@ export const AdminTableImportStatusCell = (cell: Cell) => {
     label = t("import.status.published", "Processed");
   }
 
-  if (
-    cell.value === ImportStatus.ERROR
-  ) {
+  if (cell.value === ImportStatus.ERROR) {
     color = "red";
     label = t("import.status.error", "Error");
   }
 
-  if (
-    cell.value === ImportStatus.DELETED
-  ) {
+  if (cell.value === ImportStatus.DELETED) {
     color = "red";
     label = t("import.status.trashed", "Trashed");
   }
@@ -96,11 +94,12 @@ export const AdminTableImportStatusCell = (cell: Cell) => {
 const intitalTableState: AdminTableState = {
   pageIndex: 0,
   pageSize: config.defaultPageSize ?? 30,
-  sortBy: [{
-    id: "updatedAt",
-    desc: true
-
-  }],
+  sortBy: [
+    {
+      id: "updatedAt",
+      desc: true,
+    },
+  ],
   filterKeyword: "",
 };
 
@@ -117,6 +116,16 @@ const Import = () => {
   );
 
   const [isRefetching, setIsRefetching] = useState(false);
+
+  const previousRoute = useTypedSelector(
+    ({ router }) => router.router.previous
+  );
+
+  useEffect(() => {
+    if (previousRoute?.indexOf(moduleRootPath) === -1) {
+      setTableState(intitalTableState);
+    }
+  }, [previousRoute, setTableState]);
 
   const { loading, error, data, refetch } = useQuery(importsQueryGQL, {
     onCompleted: () => {
@@ -175,6 +184,11 @@ const Import = () => {
     {
       Header: t("table.label.id", "Id"),
       accessor: "id",
+    } as AdminTableColumn,
+    {
+      Cell: AdminTableDateCell,
+      Header: t("table.label.lastUpdate", "Last update"),
+      accessor: "updatedAt",
     } as AdminTableColumn,
     {
       Cell: AdminTableImportStatusCell,
@@ -280,6 +294,8 @@ const Import = () => {
         <AdminTable
           columns={AdminTableColumns}
           isLoading={loading}
+          showFilter={false}
+          showKeywordSearch={false}
           {...{
             tableTotalCount,
             tablePageCount,

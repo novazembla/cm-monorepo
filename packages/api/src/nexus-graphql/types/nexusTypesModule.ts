@@ -3,7 +3,11 @@
 import { objectType, extendType, stringArg, nonNull } from "nexus";
 import { filteredOutputByWhitelist } from "@culturemap/core";
 
-import { daoModuleQueryAll, daoModuleGetWithTaxonomiesByKey } from "../../dao";
+import {
+  daoModuleQueryAll,
+  daoModuleGetWithTaxonomiesByKey,
+  daoSharedGetTranslatedSelectColumns,
+} from "../../dao";
 
 // TODO this white listing of keys is rather annoying,
 const FIELD_KEYS_SETTING = [
@@ -59,19 +63,17 @@ export const ModuleQuery = extendType({
               },
               select: {
                 id: true,
-                name: true,
+                ...daoSharedGetTranslatedSelectColumns(["name", "slug"]),
                 collectPrimaryTerm: true,
                 isRequired: true,
                 hasColor: true,
-                slug: true,
                 terms: {
                   orderBy: {
                     fullText: "asc",
                   },
                   select: {
                     id: true,
-                    name: true,
-                    slug: true,
+                    ...daoSharedGetTranslatedSelectColumns(["name", "slug"]),
                   },
                 },
               },

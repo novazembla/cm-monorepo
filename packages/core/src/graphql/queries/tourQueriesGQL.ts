@@ -19,9 +19,9 @@ export const toursQueryGQL = gql`
   }
 `;
 
-export const tourReadQueryGQL = gql`
-  query tourRead($id: Int!) {
-    tourRead(id: $id) {
+export const tourQueryGQL = gql`
+  query tour($id: Int!) {
+    tour(id: $id) {
       id
       title
       slug
@@ -55,7 +55,7 @@ export const tourStopsQueryGQL = gql`
     $pageIndex: Int
     $pageSize: Int
   ) {
-    taxonomyRead(id: $taxonomyId) {
+    taxonomy(id: $taxonomyId) {
       id
       title
       slug

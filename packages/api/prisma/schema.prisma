@@ -53,13 +53,6 @@ model User {
 model Location {
   id                       Int   @id @default(autoincrement())
   
-  title                    Json  @default("{}") // XXX
-  slug                     Json  @default("{}") // XXX
-  description              Json  @default("{}") // XXX
-  address                  Json? @default("{}") // XXX
-  offers                   Json? @default("{}") // XXX
-  accessibilityInformation Json? @default("{}")
-
   title_de                    String  @default("")
   slug_de                     String  @default("")
   description_de              String  @default("")
@@ -72,6 +65,7 @@ model Location {
   offers_en                   String? @default("")
   accessibilityInformation_en String? @default("")
 
+  address                  Json? @default("{}")
   contactInfo              Json? @default("{}")
   geoCodingInfo            Json? @default("{}")
   socialMedia              Json? @default("{}")
@@ -116,9 +110,14 @@ model Location {
 
 model Event {
   id          Int   @id @default(autoincrement())
-  title       Json  // XXX
-  slug        Json  // XXX
-  description Json? @default("{}")  // XXX
+  
+  title_de        String @default("")
+  slug_de         String @default("")
+  description_de  String @default("")
+
+  title_en        String @default("")
+  slug_en         String @default("")
+  description_en  String @default("")
 
   meta        Json? @default("{}")
 
@@ -203,8 +202,13 @@ model Module {
 
 model Taxonomy {
   id        Int      @id @default(autoincrement())
-  name      Json      // XXX
-  slug      Json // XXX
+  
+  name_de        String @default("")
+  slug_de         String @default("")
+  
+  name_en        String @default("")
+  slug_en         String @default("")
+
   multiTerm Boolean  @default(false)
   hasColor  Boolean  @default(false)
   collectPrimaryTerm  Boolean  @default(false)
@@ -221,8 +225,12 @@ model Taxonomy {
 
 model Term {
   id   Int  @id @default(autoincrement())
-  name Json  // XXX
-  slug Json  // XXX
+  
+  name_de        String @default("")
+  slug_de         String @default("")
+  
+  name_en        String @default("")
+  slug_en         String @default("")
 
   color      String   @default("")
   colorDark  String   @default("")
@@ -247,14 +255,22 @@ model Term {
 model Tour {
   id Int @id @default(autoincrement())
   
+  // TODO: m
   orderNumber Int   @default(1)
 
-  title       Json  // XXX
-  slug        Json  // XXX
-  duration    Json  // XXX
-  distance    Json  // XXX
-  teaser      Json  // XXX
-  description Json  // XXX
+  title_de       String @default("") 
+  slug_de        String @default("") 
+  duration_de    String @default("") 
+  distance_de    String @default("") 
+  teaser_de      String @default("") 
+  description_de String @default("") 
+
+  title_en       String @default("") 
+  slug_en        String @default("") 
+  duration_en    String @default("") 
+  distance_en    String @default("") 
+  teaser_en      String @default("") 
+  description_en String @default("") 
 
   path        Json
 
@@ -279,15 +295,21 @@ model Tour {
 model TourStop {
   id Int @id @default(autoincrement())
 
-  title  Json  // XXX
+  title_de       String @default("") 
+  teaser_de        String @default("") 
+  description_de String @default("") 
+
+  title_en       String @default("") 
+  teaser_en        String @default("") 
+  description_en String @default("") 
+
+
   number Int? @default(1)
 
 
   loactionId Int
   location   Location? @relation(fields: [loactionId], references: [id], onDelete: Cascade)
 
-  teaser      Json  // XXX
-  description Json  // XXX
 
   tourId Int?
   tour   Tour? @relation(fields: [tourId], references: [id])
@@ -310,11 +332,16 @@ model TourStop {
 model Page {
   id Int @id @default(autoincrement())
 
-  title   Json // XXX
-  slug    Json // XXX
-  intro   Json // XXX
-  content Json // XXX
-
+  title_de       String @default("") 
+  slug_de        String @default("") 
+  intro_de    String @default("") 
+  content_de    String @default("") 
+  
+  title_en       String @default("") 
+  slug_en        String @default("") 
+  intro_en    String @default("") 
+  content_en    String @default("") 
+  
   heroImageId Int?
   heroImage   Image? @relation(fields: [heroImageId], references: [id], name: "pageHeroImage", onDelete: Cascade)
 
@@ -335,7 +362,16 @@ model Image {
   id Int @id @default(autoincrement())
 
   nanoid      String @unique @db.VarChar(48)
-  meta        Json   // XXX
+  meta        Json
+
+  // TODO: finish XXX
+  alt_de       String @default("") 
+  credits_de        String @default("") 
+    
+  alt_en       String @default("") 
+  credits_en        String @default("") 
+
+
   status      Int    @default(0)
   orderNumber Int    @default(0)
 

@@ -21,7 +21,7 @@ import {
 } from "~/hooks";
 
 import { Divider } from "@chakra-ui/react";
-import { filteredOutputByWhitelist, termReadQueryGQL } from "@culturemap/core";
+import { filteredOutputByWhitelist, termQueryGQL } from "@culturemap/core";
 
 import { useQuery } from "@apollo/client";
 
@@ -49,7 +49,7 @@ const UpdateTerm = () => {
   const successToast = useSuccessfullySavedToast();
   const [isNavigatingAway, setIsNavigatingAway] = useState(false);
 
-  const { data, loading, error } = useQuery(termReadQueryGQL, {
+  const { data, loading, error } = useQuery(termQueryGQL, {
     variables: {
       id: parseInt(router.query.id, 10),
     },
@@ -73,18 +73,18 @@ const UpdateTerm = () => {
   } = formMethods;
 
   useEffect(() => {
-    if (!data || !data.termRead) return;
+    if (!data || !data.term) return;
 
     reset({
       ...multiLangJsonToRHFormData(
-        filteredOutputByWhitelist(data.termRead, [], multiLangFields),
+        filteredOutputByWhitelist(data.term, [], multiLangFields),
         multiLangFields,
         config.activeLanguages
       ),
-      color: data?.termRead?.color ?? "",
-      colorDark: data?.termRead?.colorDark ?? "",
-      hasColor: !!data?.termRead?.taxonomy?.hasColor,
-      collectPrimaryTerm: !!data?.termRead?.taxonomy?.collectPrimaryTerm,
+      color: data?.term?.color ?? "",
+      colorDark: data?.term?.colorDark ?? "",
+      hasColor: !!data?.term?.taxonomy?.hasColor,
+      collectPrimaryTerm: !!data?.term?.taxonomy?.collectPrimaryTerm,
     });
   }, [reset, data, config.activeLanguages]);
 
@@ -137,8 +137,8 @@ const UpdateTerm = () => {
     {
       path: `${moduleRootPath}/${router.query.taxId}/terms`,
       title:
-        data && data?.termRead?.taxonomy ? (
-          <MultiLangValue json={data?.termRead?.taxonomy.name} />
+        data && data?.term?.taxonomy ? (
+          <MultiLangValue json={data?.term?.taxonomy.name} />
         ) : (
           <BeatLoader size="10px" color="#666" />
         ),
@@ -183,7 +183,7 @@ const UpdateTerm = () => {
               <TaxonomyForm
                 type="term"
                 action="update"
-                data={data?.termRead}
+                data={data?.term}
                 validationSchema={ModuleTermSchema}
               />
             </ModulePage>

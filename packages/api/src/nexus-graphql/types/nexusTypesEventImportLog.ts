@@ -81,9 +81,7 @@ export const EventImportLogQueries = extendType({
 
         eventImportLogs = await daoEventImportLogQuery(
           args.where,
-          {
-            updatedAt: "desc",
-          },
+          args.orderBy,
           args.pageIndex as number,
           args.pageSize as number
         );

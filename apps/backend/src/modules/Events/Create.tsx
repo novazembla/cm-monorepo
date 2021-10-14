@@ -39,8 +39,8 @@ import {
   mapGroupOptionsToData,
 } from "~/utils";
 
-export const eventReadGetTaxonomies = gql`
-  query eventRead {
+export const eventGetTaxonomies = gql`
+  query event {
     moduleTaxonomies(key: "event") {
       id
       name
@@ -49,13 +49,6 @@ export const eventReadGetTaxonomies = gql`
       terms {
         id
         name
-      }
-    }
-
-    locations(pageSize: 1000) {
-      locations {
-        id
-        title
       }
     }
   }
@@ -80,7 +73,7 @@ const Create = () => {
 
   const disableForm = firstMutationResults.loading;
 
-  const { data, loading, error } = useQuery(eventReadGetTaxonomies, {
+  const { data, loading, error } = useQuery(eventGetTaxonomies, {
     variables: {
       id: parseInt(router.query.id, 10),
     },

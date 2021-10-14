@@ -8,7 +8,6 @@ import "@fontsource/open-sans/400-italic.css";
 import "@fontsource/open-sans/700.css";
 import "@fontsource/open-sans/700-italic.css";
 
-
 import AppProviders from "./AppProviders";
 
 import {
@@ -22,6 +21,7 @@ import {
 
 import NotFound from "~/pages/NotFound/NotFound";
 
+
 import {
   LayoutLight,
   LayoutBlank,
@@ -31,31 +31,38 @@ import {
   SettingsLoader,
 } from "~/components/app";
 
-
 import { LoadingIcon } from "~/components/ui";
 
 import { AuthenticationSessionActiveGate } from "~/components/app";
+import { useTypedDispatch } from "~/hooks";
+import { setPreviousRoute } from "~/redux/slices/router";
 
 const LayoutFull = lazy(() => import("~/components/app/LayoutFull"));
 const ScrollToTop = () => {
+  const dispatch = useTypedDispatch();
+
   const { pathname } = useLocation();
 
   // TODO: suspense plays not so nicely with that,
-
   useEffect(() => {
     let mounted = true;
 
-    if (mounted)
+    dispatch(setPreviousRoute(pathname));
+
+    if (mounted) {
+      console.log("trigger");
       window.scrollTo({
         top: 0,
         left: 0,
         behavior: "smooth",
       });
+    }
+      
 
     return () => {
       mounted = false;
     };
-  }, [pathname]);
+  }, [pathname, dispatch]);
 
   return null;
 };
@@ -63,7 +70,7 @@ const ScrollToTop = () => {
 const App = () => {
   return (
     <AppProviders>
-      <SettingsLoader/>
+      <SettingsLoader />
       <span
         className="sr-only"
         role="status"
@@ -75,7 +82,12 @@ const App = () => {
       </span>
       <Suspense fallback={<LoadingIcon type="light" size={120} />}>
         <BrowserRouter>
-          <AuthenticationSessionActiveGate publicRoutesPaths={[...getPublicOnlyRoutesPathsArray(), ...getRoutesPathsArray()]}>
+          <AuthenticationSessionActiveGate
+            publicRoutesPaths={[
+              ...getPublicOnlyRoutesPathsArray(),
+              ...getRoutesPathsArray(),
+            ]}
+          >
             <ScrollToTop />
             <Switch>
               <Route exact path="/">

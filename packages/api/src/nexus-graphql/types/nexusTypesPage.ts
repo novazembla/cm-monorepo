@@ -1,6 +1,7 @@
 /// <reference path="../../types/nexus-typegen.ts" />
 import { parseResolveInfo } from "graphql-parse-resolve-info";
-import { filteredOutputByWhitelist } from "@culturemap/core";
+import { PublishStatus } from "@culturemap/core";
+import { Prisma } from "@prisma/client";
 
 import dedent from "dedent";
 import {
@@ -18,20 +19,19 @@ import { ApiError } from "../../utils";
 
 import { GQLJson } from "./nexusTypesShared";
 
-import { authorizeApiUser } from "../helpers";
+import { authorizeApiUser, apiUserCan } from "../helpers";
 
 import { getApiConfig } from "../../config";
 
 import {
   daoPageQuery,
   daoPageQueryCount,
-  daoPageGetById,
   daoPageCreate,
   daoPageUpdate,
   daoPageDelete,
-  daoUserGetById,
-  daoPageGetBySlug,
+  daoPageQueryFirst,
   daoImageSaveImageTranslations,
+  daoSharedMapTranslatedColumnsInRowToJson,
 } from "../../dao";
 
 const apiConfig = getApiConfig();
@@ -40,30 +40,27 @@ export const Page = objectType({
   name: "Page",
   definition(t) {
     t.nonNull.int("id");
-    t.json("title");
-    t.json("slug");
-    t.json("intro");
-    t.json("content");
+
+    t.json("title", {
+      resolve: (...[p]) => daoSharedMapTranslatedColumnsInRowToJson(p, "title"),
+    });
+
+    t.json("slug", {
+      resolve: (...[p]) => daoSharedMapTranslatedColumnsInRowToJson(p, "slug"),
+    });
+    t.json("intro", {
+      resolve: (...[p]) => daoSharedMapTranslatedColumnsInRowToJson(p, "intro"),
+    });
+
+    t.json("content", {
+      resolve: (...[p]) =>
+        daoSharedMapTranslatedColumnsInRowToJson(p, "content"),
+    });
+
     t.string("fullText");
     t.nonNull.int("ownerId");
     t.nonNull.int("status");
-    t.field("author", {
-      type: "User",
 
-      // resolve(root, args, ctx, info)
-      async resolve(...[p]) {
-        if (p.ownerId) {
-          const user = await daoUserGetById(p.ownerId);
-          if (user)
-            return filteredOutputByWhitelist(user, [
-              "id",
-              "firstName",
-              "lastName",
-            ]);
-        }
-        return null;
-      },
-    });
     t.field("heroImage", {
       type: "Image",
     });
@@ -108,16 +105,36 @@ export const PageQueries = extendType({
         }),
       },
 
-      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "pageRead"),
+      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "pageReadOwn", true),
 
-      async resolve(...[, args, , info]) {
+      async resolve(...[, args, ctx, info]) {
         const pRI = parseResolveInfo(info);
 
         let totalCount;
         let pages;
 
+        let include: Prisma.PageInclude = {};
+        let where: Prisma.PageWhereInput = args.where ?? {};
+
+        // here needs to be the preview access bypass TODO:
+        if (!apiUserCan(ctx, "pageReadOwn")) {
+          where = {
+            ...where,
+            status: PublishStatus.PUBLISHED,
+          };
+        } else {
+          if (!apiUserCan(ctx, "pageRead")) {
+            where = {
+              ...where,
+              owner: {
+                id: ctx?.apiUser?.id ?? 0,
+              },
+            };
+          }
+        }
+
         if ((pRI?.fieldsByTypeName?.PageQueryResult as any)?.totalCount) {
-          totalCount = await daoPageQueryCount(args.where);
+          totalCount = await daoPageQueryCount(where);
 
           if (totalCount === 0)
             return {
@@ -126,9 +143,26 @@ export const PageQueries = extendType({
             };
         }
 
+        if (
+          (pRI?.fieldsByTypeName?.PageQueryResult as any)?.pages
+            ?.fieldsByTypeName?.Page?.heroImage
+        ) {
+          include = {
+            ...include,
+            heroImage: {
+              include: {
+                // TODO: change xxxx
+                // TODO: only active images ...
+                translations: true,
+              },
+            },
+          };
+        }
+
         if ((pRI?.fieldsByTypeName?.PageQueryResult as any)?.pages)
           pages = await daoPageQuery(
-            args.where,
+            where,
+            Object.keys(include).length > 0 ? include : undefined,
             args.orderBy,
             args.pageIndex as number,
             args.pageSize as number
@@ -141,63 +175,73 @@ export const PageQueries = extendType({
       },
     });
 
-    t.nonNull.field("pageRead", {
-      type: "Page",
-
-      args: {
-        id: nonNull(intArg()),
-      },
-
-      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "pageRead"),
-
-      // resolve(root, args, ctx, info)
-      async resolve(...[, args, , info]) {
-        const pRI = parseResolveInfo(info);
-
-        let include = {};
-        if ((pRI?.fieldsByTypeName?.Page as any)?.heroImage)
-          include = {
-            ...include,
-            heroImage: {
-              include: {
-                translations: true,
-              },
-            },
-          };
-
-        return daoPageGetById(
-          args.id,
-          Object.keys(include).length > 0 ? include : undefined
-        );
-      },
-    });
-
     t.nonNull.field("page", {
       type: "Page",
 
       args: {
-        slug: nonNull(stringArg()),
+        slug: stringArg(),
+        id: intArg(),
       },
 
+      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "pageReadOwn", true),
+
       // resolve(root, args, ctx, info)
-      async resolve(...[, args, , info]) {
+      async resolve(...[, args, ctx, info]) {
+        const config = getApiConfig();
         const pRI = parseResolveInfo(info);
 
-        let include = {};
+        let where: Prisma.PageWhereInput[] = [];
+        let include: Prisma.PageInclude = {};
+
         if ((pRI?.fieldsByTypeName?.Page as any)?.heroImage)
           include = {
             ...include,
             heroImage: {
               include: {
+                // TODO: change xxxx
+                // TODO: only active images ...
                 translations: true,
               },
             },
           };
 
-        return daoPageGetBySlug(
-          args.slug,
-          Object.keys(include).length > 0 ? include : undefined
-        );
+        if (args.slug && args.slug.trim() !== "") {
+          where.push({
+            OR: config?.activeLanguages.map((lang) => ({
+              [`slug_${lang}`]: args.slug,
+            })),
+          });
+        }
+
+        if (args.id) {
+          where.push({
+            id: args.id,
+          });
+        }
+
+        // here needs to be the preview access bypass TODO:
+        if (!apiUserCan(ctx, "pageReadOwn")) {
+          where.push({
+            status: PublishStatus.PUBLISHED,
+          });
+        } else {
+          if (!apiUserCan(ctx, "pageRead")) {
+            where.push({
+              owner: {
+                id: ctx?.apiUser?.id ?? 0,
+              },
+            });
+          }
+        }
+
+        if (Object.keys(where).length > 0) {
+          return daoPageQueryFirst(
+            where.length > 1 ? { AND: where } : where.shift() ?? {},
+            Object.keys(include).length > 0 ? include : undefined
+          );
+        } else {
+          throw new ApiError(httpStatus.NOT_FOUND, "Not found");
+        }
       },
     });
   },
@@ -251,7 +295,20 @@ export const PageMutations = extendType({
         imagesTranslations: list(arg({ type: "ImageTranslationInput" })),
       },
 
-      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "pageUpdate"),
+      authorize: async (...[, args, ctx]) => {
+        if (!authorizeApiUser(ctx, "pageUpdateOwn")) return false;
+
+        if (apiUserCan(ctx, "pageUpdate")) return true;
+
+        const count = await daoPageQueryCount({
+          id: args.id,
+          owner: {
+            id: ctx.apiUser?.id ?? 0,
+          },
+        });
+
+        return count === 1;
+      },
 
       async resolve(...[, args]) {
         const page = await daoPageUpdate(args.id, args.data);
@@ -273,7 +330,20 @@ export const PageMutations = extendType({
         id: nonNull(intArg()),
       },
 
-      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "pageDelete"),
+      authorize: async (...[, args, ctx]) => {
+        if (!authorizeApiUser(ctx, "pageDeleteOwn")) return false;
+
+        if (apiUserCan(ctx, "pageUpdate")) return true;
+
+        const count = await daoPageQueryCount({
+          id: args.id,
+          owner: {
+            id: ctx.apiUser?.id ?? 0,
+          },
+        });
+
+        return count === 1;
+      },
 
       async resolve(...[, args]) {
         const page = await daoPageDelete(args.id);

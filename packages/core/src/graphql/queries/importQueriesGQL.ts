@@ -12,6 +12,7 @@ export const importsQueryGQL = gql`
         id
         title
         status
+        updatedAt
       }
       totalCount
     }

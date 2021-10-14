@@ -42,9 +42,9 @@ export const PageForm = ({
           <TwoColFieldRow>
             <FieldRow>
               <FieldPublishStatusSelect
-                ownerId={data.pageRead.ownerId}
+                ownerId={data.page.ownerId}
                 module="page"
-                status={data?.pageRead?.status}
+                status={data?.page?.status}
               />
             </FieldRow>
             <FieldRow>
@@ -59,7 +59,7 @@ export const PageForm = ({
                   !(
                     appUser &&
                     (appUser.has("editor") ||
-                      data.pageRead.ownerId === appUser.id)
+                      data.page.ownerId === appUser.id)
                   )
                 }
                 isRequired={true}
@@ -68,7 +68,7 @@ export const PageForm = ({
                   label: `${authUser.firstName} ${authUser.lastName}`,
                 }))}
                 settings={{
-                  defaultValue: data.pageRead.ownerId,
+                  defaultValue: data.page.ownerId,
                   placeholder: t(
                     "module.forms.field.placeholder.author",
                     "Please choose the author"
@@ -82,7 +82,7 @@ export const PageForm = ({
             id="heroImage"
             name="heroImage"
             label={t("forms.heroImage.label", "Featured image")}
-            currentImage={data?.pageRead?.heroImage}
+            currentImage={data?.page?.heroImage}
             setActiveUploadCounter={setActiveUploadCounter}
             settings={{
               imageRequired: false,
@@ -92,7 +92,7 @@ export const PageForm = ({
             connectWith={{
               heroImagePages: {
                 connect: {
-                  id: data?.pageRead?.id,            
+                  id: data?.page?.id,            
                 }
               }
             }}
@@ -101,7 +101,7 @@ export const PageForm = ({
       );
     } else {
       updateActions = (
-        <input value={data?.pageRead?.ownerId} {...register("ownerId")} />
+        <input value={data?.page?.ownerId} {...register("ownerId")} />
       );
     }
   }
@@ -122,7 +122,7 @@ export const PageForm = ({
         label={t("module.pages.forms.page.field.label.title", "Title")}
         isRequired={true}
         settings={{
-          defaultValues: data?.pageRead?.title,
+          defaultValues: data?.page?.title,
           placeholder: t(
             "module.pages.forms.page.field.placeholder.title",
             "Page title"
@@ -136,7 +136,7 @@ export const PageForm = ({
         label={t("module.pages.forms.page.field.label.slug", "Slug")}
         isRequired={true}
         settings={{
-          defaultValues: data?.pageRead?.slug,
+          defaultValues: data?.page?.slug,
           placeholder: t(
             "module.pages.forms.page.field.placeholder.slug",
             "Slug / URL part"
@@ -153,7 +153,7 @@ export const PageForm = ({
         isRequired={false}
         settings={{
           defaultRequired: true,
-          defaultValues: data?.pageRead?.intro,
+          defaultValues: data?.page?.intro,
           placeholder: t(
             "module.pages.forms.page.field.placeholder.intro",
             "Page's introduction block"
@@ -170,7 +170,7 @@ export const PageForm = ({
         isRequired={false}
         settings={{
           defaultRequired: true,
-          defaultValues: data?.pageRead?.content,
+          defaultValues: data?.page?.content,
           placeholder: t(
             "module.pages.forms.page.field.placeholder.content",
             "Page content"

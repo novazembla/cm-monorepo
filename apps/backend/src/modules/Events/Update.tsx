@@ -46,9 +46,9 @@ import {
   mapDataToPrimaryTerms,
 } from "~/utils";
 
-export const eventReadAndContentAuthorsQueryGQL = gql`
-  query eventRead($id: Int!) {
-    eventRead(id: $id) {
+export const eventAndContentAuthorsQueryGQL = gql`
+  query event($id: Int!) {
+    event(id: $id) {
       id
       title
       slug
@@ -120,7 +120,7 @@ const Update = () => {
   );
 
   const { data, loading, error } = useQuery(
-    eventReadAndContentAuthorsQueryGQL,
+    eventAndContentAuthorsQueryGQL,
     {
       variables: {
         id: parseInt(router.query.id, 10),
@@ -169,7 +169,7 @@ const Update = () => {
   };
 
   useEffect(() => {
-    if (!data || !data.eventRead) return;
+    if (!data || !data.event) return;
 
     let moduleTerms = {};
 
@@ -218,7 +218,7 @@ const Update = () => {
 
         return {
           ...acc,
-          ...mapDataToGroupOptions(data.eventRead.terms, m.terms, `tax_${m.id}` ),
+          ...mapDataToGroupOptions(data.event.terms, m.terms, `tax_${m.id}` ),
         }
       }, {});      
     }
@@ -227,7 +227,7 @@ const Update = () => {
     reset({
       ...multiLangJsonToRHFormData(
         filteredOutputByWhitelist(
-          data.eventRead,
+          data.event,
           ["ownerId", "status"],
           multiLangFields
         ),
@@ -236,20 +236,20 @@ const Update = () => {
       ),
       ...moduleTerms,
       ...mapDataToPrimaryTerms(
-        data.eventRead.primaryTerms,
+        data.event.primaryTerms,
         data.moduleTaxonomies
       ),
-      isFree: !!data.eventRead.isFree,
-      isImported: !!data.eventRead.isImported,
+      isFree: !!data.event.isFree,
+      isImported: !!data.event.isImported,
       date: new Date("12/20/2021"),
-      dates: parseIncomingDates(data?.eventRead?.dates),
+      dates: parseIncomingDates(data?.event?.dates),
       locationId:
-        data?.eventRead?.locations && data?.eventRead?.locations.length
-          ? data?.eventRead?.locations[0].id
+        data?.event?.locations && data?.event?.locations.length
+          ? data?.event?.locations[0].id
           : 0,
-      heroImage: data.eventRead.heroImage?.id,
+      heroImage: data.event.heroImage?.id,
       ...multiLangImageTranslationsJsonRHFormData(
-        data.eventRead,
+        data.event,
         ["heroImage"],
         ["alt", "credits"],
         config.activeLanguages ?? ["en"]

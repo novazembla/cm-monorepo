@@ -98,7 +98,7 @@ const UpdateTourStop = () => {
       tourId: data.tourStopRead?.tourId,
       heroImage: data?.tourStopRead?.heroImage?.id,
       ...multiLangImageTranslationsJsonRHFormData(
-        data?.tourRead,
+        data?.tour,
         ["heroImage"],
         ["alt", "credits"],
         config.activeLanguages

@@ -400,13 +400,15 @@ export const AdminTable = ({
   tablePageCount,
   tableTotalCount,
   refetchPageIndex,
-  showKeywordSearch = false,
+  showKeywordSearch = true,
+  showFilter = true, // TODO: make use of
 }: {
   data: any[];
   columns: AdminTableColumn[];
   isLoading: boolean;
   isRefetching: boolean;
   showKeywordSearch?: boolean;
+  showFilter?: boolean;
   onFetchData: (
     page: number,
     pageSize: number,

@@ -41,9 +41,9 @@ import {
   multiLangImageTranslationsJsonRHFormData,
 } from "~/utils";
 
-export const pageReadAndContentAuthorsQueryGQL = gql`
-  query pageRead($id: Int!) {
-    pageRead(id: $id) {
+export const pageAndContentAuthorsQueryGQL = gql`
+  query page($id: Int!) {
+    page(id: $id) {
       id
       title
       slug
@@ -79,7 +79,7 @@ const Update = () => {
   const [isNavigatingAway, setIsNavigatingAway] = useState(false);
   const [activeUploadCounter, setActiveUploadCounter] = useState<number>(0);
 
-  const { data, loading, error } = useQuery(pageReadAndContentAuthorsQueryGQL, {
+  const { data, loading, error } = useQuery(pageAndContentAuthorsQueryGQL, {
     variables: {
       id: parseInt(router.query.id, 10),
     },
@@ -103,21 +103,21 @@ const Update = () => {
   } = formMethods;
 
   useEffect(() => {
-    if (!data || !data.pageRead) return;
+    if (!data || !data.page) return;
 
     reset({
       ...multiLangJsonToRHFormData(
         filteredOutputByWhitelist(
-          data.pageRead,
+          data.page,
           ["ownerId", "status"],
           multiLangFields
         ),
         multiLangFields,
         config.activeLanguages
       ),
-      heroImage: data.pageRead.heroImage?.id,
+      heroImage: data.page.heroImage?.id,
       ...multiLangImageTranslationsJsonRHFormData(
-        data.pageRead,
+        data.page,
         ["heroImage"],
         ["alt", "credits"],
         config.activeLanguages
@@ -175,7 +175,7 @@ const Update = () => {
             config.activeLanguages
           )
         );
-
+            
         if (!errors) {
           successToast();
           reset(

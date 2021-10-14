@@ -10,6 +10,8 @@ import {
   daoSharedGenerateFullText,
   daoSharedWrapImageWithTranslationImage,
   daoImageTranslatedColumns,
+  daoSharedMapJsonToTranslatedColumns,
+  daoSharedGetTranslatedSelectColumns,
 } from ".";
 
 const prisma = getPrismaClient();
@@ -28,14 +30,20 @@ export const daoPageCheckSlugUnique = async (
   );
 };
 
+export const daoPageFullTextKeys = ["title", "slug", "intro", "content"];
+
+export const daoPageTranslatedColumns = ["title", "slug", "intro", "content"];
+
 export const daoPageQuery = async (
   where: Prisma.PageWhereInput,
+  include: Prisma.PageInclude | undefined,
   orderBy: any,
   pageIndex: number = 0,
   pageSize: number = apiConfig.db.defaultPageSize
 ): Promise<Page[]> => {
   const pages: Page[] = await prisma.page.findMany({
     where,
+    include,
     orderBy,
     skip: pageIndex * pageSize,
     take: Math.min(pageSize, apiConfig.db.maxPageSize),
@@ -43,6 +51,24 @@ export const daoPageQuery = async (
 
   return filteredOutputByBlacklist(
     pages,
+    apiConfig.db.privateJSONDataKeys.page
+  );
+};
+
+export const daoPageQueryFirst = async (
+  where: Prisma.PageWhereInput,
+  include: Prisma.PageInclude | undefined
+): Promise<Page> => {
+  const page = await prisma.page.findFirst({
+    where,
+    include,
+  });
+  return filteredOutputByBlacklistOrNotFound(
+    daoSharedWrapImageWithTranslationImage(
+      "heroImage",
+      page,
+      daoImageTranslatedColumns
+    ),
     apiConfig.db.privateJSONDataKeys.page
   );
 };
@@ -60,7 +86,7 @@ export const daoPageCreate = async (
 ): Promise<Page> => {
   const result = await daoSharedCheckSlugUnique(
     prisma.page.findMany,
-    data.slug as Record<string, string>
+    (data as any).slug
   );
 
   if (!result.ok)
@@ -69,15 +95,19 @@ export const daoPageCreate = async (
       `Slug is not unique in [${Object.keys(result.errors).join(",")}]`
     );
 
+  let createData = daoSharedMapJsonToTranslatedColumns(
+    data,
+    daoPageTranslatedColumns
+  );
+
   const page: Page = await prisma.page.create({
     data: {
-      ...data,
-      fullText: daoSharedGenerateFullText(data, [
-        "title",
-        "slug",
-        "intro",
-        "content",
-      ]),
+      ...createData,
+      fullText: daoSharedGenerateFullText(
+        createData,
+        daoPageFullTextKeys,
+        daoPageTranslatedColumns
+      ),
     },
   });
 
@@ -115,8 +145,7 @@ export const daoPageSearchQuery = async (
     where,
     select: {
       id: true,
-      title: true,
-      slug: true,
+      ...daoSharedGetTranslatedSelectColumns(["title", "slug"]),
     },
     skip: pageIndex * pageSize,
     take: Math.min(pageSize, apiConfig.db.maxPageSize),
@@ -132,22 +161,13 @@ export const daoPageGetBySlug = async (
   slug: string,
   include?: Prisma.PageInclude | undefined
 ): Promise<Page> => {
-  const page: Page | null = await prisma.page.findFirst({
+  const config = getApiConfig();
+
+  const page = await prisma.page.findFirst({
     where: {
-      OR: [
-        {
-          slug: {
-            path: ["en"],
-            equals: slug,
-          },
-        },
-        {
-          slug: {
-            path: ["de"],
-            equals: slug,
-          },
-        },
-      ],
+      OR: config?.activeLanguages.map((lang) => ({
+        [`slug_${lang}`]: slug,
+      })),
     },
     include,
   });
@@ -168,7 +188,7 @@ export const daoPageUpdate = async (
 ): Promise<Page> => {
   const result = await daoSharedCheckSlugUnique(
     prisma.page.findMany,
-    data.slug as Record<string, string>,
+    (data as any).slug,
     true,
     id
   );
@@ -179,15 +199,19 @@ export const daoPageUpdate = async (
       `Slug is not unique in [${Object.keys(result.errors).join(",")}]`
     );
 
+  let updateData = daoSharedMapJsonToTranslatedColumns(
+    data,
+    daoPageTranslatedColumns
+  );
+
   const page: Page = await prisma.page.update({
     data: {
-      ...data,
-      fullText: daoSharedGenerateFullText(data, [
-        "title",
-        "slug",
-        "intro",
-        "content",
-      ]),
+      ...updateData,
+      fullText: daoSharedGenerateFullText(
+        updateData,
+        daoPageFullTextKeys,
+        daoPageTranslatedColumns
+      ),
     },
     where: {
       id,
@@ -226,6 +250,7 @@ const defaults = {
   daoPageUpdate,
   daoPageDelete,
   daoPageGetBySlug,
+  daoPageQueryFirst,
 };
 
 export default defaults;

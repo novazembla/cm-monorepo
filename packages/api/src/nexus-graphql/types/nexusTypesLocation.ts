@@ -1,6 +1,6 @@
 /// <reference path="../../types/nexus-typegen.ts" />
 import { parseResolveInfo } from "graphql-parse-resolve-info";
-import { filteredOutputByWhitelist, PublishStatus } from "@culturemap/core";
+import { PublishStatus } from "@culturemap/core";
 
 import dedent from "dedent";
 import {
@@ -31,8 +31,9 @@ import {
   daoLocationCreate,
   daoLocationUpdate,
   daoLocationDelete,
-  daoUserGetById,
   daoImageSaveImageTranslations,
+  daoSharedMapTranslatedColumnsInRowToJson,
+  daoSharedGetTranslatedSelectColumns,
 } from "../../dao";
 
 const apiConfig = getApiConfig();
@@ -41,28 +42,30 @@ export const Location = objectType({
   name: "Location",
   definition(t) {
     t.nonNull.int("id");
-    t.json("title");
-    t.json("slug");
+
+    t.json("title", {
+      resolve: (...[p]) => daoSharedMapTranslatedColumnsInRowToJson(p, "title"),
+    });
+
+    t.json("slug", {
+      resolve: (...[p]) => daoSharedMapTranslatedColumnsInRowToJson(p, "slug"),
+    });
+
+    t.json("description", {
+      resolve: (...[p]) =>
+        daoSharedMapTranslatedColumnsInRowToJson(p, "description"),
+    });
+    t.json("offers", {
+      resolve: (...[p]) =>
+        daoSharedMapTranslatedColumnsInRowToJson(p, "offers"),
+    });
+    t.json("accessibilityInformation", {
+      resolve: (...[p]) =>
+        daoSharedMapTranslatedColumnsInRowToJson(p, "accessibilityInformation"),
+    });
 
     t.nonNull.int("ownerId");
     t.nonNull.int("status");
-    t.field("author", {
-      type: "User",
-
-      // resolve(root, args, ctx, info)
-      async resolve(...[p]) {
-        if (p.ownerId) {
-          const user = await daoUserGetById(p.ownerId);
-          if (user)
-            return filteredOutputByWhitelist(user, [
-              "id",
-              "firstName",
-              "lastName",
-            ]);
-        }
-        return null;
-      },
-    });
 
     // TODO: enable ... Show form fields and such fun ...
     // Add tracker ..
@@ -72,13 +75,10 @@ export const Location = objectType({
     t.date("visibleUntil");
     t.date("visibleUntilTime");
 
-    t.json("description");
     t.json("address");
     t.json("contactInfo");
     t.json("geoCodingInfo");
-    t.json("accessibilityInformation");
     t.json("socialMedia");
-    t.json("offers");
     t.int("eventLocationId");
     t.string("agency");
     t.field("heroImage", {
@@ -152,8 +152,25 @@ export const LocationQueries = extendType({
         let include: Prisma.LocationInclude = {};
         let where: Prisma.LocationWhereInput = args.where;
 
+        // here needs to be the preview access bypass TODO:
+        if (!apiUserCan(ctx, "locationReadOwn")) {
+          where = {
+            ...where,
+            status: PublishStatus.PUBLISHED,
+          };
+        } else {
+          if (!apiUserCan(ctx, "locationRead")) {
+            where = {
+              ...where,
+              owner: {
+                id: ctx?.apiUser?.id ?? 0,
+              },
+            };
+          }
+        }
+
         if ((pRI?.fieldsByTypeName?.LocationQueryResult as any)?.totalCount) {
-          totalCount = await daoLocationQueryCount(args.where);
+          totalCount = await daoLocationQueryCount(where);
 
           if (totalCount === 0)
             return {
@@ -171,37 +188,32 @@ export const LocationQueries = extendType({
             terms: {
               select: {
                 id: true,
-                // daoSharedGetTransatedSelectColumns(["name", "slug"]), // TODO: activate
-                name: true,
-                slug: true,
+                ...daoSharedGetTranslatedSelectColumns(["name", "slug"]),
               },
             },
             primaryTerms: {
               select: {
                 id: true,
-                // daoSharedGetTransatedSelectColumns(["name", "slug"]), // TODO: activate
-                name: true,
-                slug: true,
+                ...daoSharedGetTranslatedSelectColumns(["name", "slug"]),
               },
             },
           };
         }
 
-        // here needs to be the preview access bypass TODO: 
-        if (!apiUserCan(ctx, "locationReadOwn")) {
-          where = {
-            ...where,
-            status: PublishStatus.PUBLISHED,
-          };
-        } else {
-          if (!apiUserCan(ctx, "locationRead")) {
-            where = {
-              ...where,
-              owner: {
-                id: ctx?.apiUser?.id ?? 0,
+        if (
+          (pRI?.fieldsByTypeName?.LocationQueryResult as any)?.locations
+            ?.fieldsByTypeName?.Location?.heroImage
+        ) {
+          include = {
+            ...include,
+            heroImage: {
+              include: {
+                // TODO: change xxxx
+                // TODO: only active images ...
+                translations: true,
               },
-            };
-          }
+            },
+          };
         }
 
         if ((pRI?.fieldsByTypeName?.LocationQueryResult as any)?.locations)
@@ -224,7 +236,6 @@ export const LocationQueries = extendType({
       type: "Location",
 
       args: {
-        lang: stringArg(),
         slug: stringArg(),
         id: intArg(),
       },
@@ -236,8 +247,8 @@ export const LocationQueries = extendType({
       async resolve(...[, args, ctx, info]) {
         const config = getApiConfig();
         const pRI = parseResolveInfo(info);
-        let where: Prisma.LocationWhereInput[] = [];
 
+        let where: Prisma.LocationWhereInput[] = [];
         let include: Prisma.LocationInclude = {};
 
         if ((pRI?.fieldsByTypeName?.Location as any)?.terms)
@@ -246,17 +257,13 @@ export const LocationQueries = extendType({
             terms: {
               select: {
                 id: true,
-                // daoSharedGetTransatedSelectColumns(["name", "slug"]), // TODO: activate
-                name: true,
-                slug: true,
+                ...daoSharedGetTranslatedSelectColumns(["name", "slug"]),
               },
             },
             primaryTerms: {
               select: {
                 id: true,
-                // daoSharedGetTransatedSelectColumns(["name", "slug"]), // TODO: activate
-                name: true,
-                slug: true,
+                ...daoSharedGetTranslatedSelectColumns(["name", "slug"]),
               },
             },
           };
@@ -267,9 +274,7 @@ export const LocationQueries = extendType({
             events: {
               select: {
                 id: true,
-                // daoSharedGetTransatedSelectColumns(["title", "slug"]), // TODO: activate
-                title: true,
-                slug: true,
+                ...daoSharedGetTranslatedSelectColumns(["title", "slug"]),
 
                 dates: {
                   select: {
@@ -292,6 +297,7 @@ export const LocationQueries = extendType({
             heroImage: {
               include: {
                 // TODO: change xxxx
+                // TODO: only active images ...
                 translations: true,
               },
             },
@@ -311,7 +317,7 @@ export const LocationQueries = extendType({
           });
         }
 
-        // here needs to be the preview access bypass TODO: 
+        // here needs to be the preview access bypass TODO:
         if (!apiUserCan(ctx, "locationReadOwn")) {
           where.push({
             status: PublishStatus.PUBLISHED,

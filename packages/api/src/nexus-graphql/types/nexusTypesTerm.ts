@@ -13,6 +13,8 @@ import {
   list,
 } from "nexus";
 import httpStatus from "http-status";
+import lodash from "lodash";
+
 import { ApiError } from "../../utils";
 
 import { GQLJson } from "./nexusTypesShared";
@@ -28,7 +30,10 @@ import {
   daoTermUpdate,
   daoTermDelete,
   daoTermsQueryCount,
+  daoSharedMapTranslatedColumnsInRowToJson,
 } from "../../dao";
+
+const { pick } = lodash;
 
 const apiConfig = getApiConfig();
 
@@ -37,8 +42,14 @@ export const Term = objectType({
   definition(t) {
     t.nonNull.int("id");
     t.nonNull.int("taxonomyId");
-    t.json("name");
-    t.json("slug");
+    t.json("name", {
+      resolve: (...[p]) => daoSharedMapTranslatedColumnsInRowToJson(p, "name"),
+    });
+
+    t.json("slug", {
+      resolve: (...[p]) => daoSharedMapTranslatedColumnsInRowToJson(p, "slug"),
+    });
+
     t.string("color");
     t.string("colorDark");
     t.date("createdAt");
@@ -118,14 +129,12 @@ export const TermQueries = extendType({
       },
     });
 
-    t.nonNull.field("termRead", {
+    t.nonNull.field("term", {
       type: "Term",
 
       args: {
         id: nonNull(intArg()),
       },
-
-      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "taxRead"),
 
       // resolve(root, args, ctx, info)
       async resolve(...[, args, , info]) {
@@ -181,10 +190,7 @@ export const TermMutations = extendType({
 
       async resolve(...[, args]) {
         const term = await daoTermCreate({
-          name: args.data.name,
-          slug: args.data.slug,
-          color: args.data.color ?? "",
-          colorDark: args.data.colorDark ?? "",
+          ...(pick(args.data, ["name", "slug", "color", "colorDark"]) as any),
           taxonomy: {
             connect: { id: args.data.taxonomyId },
           },
@@ -211,12 +217,7 @@ export const TermMutations = extendType({
       authorize: (...[, , ctx]) => authorizeApiUser(ctx, "taxUpdate"),
 
       async resolve(...[, args]) {
-        const term = await daoTermUpdate(args.id, {
-          name: args.data.name,
-          slug: args.data.slug,
-          color: args?.data?.color ?? "",
-          colorDark: args?.data?.colorDark ?? "",
-        });
+        const term = await daoTermUpdate(args.id, args.data as any);
 
         if (!term)
           throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Update failed");

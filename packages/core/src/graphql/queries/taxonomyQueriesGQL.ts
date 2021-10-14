@@ -27,9 +27,9 @@ export const taxonomiesQueryGQL = gql`
   }
 `;
 
-export const taxonomyReadQueryGQL = gql`
-  query taxonomyRead($id: Int!) {
-    taxonomyRead(id: $id) {
+export const taxonomyQueryGQL = gql`
+  query taxonomy($id: Int!) {
+    taxonomy(id: $id) {
       id
       name
       slug
@@ -55,7 +55,7 @@ export const termsQueryGQL = gql`
     $pageIndex: Int
     $pageSize: Int
   ) {
-    taxonomyRead(id: $taxonomyId) {
+    taxonomy(id: $taxonomyId) {
       id
       name
       slug
@@ -80,9 +80,9 @@ export const termsQueryGQL = gql`
   }
 `;
 
-export const termReadQueryGQL = gql`
-  query termRead($id: Int!) {
-    termRead(id: $id) {
+export const termQueryGQL = gql`
+  query term($id: Int!) {
+    term(id: $id) {
       id
       name
       slug

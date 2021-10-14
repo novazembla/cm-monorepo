@@ -19,10 +19,9 @@ import {
   daoLocationSearchQuery,
   daoEventSearchQuery,
   daoPageSearchQuery,
-  // daoImageQuery,
-  // daoImageCreate,
-  // daoImageQueryCount,
+  daoTourSearchQuery,
 } from "../../dao";
+import { PublishStatus } from "@culturemap/core";
 
 export const SearchResultItem = objectType({
   name: "SearchResultItem",
@@ -86,6 +85,7 @@ export const SearchQueries = extendType({
               };
 
         const locations = await daoLocationSearchQuery({
+          status: PublishStatus.PUBLISHED,
           fullText: query,
         });
 
@@ -93,9 +93,13 @@ export const SearchQueries = extendType({
           const items = locations.map((loc) => ({
             id: loc.id,
             type: "location",
-            title: loc.title,
-            excerpt: loc.description,
-            slug: loc.slug,
+            title: "TODO:",
+            excerpt: "TODO:",
+            slug: "TODO:",
+            // XXX TODO: Fix
+            // title: loc.title,
+            // excerpt: loc.description,
+            // slug: loc.slug,
             geopoint: {
               lng: loc.lng ?? 0,
               lat: loc.lat ?? 0,
@@ -110,6 +114,7 @@ export const SearchQueries = extendType({
         }
 
         const events = await daoEventSearchQuery({
+          status: PublishStatus.PUBLISHED,
           fullText: query,
         });
 
@@ -133,6 +138,7 @@ export const SearchQueries = extendType({
         }
 
         const pages = await daoPageSearchQuery({
+          status: PublishStatus.PUBLISHED,
           fullText: query,
         });
 
@@ -146,6 +152,28 @@ export const SearchQueries = extendType({
 
           result.push({
             module: "page",
+            items,
+            totalCount: items.length,
+          });
+        }
+
+        /// tour stop count ... TODO:
+
+        const tours = await daoTourSearchQuery({
+          status: PublishStatus.PUBLISHED,
+          fullText: query,
+        });
+
+        if (tours && tours.length > 0) {
+          const items = tours.map((tour: any) => ({
+            id: tour.id,
+            type: "tour",
+            title: tour.title,
+            slug: tour.slug,
+          }));
+
+          result.push({
+            module: "tour",
             items,
             totalCount: items.length,
           });

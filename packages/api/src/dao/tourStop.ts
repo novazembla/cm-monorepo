@@ -8,12 +8,15 @@ import {
   daoSharedGenerateFullText,
   daoSharedWrapImageWithTranslationImage,
   daoImageTranslatedColumns,
+  daoSharedMapJsonToTranslatedColumns,
 } from ".";
 
 const prisma = getPrismaClient();
 const apiConfig = getApiConfig();
 
-const fullTextKeys = ["title", "description", "teaser"];
+export const daoTourStopFullTextKeys = ["title", "description", "teaser"];
+
+export const daoTourStopTranslatedColumns = ["title", "description", "teaser"];
 
 export const daoTourStopReorder = async (
   id: number,
@@ -79,7 +82,15 @@ export const daoTourStopQuery = async (
   );
 };
 
-export const daoTourStopsQueryCount = async (
+export const daoTourStopQueryCount = async (
+  where: Prisma.TourStopWhereInput
+): Promise<number> => {
+  return prisma.tourStop.count({
+    where,
+  });
+};
+
+export const daoTourStopsCountQuery = async (
   tourId: number,
   where: Prisma.TourStopWhereInput
 ): Promise<number> => {
@@ -136,10 +147,19 @@ export const daoTourStopGetById = async (id: number): Promise<TourStop> => {
 export const daoTourStopCreate = async (
   data: Prisma.TourStopCreateInput
 ): Promise<TourStop> => {
+  let dbData = daoSharedMapJsonToTranslatedColumns(
+    data,
+    daoTourStopTranslatedColumns
+  );
+
   let tourStop: TourStop = await prisma.tourStop.create({
     data: {
-      ...data,
-      fullText: daoSharedGenerateFullText(data, fullTextKeys),
+      ...dbData,
+      fullText: daoSharedGenerateFullText(
+        dbData,
+        daoTourStopFullTextKeys,
+        daoTourStopTranslatedColumns
+      ),
     },
   });
 
@@ -174,10 +194,19 @@ export const daoTourStopUpdate = async (
   id: number,
   data: Prisma.TourStopUpdateInput
 ): Promise<TourStop> => {
+  let dbData = daoSharedMapJsonToTranslatedColumns(
+    data,
+    daoTourStopTranslatedColumns
+  );
+
   const tourStop: TourStop = await prisma.tourStop.update({
     data: {
-      ...data,
-      fullText: daoSharedGenerateFullText(data, fullTextKeys),
+      ...dbData,
+      fullText: daoSharedGenerateFullText(
+        dbData,
+        daoTourStopFullTextKeys,
+        daoTourStopTranslatedColumns
+      ),
     },
     where: {
       id,
@@ -209,7 +238,7 @@ export const daoTourStopDelete = async (id: number): Promise<TourStop> => {
 
 const defaults = {
   daoTourStopsQuery,
-  daoTourStopsQueryCount,
+  daoTourStopsCountQuery,
   daoTourStopGetById,
   daoTourStopGetTourStopsByTourId,
   daoTourStopGetTourStopsCountByTourId,

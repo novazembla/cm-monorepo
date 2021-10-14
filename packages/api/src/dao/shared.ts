@@ -181,10 +181,14 @@ export const daoSharedCheckSlugUnique = async (
   return { ok, errors };
 };
 
-export const daoSharedGenerateFullText = (data: any, keys: string[]) => {
-  return keys.reduce((fullText: string, key) => {
-    if (!(key in data)) return fullText;
+export const daoSharedGenerateFullText = (
+  data: any,
+  keys: string[],
+  translatedColumns?: string[]
+) => {
+  const config = getApiConfig();
 
+  const processElement = (fullText: string, key: string) => {
     if (typeof data[key] !== "object") {
       if (data[key]) {
         return `${fullText} ${data[key]}`;
@@ -196,6 +200,21 @@ export const daoSharedGenerateFullText = (data: any, keys: string[]) => {
     return `${fullText} ${Object.keys(data[key])
       .map((oKey) => data[key][oKey])
       .join("\n")}`;
+  };
+
+  return keys.reduce((fullText: string, key) => {
+    if (translatedColumns && translatedColumns.includes(key)) {
+      return config.activeLanguages.reduce((fT: string, lang: any) => {
+        if (`${key}_${lang}` in data) {
+          return `${fT} ${data[`${key}_${lang}`]}`;
+        }
+        return fT;
+      }, fullText);
+    } else {
+      if (!(key in data)) return fullText;
+
+      return processElement(fullText, key);
+    }
   }, "");
 };
 
@@ -258,7 +277,7 @@ export const daoSharedWrapImageWithTranslationImage = (
   };
 };
 
-export const daoSharedGetTransatedSelectColumns = (
+export const daoSharedGetTranslatedSelectColumns = (
   columns: string | string[]
 ) => {
   const config = getApiConfig();
@@ -284,8 +303,22 @@ export const daoSharedGetTransatedSelectColumns = (
   );
 };
 
+export const daoSharedMapTranslatedColumnsInRowToJson = (
+  p: any,
+  column: string
+) => {
+  const config = getApiConfig();
+
+  return config.activeLanguages.reduce((j: any, lang: string) => {
+    return {
+      ...j,
+      [lang]: p[`${column}_${lang}`] ?? null,
+    };
+  }, {});
+};
+
 const defaults = {
-  daoSharedGetTransatedSelectColumns,
+  daoSharedGetTranslatedSelectColumns,
   daoSharedMapTranslatedColumnsToJson,
   daoSharedGenerateFullText,
   daoSharedCheckSlugUnique,

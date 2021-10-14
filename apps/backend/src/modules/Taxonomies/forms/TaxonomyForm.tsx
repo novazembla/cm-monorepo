@@ -35,7 +35,7 @@ export const TaxonomyForm = ({
         label={t("module.taxonomies.forms.taxonomy.field.label.name", "Name")}
         isRequired={true}
         settings={{
-          defaultValues: data?.taxonomyRead?.name,
+          defaultValues: data?.taxonomy?.name,
           placeholder: t(
             "module.taxonomies.forms.taxonomy.field.placeholder.name",
             "Taxonomy name"
@@ -49,7 +49,7 @@ export const TaxonomyForm = ({
         label={t("module.taxonomies.forms.taxonomy.field.label.slug", "Slug")}
         isRequired={true}
         settings={{
-          defaultValues: data?.taxonomyRead?.slug,
+          defaultValues: data?.taxonomy?.slug,
           placeholder: t(
             "module.taxonomies.forms.taxonomy.field.placeholder.slug",
             "Slug / URL part"

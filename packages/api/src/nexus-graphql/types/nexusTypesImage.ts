@@ -214,7 +214,8 @@ export const ImageMutations = extendType({
         data: nonNull("ImageUpdateInput"),
       },
 
-      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "imageUpdate"),
+      // Xxx acces controll ... TODO:
+      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "imageUpdateOwn"),
 
       async resolve(...[, args]) {
         const image = await daoImageUpdate(args.id, args.data);
@@ -233,7 +234,8 @@ export const ImageMutations = extendType({
         id: nonNull(intArg()),
       },
 
-      // TODO enable later also check if user owns if not full access ... authorize: (...[, , ctx]) => authorizeApiUser(ctx, "imageDelete"),
+      // Xxx acces controll ... TODO:
+      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "imageDeleteOwn"),
 
       async resolve(...[, args]) {
         const image = await daoImageSetToDelete(args.id);

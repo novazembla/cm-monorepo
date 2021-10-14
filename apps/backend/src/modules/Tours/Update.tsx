@@ -45,9 +45,9 @@ import {
   multiLangImageTranslationsJsonRHFormData,
 } from "~/utils";
 
-export const tourReadAndContentAuthorsQueryGQL = gql`
-  query tourRead($id: Int!) {
-    tourRead(id: $id) {
+export const tourAndContentAuthorsQueryGQL = gql`
+  query tour($id: Int!) {
+    tour(id: $id) {
       id
       title
       slug
@@ -100,7 +100,7 @@ const Update = () => {
 
   const modules = useModules();
 
-  const { data, loading, error } = useQuery(tourReadAndContentAuthorsQueryGQL, {
+  const { data, loading, error } = useQuery(tourAndContentAuthorsQueryGQL, {
     variables: {
       id: parseInt(router.query.tourId, 10),
     },
@@ -126,22 +126,22 @@ const Update = () => {
   } = formMethods;
 
   useEffect(() => {
-    if (!data || !data.tourRead) return;
+    if (!data || !data?.tour) return;
 
-    setTourStops(data?.tourRead?.tourStops ?? []);
+    setTourStops(data?.tour?.tourStops ?? []);
 
     reset({
       ...multiLangJsonToRHFormData(
-        filteredOutputByWhitelist(data.tourRead, [], multiLangFieldsTour),
+        filteredOutputByWhitelist(data?.tour, [], multiLangFieldsTour),
         multiLangFieldsTour,
         config.activeLanguages
       ),
-      status: data?.tourRead?.status,
-      ownerId: data?.tourRead?.ownerId,
-      path: data?.tourRead?.path,
-      heroImage: data?.tourRead?.heroImage?.id,
+      status: data?.tour?.status,
+      ownerId: data?.tour?.ownerId,
+      path: data?.tour?.path,
+      heroImage: data?.tour?.heroImage?.id,
       ...multiLangImageTranslationsJsonRHFormData(
-        data?.tourRead,
+        data?.tour,
         ["heroImage"],
         ["alt", "credits"],
         config.activeLanguages
@@ -209,7 +209,7 @@ const Update = () => {
             {},
             {
               keepDirty: false,
-              keepValues: true
+              keepValues: true,
             }
           );
         } else {
@@ -312,7 +312,7 @@ const Update = () => {
                   lat: stop.location.lat,
                   lng: stop.location.lng,
                 }))}
-                path={data?.tourRead?.path ?? {}}
+                path={data?.tour?.path ?? {}}
                 name="path"
               />
             </ModulePage>

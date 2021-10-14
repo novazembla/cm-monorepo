@@ -21,7 +21,7 @@ export const moduleRoutes: RoutePrivateParams[] = [
     path: `${moduleRootPath}/update/:id`,
     component: Update,
     exact: true,
-    userCan: "eventUpdate",
+    userCan: "eventUpdateOwn",
   },
   {
     key: "logs",

@@ -249,7 +249,6 @@ export interface NexusGenObjects {
   Event: { // root type
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
     dates?: Array<NexusGenRootTypes['EventDate'] | null> | null; // [EventDate]
-    description?: NexusGenScalars['JSON'] | null; // JSON
     heroImage?: NexusGenRootTypes['Image'] | null; // Image
     id: number; // Int!
     isFree?: boolean | null; // Boolean
@@ -258,10 +257,8 @@ export interface NexusGenObjects {
     meta?: NexusGenScalars['JSON'] | null; // JSON
     ownerId: number; // Int!
     primaryTerms?: Array<NexusGenRootTypes['Term'] | null> | null; // [Term]
-    slug?: NexusGenScalars['JSON'] | null; // JSON
     status: number; // Int!
     terms?: Array<NexusGenRootTypes['Term'] | null> | null; // [Term]
-    title?: NexusGenScalars['JSON'] | null; // JSON
     updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
   }
   EventDate: { // root type
@@ -334,12 +331,10 @@ export interface NexusGenObjects {
     totalCount?: number | null; // Int
   }
   Location: { // root type
-    accessibilityInformation?: NexusGenScalars['JSON'] | null; // JSON
     address?: NexusGenScalars['JSON'] | null; // JSON
     agency?: string | null; // String
     contactInfo?: NexusGenScalars['JSON'] | null; // JSON
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
-    description?: NexusGenScalars['JSON'] | null; // JSON
     eventLocationId?: number | null; // Int
     events?: Array<NexusGenRootTypes['Event'] | null> | null; // [Event]
     geoCodingInfo?: NexusGenScalars['JSON'] | null; // JSON
@@ -347,14 +342,11 @@ export interface NexusGenObjects {
     id: number; // Int!
     lat?: number | null; // Float
     lng?: number | null; // Float
-    offers?: NexusGenScalars['JSON'] | null; // JSON
     ownerId: number; // Int!
     primaryTerms?: Array<NexusGenRootTypes['Term'] | null> | null; // [Term]
-    slug?: NexusGenScalars['JSON'] | null; // JSON
     socialMedia?: NexusGenScalars['JSON'] | null; // JSON
     status: number; // Int!
     terms?: Array<NexusGenRootTypes['Term'] | null> | null; // [Term]
-    title?: NexusGenScalars['JSON'] | null; // JSON
     updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
     visibleFrom?: NexusGenScalars['DateTime'] | null; // DateTime
     visibleFromTime?: NexusGenScalars['DateTime'] | null; // DateTime
@@ -373,16 +365,12 @@ export interface NexusGenObjects {
   }
   Mutation: {};
   Page: { // root type
-    content?: NexusGenScalars['JSON'] | null; // JSON
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
     fullText?: string | null; // String
     heroImage?: NexusGenRootTypes['Image'] | null; // Image
     id: number; // Int!
-    intro?: NexusGenScalars['JSON'] | null; // JSON
     ownerId: number; // Int!
-    slug?: NexusGenScalars['JSON'] | null; // JSON
     status: number; // Int!
-    title?: NexusGenScalars['JSON'] | null; // JSON
     updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
   }
   PageQueryResult: { // root type
@@ -427,8 +415,6 @@ export interface NexusGenObjects {
     id: number; // Int!
     isRequired?: boolean | null; // Boolean
     modules?: Array<NexusGenRootTypes['Module'] | null> | null; // [Module]
-    name?: NexusGenScalars['JSON'] | null; // JSON
-    slug?: NexusGenScalars['JSON'] | null; // JSON
     terms?: Array<NexusGenRootTypes['Term'] | null> | null; // [Term]
     updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
   }
@@ -441,8 +427,6 @@ export interface NexusGenObjects {
     colorDark?: string | null; // String
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
     id: number; // Int!
-    name?: NexusGenScalars['JSON'] | null; // JSON
-    slug?: NexusGenScalars['JSON'] | null; // JSON
     taxonomy?: NexusGenRootTypes['Taxonomy'] | null; // Taxonomy
     taxonomyId: number; // Int!
     updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
@@ -453,18 +437,13 @@ export interface NexusGenObjects {
   }
   Tour: { // root type
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
-    description: NexusGenScalars['JSON']; // JSON!
-    distance: NexusGenScalars['JSON']; // JSON!
-    duration: NexusGenScalars['JSON']; // JSON!
     heroImage?: NexusGenRootTypes['Image'] | null; // Image
     id: number; // Int!
     modules?: Array<NexusGenRootTypes['Module'] | null> | null; // [Module]
+    orderNumber?: number | null; // Int
     ownerId: number; // Int!
     path: NexusGenScalars['JSON']; // JSON!
-    slug: NexusGenScalars['JSON']; // JSON!
     status: number; // Int!
-    teaser: NexusGenScalars['JSON']; // JSON!
-    title: NexusGenScalars['JSON']; // JSON!
     tourStops?: Array<NexusGenRootTypes['TourStop'] | null> | null; // [TourStop]
     updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
   }
@@ -474,14 +453,11 @@ export interface NexusGenObjects {
   }
   TourStop: { // root type
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
-    description: NexusGenScalars['JSON']; // JSON!
     heroImage?: NexusGenRootTypes['Image'] | null; // Image
     id: number; // Int!
     location?: NexusGenRootTypes['Location'] | null; // Location
     locationId?: number | null; // Int
     number?: number | null; // Int
-    teaser: NexusGenScalars['JSON']; // JSON!
-    title?: NexusGenScalars['JSON'] | null; // JSON
     tour?: NexusGenRootTypes['Tour'] | null; // Tour
     tourId?: number | null; // Int
     updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
@@ -552,7 +528,6 @@ export interface NexusGenFieldTypes {
     result: boolean; // Boolean!
   }
   Event: { // field return type
-    author: NexusGenRootTypes['User'] | null; // User
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
     dates: Array<NexusGenRootTypes['EventDate'] | null> | null; // [EventDate]
     description: NexusGenScalars['JSON'] | null; // JSON
@@ -643,7 +618,6 @@ export interface NexusGenFieldTypes {
     accessibilityInformation: NexusGenScalars['JSON'] | null; // JSON
     address: NexusGenScalars['JSON'] | null; // JSON
     agency: string | null; // String
-    author: NexusGenRootTypes['User'] | null; // User
     contactInfo: NexusGenScalars['JSON'] | null; // JSON
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
     description: NexusGenScalars['JSON'] | null; // JSON
@@ -724,7 +698,6 @@ export interface NexusGenFieldTypes {
     userUpdate: NexusGenRootTypes['BooleanResult']; // BooleanResult!
   }
   Page: { // field return type
-    author: NexusGenRootTypes['User'] | null; // User
     content: NexusGenScalars['JSON'] | null; // JSON
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
     fullText: string | null; // String
@@ -755,7 +728,6 @@ export interface NexusGenFieldTypes {
     event: NexusGenRootTypes['Event']; // Event!
     eventImportLog: NexusGenRootTypes['EventImportLog']; // EventImportLog!
     eventImportLogs: NexusGenRootTypes['EventImportLogQueryResult'] | null; // EventImportLogQueryResult
-    eventRead: NexusGenRootTypes['Event']; // Event!
     events: NexusGenRootTypes['EventQueryResult'] | null; // EventQueryResult
     geocode: NexusGenRootTypes['GeoCodeResult'] | null; // GeoCodeResult
     imageRead: NexusGenRootTypes['Image']; // Image!
@@ -768,16 +740,15 @@ export interface NexusGenFieldTypes {
     moduleTaxonomies: Array<NexusGenRootTypes['Taxonomy'] | null> | null; // [Taxonomy]
     modules: Array<NexusGenRootTypes['Module'] | null> | null; // [Module]
     page: NexusGenRootTypes['Page']; // Page!
-    pageRead: NexusGenRootTypes['Page']; // Page!
     pages: NexusGenRootTypes['PageQueryResult'] | null; // PageQueryResult
     quickSearch: Array<NexusGenRootTypes['SearchResult'] | null> | null; // [SearchResult]
     setting: Array<NexusGenRootTypes['Setting'] | null> | null; // [Setting]
     settings: Array<NexusGenRootTypes['Setting'] | null> | null; // [Setting]
     taxonomies: NexusGenRootTypes['TaxonomyQueryResult'] | null; // TaxonomyQueryResult
-    taxonomyRead: NexusGenRootTypes['Taxonomy']; // Taxonomy!
-    termRead: NexusGenRootTypes['Term']; // Term!
+    taxonomy: NexusGenRootTypes['Taxonomy']; // Taxonomy!
+    term: NexusGenRootTypes['Term']; // Term!
     terms: NexusGenRootTypes['TermQueryResult'] | null; // TermQueryResult
-    tourRead: NexusGenRootTypes['Tour']; // Tour!
+    tour: NexusGenRootTypes['Tour']; // Tour!
     tourStopRead: NexusGenRootTypes['TourStop']; // TourStop!
     tours: NexusGenRootTypes['TourQueryResult'] | null; // TourQueryResult
     uniqueSlug: NexusGenRootTypes['UniqueSlugResult'] | null; // UniqueSlugResult
@@ -841,18 +812,19 @@ export interface NexusGenFieldTypes {
   }
   Tour: { // field return type
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
-    description: NexusGenScalars['JSON']; // JSON!
-    distance: NexusGenScalars['JSON']; // JSON!
-    duration: NexusGenScalars['JSON']; // JSON!
+    description: NexusGenScalars['JSON'] | null; // JSON
+    distance: NexusGenScalars['JSON'] | null; // JSON
+    duration: NexusGenScalars['JSON'] | null; // JSON
     heroImage: NexusGenRootTypes['Image'] | null; // Image
     id: number; // Int!
     modules: Array<NexusGenRootTypes['Module'] | null> | null; // [Module]
+    orderNumber: number | null; // Int
     ownerId: number; // Int!
     path: NexusGenScalars['JSON']; // JSON!
-    slug: NexusGenScalars['JSON']; // JSON!
+    slug: NexusGenScalars['JSON'] | null; // JSON
     status: number; // Int!
-    teaser: NexusGenScalars['JSON']; // JSON!
-    title: NexusGenScalars['JSON']; // JSON!
+    teaser: NexusGenScalars['JSON'] | null; // JSON
+    title: NexusGenScalars['JSON'] | null; // JSON
     tourStopCount: number | null; // Int
     tourStops: Array<NexusGenRootTypes['TourStop'] | null> | null; // [TourStop]
     updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
@@ -863,13 +835,13 @@ export interface NexusGenFieldTypes {
   }
   TourStop: { // field return type
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
-    description: NexusGenScalars['JSON']; // JSON!
+    description: NexusGenScalars['JSON'] | null; // JSON
     heroImage: NexusGenRootTypes['Image'] | null; // Image
     id: number; // Int!
     location: NexusGenRootTypes['Location'] | null; // Location
     locationId: number | null; // Int
     number: number | null; // Int
-    teaser: NexusGenScalars['JSON']; // JSON!
+    teaser: NexusGenScalars['JSON'] | null; // JSON
     title: NexusGenScalars['JSON'] | null; // JSON
     tour: NexusGenRootTypes['Tour'] | null; // Tour
     tourId: number | null; // Int
@@ -938,7 +910,6 @@ export interface NexusGenFieldTypeNames {
     result: 'Boolean'
   }
   Event: { // field return type name
-    author: 'User'
     createdAt: 'DateTime'
     dates: 'EventDate'
     description: 'JSON'
@@ -1029,7 +1000,6 @@ export interface NexusGenFieldTypeNames {
     accessibilityInformation: 'JSON'
     address: 'JSON'
     agency: 'String'
-    author: 'User'
     contactInfo: 'JSON'
     createdAt: 'DateTime'
     description: 'JSON'
@@ -1110,7 +1080,6 @@ export interface NexusGenFieldTypeNames {
     userUpdate: 'BooleanResult'
   }
   Page: { // field return type name
-    author: 'User'
     content: 'JSON'
     createdAt: 'DateTime'
     fullText: 'String'
@@ -1141,7 +1110,6 @@ export interface NexusGenFieldTypeNames {
     event: 'Event'
     eventImportLog: 'EventImportLog'
     eventImportLogs: 'EventImportLogQueryResult'
-    eventRead: 'Event'
     events: 'EventQueryResult'
     geocode: 'GeoCodeResult'
     imageRead: 'Image'
@@ -1154,16 +1122,15 @@ export interface NexusGenFieldTypeNames {
     moduleTaxonomies: 'Taxonomy'
     modules: 'Module'
     page: 'Page'
-    pageRead: 'Page'
     pages: 'PageQueryResult'
     quickSearch: 'SearchResult'
     setting: 'Setting'
     settings: 'Setting'
     taxonomies: 'TaxonomyQueryResult'
-    taxonomyRead: 'Taxonomy'
-    termRead: 'Term'
+    taxonomy: 'Taxonomy'
+    term: 'Term'
     terms: 'TermQueryResult'
-    tourRead: 'Tour'
+    tour: 'Tour'
     tourStopRead: 'TourStop'
     tours: 'TourQueryResult'
     uniqueSlug: 'UniqueSlugResult'
@@ -1233,6 +1200,7 @@ export interface NexusGenFieldTypeNames {
     heroImage: 'Image'
     id: 'Int'
     modules: 'Module'
+    orderNumber: 'Int'
     ownerId: 'Int'
     path: 'JSON'
     slug: 'JSON'
@@ -1464,7 +1432,8 @@ export interface NexusGenArgTypes {
       roles: Array<string | null>; // [String]!
     }
     event: { // args
-      slug: string; // String!
+      id?: number | null; // Int
+      slug?: string | null; // String
     }
     eventImportLog: { // args
       id: number; // Int!
@@ -1474,9 +1443,6 @@ export interface NexusGenArgTypes {
       pageIndex?: number | null; // Int
       pageSize: number | null; // Int
       where?: NexusGenScalars['JSON'] | null; // JSON
-    }
-    eventRead: { // args
-      id: number; // Int!
     }
     events: { // args
       orderBy?: NexusGenScalars['JSON'] | null; // JSON
@@ -1511,7 +1477,6 @@ export interface NexusGenArgTypes {
     }
     location: { // args
       id?: number | null; // Int
-      lang?: string | null; // String
       slug?: string | null; // String
     }
     locations: { // args
@@ -1524,10 +1489,8 @@ export interface NexusGenArgTypes {
       key: string; // String!
     }
     page: { // args
-      slug: string; // String!
-    }
-    pageRead: { // args
-      id: number; // Int!
+      id?: number | null; // Int
+      slug?: string | null; // String
     }
     pages: { // args
       orderBy?: NexusGenScalars['JSON'] | null; // JSON
@@ -1549,10 +1512,10 @@ export interface NexusGenArgTypes {
       pageSize: number | null; // Int
       where?: NexusGenScalars['JSON'] | null; // JSON
     }
-    taxonomyRead: { // args
+    taxonomy: { // args
       id: number; // Int!
     }
-    termRead: { // args
+    term: { // args
       id: number; // Int!
     }
     terms: { // args
@@ -1562,8 +1525,9 @@ export interface NexusGenArgTypes {
       taxonomyId: number; // Int!
       where?: NexusGenScalars['JSON'] | null; // JSON
     }
-    tourRead: { // args
-      id: number; // Int!
+    tour: { // args
+      id?: number | null; // Int
+      slug?: string | null; // String
     }
     tourStopRead: { // args
       id: number; // Int!

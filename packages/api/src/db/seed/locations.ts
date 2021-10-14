@@ -1,7 +1,6 @@
 /* eslint-disable no-console */
 
 import Prisma from "@prisma/client";
-import bcrypt from "bcrypt";
 import pMap from "p-map";
 
 import { LoremIpsum } from "lorem-ipsum";
@@ -55,15 +54,38 @@ const getRandomElements = (arr: any[], n: number) => {
   return result.filter((r) => r);
 };
 
-const daoSharedGenerateFullText = (data: any, keys: string[]) => {
-  return keys.reduce((fullText: string, key) => {
-    if (!(key in data)) return fullText;
-
-    if (typeof data[key] !== "object") return fullText;
+const daoSharedGenerateFullText = (
+  data: any,
+  keys: string[],
+  translatedColumns?: string[]
+) => {
+  const processElement = (fullText: string, key: string) => {
+    if (typeof data[key] !== "object") {
+      if (data[key]) {
+        return `${fullText} ${data[key]}`;
+      } else {
+        return fullText;
+      }
+    }
 
     return `${fullText} ${Object.keys(data[key])
       .map((oKey) => data[key][oKey])
       .join("\n")}`;
+  };
+
+  return keys.reduce((fullText: string, key) => {
+    if (translatedColumns && translatedColumns.includes(key)) {
+      return ["de", "en"].reduce((fT: string, lang: any) => {
+        if (`${key}_${lang}` in data) {
+          return `${fT} ${data[`${key}_${lang}`]}`;
+        }
+        return fT;
+      }, fullText);
+    } else {
+      if (!(key in data)) return fullText;
+
+      return processElement(fullText, key);
+    }
   }, "");
 };
 
@@ -101,16 +123,16 @@ const rndBetween = (min: number, max: number) =>
 //       ) / 1000000
 //   );
 
-const slugify = (text: string) => {
-  return text
-    .toString()
-    .toLowerCase()
-    .replace(/\s+/g, "-") // Replace spaces with -
-    .replace(/[^\w-]+/g, "") // Remove all non-word chars
-    .replace(/--+/g, "-") // Replace multiple - with single -
-    .replace(/^-+/, "") // Trim - from start of text
-    .replace(/-+$/, ""); // Trim - from end of text
-};
+// const slugify = (text: string) => {
+//   return text
+//     .toString()
+//     .toLowerCase()
+//     .replace(/\s+/g, "-") // Replace spaces with -
+//     .replace(/[^\w-]+/g, "") // Remove all non-word chars
+//     .replace(/--+/g, "-") // Replace multiple - with single -
+//     .replace(/^-+/, "") // Trim - from start of text
+//     .replace(/-+$/, ""); // Trim - from end of text
+// };
 
 const keywords = [
   "Kunst",
@@ -244,14 +266,6 @@ async function main() {
     },
   });
   if (contributor && editor && administrator) {
-    const taxEvntCategories = await prisma.taxonomy.findFirst({
-      where: {
-        slug: {
-          path: ["de"],
-          string_contains: "veranstaltungsarten",
-        },
-      },
-    });
     const taxTypeOfInstitution = await prisma.taxonomy.findFirst({
       where: {
         slug: {
@@ -300,10 +314,7 @@ async function main() {
 
           const tL = await prisma.location.findFirst({
             where: {
-              slug: {
-                path: ["en"],
-                string_contains: `location-en-${id}`,
-              },
+              slug_en: `location-en-${id}`,
             },
           });
 
@@ -353,35 +364,31 @@ async function main() {
 
               const data = {
                 status: Math.random() > 0.3 ? 4 : rndBetween(1, 5),
-                title: {
-                  en: `L(${id}) EN ${name}`,
-                  de: `L(${id}) DE ${name}`,
-                },
-                slug: {
-                  en: `location-en-${id}`,
-                  de: `location-de-${id}`,
-                },
-                description: {
-                  en: `Description EN: ${keywordSelection} ${lorem.generateWords(
-                    rndBetween(15, 50)
-                  )}`,
-                  de: `Beschreibung DE: ${lorem.generateWords(
-                    rndBetween(15, 50)
-                  )}`,
-                },
+                title_en: `L(${id}) EN ${name}`,
+                title_de: `L(${id}) DE ${name}`,
+                slug_en: `location-en-${id}`,
+                slug_de: `location-de-${id}`,
+                description_en: `Description EN: ${keywordSelection} ${lorem.generateWords(
+                  rndBetween(15, 50)
+                )}`,
+                description_de: `Beschreibung DE: ${lorem.generateWords(
+                  rndBetween(15, 50)
+                )}`,
+
                 address: addresses[i] as any,
-                offers: {
-                  en: `Offering EN: ${lorem.generateWords(rndBetween(15, 50))}`,
-                  de: `Angebot DE: ${lorem.generateWords(rndBetween(15, 50))}`,
-                },
-                accessibilityInformation: {
-                  en: `Accessibility Information EN: ${lorem.generateWords(
-                    rndBetween(15, 50)
-                  )}`,
-                  de: `Barrierefreiheit DE: ${lorem.generateWords(
-                    rndBetween(15, 50)
-                  )}`,
-                },
+                offers_en: `Offering EN: ${lorem.generateWords(
+                  rndBetween(15, 50)
+                )}`,
+                offers_de: `Angebot DE: ${lorem.generateWords(
+                  rndBetween(15, 50)
+                )}`,
+                accessibilityInformation_en: `Accessibility Information EN: ${lorem.generateWords(
+                  rndBetween(15, 50)
+                )}`,
+                accessibilityInformation_de: `Barrierefreiheit DE: ${lorem.generateWords(
+                  rndBetween(15, 50)
+                )}`,
+
                 geoCodingInfo: geoCodeCandidates,
                 contactInfo: {
                   phone1: "+49302313292193",
@@ -409,14 +416,23 @@ async function main() {
               await prisma.location.create({
                 data: {
                   ...data,
-                  fullText: daoSharedGenerateFullText(data, [
-                    "title",
-                    "slug",
-                    "description",
-                    "address",
-                    "contactInfo",
-                    "offers",
-                  ]),
+                  fullText: daoSharedGenerateFullText(
+                    data,
+                    [
+                      "title",
+                      "slug",
+                      "description",
+                      "offers",
+                      "accessibilityInformation",
+                    ],
+                    [
+                      "title",
+                      "slug",
+                      "description",
+                      "offers",
+                      "accessibilityInformation",
+                    ]
+                  ),
                 },
               });
             } catch (err) {

@@ -33,6 +33,7 @@ export type PermissionsOfEditor =
   | "pageUpdate"
   | "pageDelete"
   | "taxRead"
+  | "taxCreate"
   | "taxUpdate"
   | "taxDelete"
   | "imageDelete";
@@ -203,6 +204,7 @@ roles.add(
     "pageUpdate",
     "pageDelete",
     "taxRead",
+    "taxCreate",
     "taxUpdate",
     "taxDelete",
     "imageDelete",

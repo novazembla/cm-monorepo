@@ -12,7 +12,7 @@ import { daoSharedGenerateFullText } from "./shared";
 const prisma = getPrismaClient();
 const apiConfig = getApiConfig();
 
-const userFullTextKeys = ["email", "firstName", "lastName"];
+export const daoUserFullTextKeys = ["email", "firstName", "lastName"];
 
 export const daoUserCheckIsEmailTaken = async (
   email: string,
@@ -49,7 +49,7 @@ export const daoUserCreate = async (
     data: {
       ...data,
       password: await bcrypt.hash(data.password, apiConfig.security.saltRounds),
-      fullText: daoSharedGenerateFullText(data, userFullTextKeys),
+      fullText: daoSharedGenerateFullText(data, daoUserFullTextKeys),
     },
   });
 
@@ -148,7 +148,7 @@ export const daoUserUpdate = async (
   const user: User = await prisma.user.update({
     data: {
       ...updateData,
-      fullText: daoSharedGenerateFullText(data, userFullTextKeys),
+      fullText: daoSharedGenerateFullText(data, daoUserFullTextKeys),
     },
     where: {
       id,
@@ -189,7 +189,7 @@ export const daoUserProfileImageDelete = async (
     },
   });
 
-  // TODO: take over content to first administrator or deleting user ... 
+  // TODO: take over content to first administrator or deleting user ...
   await daoImageSetToDelete(imageId);
 
   return filteredOutputByBlacklistOrNotFound(
@@ -210,5 +210,5 @@ const defaults = {
   daoUserFindFirst,
   daoUserProfileImageDelete,
   daoUserCheckIsEmailTaken,
-}
+};
 export default defaults;
