@@ -52,13 +52,27 @@ model User {
 
 model Location {
   id                       Int   @id @default(autoincrement())
-  title                    Json
-  slug                     Json
-  description              Json  @default("{}")
-  address                  Json? @default("{}")
+  
+  title                    Json  @default("{}") // XXX
+  slug                     Json  @default("{}") // XXX
+  description              Json  @default("{}") // XXX
+  address                  Json? @default("{}") // XXX
+  offers                   Json? @default("{}") // XXX
   accessibilityInformation Json? @default("{}")
+
+  title_de                    String  @default("")
+  slug_de                     String  @default("")
+  description_de              String  @default("")
+  offers_de                   String? @default("")
+  accessibilityInformation_de String? @default("")
+
+  title_en                    String  @default("")
+  slug_en                     String  @default("")
+  description_en              String  @default("")
+  offers_en                   String? @default("")
+  accessibilityInformation_en String? @default("")
+
   contactInfo              Json? @default("{}")
-  offers                   Json? @default("{}")
   geoCodingInfo            Json? @default("{}")
   socialMedia              Json? @default("{}")
 
@@ -102,9 +116,10 @@ model Location {
 
 model Event {
   id          Int   @id @default(autoincrement())
-  title       Json
-  slug        Json
-  description Json? @default("{}")
+  title       Json  // XXX
+  slug        Json  // XXX
+  description Json? @default("{}")  // XXX
+
   meta        Json? @default("{}")
 
   isFree     Boolean    @default(false)
@@ -188,8 +203,8 @@ model Module {
 
 model Taxonomy {
   id        Int      @id @default(autoincrement())
-  name      Json
-  slug      Json
+  name      Json      // XXX
+  slug      Json // XXX
   multiTerm Boolean  @default(false)
   hasColor  Boolean  @default(false)
   collectPrimaryTerm  Boolean  @default(false)
@@ -206,8 +221,8 @@ model Taxonomy {
 
 model Term {
   id   Int  @id @default(autoincrement())
-  name Json
-  slug Json
+  name Json  // XXX
+  slug Json  // XXX
 
   color      String   @default("")
   colorDark  String   @default("")
@@ -231,13 +246,16 @@ model Term {
 
 model Tour {
   id Int @id @default(autoincrement())
+  
+  orderNumber Int   @default(1)
 
-  title       Json
-  slug        Json
-  duration    Json
-  distance    Json
-  teaser      Json
-  description Json
+  title       Json  // XXX
+  slug        Json  // XXX
+  duration    Json  // XXX
+  distance    Json  // XXX
+  teaser      Json  // XXX
+  description Json  // XXX
+
   path        Json
 
   heroImageId Int?
@@ -261,15 +279,15 @@ model Tour {
 model TourStop {
   id Int @id @default(autoincrement())
 
-  title  Json
+  title  Json  // XXX
   number Int? @default(1)
 
 
   loactionId Int
   location   Location? @relation(fields: [loactionId], references: [id], onDelete: Cascade)
 
-  teaser      Json
-  description Json
+  teaser      Json  // XXX
+  description Json  // XXX
 
   tourId Int?
   tour   Tour? @relation(fields: [tourId], references: [id])
@@ -292,10 +310,10 @@ model TourStop {
 model Page {
   id Int @id @default(autoincrement())
 
-  title   Json
-  slug    Json
-  intro   Json
-  content Json
+  title   Json // XXX
+  slug    Json // XXX
+  intro   Json // XXX
+  content Json // XXX
 
   heroImageId Int?
   heroImage   Image? @relation(fields: [heroImageId], references: [id], name: "pageHeroImage", onDelete: Cascade)
@@ -317,7 +335,7 @@ model Image {
   id Int @id @default(autoincrement())
 
   nanoid      String @unique @db.VarChar(48)
-  meta        Json
+  meta        Json   // XXX
   status      Int    @default(0)
   orderNumber Int    @default(0)
 

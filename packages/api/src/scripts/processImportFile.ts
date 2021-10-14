@@ -149,14 +149,10 @@ const processImportedRow = async (
     let terms = getTermsOfRow(mapping, row);
 
     const sharedData = {
-      title: {
-        de: titleDe,
-        en: titleEn,
-      },
-      slug: {
-        de: `${slugify(titleDe)}-de-${nanoid()}`,
-        en: `${slugify(titleEn)}-en-${nanoid()}`,
-      },
+      title_de: titleDe,
+      title_en: titleEn,
+      slug_de: `${slugify(titleDe)}-de-${nanoid()}`,
+      slug_en: `${slugify(titleEn)}-en-${nanoid()}`,
       agency: getRowValueOrEmptyString(mapping, row, "agency"),
       eventLocationId: evntLocationId ? parseInt(evntLocationId) : undefined,
       address: {
@@ -180,26 +176,24 @@ const processImportedRow = async (
         youtube: getRowValueOrEmptyString(mapping, row, "youtube"),
         website: getRowValueOrEmptyString(mapping, row, "website"),
       },
-      description: {
-        de: convertToHtml(
-          getRowValueOrEmptyString(mapping, row, "description-de")
-        ),
-        en: convertToHtml(
-          getRowValueOrEmptyString(mapping, row, "description-en")
-        ),
-      },
-      offers: {
-        de: convertToHtml(getRowValueOrEmptyString(mapping, row, "offers-de")),
-        en: convertToHtml(getRowValueOrEmptyString(mapping, row, "offers-en")),
-      },
-      accessibilityInformation: {
-        de: convertToHtml(
-          getRowValueOrEmptyString(mapping, row, "accessibility-de")
-        ),
-        en: convertToHtml(
-          getRowValueOrEmptyString(mapping, row, "accessibility-en")
-        ),
-      },
+      description_de: convertToHtml(
+        getRowValueOrEmptyString(mapping, row, "description-de")
+      ),
+      description_en: convertToHtml(
+        getRowValueOrEmptyString(mapping, row, "description-en")
+      ),
+      offers_de: convertToHtml(
+        getRowValueOrEmptyString(mapping, row, "offers-de")
+      ),
+      offers_en: convertToHtml(
+        getRowValueOrEmptyString(mapping, row, "offers-en")
+      ),
+      accessibilityInformation_de: convertToHtml(
+        getRowValueOrEmptyString(mapping, row, "accessibility-de")
+      ),
+      accessibilityInformation_en: convertToHtml(
+        getRowValueOrEmptyString(mapping, row, "accessibility-en")
+      ),
       importedLocationHash: locationHash,
     };
 
@@ -362,7 +356,7 @@ const processImportedRow = async (
           );
         }
       } else {
-        errors.push(`Failed to create new location ${data.title.de}`);
+        errors.push(`Failed to create new location ${data.title_de}`);
       }
     }
 

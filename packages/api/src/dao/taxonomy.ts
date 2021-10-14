@@ -18,14 +18,14 @@ const taxFullTextKeys = ["name", "slug"];
 
 export const daoTaxonomyCheckSlugUnique = async (
   slug: Record<string, string>,
-  id?: number,
-  uniqueInObject?: boolean
+  uniqueInObject: boolean,
+  id?: number
 ): Promise<{ ok: boolean; errors: Record<string, boolean> }> => {
   return daoSharedCheckSlugUnique(
     prisma.taxonomy.findMany,
     slug,
-    id,
-    uniqueInObject
+    uniqueInObject,
+    id
   );
 };
 
@@ -131,6 +131,7 @@ export const daoTaxonomyUpdate = async (
   const result = await daoSharedCheckSlugUnique(
     prisma.taxonomy.findMany,
     data.slug as Record<string, string>,
+    true,
     id
   );
 

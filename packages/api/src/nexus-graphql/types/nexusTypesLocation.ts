@@ -79,7 +79,6 @@ export const Location = objectType({
     t.json("socialMedia");
     t.json("offers");
     t.int("eventLocationId");
-    t.int("eventLocationId");
     t.string("agency");
     t.field("heroImage", {
       type: "Image",

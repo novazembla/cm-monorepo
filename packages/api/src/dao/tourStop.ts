@@ -5,7 +5,6 @@ import { filteredOutputByBlacklistOrNotFound } from "../utils";
 import { getApiConfig } from "../config";
 import { getPrismaClient } from "../db/client";
 import {
-  daoSharedCheckSlugUnique,
   daoSharedGenerateFullText,
   daoSharedWrapImageWithTranslationImage,
   daoImageTranslatedColumns,
@@ -15,19 +14,6 @@ const prisma = getPrismaClient();
 const apiConfig = getApiConfig();
 
 const fullTextKeys = ["title", "description", "teaser"];
-
-export const daoTourStopCheckSlugUnique = async (
-  slug: Record<string, string>,
-  id?: number,
-  uniqueInObject?: boolean
-): Promise<{ ok: boolean; errors: Record<string, boolean> }> => {
-  return daoSharedCheckSlugUnique(
-    prisma.tourStop.findMany,
-    slug,
-    id,
-    uniqueInObject
-  );
-};
 
 export const daoTourStopReorder = async (
   id: number,
@@ -227,7 +213,6 @@ const defaults = {
   daoTourStopGetById,
   daoTourStopGetTourStopsByTourId,
   daoTourStopGetTourStopsCountByTourId,
-  daoTourStopCheckSlugUnique,
   daoTourStopCreate,
   daoTourStopUpdate,
   daoTourStopDelete,

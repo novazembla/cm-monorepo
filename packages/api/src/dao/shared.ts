@@ -1,10 +1,108 @@
-import { Prisma } from "@prisma/client";
+import { isObject } from "../utils";
+import { getApiConfig } from "../config";
+
+const daoSharedMapTranslatedColumnsToJsonProcessRow = (
+  row: any,
+  translatedColumns: string[],
+  activeLanguages: string[]
+) => {
+  if (!isObject(row)) return row;
+
+  return translatedColumns.reduce((processedRow: any, column: any) => {
+    let json = activeLanguages.reduce((j: any, lang: any) => {
+      if (`${column}_${lang}` in processedRow) {
+        j = {
+          ...j,
+          [lang]: processedRow[`${column}_${lang}`],
+        };
+      }
+      return j;
+    }, {});
+
+    if (Object.keys(json).length > 0) {
+      activeLanguages.forEach((lang) => {
+        if (`${column}_${lang}` in processedRow)
+          delete processedRow[`${column}_${lang}`];
+      });
+      return {
+        ...processedRow,
+        [column]: json,
+      };
+    }
+
+    return processedRow;
+  }, row);
+};
+
+export const daoSharedMapTranslatedColumnsToJson = (
+  rows: any | any[] | null,
+  translatedColumns: string[]
+) => {
+  const config = getApiConfig();
+
+  if (
+    !Array.isArray(config?.activeLanguages) ||
+    config?.activeLanguages.length === 0
+  )
+    return rows;
+  if (!Array.isArray(translatedColumns) || translatedColumns.length === 0)
+    return rows;
+
+  if (rows)
+    if (Array.isArray(rows))
+      return rows.map((row) =>
+        daoSharedMapTranslatedColumnsToJsonProcessRow(
+          row,
+          translatedColumns,
+          config?.activeLanguages
+        )
+      );
+
+  return daoSharedMapTranslatedColumnsToJsonProcessRow(
+    rows,
+    translatedColumns,
+    config?.activeLanguages
+  );
+};
+
+export const daoSharedMapJsonToTranslatedColumns = (
+  data: any,
+  translatedColumns: string[]
+) => {
+  const config = getApiConfig();
+
+  if (
+    !Array.isArray(config?.activeLanguages) ||
+    config?.activeLanguages.length === 0
+  )
+    return data;
+
+  if (data)
+    return translatedColumns.reduce((processedData: any, column: any) => {
+      return config?.activeLanguages.reduce((j: any, lang: any) => {
+        let out = j;
+        if (column in processedData) {
+          if (isObject(processedData[column]) && processedData[column][lang]) {
+            out = {
+              ...out,
+              [`${column}_${lang}`]: processedData[column][lang],
+            };
+          }
+
+          delete out[`${column}`];
+        }
+        return out;
+      }, processedData);
+    }, data);
+
+  return data;
+};
 
 export const daoSharedCheckSlugUnique = async (
   findMany: Function,
   slug: Record<string, string>,
-  id?: number,
-  uniqueInObject?: boolean
+  uniqueInObject: boolean = true,
+  id?: number
 ): Promise<{ ok: boolean; errors: Record<string, boolean> }> => {
   let errors = {};
   let ok = false;
@@ -35,10 +133,7 @@ export const daoSharedCheckSlugUnique = async (
 
   // now test it with other object in the table
   const slugTests = Object.keys(slug).map((key) => ({
-    slug: {
-      path: [key],
-      equals: slug[key],
-    },
+    [`slug_${key}`]: slug[key],
   }));
 
   const terms = await findMany({
@@ -52,26 +147,24 @@ export const daoSharedCheckSlugUnique = async (
           }
         : {}),
     },
-    select: {
-      slug: true,
-    },
+    select: Object.keys(slug).reduce(
+      (acc, key) => ({
+        ...acc,
+        [`slug_${key}`]: true,
+      }),
+      {}
+    ),
   });
 
   if (terms) {
     // so there are other objects that have the same slug.
     // lets find the offending one slug.
-    errors = terms.reduce((errorsAcc: any, item: any) => {
-      if (!item.slug) return errorsAcc;
 
+    errors = terms.reduce((errorsAcc: any, item: any) => {
       return {
         ...errorsAcc,
         ...Object.keys(slug).reduce((acc, key: string) => {
-          if (
-            Object.keys(item?.slug ?? {}).find(
-              (testkey: string) =>
-                (item?.slug as Prisma.JsonObject)[testkey] === slug[key]
-            )
-          ) {
+          if (item[`slug_${key}`] === slug[key]) {
             return {
               ...acc,
               [key]: "This slug is already in use",
@@ -166,6 +259,7 @@ export const daoSharedWrapImageWithTranslationImage = (
 };
 
 const defaults = {
+  daoSharedMapTranslatedColumnsToJson,
   daoSharedGenerateFullText,
   daoSharedCheckSlugUnique,
 };

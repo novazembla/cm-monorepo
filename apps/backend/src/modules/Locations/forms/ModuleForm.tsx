@@ -282,6 +282,96 @@ export const ModuleForm = ({
       >
         <legend>
           <chakra.span px="2">
+            {t("module.locations.forms.field.label.contactInformation", "Contact Information")}
+          </chakra.span>
+        </legend>
+        <TwoColFieldRow>
+          <FieldRow>
+            <FieldInput
+              id="email1"
+              type="text"
+              name="email1"
+              label={t(
+                "module.locations.forms.field.label.email1",
+                "Email address (1)"
+              )}
+              isRequired={yupIsFieldRequired("email1", validationSchema)}
+              settings={{
+                placeholder: t(
+                  "locations.forms.field.placeholder.email",
+                  "petra.meier@contact.me"
+                ),
+              }}
+            />
+          </FieldRow>
+          <FieldRow>
+            <FieldInput
+              id="email2"
+              type="text"
+              name="email2"
+              label={t(
+                "module.locations.forms.field.label.email2",
+                "Email address (2)"
+              )}
+              isRequired={yupIsFieldRequired("email2", validationSchema)}
+              settings={{
+                placeholder: t(
+                  "locations.forms.field.placeholder.email",
+                  "petra.meier@contact.me"
+                ),
+              }}
+            />
+          </FieldRow>
+        </TwoColFieldRow>
+        <TwoColFieldRow>
+          <FieldRow>
+            <FieldInput
+              id="phone1"
+              type="text"
+              name="phone1"
+              label={t(
+                "module.locations.forms.field.label.phone1",
+                "Phone address (1)"
+              )}
+              isRequired={yupIsFieldRequired("phone1", validationSchema)}
+              settings={{
+                placeholder: t(
+                  "locations.forms.field.placeholder.phone",
+                  "+49327876780"
+                ),
+              }}
+            />
+          </FieldRow>
+          <FieldRow>
+            <FieldInput
+              id="phone2"
+              type="text"
+              name="phone2"
+              label={t(
+                "module.locations.forms.field.label.phone2",
+                "Phone address (2)"
+              )}
+              isRequired={yupIsFieldRequired("phone2", validationSchema)}
+              settings={{
+                placeholder: t(
+                  "locations.forms.field.placeholder.phone",
+                  "+49327876780"
+                ),
+              }}
+            />
+          </FieldRow>
+        </TwoColFieldRow>
+      </chakra.fieldset>
+      <Divider mt="10" />
+      <chakra.fieldset
+        border="1px solid"
+        borderColor="gray.400"
+        p="4"
+        borderRadius="md"
+        w="100%"
+      >
+        <legend>
+          <chakra.span px="2">
             {t(
               "module.locations.forms.location.geoloaction",
               "Location on map"
@@ -345,7 +435,7 @@ export const ModuleForm = ({
         )}
         isRequired={false}
         settings={{
-          defaultRequired: true,
+          defaultRequired: false,
           defaultValues: data?.locationRead?.accessibilityInformation,
           maxLength: 500,
           placeholder: t(

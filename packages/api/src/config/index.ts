@@ -106,6 +106,8 @@ export interface ApiConfig {
   geoCodingThrottle: number;
   eventImportUrl: string;
   eventImportScriptName: string;
+  activeLanguages: string[];
+  defaultLanguage: string;
 }
 
 export interface ApiConfigOverwrite {
@@ -131,6 +133,8 @@ export interface ApiConfigOverwrite {
   geoCodingThrottle?: number;
   eventImportUrl?: string;
   eventImportScriptName?: string;
+  activeLanguages?: string[];
+  defaultLanguage?: string;
 }
 const db: ApiConfigDB = {
   url: safeGuardVariable(
@@ -401,6 +405,8 @@ let apiConfig = {
   geoCodingRegions: ["DEU"],
   eventImportUrl: "https://www.berlin.de/land/kalender/json.php?c=5",
   eventImportScriptName: "import.berlin.de.js",
+  activeLanguages: ["de", "en"],
+  defaultLanguage: "de",
 };
 
 export const updateApiConfig = (aCfg: ApiConfigOverwrite) => {

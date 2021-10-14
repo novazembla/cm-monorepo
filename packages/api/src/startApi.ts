@@ -55,7 +55,7 @@ export const startApi = async () => {
           },
           {
             name: "dbConvertImages",
-            interval: process.env.NODE_ENV === "production" ? "37s" : "61s",
+            interval: process.env.NODE_ENV === "production" ? "37s" : "76s",
           },
           {
             name: "importCalendar",
