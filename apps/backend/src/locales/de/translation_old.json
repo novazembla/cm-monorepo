@@ -6,9 +6,6 @@
     "dashboard": {
       "title": "Dashboard"
     },
-    "tours": {
-      "title": "Tours"
-    },
     "locations": {
       "title": {
         "0": "L",
@@ -23,7 +20,7 @@
         "bold": "\u001b[1mLocations\u001b[22m",
         "strip": "Locations",
         "stripColors": "Locations",
-        "trap": "Ĺ۝ϾĄŦ༏ѺͶϟ",
+        "trap": "Ĺ\u06ddϾĄŦ༏ѺͶϟ",
         "zalgo": "Ḻ̖̰̰̥̹̎͌̏̿̄͗ͧ̿ͮ̏̀͜ŏ̴̸̸̢̄̍̋ͤͧ͌̈ͨ ҉̺̦͚͔̹̭̞̼̲͇̣͔͕̮̞ͅc̛͗ͩ̈ͤͧ̊̊̂͌ͬ̑̓͐ͬͯ̒̍̐́ ҉̩̭̖̪̬̝̭̰͙̜͍̱̲͓̯̺ͅͅaͦ̾̎ͧ͂̿ͥ͛͒̎̽̀ͫ̐ͣ̚̚ ҉̡̭͍̱̺̘͕̖͍̤͎̳̥͍̰̼̦͔̰͚͉͔̱̮̰̦̰̯̼̯͚̤͍̗̯̮̺̻̥̪͚̱̲͚͉͙̦͍͍́t̉͋͒͌̄͢ ҉̴̝͈̘̗̞͎̼̞̮̹̩̱͇̙̮̘̰͓̘̫̦̹͎̖̱̙̻͝͡ͅͅi͖̞̱̲͈͔ͦ͌ͬ͑́͡o̵̵̥͙̪̰͕̗̟̻̍̎͑ͧ̄ͫ͆͆͌͐̓̋̽̽n̨̲̩͎̜͓̦̺͓̙͇̪̝͕̗̟̘̩̦̙͚̳̫̭̲̘͍̭̯̫̳͕̗̻̰̟̯̥̻͓̲̝͈̪̯͔̩̔ͣ͗̓ͨ̄̒͐ͧ̀ͪ͛̈͜ͅs͐ͣ̅̋̾́͑́̿ͬͧ̈̆̇̓̏͒͑͊̕͠ ҉̩̱̥̭̯̤̭̞͕̺́",
         "zebra": "L\u001b[7mo\u001b[27mc\u001b[7ma\u001b[27mt\u001b[7mi\u001b[27mo\u001b[7mn\u001b[27ms",
         "rainbow": "\u001b[31mL\u001b[39m\u001b[33mo\u001b[39m\u001b[32mc\u001b[39m\u001b[34ma\u001b[39m\u001b[35mt\u001b[39m\u001b[31mi\u001b[39m\u001b[33mo\u001b[39m\u001b[32mn\u001b[39m\u001b[34ms\u001b[39m",
@@ -80,6 +77,28 @@
         "whiteBG": "\u001b[47mLocations\u001b[49m",
         "events": "Associated events",
         "associatedevents": "Associated events"
+      },
+      "forms": {
+        "field": {
+          "label": {
+            "author": "Author"
+          },
+          "placeholder": {
+            "author": "Please choose the location's author"
+          }
+        },
+        "location": {
+          "field": {
+            "label": {
+              "address": "Address",
+              "contactInfo": "Contact Information"
+            },
+            "placeholder": {
+              "address": "Location address",
+              "contactInfo": "Location contactInfo"
+            }
+          }
+        }
       }
     },
     "events": {
@@ -88,7 +107,26 @@
           "field": {
             "date": {
               "label": "Date"
+            },
+            "label": {
+              "descriptionLocation": "Event location Information"
+            },
+            "placeholder": {
+              "descriptionLocation": "Event loaction information (room, access, address, directions, ...)"
             }
+          },
+          "title": {
+            "actions": "Aktionen"
+          }
+        },
+        "field": {
+          "label": {
+            "author": "Author",
+            "location": "Location"
+          },
+          "placeholder": {
+            "author": "Please choose the event's author",
+            "location": "Please choose the event's location"
           }
         }
       }
@@ -99,6 +137,18 @@
       },
       "deleteimage": {
         "error": "Unfortunately, we could not process you deletion request please try again later"
+      }
+    },
+    "pages": {
+      "forms": {
+        "field": {
+          "label": {
+            "author": "Page author"
+          },
+          "placeholder": {
+            "author": "Please choose the pages's author"
+          }
+        }
       }
     }
   },
@@ -118,5 +168,70 @@
     "pleasedroporclick": "Drag & drop an image here, or click to select files",
     "uploading": "Uploading",
     "filetypenotaccepted": "You can't upload this file"
+  },
+  "events": {
+    "fields": {
+      "label": {
+        "id": "Id",
+        "status": "status",
+        "title": "title",
+        "slug": "Slug",
+        "actions": "Aktionen"
+      }
+    }
+  },
+  "locations": {
+    "fields": {
+      "label": {
+        "id": "Id",
+        "status": "status",
+        "title": "title",
+        "slug": "Slug",
+        "actions": "Aktionen"
+      }
+    }
+  },
+  "pages": {
+    "fields": {
+      "label": {
+        "id": "Id",
+        "title": "title",
+        "slug": "Slug",
+        "actions": "Aktionen"
+      }
+    }
+  },
+  "taxonomies": {
+    "fields": {
+      "label": {
+        "id": "Id",
+        "name": "Name",
+        "slug": "Slug",
+        "actions": "Aktionen"
+      }
+    }
+  },
+  "terms": {
+    "fields": {
+      "label": {
+        "id": "Id",
+        "name": "Name",
+        "slug": "Slug",
+        "actions": "Aktionen"
+      }
+    }
+  },
+  "users": {
+    "fields": {
+      "label": {
+        "id": "Id",
+        "actions": "Aktionen"
+      }
+    }
+  },
+  "import": {
+    "status": {
+      "rejected": "Processing"
+    }
   }
 }

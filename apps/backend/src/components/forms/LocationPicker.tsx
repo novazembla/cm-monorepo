@@ -338,7 +338,7 @@ export const LocationPicker = ({
         gap={{ base: "4", s: "6" }}
       >
         <Box>
-          <AspectRatio ratio={16 / 9}>
+          <AspectRatio ratio={16 / 9} border="1px solid" borderColor="gray.400" borderRadius="md">
             <Box w="100%" h="100%" ref={refMapContainer}></Box>
           </AspectRatio>
         </Box>

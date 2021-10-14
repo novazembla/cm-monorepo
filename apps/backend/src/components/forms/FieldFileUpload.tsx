@@ -50,6 +50,7 @@ const baseStyle = {
   w: "100%",
   h: "100px",
   borderWidth: 1,
+  borderRadius: "md",
   borderColor: "gray.400",
   borderStyle: "solid",
   bg: "gray.200",
@@ -102,10 +103,10 @@ export type FieldFileUploaderProgessInfo = {
 };
 
 export type FieldFileFormFunctions = {
-  clearErrors: Function
-  setUploadedFileId: Function
-  setValue: Function
-}
+  clearErrors: Function;
+  setUploadedFileId: Function;
+  setValue: Function;
+};
 
 const initialProgressInfo: FieldFileUploaderProgessInfo = {
   loaded: 0,
@@ -212,7 +213,11 @@ export const FieldFileUploader = ({
               headers: {
                 "Content-Type": "multipart/form-data",
                 ...(authentication.getAuthToken()
-                  ? { authorization: `Bearer ${authentication.getAuthToken()?.token}` }
+                  ? {
+                      authorization: `Bearer ${
+                        authentication.getAuthToken()?.token
+                      }`,
+                    }
                   : {}),
               },
               cancelToken,
@@ -227,7 +232,7 @@ export const FieldFileUploader = ({
                   });
               },
             })
-            .then(({ data }) => {
+            .then(({ data }: { data: any }) => {
               if (getCancelToken()) {
                 setIsUploading(false);
                 setfileIsDeleted(false);
@@ -235,7 +240,6 @@ export const FieldFileUploader = ({
                 if (setActiveUploadCounter)
                   setActiveUploadCounter((state: number) => state - 1);
 
-                
                 if (typeof onUpload === "function") {
                   onUpload.call(this, data, {
                     clearErrors,
@@ -299,9 +303,9 @@ export const FieldFileUploader = ({
 
   let currentFile: any =
     settings?.file && settings?.file?.id ? settings.file : {};
-  
+
   if (fileIsDeleted) currentFile = {};
-  
+
   const showFile = (currentFile && currentFile?.id) || !!uploadedFileId;
 
   const hasMin = settings?.minFileSize && settings?.minFileSize > 0;

@@ -114,7 +114,7 @@ const Index = () => {
     } as AdminTableColumn,
     {
       Cell: AdminTableMultiLangCell,
-      Header: t("table.label.title", "title"),
+      Header: t("table.label.title", "Title"),
       accessor: "title",
     } as AdminTableColumn,
     {

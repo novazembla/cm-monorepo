@@ -90,7 +90,7 @@ export const TourForm = ({
                 id="ownerId"
                 label={t(
                   "module.forms.field.label.author",
-                  "Tour author"
+                  "Author"
                 )}
                 isDisabled={
                   !(
@@ -178,6 +178,7 @@ export const TourForm = ({
         settings={{
           defaultRequired: true,
           defaultValues: data?.tourRead?.teaser,
+          maxLength: 200,
           placeholder: t(
             "module.tours.forms.tour.field.placeholder.teaser",
             "Tour listing teaser"

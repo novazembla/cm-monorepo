@@ -39,7 +39,7 @@ export const ModuleImportCreateForm = ({
           isRequired={true}
           settings={{
             placeholder: t(
-              "module.locations.forms.location.field.placeholder.title",
+              "module.locations.forms.import.field.placeholder.title",
               "Import title"
             ),
           }}

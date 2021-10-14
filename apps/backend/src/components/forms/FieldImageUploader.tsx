@@ -51,6 +51,7 @@ const baseStyle = {
   borderWidth: 1,
   borderColor: "gray.400",
   borderStyle: "solid",
+  borderRadius: "md",
   bg: "gray.200",
   color: "gray.800",
   outline: "none",
@@ -59,7 +60,7 @@ const baseStyle = {
   _hover: {
     boderColor: "gray.600",
     bg: "orange.200",
-  }
+  },
 };
 
 const activeStyle = {
@@ -111,7 +112,7 @@ export const FieldImageUploader = ({
   settings,
   id,
   label,
-  name, 
+  name,
   isRequired,
   isDisabled,
   canDelete = true,
@@ -205,7 +206,11 @@ export const FieldImageUploader = ({
               headers: {
                 "Content-Type": "multipart/form-data",
                 ...(authentication.getAuthToken()
-                  ? { authorization: `Bearer ${authentication.getAuthToken()?.token}` }
+                  ? {
+                      authorization: `Bearer ${
+                        authentication.getAuthToken()?.token
+                      }`,
+                    }
                   : {}),
               },
               cancelToken,
@@ -220,7 +225,7 @@ export const FieldImageUploader = ({
                   });
               },
             })
-            .then(({ data }) => {
+            .then(({ data }: { data: any }) => {
               if (getCancelToken()) {
                 setIsUploading(false);
                 setImageIsDeleted(false);
@@ -299,8 +304,8 @@ export const FieldImageUploader = ({
       "imageuploader.filesizebetween",
       "Size between {{minFileSize}} and {{maxFileSize}}",
       {
-        maxFileSize: humanFileSize(settings?.maxFileSize,1),
-        minFileSize: humanFileSize(settings?.minFileSize,1),
+        maxFileSize: humanFileSize(settings?.maxFileSize, 1),
+        minFileSize: humanFileSize(settings?.minFileSize, 1),
       }
     );
   } else if (hasMax) {
@@ -308,7 +313,7 @@ export const FieldImageUploader = ({
       "imageuploader.filesizebelow",
       "Size max. {{maxFileSize}}",
       {
-        maxFileSize: humanFileSize(settings?.maxFileSize,1),
+        maxFileSize: humanFileSize(settings?.maxFileSize, 1),
       }
     );
   } else if (hasMin) {
@@ -316,8 +321,8 @@ export const FieldImageUploader = ({
       "imageuploader.filesizeabove",
       "Size min. {{minFileSize}}",
       {
-        maxFileSize: humanFileSize(settings?.maxFileSize,1),
-        minFileSize: humanFileSize(settings?.minFileSize,1),
+        maxFileSize: humanFileSize(settings?.maxFileSize, 1),
+        minFileSize: humanFileSize(settings?.minFileSize, 1),
       }
     );
   }
@@ -380,24 +385,26 @@ export const FieldImageUploader = ({
               alt={settings?.image?.alt ?? ""}
               sizes={settings?.image?.sizes}
             />
-            {canDelete && (<IconButton
-              position="absolute"
-              top="3"
-              right="3"
-              fontSize="xl"
-              icon={<HiOutlineTrash />}
-              onClick={() => {
-                deleteButtonOnClick(uploadedImgId ?? currentImage?.id);
-              }}
-              aria-label={t(
-                "imageuploader.button.deleteimage",
-                "Delete profile image"
-              )}
-              title={t(
-                "imageuploader.button.deleteimage",
-                "Delete profile image"
-              )}
-            />)}
+            {canDelete && (
+              <IconButton
+                position="absolute"
+                top="3"
+                right="3"
+                fontSize="xl"
+                icon={<HiOutlineTrash />}
+                onClick={() => {
+                  deleteButtonOnClick(uploadedImgId ?? currentImage?.id);
+                }}
+                aria-label={t(
+                  "imageuploader.button.deleteimage",
+                  "Delete profile image"
+                )}
+                title={t(
+                  "imageuploader.button.deleteimage",
+                  "Delete profile image"
+                )}
+              />
+            )}
           </Box>
         )}
         {isDeleteError && (
@@ -430,7 +437,11 @@ export const FieldImageUploader = ({
               >
                 {(!isUploading || progressInfo.total < 0.01) && (
                   <>
-                    {showFileDropError && <Text color="white" fontWeight="bold">{fileDropErrorMessage}</Text>}
+                    {showFileDropError && (
+                      <Text color="white" fontWeight="bold">
+                        {fileDropErrorMessage}
+                      </Text>
+                    )}
                     {!showFileDropError && (
                       <Text w="90%">
                         {t(
@@ -440,11 +451,7 @@ export const FieldImageUploader = ({
                       </Text>
                     )}
 
-                    {fileSizeInfo && (
-                      <Text fontSize="sm">
-                        {fileSizeInfo}
-                      </Text>
-                    )}
+                    {fileSizeInfo && <Text fontSize="sm">{fileSizeInfo}</Text>}
                   </>
                 )}
 

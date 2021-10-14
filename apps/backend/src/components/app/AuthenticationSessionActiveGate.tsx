@@ -26,7 +26,7 @@ export const AuthenticationSessionActiveGate = ({
     if (!user.isLocalSessionValid()) {
       processLogout();
 
-      if (!publicRoutesPaths.includes(pathname)) history.push("/login");
+      if (!publicRoutesPaths.includes(pathname.endsWith('/') ? pathname.slice(0, -1) : pathname)) history.push("/login");
     } else {
       refreshToken();
     }

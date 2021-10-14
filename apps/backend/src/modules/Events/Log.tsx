@@ -125,7 +125,7 @@ const Log = () => {
     {
       type: "back",
       to: `${moduleRootPath}/logs`,
-      label: t("module.button.back", "Back"),
+      label: t("module.button.back", "Go back"),
       userCan: "eventRead",
     },
   ];
@@ -136,7 +136,7 @@ const Log = () => {
       <ModulePage isLoading={loading} isError={!!error}>
         
         <FieldRow>
-          <Box><b>{t("module.events.noImportErrors", "Date of import")}</b><br/>{date}</Box>
+          <Box><b>{t("module.events.importDate", "Date of import")}</b><br/>{date}</Box>
         </FieldRow>
         <FieldRow>
           <Box w="100%">

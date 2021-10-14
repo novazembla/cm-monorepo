@@ -6,9 +6,6 @@
     "dashboard": {
       "title": "Dashboard"
     },
-    "tours": {
-      "title": "Tours"
-    },
     "locations": {
       "title": {
         "0": "L",
@@ -80,6 +77,28 @@
         "whiteBG": "\u001b[47mLocations\u001b[49m",
         "events": "Associated events",
         "associatedevents": "Associated events"
+      },
+      "forms": {
+        "field": {
+          "label": {
+            "author": "Author"
+          },
+          "placeholder": {
+            "author": "Please choose the location's author"
+          }
+        },
+        "location": {
+          "field": {
+            "label": {
+              "address": "Address",
+              "contactInfo": "Contact Information"
+            },
+            "placeholder": {
+              "address": "Location address",
+              "contactInfo": "Location contactInfo"
+            }
+          }
+        }
       }
     },
     "events": {
@@ -88,7 +107,26 @@
           "field": {
             "date": {
               "label": "Date"
+            },
+            "label": {
+              "descriptionLocation": "Event location Information"
+            },
+            "placeholder": {
+              "descriptionLocation": "Event loaction information (room, access, address, directions, ...)"
             }
+          },
+          "title": {
+            "actions": "Actions"
+          }
+        },
+        "field": {
+          "label": {
+            "author": "Author",
+            "location": "Location"
+          },
+          "placeholder": {
+            "author": "Please choose the event's author",
+            "location": "Please choose the event's location"
           }
         }
       }
@@ -99,6 +137,18 @@
       },
       "deleteimage": {
         "error": "Unfortunately, we could not process you deletion request please try again later"
+      }
+    },
+    "pages": {
+      "forms": {
+        "field": {
+          "label": {
+            "author": "Page author"
+          },
+          "placeholder": {
+            "author": "Please choose the pages's author"
+          }
+        }
       }
     }
   },
@@ -118,5 +168,70 @@
     "pleasedroporclick": "Drag & drop an image here, or click to select files",
     "uploading": "Uploading",
     "filetypenotaccepted": "You can't upload this file"
+  },
+  "events": {
+    "fields": {
+      "label": {
+        "id": "Id",
+        "status": "status",
+        "title": "title",
+        "slug": "Slug",
+        "actions": "Actions"
+      }
+    }
+  },
+  "locations": {
+    "fields": {
+      "label": {
+        "id": "Id",
+        "status": "status",
+        "title": "title",
+        "slug": "Slug",
+        "actions": "Actions"
+      }
+    }
+  },
+  "pages": {
+    "fields": {
+      "label": {
+        "id": "Id",
+        "title": "title",
+        "slug": "Slug",
+        "actions": "Actions"
+      }
+    }
+  },
+  "taxonomies": {
+    "fields": {
+      "label": {
+        "id": "Id",
+        "name": "Name",
+        "slug": "Slug",
+        "actions": "Actions"
+      }
+    }
+  },
+  "terms": {
+    "fields": {
+      "label": {
+        "id": "Id",
+        "name": "Name",
+        "slug": "Slug",
+        "actions": "Actions"
+      }
+    }
+  },
+  "users": {
+    "fields": {
+      "label": {
+        "id": "Id",
+        "actions": "Actions"
+      }
+    }
+  },
+  "import": {
+    "status": {
+      "rejected": "Processing"
+    }
   }
 }

@@ -8,6 +8,8 @@ import { LeafletMapGeoman } from "../utils";
 import { useConfig } from "~/hooks";
 import { useTranslation } from "react-i18next";
 import { useFormContext } from "react-hook-form";
+// @ts-ignore
+import geoJSONLineLength from "geojson-length";
 
 export const TourPathEditor = ({
   tourStops,
@@ -25,7 +27,14 @@ export const TourPathEditor = ({
   const refMapContainer = useRef<HTMLDivElement>(null);
   const refMap = useRef<LeafletMapGeoman>();
 
-  const [, setGeoJSON] = useState({});
+  const [geoJSON, setGeoJSON] = useState<any>({});
+
+  let length = 0;
+  if (geoJSON && geoJSON?.features && Array.isArray(geoJSON?.features)) {
+    length = geoJSON.features.reduce((l: number, f:any) => {
+      return l + geoJSONLineLength(f.geometry);
+    }, 0)
+  }
 
   useEffect(() => {
     if (!window || !refMapContainer.current || refMap.current) return;
@@ -55,7 +64,7 @@ export const TourPathEditor = ({
       (bounds[0][1] + bounds[1][1]) / 2,
       13,
       config.mapStyleUrl ?? "",
-      i18n.language as any,
+      i18n.language as any
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -63,21 +72,19 @@ export const TourPathEditor = ({
   useEffect(() => {
     if (refMap.current) {
       refMap.current.setTourStops(tourStops);
-      refMap.current.loadGeoJson(
-        path
-      );
+      refMap.current.loadGeoJson(path);
     }
-    
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [refMap.current, JSON.stringify(path)])
+  }, [refMap.current, JSON.stringify(path)]);
 
   useEffect(() => {
     if (refMap.current) {
-      refMap.current.setTourStops(tourStops);      
+      refMap.current.setTourStops(tourStops);
     }
-    
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [refMap.current, JSON.stringify(tourStops)])
+  }, [refMap.current, JSON.stringify(tourStops)]);
 
   return (
     <Box>
@@ -85,8 +92,9 @@ export const TourPathEditor = ({
         {t("module.tour.heading.tourPath", "Tour path")}
       </Heading>
       <Box className="map" w="100%">
-        <Box className="editor">
+        <Box className="editor" position="relative">
           <Box className="mapcontainer" ref={refMapContainer}></Box>
+          <Box position="absolute" bottom="2" left="2" zIndex="9999" p="1" bg="#fff" borderRadius="md" border="1px solid" fontSize="sm" borderColor="gray.400">~{(length / 1000).toFixed(2)} km</Box>
         </Box>
       </Box>
       <input type="hidden" {...register(name)} />

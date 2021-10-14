@@ -92,7 +92,7 @@ const Logs = () => {
   const { t } = useTranslation();
   const [appUser] = useAuthentication();
   const [tableState, setTableState] = useLocalStorage(
-    `${moduleRootPath}/Index`,
+    `${moduleRootPath}/Logs`,
     intitalTableState
   );
 
@@ -128,7 +128,7 @@ const Logs = () => {
     {
       type: "back",
       to: moduleRootPath,
-      label: t("module.button.back", "Back"),
+      label: t("module.button.back", "Go back"),
       userCan: "eventRead",
     },
   ];

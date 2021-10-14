@@ -12,8 +12,8 @@ export const appConfig: AppConfigSettings = {
   enableOpenRegistration: false,
   enableProfilePicture: false,
   defaultPageSize: 30,
-  defaultLanguage: "en",
-  activeLanguages: ["en", "de"],
+  defaultLanguage: "de",
+  activeLanguages: ["de", "en"],
   settings: {}, // TODO: what else is needed?
 };
 export default appConfig;

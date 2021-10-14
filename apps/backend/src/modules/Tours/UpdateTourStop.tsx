@@ -159,8 +159,8 @@ const UpdateTourStop = () => {
           reset(
             {},
             {
-              keepValues: true,
-              keepDefaultValues: true,
+              keepDirty: false,
+              keepValues: true
             }
           );
         } else {

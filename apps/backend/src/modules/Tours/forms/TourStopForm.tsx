@@ -86,6 +86,7 @@ export const TourStopForm = ({
         isRequired={false}
         settings={{
           defaultRequired: true,
+          maxLength: 200,
           defaultValues: data?.tourStopRead?.teaser,
           placeholder: t(
             "module.tours.forms.tourStop.field.placeholder.teaser",

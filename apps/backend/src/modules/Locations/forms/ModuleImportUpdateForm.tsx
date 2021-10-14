@@ -177,7 +177,7 @@ export const ModuleImportUpdateForm = ({
           ].includes(importRead.status)}
           settings={{
             placeholder: t(
-              "module.locations.forms.location.field.placeholder.title",
+              "module.imports.forms.import.field.placeholder.title",
               "Import title"
             ),
           }}

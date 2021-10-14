@@ -181,8 +181,8 @@ const Update = () => {
           reset(
             {},
             {
-              keepValues: true,
-              keepDefaultValues: true,
+              keepDirty: false,
+              keepValues: true
             }
           );
         } else {

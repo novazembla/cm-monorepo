@@ -3,15 +3,15 @@ import tranlationDe from "~/locales/de/translation.json";
 
 // TODO: this should be configurable via the appconfig.ts
 
-export const defaultLanguage = process.env.REACT_APP_DEFAULT_LANGUAGE ?? "en";
-export const activeLanguages = ["en", "de"]; // these are the active lanugages in the system
+export const defaultLanguage = process.env.REACT_APP_DEFAULT_LANGUAGE ?? "de";
+export const activeLanguages = ["de","en"]; // these are the active lanugages in the system, order defined the display of elements
 
 export const resources = {
-  en: {
-    translation: tranlationEn,
-  },
   de: {
     translation: tranlationDe,
+  },
+  en: {
+    translation: tranlationEn,
   },
 };
 const config = {

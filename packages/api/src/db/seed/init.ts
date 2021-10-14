@@ -4,7 +4,6 @@ import Prisma from "@prisma/client";
 import bcrypt from "bcrypt";
 
 import { LoremIpsum } from "lorem-ipsum";
-import type { Address } from "../../types";
 
 const { PrismaClient } = Prisma;
 

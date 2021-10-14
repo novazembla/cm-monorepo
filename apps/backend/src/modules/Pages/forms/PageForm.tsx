@@ -53,7 +53,7 @@ export const PageForm = ({
                 id="ownerId"
                 label={t(
                   "module.forms.field.label.author",
-                  "Page author"
+                  "Author"
                 )}
                 isDisabled={
                   !(

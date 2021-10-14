@@ -12,6 +12,7 @@ export const ModulePageCreateSchema = object().shape(
         .lowercase()
         .matches(/^[a-z\-\d]+$/, "validation.slug.invalidcharacters")
         .required(),
+      [`intro_${lang}`]: string(),
       [`content_${lang}`]:
         lang === defaultLanguage
           ? string().nonEmptyHtml().required()

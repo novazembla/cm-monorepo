@@ -9,8 +9,8 @@ export interface i18nTranslationProps {
   length?: number;
   less?: number;
   more?: number;
-  min?: number;
-  max?: number;
+  min?: number | Date | string;
+  max?: number | Date | string;
   regex?: RegExp;
 }
 

@@ -14,8 +14,9 @@ export const ModuleTourSchemaCreate = object().shape(
         .required(),
       [`teaser_${lang}`]:
         lang === defaultLanguage
-          ? string().nonEmptyHtml().required()
-          : string(),
+          ? string().nonEmptyHtml({ max: 200 }).required()
+          : string().html({ max: 200 }),
+
       [`description_${lang}`]:
         lang === defaultLanguage
           ? string().nonEmptyHtml().required()
@@ -63,9 +64,9 @@ export const ModuleTourStopCreateSchema = object().shape(
       ...acc,
       [`title_${lang}`]: string().required(),
       [`teaser_${lang}`]:
-        lang === defaultLanguage
-          ? string().nonEmptyHtml().required()
-          : string(),
+      lang === defaultLanguage
+        ? string().nonEmptyHtml({ max: 200 }).required()
+        : string().html({ max: 200 }),
       [`description_${lang}`]:
         lang === defaultLanguage
           ? string().nonEmptyHtml().required()
@@ -73,7 +74,9 @@ export const ModuleTourStopCreateSchema = object().shape(
     }),
     {
       // t("validation.slug.chooselocation", "Please choose a location")
-      locationId: number().typeError("validation.slug.chooselocation").required(),
+      locationId: number()
+        .typeError("validation.slug.chooselocation")
+        .required(),
       path: string(),
     }
   )

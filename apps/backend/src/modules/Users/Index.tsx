@@ -44,7 +44,7 @@ const Index = () => {
   const { t } = useTranslation();
   const [appUser] = useAuthentication();
   const [tableState, setTableState] = useLocalStorage(
-    `table${moduleRootPath}`,
+    `table${moduleRootPath}/Index`,
     intitalTableState
   );
 

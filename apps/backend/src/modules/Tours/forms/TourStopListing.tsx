@@ -119,7 +119,7 @@ export const TourStopListing = ({
               fontSize="md"
               color="gray.800"
             >
-              {t("module.tour.table.tourstops.title", "Number")}
+              {t("module.tour.table.tourstops.number", "Number")}
             </Th>
             <Th pl="0" borderColor="gray.300" fontSize="md" color="gray.800">
               {t("module.tour.table.tourstops.title", "Title")}

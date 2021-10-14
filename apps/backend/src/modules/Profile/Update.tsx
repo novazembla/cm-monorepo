@@ -70,9 +70,10 @@ const Update = () => {
   const {
     handleSubmit,
     reset,
-    formState: { isSubmitting, isDirty },
+    formState: { isSubmitting, isDirty, dirtyFields },
   } = formMethods;
 
+  
   useEffect(() => {
     reset(
       filteredOutputByWhitelist(data?.userProfileRead, [
@@ -113,8 +114,8 @@ const Update = () => {
           reset(
             {},
             {
-              keepValues: true,
-              keepDefaultValues: true,
+              keepDirty: false,
+              keepValues: true
             }
           );
         } else {

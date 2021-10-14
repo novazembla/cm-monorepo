@@ -40,6 +40,50 @@
     "close": "Close menu",
     "open": "Open menu"
   },
+  "forms": {
+    "select": {
+      "autocomplete": {
+        "search": {
+          "notfound": "Nothing found",
+          "loading": "Serching the database"
+        },
+        "clearselection": "Clear selected element"
+      }
+    },
+    "field": {
+      "label": {
+        "locationPickerSearch": "Search",
+        "location": "Location"
+      },
+      "placeholder": {
+        "locationPickerSearch": "Please enter an address to search",
+        "locationsearch": "Please enter the location's title"
+      }
+    },
+    "heroImage": {
+      "label": "Featured image"
+    }
+  },
+  "fileuploader": {
+    "filesizebetween": "Size between {{minFileSize}} and {{maxFileSize}}",
+    "filesizebelow": "Size max. {{maxFileSize}}",
+    "filesizeabove": "Size min. {{minFileSize}}",
+    "droperror": {
+      "toolarge": "Chosen file is too large",
+      "toosmall": "Chosen file is too small",
+      "invalidtype": "Type of chosen file is not accepted"
+    },
+    "button": {
+      "deletefile": "Delete file"
+    },
+    "deletefile": {
+      "error": "Unfortunately, we could not process you deletion request please try again later"
+    },
+    "pleasedroporclick": "Drag & drop an file here, or click to select one",
+    "uploading": "Uploading",
+    "cancelupload": "Cancel upload",
+    "error": "Unfortunately, we could not finish you upload please try again later"
+  },
   "imageuploader": {
     "filesizebetween": "Size between {{minFileSize}} and {{maxFileSize}}",
     "filesizebelow": "Size max. {{maxFileSize}}",
@@ -68,121 +112,30 @@
       }
     }
   },
-  "PublishStatus": {
-    "select": {
-      "label": "Publish status",
-      "placeholder": "Please choose a publish status"
-    }
-  },
-  "publish": {
-    "status": {
-      "draft": "Draft",
-      "forreview": "For review",
-      "rejected": "Rejected",
-      "published": "Published",
-      "trashed": "Trashed",
-      "unknown": "Unknown",
-      "autodraft": "Draft"
-    }
-  },
-  "form": {
-    "datepicker": {
-      "close": "close"
-    },
-    "image": {
-      "label": {
-        "image": "Image",
-        "alttext": "Alternative text",
-        "credits": "Copyright information"
-      }
-    },
-    "unsavedchanges": "It looks like you've unsaved changes. Leave without saving?",
-    "geolocation": {
-      "lat": {
-        "label": "Latitude"
-      },
-      "lng": {
-        "label": "Longitude"
-      }
-    },
-    "error": {
-      "notCorrectLatitude": "This seems not to be a latitiude value",
-      "notCorrectLongitude": "This seems not to be a longitude value"
-    },
-    "info": {
-      "pleasesafedraft": "Please save a draft to unlock further functionality"
-    }
-  },
-  "editor": {
-    "button": {
-      "save": "Save",
-      "cancel": "Cancel",
-      "unbold": "Remove bold text format",
-      "bold": "Format text bold",
-      "unitalic": "Remove italic text format",
-      "italic": "Format text italic",
-      "addNewLine": "Add a new line",
-      "clearFormatting": "Clear Formatting",
-      "undo": "Undo",
-      "redo": "Redo",
-      "link": "Add link",
-      "unlink": "Remove link"
-    },
-    "link": {
-      "label": {
-        "url": "Url"
-      },
-      "url": "https://..."
-    },
-    "count": {
-      "characters": "{{count}}/{{maxLength}} characters",
-      "characters_plural": "{{count}}/{{maxLength}} characters"
-    }
-  },
-  "alert": {
-    "emailnotverfied": {
-      "title": "You have not confirmed your email address, yet. ",
-      "info": "Please check your inbox and follow the link provided in the email. In case the email didn't come through you can request another email by clicking the button.",
-      "requresterrorinfo": "Something went wrong. Please try again in a little bit.",
-      "requrestsuccessinfo": "We've sent you another email. Please check your inbox.",
-      "button": "Request verification email"
-    }
-  },
-  "general": {
-    "error": {
-      "title": "We are sorry",
-      "requestfailed": "The request has failed. Please try again."
-    },
-    "success": {
-      "title": "Thank you!"
-    },
-    "readerror": {
-      "desc": "Something went wrong and the needed information could not be loaded. Please try again later"
-    },
-    "writeerror": {
-      "desc": "Something went wrong and the needed information could not be processed. Please try again later"
-    }
-  },
-  "http": {
-    "error": {
-      "403": {
-        "title": "Access denied",
-        "explanation": "You don't have permission to see this page."
-      },
-      "404": {
-        "title": "Not found",
-        "explanation": "The requested URL could not be found.",
-        "backtohome": "Go back to home screen"
-      }
-    }
-  },
   "module": {
+    "forms": {
+      "taxonomy": {
+        "label": {
+          "primaryTerm": "(primary term)",
+          "choosePrimaryTerm": "Please choose the primary term"
+        }
+      },
+      "field": {
+        "label": {
+          "author": "Tour author"
+        },
+        "placeholder": {
+          "author": "Please choose the author"
+        }
+      }
+    },
     "button": {
       "cancel": "Cancel",
       "update": "Update",
       "savedraft": "Save draft",
-      "save": "Save",
-      "back": "Go back"
+      "back": "Go back",
+      "import": "Schedule import",
+      "save": "Save"
     },
     "users": {
       "deletealter": {
@@ -204,6 +157,8 @@
               "lastName": "Last Name",
               "email": "Email Address",
               "role": "User role",
+              "ownsEventImports": "Owns newly created imported events",
+              "ownsConentOnDelete": "This user will take over ownership of deleted users' content",
               "userBanned": "Ban user on the platform"
             },
             "placeholder": {
@@ -237,32 +192,22 @@
     "events": {
       "title": "Events",
       "menuitem": {
-        "createevent": "Add new event"
+        "createevent": "Add new event",
+        "importLogs": "Import Logs",
+        "importLog": "Log"
       },
       "forms": {
-        "field": {
-          "label": {
-            "author": "Author",
-            "location": "Location"
-          },
-          "placeholder": {
-            "author": "Please choose the event's author",
-            "location": "Please choose the event's location"
-          }
-        },
         "event": {
           "field": {
             "label": {
               "title": "Title",
               "slug": "Slug",
-              "description": "Description",
-              "descriptionLocation": "Event location Information"
+              "description": "Description"
             },
             "placeholder": {
               "title": "Event title",
               "slug": "Slug / URL part",
-              "description": "Event description",
-              "descriptionLocation": "Event loaction information (room, access, address, directions, ...)"
+              "description": "Event description"
             },
             "date": {
               "placeholder": "Date"
@@ -287,9 +232,12 @@
                 "label": "End"
               }
             }
-          },
-          "title": {
-            "actions": "Actions"
+          }
+        },
+        "field": {
+          "label": {
+            "isFree": "This event is free",
+            "isImported": "This event is automatically imported and updated"
           }
         },
         "eventdates": {
@@ -306,8 +254,12 @@
       "button": {
         "create": "Add new event",
         "edit": "Edit event",
-        "delete": "Delete event"
+        "delete": "Delete event",
+        "viewLog": "View log"
       },
+      "importDate": "Date of import",
+      "noImportErrors": "No import errors",
+      "noImportWarnings": "No import warnings",
       "event": {
         "title": {
           "updatepage": "Update event"
@@ -315,17 +267,32 @@
       }
     },
     "locations": {
-      "title": "Locations",
       "menuitem": {
-        "createlocation": "Add new location"
+        "importLogs": "Import Logs",
+        "createlocation": "Add new location",
+        "imports": "Imports",
+        "createimport": "Add new import"
       },
       "forms": {
-        "field": {
-          "label": {
-            "author": "Author"
+        "import": {
+          "errors": "Errors",
+          "warnings": "Warnings",
+          "log": "Log",
+          "field": {
+            "label": {
+              "title": "Title",
+              "csv": "CSV File"
+            },
+            "placeholder": {
+              "title": "Import title"
+            }
           },
-          "placeholder": {
-            "author": "Please choose the location's author"
+          "select": "Select target column",
+          "mapping": {
+            "title": "CSV column(s) to database columns mapping",
+            "columCSV": "Header in CSV",
+            "firstRow": "Example (1st row in CSV)",
+            "columnInDb": "Column in DB"
           }
         },
         "location": {
@@ -333,31 +300,65 @@
             "label": {
               "title": "Title",
               "slug": "Slug",
-              "address": "Address",
               "description": "Description",
-              "contactInfo": "Contact Information",
-              "offers": "Offers"
+              "offers": "Offers",
+              "accessibilityInformation": "Accessibility Information"
             },
             "placeholder": {
               "title": "Location title",
               "slug": "Slug / URL part",
-              "address": "Location address",
               "description": "Location description",
-              "contactInfo": "Location contactInfo",
-              "offers": "Location offers"
+              "offers": "Location offers",
+              "accessibilityInformation": "Location accessibilityInformation",
+              "csvfile": "Upload CSV"
             }
+          },
+          "geoloaction": "Location on map"
+        },
+        "field": {
+          "label": {
+            "address": "Address",
+            "street1": "Street (1)",
+            "houseNumber": "House Number",
+            "street2": "Street (2)",
+            "co": "C/O",
+            "postCode": "Post Code",
+            "city": "City",
+            "socialMedia": "Website/Social Media",
+            "website": "Website",
+            "facebook": "Facebook page",
+            "instagram": "Instagram",
+            "twitter": "Twitter",
+            "youtube": "YouTube",
+            "additionalInformation": "Additional Information",
+            "agency": "Agency",
+            "eventLocationId": "berlin.de Event Location ID"
           }
+        }
+      },
+      "title": "Locations",
+      "import": {
+        "button": {
+          "create": "New import",
+          "edit": "Edit import",
+          "delete": "Delete import"
+        }
+      },
+      "imports": {
+        "title": "Imports",
+        "requiredMissing": "The following required columns are not assigned: ",
+        "assignColumnsToTriggerImport": "To be able to schedule the import you need to assign all (required) columns",
+        "importIsProcessing": "Your import is being processed on the server."
+      },
+      "location": {
+        "title": {
+          "updatepage": "Update location"
         }
       },
       "button": {
         "create": "Add new location",
         "edit": "Edit location",
         "delete": "Delete location"
-      },
-      "location": {
-        "title": {
-          "updatepage": "Update location"
-        }
       },
       "associatedevents": {
         "title": "Associated events"
@@ -373,6 +374,17 @@
       },
       "noasscoiatedevents": "No associated events"
     },
+    "imports": {
+      "forms": {
+        "import": {
+          "field": {
+            "placeholder": {
+              "title": "Import title"
+            }
+          }
+        }
+      }
+    },
     "pages": {
       "title": "Pages",
       "page": {
@@ -382,24 +394,18 @@
         }
       },
       "forms": {
-        "field": {
-          "label": {
-            "author": "Page author"
-          },
-          "placeholder": {
-            "author": "Please choose the pages's author"
-          }
-        },
         "page": {
           "field": {
             "label": {
               "title": "Title",
               "slug": "Slug",
+              "intro": "Intro",
               "content": "Content"
             },
             "placeholder": {
               "title": "Page title",
               "slug": "Slug / URL part",
+              "intro": "Page's introduction block",
               "content": "Page content"
             }
           }
@@ -474,6 +480,21 @@
         "field": {
           "modules": {
             "label": "Active for the following Modules"
+          },
+          "hasColor": {
+            "label": "Show color fields"
+          },
+          "collectPrimaryTerm": {
+            "label": "Show primary term select element"
+          },
+          "isRequired": {
+            "label": "Selection of at least one term is required"
+          },
+          "color": {
+            "label": "Color (light)"
+          },
+          "colorDark": {
+            "label": "Color (dark)"
           }
         }
       },
@@ -490,6 +511,191 @@
         "create": "Add new term",
         "edit": "Edit term",
         "delete": "Delete term"
+      }
+    },
+    "tours": {
+      "title": "Tours",
+      "page": {
+        "title": {
+          "createtax": "Add new tour",
+          "createtourStop": "New Tour Stop",
+          "updatetour": "Update tour",
+          "updateTourStop": "Update tour stop"
+        }
+      },
+      "forms": {
+        "tour": {
+          "field": {
+            "label": {
+              "title": "Title",
+              "slug": "Slug",
+              "duration": "Duration",
+              "distance": "Distance",
+              "teaser": "Intro",
+              "description": "Description"
+            },
+            "placeholder": {
+              "title": "Tour name",
+              "slug": "Slug / URL part",
+              "duration": "1 hr",
+              "distance": "3 Kilometer",
+              "teaser": "Tour listing teaser",
+              "description": "Full tour description"
+            }
+          }
+        },
+        "tourStop": {
+          "field": {
+            "label": {
+              "title": "Title",
+              "teaser": "Intro",
+              "description": "Description"
+            },
+            "placeholder": {
+              "title": "Tour stop name",
+              "teaser": "Tour stop listing teaser",
+              "description": "Full tour stop description"
+            }
+          }
+        }
+      },
+      "button": {
+        "create": "Add new tour",
+        "edit": "Edit tour",
+        "view": "View tour tourStops",
+        "delete": "Delete tour"
+      }
+    },
+    "tour": {
+      "heading": {
+        "tourPath": "Tour path",
+        "tourStops": "Tour stops"
+      },
+      "table": {
+        "tourstops": {
+          "delete": "Delete tour stop",
+          "update": "Update tour stop",
+          "number": "Number",
+          "title": "Title",
+          "empty": "This tour has currently no stops.",
+          "button": {
+            "add": "Add tour stop"
+          }
+        }
+      }
+    }
+  },
+  "PublishStatus": {
+    "select": {
+      "label": "Publish status",
+      "placeholder": "Please choose a publish status"
+    }
+  },
+  "publish": {
+    "status": {
+      "imported": "Imported",
+      "importedwarning": "Imported with warning(s)",
+      "draft": "Draft",
+      "forreview": "For review",
+      "rejected": "Rejected",
+      "published": "Published",
+      "trashed": "Trashed",
+      "unknown": "Unknown",
+      "autodraft": "Draft",
+      "importedwrning": "Imported with warning(s)"
+    }
+  },
+  "form": {
+    "datepicker": {
+      "close": "close"
+    },
+    "image": {
+      "label": {
+        "image": "Image",
+        "alttext": "Alternative text",
+        "credits": "Copyright information"
+      }
+    },
+    "unsavedchanges": "It looks like you've unsaved changes. Leave without saving?",
+    "geolocation": {
+      "lat": {
+        "label": "Latitude"
+      },
+      "lng": {
+        "label": "Longitude"
+      },
+      "button": {
+        "reset": "Reset"
+      }
+    },
+    "error": {
+      "notCorrectLatitude": "This seems not to be a latitiude value",
+      "notCorrectLongitude": "This seems not to be a longitude value"
+    },
+    "info": {
+      "pleasesafedraft": "Please save a draft to unlock further functionality"
+    }
+  },
+  "editor": {
+    "button": {
+      "save": "Save",
+      "cancel": "Cancel",
+      "unbold": "Remove bold text format",
+      "bold": "Format text bold",
+      "unitalic": "Remove italic text format",
+      "italic": "Format text italic",
+      "addNewLine": "Add a new line",
+      "clearFormatting": "Clear Formatting",
+      "undo": "Undo",
+      "redo": "Redo",
+      "link": "Add link",
+      "unlink": "Remove link"
+    },
+    "link": {
+      "label": {
+        "url": "Url"
+      },
+      "url": "https://..."
+    },
+    "count": {
+      "characters": "{{count}}/{{maxLength}} characters",
+      "characters_plural": "{{count}}/{{maxLength}} characters"
+    }
+  },
+  "alert": {
+    "emailnotverfied": {
+      "title": "You have not confirmed your email address, yet. ",
+      "info": "Please check your inbox and follow the link provided in the email. In case the email didn't come through you can request another email by clicking the button.",
+      "requresterrorinfo": "Something went wrong. Please try again in a little bit.",
+      "requrestsuccessinfo": "We've sent you another email. Please check your inbox.",
+      "button": "Request verification email"
+    }
+  },
+  "general": {
+    "error": {
+      "title": "We are sorry",
+      "requestfailed": "The request has failed. Please try again."
+    },
+    "success": {
+      "title": "Thank you!"
+    },
+    "readerror": {
+      "desc": "Something went wrong and the needed information could not be loaded. Please try again later"
+    },
+    "writeerror": {
+      "desc": "Something went wrong and the needed information could not be processed. Please try again later"
+    }
+  },
+  "http": {
+    "error": {
+      "403": {
+        "title": "Access denied",
+        "explanation": "You don't have permission to see this page."
+      },
+      "404": {
+        "title": "Not found",
+        "explanation": "The requested URL could not be found.",
+        "backtohome": "Go back to home screen"
       }
     }
   },
@@ -510,6 +716,10 @@
     },
     "changepagesize": "{{pageSize}} per page"
   },
+  "apifile": {
+    "fileUploadedWithFilename": "File uploaded and saved with the file name:",
+    "linkDownload": "download"
+  },
   "apiimage": {
     "errormsg": "The image could unfortunately not be processed. Please try uploading again.",
     "processsing": "Image successful uploaded. We are processing it now",
@@ -523,6 +733,9 @@
   },
   "translationnotfound": "Trans. not found",
   "settings": {
+    "nameofyoursetting": {
+      "label": "Label"
+    },
     "error": {
       "label": "No label translation key has been defined"
     },
@@ -589,7 +802,9 @@
       "minOneItem": "Please select at least one item"
     },
     "slug": {
-      "invalidcharacters": "You can only use A-Z, -, and numbers"
+      "invalidcharacters": "You can only use A-Z, -, and numbers",
+      "chooselocation": "Please choose a location",
+      "notahexcolor": "Please provide a valid HEX color (like #a8f or #f9ad9f"
     },
     "page": {
       "login": {
@@ -622,41 +837,46 @@
       "datadeleted": "The data has been deleted"
     }
   },
-  "forms": {
-    "heroImage": {
-      "label": "Featured image"
+  "table": {
+    "label": {
+      "actions": "Actions",
+      "id": "Id",
+      "status": "status",
+      "title": "Title",
+      "date": "date",
+      "errors": "Errors",
+      "warnings": "Warnings",
+      "name": "Name"
     }
   },
-  "events": {
-    "fields": {
-      "label": {
-        "id": "Id",
-        "status": "status",
-        "title": "title",
-        "slug": "Slug",
-        "actions": "Actions"
-      }
-    }
-  },
+  "copied": "Copied",
+  "copy": "Copy",
   "locations": {
-    "fields": {
-      "label": {
-        "id": "Id",
-        "status": "status",
-        "title": "title",
-        "slug": "Slug",
-        "actions": "Actions"
+    "forms": {
+      "field": {
+        "placeholder": {
+          "street1": "Street (1)",
+          "houseNumber": "126a",
+          "street2": "Street (2)",
+          "co": "C/O ...",
+          "postCode": "Post code",
+          "city": "City",
+          "url": "https://....",
+          "agency": "Agency",
+          "eventLocationId": "berlin.de Event Location ID"
+        }
       }
     }
   },
-  "pages": {
-    "fields": {
-      "label": {
-        "id": "Id",
-        "title": "title",
-        "slug": "Slug",
-        "actions": "Actions"
-      }
+  "import": {
+    "status": {
+      "autodraft": "CSV DATA NEEDED",
+      "forreview": "Assign columns",
+      "scheduled": "Scheduled",
+      "processing": "Processing",
+      "published": "Processed",
+      "error": "Error",
+      "trashed": "Trashed"
     }
   },
   "page": {
@@ -728,24 +948,24 @@
       "back_to_login": "Back to login"
     }
   },
+  "tablae": {
+    "label": {
+      "id": "Id",
+      "name": "Name",
+      "slug": "Slug"
+    }
+  },
   "taxonomies": {
     "fields": {
       "label": {
-        "id": "Id",
-        "name": "Name",
-        "slug": "Slug",
-        "termCount": "Number of terms",
-        "actions": "Actions"
+        "termCount": "Number of terms"
       }
     }
   },
-  "terms": {
+  "tours": {
     "fields": {
       "label": {
-        "id": "Id",
-        "name": "Name",
-        "slug": "Slug",
-        "actions": "Actions"
+        "tourStopCount": "Tour Stops"
       }
     }
   },
@@ -758,13 +978,11 @@
   "users": {
     "fields": {
       "label": {
-        "id": "Id",
         "firstName": "First Name",
         "lastName": "Last name",
         "email": "Email",
         "email verified": "Email verified",
-        "role": "Role",
-        "actions": "Actions"
+        "role": "Role"
       }
     },
     "field": {

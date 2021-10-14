@@ -54,12 +54,12 @@ export const AdminTableImportStatusCell = (cell: Cell) => {
 
   if (cell.value === ImportStatus.PROCESS) {
     color = "cyan";
-    label = t("import.status.rejected", "Scheduled");
+    label = t("import.status.scheduled", "Scheduled");
   }
 
   if (cell.value === ImportStatus.PROCESSING) {
     color = "cyan";
-    label = t("import.status.rejected", "Processing");
+    label = t("import.status.processing", "Processing");
   }
 
   if (cell.value === ImportStatus.PROCESSED) {
@@ -114,7 +114,7 @@ const Import = () => {
   const { t } = useTranslation();
   const [appUser] = useAuthentication();
   const [tableState, setTableState] = useLocalStorage(
-    `${moduleRootPath}/Index`,
+    `${moduleRootPath}/Import`,
     intitalTableState
   );
 
@@ -185,7 +185,7 @@ const Import = () => {
     } as AdminTableColumn,
     {
       Cell: AdminTableMultiLangCell,
-      Header: t("table.label.title", "title"),
+      Header: t("table.label.title", "Title"),
       accessor: "title",
     } as AdminTableColumn,
     {
