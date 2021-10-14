@@ -168,9 +168,6 @@ export interface NexusGenInputs {
     teaser: NexusGenScalars['JSON']; // JSON!
     title: NexusGenScalars['JSON']; // JSON!
   }
-  UniqueSlugInput: { // input type
-    slug: NexusGenScalars['JSON']; // JSON!
-  }
   UserCreateInput: { // input type
     acceptedTerms: boolean; // Boolean!
     email: string; // String!
@@ -466,10 +463,6 @@ export interface NexusGenObjects {
     totalCount?: number | null; // Int
     tourStops?: Array<NexusGenRootTypes['TourStop'] | null> | null; // [TourStop]
   }
-  UniqueSlugResult: { // root type
-    errors?: NexusGenScalars['JSON'] | null; // JSON
-    ok: boolean; // Boolean!
-  }
   User: { // root type
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
     email?: NexusGenScalars['EmailAddress'] | null; // EmailAddress
@@ -751,7 +744,6 @@ export interface NexusGenFieldTypes {
     tour: NexusGenRootTypes['Tour']; // Tour!
     tourStopRead: NexusGenRootTypes['TourStop']; // TourStop!
     tours: NexusGenRootTypes['TourQueryResult'] | null; // TourQueryResult
-    uniqueSlug: NexusGenRootTypes['UniqueSlugResult'] | null; // UniqueSlugResult
     userProfileRead: NexusGenRootTypes['ProfileUser']; // ProfileUser!
     userRead: NexusGenRootTypes['User']; // User!
     users: NexusGenRootTypes['UsersQueryResult'] | null; // UsersQueryResult
@@ -850,10 +842,6 @@ export interface NexusGenFieldTypes {
   TourStopQueryResult: { // field return type
     totalCount: number | null; // Int
     tourStops: Array<NexusGenRootTypes['TourStop'] | null> | null; // [TourStop]
-  }
-  UniqueSlugResult: { // field return type
-    errors: NexusGenScalars['JSON'] | null; // JSON
-    ok: boolean; // Boolean!
   }
   User: { // field return type
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
@@ -1133,7 +1121,6 @@ export interface NexusGenFieldTypeNames {
     tour: 'Tour'
     tourStopRead: 'TourStop'
     tours: 'TourQueryResult'
-    uniqueSlug: 'UniqueSlugResult'
     userProfileRead: 'ProfileUser'
     userRead: 'User'
     users: 'UsersQueryResult'
@@ -1232,10 +1219,6 @@ export interface NexusGenFieldTypeNames {
   TourStopQueryResult: { // field return type name
     totalCount: 'Int'
     tourStops: 'TourStop'
-  }
-  UniqueSlugResult: { // field return type name
-    errors: 'JSON'
-    ok: 'Boolean'
   }
   User: { // field return type name
     createdAt: 'DateTime'
@@ -1537,11 +1520,6 @@ export interface NexusGenArgTypes {
       pageIndex?: number | null; // Int
       pageSize: number | null; // Int
       where?: NexusGenScalars['JSON'] | null; // JSON
-    }
-    uniqueSlug: { // args
-      data: NexusGenInputs['UniqueSlugInput']; // UniqueSlugInput!
-      id: number; // Int!
-      type: string; // String!
     }
     userProfileRead: { // args
       id: number; // Int!

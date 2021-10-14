@@ -167,8 +167,8 @@ export const UserQueries = extendType({
         roles: nonNull(list(stringArg())),
       },
 
-      // authorize: (...[, , ctx]) =>
-      //   authorizeApiUser(ctx, "accessAsAuthenticatedUser"),
+      authorize: (...[, , ctx]) =>
+        authorizeApiUser(ctx, "accessAsAuthenticatedUser"),
 
       async resolve(...[, args]) {
         const users = await daoUserQuery(

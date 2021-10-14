@@ -371,7 +371,6 @@ type Query {
   tour(id: Int, slug: String): Tour!
   tourStopRead(id: Int!): TourStop!
   tours(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): TourQueryResult
-  uniqueSlug(data: UniqueSlugInput!, id: Int!, type: String!): UniqueSlugResult
   userProfileRead(id: Int!, scope: String!): ProfileUser!
   userRead(id: Int!, scope: String!): User!
   users(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): UsersQueryResult
@@ -549,15 +548,6 @@ input TourUpsertInput {
   status: Int!
   teaser: JSON!
   title: JSON!
-}
-
-input UniqueSlugInput {
-  slug: JSON!
-}
-
-type UniqueSlugResult {
-  errors: JSON
-  ok: Boolean!
 }
 
 type User implements UserBaseNode {
