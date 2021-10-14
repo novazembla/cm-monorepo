@@ -1,3 +1,6 @@
+// TODO: visibility
+//
+
 import { useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { locationsQueryGQL, locationDeleteMutationGQL } from "@culturemap/core";
@@ -29,8 +32,6 @@ import {
 import { config } from "~/config";
 import { SortingRule } from "react-table";
 
-import { filterColumnKeys } from "./moduleConfig";
-
 const intitalTableState: AdminTableState = {
   pageIndex: 0,
   pageSize: config.defaultPageSize ?? 30,
@@ -43,7 +44,7 @@ let refetchTotalCount = 0;
 let refetchPageIndex: number | undefined = undefined;
 
 const Index = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [appUser] = useAuthentication();
   const [tableState, setTableState] = useLocalStorage(
     `${moduleRootPath}/Index`,
@@ -62,8 +63,8 @@ const Index = () => {
     notifyOnNetworkStatusChange: true,
     variables: adminTableCreateQueryVariables(
       tableState,
-      filterColumnKeys,
       multiLangFields,
+      i18n.language,
       config.activeLanguages
     ),
   });
@@ -98,7 +99,7 @@ const Index = () => {
       to: `${moduleRootPath}/import`,
       label: t("module.locations.menuitem.imports", "Imports"),
       userCan: "locationCreate",
-    },    
+    },
   ];
 
   // columns need to be a ref!
@@ -126,7 +127,10 @@ const Index = () => {
       appUser,
 
       showEdit: true,
-      canEdit: (cell, appUser) => appUser?.can("locationUpdate"),
+      canEdit: (cell, appUser) =>
+        appUser?.can("locationUpdate") ||
+        (appUser.can("locationUpdateOwn") &&
+          appUser.id === (cell?.row?.original as any)?.ownerId),
       editPath: `${moduleRootPath}/update/:id`,
       editButtonLabel: t("module.locations.button.edit", "Edit location"),
       // editButtonComponent: undefined,
@@ -173,8 +177,8 @@ const Index = () => {
       refetch(
         adminTableCreateQueryVariables(
           newTableState,
-          filterColumnKeys,
           multiLangFields,
+          i18n.language,
           config.activeLanguages
         )
       );

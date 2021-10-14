@@ -258,7 +258,34 @@ export const daoSharedWrapImageWithTranslationImage = (
   };
 };
 
+export const daoSharedGetTransatedSelectColumns = (
+  columns: string | string[]
+) => {
+  const config = getApiConfig();
+
+  if (
+    !Array.isArray(config?.activeLanguages) ||
+    config.activeLanguages.length === 0
+  )
+    return {};
+
+  return config.activeLanguages.reduce(
+    (accLang: any, lang: string) => ({
+      ...accLang,
+      ...(Array.isArray(columns) ? columns : [columns]).reduce(
+        (accColumns: any, column: string) => ({
+          ...accColumns,
+          [`${column}_${lang}`]: true,
+        }),
+        {}
+      ),
+    }),
+    {}
+  );
+};
+
 const defaults = {
+  daoSharedGetTransatedSelectColumns,
   daoSharedMapTranslatedColumnsToJson,
   daoSharedGenerateFullText,
   daoSharedCheckSlugUnique,

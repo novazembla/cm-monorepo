@@ -34,8 +34,6 @@ import {
 import { config } from "~/config";
 import { SortingRule, Cell } from "react-table";
 
-import { filterColumnKeys } from "./moduleConfig";
-
 export const AdminTableImportStatusCell = (cell: Cell) => {
   const { t } = useTranslation();
   let color = "gray";
@@ -111,7 +109,7 @@ let refetchTotalCount = 0;
 let refetchPageIndex: number | undefined = undefined;
 
 const Import = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [appUser] = useAuthentication();
   const [tableState, setTableState] = useLocalStorage(
     `${moduleRootPath}/Import`,
@@ -130,8 +128,8 @@ const Import = () => {
     notifyOnNetworkStatusChange: true,
     variables: adminTableCreateQueryVariables(
       tableState,
-      filterColumnKeys,
       multiLangFields,
+      i18n.language,
       config.activeLanguages
     ),
   });
@@ -251,8 +249,8 @@ const Import = () => {
       refetch(
         adminTableCreateQueryVariables(
           newTableState,
-          filterColumnKeys,
           multiLangFields,
+          i18n.language,
           config.activeLanguages
         )
       );

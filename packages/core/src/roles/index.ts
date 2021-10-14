@@ -1,4 +1,4 @@
-import { PartialRecord } from "../types";
+import { PartialRecord, TsEnsureArrayOfAll } from "../types";
 
 export type RoleNames =
   | "administrator"
@@ -21,22 +21,17 @@ export type PermissionsOfAdministrator =
 // !!! Also add new permissions to the constructing arrays on the bottom
 export type PermissionsOfEditor =
   | "locationRead"
-  | "locationCreate"
   | "locationUpdate"
   | "locationDelete"
   | "eventRead"
-  | "eventCreate"
   | "eventUpdate"
   | "eventDelete"
   | "tourRead"
-  | "tourCreate"
   | "tourUpdate"
   | "tourDelete"
   | "pageRead"
-  | "pageCreate"
   | "pageUpdate"
   | "pageDelete"
-  | "taxCreate"
   | "taxRead"
   | "taxUpdate"
   | "taxDelete"
@@ -44,25 +39,25 @@ export type PermissionsOfEditor =
 
 // !!! Also add new permissions to the constructing arrays on the bottom
 export type PermissionsOfContributor =
-  | "locationRead"
   | "locationCreate"
-  | "locationUpdate"
+  | "locationReadOwn"
+  | "locationUpdateOwn"
   | "locationDeleteOwn"
-  | "eventRead"
   | "eventCreate"
-  | "eventUpdate"
+  | "eventReadOwn"
+  | "eventUpdateOwn"
   | "eventDeleteOwn"
-  | "tourRead"
   | "tourCreate"
-  | "tourUpdate"
+  | "tourReadOwn"
+  | "tourUpdateOwn"
   | "tourDeleteOwn"
   | "imageRead"
-  | "imageUpdate"
-  | "imageCreate"
+  | "imageUpdateOwn"
+  | "imageCreateOwn"
   | "imageDeleteOwn"
-  | "pageRead"
   | "pageCreate"
-  | "pageUpdate"
+  | "pageReadOwn"
+  | "pageUpdateOwn"
   | "pageDeleteOwn";
 
 // !!! Also add new permissions to the constructing arrays on the bottom
@@ -180,61 +175,78 @@ export const roles: Roles = {
     return [];
   },
 };
-roles.add("administrator", [
-  "userCreate",
-  "userRead",
-  "userUpdate",
-  "userDelete",
-  "settingRead",
-  "settingUpdate",
-]);
-roles.add("editor", [
-  "locationRead",
-  "locationCreate",
-  "locationUpdate",
-  "locationDelete",
-  "eventRead",
-  "eventCreate",
-  "eventUpdate",
-  "eventDelete",
-  "tourRead",
-  "tourCreate",
-  "tourUpdate",
-  "tourDelete",
-  "pageRead",
-  "pageCreate",
-  "pageUpdate",
-  "pageDelete",
-  "taxCreate",
-  "taxRead",
-  "taxUpdate",
-  "taxDelete",
-]);
-roles.add("contributor", [
-  "locationRead",
-  "locationCreate",
-  "locationUpdate",
-  "locationDeleteOwn",
-  "eventRead",
-  "eventCreate",
-  "eventUpdate",
-  "eventDeleteOwn",
-  "tourRead",
-  "tourCreate",
-  "tourUpdate",
-  "tourDeleteOwn",
-  "pageRead",
-  "pageCreate",
-  "pageUpdate",
-  "pageDeleteOwn",
-]);
-roles.add("user", [
-  "accessAsAuthenticatedUser",
-  "profileRead",
-  "profileUpdate",
-]);
-roles.add("refresh", ["canRefreshAccessToken"]);
-roles.add("api", ["canConfirmToken"]);
+roles.add(
+  "administrator",
+  TsEnsureArrayOfAll<PermissionsOfAdministrator>()([
+    "userCreate",
+    "userRead",
+    "userUpdate",
+    "userDelete",
+    "settingRead",
+    "settingUpdate",
+  ])
+);
+
+roles.add(
+  "editor",
+  TsEnsureArrayOfAll<PermissionsOfEditor>()([
+    "locationRead",
+    "locationUpdate",
+    "locationDelete",
+    "eventRead",
+    "eventUpdate",
+    "eventDelete",
+    "tourRead",
+    "tourUpdate",
+    "tourDelete",
+    "pageRead",
+    "pageUpdate",
+    "pageDelete",
+    "taxRead",
+    "taxUpdate",
+    "taxDelete",
+    "imageDelete",
+  ])
+);
+
+roles.add(
+  "contributor",
+  TsEnsureArrayOfAll<PermissionsOfContributor>()([
+    "locationReadOwn",
+    "locationCreate",
+    "locationUpdateOwn",
+    "locationDeleteOwn",
+    "eventCreate",
+    "eventReadOwn",
+    "eventUpdateOwn",
+    "eventDeleteOwn",
+    "tourCreate",
+    "tourReadOwn",
+    "tourUpdateOwn",
+    "tourDeleteOwn",
+    "imageRead",
+    "imageUpdateOwn",
+    "imageCreateOwn",
+    "imageDeleteOwn",
+    "pageCreate",
+    "pageReadOwn",
+    "pageUpdateOwn",
+    "pageDeleteOwn",
+  ])
+);
+roles.add(
+  "user",
+  TsEnsureArrayOfAll<PermissionsOfUser>()([
+    "accessAsAuthenticatedUser",
+    "profileRead",
+    "profileUpdate",
+  ])
+);
+roles.add(
+  "refresh",
+  TsEnsureArrayOfAll<PermissionsOfRefresh>()(["canRefreshAccessToken"])
+);
+roles.add("api", TsEnsureArrayOfAll<PermissionsOfApi>()(["canConfirmToken"]));
 
 roles.extend("administrator", [
   "editor",

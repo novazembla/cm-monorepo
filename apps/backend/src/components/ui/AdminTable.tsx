@@ -33,6 +33,7 @@ import {
 
 import {
   usePagination,
+  useSortBy,
   // TODO: enable useRowSelect,
   useAsyncDebounce,
   useTable,
@@ -104,9 +105,9 @@ export type AdminTableQueryVariables = {
 
 export const adminTableCreateQueryVariables = (
   tState: AdminTableState,
-  filterColumnKeys: string[],
-  jsonColumns?: string[],
-  jsonKeys?: string[]
+  multilangColumns?: string[],
+  activeLanguage?: string,
+  activeLanguages?: string[],
 ) => {
   let variables: AdminTableQueryVariables = {
     pageIndex: tState.pageIndex,
@@ -114,17 +115,20 @@ export const adminTableCreateQueryVariables = (
   };
 
   if (tState.sortBy && Array.isArray(tState.sortBy) && tState.sortBy.length) {
+    let key = tState.sortBy[0].id;
+    if (multilangColumns?.includes(tState.sortBy[0].id)) {
+      key = `${key}_${activeLanguage}`;
+    }
+    
     variables = {
       ...variables,
       orderBy: {
-        [tState.sortBy[0].id]: tState.sortBy[0].desc ? "desc" : "asc",
+        [key]: tState.sortBy[0].desc ? "desc" : "asc",
       },
     };
   }
 
   if (tState.filterKeyword && tState.filterKeyword.length > 2) {
-    // however in any case we need to set the where clause
-
     variables = {
       ...variables,
       where: {
@@ -134,32 +138,6 @@ export const adminTableCreateQueryVariables = (
         },
       },
     };
-
-    // variables = {
-    //   ...variables,
-    //   where: {
-    //     OR: filterColumnKeys.map((key) => {
-    //       if (jsonColumns && jsonKeys && jsonColumns.includes(key)) {
-    //         return {
-    //           OR: jsonKeys.map((jKey) => ({
-    //             [key]: {
-    //               path: jKey,
-    //               string_contains: tState.filterKeyword,
-    //               // TODO: maybe enable at some point mode: 'insensitive',
-    //             },
-    //           })),
-    //         };
-    //       } else {
-    //         return {
-    //           [key]: {
-    //             contains: tState.filterKeyword,
-    //             mode: "insensitive",
-    //           },
-    //         };
-    //       }
-    //     }),
-    //   },
-    // };
   }
 
   return variables;
@@ -398,13 +376,12 @@ export const AdminTablePublishStatusCell = (cell: Cell) => {
   );
 };
 
-
 export const AdminTableDateCell = (cell: Cell) => {
   let date = "-";
 
   try {
-    date = new Date(cell.value).toLocaleString()
-  } catch(err){}
+    date = new Date(cell.value).toLocaleString();
+  } catch (err) {}
 
   return <>{date}</>;
 };
@@ -476,6 +453,7 @@ export const AdminTable = ({
       autoResetPage: false,
       pageCount: tablePageCount,
     },
+    useSortBy,
     usePagination
   );
 
@@ -597,7 +575,7 @@ export const AdminTable = ({
                 {headerGroup.headers.map((column) => (
                   <Th
                     {
-                      ...column.getHeaderProps(/* column.getSortByToggleProps() */)
+                      ...column.getHeaderProps(column.getSortByToggleProps())
                     }
                     fontSize="md"
                     color="gray.800"

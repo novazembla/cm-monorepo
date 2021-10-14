@@ -105,7 +105,7 @@ export const AuthMutations = extendType({
       },
 
       authorize: (...[, , ctx]) =>
-        authorizeApiUser(ctx, "canRefreshAccessToken", true),
+        authorizeApiUser(ctx, "canRefreshAccessToken", false, true),
 
       async resolve(...[, args, { res, req }]) {
         // throw new AuthenticationError("Access Denied"); TODO: REmove

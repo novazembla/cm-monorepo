@@ -19,14 +19,14 @@ export const moduleRoutes: RoutePrivateParams[] = [
     path: `${moduleRootPath}/update/:id`,
     component: Update,
     exact: true,
-    userCan: "pageUpdate",
+    userCan: "pageUpdateOwn",
   },
   {
     key: "index",
     path: `${moduleRootPath}`,
     component: Index,
     exact: true,
-    userCan: "pageRead",
+    userCan: "pageReadOwn",
   }
 ];
 

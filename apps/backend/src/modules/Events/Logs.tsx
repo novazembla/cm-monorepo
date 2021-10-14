@@ -29,7 +29,6 @@ import {
 } from "~/components/ui";
 import { config } from "~/config";
 import { SortingRule } from "react-table";
-import { filterColumnKeys } from "./moduleConfig";
 
 const intitalTableState: AdminTableState = {
   pageIndex: 0,
@@ -89,7 +88,7 @@ export const AdminTableWarningsCountCell = (cell: Cell) => {
 };
 
 const Logs = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [appUser] = useAuthentication();
   const [tableState, setTableState] = useLocalStorage(
     `${moduleRootPath}/Logs`,
@@ -108,8 +107,8 @@ const Logs = () => {
     notifyOnNetworkStatusChange: true,
     variables: adminTableCreateQueryVariables(
       tableState,
-      filterColumnKeys,
       multiLangFields,
+      i18n.language,
       config.activeLanguages
     ),
   });
@@ -199,8 +198,8 @@ const Logs = () => {
       refetch(
         adminTableCreateQueryVariables(
           newTableState,
-          filterColumnKeys,
           multiLangFields,
+          i18n.language,
           config.activeLanguages
         )
       );

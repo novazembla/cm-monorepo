@@ -764,7 +764,6 @@ export interface NexusGenFieldTypes {
     importRead: NexusGenRootTypes['Import']; // Import!
     imports: NexusGenRootTypes['ImportQueryResult'] | null; // ImportQueryResult
     location: NexusGenRootTypes['Location']; // Location!
-    locationRead: NexusGenRootTypes['Location']; // Location!
     locations: NexusGenRootTypes['LocationQueryResult'] | null; // LocationQueryResult
     moduleTaxonomies: Array<NexusGenRootTypes['Taxonomy'] | null> | null; // [Taxonomy]
     modules: Array<NexusGenRootTypes['Module'] | null> | null; // [Module]
@@ -1151,7 +1150,6 @@ export interface NexusGenFieldTypeNames {
     importRead: 'Import'
     imports: 'ImportQueryResult'
     location: 'Location'
-    locationRead: 'Location'
     locations: 'LocationQueryResult'
     moduleTaxonomies: 'Taxonomy'
     modules: 'Module'
@@ -1512,10 +1510,9 @@ export interface NexusGenArgTypes {
       where?: NexusGenScalars['JSON'] | null; // JSON
     }
     location: { // args
-      slug: string; // String!
-    }
-    locationRead: { // args
-      id: number; // Int!
+      id?: number | null; // Int
+      lang?: string | null; // String
+      slug?: string | null; // String
     }
     locations: { // args
       orderBy?: NexusGenScalars['JSON'] | null; // JSON

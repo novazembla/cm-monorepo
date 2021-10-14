@@ -13,17 +13,17 @@ export const usersModuleAccessRules: ModuleAccessRules = {
   userCan: "userRead",
 };
 export const pagesModuleAccessRules: ModuleAccessRules = {
-  userCan: "pageRead",
+  userCan: "pageReadOwn",
 };
 export const settingsModuleAccessRules: ModuleAccessRules = {
   userCan: "settingRead",
 };
 export const locationsModuleAccessRules: ModuleAccessRules = {
-  userCan: "locationRead",
+  userCan: "locationReadOwn",
 };
 export const eventsModuleAccessRules: ModuleAccessRules = {
-  userCan: "eventRead",
+  userCan: "eventReadOwn",
 };
 export const toursModuleAccessRules: ModuleAccessRules = {
-  userCan: "tourRead",
+  userCan: "tourReadOwn",
 };

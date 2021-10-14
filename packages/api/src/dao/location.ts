@@ -170,7 +170,10 @@ export const daoLocationGetById = async (
   return filteredOutputByBlacklistOrNotFound(
     daoSharedWrapImageWithTranslationImage(
       "heroImage",
-      location,
+      daoSharedMapTranslatedColumnsToJson(
+        location,
+        daoLocationTranslatedColumns
+      ),
       daoImageTranslatedColumns
     ),
     apiConfig.db.privateJSONDataKeys.location
@@ -208,7 +211,13 @@ export const daoLocationUpdate = async (
   });
 
   return filteredOutputByBlacklistOrNotFound(
-    daoSharedMapTranslatedColumnsToJson(location, daoLocationTranslatedColumns),
+    daoSharedMapTranslatedColumnsToJson(
+      daoSharedMapTranslatedColumnsToJson(
+        location,
+        daoLocationTranslatedColumns
+      ),
+      daoLocationTranslatedColumns
+    ),
     apiConfig.db.privateJSONDataKeys.location
   );
 };
@@ -221,7 +230,13 @@ export const daoLocationDelete = async (id: number): Promise<Location> => {
   });
 
   return filteredOutputByBlacklistOrNotFound(
-    daoSharedMapTranslatedColumnsToJson(location, daoLocationTranslatedColumns),
+    daoSharedMapTranslatedColumnsToJson(
+      daoSharedMapTranslatedColumnsToJson(
+        location,
+        daoLocationTranslatedColumns
+      ),
+      daoLocationTranslatedColumns
+    ),
     apiConfig.db.privateJSONDataKeys.location
   );
 };
@@ -230,22 +245,13 @@ export const daoLocationGetBySlug = async (
   slug: string,
   include?: Prisma.LocationInclude | undefined
 ): Promise<Location> => {
+  const config = getApiConfig();
+
   const location = await prisma.location.findFirst({
     where: {
-      OR: [
-        {
-          slug: {
-            path: ["en"],
-            equals: slug,
-          },
-        },
-        {
-          slug: {
-            path: ["de"],
-            equals: slug,
-          },
-        },
-      ],
+      OR: config?.activeLanguages.map((lang) => ({
+        [`slug_${lang}`]: slug,
+      })),
     },
     include,
   });

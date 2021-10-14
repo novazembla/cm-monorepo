@@ -43,14 +43,14 @@ export const moduleRoutes: RoutePrivateParams[] = [
     path: `${moduleRootPath}/update/:id`,
     component: Update,
     exact: true,
-    userCan: "locationUpdate",
+    userCan: "locationUpdateOwn",
   },
   {
     key: "index",
     path: `${moduleRootPath}`,
     component: Index,
     exact: true,
-    userCan: "locationRead",
+    userCan: "locationReadOwn",
   }
 ];
 

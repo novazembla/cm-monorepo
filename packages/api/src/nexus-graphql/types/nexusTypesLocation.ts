@@ -1,6 +1,6 @@
 /// <reference path="../../types/nexus-typegen.ts" />
 import { parseResolveInfo } from "graphql-parse-resolve-info";
-import { filteredOutputByWhitelist } from "@culturemap/core";
+import { filteredOutputByWhitelist, PublishStatus } from "@culturemap/core";
 
 import dedent from "dedent";
 import {
@@ -13,12 +13,14 @@ import {
   arg,
   list,
 } from "nexus";
+import { Prisma } from "@prisma/client";
+
 import httpStatus from "http-status";
 import { ApiError } from "../../utils";
 
 import { GQLJson } from "./nexusTypesShared";
 
-import { authorizeApiUser } from "../helpers";
+import { authorizeApiUser, apiUserCan } from "../helpers";
 
 import { getApiConfig } from "../../config";
 
@@ -30,7 +32,6 @@ import {
   daoLocationUpdate,
   daoLocationDelete,
   daoUserGetById,
-  daoLocationGetBySlug,
   daoImageSaveImageTranslations,
 } from "../../dao";
 
@@ -140,14 +141,16 @@ export const LocationQueries = extendType({
         }),
       },
 
-      // TODO: enable! authorize: (...[, , ctx]) => authorizeApiUser(ctx, "locationRead"),
+      authorize: (...[, , ctx]) =>
+        authorizeApiUser(ctx, "locationReadOwn", true),
 
-      async resolve(...[, args, , info]) {
+      async resolve(...[, args, ctx, info]) {
         const pRI = parseResolveInfo(info);
 
         let totalCount;
         let locations;
-        let include = {};
+        let include: Prisma.LocationInclude = {};
+        let where: Prisma.LocationWhereInput = args.where;
 
         if ((pRI?.fieldsByTypeName?.LocationQueryResult as any)?.totalCount) {
           totalCount = await daoLocationQueryCount(args.where);
@@ -168,6 +171,7 @@ export const LocationQueries = extendType({
             terms: {
               select: {
                 id: true,
+                // daoSharedGetTransatedSelectColumns(["name", "slug"]), // TODO: activate
                 name: true,
                 slug: true,
               },
@@ -175,6 +179,7 @@ export const LocationQueries = extendType({
             primaryTerms: {
               select: {
                 id: true,
+                // daoSharedGetTransatedSelectColumns(["name", "slug"]), // TODO: activate
                 name: true,
                 slug: true,
               },
@@ -182,9 +187,26 @@ export const LocationQueries = extendType({
           };
         }
 
+        // here needs to be the preview access bypass TODO: 
+        if (!apiUserCan(ctx, "locationReadOwn")) {
+          where = {
+            ...where,
+            status: PublishStatus.PUBLISHED,
+          };
+        } else {
+          if (!apiUserCan(ctx, "locationRead")) {
+            where = {
+              ...where,
+              owner: {
+                id: ctx?.apiUser?.id ?? 0,
+              },
+            };
+          }
+        }
+
         if ((pRI?.fieldsByTypeName?.LocationQueryResult as any)?.locations)
           locations = await daoLocationQuery(
-            args.where,
+            where,
             Object.keys(include).length > 0 ? include : undefined,
             args.orderBy,
             args.pageIndex as number,
@@ -202,86 +224,21 @@ export const LocationQueries = extendType({
       type: "Location",
 
       args: {
-        slug: nonNull(stringArg()),
+        lang: stringArg(),
+        slug: stringArg(),
+        id: intArg(),
       },
+
+      authorize: (...[, , ctx]) =>
+        authorizeApiUser(ctx, "locationReadOwn", true),
 
       // resolve(root, args, ctx, info)
-      async resolve(...[, args, , info]) {
+      async resolve(...[, args, ctx, info]) {
+        const config = getApiConfig();
         const pRI = parseResolveInfo(info);
+        let where: Prisma.LocationWhereInput[] = [];
 
-        let include: any = {
-          terms: {
-            select: {
-              id: true,
-              name: true,
-              slug: true,
-            },
-            orderBy: {
-              name: "asc",
-            },
-          },
-          primaryTerms: {
-            select: {
-              id: true,
-              name: true,
-              slug: true,
-            },
-          },
-          events: {
-            select: {
-              id: true,
-              slug: true,
-              title: true,
-
-              dates: {
-                select: {
-                  date: true,
-                  begin: true,
-                  end: true,
-                },
-                orderBy: {
-                  date: "asc",
-                },
-                take: 3,
-              },
-            },
-            orderBy: {
-              title: "asc",
-            },
-          },
-        };
-
-        if ((pRI?.fieldsByTypeName?.Location as any)?.heroImage)
-          include = {
-            ...include,
-            heroImage: {
-              include: {
-                translations: true,
-              },
-            },
-          };
-
-        return daoLocationGetBySlug(
-          args.slug,
-          Object.keys(include).length > 0 ? include : undefined
-        );
-      },
-    });
-
-    t.nonNull.field("locationRead", {
-      type: "Location",
-
-      args: {
-        id: nonNull(intArg()),
-      },
-
-      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "locationRead"),
-
-      // resolve(root, args, ctx, info)
-      async resolve(...[, args, , info]) {
-        const pRI = parseResolveInfo(info);
-
-        let include = {};
+        let include: Prisma.LocationInclude = {};
 
         if ((pRI?.fieldsByTypeName?.Location as any)?.terms)
           include = {
@@ -289,6 +246,7 @@ export const LocationQueries = extendType({
             terms: {
               select: {
                 id: true,
+                // daoSharedGetTransatedSelectColumns(["name", "slug"]), // TODO: activate
                 name: true,
                 slug: true,
               },
@@ -296,6 +254,7 @@ export const LocationQueries = extendType({
             primaryTerms: {
               select: {
                 id: true,
+                // daoSharedGetTransatedSelectColumns(["name", "slug"]), // TODO: activate
                 name: true,
                 slug: true,
               },
@@ -308,8 +267,21 @@ export const LocationQueries = extendType({
             events: {
               select: {
                 id: true,
+                // daoSharedGetTransatedSelectColumns(["title", "slug"]), // TODO: activate
                 title: true,
                 slug: true,
+
+                dates: {
+                  select: {
+                    date: true,
+                    begin: true,
+                    end: true,
+                  },
+                  orderBy: {
+                    date: "asc",
+                  },
+                  take: 3,
+                },
               },
             },
           };
@@ -319,17 +291,49 @@ export const LocationQueries = extendType({
             ...include,
             heroImage: {
               include: {
+                // TODO: change xxxx
                 translations: true,
               },
             },
           };
 
-        return daoLocationQueryFirst(
-          {
+        if (args.slug && args.slug.trim() !== "") {
+          where.push({
+            OR: config?.activeLanguages.map((lang) => ({
+              [`slug_${lang}`]: args.slug,
+            })),
+          });
+        }
+
+        if (args.id) {
+          where.push({
             id: args.id,
-          },
-          include
-        );
+          });
+        }
+
+        // here needs to be the preview access bypass TODO: 
+        if (!apiUserCan(ctx, "locationReadOwn")) {
+          where.push({
+            status: PublishStatus.PUBLISHED,
+          });
+        } else {
+          if (!apiUserCan(ctx, "locationRead")) {
+            where.push({
+              owner: {
+                id: ctx?.apiUser?.id ?? 0,
+              },
+            });
+          }
+        }
+
+        if (Object.keys(where).length > 0) {
+          return daoLocationQueryFirst(
+            where.length > 1 ? { AND: where } : where.shift() ?? {},
+            Object.keys(include).length > 0 ? include : undefined
+          );
+        } else {
+          throw new ApiError(httpStatus.NOT_FOUND, "Not found");
+        }
       },
     });
   },
@@ -390,10 +394,23 @@ export const LocationMutations = extendType({
       args: {
         id: nonNull(intArg()),
         data: nonNull("LocationUpsertInput"),
-        imagesTranslations: list(arg({ type: "ImageTranslationInput" })),
+        imagesTranslations: list(arg({ type: "ImageTranslationInput" })), // TODO: this has to go?
       },
 
-      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "locationUpdate"),
+      authorize: async (...[, args, ctx]) => {
+        if (!authorizeApiUser(ctx, "locationUpdateOwn")) return false;
+
+        if (apiUserCan(ctx, "locationUpdate")) return true;
+
+        const count = await daoLocationQueryCount({
+          id: args.id,
+          owner: {
+            id: ctx.apiUser?.id ?? 0,
+          },
+        });
+
+        return count === 1;
+      },
 
       async resolve(...[, args]) {
         const location = await daoLocationUpdate(args.id, args.data);
@@ -415,7 +432,20 @@ export const LocationMutations = extendType({
         id: nonNull(intArg()),
       },
 
-      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "locationDelete"),
+      authorize: async (...[, args, ctx]) => {
+        if (!authorizeApiUser(ctx, "locationDeleteOwn")) return false;
+
+        if (apiUserCan(ctx, "locationDelete")) return true;
+
+        const count = await daoLocationQueryCount({
+          id: args.id,
+          owner: {
+            id: ctx.apiUser?.id ?? 0,
+          },
+        });
+
+        return count === 1;
+      },
 
       async resolve(...[, args]) {
         const location = await daoLocationDelete(args.id);

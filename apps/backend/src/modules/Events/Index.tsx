@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import { eventsQueryGQL, eventDeleteMutationGQL } from "@culturemap/core";
 import { useQuery } from "@apollo/client";
 
-
 import {
   ModuleSubNav,
   ButtonListElement,
@@ -29,7 +28,6 @@ import {
 } from "~/components/ui";
 import { config } from "~/config";
 import { SortingRule } from "react-table";
-import {filterColumnKeys} from "./moduleConfig";
 
 const intitalTableState: AdminTableState = {
   pageIndex: 0,
@@ -42,9 +40,8 @@ let refetchDataCache: any[] = [];
 let refetchTotalCount = 0;
 let refetchPageIndex: number | undefined = undefined;
 
-
 const Index = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [appUser] = useAuthentication();
   const [tableState, setTableState] = useLocalStorage(
     `${moduleRootPath}/Index`,
@@ -52,7 +49,7 @@ const Index = () => {
   );
 
   const [isRefetching, setIsRefetching] = useState(false);
-  
+
   const { loading, error, data, refetch } = useQuery(eventsQueryGQL, {
     onCompleted: () => {
       setIsRefetching(false);
@@ -61,7 +58,12 @@ const Index = () => {
       setIsRefetching(false);
     },
     notifyOnNetworkStatusChange: true,
-    variables: adminTableCreateQueryVariables(tableState, filterColumnKeys, multiLangFields, config.activeLanguages),
+    variables: adminTableCreateQueryVariables(
+      tableState,
+      multiLangFields,
+      i18n.language,
+      config.activeLanguages
+    ),
   });
 
   const [adminTableDeleteButtonOnClick, DeleteAlertDialog, isDeleteError] =
@@ -123,16 +125,19 @@ const Index = () => {
 
       showEdit: true,
       canEdit: (cell, appUser) =>
-        appUser?.can("eventUpdate"),
+        appUser?.can("eventUpdate") ||
+        (appUser.can("eventUpdateOwn") &&
+          appUser.id === (cell?.row?.original as any)?.ownerId),
       editPath: `${moduleRootPath}/update/:id`,
       editButtonLabel: t("module.events.button.edit", "Edit event"),
       // editButtonComponent: undefined,
 
       showDelete: true,
-      canDelete: (cell, appUser) => appUser?.can("eventDelete") ||
-      (appUser.can("eventDeleteOwn") &&
-        appUser.id === (cell?.row?.original as any)?.ownerId),
-        
+      canDelete: (cell, appUser) =>
+        appUser?.can("eventDelete") ||
+        (appUser.can("eventDeleteOwn") &&
+          appUser.id === (cell?.row?.original as any)?.ownerId),
+
       deleteButtonLabel: t("module.events.button.delete", "Delete event"),
       // deleteButtonComponent?: React.FC<any>;
 
@@ -166,7 +171,14 @@ const Index = () => {
 
       setIsRefetching(true);
 
-      refetch(adminTableCreateQueryVariables(newTableState, filterColumnKeys, multiLangFields, config.activeLanguages));
+      refetch(
+        adminTableCreateQueryVariables(
+          newTableState,
+          multiLangFields,
+          i18n.language,
+          config.activeLanguages
+        )
+      );
 
       setTableState(newTableState);
     }

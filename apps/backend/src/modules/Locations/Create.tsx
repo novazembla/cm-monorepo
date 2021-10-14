@@ -41,8 +41,8 @@ import {
   mapPrimaryTermsToData
 } from "~/utils";
 
-export const locationReadGetTaxonomies = gql`
-  query locationRead {
+export const locationGetTaxonomies = gql`
+  query moduleTaxonomies {
     moduleTaxonomies(key: "location") {
       id
       name
@@ -74,7 +74,7 @@ const Create = () => {
 
   const disableForm = firstMutationResults.loading;
 
-  const { data, loading, error } = useQuery(locationReadGetTaxonomies, {
+  const { data, loading, error } = useQuery(locationGetTaxonomies, {
     variables: {
       id: parseInt(router.query.id, 10),
     },

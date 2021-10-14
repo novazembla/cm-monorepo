@@ -24,7 +24,7 @@ export const FieldModuleTaxonomies = ({ data }: { data: any }) => {
         let primaryTermId;
         if (taxonomy?.collectPrimaryTerm) {
           const primaryTerm = mapTermDataToPrimaryTerm(
-            data?.locationRead?.primaryTerms,
+            data?.location?.primaryTerms,
             taxonomy.terms
           );
           primaryTermId = primaryTerm?.id;

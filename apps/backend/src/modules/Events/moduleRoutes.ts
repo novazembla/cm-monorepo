@@ -28,7 +28,7 @@ export const moduleRoutes: RoutePrivateParams[] = [
     path: `${moduleRootPath}/logs`,
     component: Logs,
     exact: true,
-    userCan: "eventRead",
+    userCan: "eventReadOwn",
   },
   
   {
@@ -36,14 +36,14 @@ export const moduleRoutes: RoutePrivateParams[] = [
     path: `${moduleRootPath}/log/:id`,
     component: Log,
     exact: true,
-    userCan: "eventRead",
+    userCan: "eventReadOwn",
   },
   {
     key: "index",
     path: `${moduleRootPath}`,
     component: Index,
     exact: true,
-    userCan: "eventRead",
+    userCan: "eventReadOwn",
   }
 ];
 

@@ -1,8 +1,10 @@
 import { useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { taxonomiesQueryGQL, taxonomyDeleteMutationGQL } from "@culturemap/core";
+import {
+  taxonomiesQueryGQL,
+  taxonomyDeleteMutationGQL,
+} from "@culturemap/core";
 import { useQuery } from "@apollo/client";
-
 
 import {
   ModuleSubNav,
@@ -28,7 +30,6 @@ import {
 } from "~/components/ui";
 import { config } from "~/config";
 import { SortingRule } from "react-table";
-import { taxonomyFilterColumnKeys } from "./moduleConfig";
 
 const intitalTableState: AdminTableState = {
   pageIndex: 0,
@@ -41,10 +42,8 @@ let refetchDataCache: any[] = [];
 let refetchTotalCount = 0;
 let refetchPageIndex: number | undefined = undefined;
 
-
-
 const Index = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [appUser] = useAuthentication();
   const [tableState, setTableState] = useLocalStorage(
     `${moduleRootPath}/Index`,
@@ -52,7 +51,7 @@ const Index = () => {
   );
 
   const [isRefetching, setIsRefetching] = useState(false);
-  
+
   const { loading, error, data, refetch } = useQuery(taxonomiesQueryGQL, {
     onCompleted: () => {
       setIsRefetching(false);
@@ -61,7 +60,12 @@ const Index = () => {
       setIsRefetching(false);
     },
     notifyOnNetworkStatusChange: true,
-    variables: adminTableCreateQueryVariables(tableState, taxonomyFilterColumnKeys, multiLangFields, config.activeLanguages),
+    variables: adminTableCreateQueryVariables(
+      tableState,
+      multiLangFields,
+      i18n.language,
+      config.activeLanguages
+    ),
   });
 
   const [adminTableDeleteButtonOnClick, DeleteAlertDialog, isDeleteError] =
@@ -122,24 +126,31 @@ const Index = () => {
       appUser,
 
       showEdit: true,
-      canEdit: (cell, appUser) =>
-        appUser?.can("taxUpdate"),
+      canEdit: (cell, appUser) => appUser?.can("taxUpdate"),
       editPath: `${moduleRootPath}/update/:id`,
       editButtonLabel: t("module.taxonomies.button.edit", "Edit taxonomy"),
       // editButtonComponent: undefined,
 
       showView: true,
-      canView: (cell, appUser) =>
-        appUser?.can("taxUpdate"),
+      canView: (cell, appUser) => appUser?.can("taxUpdate"),
       viewPath: `${moduleRootPath}/:id/terms`,
-      viewButtonLabel: t("module.taxonomies.button.view", "View taxonomy terms"),
+      viewButtonLabel: t(
+        "module.taxonomies.button.view",
+        "View taxonomy terms"
+      ),
       // viewButtonComponent: undefined,
-      
+
       showDelete: true,
       canDelete: (cell, appUser) => {
-        return appUser?.can("taxDelete") && (cell as any).row.values.termCount === 0},
-        
-      deleteButtonLabel: t("module.taxonomies.button.delete", "Delete taxonomy"),
+        return (
+          appUser?.can("taxDelete") && (cell as any).row.values.termCount === 0
+        );
+      },
+
+      deleteButtonLabel: t(
+        "module.taxonomies.button.delete",
+        "Delete taxonomy"
+      ),
       // deleteButtonComponent?: React.FC<any>;
 
       deleteButtonOnClick: (cell) => {
@@ -172,7 +183,14 @@ const Index = () => {
 
       setIsRefetching(true);
 
-      refetch(adminTableCreateQueryVariables(newTableState, taxonomyFilterColumnKeys, multiLangFields, config.activeLanguages));
+      refetch(
+        adminTableCreateQueryVariables(
+          newTableState,
+          multiLangFields,
+          i18n.language,
+          config.activeLanguages
+        )
+      );
 
       setTableState(newTableState);
     }
@@ -185,7 +203,8 @@ const Index = () => {
   const tablePageCount =
     tableTotalCount > 0
       ? Math.ceil(
-          (data?.taxonomies?.totalCount ?? refetchTotalCount) / tableState.pageSize
+          (data?.taxonomies?.totalCount ?? refetchTotalCount) /
+            tableState.pageSize
         )
       : 0;
 
@@ -206,7 +225,9 @@ const Index = () => {
             onFetchData,
             refetchPageIndex,
           }}
-          data={isRefetching ? refetchDataCache : data?.taxonomies?.taxonomies ?? []}
+          data={
+            isRefetching ? refetchDataCache : data?.taxonomies?.taxonomies ?? []
+          }
           intitalTableState={tableState}
         />
       </ModulePage>

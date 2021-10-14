@@ -21,7 +21,7 @@ export const moduleRoutes: RoutePrivateParams[] = [
     path: `${moduleRootPath}/update/:tourId`,
     component: Update,
     exact: true,
-    userCan: "tourUpdate",
+    userCan: "tourUpdateOwn",
   },
   {
     key: "tourStopCreate",
@@ -35,14 +35,14 @@ export const moduleRoutes: RoutePrivateParams[] = [
     path: `${moduleRootPath}/:tourId/update/:tourStopId/`,
     component: UpdateTourStop,
     exact: true,
-    userCan: "tourUpdate",
+    userCan: "tourUpdateOwn",
   },
   {
     key: "index",
     path: `${moduleRootPath}`,
     component: Index,
     exact: true,
-    userCan: "tourRead",
+    userCan: "tourReadOwn",
   }
 ];
 

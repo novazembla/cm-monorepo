@@ -359,8 +359,7 @@ type Query {
   images(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, taxonomyId: Int, where: JSON): ImageQueryResult
   importRead(id: Int!): Import!
   imports(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): ImportQueryResult
-  location(slug: String!): Location!
-  locationRead(id: Int!): Location!
+  location(id: Int, lang: String, slug: String): Location!
   locations(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): LocationQueryResult
   moduleTaxonomies(key: String!): [Taxonomy]
   modules: [Module]

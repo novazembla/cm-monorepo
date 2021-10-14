@@ -62,9 +62,9 @@ import {
 
 import { MultiLangValue } from "~/components/ui";
 
-export const locationReadAndContentAuthorsQueryGQL = gql`
-  query locationRead($id: Int!) {
-    locationRead(id: $id) {
+export const locationAndContentAuthorsQueryGQL = gql`
+  query location($id: Int!) {
+    location(id: $id) {
       id
       title
       slug
@@ -140,7 +140,7 @@ const Update = () => {
   );
 
   const { data, loading, error } = useQuery(
-    locationReadAndContentAuthorsQueryGQL,
+    locationAndContentAuthorsQueryGQL,
     {
       variables: {
         id: parseInt(router.query.id, 10),
@@ -166,7 +166,7 @@ const Update = () => {
   } = formMethods;
 
   useEffect(() => {
-    if (!data || !data.locationRead) return;
+    if (!data || !data.location) return;
 
     let moduleTerms = {};
 
@@ -218,7 +218,7 @@ const Update = () => {
 
         return {
           ...acc,
-          ...mapDataToGroupOptions(data.locationRead.terms, m.terms, `tax_${m.id}` ),
+          ...mapDataToGroupOptions(data.location.terms, m.terms, `tax_${m.id}` ),
         }
       }, {});      
     }
@@ -228,7 +228,7 @@ const Update = () => {
     reset({
       ...multiLangJsonToRHFormData(
         filteredOutputByWhitelist(
-          data.locationRead,
+          data.location,
           ["ownerId", "lat", "lng", "status"],
           multiLangFields
         ),
@@ -237,17 +237,17 @@ const Update = () => {
       ),
       ...moduleTerms,
       ...mapDataToPrimaryTerms(
-        data.locationRead.primaryTerms,
+        data.location.primaryTerms,
         data.moduleTaxonomies
       ),
-      heroImage: data.locationRead.heroImage?.id,
-      lat: data.locationRead?.lat,
-      lng: data.locationRead?.lng,
-      eventLocationId: data.locationRead?.eventLocationId
-        ? parseInt(data.locationRead?.eventLocationId)
+      heroImage: data.location.heroImage?.id,
+      lat: data.location?.lat,
+      lng: data.location?.lng,
+      eventLocationId: data.location?.eventLocationId
+        ? parseInt(data.location?.eventLocationId)
         : undefined,
-      agency: data.locationRead?.agency,
-      ...pick(data?.locationRead?.address, [
+      agency: data.location?.agency,
+      ...pick(data?.location?.address, [
         "co",
         "street1",
         "street2",
@@ -255,13 +255,13 @@ const Update = () => {
         "city",
         "postCode",
       ]),
-      ...pick(data?.locationRead?.contactInfo, [
+      ...pick(data?.location?.contactInfo, [
         "email1",
         "email2",
         "phone1",
         "phone2",
       ]),
-      ...pick(data?.locationRead?.socialMedia, [
+      ...pick(data?.location?.socialMedia, [
         "facebook",
         "twitter",
         "instagram",
@@ -269,7 +269,7 @@ const Update = () => {
         "website",
       ]),
       ...multiLangImageTranslationsJsonRHFormData(
-        data.locationRead,
+        data.location,
         ["heroImage"],
         ["alt", "credits"],
         config.activeLanguages
@@ -435,13 +435,13 @@ const Update = () => {
       type: "back",
       to: moduleRootPath,
       label: t("module.button.cancel", "Cancel"),
-      userCan: "locationRead",
+      userCan: "locationReadOwn",
     },
     {
       type: "submit",
       isLoading: isSubmitting,
       label: t("module.button.update", "Update"),
-      userCan: "locationUpdate",
+      userCan: "locationUpdateOwn",
     },
   ];
 
@@ -472,7 +472,7 @@ const Update = () => {
                 validationSchema={extendedValidationSchema}
               />
 
-              {data && Array.isArray(data?.locationRead?.events) && (
+              {data && Array.isArray(data?.location?.events) && (
                 <Box mt="6">
                   <Divider mt="10" />
                   <Heading as="h2" mb="3">
@@ -517,7 +517,7 @@ const Update = () => {
                       </tr>
                     </Thead>
                     <tbody>
-                      {data.locationRead.events.length === 0 && (
+                      {data.location.events.length === 0 && (
                         <tr key={`event-no-event`}>
                           <chakra.td pl="0" borderColor="gray.300" colSpan={2}>
                             {t(
@@ -527,9 +527,9 @@ const Update = () => {
                           </chakra.td>
                         </tr>
                       )}
-                      {data.locationRead.events.length > 0 && (
+                      {data.location.events.length > 0 && (
                         <>
-                          {data.locationRead.events.map((event: any) => (
+                          {data.location.events.map((event: any) => (
                             <tr key={`event-${event.id}`}>
                               <Td pl="0" borderColor="gray.300">
                                 <MultiLangValue json={event.title} />

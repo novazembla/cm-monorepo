@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import { toursQueryGQL, tourDeleteMutationGQL } from "@culturemap/core";
 import { useQuery } from "@apollo/client";
 
-
 import {
   ModuleSubNav,
   ButtonListElement,
@@ -28,7 +27,6 @@ import {
 } from "~/components/ui";
 import { config } from "~/config";
 import { SortingRule } from "react-table";
-import { tourFilterColumnKeys } from "./moduleConfig";
 
 const intitalTableState: AdminTableState = {
   pageIndex: 0,
@@ -42,7 +40,7 @@ let refetchTotalCount = 0;
 let refetchPageIndex: number | undefined = undefined;
 
 const Index = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [appUser] = useAuthentication();
   const [tableState, setTableState] = useLocalStorage(
     `${moduleRootPath}/Index`,
@@ -50,7 +48,7 @@ const Index = () => {
   );
 
   const [isRefetching, setIsRefetching] = useState(false);
-  
+
   const { loading, error, data, refetch } = useQuery(toursQueryGQL, {
     onCompleted: () => {
       setIsRefetching(false);
@@ -59,7 +57,12 @@ const Index = () => {
       setIsRefetching(false);
     },
     notifyOnNetworkStatusChange: true,
-    variables: adminTableCreateQueryVariables(tableState, tourFilterColumnKeys, multiLangFieldsTour, config.activeLanguages),
+    variables: adminTableCreateQueryVariables(
+      tableState,
+      multiLangFieldsTour,
+      i18n.language,
+      config.activeLanguages
+    ),
   });
 
   const [adminTableDeleteButtonOnClick, DeleteAlertDialog, isDeleteError] =
@@ -116,22 +119,23 @@ const Index = () => {
 
       showEdit: true,
       canEdit: (cell, appUser) =>
-        appUser?.can("tourUpdate"),
+        appUser?.can("tourUpdate") ||
+        (appUser.can("tourUpdateOwn") &&
+          appUser.id === (cell?.row?.original as any)?.ownerId),
       editPath: `${moduleRootPath}/update/:id`,
       editButtonLabel: t("module.tours.button.edit", "Edit tour"),
       // editButtonComponent: undefined,
 
-      showView: false,
-      canView: (cell, appUser) =>
-        appUser?.can("tourUpdate"),
-      viewPath: `${moduleRootPath}/:id/tourStops`,
-      viewButtonLabel: t("module.tours.button.view", "View tour tourStops"),
-      // viewButtonComponent: undefined,
-      
       showDelete: true,
       canDelete: (cell, appUser) => {
-        return appUser?.can("tourDelete") && (cell as any).row.values.tourStopCount === 0},
-        
+        return (
+          (appUser?.can("tourDelete") ||
+            (appUser.can("tourDeleteOwn") &&
+              appUser.id === (cell?.row?.original as any)?.ownerId)) &&
+          (cell as any).row.values.tourStopCount === 0
+        );
+      },
+
       deleteButtonLabel: t("module.tours.button.delete", "Delete tour"),
       // deleteButtonComponent?: React.FC<any>;
 
@@ -165,7 +169,14 @@ const Index = () => {
 
       setIsRefetching(true);
 
-      refetch(adminTableCreateQueryVariables(newTableState, tourFilterColumnKeys, multiLangFieldsTour, config.activeLanguages));
+      refetch(
+        adminTableCreateQueryVariables(
+          newTableState,
+          multiLangFieldsTour,
+          i18n.language,
+          config.activeLanguages
+        )
+      );
 
       setTableState(newTableState);
     }

@@ -27,7 +27,6 @@ import {
 } from "~/components/ui";
 import { config } from "~/config";
 import { SortingRule } from "react-table";
-import { filterColumnKeys } from "./moduleConfig";
 
 const intitalTableState: AdminTableState = {
   pageIndex: 0,
@@ -58,7 +57,7 @@ const Index = () => {
       setIsRefetching(false);
     },
     notifyOnNetworkStatusChange: true,
-    variables: adminTableCreateQueryVariables(tableState, filterColumnKeys),
+    variables: adminTableCreateQueryVariables(tableState),
   });
 
   const [adminTableDeleteButtonOnClick, DeleteAlertDialog, isDeleteError] =
@@ -221,7 +220,7 @@ const Index = () => {
 
       setIsRefetching(true);
 
-      refetch(adminTableCreateQueryVariables(newTableState, filterColumnKeys));
+      refetch(adminTableCreateQueryVariables(newTableState));
 
       setTableState(newTableState);
     }

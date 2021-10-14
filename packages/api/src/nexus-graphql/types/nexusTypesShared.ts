@@ -86,7 +86,11 @@ export const SharedQueries = extendType({
             break;
 
           case "term":
-            result = await daoTermCheckSlugUnique(args?.data?.slug, true, args.id);
+            result = await daoTermCheckSlugUnique(
+              args?.data?.slug,
+              true,
+              args.id
+            );
             break;
 
           default:

@@ -26,11 +26,10 @@ import {
   adminTableCreateNewTableState,
   AdminTableActionCell,
   AdminTableMultiLangCell,
-  MultiLangValue
+  MultiLangValue,
 } from "~/components/ui";
 import { config } from "~/config";
 import { SortingRule } from "react-table";
-import { termFilterColumnKeys } from "./moduleConfig";
 
 const intitalTableState: AdminTableState = {
   pageIndex: 0,
@@ -45,7 +44,7 @@ let refetchPageIndex: number | undefined = undefined;
 
 const Terms = () => {
   const router = useRouter();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [appUser] = useAuthentication();
   const [tableState, setTableState] = useLocalStorage(
     `${moduleRootPath}/Terms/${router.query.taxId}`,
@@ -64,7 +63,12 @@ const Terms = () => {
     notifyOnNetworkStatusChange: true,
     variables: {
       taxonomyId: parseInt(router.query.taxId, 10),
-      ...adminTableCreateQueryVariables(tableState, termFilterColumnKeys, multiLangFields, config.activeLanguages),
+      ...adminTableCreateQueryVariables(
+        tableState,
+        multiLangFields,
+        i18n.language,
+        config.activeLanguages
+      ),
     },
   });
 
@@ -85,7 +89,12 @@ const Terms = () => {
       title: t("module.terms.title", "Taxonomies"),
     },
     {
-      title: data && data.taxonomyRead ? <MultiLangValue json={data.taxonomyRead.name} /> : <BeatLoader size="10px" color="#666"/>,
+      title:
+        data && data.taxonomyRead ? (
+          <MultiLangValue json={data.taxonomyRead.name} />
+        ) : (
+          <BeatLoader size="10px" color="#666" />
+        ),
     },
   ];
 
@@ -148,7 +157,7 @@ const Terms = () => {
     filterKeyword: string
   ) => {
     refetchPageIndex = undefined;
-    
+
     const [newTableState, doRefetch, newPageIndex] =
       adminTableCreateNewTableState(
         tableState,
@@ -164,8 +173,15 @@ const Terms = () => {
       refetchTotalCount = data?.terms?.totalCount ?? 0;
 
       setIsRefetching(true);
-      
-      refetch(adminTableCreateQueryVariables(newTableState, termFilterColumnKeys, multiLangFields, config.activeLanguages));
+
+      refetch(
+        adminTableCreateQueryVariables(
+          newTableState,
+          multiLangFields,
+          i18n.language,
+          config.activeLanguages
+        )
+      );
 
       setTableState(newTableState);
     }

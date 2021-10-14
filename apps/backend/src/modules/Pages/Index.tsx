@@ -28,7 +28,6 @@ import {
 } from "~/components/ui";
 import { config } from "~/config";
 import { SortingRule } from "react-table";
-import { filterColumnKeys } from "./moduleConfig";
 
 const intitalTableState: AdminTableState = {
   pageIndex: 0,
@@ -42,7 +41,7 @@ let refetchTotalCount = 0;
 let refetchPageIndex: number | undefined = undefined;
 
 const Index = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [appUser] = useAuthentication();
   const [tableState, setTableState] = useLocalStorage(
     `${moduleRootPath}/Index`,
@@ -61,8 +60,8 @@ const Index = () => {
     notifyOnNetworkStatusChange: true,
     variables: adminTableCreateQueryVariables(
       tableState,
-      filterColumnKeys,
       multiLangFields,
+      i18n.language,
       config.activeLanguages
     ),
   });
@@ -119,7 +118,10 @@ const Index = () => {
       appUser,
 
       showEdit: true,
-      canEdit: (cell, appUser) => appUser?.can("pageUpdate"),
+      canEdit: (cell, appUser) =>
+        appUser?.can("pageUpdate") ||
+        (appUser.can("pageUpdateOwn") &&
+          appUser.id === (cell?.row?.original as any)?.ownerId),
       editPath: `${moduleRootPath}/update/:id`,
       editButtonLabel: t("module.pages.button.edit", "Edit page"),
       // editButtonComponent: undefined,
@@ -129,7 +131,7 @@ const Index = () => {
         appUser?.can("pageDelete") ||
         (appUser.can("pageDeleteOwn") &&
           appUser.id === (cell?.row?.original as any)?.ownerId),
-          
+
       deleteButtonLabel: t("module.pages.button.delete", "Delete page"),
       // deleteButtonComponent?: React.FC<any>;
 
@@ -166,8 +168,8 @@ const Index = () => {
       refetch(
         adminTableCreateQueryVariables(
           newTableState,
-          filterColumnKeys,
           multiLangFields,
+          i18n.language,
           config.activeLanguages
         )
       );

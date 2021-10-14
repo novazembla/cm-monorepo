@@ -45,9 +45,9 @@ export const ModuleForm = ({
           <TwoColFieldRow>
             <FieldRow>
               <FieldPublishStatusSelect
-                ownerId={data.locationRead.ownerId}
+                ownerId={data.location.ownerId}
                 module="location"
-                status={data?.locationRead?.status}
+                status={data?.location?.status}
               />
             </FieldRow>
             <FieldRow>
@@ -64,11 +64,11 @@ export const ModuleForm = ({
                   !(
                     appUser &&
                     (appUser.has("editor") ||
-                      data.locationRead.ownerId === appUser.id)
+                      data.location.ownerId === appUser.id)
                   )
                 }
                 settings={{
-                  defaultValue: data.locationRead.ownerId,
+                  defaultValue: data.location.ownerId,
                   placeholder: t(
                     "module.forms.field.placeholder.author",
                     "Please choose the author"
@@ -83,7 +83,7 @@ export const ModuleForm = ({
             id="heroImage"
             name="heroImage"
             label={t("forms.heroImage.label", "Featured image")}
-            currentImage={data?.locationRead?.heroImage}
+            currentImage={data?.location?.heroImage}
             setActiveUploadCounter={setActiveUploadCounter}
             settings={{
               imageRequired: false,
@@ -93,7 +93,7 @@ export const ModuleForm = ({
             connectWith={{
               heroImageLocations: {
                 connect: {
-                  id: data?.locationRead?.id,
+                  id: data?.location?.id,
                 },
               },
             }}
@@ -102,7 +102,7 @@ export const ModuleForm = ({
       );
     } else {
       updateActions = (
-        <input value={data?.locationRead?.ownerId} {...register("ownerId")} />
+        <input value={data?.location?.ownerId} {...register("ownerId")} />
       );
     }
   }
@@ -127,7 +127,7 @@ export const ModuleForm = ({
         label={t("module.locations.forms.location.field.label.title", "Title")}
         isRequired={true}
         settings={{
-          defaultValues: data?.locationRead?.title,
+          defaultValues: data?.location?.title,
           placeholder: t(
             "module.locations.forms.location.field.placeholder.title",
             "Location title"
@@ -141,7 +141,7 @@ export const ModuleForm = ({
         label={t("module.locations.forms.location.field.label.slug", "Slug")}
         isRequired={true}
         settings={{
-          defaultValues: data?.locationRead?.slug,
+          defaultValues: data?.location?.slug,
           placeholder: t(
             "module.locations.forms.location.field.placeholder.slug",
             "Slug / URL part"
@@ -379,8 +379,8 @@ export const ModuleForm = ({
           </chakra.span>
         </legend>
         <LocationPicker
-          lat={data?.locationRead?.lat}
-          lng={data?.locationRead?.lng}
+          lat={data?.location?.lat}
+          lng={data?.location?.lng}
           required
         />
       </chakra.fieldset>
@@ -398,7 +398,7 @@ export const ModuleForm = ({
         isRequired={false}
         settings={{
           defaultRequired: true,
-          defaultValues: data?.locationRead?.description,
+          defaultValues: data?.location?.description,
           maxLength: 1000,
           placeholder: t(
             "module.locations.forms.location.field.placeholder.description",
@@ -417,7 +417,7 @@ export const ModuleForm = ({
         )}
         isRequired={false}
         settings={{
-          defaultValues: data?.locationRead?.offers,
+          defaultValues: data?.location?.offers,
           maxLength: 500,
           placeholder: t(
             "module.locations.forms.location.field.placeholder.offers",
@@ -436,7 +436,7 @@ export const ModuleForm = ({
         isRequired={false}
         settings={{
           defaultRequired: false,
-          defaultValues: data?.locationRead?.accessibilityInformation,
+          defaultValues: data?.location?.accessibilityInformation,
           maxLength: 500,
           placeholder: t(
             "module.locations.forms.location.field.placeholder.accessibilityInformation",
