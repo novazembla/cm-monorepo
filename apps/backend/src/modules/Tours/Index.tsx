@@ -1,7 +1,12 @@
 import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { toursQueryGQL, tourDeleteMutationGQL } from "@culturemap/core";
+import {
+  toursQueryGQL,
+  tourDeleteMutationGQL,
+  PublishStatus,
+} from "@culturemap/core";
 import { useQuery } from "@apollo/client";
+import { useForm, FormProvider } from "react-hook-form";
 
 import {
   ModuleSubNav,
@@ -25,7 +30,7 @@ import {
   adminTableCreateNewTableState,
   AdminTableActionCell,
   AdminTableMultiLangCell,
-  AdminTablePublishStatusCell
+  AdminTablePublishStatusCell,
 } from "~/components/ui";
 import { config } from "~/config";
 import { SortingRule } from "react-table";
@@ -39,6 +44,14 @@ const intitalTableState: AdminTableState = {
   taxFilter: [],
   and: false,
 };
+
+const statusFilter = [
+  PublishStatus.DRAFT,
+  PublishStatus.FORREVIEW,
+  PublishStatus.PUBLISHED,
+  PublishStatus.REJECTED,
+  PublishStatus.TRASHED,
+];
 
 let refetchDataCache: any[] = [];
 let refetchTotalCount = 0;
@@ -54,16 +67,63 @@ const Index = () => {
 
   const [isRefetching, setIsRefetching] = useState(false);
 
-  const previousRoute = useTypedSelector(({router}) => router.router.previous);
+  const previousRoute = useTypedSelector(
+    ({ router }) => router.router.previous
+  );
+
+  const formMethods = useForm<any>({
+    mode: "onTouched",
+    defaultValues: {
+      ...tableState.statusFilter.reduce((acc: any, s: PublishStatus) => {
+        return {
+          ...acc,
+          [`filter_status_${s}`]: true,
+        };
+      }, {}),
+      ...tableState.taxFilter.reduce((acc: any, t: number) => {
+        return {
+          ...acc,
+          [`tax_${t}`]: true,
+        };
+      }, {}),
+      and: !!tableState.and,
+    },
+  });
+
+  const { getValues, reset } = formMethods;
 
   const [isTableStateReset, setIsTableStateReset] = useState(false);
   useEffect(() => {
     if (previousRoute?.indexOf(moduleRootPath) === -1 && !isTableStateReset) {
       setTableState(intitalTableState);
+      reset({
+        ...intitalTableState.statusFilter.reduce(
+          (acc: any, s: PublishStatus) => {
+            return {
+              ...acc,
+              [`filter_status_${s}`]: true,
+            };
+          },
+          {}
+        ),
+        ...intitalTableState.taxFilter.reduce((acc: any, t: number) => {
+          return {
+            ...acc,
+            [`tax_${t}`]: true,
+          };
+        }, {}),
+        and: !!intitalTableState.and,
+      });
       setIsTableStateReset(true);
     }
-  }, [previousRoute, setTableState, setIsTableStateReset, isTableStateReset]);
-  
+  }, [
+    previousRoute,
+    setTableState,
+    setIsTableStateReset,
+    isTableStateReset,
+    reset,
+  ]);
+
   const { loading, error, data, refetch } = useQuery(toursQueryGQL, {
     onCompleted: () => {
       setIsRefetching(false);
@@ -179,7 +239,8 @@ const Index = () => {
         pageIndex,
         pageSize,
         sortBy,
-        filterKeyword
+        filterKeyword,
+        getValues()
       );
 
     if (doRefetch) {
@@ -220,21 +281,31 @@ const Index = () => {
         isLoading={loading && !isRefetching}
         isError={!!error || !!isDeleteError}
       >
-        <AdminTable
-          columns={AdminTableColumns}
-          isLoading={loading}
-          showFilter={true}
-          showKeywordSearch={true}
-          {...{
-            tableTotalCount,
-            tablePageCount,
-            isRefetching,
-            onFetchData,
-            refetchPageIndex,
-          }}
-          data={isRefetching ? refetchDataCache : data?.tours?.tours ?? []}
-          intitalTableState={tableState}
-        />
+        <FormProvider {...formMethods}>
+          <form
+            noValidate
+            onSubmit={(event) => {
+              event.preventDefault();
+            }}
+          >
+            <AdminTable
+              columns={AdminTableColumns}
+              isLoading={loading}
+              showFilter={true}
+              showKeywordSearch={true}
+              statusFilter={statusFilter}
+              {...{
+                tableTotalCount,
+                tablePageCount,
+                isRefetching,
+                onFetchData,
+                refetchPageIndex,
+              }}
+              data={isRefetching ? refetchDataCache : data?.tours?.tours ?? []}
+              intitalTableState={tableState}
+            />
+          </form>
+        </FormProvider>
       </ModulePage>
       {DeleteAlertDialog}
     </>

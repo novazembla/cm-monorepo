@@ -95,6 +95,7 @@ const statusFilter = [
   PublishStatus.IMPORTEDWARNINGS,
   PublishStatus.PUBLISHED,
   PublishStatus.REJECTED,
+  PublishStatus.TRASHED,
 ];
 
 const Index = () => {
@@ -105,7 +106,6 @@ const Index = () => {
     `${moduleRootPath}/Index`,
     intitalTableState
   );
-    
 
   const previousRoute = useTypedSelector(
     ({ router }) => router.router.previous
@@ -130,15 +130,41 @@ const Index = () => {
     },
   });
 
-  const { getValues } = formMethods;
+  const { getValues, reset } = formMethods;
 
   const [isTableStateReset, setIsTableStateReset] = useState(false);
   useEffect(() => {
+    console.log(previousRoute, isTableStateReset);
     if (previousRoute?.indexOf(moduleRootPath) === -1 && !isTableStateReset) {
+      console.log("Reset");
       setTableState(intitalTableState);
+      reset({
+        ...intitalTableState.statusFilter.reduce(
+          (acc: any, s: PublishStatus) => {
+            return {
+              ...acc,
+              [`filter_status_${s}`]: true,
+            };
+          },
+          {}
+        ),
+        ...intitalTableState.taxFilter.reduce((acc: any, t: number) => {
+          return {
+            ...acc,
+            [`tax_${t}`]: true,
+          };
+        }, {}),
+        and: !!intitalTableState.and,
+      });
       setIsTableStateReset(true);
     }
-  }, [previousRoute, setTableState, setIsTableStateReset, isTableStateReset]);
+  }, [
+    previousRoute,
+    setTableState,
+    setIsTableStateReset,
+    isTableStateReset,
+    reset,
+  ]);
 
   const [isRefetching, setIsRefetching] = useState(false);
 
@@ -250,7 +276,7 @@ const Index = () => {
     filterKeyword: string
   ) => {
     refetchPageIndex = undefined;
-    
+
     const [newTableState, doRefetch, newPageIndex] =
       adminTableCreateNewTableState(
         tableState,

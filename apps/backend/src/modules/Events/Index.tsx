@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { eventsQueryGQL, eventDeleteMutationGQL } from "@culturemap/core";
-import { useQuery } from "@apollo/client";
+import { eventDeleteMutationGQL, PublishStatus } from "@culturemap/core";
+import { useQuery, gql } from "@apollo/client";
+import { useForm, FormProvider } from "react-hook-form";
 
 import {
   ModuleSubNav,
@@ -31,6 +32,49 @@ import {
 import { config } from "~/config";
 import { SortingRule } from "react-table";
 
+export const eventsQueryGQL = gql`
+  query events($where: JSON, $orderBy: JSON, $pageIndex: Int, $pageSize: Int) {
+    events(
+      where: $where
+      orderBy: $orderBy
+      pageIndex: $pageIndex
+      pageSize: $pageSize
+    ) {
+      events {
+        id
+        ownerId
+        title
+        slug
+        status
+        description
+        isFree
+        isImported
+        meta
+        updatedAt
+        dates {
+          id
+          date
+          begin
+          end
+        }
+      }
+      totalCount
+    }
+    moduleTaxonomies(key: "event") {
+      id
+      name
+      slug
+      isRequired
+      collectPrimaryTerm
+      terms {
+        id
+        slug
+        name
+      }
+    }
+  }
+`;
+
 const intitalTableState: AdminTableState = {
   pageIndex: 0,
   pageSize: config.defaultPageSize ?? 30,
@@ -45,6 +89,16 @@ let refetchDataCache: any[] = [];
 let refetchTotalCount = 0;
 let refetchPageIndex: number | undefined = undefined;
 
+const statusFilter = [
+  PublishStatus.DRAFT,
+  PublishStatus.FORREVIEW,
+  PublishStatus.IMPORTED,
+  PublishStatus.IMPORTEDWARNINGS,
+  PublishStatus.PUBLISHED,
+  PublishStatus.REJECTED,
+  PublishStatus.TRASHED,
+];
+
 const Index = () => {
   const { t, i18n } = useTranslation();
   const [appUser] = useAuthentication();
@@ -55,16 +109,62 @@ const Index = () => {
 
   const [isRefetching, setIsRefetching] = useState(false);
 
+  const previousRoute = useTypedSelector(
+    ({ router }) => router.router.previous
+  );
 
-  const previousRoute = useTypedSelector(({router}) => router.router.previous);
+  const formMethods = useForm<any>({
+    mode: "onTouched",
+    defaultValues: {
+      ...tableState.statusFilter.reduce((acc: any, s: PublishStatus) => {
+        return {
+          ...acc,
+          [`filter_status_${s}`]: true,
+        };
+      }, {}),
+      ...tableState.taxFilter.reduce((acc: any, t: number) => {
+        return {
+          ...acc,
+          [`tax_${t}`]: true,
+        };
+      }, {}),
+      and: !!tableState.and,
+    },
+  });
+
+  const { getValues, reset } = formMethods;
 
   const [isTableStateReset, setIsTableStateReset] = useState(false);
   useEffect(() => {
     if (previousRoute?.indexOf(moduleRootPath) === -1 && !isTableStateReset) {
       setTableState(intitalTableState);
+      reset({
+        ...intitalTableState.statusFilter.reduce(
+          (acc: any, s: PublishStatus) => {
+            return {
+              ...acc,
+              [`filter_status_${s}`]: true,
+            };
+          },
+          {}
+        ),
+        ...intitalTableState.taxFilter.reduce((acc: any, t: number) => {
+          return {
+            ...acc,
+            [`tax_${t}`]: true,
+          };
+        }, {}),
+        and: !!intitalTableState.and,
+      });
       setIsTableStateReset(true);
     }
-  }, [previousRoute, setTableState, setIsTableStateReset, isTableStateReset]);
+  }, [
+    previousRoute,
+    setTableState,
+    setIsTableStateReset,
+    isTableStateReset,
+    reset,
+  ]);
 
   const { loading, error, data, refetch } = useQuery(eventsQueryGQL, {
     onCompleted: () => {
@@ -182,7 +282,8 @@ const Index = () => {
         pageIndex,
         pageSize,
         sortBy,
-        filterKeyword
+        filterKeyword,
+        getValues(),
       );
 
     if (doRefetch) {
@@ -223,7 +324,14 @@ const Index = () => {
         isLoading={loading && !isRefetching}
         isError={!!error || !!isDeleteError}
       >
-        <AdminTable
+        <FormProvider {...formMethods}>
+          <form
+            noValidate
+            onSubmit={(event) => {
+              event.preventDefault();
+            }}
+          >
+            <AdminTable
           columns={AdminTableColumns}
           isLoading={loading}
           showFilter={true}
@@ -236,8 +344,12 @@ const Index = () => {
             refetchPageIndex,
           }}
           data={isRefetching ? refetchDataCache : data?.events?.events ?? []}
+          statusFilter={statusFilter}
+          taxonomies={data}
           intitalTableState={tableState}
-        />
+          />
+          </form>
+        </FormProvider>
       </ModulePage>
       {DeleteAlertDialog}
     </>

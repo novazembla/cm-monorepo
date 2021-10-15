@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { pagesQueryGQL, pageDeleteMutationGQL } from "@culturemap/core";
+import { pagesQueryGQL, pageDeleteMutationGQL, PublishStatus} from "@culturemap/core";
 import { useQuery } from "@apollo/client";
+import { useForm, FormProvider } from "react-hook-form";
 
 import {
   ModuleSubNav,
@@ -40,6 +41,14 @@ const intitalTableState: AdminTableState = {
   and: false,
 };
 
+const statusFilter = [
+  PublishStatus.DRAFT,
+  PublishStatus.FORREVIEW,
+  PublishStatus.PUBLISHED,
+  PublishStatus.REJECTED,
+  PublishStatus.TRASHED,
+];
+
 let refetchDataCache: any[] = [];
 let refetchTotalCount = 0;
 let refetchPageIndex: number | undefined = undefined;
@@ -54,15 +63,62 @@ const Index = () => {
 
   const [isRefetching, setIsRefetching] = useState(false);
 
-  const previousRoute = useTypedSelector(({router}) => router.router.previous);
+  const previousRoute = useTypedSelector(
+    ({ router }) => router.router.previous
+  );
+
+  const formMethods = useForm<any>({
+    mode: "onTouched",
+    defaultValues: {
+      ...tableState.statusFilter.reduce((acc: any, s: PublishStatus) => {
+        return {
+          ...acc,
+          [`filter_status_${s}`]: true,
+        };
+      }, {}),
+      ...tableState.taxFilter.reduce((acc: any, t: number) => {
+        return {
+          ...acc,
+          [`tax_${t}`]: true,
+        };
+      }, {}),
+      and: !!tableState.and,
+    },
+  });
+
+  const { getValues, reset } = formMethods;
 
   const [isTableStateReset, setIsTableStateReset] = useState(false);
   useEffect(() => {
     if (previousRoute?.indexOf(moduleRootPath) === -1 && !isTableStateReset) {
       setTableState(intitalTableState);
+      reset({
+        ...intitalTableState.statusFilter.reduce(
+          (acc: any, s: PublishStatus) => {
+            return {
+              ...acc,
+              [`filter_status_${s}`]: true,
+            };
+          },
+          {}
+        ),
+        ...intitalTableState.taxFilter.reduce((acc: any, t: number) => {
+          return {
+            ...acc,
+            [`tax_${t}`]: true,
+          };
+        }, {}),
+        and: !!intitalTableState.and,
+      });
       setIsTableStateReset(true);
     }
-  }, [previousRoute, setTableState, setIsTableStateReset, isTableStateReset]);
+  }, [
+    previousRoute,
+    setTableState,
+    setIsTableStateReset,
+    isTableStateReset,
+    reset,
+  ]);
 
   const { loading, error, data, refetch } = useQuery(pagesQueryGQL, {
     onCompleted: () => {
@@ -169,7 +225,8 @@ const Index = () => {
         pageIndex,
         pageSize,
         sortBy,
-        filterKeyword
+        filterKeyword,
+        getValues()
       );
 
     if (doRefetch) {
@@ -210,10 +267,17 @@ const Index = () => {
         isLoading={loading && !isRefetching}
         isError={!!error || !!isDeleteError}
       >
-        <AdminTable
+        <FormProvider {...formMethods}>
+          <form
+            noValidate
+            onSubmit={(event) => {
+              event.preventDefault();
+            }}
+          ><AdminTable
           columns={AdminTableColumns}
           isLoading={loading}
           showFilter={true}
+          statusFilter={statusFilter}
           showKeywordSearch={true}
           {...{
             tableTotalCount,
@@ -225,6 +289,8 @@ const Index = () => {
           data={isRefetching ? refetchDataCache : data?.pages?.pages ?? []}
           intitalTableState={tableState}
         />
+        </form>
+        </FormProvider>
       </ModulePage>
       {DeleteAlertDialog}
     </>

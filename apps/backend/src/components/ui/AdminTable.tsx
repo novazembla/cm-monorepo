@@ -644,7 +644,7 @@ export const AdminTable = ({
         </Link>
       </VisuallyHidden>
 
-      {(showKeywordSearch || statusFilter || showFilter) && (
+      {(showKeywordSearch || showFilter) && (
         <Box mb="5">
           <Flex
             py="2"
@@ -653,13 +653,13 @@ export const AdminTable = ({
             borderColor="gray.300"
           >
             <Box width="80%" pr="6">
-              <Button
+              {showFilter && <Button
                 onClick={() => {
                   setFilterIsOpen(!filterIsOpen);
                 }}
               >
                 {t("admintable.filter.button.toggle", "Filter")}
-              </Button>
+              </Button>}
             </Box>
             <Box w="20%">
               <FormLabel htmlFor="filter" m="0">
@@ -677,7 +677,7 @@ export const AdminTable = ({
               </FormLabel>
             </Box>
           </Flex>
-          {showFilter && (
+          {showFilter && (taxonomies || statusFilter ) && (
             <Box
               position="relative"
               overflow="hidden"

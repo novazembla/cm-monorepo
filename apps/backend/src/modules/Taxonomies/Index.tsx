@@ -232,7 +232,7 @@ const Index = () => {
         <AdminTable
           columns={AdminTableColumns}
           isLoading={loading}
-          showFilter={true}
+          showFilter={false}
           showKeywordSearch={true}
           {...{
             tableTotalCount,
