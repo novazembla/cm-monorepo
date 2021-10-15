@@ -46,6 +46,7 @@ model User {
   fullText String? @default("")
 
   imports Import[]
+  locationExports LocationExport[]
 
   profileImageId Int?
   profileImage   Image? @relation(fields: [profileImageId], references: [id], name: "profileImage", onDelete: Cascade)
@@ -430,6 +431,26 @@ model Import {
   updatedAt DateTime @default(now()) @updatedAt
 }
 
+
+model LocationExport {
+  id       Int    @id @default(autoincrement())
+  title    String
+  log      Json?  @default("[]")
+  errors   Json?  @default("[]")
+  meta  Json?  @default("{}")
+  status   Int    @default(0)
+
+  fileId Int?
+  file   File? @relation(fields: [fileId], references: [id], name: "locationExportFiles")
+
+  ownerId Int
+  owner   User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+
 model File {
   id Int @id @default(autoincrement())
 
@@ -444,4 +465,5 @@ model File {
   owner   User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
   imports Import[] @relation("importFiles")
+  locationExports LocationExport[] @relation("locationExportFiles")
 }

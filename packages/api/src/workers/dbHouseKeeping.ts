@@ -6,7 +6,12 @@ import { spawn } from "child_process";
 import Prisma from "@prisma/client";
 
 import { getApiConfig } from "../config";
-import { ImageStatus, FileStatus, ImportStatus } from "@culturemap/core";
+import {
+  ImageStatus,
+  FileStatus,
+  ImportStatus,
+  LocationExportStatus,
+} from "@culturemap/core";
 
 // https://github.com/breejs/bree#long-running-jobs
 // Or use https://threads.js.org/usage for a queing experience .. .
@@ -192,8 +197,6 @@ const doChores = async () => {
       },
     });
 
-    await prisma.$disconnect();
-
     if (scheduledImport) {
       try {
         // TODO: adjust to production server configuration
@@ -228,6 +231,101 @@ const doChores = async () => {
         );
       }
     }
+
+    const locationExportsToDelete = await prisma.locationExport.findMany({
+      where: {
+        updatedAt: {
+          lt: new Date(new Date().getTime() - 1000 * 60 * 60 * 24),
+        },
+      },
+      include: {
+        file: true,
+      },
+    });
+
+    if (locationExportsToDelete && locationExportsToDelete.length) {
+      const fileIds: number[] = locationExportsToDelete.reduce((acc, imp) => {
+        if (imp?.file && imp?.file?.id) {
+          acc.push(imp?.file?.id);
+        }
+        return acc;
+      }, [] as number[]);
+
+      if (fileIds.length > 0) {
+        await prisma.file.updateMany({
+          data: {
+            status: FileStatus.DELETED,
+          },
+          where: {
+            id: {
+              in: fileIds,
+            },
+          },
+        });
+        postMessage(
+          `[WORKER:dbHousekeeping]: Scheduled ${fileIds.length} uploaded locationExport files to be deleted`
+        );
+      }
+
+      const locationExportCleanup = await prisma.locationExport.deleteMany({
+        where: {
+          updatedAt: {
+            lt: new Date(new Date().getTime() - 1000 * 60 * 60 * 24),
+          },
+        },
+      });
+
+      postMessage(
+        `[WORKER:dbHousekeeping]: Deleted ${locationExportCleanup.count} expired locationExport(s)`
+      );
+    }
+
+    const scheduledLocationExport = await prisma.locationExport.findFirst({
+      where: {
+        status: {
+          in: [LocationExportStatus.PROCESS],
+        },
+      },
+      orderBy: {
+        updatedAt: "asc",
+      },
+    });
+
+    if (scheduledLocationExport) {
+      try {
+        // TODO: adjust to production server configuration
+        const buildFolder =
+          process.env.NODE_ENV !== "production" ? "dist" : "dist";
+
+        spawn(
+          "node",
+          [
+            `${apiConfig.packageBaseDir}/${buildFolder}/scripts/processLocationExportFile.js`,
+            `--locationExportId=${scheduledLocationExport.id}`,
+          ],
+          {
+            detached: true,
+          }
+        );
+        postMessage(
+          `[WORKER:dbHousekeeping]: Triggered locationExport script for locationExport: ${scheduledLocationExport.id}`
+        );
+      } catch (err) {
+        await prisma.locationExport.update({
+          data: {
+            status: LocationExportStatus.ERROR,
+            errors: ["Could not execute locationExport script"],
+          },
+          where: {
+            id: scheduledLocationExport.id,
+          },
+        });
+        postMessage(
+          `[WORKER:dbHousekeeping]: could not trigger script for locationExport: ${scheduledLocationExport.id}`
+        );
+      }
+    }
+    await prisma.$disconnect();
   } catch (Err: any) {
     postMessage(
       `[WORKER:dbHousekeeping]: Failed to run worker. ${Err.name} ${Err.message}`

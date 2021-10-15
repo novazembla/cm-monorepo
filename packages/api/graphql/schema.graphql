@@ -224,6 +224,29 @@ type Location {
   visibleUntilTime: DateTime
 }
 
+type LocationExport {
+  createdAt: DateTime
+  errors: JSON
+  file: JSON
+  id: Int!
+  log: JSON
+  meta: JSON
+  status: Int
+  title: JSON
+  updatedAt: DateTime
+}
+
+"""List all the location exports in the database."""
+type LocationExportQueryResult {
+  locationExports: [LocationExport]
+  totalCount: Int
+}
+
+input LocationExportUpsertInput {
+  meta: JSON
+  title: String!
+}
+
 """List all the locations in the database."""
 type LocationQueryResult {
   locations: [Location]
@@ -276,6 +299,8 @@ type Mutation {
   importUpdate(data: ImportUpsertInput!, id: Int!): Import!
   locationCreate(data: LocationUpsertInput!): Location!
   locationDelete(id: Int!): BooleanResult!
+  locationExportCreate(data: LocationExportUpsertInput!): LocationExport!
+  locationExportDelete(id: Int!): BooleanResult!
   locationUpdate(data: LocationUpsertInput!, id: Int!, imagesTranslations: [ImageTranslationInput]): Location!
   pageCreate(data: PageUpsertInput!): Page!
   pageDelete(id: Int!): BooleanResult!
@@ -356,6 +381,8 @@ type Query {
   importRead(id: Int!): Import!
   imports(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): ImportQueryResult
   location(id: Int, slug: String): Location!
+  locationExportRead(id: Int!): LocationExport!
+  locationExports(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): LocationExportQueryResult
   locations(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): LocationQueryResult
   moduleTaxonomies(key: String!): [Taxonomy]
   modules: [Module]

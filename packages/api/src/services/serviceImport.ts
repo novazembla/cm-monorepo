@@ -3,7 +3,11 @@ import { parse } from "@fast-csv/parse";
 import httpStatus from "http-status";
 import { access } from "fs/promises";
 import { createReadStream } from "fs";
-import { importHeaders, importRequiredHeaders } from "@culturemap/core";
+import {
+  importHeaders,
+  importRequiredHeaders,
+  ImportStatus,
+} from "@culturemap/core";
 import { ApiError } from "../utils";
 import { logger } from "./serviceLogging";
 import { daoImportGetById, daoFileSetToDelete, daoImportDelete } from "../dao";
@@ -178,6 +182,12 @@ export const importDelete = async (id: number): Promise<Import> => {
   const importInDb: Import = await daoImportGetById(id);
 
   if (!importInDb)
+    throw new ApiError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      "Import could not be deleted"
+    );
+
+  if (importInDb.status === ImportStatus.PROCESSING)
     throw new ApiError(
       httpStatus.INTERNAL_SERVER_ERROR,
       "Import could not be deleted"

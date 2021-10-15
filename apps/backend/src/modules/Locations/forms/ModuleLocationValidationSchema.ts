@@ -44,6 +44,10 @@ export const ModuleLocationCreateSchema = object().shape(
   )
 );
 
+export const ModuleLocationExportCreateSchema = object().shape({
+  title: string().required(),
+});
+
 export const ModuleLocationUpdateSchema = ModuleLocationCreateSchema.concat(
   object().shape(
     activeLanguages.reduce(

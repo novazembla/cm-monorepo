@@ -1,4 +1,4 @@
-import type { RoutePrivateParams } from '~/types';
+import type { RoutePrivateParams } from "~/types";
 
 import Create from "./Create";
 import Update from "./Update";
@@ -7,7 +7,8 @@ import Import from "./Import";
 import ImportCreate from "./ImportCreate";
 import ImportUpdate from "./ImportUpdate";
 
-import { moduleRootPath } from './moduleConfig';
+import { moduleRootPath } from "./moduleConfig";
+import LocationExports from "./LocationExports";
 
 export const moduleRoutes: RoutePrivateParams[] = [
   {
@@ -39,6 +40,13 @@ export const moduleRoutes: RoutePrivateParams[] = [
     userCan: "locationCreate",
   },
   {
+    key: "exports",
+    path: `${moduleRootPath}/exports`,
+    component: LocationExports,
+    exact: true,
+    userCan: "locationCreate",
+  },
+  {
     key: "update",
     path: `${moduleRootPath}/update/:id`,
     component: Update,
@@ -51,7 +59,7 @@ export const moduleRoutes: RoutePrivateParams[] = [
     component: Index,
     exact: true,
     userCan: "locationReadOwn",
-  }
+  },
 ];
 
 export const getModuleRoutesPathsArray = (): string[] => {

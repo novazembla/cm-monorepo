@@ -6,6 +6,8 @@ import { useTranslation } from "react-i18next";
 import { locationDeleteMutationGQL, PublishStatus } from "@culturemap/core";
 import { useQuery, gql } from "@apollo/client";
 import { useForm, FormProvider } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import type * as yup from "yup";
 
 import {
   ModuleSubNav,
@@ -19,7 +21,13 @@ import {
   useAuthentication,
   useLocalStorage,
   useTypedSelector,
+  useSuccessfullySavedToast,
 } from "~/hooks";
+
+import { FieldInput, FieldRow, TextErrorMessage } from "~/components/forms";
+
+import { useLocationExportCreateMutation } from "./hooks";
+import { ModuleLocationExportCreateSchema } from "./forms";
 
 import {
   AdminTable,
@@ -34,6 +42,7 @@ import {
 } from "~/components/ui";
 import { config } from "~/config";
 import { SortingRule } from "react-table";
+import { Divider, chakra, Button, Box, Flex } from "@chakra-ui/react";
 
 export const locationsQueryGQL = gql`
   query locations(
@@ -100,12 +109,16 @@ const statusFilter = [
 
 const Index = () => {
   const { t, i18n } = useTranslation();
-
+  const [hasFormError, setHasFormError] = useState(false);
   const [appUser] = useAuthentication();
+  const successToast = useSuccessfullySavedToast();
   const [tableState, setTableState] = useLocalStorage(
     `${moduleRootPath}/Index`,
     intitalTableState
   );
+
+  const [firstMutation, firstMutationResults] =
+    useLocationExportCreateMutation();
 
   const previousRoute = useTypedSelector(
     ({ router }) => router.router.previous
@@ -127,10 +140,12 @@ const Index = () => {
         };
       }, {}),
       and: !!tableState.and,
+      title: undefined,
     },
+    resolver: yupResolver(ModuleLocationExportCreateSchema),
   });
 
-  const { getValues, reset } = formMethods;
+  const { getValues, reset, handleSubmit } = formMethods;
 
   const [isTableStateReset, setIsTableStateReset] = useState(false);
   useEffect(() => {
@@ -211,6 +226,12 @@ const Index = () => {
       type: "navigation",
       to: `${moduleRootPath}/import`,
       label: t("module.locations.menuitem.imports", "Imports"),
+      userCan: "locationCreate",
+    },
+    {
+      type: "navigation",
+      to: `${moduleRootPath}/exports`,
+      label: t("module.locations.menuitem.exports", "Exports"),
       userCan: "locationCreate",
     },
   ];
@@ -309,6 +330,31 @@ const Index = () => {
 
   const tableTotalCount = data?.locations?.totalCount ?? refetchTotalCount;
 
+  const onSubmit = async (
+    newData: yup.InferType<typeof ModuleLocationExportCreateSchema>
+  ) => {
+    setHasFormError(false);
+
+    try {
+      if (appUser) {
+        const mutationResults = await firstMutation({
+          title: newData.title,
+          meta: tableState,
+        });
+
+        if (!mutationResults.errors) {
+          successToast();
+        } else {
+          setHasFormError(true);
+        }
+      } else {
+        setHasFormError(true);
+      }
+    } catch (err) {
+      setHasFormError(true);
+    }
+  };
+
   const tablePageCount =
     tableTotalCount > 0
       ? Math.ceil(
@@ -325,12 +371,13 @@ const Index = () => {
         isError={!!error || !!isDeleteError}
       >
         <FormProvider {...formMethods}>
-          <form
-            noValidate
-            onSubmit={(event) => {
-              event.preventDefault();
-            }}
-          >
+          <form noValidate onSubmit={handleSubmit(onSubmit)}>
+            {hasFormError && (
+              <>
+                <TextErrorMessage error="general.writeerror.desc" />
+                <Divider />
+              </>
+            )}
             <AdminTable
               columns={AdminTableColumns}
               isLoading={loading}
@@ -352,6 +399,62 @@ const Index = () => {
               taxonomies={data}
               intitalTableState={tableState}
             />
+            <Divider mt="3" />
+            <chakra.fieldset
+              border="1px solid"
+              borderColor="gray.400"
+              p="2"
+              borderRadius="md"
+            >
+              <legend>
+                <chakra.span px="2">
+                  {t("module.locations.export.create.label", "Export")}
+                </chakra.span>
+              </legend>
+              <Box p="2">
+                <FieldRow>
+                  <Box>
+                    {t(
+                      "module.locations.export.introduction",
+                      "Export all {{num}} items as CSV file",
+                      {
+                        num: tableTotalCount
+                      }
+
+                    )}
+                  </Box>
+                </FieldRow>
+                <FieldRow>
+                  <FieldInput
+                    id="title"
+                    type="text"
+                    name="title"
+                    label={t(
+                      "module.locations.export.field.label.exportName",
+                      "Export Name"
+                    )}
+                    isRequired={true}
+                    isDisabled={tableTotalCount === 0}
+                    settings={{
+                      placeholder: t(
+                        "module.locations.export.field.placeholder.title",
+                        "Short name to find your export in the export listing"
+                      ),
+                    }}
+                  />
+                </FieldRow>
+                <FieldRow>
+                  <Flex w="100%" justifyContent="flex-end">
+                    <Button type="submit" isDisabled={tableTotalCount === 0}>
+                      {t(
+                        "module.locations.export.button.label.scheduleExport",
+                        "Schedule export"
+                      )}
+                    </Button>
+                  </Flex>
+                </FieldRow>
+              </Box>
+            </chakra.fieldset>
           </form>
         </FormProvider>
       </ModulePage>

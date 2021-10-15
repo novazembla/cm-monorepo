@@ -84,6 +84,10 @@ export interface NexusGenInputs {
     title: string; // String!
     warnings?: NexusGenScalars['JSON'] | null; // JSON
   }
+  LocationExportUpsertInput: { // input type
+    meta?: NexusGenScalars['JSON'] | null; // JSON
+    title: string; // String!
+  }
   LocationUpsertInput: { // input type
     accessibilityInformation?: NexusGenScalars['JSON'] | null; // JSON
     address?: NexusGenScalars['JSON'] | null; // JSON
@@ -350,6 +354,21 @@ export interface NexusGenObjects {
     visibleFromTime?: NexusGenScalars['DateTime'] | null; // DateTime
     visibleUntil?: NexusGenScalars['DateTime'] | null; // DateTime
     visibleUntilTime?: NexusGenScalars['DateTime'] | null; // DateTime
+  }
+  LocationExport: { // root type
+    createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
+    errors?: NexusGenScalars['JSON'] | null; // JSON
+    file?: NexusGenScalars['JSON'] | null; // JSON
+    id: number; // Int!
+    log?: NexusGenScalars['JSON'] | null; // JSON
+    meta?: NexusGenScalars['JSON'] | null; // JSON
+    status?: number | null; // Int
+    title?: NexusGenScalars['JSON'] | null; // JSON
+    updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
+  }
+  LocationExportQueryResult: { // root type
+    locationExports?: Array<NexusGenRootTypes['LocationExport'] | null> | null; // [LocationExport]
+    totalCount?: number | null; // Int
   }
   LocationQueryResult: { // root type
     locations?: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
@@ -636,6 +655,21 @@ export interface NexusGenFieldTypes {
     visibleUntil: NexusGenScalars['DateTime'] | null; // DateTime
     visibleUntilTime: NexusGenScalars['DateTime'] | null; // DateTime
   }
+  LocationExport: { // field return type
+    createdAt: NexusGenScalars['DateTime'] | null; // DateTime
+    errors: NexusGenScalars['JSON'] | null; // JSON
+    file: NexusGenScalars['JSON'] | null; // JSON
+    id: number; // Int!
+    log: NexusGenScalars['JSON'] | null; // JSON
+    meta: NexusGenScalars['JSON'] | null; // JSON
+    status: number | null; // Int
+    title: NexusGenScalars['JSON'] | null; // JSON
+    updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
+  }
+  LocationExportQueryResult: { // field return type
+    locationExports: Array<NexusGenRootTypes['LocationExport'] | null> | null; // [LocationExport]
+    totalCount: number | null; // Int
+  }
   LocationQueryResult: { // field return type
     locations: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
     totalCount: number | null; // Int
@@ -665,6 +699,8 @@ export interface NexusGenFieldTypes {
     importUpdate: NexusGenRootTypes['Import']; // Import!
     locationCreate: NexusGenRootTypes['Location']; // Location!
     locationDelete: NexusGenRootTypes['BooleanResult']; // BooleanResult!
+    locationExportCreate: NexusGenRootTypes['LocationExport']; // LocationExport!
+    locationExportDelete: NexusGenRootTypes['BooleanResult']; // BooleanResult!
     locationUpdate: NexusGenRootTypes['Location']; // Location!
     pageCreate: NexusGenRootTypes['Page']; // Page!
     pageDelete: NexusGenRootTypes['BooleanResult']; // BooleanResult!
@@ -730,6 +766,8 @@ export interface NexusGenFieldTypes {
     importRead: NexusGenRootTypes['Import']; // Import!
     imports: NexusGenRootTypes['ImportQueryResult'] | null; // ImportQueryResult
     location: NexusGenRootTypes['Location']; // Location!
+    locationExportRead: NexusGenRootTypes['LocationExport']; // LocationExport!
+    locationExports: NexusGenRootTypes['LocationExportQueryResult'] | null; // LocationExportQueryResult
     locations: NexusGenRootTypes['LocationQueryResult'] | null; // LocationQueryResult
     moduleTaxonomies: Array<NexusGenRootTypes['Taxonomy'] | null> | null; // [Taxonomy]
     modules: Array<NexusGenRootTypes['Module'] | null> | null; // [Module]
@@ -1013,6 +1051,21 @@ export interface NexusGenFieldTypeNames {
     visibleUntil: 'DateTime'
     visibleUntilTime: 'DateTime'
   }
+  LocationExport: { // field return type name
+    createdAt: 'DateTime'
+    errors: 'JSON'
+    file: 'JSON'
+    id: 'Int'
+    log: 'JSON'
+    meta: 'JSON'
+    status: 'Int'
+    title: 'JSON'
+    updatedAt: 'DateTime'
+  }
+  LocationExportQueryResult: { // field return type name
+    locationExports: 'LocationExport'
+    totalCount: 'Int'
+  }
   LocationQueryResult: { // field return type name
     locations: 'Location'
     totalCount: 'Int'
@@ -1042,6 +1095,8 @@ export interface NexusGenFieldTypeNames {
     importUpdate: 'Import'
     locationCreate: 'Location'
     locationDelete: 'BooleanResult'
+    locationExportCreate: 'LocationExport'
+    locationExportDelete: 'BooleanResult'
     locationUpdate: 'Location'
     pageCreate: 'Page'
     pageDelete: 'BooleanResult'
@@ -1107,6 +1162,8 @@ export interface NexusGenFieldTypeNames {
     importRead: 'Import'
     imports: 'ImportQueryResult'
     location: 'Location'
+    locationExportRead: 'LocationExport'
+    locationExports: 'LocationExportQueryResult'
     locations: 'LocationQueryResult'
     moduleTaxonomies: 'Taxonomy'
     modules: 'Module'
@@ -1314,6 +1371,12 @@ export interface NexusGenArgTypes {
     locationDelete: { // args
       id: number; // Int!
     }
+    locationExportCreate: { // args
+      data: NexusGenInputs['LocationExportUpsertInput']; // LocationExportUpsertInput!
+    }
+    locationExportDelete: { // args
+      id: number; // Int!
+    }
     locationUpdate: { // args
       data: NexusGenInputs['LocationUpsertInput']; // LocationUpsertInput!
       id: number; // Int!
@@ -1462,6 +1525,15 @@ export interface NexusGenArgTypes {
     location: { // args
       id?: number | null; // Int
       slug?: string | null; // String
+    }
+    locationExportRead: { // args
+      id: number; // Int!
+    }
+    locationExports: { // args
+      orderBy?: NexusGenScalars['JSON'] | null; // JSON
+      pageIndex?: number | null; // Int
+      pageSize: number | null; // Int
+      where?: NexusGenScalars['JSON'] | null; // JSON
     }
     locations: { // args
       orderBy?: NexusGenScalars['JSON'] | null; // JSON
