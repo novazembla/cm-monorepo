@@ -25,7 +25,7 @@ export const ModuleTourSchemaCreate = object().shape(
       [`distance_${lang}`]: string().required(),
     }),
     {
-      // duration: string().required(),
+      orderNumber: number().required(),
       // distance: string().required(),
     }
   )

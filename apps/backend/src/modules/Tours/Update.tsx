@@ -51,6 +51,7 @@ export const tourAndContentAuthorsQueryGQL = gql`
       id
       title
       slug
+      orderNumber
       distance
       duration
       teaser
@@ -137,6 +138,7 @@ const Update = () => {
         config.activeLanguages
       ),
       status: data?.tour?.status,
+      orderNumber: data?.tour?.orderNumber,
       ownerId: data?.tour?.ownerId,
       path: data?.tour?.path,
       heroImage: data?.tour?.heroImage?.id,
@@ -182,6 +184,7 @@ const Update = () => {
               multiLangFieldsTour
             ),
             status: parseInt(newData.status),
+            orderNumber: parseInt(newData.orderNumber),
             path: newData.path,
             ...heroImage,
             owner: {

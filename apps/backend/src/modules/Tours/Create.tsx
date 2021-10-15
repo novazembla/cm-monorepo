@@ -70,6 +70,7 @@ const Create = () => {
             connect: { id: appUser.id },
           },
           status: PublishStatus.DRAFT,
+          orderNumber: newData.orderNumber,
           ...filteredOutputByWhitelist(
             multiLangRHFormDataToJson(
               newData,

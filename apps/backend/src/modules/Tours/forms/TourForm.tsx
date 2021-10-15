@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+
 import { Divider, Alert, AlertIcon } from "@chakra-ui/react";
 import {
   FieldMultiLangInput,
@@ -6,11 +7,13 @@ import {
   FieldHidden,
   FieldPublishStatusSelect,
   FieldRow,
+  FieldInput,
   TwoColFieldRow,
   FieldMultiLangTextEditor,
   FieldSingleImage,
 } from "~/components/forms";
 import { useAuthentication } from "~/hooks";
+import { yupIsFieldRequired } from "~/validation";
 
 export const TourForm = ({
   data,
@@ -73,6 +76,21 @@ export const TourForm = ({
           ),
         }}
       />
+      <FieldRow>
+      <FieldInput
+              id="orderNumber"
+              type="text"
+              name="orderNumber"
+              label={t(
+                "module.tours.forms.field.label.orderNumber",
+                "Order number"
+              )}
+              isRequired={yupIsFieldRequired("orderNumber", validationSchema)}
+              settings={{
+                placeholder: "1",
+              }}
+            />
+      </FieldRow>
       {action === "update" && (
         <>
           <Divider mt="10" />

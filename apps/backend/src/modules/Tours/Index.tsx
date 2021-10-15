@@ -38,7 +38,10 @@ import { SortingRule } from "react-table";
 const intitalTableState: AdminTableState = {
   pageIndex: 0,
   pageSize: config.defaultPageSize ?? 30,
-  sortBy: [],
+  sortBy: [{
+    id: "orderNumber",
+    desc: false
+  }],
   filterKeyword: "",
   statusFilter: [],
   taxFilter: [],
@@ -177,6 +180,11 @@ const Index = () => {
       Cell: AdminTablePublishStatusCell,
       Header: t("table.label.status", "status"),
       accessor: "status",
+    } as AdminTableColumn,
+    {
+      isNumeric: true,
+      Header: t("table.label.orderNumber", "Order number"),
+      accessor: "orderNumber",
     } as AdminTableColumn,
     {
       Cell: AdminTableMultiLangCell,
