@@ -83,19 +83,7 @@ export const ModuleQuery = extendType({
 
         if (!module || !(module as any).taxonomies) return null;
 
-        return filteredOutputByWhitelist(
-          (module as any).taxonomies,
-          FIELD_KEYS_SETTING,
-          [
-            "id",
-            "name",
-            "slug",
-            "hasColor",
-            "isRequired",
-            "collectPrimaryTerm",
-            "terms",
-          ]
-        );
+        return (module as any).taxonomies;
       },
     });
   },

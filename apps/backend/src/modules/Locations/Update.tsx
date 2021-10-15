@@ -171,9 +171,6 @@ const Update = () => {
     let moduleTerms = {};
 
     if (data?.moduleTaxonomies) {
-
-      console.log(data?.moduleTaxonomies);
-
       let requiredModules = data.moduleTaxonomies.reduce((acc: any, m: any) => {
         if (!m?.isRequired || !Array.isArray(m.terms) || m.terms.length === 0)
           return acc;
@@ -222,8 +219,6 @@ const Update = () => {
         }
       }, {});      
     }
-
-    console.log(moduleTerms);
     
     reset({
       ...multiLangJsonToRHFormData(

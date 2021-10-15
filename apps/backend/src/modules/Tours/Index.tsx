@@ -25,6 +25,7 @@ import {
   adminTableCreateNewTableState,
   AdminTableActionCell,
   AdminTableMultiLangCell,
+  AdminTablePublishStatusCell
 } from "~/components/ui";
 import { config } from "~/config";
 import { SortingRule } from "react-table";
@@ -34,6 +35,9 @@ const intitalTableState: AdminTableState = {
   pageSize: config.defaultPageSize ?? 30,
   sortBy: [],
   filterKeyword: "",
+  statusFilter: [],
+  taxFilter: [],
+  and: false,
 };
 
 let refetchDataCache: any[] = [];
@@ -52,12 +56,14 @@ const Index = () => {
 
   const previousRoute = useTypedSelector(({router}) => router.router.previous);
 
+  const [isTableStateReset, setIsTableStateReset] = useState(false);
   useEffect(() => {
-    if (previousRoute?.indexOf(moduleRootPath) === -1) {
+    if (previousRoute?.indexOf(moduleRootPath) === -1 && !isTableStateReset) {
       setTableState(intitalTableState);
-    }    
-  }, [previousRoute, setTableState])
-
+      setIsTableStateReset(true);
+    }
+  }, [previousRoute, setTableState, setIsTableStateReset, isTableStateReset]);
+  
   const { loading, error, data, refetch } = useQuery(toursQueryGQL, {
     onCompleted: () => {
       setIsRefetching(false);
@@ -106,6 +112,11 @@ const Index = () => {
     {
       Header: t("table.label.id", "Id"),
       accessor: "id",
+    } as AdminTableColumn,
+    {
+      Cell: AdminTablePublishStatusCell,
+      Header: t("table.label.status", "status"),
+      accessor: "status",
     } as AdminTableColumn,
     {
       Cell: AdminTableMultiLangCell,

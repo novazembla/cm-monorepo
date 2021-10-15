@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { eventImportLogsQueryGQL, tourUpdateMutationGQL } from "@culturemap/core";
+import { eventImportLogsQueryGQL } from "@culturemap/core";
 import { useQuery } from "@apollo/client";
 
 import { Cell } from "react-table";
@@ -36,6 +36,9 @@ const intitalTableState: AdminTableState = {
     desc: true,
   }],
   filterKeyword: "",
+  statusFilter: [],
+  taxFilter: [],
+  and: false,
 };
 
 let refetchDataCache: any[] = [];
@@ -102,11 +105,13 @@ const Logs = () => {
     ({ router }) => router.router.previous
   );
 
+  const [isTableStateReset, setIsTableStateReset] = useState(false);
   useEffect(() => {
-    if (previousRoute?.indexOf(moduleRootPath) === -1) {
+    if (previousRoute?.indexOf(moduleRootPath) === -1 && !isTableStateReset) {
       setTableState(intitalTableState);
+      setIsTableStateReset(true);
     }
-  }, [previousRoute, setTableState]);
+  }, [previousRoute, setTableState, setIsTableStateReset, isTableStateReset]);
 
   const { loading, error, data, refetch } = useQuery(eventImportLogsQueryGQL, {
     onCompleted: () => {

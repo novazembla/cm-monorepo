@@ -3,8 +3,9 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { locationsQueryGQL, locationDeleteMutationGQL } from "@culturemap/core";
-import { useQuery } from "@apollo/client";
+import { locationDeleteMutationGQL, PublishStatus } from "@culturemap/core";
+import { useQuery, gql } from "@apollo/client";
+import { useForm, FormProvider } from "react-hook-form";
 
 import {
   ModuleSubNav,
@@ -34,16 +35,67 @@ import {
 import { config } from "~/config";
 import { SortingRule } from "react-table";
 
+export const locationsQueryGQL = gql`
+  query locations(
+    $where: JSON
+    $orderBy: JSON
+    $pageIndex: Int
+    $pageSize: Int
+  ) {
+    locations(
+      where: $where
+      orderBy: $orderBy
+      pageIndex: $pageIndex
+      pageSize: $pageSize
+    ) {
+      locations {
+        id
+        ownerId
+        title
+        slug
+        status
+        description
+        updatedAt
+      }
+      totalCount
+    }
+    moduleTaxonomies(key: "location") {
+      id
+      name
+      slug
+      isRequired
+      collectPrimaryTerm
+      terms {
+        id
+        slug
+        name
+      }
+    }
+  }
+`;
+
 const intitalTableState: AdminTableState = {
   pageIndex: 0,
   pageSize: config.defaultPageSize ?? 30,
   sortBy: [],
   filterKeyword: "",
+  statusFilter: [],
+  taxFilter: [],
+  and: false,
 };
 
 let refetchDataCache: any[] = [];
 let refetchTotalCount = 0;
 let refetchPageIndex: number | undefined = undefined;
+
+const statusFilter = [
+  PublishStatus.DRAFT,
+  PublishStatus.FORREVIEW,
+  PublishStatus.IMPORTED,
+  PublishStatus.IMPORTEDWARNINGS,
+  PublishStatus.PUBLISHED,
+  PublishStatus.REJECTED,
+];
 
 const Index = () => {
   const { t, i18n } = useTranslation();
@@ -53,16 +105,40 @@ const Index = () => {
     `${moduleRootPath}/Index`,
     intitalTableState
   );
+    
 
   const previousRoute = useTypedSelector(
     ({ router }) => router.router.previous
   );
 
+  const formMethods = useForm<any>({
+    mode: "onTouched",
+    defaultValues: {
+      ...tableState.statusFilter.reduce((acc: any, s: PublishStatus) => {
+        return {
+          ...acc,
+          [`filter_status_${s}`]: true,
+        };
+      }, {}),
+      ...tableState.taxFilter.reduce((acc: any, t: number) => {
+        return {
+          ...acc,
+          [`tax_${t}`]: true,
+        };
+      }, {}),
+      and: !!tableState.and,
+    },
+  });
+
+  const { getValues } = formMethods;
+
+  const [isTableStateReset, setIsTableStateReset] = useState(false);
   useEffect(() => {
-    if (previousRoute?.indexOf(moduleRootPath) === -1) {
+    if (previousRoute?.indexOf(moduleRootPath) === -1 && !isTableStateReset) {
       setTableState(intitalTableState);
+      setIsTableStateReset(true);
     }
-  }, [previousRoute, setTableState]);
+  }, [previousRoute, setTableState, setIsTableStateReset, isTableStateReset]);
 
   const [isRefetching, setIsRefetching] = useState(false);
 
@@ -115,7 +191,6 @@ const Index = () => {
     },
   ];
 
-  // columns need to be a ref!
   const { current: AdminTableColumns } = useRef([
     {
       Header: t("table.label.id", "Id"),
@@ -175,14 +250,15 @@ const Index = () => {
     filterKeyword: string
   ) => {
     refetchPageIndex = undefined;
-
+    
     const [newTableState, doRefetch, newPageIndex] =
       adminTableCreateNewTableState(
         tableState,
         pageIndex,
         pageSize,
         sortBy,
-        filterKeyword
+        filterKeyword,
+        getValues()
       );
 
     if (doRefetch) {
@@ -224,23 +300,36 @@ const Index = () => {
         isLoading={loading && !isRefetching}
         isError={!!error || !!isDeleteError}
       >
-        <AdminTable
-          columns={AdminTableColumns}
-          isLoading={loading}
-          showFilter={true}
-          showKeywordSearch={true}
-          {...{
-            tableTotalCount,
-            tablePageCount,
-            isRefetching,
-            onFetchData,
-            refetchPageIndex,
-          }}
-          data={
-            isRefetching ? refetchDataCache : data?.locations?.locations ?? []
-          }
-          intitalTableState={tableState}
-        />
+        <FormProvider {...formMethods}>
+          <form
+            noValidate
+            onSubmit={(event) => {
+              event.preventDefault();
+            }}
+          >
+            <AdminTable
+              columns={AdminTableColumns}
+              isLoading={loading}
+              showFilter={true}
+              showKeywordSearch={true}
+              {...{
+                tableTotalCount,
+                tablePageCount,
+                isRefetching,
+                onFetchData,
+                refetchPageIndex,
+              }}
+              statusFilter={statusFilter}
+              data={
+                isRefetching
+                  ? refetchDataCache
+                  : data?.locations?.locations ?? []
+              }
+              taxonomies={data}
+              intitalTableState={tableState}
+            />
+          </form>
+        </FormProvider>
       </ModulePage>
       {DeleteAlertDialog}
     </>

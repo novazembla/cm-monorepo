@@ -35,6 +35,9 @@ const intitalTableState: AdminTableState = {
   pageSize: config.defaultPageSize ?? 30,
   sortBy: [],
   filterKeyword: "",
+  statusFilter: [],
+  taxFilter: [],
+  and: false,
 };
 
 let refetchDataCache: any[] = [];
@@ -53,12 +56,13 @@ const Index = () => {
 
   const previousRoute = useTypedSelector(({router}) => router.router.previous);
 
+  const [isTableStateReset, setIsTableStateReset] = useState(false);
   useEffect(() => {
-    if (previousRoute?.indexOf(moduleRootPath) === -1) {
+    if (previousRoute?.indexOf(moduleRootPath) === -1 && !isTableStateReset) {
       setTableState(intitalTableState);
-    }    
-  }, [previousRoute, setTableState])
-
+      setIsTableStateReset(true);
+    }
+  }, [previousRoute, setTableState, setIsTableStateReset, isTableStateReset]);
 
   const { loading, error, data, refetch } = useQuery(pagesQueryGQL, {
     onCompleted: () => {

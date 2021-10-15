@@ -101,6 +101,9 @@ const intitalTableState: AdminTableState = {
     },
   ],
   filterKeyword: "",
+  statusFilter: [],
+  taxFilter: [],
+  and: false,
 };
 
 let refetchDataCache: any[] = [];
@@ -121,12 +124,13 @@ const Import = () => {
     ({ router }) => router.router.previous
   );
 
+  const [isTableStateReset, setIsTableStateReset] = useState(false);
   useEffect(() => {
-    if (previousRoute?.indexOf(moduleRootPath) === -1) {
+    if (previousRoute?.indexOf(moduleRootPath) === -1 && !isTableStateReset) {
       setTableState(intitalTableState);
+      setIsTableStateReset(true);
     }
-  }, [previousRoute, setTableState]);
-
+  }, [previousRoute, setTableState, setIsTableStateReset, isTableStateReset]);
   const { loading, error, data, refetch } = useQuery(importsQueryGQL, {
     onCompleted: () => {
       setIsRefetching(false);

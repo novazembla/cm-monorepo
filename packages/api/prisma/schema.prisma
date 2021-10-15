@@ -1,5 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
+// TODO: add fulltext index https://www.prisma.io/docs/concepts/components/prisma-client/full-text-search
 
 datasource db {
   provider = "postgresql"

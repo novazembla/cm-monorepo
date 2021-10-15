@@ -4,6 +4,7 @@ import React, {
   useMemo,
   ChangeEvent,
   ChangeEventHandler,
+  useRef,
 } from "react";
 import type { AuthenticatedAppUser } from "@culturemap/core";
 import { PublishStatus } from "@culturemap/core";
@@ -57,6 +58,13 @@ import { BsEye } from "react-icons/bs";
 import { useTranslation } from "react-i18next";
 import { MultiLangValue } from ".";
 
+import {
+  FieldRadioOrCheckboxGroup,
+  FieldRow,
+  FieldModuleTaxonomies,
+  FieldSwitch,
+} from "~/components/forms";
+
 export type AdminTableColumn = {
   Header: string;
   accessor?: string;
@@ -94,6 +102,9 @@ export type AdminTableState = {
   pageSize: number;
   sortBy: SortingRule<Object>[];
   filterKeyword: string;
+  statusFilter: PublishStatus[];
+  taxFilter: number[];
+  and: boolean;
 };
 
 export type AdminTableQueryVariables = {
@@ -107,7 +118,7 @@ export const adminTableCreateQueryVariables = (
   tState: AdminTableState,
   multilangColumns?: string[],
   activeLanguage?: string,
-  activeLanguages?: string[],
+  activeLanguages?: string[]
 ) => {
   let variables: AdminTableQueryVariables = {
     pageIndex: tState.pageIndex,
@@ -119,7 +130,7 @@ export const adminTableCreateQueryVariables = (
     if (multilangColumns?.includes(tState.sortBy[0].id)) {
       key = `${key}_${activeLanguage}`;
     }
-    
+
     variables = {
       ...variables,
       orderBy: {
@@ -127,16 +138,57 @@ export const adminTableCreateQueryVariables = (
       },
     };
   }
-
+  let where: any[] = [];
   if (tState.filterKeyword && tState.filterKeyword.length > 2) {
+    where.push({
+      fullText: {
+        contains: tState.filterKeyword,
+        mode: "insensitive",
+      },
+    });
+  }
+
+  if (tState.statusFilter.length > 0)
+    where.push({
+      status: {
+        in: tState.statusFilter,
+      },
+    });
+
+  if (tState.taxFilter.length > 0) {
+    if (!!tState.and) {
+      where = [
+        ...where,
+        ...tState.taxFilter.map((id: number) => ({
+          terms: {
+            some: {
+              id: {
+                equals: id,
+              },
+            },
+          },
+        })),
+      ];
+    } else {
+      where.push({
+        terms: {
+          some: {
+            id: { in: tState.taxFilter },
+          },
+        },
+      });
+    }
+  }
+
+  if (where.length > 0) {
     variables = {
       ...variables,
-      where: {
-        fullText: {
-          contains: tState.filterKeyword,
-          mode: "insensitive",
-        },
-      },
+      where:
+        where.length > 1
+          ? {
+              AND: where,
+            }
+          : where[0],
     };
   }
 
@@ -148,7 +200,8 @@ export const adminTableCreateNewTableState = (
   pageIndex: number,
   pageSize: number,
   sortBy: SortingRule<Object>[],
-  filterKeyword: string
+  filterKeyword: string,
+  values?: any
 ): [AdminTableState, boolean, number] => {
   let newTableState = {
     ...tableState,
@@ -158,6 +211,28 @@ export const adminTableCreateNewTableState = (
   let doRefetch = false;
 
   let newPageIndex = pageIndex;
+
+  const statusFilter: PublishStatus[] =
+    values && Object.keys(values).length > 0
+      ? Object.keys(values).reduce((status: PublishStatus[], key: string) => {
+          if (values[key] && key.indexOf("filter_status") > -1) {
+            const parts = key.split("_");
+            if (parts.length === 3) status.push(parseInt(parts[2]));
+          }
+          return status;
+        }, [])
+      : [];
+
+  const taxFilter: number[] =
+    values && Object.keys(values).length > 0
+      ? Object.keys(values).reduce((terms: number[], key: string) => {
+          if (values[key] && key.indexOf("tax_") > -1) {
+            const parts = key.split("_");
+            if (parts.length === 2) terms.push(parseInt(parts[1]));
+          }
+          return terms;
+        }, [])
+      : [];
 
   if (
     (!sortBy || (Array.isArray(sortBy) && sortBy.length === 0)) &&
@@ -184,6 +259,40 @@ export const adminTableCreateNewTableState = (
       newPageIndex = 0;
       doRefetch = true;
     }
+  }
+
+  if (
+    statusFilter &&
+    JSON.stringify(statusFilter) !== JSON.stringify(tableState.statusFilter)
+  ) {
+    newTableState = {
+      ...newTableState,
+      statusFilter,
+    };
+    doRefetch = true;
+  }
+
+  if (
+    values &&
+    typeof values?.and === "boolean" &&
+    !!values.and !== !!tableState.and
+  ) {
+    newTableState = {
+      ...newTableState,
+      and: !!values.and,
+    };
+    doRefetch = true;
+  }
+
+  if (
+    taxFilter &&
+    JSON.stringify(taxFilter) !== JSON.stringify(tableState.taxFilter)
+  ) {
+    newTableState = {
+      ...newTableState,
+      taxFilter,
+    };
+    doRefetch = true;
   }
 
   if (tableState.pageSize !== pageSize) {
@@ -392,6 +501,7 @@ export const AdminTableMultiLangCell = (cell: Cell) => (
 
 export const AdminTable = ({
   data,
+  taxonomies,
   columns,
   isLoading,
   isRefetching,
@@ -402,13 +512,16 @@ export const AdminTable = ({
   refetchPageIndex,
   showKeywordSearch = true,
   showFilter = true, // TODO: make use of
+  statusFilter = [],
 }: {
   data: any[];
+  taxonomies?: any[];
   columns: AdminTableColumn[];
   isLoading: boolean;
   isRefetching: boolean;
   showKeywordSearch?: boolean;
   showFilter?: boolean;
+  statusFilter?: PublishStatus[];
   onFetchData: (
     page: number,
     pageSize: number,
@@ -422,7 +535,8 @@ export const AdminTable = ({
 }) => {
   const { t } = useTranslation();
 
-  // TODO: remove
+  const [filterIsOpen, setFilterIsOpen] = useState(false);
+  const filterContent = useRef<HTMLDivElement>(null);
 
   const [triggeredRefetch, setTriggeredRefetch] = useState(false);
   const [filterKeyword, setFilterKeyword] = useState(
@@ -530,28 +644,206 @@ export const AdminTable = ({
         </Link>
       </VisuallyHidden>
 
-      {showKeywordSearch && (
-        <Flex
-          mb="5"
-          py="2"
-          justifyContent="flex-end"
-          borderY="1px solid"
-          borderColor="gray.300"
-        >
-          <FormLabel htmlFor="filter" w="25%" m="0">
-            <VisuallyHidden>
-              {t("admintable.search", "Keyword search")}
-            </VisuallyHidden>
-            <Input
-              name="filter"
-              id="filter"
-              onChange={onFilterChange}
-              onBlur={onFilterChange}
-              defaultValue={intitalTableState.filterKeyword}
-              placeholder={t("admintable.search", "Keyword search")}
-            />
-          </FormLabel>
-        </Flex>
+      {(showKeywordSearch || statusFilter || showFilter) && (
+        <Box mb="5">
+          <Flex
+            py="2"
+            justifyContent="space-between"
+            borderY="1px solid"
+            borderColor="gray.300"
+          >
+            <Box width="80%" pr="6">
+              <Button
+                onClick={() => {
+                  setFilterIsOpen(!filterIsOpen);
+                }}
+              >
+                {t("admintable.filter.button.toggle", "Filter")}
+              </Button>
+            </Box>
+            <Box w="20%">
+              <FormLabel htmlFor="filter" m="0">
+                <VisuallyHidden>
+                  {t("admintable.search", "Keyword search")}
+                </VisuallyHidden>
+                <Input
+                  name="filter"
+                  id="filter"
+                  onChange={onFilterChange}
+                  onBlur={onFilterChange}
+                  defaultValue={intitalTableState.filterKeyword}
+                  placeholder={t("admintable.search", "Keyword search")}
+                />
+              </FormLabel>
+            </Box>
+          </Flex>
+          {showFilter && (
+            <Box
+              position="relative"
+              overflow="hidden"
+              transition="height 0.5s"
+              w="100%"
+              sx={{
+                h:
+                  filterIsOpen && filterContent.current
+                    ? filterContent.current.offsetHeight + 1
+                    : 0,
+              }}
+            >
+              <Box
+                ref={filterContent}
+                w="100%"
+                position="absolute"
+                bottom="0"
+                left="0"
+              >
+                <Box
+                  pt="2"
+                  pb="3"
+                  borderBottom="1px solid"
+                  borderColor="gray.300"
+                  w="100%"
+                >
+                  {Array.isArray(statusFilter) && statusFilter.length > 0 && (
+                    <FieldRow>
+                      <FieldRadioOrCheckboxGroup
+                        id="filter_status"
+                        name="filter_status"
+                        label={t(
+                          "admintable.filter.status",
+                          "Pulication status"
+                        )}
+                        type="checkbox"
+                        options={statusFilter
+                          .map((status: PublishStatus) => {
+                            let value = {
+                              id: 0,
+                              label: "Unknown",
+                            };
+
+                            switch (status) {
+                              case PublishStatus.IMPORTED:
+                                value = {
+                                  id: PublishStatus.IMPORTED,
+                                  label: t(
+                                    "publish.status.imported",
+                                    "Imported"
+                                  ),
+                                };
+                                break;
+
+                              case PublishStatus.IMPORTEDWARNINGS:
+                                value = {
+                                  id: PublishStatus.IMPORTEDWARNINGS,
+                                  label: t(
+                                    "publish.status.importedwarning",
+                                    "Imported with warning(s)"
+                                  ),
+                                };
+                                break;
+
+                              case PublishStatus.DRAFT:
+                                value = {
+                                  id: PublishStatus.DRAFT,
+                                  label: t("publish.status.draft", "Draft"),
+                                };
+                                break;
+
+                              case PublishStatus.FORREVIEW:
+                                value = {
+                                  id: PublishStatus.FORREVIEW,
+                                  label: t(
+                                    "publish.status.forreview",
+                                    "For review"
+                                  ),
+                                };
+                                break;
+
+                              case PublishStatus.REJECTED:
+                                value = {
+                                  id: PublishStatus.REJECTED,
+                                  label: t(
+                                    "publish.status.rejected",
+                                    "Rejected"
+                                  ),
+                                };
+                                break;
+
+                              case PublishStatus.PUBLISHED:
+                                value = {
+                                  id: PublishStatus.PUBLISHED,
+                                  label: t(
+                                    "publish.status.published",
+                                    "Published"
+                                  ),
+                                };
+                                break;
+
+                              case PublishStatus.TRASHED:
+                                value = {
+                                  id: PublishStatus.TRASHED,
+                                  label: t("publish.status.trashed", "Trashed"),
+                                };
+                                break;
+
+                              default:
+                                value = {
+                                  id: 0,
+                                  label: "unknown",
+                                };
+                                break;
+                            }
+
+                            return value;
+                          })
+                          .sort((a: any, b: any) => {
+                            if (a.label < b.label) return -1;
+                            if (a.label > b.label) return 1;
+                            return 0;
+                          })}
+                      />
+                    </FieldRow>
+                  )}
+
+                  {taxonomies && (
+                    <FieldModuleTaxonomies data={taxonomies} isFilter />
+                  )}
+
+                  <Flex
+                    width="100%"
+                    pt="3"
+                    justifyContent="space-between"
+                    alignContent="center"
+                  >
+                    <Box>
+                      {taxonomies && (
+                        <FieldSwitch
+                          name="and"
+                          label={
+                            <span>
+                              {t(
+                                "admintable.filter.termsAndRelationship",
+                                "Items must have all the selected taxonomy terms"
+                              )}
+                            </span>
+                          }
+                          defaultChecked={!!intitalTableState.and}
+                        />
+                      )}
+                    </Box>
+                    <Button
+                      onClick={() => {
+                        onFetchData(pageIndex, pageSize, sortBy, filterKeyword);
+                      }}
+                    >
+                      {t("admintable.filter.button.filter", "Filtern")}
+                    </Button>
+                  </Flex>
+                </Box>
+              </Box>
+            </Box>
+          )}
+        </Box>
       )}
       <Box className="admin-table-wrapper" w="100%" overflowX="auto">
         <Table
@@ -576,9 +868,7 @@ export const AdminTable = ({
               <Tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column) => (
                   <Th
-                    {
-                      ...column.getHeaderProps(column.getSortByToggleProps())
-                    }
+                    {...column.getHeaderProps(column.getSortByToggleProps())}
                     fontSize="md"
                     color="gray.800"
                     borderColor="gray.300"
@@ -696,6 +986,9 @@ export const AdminTable = ({
                   mb="3"
                 >
                   <HStack>
+                    <Box pr="6" whiteSpace="nowrap">
+                      {t("admintable.total", "Total count")}: {tableTotalCount}
+                    </Box>
                     <IconButton
                       icon={<HiChevronDoubleLeft />}
                       onClick={() => gotoPage(0)}

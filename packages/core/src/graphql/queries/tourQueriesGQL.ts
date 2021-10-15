@@ -12,6 +12,7 @@ export const toursQueryGQL = gql`
         id
         title
         slug
+        status
         tourStopCount
       }
       totalCount

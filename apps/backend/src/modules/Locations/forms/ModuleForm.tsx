@@ -149,6 +149,7 @@ export const ModuleForm = ({
         }}
       />
       {updateActions}
+      <Divider mt="10" />
       <FieldModuleTaxonomies data={data} />
       <Divider mt="10" />
       <chakra.fieldset

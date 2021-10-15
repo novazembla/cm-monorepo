@@ -1,4 +1,4 @@
-import { Divider, Box } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import { MultiLangValue } from "~/components/ui";
 import { useTranslation } from "react-i18next";
 import {
@@ -12,17 +12,22 @@ import {
   mapTermDataToPrimaryTerm,
 } from "~/utils";
 
-export const FieldModuleTaxonomies = ({ data }: { data: any }) => {
+export const FieldModuleTaxonomies = ({
+  data,
+  isFilter,
+}: {
+  data: any;
+  isFilter?: boolean;
+}) => {
   const { t } = useTranslation();
 
   if (!data || !data?.moduleTaxonomies) return <></>;
 
   return (
     <>
-    <Divider mt="10" />
       {data?.moduleTaxonomies.map((taxonomy: any) => {
         let primaryTermId;
-        if (taxonomy?.collectPrimaryTerm) {
+        if (!isFilter && taxonomy?.collectPrimaryTerm) {
           const primaryTerm = mapTermDataToPrimaryTerm(
             data?.location?.primaryTerms,
             taxonomy.terms
@@ -38,7 +43,7 @@ export const FieldModuleTaxonomies = ({ data }: { data: any }) => {
               mt: 0,
             }}
           >
-            {taxonomy?.collectPrimaryTerm && (
+            {!isFilter && taxonomy?.collectPrimaryTerm && (
               <FieldRow>
                 <FieldSelect
                   id={`primary_tax_${taxonomy.id}`}
@@ -70,8 +75,8 @@ export const FieldModuleTaxonomies = ({ data }: { data: any }) => {
             )}
             <FieldRow>
               <FieldRadioOrCheckboxGroup
-                id={`tax_${taxonomy.id}`}
-                name={`tax_${taxonomy.id}`}
+                id={`tax${!isFilter ? `_${taxonomy.id}` : ""}`}
+                name={`tax${!isFilter ? `_${taxonomy.id}` : ""}`}
                 isRequired={taxonomy?.isRequired}
                 label={<MultiLangValue json={taxonomy.name} />}
                 type="checkbox"

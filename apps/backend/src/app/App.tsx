@@ -21,7 +21,6 @@ import {
 
 import NotFound from "~/pages/NotFound/NotFound";
 
-
 import {
   LayoutLight,
   LayoutBlank,
@@ -50,14 +49,12 @@ const ScrollToTop = () => {
     dispatch(setPreviousRoute(pathname));
 
     if (mounted) {
-      console.log("trigger");
       window.scrollTo({
         top: 0,
         left: 0,
         behavior: "smooth",
       });
     }
-      
 
     return () => {
       mounted = false;

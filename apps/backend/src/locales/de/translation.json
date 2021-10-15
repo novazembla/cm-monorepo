@@ -1,7 +1,7 @@
 {
   "footer": {
     "contactLink": {
-      "title": "Kontak"
+      "title": "Kontakt"
     }
   },
   "avatar": {
@@ -44,10 +44,10 @@
     "select": {
       "autocomplete": {
         "search": {
-          "notfound": "Nothing found",
-          "loading": "Serching the database"
+          "notfound": "Nichts gefunden",
+          "loading": "Daten werden geladen"
         },
-        "clearselection": "Clear selected element"
+        "clearselection": "Ausgewähltes Element löschen"
       }
     },
     "field": {
@@ -56,8 +56,8 @@
         "location": "Kartenpunkt"
       },
       "placeholder": {
-        "locationPickerSearch": "Please enter an address to search",
-        "locationsearch": "Please enter the location's title"
+        "locationPickerSearch": "Bitte geben Sie eine Adresse ein, um zu suchen",
+        "locationsearch": "Bitte geben Sie die Adresse ein"
       }
     },
     "heroImage": {
@@ -65,50 +65,50 @@
     }
   },
   "fileuploader": {
-    "filesizebetween": "Size between {{minFileSize}} and {{maxFileSize}}",
-    "filesizebelow": "Size max. {{maxFileSize}}",
-    "filesizeabove": "Size min. {{minFileSize}}",
+    "filesizebetween": "Dateigrösse zwischen {{minFileSize}} und {{maxFileSize}}",
+    "filesizebelow": "Max. Dateigrösse {{maxFileSize}}",
+    "filesizeabove": "Min. Dateigrösse {{minFileSize}}",
     "droperror": {
-      "toolarge": "Chosen file is too large",
-      "toosmall": "Chosen file is too small",
-      "invalidtype": "Type of chosen file is not accepted"
+      "toolarge": "Die ausgewählte Datei ist zu groß",
+      "toosmall": "Die ausgewählte Datei ist zu klein",
+      "invalidtype": "Dieses Dateiformat kann nicht verwendet werden."
     },
     "button": {
       "deletefile": "Datei löschen"
     },
     "deletefile": {
-      "error": "Unfortunately, we could not process you deletion request please try again later"
+      "error": "Leider konnten wir Ihre Löschanfrage nicht bearbeiten. Bitte versuchen Sie es später erneut."
     },
-    "pleasedroporclick": "Drag & drop an file here, or click to select one",
-    "uploading": "Uploading",
-    "cancelupload": "Cancel upload",
-    "error": "Unfortunately, we could not finish you upload please try again later"
+    "pleasedroporclick": "Ziehen Sie eine Datei hierher und legen Sie sie hier ab, oder klicken Sie, um eine Datei auszuwählen.",
+    "uploading": "Hochladen",
+    "cancelupload": "Upload abbrechen",
+    "error": "Leider konnten wir Ihren Upload nicht abschließen, bitte versuchen Sie es später noch einmal."
   },
   "imageuploader": {
-    "filesizebetween": "Size between {{minFileSize}} and {{maxFileSize}}",
-    "filesizebelow": "Size max. {{maxFileSize}}",
-    "filesizeabove": "Size min. {{minFileSize}}",
+    "filesizebetween": "Dateigrösse zwischen {{minFileSize}} und {{maxFileSize}}",
+    "filesizebelow": "Max. Dateigrösse {{maxFileSize}}",
+    "filesizeabove": "Min. Dateigrösse {{minFileSize}}",
     "droperror": {
-      "toolarge": "Chosen file is too large",
-      "toosmall": "Chosen file is too small",
-      "invalidtype": "Type of chosen file is not accepted"
+      "toolarge": "Die ausgewählte Datei ist zu groß.",
+      "toosmall": "Die ausgewählte Datei ist zu klein.",
+      "invalidtype": "Dieses Dateiformat kann nicht verwendet werden."
     },
     "button": {
-      "deleteimage": "Delete profile image"
+      "deleteimage": "Profilbild löschen"
     },
     "deleteimage": {
-      "error": "Unfortunately, we could not process you deletion request please try again later"
+      "error": "Leider konnten wir Ihre Löschanfrage nicht bearbeiten. Bitte versuchen Sie es später erneut."
     },
-    "pleasedroporclick": "Drag & drop an image here, or click to select one",
-    "uploading": "Uploading",
-    "cancelupload": "Cancel upload",
-    "error": "Unfortunately, we could not finish you upload please try again later"
+    "pleasedroporclick": "Ziehen Sie eine Datei hierher und legen Sie sie hier ab, oder klicken Sie, um eine Datei auszuwählen.",
+    "uploading": "Hochladen",
+    "cancelupload": "Upload abbrechen",
+    "error": "Leider konnten wir Ihren Upload nicht abschließen, bitte versuchen Sie es später noch einmal."
   },
   "ui": {
     "button": {
       "label": {
-        "show": "Show",
-        "hide": "Hide"
+        "show": "Anzeigen",
+        "hide": "Verstecken"
       }
     }
   },
@@ -116,37 +116,37 @@
     "forms": {
       "taxonomy": {
         "label": {
-          "primaryTerm": "(primary term)",
-          "choosePrimaryTerm": "Please choose the primary term"
+          "primaryTerm": "Hauptbegriff",
+          "choosePrimaryTerm": "Hauptbegriff wählen"
         }
       },
       "field": {
         "label": {
-          "author": "Tour author"
+          "author": "AutorIn"
         },
         "placeholder": {
-          "author": "Please choose the author"
+          "author": "Bitte AutorIn auswählen"
         }
       }
     },
     "button": {
-      "cancel": "Cancel",
-      "update": "Update",
-      "savedraft": "Save draft",
-      "back": "Go back",
-      "import": "Schedule import",
-      "save": "Save"
+      "cancel": "Abbrechen",
+      "update": "Aktualisieren",
+      "savedraft": "Entwurf speichern",
+      "back": "Zurück",
+      "import": "Importieren",
+      "save": "Speichern"
     },
     "users": {
       "deletealter": {
-        "title": "Please confirm",
-        "message": "Do you really want to delete the user? Once done we cannot revert this action!"
+        "title": "Bitte bestätigen",
+        "message": "Möchten Sie diese BenutzerIn wirklich löschen? Diese Aktion kann nicht rückgängig gemacht machen!"
       },
-      "title": "Users",
+      "title": "NutzerIn",
       "page": {
         "title": {
-          "createuser": "Add new user",
-          "updateuser": "Update user"
+          "createuser": "NutzerIn hinzufügen",
+          "updateuser": "NutzerIn aktualisieren"
         }
       },
       "forms": {
@@ -154,303 +154,303 @@
           "field": {
             "label": {
               "firstName": "Vorname",
-              "lastName": "Last Name",
-              "email": "Email Address",
-              "role": "User role",
-              "ownsEventImports": "Owns newly created imported events",
-              "ownsConentOnDelete": "This user will take over ownership of deleted users' content",
-              "userBanned": "Ban user on the platform"
+              "lastName": "Nachname",
+              "email": "Email Adresse",
+              "role": "Rolle der NutzerIn",
+              "ownsEventImports": "Besitzt neu erstellte importierte Events",
+              "ownsConentOnDelete": "Dieser NutzerIn die Inhalte der gelöschten NutzerIn hinzufügen",
+              "userBanned": "NutzerIn sperren"
             },
             "placeholder": {
-              "firstName": "The user's first name",
-              "lastName": "The user's last name",
-              "email": "The user's email address",
-              "role": "Please choose the user's role"
+              "firstName": "Vorname der NutzerIn",
+              "lastName": "Nachname der NutzerIn",
+              "email": "Email Adresse der NutzerIn",
+              "role": "Rolle der NutzerIn"
             }
           }
         },
         "create": {
           "field": {
             "label": {
-              "password": "Password",
-              "passwordConfirmation": "Password confirmation"
+              "password": "Passwort",
+              "passwordConfirmation": "Passwort bestätigen"
             },
             "placeholder": {
-              "password": "Please enter the user's initial password",
-              "passwordConfirmation": "Please confirm the user's initial password"
+              "password": "Bitte das Passwort der NutzerIn eingeben",
+              "passwordConfirmation": "Bitte das Passwort der NutzerIn wiederholen"
             }
           }
         },
-        "messageUserBanned": "The user is/will be banned on the platform"
+        "messageUserBanned": "Die NutzerIn wird gesperrt"
       },
       "button": {
-        "create": "Add user",
-        "edit": "Edit user",
-        "delete": "Delete user"
+        "create": "NutzerIn hinzufügen",
+        "edit": "NutzerIn bearbeiten",
+        "delete": "NutzerIn löschen"
       }
     },
     "events": {
-      "title": "Events",
+      "title": "Veranstaltungen",
       "menuitem": {
-        "createevent": "Add new event",
-        "importLogs": "Import Logs",
+        "createevent": "Veranstaltung hinzufügen",
+        "importLogs": "Log importieren",
         "importLog": "Log"
       },
       "forms": {
         "event": {
           "field": {
             "label": {
-              "title": "Title",
+              "title": "Titel",
               "slug": "Slug",
-              "description": "Description"
+              "description": "Beschreibung"
             },
             "placeholder": {
-              "title": "Event title",
-              "slug": "Slug / URL part",
-              "description": "Event description"
+              "title": "Veranstaltungstitel",
+              "slug": "Slug / URL Zusatz",
+              "description": "Veranstaltungsbeschreibung"
             },
             "date": {
-              "placeholder": "Date"
+              "placeholder": "Datum"
             },
             "begin": {
-              "label": "Begin"
+              "label": "Beginn"
             },
             "end": {
-              "label": "End"
+              "label": "Ende"
             },
             "dates": {
-              "removedate": "Remove",
-              "clone": "Clone current line"
+              "removedate": "Entfernen",
+              "clone": "Aktuelle Zeile duplizieren"
             }
           },
           "table": {
             "column": {
               "begin": {
-                "label": "Begin"
+                "label": "Beginn"
               },
               "end": {
-                "label": "End"
+                "label": "Ende"
               }
             }
           }
         },
         "field": {
           "label": {
-            "isFree": "This event is free",
-            "isImported": "This event is automatically imported and updated"
+            "isFree": "Diese Veranstaltung ist kostenfrei",
+            "isImported": "Diese Veranstaltung wird automatisch importiert und aktualisiert"
           }
         },
         "eventdates": {
-          "heading": "Event date(s)",
+          "heading": "Veranstaltungsdatum / -daten",
           "table": {
             "column": {
               "date": {
-                "label": "Date"
+                "label": "Datum"
               }
             }
           }
         }
       },
       "button": {
-        "create": "Add new event",
-        "edit": "Edit event",
-        "delete": "Delete event",
-        "viewLog": "View log"
+        "create": "Neue Veranstaltung hinzufügen",
+        "edit": "Veranstaltung bearbeiten",
+        "delete": "Veranstaltung löschen",
+        "viewLog": "Log anzeigen"
       },
-      "importDate": "Date of import",
-      "noImportErrors": "No import errors",
-      "noImportWarnings": "No import warnings",
+      "importDate": "Datum des Imports",
+      "noImportErrors": "Anzahl der Importfehler",
+      "noImportWarnings": "Keine Import Warnungen",
       "event": {
         "title": {
-          "updatepage": "Update event"
+          "updatepage": "Veranstaltung aktualisieren"
         }
       }
     },
     "locations": {
       "menuitem": {
         "importLogs": "Import Logs",
-        "createlocation": "Add new location",
-        "imports": "Imports",
-        "createimport": "Add new import"
+        "createlocation": "Neuen Veranstaltungsort hinzufügen",
+        "imports": "Importe",
+        "createimport": "Neuen Import hinzufügen"
       },
       "forms": {
         "import": {
-          "errors": "Errors",
-          "warnings": "Warnings",
+          "errors": "Fehlermeldungen",
+          "warnings": "Warnungen",
           "log": "Log",
           "field": {
             "label": {
-              "title": "Title",
-              "csv": "CSV File"
+              "title": "Titel",
+              "csv": "CSV Datei"
             },
             "placeholder": {
-              "title": "Import title"
+              "title": "Importiere den Titel"
             }
           },
-          "select": "Select target column",
+          "select": "Zielspalte auswählen",
           "mapping": {
-            "title": "CSV column(s) to database columns mapping",
-            "columCSV": "Header in CSV",
-            "firstRow": "Example (1st row in CSV)",
-            "columnInDb": "Column in DB"
+            "title": "Zuordnung von CSV-Spalte(n) zu Datenbankspalten",
+            "columCSV": "Kopfzeile in CSV",
+            "firstRow": "Beispiel (1. Zeile in CSV)",
+            "columnInDb": "Spalte in DB"
           }
         },
         "location": {
           "field": {
             "label": {
-              "title": "Title",
+              "title": "Titel",
               "slug": "Slug",
-              "description": "Description",
-              "offers": "Offers",
-              "accessibilityInformation": "Accessibility Information"
+              "description": "Beschreibung",
+              "offers": "Angebote",
+              "accessibilityInformation": "Informationen zur Barrierefreiheit"
             },
             "placeholder": {
-              "title": "Location title",
-              "slug": "Slug / URL part",
-              "description": "Location description",
-              "offers": "Location offers",
-              "accessibilityInformation": "Location accessibilityInformation",
-              "csvfile": "Upload CSV"
+              "title": "Titel des Veranstaltungsortes",
+              "slug": "Slug / URL Zusatz",
+              "description": "Beschreibung des Veranstaltungsortes",
+              "offers": "Angebote des Veranstaltungsortes",
+              "accessibilityInformation": "Informationen zur Barrierefreiheit",
+              "csvfile": "CSV Datei hochladen"
             }
           },
-          "geoloaction": "Location on map"
+          "geoloaction": "Veranstaltungsort auf der Karte"
         },
         "field": {
           "label": {
-            "address": "Address",
-            "street1": "Street (1)",
-            "houseNumber": "House Number",
-            "street2": "Street (2)",
+            "address": "Adresse",
+            "street1": "Straße (1)",
+            "houseNumber": "Hausnummer",
+            "street2": "Straße (2)",
             "co": "C/O",
-            "postCode": "Post Code",
-            "city": "City",
+            "postCode": "Postleitzahl",
+            "city": "Stadt",
             "socialMedia": "Website/Social Media",
             "website": "Website",
-            "facebook": "Facebook page",
+            "facebook": "Facebook",
             "instagram": "Instagram",
             "twitter": "Twitter",
             "youtube": "YouTube",
-            "additionalInformation": "Additional Information",
-            "agency": "Agency",
-            "eventLocationId": "berlin.de Event Location ID"
+            "additionalInformation": "Zusätzliche Informationen",
+            "agency": "Agentur",
+            "eventLocationId": "ID des Veranstaltungsortes auf berlin.de"
           }
         }
       },
-      "title": "Locations",
+      "title": "Veranstaltungsort",
       "import": {
         "button": {
-          "create": "New import",
-          "edit": "Edit import",
-          "delete": "Delete import"
+          "create": "Neuer Import",
+          "edit": "Import bearbeiten",
+          "delete": "Import löschen"
         }
       },
       "imports": {
-        "title": "Imports",
-        "requiredMissing": "The following required columns are not assigned: ",
-        "assignColumnsToTriggerImport": "To be able to schedule the import you need to assign all (required) columns",
-        "importIsProcessing": "Your import is being processed on the server."
+        "title": "Importe",
+        "requiredMissing": "Die folgenden erforderlichen Spalten sind nicht zugewiesen: ",
+        "assignColumnsToTriggerImport": "Um den Import planen zu können, müssen Sie alle (erforderlichen) Spalten zuweisen",
+        "importIsProcessing": "Ihr Import wird auf dem Server verarbeitet."
       },
       "location": {
         "title": {
-          "updatepage": "Update location"
+          "updatepage": "Veranstaltungsort aktualisieren"
         }
       },
       "button": {
-        "create": "Add new location",
-        "edit": "Edit location",
-        "delete": "Delete location"
+        "create": "Veranstaltungsort hinzufügen",
+        "edit": "Veranstaltungsort bearbeiten",
+        "delete": "Veranstaltungsort löschen"
       },
       "associatedevents": {
-        "title": "Associated events"
+        "title": "Zugehörige Veranstaltungen"
       },
       "events": {
-        "title": "Title"
+        "title": "Titel"
       },
       "fields": {
         "label": {
           "actions": "Aktionen",
-          "viewevent": "View event"
+          "viewevent": "Veranstaltung ansehen"
         }
       },
-      "noasscoiatedevents": "No associated events"
+      "noasscoiatedevents": "Keine zugehörigen Veranstaltungen"
     },
     "imports": {
       "forms": {
         "import": {
           "field": {
             "placeholder": {
-              "title": "Import title"
+              "title": "Importiere den Titel"
             }
           }
         }
       }
     },
     "pages": {
-      "title": "Pages",
+      "title": "Seiten",
       "page": {
         "title": {
-          "createpage": "Add new page",
-          "updatepage": "Update page"
+          "createpage": "Neue Seite hinzufügen",
+          "updatepage": "Seite aktualisieren"
         }
       },
       "forms": {
         "page": {
           "field": {
             "label": {
-              "title": "Title",
+              "title": "Titel",
               "slug": "Slug",
-              "intro": "Intro",
-              "content": "Content"
+              "intro": "Zusammenfassung",
+              "content": "Inhalt"
             },
             "placeholder": {
-              "title": "Page title",
-              "slug": "Slug / URL part",
-              "intro": "Page's introduction block",
-              "content": "Page content"
+              "title": "Seiten Titel",
+              "slug": "Slug / URL Zusatz",
+              "intro": "Einführungsblock der Seite",
+              "content": "Seiteninhalt"
             }
           }
         }
       },
       "button": {
-        "create": "Add new page",
-        "edit": "Edit page",
-        "delete": "Delete page"
+        "create": "Seite hinzufügen",
+        "edit": "Seite bearbeiten",
+        "delete": "Seite löschen"
       }
     },
     "profile": {
-      "title": "Profile",
+      "title": "Profil",
       "button": {
-        "update": "Update profile",
-        "updatepassword": "Update password"
+        "update": "Profil aktualisieren",
+        "updatepassword": "Passwort aktualisieren"
       },
       "image": {
-        "placeholder": "No profile picture uploaded"
+        "placeholder": "Kein Profilbild hochgeladen"
       },
       "data": {
         "title": {
           "fullname": "Name",
-          "email": "Email address",
+          "email": "Email Adresse",
           "emailverificationstatus": {
-            "status": "Email verification status",
-            "verified": "You've verified your email address",
-            "notverified": "You've not verified your email address. Check your inbox!"
+            "status": "E-Mail-Bestätigungsstatus",
+            "verified": "Sie haben Ihre E-Mail-Adresse bestätigt",
+            "notverified": "Sie haben Ihre E-Mail-Adresse nicht bestätigt. Überprüfe deinen Posteingang!"
           }
         }
       },
       "page": {
         "title": {
-          "updateprofile": "Update profile"
+          "updateprofile": "Profil aktualisieren"
         }
       }
     },
     "settings": {
-      "title": "Settings",
+      "title": "Einstellungen",
       "button": {
-        "update": "Update settings"
+        "update": "Einstellungen aktualisieren"
       },
       "page": {
         "title": {
-          "updatesettings": "Update settings"
+          "updatesettings": "Einstellungen aktualisieren"
         }
       }
     },
@@ -458,10 +458,10 @@
       "title": "Taxonomies",
       "page": {
         "title": {
-          "createtax": "Update term",
-          "createterm": "Add new term",
-          "updatetaxonomy": "Update taxonomy",
-          "updatetax": "Update term"
+          "createtax": "Begriff aktualisieren",
+          "createterm": "Begriff hinzufügen",
+          "updatetaxonomy": "Taxonomie aktualisieren",
+          "updatetax": "Begriff aktualisieren"
         }
       },
       "forms": {
@@ -472,114 +472,114 @@
               "slug": "Slug"
             },
             "placeholder": {
-              "name": "Taxonomy name",
-              "slug": "Slug / URL part"
+              "name": "Taxonomie Name",
+              "slug": "Slug / URL Zusatz"
             }
           }
         },
         "field": {
           "modules": {
-            "label": "Active for the following Modules"
+            "label": "Aktiv für folgende Module"
           },
           "hasColor": {
-            "label": "Show color fields"
+            "label": "Farbfelder anzeigen"
           },
           "collectPrimaryTerm": {
-            "label": "Show primary term select element"
+            "label": "Primärbegriffsauswahlelement anzeigen"
           },
           "isRequired": {
-            "label": "Selection of at least one term is required"
+            "label": "Auswahl von mindestens einem Begriff ist erforderlich"
           },
           "color": {
-            "label": "Color (light)"
+            "label": "Farbe (hell)"
           },
           "colorDark": {
-            "label": "Color (dark)"
+            "label": "Farbe (dunkel)"
           }
         }
       },
       "button": {
-        "create": "Add new taxonomy",
-        "edit": "Edit taxonomy",
-        "view": "View taxonomy terms",
-        "delete": "Delete taxonomy"
+        "create": "Neue Taxonomie hinzufügen",
+        "edit": "Taxonomie bearbeiten",
+        "view": "Taxonomiebegriffe anzeigen",
+        "delete": "Taxonomie löschen"
       }
     },
     "terms": {
-      "title": "Taxonomies",
+      "title": "Taxonomien",
       "button": {
-        "create": "Add new term",
-        "edit": "Edit term",
-        "delete": "Delete term"
+        "create": "Neuen Begriff hinzufügen",
+        "edit": "Begriff bearbeiten",
+        "delete": "Begriff löschen"
       }
     },
     "tours": {
-      "title": "Tours",
+      "title": "Touren",
       "page": {
         "title": {
-          "createtax": "Add new tour",
-          "createtourStop": "New Tour Stop",
-          "updatetour": "Update tour",
-          "updateTourStop": "Update tour stop"
+          "createtax": "Neue Tour hinzufügen",
+          "createtourStop": "Neuer Tour Stop",
+          "updatetour": "Tour aktualisieren",
+          "updateTourStop": "Tour Stop aktualisieren"
         }
       },
       "forms": {
         "tour": {
           "field": {
             "label": {
-              "title": "Title",
+              "title": "Titel",
               "slug": "Slug",
-              "duration": "Duration",
-              "distance": "Distance",
-              "teaser": "Intro",
-              "description": "Description"
+              "duration": "Dauer",
+              "distance": "Entfernung",
+              "teaser": "Zusammenfasssung",
+              "description": "Beschreibung"
             },
             "placeholder": {
-              "title": "Tour name",
-              "slug": "Slug / URL part",
-              "duration": "1 hr",
+              "title": "Tour Name",
+              "slug": "Slug / URL Zusatz",
+              "duration": "1 Std",
               "distance": "3 Kilometer",
-              "teaser": "Tour listing teaser",
-              "description": "Full tour description"
+              "teaser": "Teaser für die Tourliste",
+              "description": "vollständige Tourenbeschreibung"
             }
           }
         },
         "tourStop": {
           "field": {
             "label": {
-              "title": "Title",
-              "teaser": "Intro",
-              "description": "Description"
+              "title": "Titel",
+              "teaser": "Zusammenfasssung",
+              "description": "Beschreibung"
             },
             "placeholder": {
-              "title": "Tour stop name",
-              "teaser": "Tour stop listing teaser",
-              "description": "Full tour stop description"
+              "title": "Tour Stop Name",
+              "teaser": "Teaser für Tour Stop-Auflistung",
+              "description": "vollständige Tourenbeschreibung"
             }
           }
         }
       },
       "button": {
-        "create": "Add new tour",
-        "edit": "Edit tour",
-        "view": "View tour tourStops",
-        "delete": "Delete tour"
+        "create": "Neue Tour hinzufügen",
+        "edit": "Tour bearbeiten",
+        "view": "Tour Stops anzeigen",
+        "delete": "Tour löschen"
       }
     },
     "tour": {
       "heading": {
-        "tourPath": "Tour path",
-        "tourStops": "Tour stops"
+        "tourPath": "Tour Pfad",
+        "tourStops": "Tour Stops"
       },
       "table": {
         "tourstops": {
-          "delete": "Delete tour stop",
-          "update": "Update tour stop",
-          "number": "Number",
-          "title": "Title",
-          "empty": "This tour has currently no stops.",
+          "delete": "Tour Stop löschen",
+          "update": "Tour Stop aktualisieren",
+          "number": "Nummer",
+          "title": "Titel",
+          "empty": "Diese Tour hat derzeit keine Stopps.",
           "button": {
-            "add": "Add tour stop"
+            "add": "Tour Stop hinzufügen"
           }
         }
       }
@@ -587,224 +587,224 @@
   },
   "PublishStatus": {
     "select": {
-      "label": "Publish status",
-      "placeholder": "Please choose a publish status"
+      "label": "Veröffentlichungsstatus",
+      "placeholder": "Veröffentlichungsstatus auswählen"
     }
   },
   "publish": {
     "status": {
-      "imported": "Imported",
-      "importedwarning": "Imported with warning(s)",
+      "imported": "Importiert",
+      "importedwarning": "Importiert mit Warnung(en)",
       "draft": "Entwurf",
       "forreview": "Zur Kontrolle",
       "rejected": "Zurückgewiesen",
       "published": "Publiziert",
       "trashed": "Gelöscht",
       "unknown": "Unbekannt",
-      "autodraft": "Draft",
-      "importedwrning": "Imported with warning(s)"
+      "autodraft": "automatischer Entwurf",
+      "importedwrning": "Importiert mit Warnung(en)"
     }
   },
   "form": {
     "datepicker": {
-      "close": "close"
+      "close": "schliessen"
     },
     "image": {
       "label": {
-        "image": "Image",
-        "alttext": "Alternative text",
-        "credits": "Copyright information"
+        "image": "Bild",
+        "alttext": "Bildbeschreibung",
+        "credits": "Urheberrechtsinformation"
       }
     },
-    "unsavedchanges": "It looks like you've unsaved changes. Leave without saving?",
+    "unsavedchanges": "Offenbar haben Sie Änderungen nicht gespeichert. Verlassen ohne zu speichern?",
     "geolocation": {
       "lat": {
-        "label": "Latitude"
+        "label": "Breitengrad"
       },
       "lng": {
-        "label": "Longitude"
+        "label": "Längengrad"
       },
       "button": {
-        "reset": "Reset"
+        "reset": "Zurücksetzen"
       }
     },
     "error": {
-      "notCorrectLatitude": "This seems not to be a latitiude value",
-      "notCorrectLongitude": "This seems not to be a longitude value"
+      "notCorrectLatitude": "Dies scheint kein Breitengrad zu sein",
+      "notCorrectLongitude": "Dies scheint kein Längengrad zu sein"
     },
     "info": {
-      "pleasesafedraft": "Please save a draft to unlock further functionality"
+      "pleasesafedraft": "Bitte speichern Sie einen Entwurf um weitere Funktionen freizuschalten"
     }
   },
   "editor": {
     "button": {
-      "save": "Save",
-      "cancel": "Cancel",
-      "unbold": "Remove bold text format",
-      "bold": "Format text bold",
-      "unitalic": "Remove italic text format",
-      "italic": "Format text italic",
-      "addNewLine": "Add a new line",
-      "clearFormatting": "Clear Formatting",
-      "undo": "Undo",
-      "redo": "Redo",
-      "link": "Add link",
-      "unlink": "Remove link"
+      "save": "Speichern",
+      "cancel": "Abbrechen",
+      "unbold": "Fettgedrucktes Textformat entfernen",
+      "bold": "Text fett formatieren",
+      "unitalic": "Kursivgedrucktes Textformat entfernen",
+      "italic": "Text kursiv formatieren",
+      "addNewLine": "Neue Zeile einfügen",
+      "clearFormatting": "Formatierungen entfernen",
+      "undo": "Rückgängig machen",
+      "redo": "Wiederholen",
+      "link": "Link hinzufügen",
+      "unlink": "Link entfernen"
     },
     "link": {
       "label": {
-        "url": "Url"
+        "url": "URL"
       },
       "url": "https://..."
     },
     "count": {
-      "characters": "{{count}}/{{maxLength}} characters",
-      "characters_plural": "{{count}}/{{maxLength}} characters"
+      "characters": "{{count}}/{{maxLength}} Zeichen",
+      "characters_plural": "{{count}}/{{maxLength}} Zeichen"
     }
   },
   "alert": {
     "emailnotverfied": {
-      "title": "You have not confirmed your email address, yet. ",
-      "info": "Please check your inbox and follow the link provided in the email. In case the email didn't come through you can request another email by clicking the button.",
-      "requresterrorinfo": "Something went wrong. Please try again in a little bit.",
-      "requrestsuccessinfo": "We've sent you another email. Please check your inbox.",
-      "button": "Request verification email"
+      "title": "Sie haben Ihre E-Mail-Adresse noch nicht bestätigt.",
+      "info": "Bitte überprüfen Sie Ihren Posteingang und folgen Sie dem Link in der E-Mail. Falls die E-Mail nicht angekommen ist, können Sie eine weitere E-Mail anfordern, indem Sie auf die Schaltfläche klicken.",
+      "requresterrorinfo": "Etwas ist schief gelaufen. Bitte versuchen Sie es in Kürze erneut.",
+      "requrestsuccessinfo": "Wir haben Ihnen eine weitere E-Mail gesendet. Bitte überprüfen Sie Ihren Posteingang.",
+      "button": "Bestätigungs-E-Mail anfordern"
     }
   },
   "general": {
     "error": {
-      "title": "We are sorry",
-      "requestfailed": "The request has failed. Please try again."
+      "title": "Es tut uns leid",
+      "requestfailed": "Die Anfrage ist fehlgeschlagen. Bitte versuche es erneut."
     },
     "success": {
-      "title": "Thank you!"
+      "title": "Vielen Dank!"
     },
     "readerror": {
-      "desc": "Something went wrong and the needed information could not be loaded. Please try again later"
+      "desc": "Ein Fehler ist aufgetreten und die benötigten Informationen konnten nicht geladen werden. Bitte versuchen Sie es später noch einmal"
     },
     "writeerror": {
-      "desc": "Something went wrong and the needed information could not be processed. Please try again later"
+      "desc": "Ein Fehler ist aufgetreten und die benötigten Informationen konnten nicht verarbeitet werden. Bitte versuchen Sie es später noch einmal"
     }
   },
   "http": {
     "error": {
       "403": {
-        "title": "Access denied",
-        "explanation": "You don't have permission to see this page."
+        "title": "Zugriff abgelehnt",
+        "explanation": "Sie sind nicht berechtigt, diese Seite anzuzeigen."
       },
       "404": {
-        "title": "Not found",
-        "explanation": "The requested URL could not be found.",
-        "backtohome": "Go back to home screen"
+        "title": "Nicht gefunden",
+        "explanation": "Die angeforderte URL konnte nicht gefunden werden.",
+        "backtohome": "Zurück zur Startseite"
       }
     }
   },
   "admintable": {
-    "gotopagination": "Skip to pagination",
-    "search": "Keyword search",
+    "gotopagination": "Zur Seitennavigation springen",
+    "search": "Schlagwortsuche",
     "sorted": {
-      "desc": "Sorted descending",
-      "asc": "Sorted ascending"
+      "desc": "Absteigend sortieren",
+      "asc": "Aufsteigend sortieren"
     },
-    "nodata": "No items found",
+    "nodata": "Keine Elemente gefunden",
     "pagination": {
-      "gotofirstpage": "goto first page",
-      "gotopreviouspage": "goto previous page",
-      "gotopage": "goto page number {{page}}",
-      "gotonextpage": "goto next page",
-      "gotolastpage": "goto last page"
+      "gotofirstpage": "gehe zur ersten Seite",
+      "gotopreviouspage": "gehe zur vorherigen Seite",
+      "gotopage": "gehe zu Seitennummer {{page}}",
+      "gotonextpage": "gehe zur nächsten Seite",
+      "gotolastpage": "gehe zur letzten Seite"
     },
-    "changepagesize": "{{pageSize}} per page"
+    "changepagesize": "{{pageSize}} pro Seite"
   },
   "apifile": {
-    "fileUploadedWithFilename": "File uploaded and saved with the file name:",
-    "linkDownload": "download"
+    "fileUploadedWithFilename": "Datei hochgeladen und mit dem Dateinamen gespeichert:",
+    "linkDownload": "herunterladen"
   },
   "apiimage": {
-    "errormsg": "The image could unfortunately not be processed. Please try uploading again.",
-    "processsing": "Image successful uploaded. We are processing it now",
-    "placeholder": "Image"
+    "errormsg": "Das Bild konnte leider nicht bearbeitet werden. Bitte versuchen Sie das Hochladen erneut.",
+    "processsing": "Das Bild wurde erfolgreich hochgeladen und wird von uns verarbeitet",
+    "placeholder": "Bild"
   },
   "dangerzonealertdialog": {
-    "writedeletetoken": "DELETE",
-    "writedeletetask": "Please enter \"{{token}}\" into the field below to unlock the action",
-    "writedeletelabel": "Written delete confirmation.",
+    "writedeletetoken": "LÖSCHEN",
+    "writedeletetask": "Bitte geben Sie \"{{token}}\" in das Feld unten ein, um die Aktion zu bestätigen",
+    "writedeletelabel": "Schriftliche Löschbestätigung.",
     "placeholder": "{{token}}"
   },
-  "translationnotfound": "Trans. not found",
+  "translationnotfound": "Übersetzung nicht gefunden",
   "settings": {
     "nameofyoursetting": {
       "label": "Label"
     },
     "error": {
-      "label": "No label translation key has been defined"
+      "label": "Es wurde kein Labelübersetzungsschlüssel definiert"
     },
     "contactEmail": {
-      "label": "Contact email address"
+      "label": "Kontakt-E-Mailadresse"
     },
     "frontendMapStyeJsonUrl": {
       "label": "Backend Map Api Key"
     },
     "centerOfGravity": {
-      "label": "Center of map (geo referencing)"
+      "label": "Kartenmitte (Georeferenzierung)"
     },
     "empty": {
       "defaultvalue": "Nicht gesetzt! Bitte die Einstellungen aktualisieren"
     }
   },
   "validation": {
-    "notunique": "This valaue is not unique",
+    "notunique": "Dieser Wert ist nicht einzigartig",
     "mixed": {
-      "default": "{{path}} is nicht korrekt",
+      "default": "{{path}} ist nicht korrekt",
       "required": "{{path}} ist ein notwendiges Feld",
-      "oneOf": "{{path}} must be one of the following values: {{values}}",
-      "notOneOf": "{{path}} must not be one of the following values: {{values}}",
-      "notType": "This field must not be of the type: {{type}}",
-      "defined": "{{path}} must be defined"
+      "oneOf": "{{path}} muss einer der folgenden Werte sein: {{values}}",
+      "notOneOf": "{{path}} darf keiner der folgenden Werte sein: {{values}}",
+      "notType": "Dieses Feld darf nicht vom Typ {{type}} sein:",
+      "defined": "{{path}} muss definiert werden"
     },
     "string": {
-      "length": "{{path}} must be exactly {{length}} characters long",
-      "min": "{{path}} must be at least {{min}} characters long",
-      "max": "{{path}} must be at most {{max}} characters long",
-      "matches": "{{path}} must match the following: \"{{regex}}\"",
-      "email": "{{path}} must be a valid email address",
-      "url": "{{path}} must be a valid URL",
-      "uuid": "{{path}} must be a valid UUID",
-      "trim": "{{path}} must be a trimmed string",
-      "lowercase": "{{path}} must be a lowercase string",
-      "uppercase": "{{path}} must be a upper case string"
+      "length": "{{path}} muss exakt {{length}} Zeichen lang sein",
+      "min": "{{path}} muss mindestens {{min}} Zeichen lang sein",
+      "max": "{{path}} darf maximal {{max}} Zeichen lang sein",
+      "matches": "{{path}} muss mit folgendem übereinstimmen: \"{{regex}}\"",
+      "email": "{{path}} muss eine gültige E-Mail-Adresse sein",
+      "url": "{{path}} muss eine gültige URL sein",
+      "uuid": "{{path}} muss eine gültige UUID sein",
+      "trim": "{{path}} darf kein Leerzeichen am Anfang oder Ende haben",
+      "lowercase": "{{path}} muss ein String in Kleinbuchstaben sein",
+      "uppercase": "{{path}} muss ein String in Grossbuchstaben sein"
     },
     "number": {
-      "min": "{{path}} must be greater than or equal to {{min}}",
-      "max": "{{path}} must be less than or equal to {{max}}",
-      "lessThan": "{{path}} must be less than {{less}}",
-      "moreThan": "{{path}} must be greater than {{more}}",
-      "positive": "{{path}} must be a positive number",
-      "negative": "{{path}} must be a negative number",
-      "integer": "{{path}} must be an integer",
-      "nolatitude": "Longitudes are numbers between -90.00 and 90.00",
-      "nolongitude": "Longitudes are numbers between -180.00 and 180.00"
+      "min": "{{path}} muss größer oder gleich {{min}} sein",
+      "max": "{{path}} muss kleiner oder gleich {{max}} sein",
+      "lessThan": "{{path}} muss kleiner sein als {{less}}",
+      "moreThan": "{{path}} muss grösser sein als {{more}}",
+      "positive": "{{path}} muss eine positive Zahl sein",
+      "negative": "{{path}} muss eine negative Zahl sein",
+      "integer": "{{path}} muss eine ganze Zahl sein",
+      "nolatitude": "Längengrade sind Zahlen zwischen -90.00 und 90.00",
+      "nolongitude": "Breitengrade sind Zahlen zwischen -180.00 und 180.00"
     },
     "date": {
-      "min": "{{path}} field must be later than {{min}}",
-      "max": "{{path}} field must be at earlier than {{max}}"
+      "min": "{{path}} Feld muss später sein als {{min}}",
+      "max": "{{path}} Feld muss früher sein als {{max}}"
     },
     "boolean": {
-      "isValue": "{{path}} field must be {{value}}"
+      "isValue": "{{path}} Feld muss {{value}} sein"
     },
     "object": {
-      "noUnknown": "{{path}} field has unspecified keys: {{unknown}}"
+      "noUnknown": "{{path}} Feld hat nicht spezifizierte Schlüssel: {{unknown}}"
     },
     "array": {
-      "min": "{{path}} field must have at least {{min}} items",
-      "max": "{{path}} field must have less than or equal to {{max}} items",
-      "length": "{{path}} must have {{length}} items",
-      "minOneItem": "Please select at least one item"
+      "min": "{{path}} Feld muss mindestens {{min}} Elemente enthalten",
+      "max": "{{path}} Feld muss weniger oder gleich {{max}} Elemente enthalten",
+      "length": "{{path}} muss {{length}} Elemente haben",
+      "minOneItem": "Bitte wähle mindestens ein Element aus"
     },
     "slug": {
-      "invalidcharacters": "You can only use A-Z, -, and numbers",
-      "chooselocation": "Please choose a location",
-      "notahexcolor": "Please provide a valid HEX color (like #a8f or #f9ad9f"
+      "invalidcharacters": "Bitte verwenden Sie ausschliesslich A-Z, -, und Zahlen",
+      "chooselocation": "Bitte wählen Sie einen Ort",
+      "notahexcolor": "Bitte geben Sie eine gültige HEX-Farbe an (z.B. #a8f oder #f9ad9f"
     },
     "page": {
       "login": {
@@ -812,19 +812,19 @@
         "passwordRequiredError": "Bitte geben Sie ihr Passwort ein"
       },
       "passwordrequest": {
-        "emailRequiredError": "Please enter your email address"
+        "emailRequiredError": "Bitte geben Sie Ihre Emailadresse ein"
       },
       "passwordreset": {
-        "pleaseProvideYourNewPassword": "Please enter your new password",
-        "pleaseConfirmYourNewPassword": "Please confirm your new password"
+        "pleaseProvideYourNewPassword": "Bitte geben Sie Ihr neues Passwort ein",
+        "pleaseConfirmYourNewPassword": "Bitte bestätigen Sie Ihr neues Passwort"
       },
       "register": {
-        "firstNameRequiredError": "Please enter your first name",
-        "lastNameRequiredError": "Please enter your last name",
-        "emailRequiredError": "Please enter your email address",
-        "passwordRequiredError": "Please enter your password",
-        "pleaseConfirmYourPassword": "Please confirm your password",
-        "acceptedTermsRequiredError": "Please accept out terms & conditions"
+        "firstNameRequiredError": "Bitte geben Sie Ihren Vornamen ein",
+        "lastNameRequiredError": "Bitte geben Sie Ihren Nachnamen ein",
+        "emailRequiredError": "Bitte geben Sie Ihre Emailadresse ein",
+        "passwordRequiredError": "Bitte geben Sie ihr Passwort ein",
+        "pleaseConfirmYourPassword": "Bitte bestätigen Sie Ihr Passwort",
+        "acceptedTermsRequiredError": "Bitte akzeptieren Sie unsere Nutzungsbedingungen"
       }
     }
   },
@@ -881,71 +881,71 @@
   },
   "page": {
     "passwordreset": {
-      "form_field_password_label": "New Password",
-      "form_field_password_placeholder": "Please enter your password",
-      "form_field_password_confirmation_label": "Confirm your new password",
-      "form_field_password_confirm_placeholder": "Please confirm your password",
-      "youPasswordHasBeenResetPleaseReauthenticate": "Your password has been changed. Please login again.",
-      "button_goto_login": "Goto login",
-      "youCanNowLogin": "Your password has been reset.",
-      "title": "Reset your password",
-      "info": "Enter your new password and confirm it in the second field.",
-      "back_to_login": "Back to login",
-      "form_button_submit": "Change password"
+      "form_field_password_label": "Neues Passwort",
+      "form_field_password_placeholder": "Bitte geben Sie ihr Passwort ein",
+      "form_field_password_confirmation_label": "Bitte bestätigen Sie ihr neues Passwort",
+      "form_field_password_confirm_placeholder": "Bitte bestätigen Sie ihr Passwort",
+      "youPasswordHasBeenResetPleaseReauthenticate": "Ihr Passwort wurde geändert. Bitte melden Sie sich erneut an.",
+      "button_goto_login": "Zum Login",
+      "youCanNowLogin": "Dein Passwort wurde zurück gesetzt.",
+      "title": "Setze dein Passwort zurück",
+      "info": "Geben Sie Ihr neues Passwort ein und bestätigen Sie es im zweiten Feld.",
+      "back_to_login": "Zurück zum Login",
+      "form_button_submit": "Passwort ändern"
     },
     "register": {
-      "profileimage": "Profile Image",
+      "profileimage": "Profilbild",
       "form_field_firstName_label": "Vorname",
-      "form_field_firstName_placeholder": "Your first name",
-      "form_field_lastName_label": "Last Name",
-      "form_field_lastName_placeholder": "Your last name",
-      "form_field_registration_label": "Email Address",
-      "form_field_registration_placeholder": "Please enter your email address",
-      "error": "We're sorry something went wrong. Please check your data and try again.",
-      "emailtaken": "The given email address is already in use. Maybe you did forget your password?",
-      "title": "Register as new User",
-      "prompt": "Please fill in the form to register as a new user.",
-      "form_field_password_label": "Your password",
-      "form_field_password_placeholder": "Please enter your password",
-      "accpt_terms_and_conditions": "I do accept the terms and conditions",
-      "form_button_submit": "Register"
+      "form_field_firstName_placeholder": "Ihr Vorname",
+      "form_field_lastName_label": "Nachname",
+      "form_field_lastName_placeholder": "Ihr Nachname",
+      "form_field_registration_label": "Email Adresse",
+      "form_field_registration_placeholder": "Geben Sie bitte Ihre Email-Adresse ein",
+      "error": "Es tut uns leid. Etwas ist schief gegangen. Bitte überprüfen Sie Ihre Eingaben und versuchen Sie es erneut.",
+      "emailtaken": "Die angegebene E-Mail-Adresse wird bereits verwendet. Vielleicht haben Sie Ihr Passwort vergessen?",
+      "title": "Als neue NutzerIn registrieren",
+      "prompt": "Bitte füllen Sie das Formular aus, um sich als neue NutzerIn zu registrieren.",
+      "form_field_password_label": "Ihr Passwort",
+      "form_field_password_placeholder": "Bitte geben Sie Ihr Passwort ein",
+      "accpt_terms_and_conditions": "Ich akzeptiere die Nutzungsbedingungen",
+      "form_button_submit": "Registrieren"
     },
     "passwordrequest": {
-      "thankyou": "Thank you!",
-      "requestInYourEmail": "We've sent you an email with a password request link. Please click the link provided to reset your password.",
-      "title": "Forgot your password?",
-      "info": "Enter your registered email to request a password reset link via email.",
-      "error": "The reset request has failed. Please try again.",
-      "form_field_email_label": "Email Address",
-      "form_field_email_placeholder": "Please enter your email address",
-      "back_to_login": "Back to login",
-      "form_button_submit": "Request reset link"
+      "thankyou": "Vielen dank!",
+      "requestInYourEmail": "Wir haben Ihnen eine E-Mail mit einem Link zur Passwortanforderung gesendet. Bitte klicken Sie auf den bereitgestellten Link, um Ihr Passwort zurückzusetzen.",
+      "title": "Passwort vergessen?",
+      "info": "Geben Sie Ihre registrierte E-Mail-Adresse ein, um einen Link zum Zurücksetzen des Passworts per E-Mail anzufordern.",
+      "error": "Die Zurücksetzung ist fehlgeschlagen. Bitte versuche es erneut.",
+      "form_field_email_label": "Email-Adresse",
+      "form_field_email_placeholder": "Geben Sie bitte Ihre Email-Adresse ein",
+      "back_to_login": "Zurück zur Anmeldung",
+      "form_button_submit": "Link zum Zurücksetzen anfordern"
     },
     "emailconfirmation": {
-      "button_goto_dashboard": "Goto dashboard",
-      "button_goto_login": "Goto login",
-      "requestsuccesstitles": "Thanky you",
-      "errorExplanation": "We could not verify your email address based on the information provided.",
-      "requestsuccessexplanation": "We've send you another email. Please check your inbox.",
-      "logintoproceed": "Please login to request another verification email.",
-      "requestanotheremail": "Request a new verification email.",
-      "youCanNowLogin": "Your email has been confirmed."
+      "button_goto_dashboard": "Gehe zum Dashboard",
+      "button_goto_login": "Zum Login",
+      "requestsuccesstitles": "Vielen Dank",
+      "errorExplanation": "Wir konnten Ihre E-Mail-Adresse anhand der bereitgestellten Informationen nicht verifizieren.",
+      "requestsuccessexplanation": "Wir haben Ihnen eine weitere E-Mail gesendet. Bitte überprüfen Sie Ihren Posteingang.",
+      "logintoproceed": "Bitte melden Sie sich an, um eine weitere Bestätigungs-E-Mail anzufordern.",
+      "requestanotheremail": "Neue Bestätigungsmail anfordern.",
+      "youCanNowLogin": "Ihre Email wurde bestätigt."
     },
     "login": {
-      "error": "The login failed. Please try again.",
-      "title": "Login",
-      "prompt": "Please login to access the administration tool.",
-      "no_account_prompt": "Don't have an account?",
-      "register_link": "Register as new user",
-      "form_field_login_label": "Email Address",
-      "form_field_login_placeholder": "Please enter your email address",
-      "form_field_password_label": "Your password",
-      "form_field_password_placeholder": "Please enter your password",
-      "forgot_your_password": "Forgot your password?",
-      "form_button_login": "Login"
+      "error": "Die Anmeldung ist fehlgeschlagen. Bitte versuchen Sie es erneut.",
+      "title": "Anmeldung",
+      "prompt": "Bitte melden Sie sich an, um auf das Administrationstool zuzugreifen.",
+      "no_account_prompt": "Sie haben kein Konto?",
+      "register_link": "Als neue NutzerIn registrieren",
+      "form_field_login_label": "Email-Adresse",
+      "form_field_login_placeholder": "Geben Sie bitte Ihre Email-Adresse ein",
+      "form_field_password_label": "Ihr Passwort",
+      "form_field_password_placeholder": "Bitte geben Sie Ihr Passwort ein",
+      "forgot_your_password": "Passwort vergessen?",
+      "form_button_login": "Anmeldung"
     },
     "signup": {
-      "back_to_login": "Zurück zum Login"
+      "back_to_login": "Zurück zur Anmeldung"
     }
   },
   "tablae": {

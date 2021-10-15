@@ -246,7 +246,7 @@ export const ModuleForm = ({
       {updateActions}
 
       {data && data?.moduleTaxonomies && (
-        <FieldModuleTaxonomies data={data} />
+        <><Divider mt="10" /><FieldModuleTaxonomies data={data} /></>
           
       )}
 
