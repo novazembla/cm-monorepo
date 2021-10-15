@@ -680,7 +680,7 @@ export const AdminTable = ({
           {showFilter && (taxonomies || statusFilter ) && (
             <Box
               position="relative"
-              overflow="hidden"
+              overflowY="hidden"
               transition="height 0.5s"
               w="100%"
               sx={{
@@ -814,6 +814,7 @@ export const AdminTable = ({
                     pt="3"
                     justifyContent="space-between"
                     alignContent="center"
+                    px="1"
                   >
                     <Box>
                       {taxonomies && (
