@@ -332,7 +332,7 @@ export const ModuleForm = ({
               name="phone1"
               label={t(
                 "module.locations.forms.field.label.phone1",
-                "Phone address (1)"
+                "Phone number (1)"
               )}
               isRequired={yupIsFieldRequired("phone1", validationSchema)}
               settings={{
@@ -350,7 +350,7 @@ export const ModuleForm = ({
               name="phone2"
               label={t(
                 "module.locations.forms.field.label.phone2",
-                "Phone address (2)"
+                "Phone number (2)"
               )}
               isRequired={yupIsFieldRequired("phone2", validationSchema)}
               settings={{

@@ -433,6 +433,7 @@ export const TourUpsertInput = inputObjectType({
     t.json("heroImage");
     t.nonNull.json("owner");
     t.nonNull.int("status");
+    t.nonNull.int("orderNumber");
   },
 });
 

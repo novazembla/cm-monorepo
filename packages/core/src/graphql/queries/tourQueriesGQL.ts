@@ -13,6 +13,7 @@ export const toursQueryGQL = gql`
         title
         slug
         status
+        orderNumber
         tourStopCount
       }
       totalCount
@@ -30,6 +31,7 @@ export const tourQueryGQL = gql`
       duration
       teaser
       description
+      orderNumber
       ownerId
       heroImage {
         id

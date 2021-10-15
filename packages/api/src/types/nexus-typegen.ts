@@ -161,6 +161,7 @@ export interface NexusGenInputs {
     distance: NexusGenScalars['JSON']; // JSON!
     duration: NexusGenScalars['JSON']; // JSON!
     heroImage?: NexusGenScalars['JSON'] | null; // JSON
+    orderNumber: number; // Int!
     owner: NexusGenScalars['JSON']; // JSON!
     path: NexusGenScalars['JSON']; // JSON!
     slug: NexusGenScalars['JSON']; // JSON!

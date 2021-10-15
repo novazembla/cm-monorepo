@@ -542,6 +542,7 @@ input TourUpsertInput {
   distance: JSON!
   duration: JSON!
   heroImage: JSON
+  orderNumber: Int!
   owner: JSON!
   path: JSON!
   slug: JSON!

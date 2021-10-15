@@ -134,9 +134,7 @@ const Index = () => {
 
   const [isTableStateReset, setIsTableStateReset] = useState(false);
   useEffect(() => {
-    console.log(previousRoute, isTableStateReset);
     if (previousRoute?.indexOf(moduleRootPath) === -1 && !isTableStateReset) {
-      console.log("Reset");
       setTableState(intitalTableState);
       reset({
         ...intitalTableState.statusFilter.reduce(
