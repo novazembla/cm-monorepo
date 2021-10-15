@@ -150,6 +150,11 @@
           }
         }
       }
+    },
+    "tours": {
+      "button": {
+        "view": "View tour tourStops"
+      }
     }
   },
   "vvalidation": {
@@ -232,6 +237,12 @@
   "import": {
     "status": {
       "rejected": "Processing"
+    }
+  },
+  "editor": {
+    "count": {
+      "characters": "{{count}}/{{maxLength}} characters",
+      "characters_plural": "{{count}}/{{maxLength}} characters"
     }
   }
 }

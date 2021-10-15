@@ -324,6 +324,11 @@
             "co": "C/O",
             "postCode": "Postleitzahl",
             "city": "Stadt",
+            "contactInformation": "Kontaktinformation",
+            "email1": "Email Adresse (1)",
+            "email2": "Email Adresse (2)",
+            "phone1": "Telefonnummer (1)",
+            "phone2": "Telefonnummer (2)",
             "socialMedia": "Website/Social Media",
             "website": "Website",
             "facebook": "Facebook",
@@ -544,6 +549,11 @@
             }
           }
         },
+        "field": {
+          "label": {
+            "orderNumber": "Sortierungsnummer"
+          }
+        },
         "tourStop": {
           "field": {
             "label": {
@@ -562,7 +572,6 @@
       "button": {
         "create": "Neue Tour hinzufügen",
         "edit": "Tour bearbeiten",
-        "view": "Tour Stops anzeigen",
         "delete": "Tour löschen"
       }
     },
@@ -658,8 +667,8 @@
       "url": "https://..."
     },
     "count": {
-      "characters": "{{count}}/{{maxLength}} Zeichen",
-      "characters_plural": "{{count}}/{{maxLength}} Zeichen"
+      "characters_one": "{{count}}/{{maxLength}} character",
+      "characters_other": "{{count}}/{{maxLength}} characters"
     }
   },
   "alert": {
@@ -701,12 +710,21 @@
   },
   "admintable": {
     "gotopagination": "Zur Seitennavigation springen",
+    "filter": {
+      "button": {
+        "toggle": "Filter",
+        "filter": "Filtern"
+      },
+      "status": "Pulikationsstatus",
+      "termsAndRelationship": "Alle Begriffe müssen zugewiesen sein (UND Filter)"
+    },
     "search": "Schlagwortsuche",
     "sorted": {
       "desc": "Absteigend sortieren",
       "asc": "Aufsteigend sortieren"
     },
     "nodata": "Keine Elemente gefunden",
+    "total": "Gesamtanzahl",
     "pagination": {
       "gotofirstpage": "gehe zur ersten Seite",
       "gotopreviouspage": "gehe zur vorherigen Seite",
@@ -841,12 +859,14 @@
     "label": {
       "actions": "Aktionen",
       "id": "ID",
+      "lastUpdate": "Zuletzt aktualisiert",
       "status": "Status",
       "title": "Titel",
       "date": "Datum",
       "errors": "Fehler",
       "warnings": "Warnungen",
-      "name": "Name"
+      "name": "Name",
+      "orderNumber": "Sortierungsnummer"
     }
   },
   "copied": "Kopiert",
@@ -861,6 +881,8 @@
           "co": "C/O ...",
           "postCode": "Postleitzahl",
           "city": "Stadt",
+          "email": "petra.meier@contact.me",
+          "phone": "+49327876780",
           "url": "https://....",
           "agency": "Träger",
           "eventLocationId": "berlin.de Veranstaltungsort ID"
