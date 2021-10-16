@@ -354,7 +354,11 @@ const doChores = async () => {
         }
       }
 
-      log.push(`Starting to process export.`);
+      log.push(
+        exportInDb.lang === "de"
+          ? `Beginne export.`
+          : `Starting to process export.`
+      );
       await prisma.locationExport.update({
         data: {
           status: ExportStatus.PROCESSING,
@@ -512,13 +516,18 @@ const doChores = async () => {
               "",
               "",
             ]);
+
             for (let i = 0; i < locations.length; i++) {
-              await worksheet
+              worksheet
                 .addRow(locationToArray(locations[i], exportInDb.lang))
                 .commit();
-              log.push(`Processed location id: ${locations[i].id}`);
+              log.push(
+                exportInDb.lang === "de"
+                  ? `Kartenpunkt: ${locations[i].id} bearbeitet`
+                  : `Processed location id: ${locations[i].id}`
+              );
             }
-            await worksheet.commit();
+            worksheet.commit();
             await workbook.commit();
 
             log.push(

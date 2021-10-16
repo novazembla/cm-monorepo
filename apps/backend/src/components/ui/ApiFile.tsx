@@ -1,7 +1,7 @@
 import React from "react";
 import { FileStatus } from "@culturemap/core";
 import type { ApiFileMetaInformation } from "@culturemap/core";
-import { Flex, Box, chakra } from "@chakra-ui/react";
+import { Flex, Button, Link, Box,chakra } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 
 export type ApiFileProps = {
@@ -17,10 +17,37 @@ export const ApiFile = ({ id, meta, status, allowDownload }: ApiFileProps) => {
   let content;
 
   if (status === FileStatus.UPLOADED) {
-    content = <Box><chakra.span pr="1">{t("apifile.fileUploadedWithFilename", "File uploaded and saved with the file name:")}</chakra.span><b>{meta?.originalFileName}</b>
-      {allowDownload && <a href={meta?.originalFileUrl}>{t("apifile.linkDownload", "download")}</a>}
-    </Box>;
+    content = (
+      <Flex w="100%" justifyContent="space-between" alignItems="center">
+        <Box>
+          <chakra.span pr="1">
+          {t(
+            "apifile.fileCreatedWithFilename",
+            "File created and saved with the file name:"
+          )}
+        </chakra.span>
+        <b>{meta?.originalFileName}</b>
+        </Box>
+        {allowDownload && (
+          <Button as={Link} href={meta?.originalFileUrl} rel="noreferrer" target="_blank" color="#fff !important" textDecoration="none !important">
+            {t("apifile.linkDownload", "download")}
+          </Button>
+        )}
+      </Flex>
+    );
   }
 
-  return <Flex h="80px" alignItems="center" p="4" pr="60px" border="1px solid " borderColor="gray.400" borderRadius="md">{content}</Flex>;
+  return (
+    <Flex
+      h="80px"
+      alignItems="center"
+      p="4"
+      border="1px solid "
+      borderColor="gray.400"
+      borderRadius="md"
+      w="100%"
+    >
+      {content}
+    </Flex>
+  );
 };

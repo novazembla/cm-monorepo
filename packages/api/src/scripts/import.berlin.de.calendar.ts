@@ -96,7 +96,7 @@ const findLocationByEventLocationId = async (
 
   if (!location) {
     warnings.push(
-      `Could not find matching location in database. Please ensure that one of the locations has the correct event location id For berlin.de Veranstaltungsort id: ${eventLocationId}, Veranstaltungsort Name: "${name}"`
+      `Fehlender Kartenpunkt für berlin.de Veranstaltungsort ID: ${eventLocationId}, Name: "${name}"`
     );
   }
 
@@ -158,7 +158,7 @@ const registerEventCategoies = async (
             if (termEN === "") {
               termEN = termDE;
               warnings.push(
-                `Missing: No translation for term! Using German substitute: ${termDE}`
+                `Fehlende englische Übersetzung, nutze deutschen Namen: ${termDE}`
               );
             }
 
@@ -179,9 +179,9 @@ const registerEventCategoies = async (
               },
             });
             logger.info(
-              `import.berlin.de: created new term ${termDE}/${termEN}`
+              `import.berlin.de: Neuer Begriff erstellt ${termDE}/${termEN}`
             );
-            log.push(`import.berlin.de: created new term ${termDE}/${termEN}`);
+            log.push(`Neuer Begriff erstellt ${termDE}/${termEN}`);
           }
 
           if (term?.id) eventCategories[`${key}`] = term.id;
@@ -214,12 +214,12 @@ const doChores = async () => {
     const client = axios.create();
     axiosRetry(client, { retries: 3 });
 
-    log.push("Starting import process");
+    log.push("Beginne Import Prozess");
 
     const eventOwner = await findEventOwner(prisma);
     if (!eventOwner || !eventOwner?.id)
       throw Error(
-        "Could not find event owner. Please ensure one user is set to be the imported events' owner"
+        "Konnte die KartenpunktautorIn nicht bestimmen. Bitte setzen Sie bei einer NutzerIn das Attribug: ImportbesitzerIn"
       );
 
     await saveImportLog(prisma);
@@ -229,7 +229,7 @@ const doChores = async () => {
       })
       .then(async (response: AxiosResponse<any>) => {
         if (response.data && isObject(response?.data?.events)) {
-          log.push(`Retrieved event listing from ${apiConfig.eventImportUrl}`);
+          log.push(`Kalender von ${apiConfig.eventImportUrl} eingelesen`);
           await saveImportLog(prisma);
 
           if (isObject(response?.data?.kategorien)) {
@@ -264,9 +264,9 @@ const doChores = async () => {
           );
 
           log.push(
-            `Found ${count.events} events with ${count.datesCurrent} (upcoming) dates`
+            `${count.events} Veranstaltungen mit ${count.datesCurrent} Terminen gefunden`
           );
-          log.push(`Starting to process events`);
+          log.push(`Beginne den import dieser ....`);
           await saveImportLog(prisma);
 
           const processEvent = async (key: string) => {
@@ -406,18 +406,18 @@ const doChores = async () => {
 
                   if (eventInDb) {
                     log.push(
-                      `Created new event in database with ID: ${eventInDb?.id}`
+                      `Neue Veranstaltung mit der ID: ${eventInDb?.id} erstellt`
                     );
                   }
                 } else {
                   log.push(
-                    `Skipped creation of new event as event with event_id ${event?.event_id} has got no upcomming dates`
+                    `Überspringe die Veranstaltung (berlin.de ID: ${event?.event_id}) da diese keine zukünftigen Termine hat`
                   );
                 }
               } else {
                 if (!eventInDb.isImported) {
                   log.push(
-                    `Skipped event ID: ${eventInDb?.id} (berlin.de id: ${event.event_id}) as isImported is set to false`
+                    `Überspringe Veranstaltung ID: ${eventInDb?.id} (berlin.de id: ${event.event_id}) da sie vom Import ausgenommen wurde`
                   );
                 } else {
                   if (dates.length > 0) {
@@ -494,11 +494,11 @@ const doChores = async () => {
 
                       // TODO: that next.js trigger updates on frontend via get request
                       log.push(
-                        `Updated event ID: ${eventInDb?.id} (berlin.de id: ${event.event_id})`
+                        `Veranstaltung : ${eventInDb?.id} (berlin.de id: ${event.event_id}) aktualisiert`
                       );
                     } else {
                       log.push(
-                        `Skipped event ID: ${eventInDb?.id} (berlin.de id: ${event.event_id}) as last modified < update date`
+                        `Überspringe Veranstaltung ID: ${eventInDb?.id} (berlin.de id: ${event.event_id}) da die Daten in der Datenbank aktuell sind`
                       );
                     }
                   } else {
@@ -509,7 +509,7 @@ const doChores = async () => {
                       },
                     });
                     log.push(
-                      `Deleted event ID: ${eventInDb?.id} (berlin.de id: ${event.event_id}) as next upcoming events = 0`
+                      `Lösche Veranstaltung ID: ${eventInDb?.id} (berlin.de id: ${event.event_id}) da keine zukünftigen Termine mehr vorhanden sind`
                     );
                   }
                 }
@@ -555,7 +555,7 @@ const doChores = async () => {
               },
             });
             log.push(
-              `Removed ${deleteResult.count} event(s) as they did not appear in the import data anymore`
+              `Löschte ${deleteResult.count} nicht mehr im Kalender vorhandene Veranstaltungen.`
             );
           }
         }
@@ -563,7 +563,7 @@ const doChores = async () => {
       .catch((err) => {
         throw err;
       });
-    log.push("import finished");
+    log.push("Import beendet");
   } catch (err: any) {
     logger.error(`import.berlin.de: ${err.name} ${err.message}`);
     errors.push(`import.berlin.de: ${err.name} ${err.message}`);

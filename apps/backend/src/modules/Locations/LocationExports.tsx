@@ -159,7 +159,7 @@ const LocationExports = () => {
       title: t("module.locations.title", "Locations"),
     },
     {
-      title: t("module.locations.menuitem.locationExports", "Location exports"),
+      title: t("module.locations.menuitem.locationExports", "Exports"),
     },
   ];
 
