@@ -50,6 +50,8 @@ let termsType: any = {};
 let termsTargetAudience: any = {};
 let termsInstitutionType: any = {};
 
+let lang = "en";
+
 const trimString = (str: string, length: number) =>
   str.length > length ? str.substring(0, length - 3) + "..." : str;
 
@@ -287,9 +289,13 @@ const processImportedRow = async (
         };
         hasWarnings = true;
         warnings.push(
-          `Geocoding: location ID: (${locationInDb?.id}) - row# ${
-            row["###" as any]
-          } address change please check geo coding result`
+          lang === "de"
+            ? `Geocoding: Kartenpunkt ID: (${locationInDb?.id}) - row# ${
+                row["###" as any]
+              } die Addresse hat sich geändert bitte überprüfen Sie das Resultat`
+            : `Geocoding: location ID: (${locationInDb?.id}) - row# ${
+                row["###" as any]
+              } address change please check geo coding result`
         );
       }
       locationInDb = await prisma.location.update({
@@ -305,9 +311,17 @@ const processImportedRow = async (
       });
 
       if (locationInDb?.id) {
-        log.push(`Updated location id ${locationInDb.id}`);
+        log.push(
+          lang === "de"
+            ? `Kartenpunkt Id ${locationInDb.id} aktualisiert`
+            : `Updated location id ${locationInDb.id}`
+        );
       } else {
-        errors.push(`Failed to create new location ${data.title.de}`);
+        errors.push(
+          lang === "de"
+            ? `Konnte neuen Kartenpunkt für "${data.title.de}" nicht erstellen`
+            : `Failed to create new location ${data.title.de}`
+        );
       }
     } else {
       const geoCodeCandidates = await geocodingGetAddressCandidates(
@@ -377,16 +391,28 @@ const processImportedRow = async (
       });
 
       if (locationInDb?.id) {
-        log.push(`Created new location with id ${locationInDb.id}`);
+        log.push(
+          lang === "de"
+            ? `Neuer Kartenpunkt mit der ID ${locationInDb.id} erstellt`
+            : `Created new location with id ${locationInDb.id}`
+        );
         if (!point || !point.lat || !point.lng) {
           warnings.push(
-            `Geocoding: Location ID: (${locationInDb?.id}) - row# ${
-              row["###" as any]
-            } could not find location on map`
+            lang === "de"
+              ? `Geocoding: Kartenpunkt ID: (${locationInDb?.id}) - row# ${
+                  row["###" as any]
+                } konnte Adresse nicht auflösen`
+              : `Geocoding: Location ID: (${locationInDb?.id}) - row# ${
+                  row["###" as any]
+                } could not find location on map`
           );
         }
       } else {
-        errors.push(`Failed to create new location ${data.title_de}`);
+        errors.push(
+          lang === "de"
+            ? `Kartenpunkt für "${data.title_de}" konnte nicht erstellt werden`
+            : `Failed to create new location ${data.title_de}`
+        );
       }
     }
 
@@ -396,18 +422,26 @@ const processImportedRow = async (
       !isEmail(sharedData.contactInfo.email1)
     )
       warnings.push(
-        `Invalid email: location ID: (${locationInDb?.id}) - row# ${
-          row["###" as any]
-        } Email (1) is not valid email address`
+        lang === "de"
+          ? `Falsche Email Addresse: Kartenpunkt ID: (${
+              locationInDb?.id
+            }) - row# ${row["###" as any]} Email Addresse (1) ist nicht korrekt`
+          : `Invalid email: location ID: (${locationInDb?.id}) - row# ${
+              row["###" as any]
+            } Email (1) is not valid email address`
       );
     if (
       sharedData.contactInfo.email2 !== "" &&
       !isEmail(sharedData.contactInfo.email2)
     )
       warnings.push(
-        `Invalid email: location ID: (${locationInDb?.id}) - row# ${
-          row["###" as any]
-        } Email (2) is not valid email address`
+        lang === "de"
+          ? `Falsche Email Addresse: Kartenpunkt ID: (${
+              locationInDb?.id
+            }) - row# ${row["###" as any]} Email Addresse (2) ist nicht korrekt`
+          : `Invalid email: location ID: (${locationInDb?.id}) - row# ${
+              row["###" as any]
+            } Email (2) is not valid email address`
       );
 
     socialMediaKeys.forEach((key) => {
@@ -415,9 +449,13 @@ const processImportedRow = async (
 
       if (socialLinks[key] !== "" && !isUrl(socialLinks[key]))
         warnings.push(
-          `Invalid URL: location ID: (${locationInDb?.id}) - row# ${
-            row["###" as any]
-          } "${key}" is not valid url`
+          lang === "de"
+            ? `Falsche URL: Kartenpunkt ID: (${locationInDb?.id}) - row# ${
+                row["###" as any]
+              } "${key}" ist keine URL`
+            : `Invalid URL: location ID: (${locationInDb?.id}) - row# ${
+                row["###" as any]
+              } "${key}" is not valid url`
         );
     });
   } catch (err: any) {
@@ -455,13 +493,26 @@ const doChores = async () => {
       if (![ImportStatus.PROCESS].includes(importInDb.status ?? -1))
         throw Error("Status of import excludes it from processing");
 
+      lang = importInDb.lang;
+
       const file = (importInDb?.file?.meta as any)?.originalFilePath;
-      if (!file) throw Error(`No file uploaded for import id ${args.importId}`);
+      if (!file)
+        throw Error(
+          lang === "de"
+            ? `Keine Datei für Import id ${args.importId} gefunden`
+            : `No file uploaded for import id ${args.importId}`
+        );
 
       if (!importInDb?.owner?.id)
-        throw Error(`No owner for import id ${args.importId}`);
+        throw Error(
+          lang === "de"
+            ? `Keine BesiterIn für Import id ${args.importId} gefunden`
+            : `No owner found for import id ${args.importId}`
+        );
 
-      log.push(`Starting to process import.`);
+      log.push(
+        lang === "de" ? `Beginne Import ...` : `Starting to process import.`
+      );
       await prisma.import.update({
         data: {
           status: ImportStatus.PROCESSING,
@@ -478,7 +529,11 @@ const doChores = async () => {
         const mapping = importInDb.mapping;
 
         if (!Array.isArray(mapping) || mapping.length === 0)
-          throw Error("mapping could not be retrieved from db");
+          throw Error(
+            lang === "de"
+              ? `Die Spaltenzuweisung konnte nicht gefunden werden`
+              : "mapping could not be retrieved from db"
+          );
 
         // is the file readable?
         await access(file);
@@ -508,7 +563,9 @@ const doChores = async () => {
             }, {} as any);
           } else {
             throw Error(
-              "Could not retrieve terms for 'Einrichtungsart' - Slug 'einrichtungsart'"
+              lang === "de"
+                ? "Konnte die Begriffe der Taxonomie 'Einrichtungsart' - Slug 'einrichtungsart' nicht finden"
+                : "Could not retrieve terms for 'Einrichtungsart' - Slug 'einrichtungsart'"
             );
           }
         }
@@ -538,7 +595,9 @@ const doChores = async () => {
             }, {} as any);
           } else {
             throw Error(
-              "Could not retrieve terms for 'Zielgruppe' - Slug 'zielgruppe'"
+              lang === "de"
+                ? "Konnte die Begriffe der Taxonomie 'Zielgruppe' - Slug 'zielgruppe' nicht finden"
+                : "Could not retrieve terms for 'Zielgruppe' - Slug 'zielgruppe'"
             );
           }
         }
@@ -568,7 +627,9 @@ const doChores = async () => {
             }, {} as any);
           } else {
             throw Error(
-              "Could not retrieve terms for 'Trägerart' - Slug 'traegerart'"
+              lang === "de"
+                ? "Konnte die Begriffe der Taxonomie 'Trägerart' - Slug 'traegerart' nicht finden"
+                : "Could not retrieve terms for 'Trägerart' - Slug 'traegerart'"
             );
           }
         }
@@ -598,9 +659,9 @@ const doChores = async () => {
                     }
 
                     const k = Object.keys(importHeaders).find((iHk) => {
-                      const t = Object.keys(importHeaders[iHk]).find((lang) => {
+                      const t = Object.keys(importHeaders[iHk]).find((lng) => {
                         return (
-                          importHeaders[iHk][lang].toLowerCase() ===
+                          importHeaders[iHk][lng].toLowerCase() ===
                           hTrimmed.toLowerCase()
                         );
                       });
@@ -631,13 +692,18 @@ const doChores = async () => {
 
                   Object.keys(requiredHeadersCheck).forEach((key) => {
                     if (!requiredHeadersCheck[key]) {
+
                       const keys = importRequiredHeaders[key].map((k) => {
-                        return importHeaders[k].en;
+                        return importHeaders[k][lang];
                       });
                       warnings.push(
-                        `Required column "${keys.join(
-                          '" or "'
-                        )}" not found in CSV.`
+                        lang === "de"
+                          ? `Konnte verpflichtende Spalte(n) "${keys.join(
+                              '" or "'
+                            )}" nicht in der CSV-Datei finden`
+                          : `Required column "${keys.join(
+                              '" or "'
+                            )}" not found in CSV.`
                       );
                     }
                   });
@@ -659,22 +725,32 @@ const doChores = async () => {
                 headers.length - 1 < Object.keys(importRequiredHeaders).length
               ) {
                 errors.push(
-                  `The uploaded CSV did not contain the minimum number of columns. Please ensure to only upload documents that contain at least ${
-                    Object.keys(importRequiredHeaders).length
-                  } content columns and one ID column`
+                  lang === "de"
+                    ? `Die hochgeladene Datei enthält weniger Spalten als die Anzahl der verpflichtenden Spalten. Bitte laden Sie nur Dateien mit mindestens ${
+                        Object.keys(importRequiredHeaders).length
+                      } Spalten, sowie einer Laufnummerspalte hoch`
+                    : `The uploaded CSV did not contain the minimum number of columns. Please ensure to only upload documents that contain at least ${
+                        Object.keys(importRequiredHeaders).length
+                      } content columns and one ID column`
                 );
               }
             })
             .on("data-invalid", (row) => {
               warnings.push(
-                `Invalid row ${trimString(JSON.stringify(row), 120)}`
+                lang === "de"
+                  ? `Fehler in Zeile:  ${trimString(JSON.stringify(row), 120)}`
+                  : `Invalid row ${trimString(JSON.stringify(row), 120)}`
               );
             })
             .on("data", async (row) => {
               rows.push(row);
             })
             .on("end", (rowCount: number) => {
-              log.push(`Import done: processed ${rowCount} rows`);
+              log.push(
+                lang === "de"
+                  ? `Import beendet: ${rowCount} Zeilen bearbeitet`
+                  : `Import done: processed ${rowCount} rows`
+              );
               logger.debug(`Import done: processed ${rowCount} rows`);
               resolve(true);
             });

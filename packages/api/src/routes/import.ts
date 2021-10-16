@@ -10,9 +10,9 @@ import { fileCreate, fileGetUploadInfo } from "../services/serviceFile";
 import { createFileMetaInfo } from ".";
 
 import { ApiError } from "../utils";
-import { authAuthenticateUserByToken } from "../services/serviceAuth";
+// import { authAuthenticateUserByToken } from "../services/serviceAuth";
 import { importParseInitialCsv } from "../services/serviceImport";
-import { daoFileGetById, daoImportUpdate } from "../dao";
+import { daoFileGetById, daoImportUpdate, daoImportGetById } from "../dao";
 import { ImportStatus } from "@culturemap/core";
 
 const storagePrivate = multer.diskStorage({
@@ -50,9 +50,9 @@ export const postImportFile = async (
   next: NextFunction
 ) => {
   try {
-    const refreshToken = req?.cookies?.refreshToken ?? "";
+    // const refreshToken = req?.cookies?.refreshToken ?? "";
     // TODO: enable access restrictions
-    // TODO: bring to openar ... 
+    // TODO: bring to openar ...
     // logger.info(`RT 1 ${JSON.stringify(refreshToken)}`);
     // logger.info(`RT 1.1 ${JSON.stringify(req?.cookies)}`);
     // logger.info(`RT 1.2 ${JSON.stringify(req?.headers)}`);
@@ -77,23 +77,30 @@ export const postImportFile = async (
     try {
       if (req.body.ownerId && !Number.isNaN(req.body.ownerId)) {
         if (req.file) {
+          let connectWith;
+          try {
+            connectWith = req?.body?.connectWith
+              ? JSON.parse(req?.body?.connectWith)
+              : {};
+          } catch (err) {
+            // nothing to be done ...
+          }
+
+          console.log(connectWith);
+
+          const importId = connectWith?.imports?.connect?.id;
+          let importInDb;
+          if (importId) importInDb = await daoImportGetById(importId);
+
           const { fileNanoId, metainfo } = createFileMetaInfo(req.file, true);
 
           const initialParseResult = await importParseInitialCsv(
             metainfo.originalFilePath,
-            10
+            5,
+            importInDb?.lang ?? "en"
           );
 
           if (initialParseResult.errors.length === 0) {
-            let connectWith;
-            try {
-              connectWith = req?.body?.connectWith
-                ? JSON.parse(req?.body?.connectWith)
-                : {};
-            } catch (err) {
-              // nothing to be done ...
-            }
-
             const file = await fileCreate(
               parseInt(req.body.ownerId, 10),
               fileNanoId,

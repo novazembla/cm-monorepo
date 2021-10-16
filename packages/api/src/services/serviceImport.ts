@@ -15,7 +15,11 @@ import { daoImportGetById, daoFileSetToDelete, daoImportDelete } from "../dao";
 const trimString = (str: string, length: number) =>
   str.length > length ? str.substring(0, length - 3) + "..." : str;
 
-export const importParseInitialCsv = async (file: string, numRows: number) => {
+export const importParseInitialCsv = async (
+  file: string,
+  numRows: number,
+  lang: string
+) => {
   const log: any[] = [];
   const errors: any[] = [];
   const warnings: any[] = [];
@@ -53,9 +57,9 @@ export const importParseInitialCsv = async (file: string, numRows: number) => {
                 }
 
                 const k = Object.keys(importHeaders).find((iHk) => {
-                  const t = Object.keys(importHeaders[iHk]).find((lang) => {
+                  const t = Object.keys(importHeaders[iHk]).find((lng) => {
                     return (
-                      importHeaders[iHk][lang].toLowerCase() ===
+                      importHeaders[iHk][lng].toLowerCase() ===
                       hTrimmed.toLowerCase()
                     );
                   });
@@ -68,7 +72,9 @@ export const importParseInitialCsv = async (file: string, numRows: number) => {
                 } else {
                   unknownHeadersCounter += 1;
                   warnings.push(
-                    `Unknown column header "${h}" please assign tagret database column`
+                    lang === "de"
+                      ? `Unbekannte Spaltenüberschrift "${h}" bitte bestimmen Sie eine Zielspalte in der Datenbank`
+                      : `Unknown column header "${h}" please assign tagret database column`
                   );
 
                   const uKey = `unkown-${unknownHeadersCounter}`;
@@ -92,10 +98,16 @@ export const importParseInitialCsv = async (file: string, numRows: number) => {
                 if (!requiredHeadersCheck[key]) {
                   missingRequiredHeadersCounter += 1;
                   const keys = importRequiredHeaders[key].map((k) => {
-                    return importHeaders[k].en;
+                    return importHeaders[k][lang];
                   });
                   warnings.push(
-                    `Required column "${keys.join('" or "')}" not found in CSV.`
+                    lang === "de"
+                      ? `Konnte verpflichtende Spalte(n) "${keys.join(
+                          '" or "'
+                        )}" nicht in der CSV-Datei finden`
+                      : `Required column "${keys.join(
+                          '" or "'
+                        )}" not found in CSV.`
                   );
                 }
               });
@@ -118,20 +130,32 @@ export const importParseInitialCsv = async (file: string, numRows: number) => {
             headers.length - 1 < Object.keys(importRequiredHeaders).length
           ) {
             errors.push(
-              `The uploaded CSV did not contain the minimum number of columns. Please ensure to only upload documents that contain at least ${
-                Object.keys(importRequiredHeaders).length
-              } content columns and one ID column`
+              lang === "de"
+                ? `Die hochgeladene Datei enthält weniger Spalten als die Anzahl der verpflichtenden Spalten. Bitte laden Sie nur Dateien mit mindestens ${
+                    Object.keys(importRequiredHeaders).length
+                  } Spalten, sowie einer Laufnummerspalte hoch`
+                : `The uploaded CSV did not contain the minimum number of columns. Please ensure to only upload documents that contain at least ${
+                    Object.keys(importRequiredHeaders).length
+                  } content columns and one ID column`
             );
           }
         })
         .on("data-invalid", (row) => {
-          errors.push(`Invalid row ${trimString(JSON.stringify(row), 120)}`);
+          errors.push(
+            lang === "de"
+              ? `Fehler in Zeile:  ${trimString(JSON.stringify(row), 120)}`
+              : `Invalid row ${trimString(JSON.stringify(row), 120)}`
+          );
         })
         .on("data", (row) => {
           rows.push(row);
         })
         .on("end", (rowCount: number) => {
-          log.push(`Parsed first ${rowCount} rows`);
+          log.push(
+            lang === "de"
+              ? `Die ersten ${rowCount} Zeilen wurden erfolgreich eingelesen`
+              : `Parsed first ${rowCount} rows`
+          );
           logger.debug(`Parsed first ${rowCount} rows`);
           resolve(true);
         });
@@ -140,9 +164,17 @@ export const importParseInitialCsv = async (file: string, numRows: number) => {
     errors.push(err.message);
   }
 
-  if (headers.length === 0) errors.push("Headers have not been found");
+  if (headers.length === 0)
+    errors.push(
+      lang === "de"
+        ? `Konnte Spaltenüberschriften nicht finden`
+        : "Headers have not been found"
+    );
 
-  if (rows.length === 0) errors.push("No data row(s) found");
+  if (rows.length === 0)
+    errors.push(
+      lang === "de" ? `Keinen Datenzeilen gefunden` : "No data row(s) found"
+    );
 
   if (headers.length > 0 && rows.length) {
     if (headers.length === Object.keys(rows[0]).length) {
@@ -158,7 +190,11 @@ export const importParseInitialCsv = async (file: string, numRows: number) => {
         return agg;
       }, [] as any[]);
     } else {
-      errors.push("Headers and rows column count do not match");
+      errors.push(
+        lang === "de"
+          ? `Die Anzahl der Spaltenüberschriften stimmt nicht mit der Anzahl der Datenspalten überein`
+          : "Headers and rows column count do not match"
+      );
     }
   }
 
