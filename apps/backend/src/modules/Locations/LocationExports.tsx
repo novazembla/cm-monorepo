@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import {
   locationExportsQueryGQL,
   locationExportDeleteMutationGQL,
-  LocationExportStatus,
+  ExportStatus,
 } from "@culturemap/core";
 import { useQuery } from "@apollo/client";
 
@@ -36,38 +36,38 @@ import {
 import { config } from "~/config";
 import { SortingRule, Cell } from "react-table";
 
-export const AdminTableLocationExportStatusCell = (cell: Cell) => {
+export const AdminTableExportStatusCell = (cell: Cell) => {
   const { t } = useTranslation();
   let color = "gray";
   let variant = "subtle";
   let label = t("publish.status.unknown", "Unknown");
 
-  if (cell.value === LocationExportStatus.CREATED) {
+  if (cell.value === ExportStatus.CREATED) {
     color = "orange";
     label = t("import.status.created", "Created");
   }
 
-  if (cell.value === LocationExportStatus.PROCESS) {
+  if (cell.value === ExportStatus.PROCESS) {
     color = "cyan";
     label = t("import.status.scheduled", "Scheduled");
   }
 
-  if (cell.value === LocationExportStatus.PROCESSING) {
+  if (cell.value === ExportStatus.PROCESSING) {
     color = "cyan";
     label = t("import.status.processing", "Processing");
   }
 
-  if (cell.value === LocationExportStatus.PROCESSED) {
+  if (cell.value === ExportStatus.PROCESSED) {
     color = "green";
     label = t("import.status.published", "Processed");
   }
 
-  if (cell.value === LocationExportStatus.ERROR) {
+  if (cell.value === ExportStatus.ERROR) {
     color = "red";
     label = t("import.status.error", "Error");
   }
 
-  if (cell.value === LocationExportStatus.DELETED) {
+  if (cell.value === ExportStatus.DELETED) {
     color = "red";
     label = t("import.status.trashed", "Trashed");
   }
@@ -184,7 +184,7 @@ const LocationExports = () => {
       accessor: "updatedAt",
     } as AdminTableColumn,
     {
-      Cell: AdminTableLocationExportStatusCell,
+      Cell: AdminTableExportStatusCell,
       Header: t("table.label.status", "status"),
       accessor: "status",
     } as AdminTableColumn,
@@ -214,7 +214,7 @@ const LocationExports = () => {
           (appUser?.can("locationDelete") ||
             (appUser.can("locationDeleteOwn") &&
               appUser.id === (cell?.row?.original as any)?.ownerId)) &&
-          (cell?.row?.original as any).status !== LocationExportStatus.PROCESSING
+          (cell?.row?.original as any).status !== ExportStatus.PROCESSING
         );
       },
 

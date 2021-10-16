@@ -162,6 +162,7 @@ type Import {
   errors: JSON
   file: JSON
   id: Int!
+  lang: String
   log: JSON
   mapping: JSON
   status: Int
@@ -178,6 +179,7 @@ type ImportQueryResult {
 
 input ImportUpsertInput {
   errors: JSON
+  lang: String
   log: JSON
   mapping: JSON
   status: Int!
@@ -229,6 +231,7 @@ type LocationExport {
   errors: JSON
   file: JSON
   id: Int!
+  lang: String
   log: JSON
   meta: JSON
   status: Int
@@ -243,6 +246,7 @@ type LocationExportQueryResult {
 }
 
 input LocationExportUpsertInput {
+  lang: String
   meta: JSON
   title: String!
 }

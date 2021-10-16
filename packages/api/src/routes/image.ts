@@ -11,7 +11,7 @@ import { imageCreate, imageGetUploadInfo } from "../services/serviceImage";
 
 import { getApiConfig } from "../config";
 import { ApiError } from "../utils";
-import { authAuthenticateUserByToken } from "../services/serviceAuth";
+// import { authAuthenticateUserByToken } from "../services/serviceAuth";
 
 const storage = multer.diskStorage({
   destination: async (_req: Request, _file, cb) => {

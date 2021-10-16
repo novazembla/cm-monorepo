@@ -16,7 +16,7 @@ import { ApiError } from "../../utils";
 
 import { GQLJson } from "./nexusTypesShared";
 
-import { authorizeApiUser } from "../helpers";
+import { authorizeApiUser, apiUserCan } from "../helpers";
 
 import { getApiConfig } from "../../config";
 
@@ -27,7 +27,7 @@ import {
   daoLocationExportCreate,
 } from "../../dao";
 import { Prisma } from ".prisma/client";
-import { LocationExportStatus } from "@culturemap/core";
+import { ExportStatus } from "@culturemap/core";
 import { locationExportDelete } from "../../services/serviceLocationExport";
 
 const apiConfig = getApiConfig();
@@ -37,6 +37,7 @@ export const LocationExport = objectType({
   definition(t) {
     t.nonNull.int("id");
     t.json("title");
+    t.string("lang");
     t.json("log");
     t.json("errors");
     t.json("meta");
@@ -83,22 +84,31 @@ export const LocationExportQueries = extendType({
         }),
       },
 
-      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "locationCreate"),
+      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "locationReadOwn"),
 
-      async resolve(...[, args, , info]) {
+      async resolve(...[, args, ctx, info]) {
         const pRI = parseResolveInfo(info);
 
         let totalCount;
         let locationExports;
-        let include = {};
+        let include: Prisma.LocationExportInclude = {};
         let where: Prisma.LocationExportWhereInput = {
           ...args.where,
           status: {
             not: {
-              in: [LocationExportStatus.DELETED],
+              in: [ExportStatus.DELETED],
             },
           },
         };
+
+        if (!apiUserCan(ctx, "locationRead")) {
+          where = {
+            ...where,
+            owner: {
+              id: ctx?.apiUser?.id ?? 0,
+            },
+          };
+        }
 
         if (
           (pRI?.fieldsByTypeName?.LocationExportQueryResult as any)?.totalCount
@@ -138,7 +148,20 @@ export const LocationExportQueries = extendType({
         id: nonNull(intArg()),
       },
 
-      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "locationCreate"),
+      authorize: async (...[, args, ctx]) => {
+        if (!authorizeApiUser(ctx, "locationUpdateOwn")) return false;
+
+        if (apiUserCan(ctx, "locationUpdate")) return true;
+
+        const count = await daoLocationExportQueryCount({
+          id: args.id,
+          owner: {
+            id: ctx.apiUser?.id ?? 0,
+          },
+        });
+
+        return count === 1;
+      },
 
       // resolve(root, args, ctx, info)
       async resolve(...[, args]) {
@@ -152,6 +175,7 @@ export const LocationExportUpsertInput = inputObjectType({
   name: "LocationExportUpsertInput",
   definition(t) {
     t.nonNull.string("title");
+    t.string("lang");
     t.json("meta");
   },
 });
@@ -172,12 +196,13 @@ export const LocationExportMutations = extendType({
       async resolve(...[, args, ctx]) {
         const location = await daoLocationExportCreate({
           ...args.data,
+          lang: args.data?.lang ?? "en",
           owner: {
             connect: {
               id: ctx?.apiUser?.id ?? 0,
             },
           },
-          status: LocationExportStatus.PROCESS,
+          status: ExportStatus.PROCESS,
         });
 
         if (!location)
@@ -197,7 +222,20 @@ export const LocationExportMutations = extendType({
         id: nonNull(intArg()),
       },
 
-      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "locationCreate"),
+      authorize: async (...[, args, ctx]) => {
+        if (!authorizeApiUser(ctx, "locationDeleteOwn")) return false;
+
+        if (apiUserCan(ctx, "locationDelete")) return true;
+
+        const count = await daoLocationExportQueryCount({
+          id: args.id,
+          owner: {
+            id: ctx.apiUser?.id ?? 0,
+          },
+        });
+
+        return count === 1;
+      },
 
       async resolve(...[, args]) {
         const location = await locationExportDelete(args.id);

@@ -415,6 +415,8 @@ model ImageTranslation {
 model Import {
   id       Int    @id @default(autoincrement())
   title    String
+  lang      String @default("en")
+  
   log      Json?  @default("[]")
   errors   Json?  @default("[]")
   mapping  Json?  @default("[]")
@@ -435,6 +437,7 @@ model Import {
 model LocationExport {
   id       Int    @id @default(autoincrement())
   title    String
+  lang      String @default("en")
   log      Json?  @default("[]")
   errors   Json?  @default("[]")
   meta  Json?  @default("{}")

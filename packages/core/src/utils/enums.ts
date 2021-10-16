@@ -38,13 +38,13 @@ export enum ImportStatus {
   DELETED, // 6
 }
 
-export enum LocationExportStatus {
+export enum ExportStatus {
   CREATED, // 0
-  PROCESS, // 2
-  PROCESSING, // 3
-  PROCESSED, // 4
-  ERROR, // 5
-  DELETED, // 6
+  PROCESS, // 1
+  PROCESSING, // 2
+  PROCESSED, // 3
+  ERROR, // 4
+  DELETED, // 5
 }
 
 export default ImageStatus;

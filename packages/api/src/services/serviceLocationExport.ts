@@ -6,7 +6,7 @@ import {
   daoFileSetToDelete,
   daoLocationExportDelete,
 } from "../dao";
-import { LocationExportStatus } from "@culturemap/core";
+import { ExportStatus } from "@culturemap/core";
 
 export const locationExportDelete = async (
   id: number
@@ -19,7 +19,7 @@ export const locationExportDelete = async (
       "LocationExport could not be deleted"
     );
 
-  if (locationExportInDb.status === LocationExportStatus.PROCESSING)
+  if (locationExportInDb.status === ExportStatus.PROCESSING)
     throw new ApiError(
       httpStatus.INTERNAL_SERVER_ERROR,
       "LocationExport could not be deleted"

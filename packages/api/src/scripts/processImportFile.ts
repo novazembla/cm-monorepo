@@ -452,9 +452,8 @@ const doChores = async () => {
     });
 
     if (importInDb) {
-      // TODO: change to
-      // if (![ImportStatus.PROCESS].includes(importInDb.status ?? -1))
-      //   throw Error("Status of import excludes it from processing");
+      if (![ImportStatus.PROCESS].includes(importInDb.status ?? -1))
+        throw Error("Status of import excludes it from processing");
 
       const file = (importInDb?.file?.meta as any)?.originalFilePath;
       if (!file) throw Error(`No file uploaded for import id ${args.importId}`);

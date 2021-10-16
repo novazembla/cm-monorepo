@@ -34,7 +34,7 @@ import { ModuleImportCreateForm } from "./forms";
 const Create = () => {
   const router = useRouter();
   const [appUser] = useAuthentication();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const successToast = useSuccessfullySavedToast();
   const [isNavigatingAway, setIsNavigatingAway] = useState(false);
 
@@ -62,6 +62,7 @@ const Create = () => {
         const mutationResults = await firstMutation({
           status: ImportStatus.CREATED,
           title: newData.title,
+          lang: i18n.language,
         });
 
         if (!mutationResults.errors) {

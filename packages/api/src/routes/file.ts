@@ -9,7 +9,7 @@ import { fileCreate, fileGetUploadInfo } from "../services/serviceFile";
 
 import { ApiError } from "../utils";
 import { createFileMetaInfo } from ".";
-import { authAuthenticateUserByToken } from "../services/serviceAuth";
+// import { authAuthenticateUserByToken } from "../services/serviceAuth";
 
 const storage = multer.diskStorage({
   destination: async (_req: Request, _file, cb) => {

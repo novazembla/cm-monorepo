@@ -78,6 +78,7 @@ export interface NexusGenInputs {
   }
   ImportUpsertInput: { // input type
     errors?: NexusGenScalars['JSON'] | null; // JSON
+    lang?: string | null; // String
     log?: NexusGenScalars['JSON'] | null; // JSON
     mapping?: NexusGenScalars['JSON'] | null; // JSON
     status: number; // Int!
@@ -85,6 +86,7 @@ export interface NexusGenInputs {
     warnings?: NexusGenScalars['JSON'] | null; // JSON
   }
   LocationExportUpsertInput: { // input type
+    lang?: string | null; // String
     meta?: NexusGenScalars['JSON'] | null; // JSON
     title: string; // String!
   }
@@ -321,6 +323,7 @@ export interface NexusGenObjects {
     errors?: NexusGenScalars['JSON'] | null; // JSON
     file?: NexusGenScalars['JSON'] | null; // JSON
     id: number; // Int!
+    lang?: string | null; // String
     log?: NexusGenScalars['JSON'] | null; // JSON
     mapping?: NexusGenScalars['JSON'] | null; // JSON
     status?: number | null; // Int
@@ -360,6 +363,7 @@ export interface NexusGenObjects {
     errors?: NexusGenScalars['JSON'] | null; // JSON
     file?: NexusGenScalars['JSON'] | null; // JSON
     id: number; // Int!
+    lang?: string | null; // String
     log?: NexusGenScalars['JSON'] | null; // JSON
     meta?: NexusGenScalars['JSON'] | null; // JSON
     status?: number | null; // Int
@@ -616,6 +620,7 @@ export interface NexusGenFieldTypes {
     errors: NexusGenScalars['JSON'] | null; // JSON
     file: NexusGenScalars['JSON'] | null; // JSON
     id: number; // Int!
+    lang: string | null; // String
     log: NexusGenScalars['JSON'] | null; // JSON
     mapping: NexusGenScalars['JSON'] | null; // JSON
     status: number | null; // Int
@@ -660,6 +665,7 @@ export interface NexusGenFieldTypes {
     errors: NexusGenScalars['JSON'] | null; // JSON
     file: NexusGenScalars['JSON'] | null; // JSON
     id: number; // Int!
+    lang: string | null; // String
     log: NexusGenScalars['JSON'] | null; // JSON
     meta: NexusGenScalars['JSON'] | null; // JSON
     status: number | null; // Int
@@ -1012,6 +1018,7 @@ export interface NexusGenFieldTypeNames {
     errors: 'JSON'
     file: 'JSON'
     id: 'Int'
+    lang: 'String'
     log: 'JSON'
     mapping: 'JSON'
     status: 'Int'
@@ -1056,6 +1063,7 @@ export interface NexusGenFieldTypeNames {
     errors: 'JSON'
     file: 'JSON'
     id: 'Int'
+    lang: 'String'
     log: 'JSON'
     meta: 'JSON'
     status: 'Int'

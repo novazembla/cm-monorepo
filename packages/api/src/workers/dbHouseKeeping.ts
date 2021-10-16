@@ -10,7 +10,7 @@ import {
   ImageStatus,
   FileStatus,
   ImportStatus,
-  LocationExportStatus,
+  ExportStatus,
 } from "@culturemap/core";
 
 // https://github.com/breejs/bree#long-running-jobs
@@ -283,7 +283,7 @@ const doChores = async () => {
     const scheduledLocationExport = await prisma.locationExport.findFirst({
       where: {
         status: {
-          in: [LocationExportStatus.PROCESS],
+          in: [ExportStatus.PROCESS],
         },
       },
       orderBy: {
@@ -301,7 +301,7 @@ const doChores = async () => {
           "node",
           [
             `${apiConfig.packageBaseDir}/${buildFolder}/scripts/processLocationExportFile.js`,
-            `--locationExportId=${scheduledLocationExport.id}`,
+            `--exportId=${scheduledLocationExport.id}`,
           ],
           {
             detached: true,
@@ -313,7 +313,7 @@ const doChores = async () => {
       } catch (err) {
         await prisma.locationExport.update({
           data: {
-            status: LocationExportStatus.ERROR,
+            status: ExportStatus.ERROR,
             errors: ["Could not execute locationExport script"],
           },
           where: {

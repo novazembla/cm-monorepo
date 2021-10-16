@@ -117,7 +117,7 @@ const Index = () => {
     intitalTableState
   );
 
-  const [firstMutation, firstMutationResults] =
+  const [firstMutation] =
     useLocationExportCreateMutation();
 
   const previousRoute = useTypedSelector(
@@ -339,7 +339,13 @@ const Index = () => {
       if (appUser) {
         const mutationResults = await firstMutation({
           title: newData.title,
-          meta: tableState,
+          lang: i18n.language,
+          meta: adminTableCreateQueryVariables(
+            tableState,
+            multiLangFields,
+            i18n.language,
+            config.activeLanguages
+          ),
         });
 
         if (!mutationResults.errors) {

@@ -293,7 +293,7 @@ export const authVerifyEmail = async (token: string) => {
   }
 };
 
-export default {
+const defaults = {
   authAuthenticateUserByToken,
   authLoginUserWithEmailAndPassword,
   authLogout,
@@ -304,3 +304,4 @@ export default {
   authSendEmailConfirmationEmail,
   authVerifyEmail,
 };
+export default defaults;

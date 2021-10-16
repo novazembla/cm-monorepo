@@ -16,18 +16,18 @@ import { ApiError } from "../../utils";
 
 import { GQLJson } from "./nexusTypesShared";
 
-import { authorizeApiUser } from "../helpers";
+import { authorizeApiUser, apiUserCan } from "../helpers";
 
 import { getApiConfig } from "../../config";
 
 import {
   daoImportGetById,
   daoImportQuery,
-  daoImportQueryCount,
   daoImportCreate,
   daoImportUpdate,
   daoFileSetToDelete,
   daoFileGetById,
+  daoImportQueryCount,
 } from "../../dao";
 import { Prisma } from ".prisma/client";
 import { ImportStatus } from "@culturemap/core";
@@ -46,6 +46,7 @@ export const Import = objectType({
     t.json("mapping");
     t.int("status");
     t.json("file");
+    t.string("lang");
     t.date("createdAt");
     t.date("updatedAt");
   },
@@ -87,14 +88,14 @@ export const ImportQueries = extendType({
         }),
       },
 
-      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "locationCreate"),
+      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "locationReadOwn"),
 
-      async resolve(...[, args, , info]) {
+      async resolve(...[, args, ctx, info]) {
         const pRI = parseResolveInfo(info);
 
         let totalCount;
         let imports;
-        let include = {};
+        let include: Prisma.ImportInclude = {};
         let where: Prisma.ImportWhereInput = {
           ...args.where,
           status: {
@@ -103,6 +104,15 @@ export const ImportQueries = extendType({
             },
           },
         };
+
+        if (!apiUserCan(ctx, "locationRead")) {
+          where = {
+            ...where,
+            owner: {
+              id: ctx?.apiUser?.id ?? 0,
+            },
+          };
+        }
 
         if ((pRI?.fieldsByTypeName?.ImportQueryResult as any)?.totalCount) {
           totalCount = await daoImportQueryCount(where);
@@ -137,7 +147,20 @@ export const ImportQueries = extendType({
         id: nonNull(intArg()),
       },
 
-      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "locationCreate"),
+      authorize: async (...[, args, ctx]) => {
+        if (!authorizeApiUser(ctx, "locationUpdateOwn")) return false;
+
+        if (apiUserCan(ctx, "locationUpdate")) return true;
+
+        const count = await daoImportQueryCount({
+          id: args.id,
+          owner: {
+            id: ctx.apiUser?.id ?? 0,
+          },
+        });
+
+        return count === 1;
+      },
 
       // resolve(root, args, ctx, info)
       async resolve(...[, args]) {
@@ -155,6 +178,7 @@ export const ImportUpsertInput = inputObjectType({
     t.json("errors");
     t.json("warnings");
     t.json("mapping");
+    t.string("lang");
     t.nonNull.int("status");
   },
 });
@@ -175,6 +199,7 @@ export const ImportMutations = extendType({
       async resolve(...[, args, ctx]) {
         const location = await daoImportCreate({
           ...args.data,
+          lang: args.data?.lang ?? "en",
           owner: {
             connect: {
               id: ctx?.apiUser?.id ?? 0,
@@ -200,10 +225,26 @@ export const ImportMutations = extendType({
         data: nonNull("ImportUpsertInput"),
       },
 
-      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "locationCreate"),
+      authorize: async (...[, args, ctx]) => {
+        if (!authorizeApiUser(ctx, "locationUpdateOwn")) return false;
+
+        if (apiUserCan(ctx, "locationUpdate")) return true;
+
+        const count = await daoImportQueryCount({
+          id: args.id,
+          owner: {
+            id: ctx.apiUser?.id ?? 0,
+          },
+        });
+
+        return count === 1;
+      },
 
       async resolve(...[, args]) {
-        const location = await daoImportUpdate(args.id, args.data);
+        const location = await daoImportUpdate(args.id, {
+          ...args.data,
+          lang: undefined,
+        });
 
         if (!location)
           throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Update failed");
@@ -219,7 +260,20 @@ export const ImportMutations = extendType({
         id: nonNull(intArg()),
       },
 
-      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "locationCreate"),
+      authorize: async (...[, args, ctx]) => {
+        if (!authorizeApiUser(ctx, "locationDeleteOwn")) return false;
+
+        if (apiUserCan(ctx, "locationDelete")) return true;
+
+        const count = await daoImportQueryCount({
+          id: args.id,
+          owner: {
+            id: ctx.apiUser?.id ?? 0,
+          },
+        });
+
+        return count === 1;
+      },
 
       async resolve(...[, args]) {
         const fileInDb: any = await daoFileGetById(args.id, {
@@ -262,7 +316,20 @@ export const ImportMutations = extendType({
         id: nonNull(intArg()),
       },
 
-      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "locationCreate"),
+      authorize: async (...[, args, ctx]) => {
+        if (!authorizeApiUser(ctx, "locationDeleteOwn")) return false;
+
+        if (apiUserCan(ctx, "locationDelete")) return true;
+
+        const count = await daoImportQueryCount({
+          id: args.id,
+          owner: {
+            id: ctx.apiUser?.id ?? 0,
+          },
+        });
+
+        return count === 1;
+      },
 
       async resolve(...[, args]) {
         const location = await importDelete(args.id);
