@@ -270,8 +270,10 @@
       "menuitem": {
         "importLogs": "Import Logs",
         "createlocation": "Add new location",
+        "locationExports": "Exports",
         "imports": "Imports",
-        "createimport": "Add new import"
+        "createimport": "Add new import",
+        "exports": "Exports"
       },
       "forms": {
         "import": {
@@ -342,6 +344,30 @@
         }
       },
       "title": "Locations",
+      "breadcrumb": {
+        "exportdetail": "Export detail"
+      },
+      "export": {
+        "exportIsProcessing": "Your export is being processed on the server.",
+        "exportProcessed": "Your export has been processed.",
+        "field": {
+          "label": {
+            "exportName": "Export Name"
+          },
+          "placeholder": {
+            "title": "Short name to find your export in the export listing"
+          }
+        },
+        "create": {
+          "label": "Export"
+        },
+        "introduction": "Export all {{num}} items as .xlsx file",
+        "button": {
+          "label": {
+            "scheduleExport": "Schedule export"
+          }
+        }
+      },
       "import": {
         "button": {
           "create": "New import",
@@ -364,6 +390,11 @@
         "create": "Add new location",
         "edit": "Edit location",
         "delete": "Delete location"
+      },
+      "exports": {
+        "button": {
+          "view": "View import"
+        }
       },
       "associatedevents": {
         "title": "Associated events"
@@ -735,7 +766,7 @@
     "changepagesize": "{{pageSize}} per page"
   },
   "apifile": {
-    "fileUploadedWithFilename": "File uploaded and saved with the file name:",
+    "fileSavedWithFilename": "File created and saved with the file name",
     "linkDownload": "download"
   },
   "apiimage": {
@@ -898,7 +929,8 @@
       "processing": "Processing",
       "published": "Processed",
       "error": "Error",
-      "trashed": "Trashed"
+      "trashed": "Trashed",
+      "created": "Created"
     }
   },
   "page": {

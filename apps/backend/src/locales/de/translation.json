@@ -270,8 +270,10 @@
       "menuitem": {
         "importLogs": "Import Logs",
         "createlocation": "Neuen Veranstaltungsort hinzufügen",
+        "locationExports": "Export",
         "imports": "Importe",
-        "createimport": "Neuen Import hinzufügen"
+        "createimport": "Neuen Import hinzufügen",
+        "exports": "Exports"
       },
       "forms": {
         "import": {
@@ -342,6 +344,30 @@
         }
       },
       "title": "Veranstaltungsort",
+      "breadcrumb": {
+        "exportdetail": "Exportdetail"
+      },
+      "export": {
+        "exportIsProcessing": "Ihr Export wird auf dem Server bearbeited.",
+        "exportProcessed": "Ihr Export wurde vollständig durchgeführt.",
+        "field": {
+          "label": {
+            "exportName": "Exportname"
+          },
+          "placeholder": {
+            "title": "Kurzer Titel um den Export in der Exportliste wiedererkennen zu können"
+          }
+        },
+        "create": {
+          "label": "Exportieren"
+        },
+        "introduction": "Exportiere alle {{num}} Einträge aks .xlsx Datei",
+        "button": {
+          "label": {
+            "scheduleExport": "Export durchführen"
+          }
+        }
+      },
       "import": {
         "button": {
           "create": "Neuer Import",
@@ -364,6 +390,11 @@
         "create": "Veranstaltungsort hinzufügen",
         "edit": "Veranstaltungsort bearbeiten",
         "delete": "Veranstaltungsort löschen"
+      },
+      "exports": {
+        "button": {
+          "view": "Import ansehen"
+        }
       },
       "associatedevents": {
         "title": "Zugehörige Veranstaltungen"
@@ -735,7 +766,7 @@
     "changepagesize": "{{pageSize}} pro Seite"
   },
   "apifile": {
-    "fileUploadedWithFilename": "Datei hochgeladen und mit dem Dateinamen gespeichert:",
+    "fileSavedWithFilename": "Datei erstellt und folgendem Dateinamen gespeichert",
     "linkDownload": "herunterladen"
   },
   "apiimage": {
@@ -898,7 +929,8 @@
       "processing": "In Bearbeitung",
       "published": "Berarbeitet",
       "error": "Fehler",
-      "trashed": "Gelöscht"
+      "trashed": "Gelöscht",
+      "created": "Erstellt"
     }
   },
   "page": {

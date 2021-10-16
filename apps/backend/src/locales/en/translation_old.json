@@ -244,5 +244,8 @@
       "characters": "{{count}}/{{maxLength}} characters",
       "characters_plural": "{{count}}/{{maxLength}} characters"
     }
+  },
+  "apifile": {
+    "fileUploadedWithFilename": "File uploaded and saved with the file name:"
   }
 }

@@ -422,7 +422,7 @@ const Index = () => {
                   <Box>
                     {t(
                       "module.locations.export.introduction",
-                      "Export all {{num}} items as CSV file",
+                      "Export all {{num}} items as .xlsx file",
                       {
                         num: tableTotalCount
                       }

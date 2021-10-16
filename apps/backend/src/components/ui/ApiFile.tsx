@@ -22,9 +22,9 @@ export const ApiFile = ({ id, meta, status, allowDownload }: ApiFileProps) => {
         <Box>
           <chakra.span pr="1">
           {t(
-            "apifile.fileCreatedWithFilename",
-            "File created and saved with the file name:"
-          )}
+            "apifile.fileSavedWithFilename",
+            "File saved with the file name"
+          )}:
         </chakra.span>
         <b>{meta?.originalFileName}</b>
         </Box>
