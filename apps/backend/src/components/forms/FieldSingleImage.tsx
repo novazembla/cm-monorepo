@@ -1,9 +1,14 @@
 import React from "react";
-import { imageDeleteMutationGQL } from "@culturemap/core";
+import { ImageCropPosition, imageDeleteMutationGQL } from "@culturemap/core";
 
 import { DocumentNode } from "@apollo/client";
 import { Box, chakra, Grid } from "@chakra-ui/react";
-import { FieldMultiLangInput, FieldRow, FieldImageUploader } from ".";
+import {
+  FieldMultiLangInput,
+  FieldRow,
+  FieldImageUploader,
+  FieldImageCropPositionSelect,
+} from ".";
 import { useTranslation } from "react-i18next";
 import { useFormContext } from "react-hook-form";
 import { useConfig } from "~/hooks";
@@ -48,8 +53,34 @@ export const FieldSingleImage = ({
 }) => {
   const { t } = useTranslation();
   const config = useConfig();
-  const { setValue, getValues } = useFormContext();
-  
+  const { setValue, getValues, watch } = useFormContext();
+
+  let mappedCropPosition = "center";
+
+  const watchedValue = watch(`${name}_cropPosition`) ? parseInt(watch(`${name}_cropPosition`)) : 0;
+
+  switch (watchedValue) {
+    case ImageCropPosition.TOP:
+      mappedCropPosition = "top";
+      break;
+
+    case ImageCropPosition.RIGHT:
+      mappedCropPosition = "right";
+      break;
+
+    case ImageCropPosition.BOTTOM:
+      mappedCropPosition = "bottom";
+      break;
+
+    case ImageCropPosition.LEFT:
+      mappedCropPosition = "left";
+      break;
+
+    default: 
+      mappedCropPosition = "center";
+      break;
+  }
+
   return (
     <chakra.fieldset
       border="1px solid"
@@ -67,7 +98,10 @@ export const FieldSingleImage = ({
         gap={{ base: "4", s: "6" }}
       >
         <Box>
-          <Box w={{ base: "100%", t: "100%" }} maxW={{ base: "350px", t: "100%" }}>
+          <Box
+            w={{ base: "100%", t: "100%" }}
+            maxW={{ base: "350px", t: "100%" }}
+          >
             <FieldImageUploader
               name={`${name}`}
               id={`${id}`}
@@ -84,6 +118,8 @@ export const FieldSingleImage = ({
                   setValue(`${name}_credits_${lang}`, "");
                 });
               }}
+              objectFit="cover"
+              objectPosition={mappedCropPosition}
               setActiveUploadCounter={setActiveUploadCounter}
               settings={{
                 minFileSize: settings?.minFileSize ?? 1024 * 1024 * 0.0977,
@@ -112,7 +148,8 @@ export const FieldSingleImage = ({
               label={t("form.image.label.alttext", "Alternative text")}
               settings={{
                 defaultRequired:
-                  (!!settings.imageRequired && !!settings.altRequired) || !!getValues(name),
+                  (!!settings.imageRequired && !!settings.altRequired) ||
+                  !!getValues(name),
                 defaultValues: currentImage?.alt ?? "",
               }}
             />
@@ -125,10 +162,14 @@ export const FieldSingleImage = ({
               label={t("form.image.label.credits", "Copyright information")}
               settings={{
                 defaultRequired:
-                  (!!settings.imageRequired && !!settings.creditsRequired) || !!getValues(name),
+                  (!!settings.imageRequired && !!settings.creditsRequired) ||
+                  !!getValues(name),
                 defaultValues: currentImage?.credits ?? "",
               }}
             />
+          </FieldRow>
+          <FieldRow>
+            <FieldImageCropPositionSelect name={`${name}_cropPosition`} cropPosition={currentImage?.cropPosition} />
           </FieldRow>
         </Box>
       </Grid>

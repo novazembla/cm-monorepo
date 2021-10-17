@@ -366,14 +366,14 @@ model Image {
   nanoid      String @unique @db.VarChar(48)
   meta        Json
 
-  // TODO: finish XXX
   alt_de       String @default("") 
   credits_de        String @default("") 
     
   alt_en       String @default("") 
   credits_en        String @default("") 
 
-
+  cropPosition  Int @default(0)
+  
   status      Int    @default(0)
   orderNumber Int    @default(0)
 
@@ -454,6 +454,14 @@ model File {
 
   ownerId Int
   owner   User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  // TODO: finish XXX
+  title_de       String @default("") 
+  credits_de        String @default("") 
+    
+  title_en       String @default("") 
+  credits_en        String @default("") 
+
 
   imports Import[] @relation("importFiles")
   locationExports LocationExport[] @relation("locationExportFiles")

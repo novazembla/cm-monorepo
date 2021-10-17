@@ -290,6 +290,7 @@ export const EventQueries = extendType({
                 id: true,
                 status: true,
                 meta: true,
+                cropPosition: true,
                 ...daoSharedGetTranslatedSelectColumns(["alt", "credits"]),
               },
             },

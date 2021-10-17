@@ -13,7 +13,7 @@ import {
   ModulePage,
 } from "~/components/modules";
 
-import { moduleRootPath, multiLangFields } from "./moduleConfig";
+import { moduleRootPath } from "./moduleConfig";
 import {
   useDeleteByIdButton,
   useAuthentication,

@@ -298,6 +298,7 @@ export interface NexusGenObjects {
   }
   Image: { // root type
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
+    cropPosition?: number | null; // Int
     id: number; // Int!
     meta?: NexusGenScalars['JSON'] | null; // JSON
     nanoid?: string | null; // String
@@ -597,6 +598,7 @@ export interface NexusGenFieldTypes {
     alt: NexusGenScalars['JSON'] | null; // JSON
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
     credits: NexusGenScalars['JSON'] | null; // JSON
+    cropPosition: number | null; // Int
     id: number; // Int!
     meta: NexusGenScalars['JSON'] | null; // JSON
     nanoid: string | null; // String
@@ -997,6 +999,7 @@ export interface NexusGenFieldTypeNames {
     alt: 'JSON'
     createdAt: 'DateTime'
     credits: 'JSON'
+    cropPosition: 'Int'
     id: 'Int'
     meta: 'JSON'
     nanoid: 'String'

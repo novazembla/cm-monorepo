@@ -86,6 +86,7 @@ export const eventAndContentAuthorsQueryGQL = gql`
         status
         alt
         credits
+        cropPosition
       }
     }
     adminUsers(roles: ["administrator", "editor", "contributor"]) {
@@ -240,6 +241,7 @@ const Update = () => {
           ? data?.event?.locations[0].id
           : 0,
       heroImage: data.event.heroImage?.id,
+      heroImage_cropPosition: data.event.heroImage?.cropPosition,
       ...multiLangTranslationsJsonRHFormData(
         data?.event?.heroImage,
         ["alt", "credits"],
@@ -265,12 +267,15 @@ const Update = () => {
                   connect: {
                     id: newData.heroImage,
                   },
-                  update: multiLangImageMetaRHFormDataToJson(
-                    newData,
-                    "heroImage",
-                    ["alt", "credits"],
-                    config.activeLanguages
-                  ),
+                  update: {
+                    cropPosition: newData.heroImage_cropPosition ? parseInt(newData.heroImage_cropPosition) : 0,
+                    ...multiLangImageMetaRHFormDataToJson(
+                      newData,
+                      "heroImage",
+                      ["alt", "credits"],
+                      config.activeLanguages
+                    ),
+                  },
                 },
                 // images: {
                 //   set: [{

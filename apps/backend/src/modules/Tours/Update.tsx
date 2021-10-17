@@ -65,6 +65,7 @@ export const tourAndContentAuthorsQueryGQL = gql`
         status
         alt
         credits
+        cropPosition
       }
       tourStopCount
       tourStops {
@@ -142,11 +143,12 @@ const Update = () => {
       ownerId: data?.tour?.ownerId,
       path: data?.tour?.path,
       heroImage: data?.tour?.heroImage?.id,
+      heroImage_cropPosition: data.tour.heroImage?.cropPosition,
       ...multiLangTranslationsJsonRHFormData(
         data?.tour?.heroImage,
         ["alt", "credits"],
         config.activeLanguages,
-        "heroImage",
+        "heroImage"
       ),
     });
   }, [reset, data, config.activeLanguages, modules]);
@@ -167,13 +169,17 @@ const Update = () => {
                   connect: {
                     id: newData.heroImage,
                   },
-                  update: multiLangImageMetaRHFormDataToJson(
+                  update: {
+                    cropPosition: newData.heroImage_cropPosition
+                      ? parseInt(newData.heroImage_cropPosition)
+                      : 0,
+                    ...multiLangImageMetaRHFormDataToJson(
                       newData,
                       "heroImage",
                       ["alt", "credits"],
                       config.activeLanguages
                     ),
-                  
+                  },
                 },
                 // images: {
                 //   set: [{

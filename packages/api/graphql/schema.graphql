@@ -126,6 +126,7 @@ type Image {
   alt: JSON
   createdAt: DateTime
   credits: JSON
+  cropPosition: Int
   id: Int!
   meta: JSON
   nanoid: String

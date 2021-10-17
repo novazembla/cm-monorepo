@@ -1,7 +1,7 @@
 import React from "react";
 import { ImageStatus } from "@culturemap/core";
 import type { ApiImageMetaInformation } from "@culturemap/core";
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { Box, Flex, Text, Img } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { BeatLoader } from "react-spinners";
 
@@ -17,7 +17,9 @@ export type ApiImageProps = {
   showPlaceholder?: boolean;
   placeholder?: string;
   sizes?: string;
-}
+  objectFit?: string;
+  objectPosition?: string;
+};
 
 export const ApiImage = ({
   id,
@@ -29,6 +31,8 @@ export const ApiImage = ({
   placeholder,
   showPlaceholder,
   sizes = "100vw",
+  objectFit = "contain",
+  objectPosition = "center",
 }: ApiImageProps) => {
   const { t } = useTranslation();
 
@@ -37,10 +41,7 @@ export const ApiImage = ({
   let content;
   let imageAspectRationPB;
 
-  if (
-    status === ImageStatus.READY ||
-    polledStatus === ImageStatus.READY
-  ) {
+  if (status === ImageStatus.READY || polledStatus === ImageStatus.READY) {
     const aSizes =
       meta?.availableSizes ?? polledMeta?.availableSizes ?? undefined;
 
@@ -87,11 +88,13 @@ export const ApiImage = ({
                 type="image/jpeg"
               />
             )}
-            <img
+            <Img
               src={originalUrl}
               alt={alt}
               width={originalWidth}
               height={originalHeight}
+              objectFit={(objectFit ?? "contain") as any}
+              objectPosition={(objectPosition ?? "center") as any}
             />
           </picture>
         );

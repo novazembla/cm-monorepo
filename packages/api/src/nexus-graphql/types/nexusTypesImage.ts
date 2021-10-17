@@ -42,6 +42,7 @@ export const Image = objectType({
     t.nonNull.int("ownerId");
     t.string("nanoid");
     t.int("status");
+    t.int("cropPosition");
     t.json("meta");
     t.int("orderNumber");
     t.json("alt", {

@@ -26,3 +26,4 @@ export * from "./FieldHidden";
 export * from "./FieldFileUpload";
 export * from "./FieldImages";
 export * from "./FieldModuleTaxonomies";
+export * from "./FieldImageCropPositionSelect";

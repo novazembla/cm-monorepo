@@ -47,4 +47,12 @@ export enum ExportStatus {
   DELETED, // 5
 }
 
+export enum ImageCropPosition {
+  CENTER, // 0
+  TOP, // 1
+  RIGHT, // 2
+  BOTTOM, // 3
+  LEFT, // 4
+}
+
 export default ImageStatus;

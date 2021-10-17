@@ -87,6 +87,19 @@
     "cancelupload": "Upload abbrechen",
     "error": "Leider konnten wir Ihren Upload nicht abschließen, bitte versuchen Sie es später noch einmal."
   },
+  "image": {
+    "cropPosition": {
+      "select": {
+        "label": "Postion des Bildausschnitts",
+        "placeholder": "Bitte wählen Sie die Position des Bildausschnitts"
+      },
+      "center": "Zentriert",
+      "top": "Oben",
+      "right": "Rechts",
+      "bottom": "Unten",
+      "left": "Links"
+    }
+  },
   "validation": {
     "image": {
       "required": "Bitte laden Sie ein Bild hoch"

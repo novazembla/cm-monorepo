@@ -58,6 +58,7 @@ export const pageAndContentAuthorsQueryGQL = gql`
         status
         alt
         credits
+        cropPosition
       }
       createdAt
       updatedAt
@@ -116,11 +117,12 @@ const Update = () => {
         config.activeLanguages
       ),
       heroImage: data.page.heroImage?.id,
+      heroImage_cropPosition: data.page.heroImage?.cropPosition,
       ...multiLangTranslationsJsonRHFormData(
         data?.page?.heroImage,
         ["alt", "credits"],
         config.activeLanguages,
-        "heroImage",
+        "heroImage"
       ),
     });
   }, [reset, data, config.activeLanguages]);
@@ -137,12 +139,17 @@ const Update = () => {
               connect: {
                 id: newData.heroImage,
               },
-              update: multiLangImageMetaRHFormDataToJson(
-                newData,
-                "heroImage",
-                ["alt", "credits"],
-                config.activeLanguages
-              ),
+              update: {
+                cropPosition: newData.heroImage_cropPosition
+                  ? parseInt(newData.heroImage_cropPosition)
+                  : 0,
+                ...multiLangImageMetaRHFormDataToJson(
+                  newData,
+                  "heroImage",
+                  ["alt", "credits"],
+                  config.activeLanguages
+                ),
+              },
             },
             // images: {
             //   set: [{

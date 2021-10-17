@@ -114,6 +114,7 @@ export const locationAndContentAuthorsQueryGQL = gql`
         status
         alt
         credits
+        cropPosition
       }
     }
     adminUsers(roles: ["administrator", "editor", "contributor"]) {
@@ -241,6 +242,7 @@ const Update = () => {
         data.moduleTaxonomies
       ),
       heroImage: data.location.heroImage?.id,
+      heroImage_cropPosition: data.location.heroImage?.cropPosition,
       images: fieldImagesParseIncomingImages(data.location.images),
       lat: data.location?.lat,
       lng: data.location?.lng,
@@ -285,7 +287,6 @@ const Update = () => {
     setIsNavigatingAway(false);
     try {
       if (appUser) {
-        
         const heroImage =
           newData.heroImage &&
           !isNaN(newData.heroImage) &&
@@ -295,12 +296,17 @@ const Update = () => {
                   connect: {
                     id: newData.heroImage,
                   },
-                  update: multiLangImageMetaRHFormDataToJson(
-                    newData,
-                    "heroImage",
-                    ["alt", "credits"],
-                    config.activeLanguages
-                  ),
+                  update: {
+                    cropPosition: newData.heroImage_cropPosition
+                      ? parseInt(newData.heroImage_cropPosition)
+                      : 0,
+                    ...multiLangImageMetaRHFormDataToJson(
+                      newData,
+                      "heroImage",
+                      ["alt", "credits"],
+                      config.activeLanguages
+                    ),
+                  },
                 },
               }
             : undefined;

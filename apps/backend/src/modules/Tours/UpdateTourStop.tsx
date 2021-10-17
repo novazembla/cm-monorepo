@@ -100,11 +100,12 @@ const UpdateTourStop = () => {
       tourId: data.tourStopRead?.tourId,
       images: fieldImagesParseIncomingImages(data.tourStopRead.images),
       heroImage: data?.tourStopRead?.heroImage?.id,
+      heroImage_cropPosition: data.tourStopRead.heroImage?.cropPosition,
       ...multiLangTranslationsJsonRHFormData(
         data?.tourStopRead?.heroImage,
         ["alt", "credits"],
         config.activeLanguages,
-        "heroImage",
+        "heroImage"
       ),
     });
   }, [reset, data, config.activeLanguages]);
@@ -125,12 +126,17 @@ const UpdateTourStop = () => {
                   connect: {
                     id: newData.heroImage,
                   },
-                  update: multiLangImageMetaRHFormDataToJson(
-                    newData,
-                    "heroImage",
-                    ["alt", "credits"],
-                    config.activeLanguages
-                  ),
+                  update: {
+                    cropPosition: newData.heroImage_cropPosition
+                      ? parseInt(newData.heroImage_cropPosition)
+                      : 0,
+                    ...multiLangImageMetaRHFormDataToJson(
+                      newData,
+                      "heroImage",
+                      ["alt", "credits"],
+                      config.activeLanguages
+                    ),
+                  },
                 },
               }
             : undefined;

@@ -37,6 +37,7 @@ export const tourQueryGQL = gql`
         id
         meta
         status
+        cropPosition
       }
       tourStopCount
       tourStops {
@@ -106,6 +107,7 @@ export const tourStopReadQueryGQL = gql`
         status
         alt
         credits
+        cropPosition
       }
       images {
         id

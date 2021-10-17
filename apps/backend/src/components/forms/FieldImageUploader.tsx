@@ -124,6 +124,8 @@ export const FieldImageUploader = ({
   setActiveUploadCounter,
   shouldSetFormDirtyOnUpload = false,
   shouldSetFormDirtyOnDelete = false,
+  objectFit = "contain",
+  objectPosition = "center",
 }: {
   settings?: FieldImageUploaderSettings;
   id: string;
@@ -140,6 +142,8 @@ export const FieldImageUploader = ({
   setActiveUploadCounter?: Function;
   connectWith?: any;
   route?: string;
+  objectFit?: string;
+  objectPosition?: string;
 }) => {
   const [appUser] = useAuthentication();
   const { t } = useTranslation();
@@ -386,6 +390,8 @@ export const FieldImageUploader = ({
               showPlaceholder={settings?.image?.showPlaceholder}
               alt={settings?.image?.alt ?? ""}
               sizes={settings?.image?.sizes}
+              objectFit={objectFit}
+              objectPosition={objectPosition}
             />
             {canDelete && (
               <IconButton

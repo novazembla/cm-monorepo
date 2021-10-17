@@ -87,6 +87,19 @@
     "cancelupload": "Cancel upload",
     "error": "Unfortunately, we could not finish you upload please try again later"
   },
+  "image": {
+    "cropPosition": {
+      "select": {
+        "label": "Image crop position",
+        "placeholder": "Please choose a crop position"
+      },
+      "center": "Centered",
+      "top": "Top",
+      "right": "Right",
+      "bottom": "Bottom",
+      "left": "Left"
+    }
+  },
   "validation": {
     "image": {
       "required": "Please upload an image"
