@@ -6,8 +6,6 @@ import { getApiConfig } from "../config";
 import { getPrismaClient } from "../db/client";
 import {
   daoSharedGenerateFullText,
-  daoSharedWrapImageWithTranslationImage,
-  daoImageTranslatedColumns,
   daoSharedMapJsonToTranslatedColumns,
 } from ".";
 
@@ -73,11 +71,7 @@ export const daoTourStopQuery = async (
   });
 
   return filteredOutputByBlacklist(
-    daoSharedWrapImageWithTranslationImage(
-      "heroImage",
-      tourStop,
-      daoImageTranslatedColumns
-    ),
+    tourStop,
     apiConfig.db.privateJSONDataKeys.tour
   );
 };
@@ -135,11 +129,7 @@ export const daoTourStopGetById = async (id: number): Promise<TourStop> => {
   });
 
   return filteredOutputByBlacklistOrNotFound(
-    daoSharedWrapImageWithTranslationImage(
-      "heroImage",
-      tourStop,
-      daoImageTranslatedColumns
-    ),
+    tourStop,
     apiConfig.db.privateJSONDataKeys.tour
   );
 };
@@ -181,11 +171,7 @@ export const daoTourStopCreate = async (
   }
 
   return filteredOutputByBlacklistOrNotFound(
-    daoSharedWrapImageWithTranslationImage(
-      "heroImage",
-      tourStop,
-      daoImageTranslatedColumns
-    ),
+    tourStop,
     apiConfig.db.privateJSONDataKeys.tour
   );
 };
@@ -214,11 +200,7 @@ export const daoTourStopUpdate = async (
   });
 
   return filteredOutputByBlacklistOrNotFound(
-    daoSharedWrapImageWithTranslationImage(
-      "heroImage",
-      tourStop,
-      daoImageTranslatedColumns
-    ),
+    tourStop,
     apiConfig.db.privateJSONDataKeys.tour
   );
 };

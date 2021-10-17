@@ -30,7 +30,6 @@ import {
   daoEventCreate,
   daoEventDelete,
   daoSharedMapTranslatedColumnsInRowToJson,
-  daoImageSaveImageTranslations,
   daoSharedGetTranslatedSelectColumns,
 } from "../../dao";
 
@@ -287,9 +286,11 @@ export const EventQueries = extendType({
           include = {
             ...include,
             heroImage: {
-              include: {
-                // TODO: change xxxx
-                translations: true,
+              select: {
+                id: true,
+                status: true,
+                meta: true,
+                ...daoSharedGetTranslatedSelectColumns(["alt", "credits"]),
               },
             },
           };
@@ -415,7 +416,6 @@ export const EventMutations = extendType({
       args: {
         id: nonNull(intArg()),
         data: nonNull("EventUpsertInput"),
-        imagesTranslations: list(arg({ type: "ImageTranslationInput" })),
       },
 
       authorize: async (...[, args, ctx]) => {
@@ -438,9 +438,6 @@ export const EventMutations = extendType({
 
         if (!event)
           throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Update failed");
-
-        if (Array.isArray(args.imagesTranslations))
-          await daoImageSaveImageTranslations(args.imagesTranslations);
 
         return event;
       },

@@ -307,7 +307,7 @@ model TourStop {
 
 
   number Int? @default(1)
-
+  images Image[]
 
   loactionId Int
   location   Location? @relation(fields: [loactionId], references: [id], onDelete: Cascade)
@@ -386,8 +386,8 @@ model Image {
 
   events       Event[]
   locations    Location[]
-  translations ImageTranslation[]
-
+  tourStops    TourStop[]
+  
   profileImageUsers  User[]     @relation("profileImage")
   heroImagePages     Page[]     @relation("pageHeroImage")
   heroImageEvents    Event[]    @relation("eventHeroImage")
@@ -398,18 +398,6 @@ model Image {
   @@index([ownerId], name: "indexImageOwnerId")
   @@index([ownerId, type], name: "indexImageOwnerIdType")
   @@index([status], name: "indexImageStatus")
-}
-
-model ImageTranslation {
-  id          Int    @id @default(autoincrement())
-  key         String @db.VarChar(24)
-  lang        String @db.VarChar(4)
-  translation String
-
-  imageId Int
-  image   Image? @relation(fields: [imageId], references: [id], onDelete: Cascade)
-
-  @@unique([imageId, key, lang], name: "uniqueTransKeys")
 }
 
 model Import {

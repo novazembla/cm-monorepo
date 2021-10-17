@@ -39,7 +39,7 @@ import {
   multiLangJsonToRHFormData,
   multiLangRHFormDataToJson,
   multiLangSlugUniqueError,
-  multiLangImageTranslationsRHFormDataToJson,
+  multiLangImageMetaRHFormDataToJson,
   multiLangImageTranslationsJsonRHFormData,
   mapGroupOptionsToData,
   mapDataToGroupOptions,
@@ -119,14 +119,11 @@ const Update = () => {
     ModuleEventUpdateSchema
   );
 
-  const { data, loading, error } = useQuery(
-    eventAndContentAuthorsQueryGQL,
-    {
-      variables: {
-        id: parseInt(router.query.id, 10),
-      },
-    }
-  );
+  const { data, loading, error } = useQuery(eventAndContentAuthorsQueryGQL, {
+    variables: {
+      id: parseInt(router.query.id, 10),
+    },
+  });
 
   const [firstMutation, firstMutationResults] = useEventUpdateMutation();
   const [hasFormError, setHasFormError] = useState(false);
@@ -213,16 +210,14 @@ const Update = () => {
       }
 
       moduleTerms = data.moduleTaxonomies.reduce((acc: any, m: any) => {
-        if (!Array.isArray(m.terms) || m.terms.length === 0)
-          return acc;
+        if (!Array.isArray(m.terms) || m.terms.length === 0) return acc;
 
         return {
           ...acc,
-          ...mapDataToGroupOptions(data.event.terms, m.terms, `tax_${m.id}` ),
-        }
-      }, {});      
+          ...mapDataToGroupOptions(data.event.terms, m.terms, `tax_${m.id}`),
+        };
+      }, {});
     }
-
 
     reset({
       ...multiLangJsonToRHFormData(
@@ -235,10 +230,7 @@ const Update = () => {
         config.activeLanguages ?? ["en"]
       ),
       ...moduleTerms,
-      ...mapDataToPrimaryTerms(
-        data.event.primaryTerms,
-        data.moduleTaxonomies
-      ),
+      ...mapDataToPrimaryTerms(data.event.primaryTerms, data.moduleTaxonomies),
       isFree: !!data.event.isFree,
       isImported: !!data.event.isImported,
       date: new Date("12/20/2021"),
@@ -273,7 +265,37 @@ const Update = () => {
                   connect: {
                     id: newData.heroImage,
                   },
+                  update: multiLangImageMetaRHFormDataToJson(
+                    newData,
+                    "heroImage",
+                    ["alt", "credits"],
+                    config.activeLanguages
+                  ),
                 },
+                // images: {
+                //   set: [{
+                //     id: 17
+                //   }],
+                //   update: [
+                //     {
+                //       where: {
+                //         id: 17,
+                //       },
+                //       data: {
+                //         alt_de: "17xxx alt_de updated title",
+                //         alt_en: "17xxx alt_en updated title",
+                //         credits_de: "17xxx credits_de updated title",
+                //         credits_en: "17xxx credits_en updated title",
+                //         // ...multiLangImageMetaRHFormDataToJson(
+                //         //   newData,
+                //         //   "heroImage",
+                //         //   ["alt", "credits"],
+                //         //   config.activeLanguages
+                //         // ),
+                //       },
+                //     },
+                //   ],
+                // },
               }
             : undefined;
 
@@ -294,57 +316,43 @@ const Update = () => {
           }, []);
         }
 
-        const { errors } = await firstMutation(
-          parseInt(router.query.id, 10),
-          {
-            owner: {
-              connect: {
-                id: newData.ownerId,
-              },
+        const { errors } = await firstMutation(parseInt(router.query.id, 10), {
+          owner: {
+            connect: {
+              id: newData.ownerId,
             },
-            ...(newData.locationId
-              ? {
-                  locations: {
-                    set: {
-                      id: newData.locationId,
-                    },
-                  },
-                }
-              : {
-                  locations: {
-                    set: [],
-                  },
-                }),
-            isFree: !!newData.isFree,
-            isImported: !!newData.isImported,
-            dates: newData.dates,
-            status: newData.status,
-            terms: {
-              set: terms,
-            },
-            ...heroImage,
-            ...filteredOutputByWhitelist(
-              multiLangRHFormDataToJson(
-                newData,
-                multiLangFields,
-                config.activeLanguages ?? ["en"]
-              ),
-              [],
-              multiLangFields
-            ),
           },
-          multiLangImageTranslationsRHFormDataToJson(
-            newData,
-            [
-              {
-                name: "heroImage",
-                id: newData.heroImage,
-              },
-            ],
-            ["alt", "credits"],
-            config.activeLanguages ?? ["en"]
-          )
-        );
+          ...(newData.locationId
+            ? {
+                locations: {
+                  set: {
+                    id: newData.locationId,
+                  },
+                },
+              }
+            : {
+                locations: {
+                  set: [],
+                },
+              }),
+          isFree: !!newData.isFree,
+          isImported: !!newData.isImported,
+          dates: newData.dates,
+          status: newData.status,
+          terms: {
+            set: terms,
+          },
+          ...heroImage,
+          ...filteredOutputByWhitelist(
+            multiLangRHFormDataToJson(
+              newData,
+              multiLangFields,
+              config.activeLanguages ?? ["en"]
+            ),
+            [],
+            multiLangFields
+          ),
+        });
 
         if (!errors) {
           successToast();
@@ -352,7 +360,7 @@ const Update = () => {
             {},
             {
               keepDirty: false,
-              keepValues: true
+              keepValues: true,
             }
           );
         } else {

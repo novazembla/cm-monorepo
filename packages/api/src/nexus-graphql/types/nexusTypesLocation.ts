@@ -31,7 +31,6 @@ import {
   daoLocationCreate,
   daoLocationUpdate,
   daoLocationDelete,
-  daoImageSaveImageTranslations,
   daoSharedMapTranslatedColumnsInRowToJson,
   daoSharedGetTranslatedSelectColumns,
 } from "../../dao";
@@ -207,10 +206,11 @@ export const LocationQueries = extendType({
           include = {
             ...include,
             heroImage: {
-              include: {
-                // TODO: change xxxx
-                // TODO: only active images ...
-                translations: true,
+              select: {
+                id: true,
+                status: true,
+                meta: true,
+                ...daoSharedGetTranslatedSelectColumns(["alt", "credits"]),
               },
             },
           };
@@ -295,10 +295,11 @@ export const LocationQueries = extendType({
           include = {
             ...include,
             heroImage: {
-              include: {
-                // TODO: change xxxx
-                // TODO: only active images ...
-                translations: true,
+              select: {
+                id: true,
+                status: true,
+                meta: true,
+                ...daoSharedGetTranslatedSelectColumns(["alt", "credits"]),
               },
             },
           };
@@ -365,6 +366,7 @@ export const LocationUpsertInput = inputObjectType({
     t.json("terms");
     t.json("primaryTerms");
     t.json("heroImage");
+    t.json("images");
   },
 });
 
@@ -400,7 +402,6 @@ export const LocationMutations = extendType({
       args: {
         id: nonNull(intArg()),
         data: nonNull("LocationUpsertInput"),
-        imagesTranslations: list(arg({ type: "ImageTranslationInput" })), // TODO: this has to go?
       },
 
       authorize: async (...[, args, ctx]) => {
@@ -423,9 +424,6 @@ export const LocationMutations = extendType({
 
         if (!location)
           throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Update failed");
-
-        if (Array.isArray(args.imagesTranslations))
-          await daoImageSaveImageTranslations(args.imagesTranslations);
 
         return location;
       },

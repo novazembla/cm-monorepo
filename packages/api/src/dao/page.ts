@@ -8,8 +8,6 @@ import { getPrismaClient } from "../db/client";
 import {
   daoSharedCheckSlugUnique,
   daoSharedGenerateFullText,
-  daoSharedWrapImageWithTranslationImage,
-  daoImageTranslatedColumns,
   daoSharedMapJsonToTranslatedColumns,
   daoSharedGetTranslatedSelectColumns,
 } from ".";
@@ -64,11 +62,7 @@ export const daoPageQueryFirst = async (
     include,
   });
   return filteredOutputByBlacklistOrNotFound(
-    daoSharedWrapImageWithTranslationImage(
-      "heroImage",
-      page,
-      daoImageTranslatedColumns
-    ),
+    page,
     apiConfig.db.privateJSONDataKeys.page
   );
 };
@@ -127,11 +121,7 @@ export const daoPageGetById = async (
   });
 
   return filteredOutputByBlacklistOrNotFound(
-    daoSharedWrapImageWithTranslationImage(
-      "heroImage",
-      page,
-      daoImageTranslatedColumns
-    ),
+    page,
     apiConfig.db.privateJSONDataKeys.page
   );
 };
@@ -173,11 +163,7 @@ export const daoPageGetBySlug = async (
   });
 
   return filteredOutputByBlacklistOrNotFound(
-    daoSharedWrapImageWithTranslationImage(
-      "heroImage",
-      page,
-      daoImageTranslatedColumns
-    ),
+    page,
     apiConfig.db.privateJSONDataKeys.page
   );
 };
@@ -219,11 +205,7 @@ export const daoPageUpdate = async (
   });
 
   return filteredOutputByBlacklistOrNotFound(
-    daoSharedWrapImageWithTranslationImage(
-      "heroImage",
-      page,
-      daoImageTranslatedColumns
-    ),
+    page,
     apiConfig.db.privateJSONDataKeys.page
   );
 };

@@ -13,12 +13,8 @@ export const pageCreateMutationGQL = gql`
 `;
 
 export const pageUpdateMutationGQL = gql`
-  mutation pageUpdate(
-    $id: Int!
-    $data: PageUpsertInput!
-    $imagesTranslations: [ImageTranslationInput]
-  ) {
-    pageUpdate(id: $id, data: $data, imagesTranslations: $imagesTranslations) {
+  mutation pageUpdate($id: Int!, $data: PageUpsertInput!) {
+    pageUpdate(id: $id, data: $data) {
       id
       title
       intro

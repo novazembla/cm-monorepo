@@ -68,10 +68,6 @@ export interface NexusGenInputs {
     terms?: NexusGenScalars['JSON'] | null; // JSON
     title: NexusGenScalars['JSON']; // JSON!
   }
-  ImageTranslationInput: { // input type
-    id: number; // Int!
-    translations: NexusGenScalars['JSON']; // JSON!
-  }
   ImageUpdateInput: { // input type
     meta: NexusGenScalars['JSON']; // JSON!
     ownerId: number; // Int!
@@ -98,6 +94,7 @@ export interface NexusGenInputs {
     description?: NexusGenScalars['JSON'] | null; // JSON
     eventLocationId?: number | null; // Int
     heroImage?: NexusGenScalars['JSON'] | null; // JSON
+    images?: NexusGenScalars['JSON'] | null; // JSON
     lat?: number | null; // Float
     lng?: number | null; // Float
     offers?: NexusGenScalars['JSON'] | null; // JSON
@@ -298,9 +295,7 @@ export interface NexusGenObjects {
     lng?: number | null; // Float
   }
   Image: { // root type
-    alt?: NexusGenScalars['JSON'] | null; // JSON
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
-    credits?: NexusGenScalars['JSON'] | null; // JSON
     id: number; // Int!
     meta?: NexusGenScalars['JSON'] | null; // JSON
     nanoid?: string | null; // String
@@ -1351,7 +1346,6 @@ export interface NexusGenArgTypes {
     eventUpdate: { // args
       data: NexusGenInputs['EventUpsertInput']; // EventUpsertInput!
       id: number; // Int!
-      imagesTranslations?: Array<NexusGenInputs['ImageTranslationInput'] | null> | null; // [ImageTranslationInput]
     }
     imageDelete: { // args
       id: number; // Int!
@@ -1388,7 +1382,6 @@ export interface NexusGenArgTypes {
     locationUpdate: { // args
       data: NexusGenInputs['LocationUpsertInput']; // LocationUpsertInput!
       id: number; // Int!
-      imagesTranslations?: Array<NexusGenInputs['ImageTranslationInput'] | null> | null; // [ImageTranslationInput]
     }
     pageCreate: { // args
       data: NexusGenInputs['PageUpsertInput']; // PageUpsertInput!
@@ -1399,7 +1392,6 @@ export interface NexusGenArgTypes {
     pageUpdate: { // args
       data: NexusGenInputs['PageUpsertInput']; // PageUpsertInput!
       id: number; // Int!
-      imagesTranslations?: Array<NexusGenInputs['ImageTranslationInput'] | null> | null; // [ImageTranslationInput]
     }
     settingsUpdate: { // args
       data?: NexusGenInputs['SettingsUpdateInput'][] | null; // [SettingsUpdateInput!]
@@ -1443,12 +1435,10 @@ export interface NexusGenArgTypes {
     tourStopUpdate: { // args
       data: NexusGenInputs['TourStopUpdateInput']; // TourStopUpdateInput!
       id: number; // Int!
-      imagesTranslations?: Array<NexusGenInputs['ImageTranslationInput'] | null> | null; // [ImageTranslationInput]
     }
     tourUpdate: { // args
       data: NexusGenInputs['TourUpsertInput']; // TourUpsertInput!
       id: number; // Int!
-      imagesTranslations?: Array<NexusGenInputs['ImageTranslationInput'] | null> | null; // [ImageTranslationInput]
     }
     userCreate: { // args
       data: NexusGenInputs['UserCreateInput']; // UserCreateInput!

@@ -32,7 +32,6 @@ import {
   daoTourCreate,
   daoTourUpdate,
   daoTourDelete,
-  daoImageSaveImageTranslations,
   daoTourStopReorder,
   daoSharedMapTranslatedColumnsInRowToJson,
   daoSharedGetTranslatedSelectColumns,
@@ -196,8 +195,9 @@ export const TourQueries = extendType({
             heroImage: {
               select: {
                 id: true,
-                meta: true,
                 status: true,
+                meta: true,
+                ...daoSharedGetTranslatedSelectColumns(["alt", "credits"]),
               },
             },
           };
@@ -238,8 +238,9 @@ export const TourQueries = extendType({
                 heroImage: {
                   select: {
                     id: true,
-                    meta: true,
                     status: true,
+                    meta: true,
+                    ...daoSharedGetTranslatedSelectColumns(["alt", "credits"]),
                   },
                 },
                 location: {
@@ -303,9 +304,9 @@ export const TourQueries = extendType({
                 heroImage: {
                   select: {
                     id: true,
-                    meta: true,
                     status: true,
-                    translations: true,
+                    meta: true,
+                    ...daoSharedGetTranslatedSelectColumns(["alt", "credits"]),
                   },
                 },
                 location: {
@@ -351,9 +352,9 @@ export const TourQueries = extendType({
             heroImage: {
               select: {
                 id: true,
-                meta: true,
                 status: true,
-                translations: true,
+                meta: true,
+                ...daoSharedGetTranslatedSelectColumns(["alt", "credits"]),
               },
             },
           };
@@ -477,7 +478,6 @@ export const TourMutations = extendType({
       args: {
         id: nonNull(intArg()),
         data: nonNull("TourUpsertInput"),
-        imagesTranslations: list(arg({ type: "ImageTranslationInput" })),
       },
 
       authorize: async (...[, args, ctx]) => {
@@ -500,9 +500,6 @@ export const TourMutations = extendType({
 
         if (!tour)
           throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Update failed");
-
-        if (Array.isArray(args.imagesTranslations))
-          await daoImageSaveImageTranslations(args.imagesTranslations);
 
         return tour;
       },

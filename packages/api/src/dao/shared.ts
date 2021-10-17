@@ -1,70 +1,6 @@
 import { isObject } from "../utils";
 import { getApiConfig } from "../config";
 
-const daoSharedMapTranslatedColumnsToJsonProcessRow = (
-  row: any,
-  translatedColumns: string[],
-  activeLanguages: string[]
-) => {
-  if (!isObject(row)) return row;
-
-  return translatedColumns.reduce((processedRow: any, column: any) => {
-    let json = activeLanguages.reduce((j: any, lang: any) => {
-      if (`${column}_${lang}` in processedRow) {
-        j = {
-          ...j,
-          [lang]: processedRow[`${column}_${lang}`],
-        };
-      }
-      return j;
-    }, {});
-
-    if (Object.keys(json).length > 0) {
-      activeLanguages.forEach((lang) => {
-        if (`${column}_${lang}` in processedRow)
-          delete processedRow[`${column}_${lang}`];
-      });
-      return {
-        ...processedRow,
-        [column]: json,
-      };
-    }
-
-    return processedRow;
-  }, row);
-};
-
-export const daoSharedMapTranslatedColumnsToJson = (
-  rows: any | any[] | null,
-  translatedColumns: string[]
-) => {
-  const config = getApiConfig();
-
-  if (
-    !Array.isArray(config?.activeLanguages) ||
-    config?.activeLanguages.length === 0
-  )
-    return rows;
-  if (!Array.isArray(translatedColumns) || translatedColumns.length === 0)
-    return rows;
-
-  if (rows)
-    if (Array.isArray(rows))
-      return rows.map((row) =>
-        daoSharedMapTranslatedColumnsToJsonProcessRow(
-          row,
-          translatedColumns,
-          config?.activeLanguages
-        )
-      );
-
-  return daoSharedMapTranslatedColumnsToJsonProcessRow(
-    rows,
-    translatedColumns,
-    config?.activeLanguages
-  );
-};
-
 export const daoSharedMapJsonToTranslatedColumns = (
   data: any,
   translatedColumns: string[]
@@ -218,65 +154,6 @@ export const daoSharedGenerateFullText = (
   }, "");
 };
 
-export const daoSharedMapTranslations = (
-  data: any,
-  keys: string[]
-): any | any[] => {
-  if (!data) return data;
-
-  if (Array.isArray(data))
-    return data.map((item) => daoSharedMapTranslations(item, keys));
-
-  if (!data.translations || keys.length === 0) return data;
-
-  const returnData = {
-    ...data,
-    ...keys.reduce(
-      (acc, key) => ({
-        ...acc,
-        [key]: data.translations
-          .filter((trans: any) => trans.key === key)
-          .reduce(
-            (transAcc: any, trans: any) => ({
-              ...transAcc,
-              [trans.lang]: trans.translation,
-            }),
-            {}
-          ),
-      }),
-      {}
-    ),
-  };
-  delete returnData.translations;
-  return returnData;
-};
-
-export const daoSharedWrapImageWithTranslationImage = (
-  imageKey: string,
-  data: any,
-  transKeys: string[]
-) => {
-  if (
-    !data ||
-    !(imageKey in data) ||
-    !data[imageKey] ||
-    !("translations" in data[imageKey])
-  )
-    return data;
-
-  const image = {
-    ...data[imageKey],
-    ...daoSharedMapTranslations(data[imageKey], transKeys),
-  };
-
-  delete image.translations;
-
-  return {
-    ...data,
-    [imageKey]: image,
-  };
-};
-
 export const daoSharedGetTranslatedSelectColumns = (
   columns: string | string[]
 ) => {
@@ -319,7 +196,6 @@ export const daoSharedMapTranslatedColumnsInRowToJson = (
 
 const defaults = {
   daoSharedGetTranslatedSelectColumns,
-  daoSharedMapTranslatedColumnsToJson,
   daoSharedGenerateFullText,
   daoSharedCheckSlugUnique,
 };

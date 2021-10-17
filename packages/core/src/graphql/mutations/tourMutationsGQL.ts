@@ -11,12 +11,8 @@ export const tourCreateMutationGQL = gql`
 `;
 
 export const tourUpdateMutationGQL = gql`
-  mutation tourUpdate(
-    $id: Int!
-    $data: TourUpsertInput!
-    $imagesTranslations: [ImageTranslationInput]
-  ) {
-    tourUpdate(id: $id, data: $data, imagesTranslations: $imagesTranslations) {
+  mutation tourUpdate($id: Int!, $data: TourUpsertInput!) {
+    tourUpdate(id: $id, data: $data) {
       id
       title
       slug
@@ -51,16 +47,8 @@ export const tourStopCreateMutationGQL = gql`
 `;
 
 export const tourStopUpdateMutationGQL = gql`
-  mutation tourStopUpdate(
-    $id: Int!
-    $data: TourStopUpdateInput!
-    $imagesTranslations: [ImageTranslationInput]
-  ) {
-    tourStopUpdate(
-      id: $id
-      data: $data
-      imagesTranslations: $imagesTranslations
-    ) {
+  mutation tourStopUpdate($id: Int!, $data: TourStopUpdateInput!) {
+    tourStopUpdate(id: $id, data: $data) {
       id
       title
       number

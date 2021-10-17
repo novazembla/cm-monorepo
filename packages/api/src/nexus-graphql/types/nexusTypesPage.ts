@@ -30,7 +30,7 @@ import {
   daoPageUpdate,
   daoPageDelete,
   daoPageQueryFirst,
-  daoImageSaveImageTranslations,
+  daoSharedGetTranslatedSelectColumns,
   daoSharedMapTranslatedColumnsInRowToJson,
 } from "../../dao";
 
@@ -150,10 +150,11 @@ export const PageQueries = extendType({
           include = {
             ...include,
             heroImage: {
-              include: {
-                // TODO: change xxxx
-                // TODO: only active images ...
-                translations: true,
+              select: {
+                id: true,
+                status: true,
+                meta: true,
+                ...daoSharedGetTranslatedSelectColumns(["alt", "credits"]),
               },
             },
           };
@@ -197,10 +198,11 @@ export const PageQueries = extendType({
           include = {
             ...include,
             heroImage: {
-              include: {
-                // TODO: change xxxx
-                // TODO: only active images ...
-                translations: true,
+              select: {
+                id: true,
+                status: true,
+                meta: true,
+                ...daoSharedGetTranslatedSelectColumns(["alt", "credits"]),
               },
             },
           };
@@ -292,7 +294,6 @@ export const PageMutations = extendType({
       args: {
         id: nonNull(intArg()),
         data: nonNull("PageUpsertInput"),
-        imagesTranslations: list(arg({ type: "ImageTranslationInput" })),
       },
 
       authorize: async (...[, args, ctx]) => {
@@ -315,9 +316,6 @@ export const PageMutations = extendType({
 
         if (!page)
           throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Update failed");
-
-        if (Array.isArray(args.imagesTranslations))
-          await daoImageSaveImageTranslations(args.imagesTranslations);
 
         return page;
       },

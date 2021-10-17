@@ -27,12 +27,11 @@ export const useTourUpdateMutation = () => {
     // onCompleted: (data) => {},
   });
 
-  const execute = (id: number, data: any, imagesTranslations: any) => {
+  const execute = (id: number, data: any) => {
     return mutation({
       variables: {
         id,
-        data,
-        imagesTranslations,
+        data
       },
     });
   };
@@ -78,12 +77,11 @@ export const useTourStopUpdateMutation = () => {
     // onCompleted: (data) => {},
   });
 
-  const execute = (id: number, data: any, imagesTranslations: any) => {
+  const execute = (id: number, data: any) => {
     return mutation({
       variables: {
         id,
         data,
-        imagesTranslations,
       },
     });
   };

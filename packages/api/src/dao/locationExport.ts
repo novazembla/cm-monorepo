@@ -4,10 +4,6 @@ import { filteredOutputByBlacklist } from "@culturemap/core";
 import { filteredOutputByBlacklistOrNotFound } from "../utils";
 import { getApiConfig } from "../config";
 import { getPrismaClient } from "../db/client";
-import {
-  daoSharedWrapImageWithTranslationImage,
-  daoImageTranslatedColumns,
-} from ".";
 
 const prisma = getPrismaClient();
 const apiConfig = getApiConfig();
@@ -44,11 +40,7 @@ export const daoLocationExportQueryFirst = async (
   });
 
   return filteredOutputByBlacklistOrNotFound(
-    daoSharedWrapImageWithTranslationImage(
-      "heroImage",
-      locationExportInDb,
-      daoImageTranslatedColumns
-    ),
+    locationExportInDb,
     apiConfig.db.privateJSONDataKeys.all
   );
 };
@@ -87,11 +79,7 @@ export const daoLocationExportGetById = async (
     });
 
   return filteredOutputByBlacklistOrNotFound(
-    daoSharedWrapImageWithTranslationImage(
-      "heroImage",
-      locationExportInDb,
-      daoImageTranslatedColumns
-    ),
+    locationExportInDb,
     apiConfig.db.privateJSONDataKeys.all
   );
 };

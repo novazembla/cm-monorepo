@@ -692,7 +692,6 @@ const doChores = async () => {
 
                   Object.keys(requiredHeadersCheck).forEach((key) => {
                     if (!requiredHeadersCheck[key]) {
-
                       const keys = importRequiredHeaders[key].map((k) => {
                         return importHeaders[k][lang];
                       });

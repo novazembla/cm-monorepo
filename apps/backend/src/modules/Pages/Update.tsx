@@ -37,8 +37,8 @@ import {
   multiLangJsonToRHFormData,
   multiLangRHFormDataToJson,
   multiLangSlugUniqueError,
-  multiLangImageTranslationsRHFormDataToJson,
   multiLangImageTranslationsJsonRHFormData,
+  multiLangImageMetaRHFormDataToJson,
 } from "~/utils";
 
 export const pageAndContentAuthorsQueryGQL = gql`
@@ -137,52 +137,68 @@ const Update = () => {
               connect: {
                 id: newData.heroImage,
               },
+              update: multiLangImageMetaRHFormDataToJson(
+                newData,
+                "heroImage",
+                ["alt", "credits"],
+                config.activeLanguages
+              ),
             },
+            // images: {
+            //   set: [{
+            //     id: 17
+            //   }],
+            //   update: [
+            //     {
+            //       where: {
+            //         id: 17,
+            //       },
+            //       data: {
+            //         alt_de: "17xxx alt_de updated title",
+            //         alt_en: "17xxx alt_en updated title",
+            //         credits_de: "17xxx credits_de updated title",
+            //         credits_en: "17xxx credits_en updated title",
+            //         // ...multiLangImageMetaRHFormDataToJson(
+            //         //   newData,
+            //         //   "heroImage",
+            //         //   ["alt", "credits"],
+            //         //   config.activeLanguages
+            //         // ),
+            //       },
+            //     },
+            //   ],
+            // },
           }
         : undefined;
 
     try {
       if (appUser) {
-        const { errors } = await firstMutation(
-          parseInt(router.query.id, 10),
-          {
-            status: newData.status,
-            ...filteredOutputByWhitelist(
-              multiLangRHFormDataToJson(
-                newData,
-                multiLangFields,
-                config.activeLanguages
-              ),
-              [],
-              multiLangFields
+        const { errors } = await firstMutation(parseInt(router.query.id, 10), {
+          status: newData.status,
+          ...filteredOutputByWhitelist(
+            multiLangRHFormDataToJson(
+              newData,
+              multiLangFields,
+              config.activeLanguages
             ),
-            ...heroImage,
-            owner: {
-              connect: {
-                id: newData.ownerId,
-              },
+            [],
+            multiLangFields
+          ),
+          ...heroImage,
+          owner: {
+            connect: {
+              id: newData.ownerId,
             },
           },
-          multiLangImageTranslationsRHFormDataToJson(
-            newData,
-            [
-              {
-                name: "heroImage",
-                id: newData.heroImage,
-              },
-            ],
-            ["alt", "credits"],
-            config.activeLanguages
-          )
-        );
-            
+        });
+
         if (!errors) {
           successToast();
           reset(
             {},
             {
               keepDirty: false,
-              keepValues: true
+              keepValues: true,
             }
           );
         } else {

@@ -30,6 +30,7 @@ import {
   daoImageGetById,
   daoImageGetStatusById,
   daoImageSetToDelete,
+  daoSharedMapTranslatedColumnsInRowToJson,
 } from "../../dao";
 
 const apiConfig = getApiConfig();
@@ -43,8 +44,14 @@ export const Image = objectType({
     t.int("status");
     t.json("meta");
     t.int("orderNumber");
-    t.json("alt");
-    t.json("credits");
+    t.json("alt", {
+      resolve: (...[p]) => daoSharedMapTranslatedColumnsInRowToJson(p, "alt"),
+    });
+
+    t.json("credits", {
+      resolve: (...[p]) =>
+        daoSharedMapTranslatedColumnsInRowToJson(p, "credits"),
+    });
     t.date("createdAt");
     t.date("updatedAt");
   },
@@ -183,14 +190,6 @@ export const ImageQueries = extendType({
         };
       },
     });
-  },
-});
-
-export const ImageTranslationInput = inputObjectType({
-  name: "ImageTranslationInput",
-  definition(t) {
-    t.nonNull.json("translations");
-    t.nonNull.int("id");
   },
 });
 

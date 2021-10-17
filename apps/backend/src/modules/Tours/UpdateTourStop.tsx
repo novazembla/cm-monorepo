@@ -43,7 +43,7 @@ import {
   multiLangJsonToRHFormData,
   multiLangRHFormDataToJson,
   multiLangSlugUniqueError,
-  multiLangImageTranslationsRHFormDataToJson,
+  multiLangImageMetaRHFormDataToJson,
   multiLangImageTranslationsJsonRHFormData,
 } from "~/utils";
 
@@ -122,7 +122,37 @@ const UpdateTourStop = () => {
                   connect: {
                     id: newData.heroImage,
                   },
+                  update: multiLangImageMetaRHFormDataToJson(
+                    newData,
+                    "heroImage",
+                    ["alt", "credits"],
+                    config.activeLanguages
+                  ),
                 },
+                // images: {
+                //   set: [{
+                //     id: 17
+                //   }],
+                //   update: [
+                //     {
+                //       where: {
+                //         id: 17,
+                //       },
+                //       data: {
+                //         alt_de: "17xxx alt_de updated title",
+                //         alt_en: "17xxx alt_en updated title",
+                //         credits_de: "17xxx credits_de updated title",
+                //         credits_en: "17xxx credits_en updated title",
+                //         // ...multiLangImageMetaRHFormDataToJson(
+                //         //   newData,
+                //         //   "heroImage",
+                //         //   ["alt", "credits"],
+                //         //   config.activeLanguages
+                //         // ),
+                //       },
+                //     },
+                //   ],
+                // },
               }
             : undefined;
 
@@ -140,18 +170,7 @@ const UpdateTourStop = () => {
             ),
             ...heroImage,
             locationId: newData.locationId,
-          },
-          multiLangImageTranslationsRHFormDataToJson(
-            newData,
-            [
-              {
-                name: "heroImage",
-                id: newData.heroImage,
-              },
-            ],
-            ["alt", "credits"],
-            config.activeLanguages
-          )
+          }
         );
 
         if (!errors) {
@@ -160,7 +179,7 @@ const UpdateTourStop = () => {
             {},
             {
               keepDirty: false,
-              keepValues: true
+              keepValues: true,
             }
           );
         } else {

@@ -12,8 +12,6 @@ import {
 import {
   daoSharedCheckSlugUnique,
   daoSharedGenerateFullText,
-  daoSharedWrapImageWithTranslationImage,
-  daoImageTranslatedColumns,
   daoSharedMapJsonToTranslatedColumns,
   daoSharedGetTranslatedSelectColumns,
 } from ".";
@@ -92,12 +90,7 @@ export const daoTourQueryFirst = async (
   });
 
   return filteredOutputByBlacklistOrNotFound(
-    // HOW to generalize that to work with many images...
-    daoSharedWrapImageWithTranslationImage(
-      "heroImage",
-      tour,
-      daoImageTranslatedColumns
-    ),
+    tour,
     apiConfig.db.privateJSONDataKeys.tour
   );
 };
@@ -146,11 +139,7 @@ export const daoTourGetById = async (id: number): Promise<Tour> => {
   });
 
   return filteredOutputByBlacklistOrNotFound(
-    daoSharedWrapImageWithTranslationImage(
-      "heroImage",
-      tour,
-      daoImageTranslatedColumns
-    ),
+    tour,
     apiConfig.db.privateJSONDataKeys.tour
   );
 };
@@ -228,11 +217,7 @@ export const daoTourUpdate = async (
   });
 
   return filteredOutputByBlacklistOrNotFound(
-    daoSharedWrapImageWithTranslationImage(
-      "heroImage",
-      tour,
-      daoImageTranslatedColumns
-    ),
+    tour,
     apiConfig.db.privateJSONDataKeys.tour
   );
 };

@@ -11,7 +11,6 @@ import {
   nonNull,
   // stringArg,
   intArg,
-  arg,
   list,
 } from "nexus";
 import httpStatus from "http-status";
@@ -26,7 +25,6 @@ import {
   daoTourStopCreate,
   daoTourStopUpdate,
   daoTourStopDelete,
-  daoImageSaveImageTranslations,
   daoTourGetById,
   daoTourStopQueryCount,
   daoSharedMapTranslatedColumnsInRowToJson,
@@ -155,9 +153,9 @@ export const TourStopQueries = extendType({
             heroImage: {
               select: {
                 id: true,
-                meta: true,
                 status: true,
-                translations: true,
+                meta: true,
+                ...daoSharedGetTranslatedSelectColumns(["alt", "credits"]),
               },
             },
           };
@@ -285,7 +283,6 @@ export const TourStopMutations = extendType({
       args: {
         id: nonNull(intArg()),
         data: nonNull("TourStopUpdateInput"),
-        imagesTranslations: list(arg({ type: "ImageTranslationInput" })),
       },
 
       authorize: async (...[, , ctx]) => {
@@ -318,9 +315,6 @@ export const TourStopMutations = extendType({
 
         if (!tourStop)
           throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Update failed");
-
-        if (Array.isArray(args.imagesTranslations))
-          await daoImageSaveImageTranslations(args.imagesTranslations);
 
         return tourStop;
       },

@@ -147,11 +147,6 @@ type ImageStatus {
   status: Int!
 }
 
-input ImageTranslationInput {
-  id: Int!
-  translations: JSON!
-}
-
 input ImageUpdateInput {
   meta: JSON!
   ownerId: Int!
@@ -265,6 +260,7 @@ input LocationUpsertInput {
   description: JSON
   eventLocationId: Int
   heroImage: JSON
+  images: JSON
   lat: Float
   lng: Float
   offers: JSON
@@ -294,7 +290,7 @@ type Mutation {
   authVerifyEmail(token: String!): BooleanResult!
   eventCreate(data: EventUpsertInput!): Event!
   eventDelete(id: Int!): BooleanResult!
-  eventUpdate(data: EventUpsertInput!, id: Int!, imagesTranslations: [ImageTranslationInput]): Event!
+  eventUpdate(data: EventUpsertInput!, id: Int!): Event!
   imageDelete(id: Int!): BooleanResult!
   imageUpdate(data: ImageUpdateInput!, id: Int!): Image!
   importCreate(data: ImportUpsertInput!): Import!
@@ -305,10 +301,10 @@ type Mutation {
   locationDelete(id: Int!): BooleanResult!
   locationExportCreate(data: LocationExportUpsertInput!): LocationExport!
   locationExportDelete(id: Int!): BooleanResult!
-  locationUpdate(data: LocationUpsertInput!, id: Int!, imagesTranslations: [ImageTranslationInput]): Location!
+  locationUpdate(data: LocationUpsertInput!, id: Int!): Location!
   pageCreate(data: PageUpsertInput!): Page!
   pageDelete(id: Int!): BooleanResult!
-  pageUpdate(data: PageUpsertInput!, id: Int!, imagesTranslations: [ImageTranslationInput]): Page!
+  pageUpdate(data: PageUpsertInput!, id: Int!): Page!
   settingsUpdate(data: [SettingsUpdateInput!]): BooleanResult!
   taxonomyCreate(data: TaxonomyUpsertInput!): Taxonomy!
   taxonomyDelete(id: Int!): BooleanResult!
@@ -321,8 +317,8 @@ type Mutation {
   tourReorderTourStops(data: [TourStopOrderInput]!, id: Int!): Tour!
   tourStopCreate(data: TourStopCreateInput!): TourStop!
   tourStopDelete(id: Int!): BooleanResult!
-  tourStopUpdate(data: TourStopUpdateInput!, id: Int!, imagesTranslations: [ImageTranslationInput]): TourStop!
-  tourUpdate(data: TourUpsertInput!, id: Int!, imagesTranslations: [ImageTranslationInput]): Tour!
+  tourStopUpdate(data: TourStopUpdateInput!, id: Int!): TourStop!
+  tourUpdate(data: TourUpsertInput!, id: Int!): Tour!
   userCreate(data: UserCreateInput!, scope: String!): User!
   userDelete(id: Int!, scope: String!): BooleanResult!
   userProfileImageDelete(id: Int!, scope: String!): BooleanResult!

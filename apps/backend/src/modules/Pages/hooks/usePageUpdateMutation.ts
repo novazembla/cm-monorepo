@@ -6,13 +6,12 @@ export const usePageUpdateMutation = () => {
     // onCompleted: (data) => {},
   });
 
-  const execute = (id: number, data: any, imagesTranslations: any) => {
+  const execute = (id: number, data: any) => {
     return mutation({
       variables: {
-        id, 
+        id,
         data,
-        imagesTranslations,
-      }
+      },
     });
   };
   return [execute, mutationResults] as const;

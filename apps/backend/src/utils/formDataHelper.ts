@@ -70,43 +70,23 @@ export const multiLangRHFormDataToJson = (
   return filteredOutputByBlacklist(changedData, filterNamesAndLang);
 };
 
-export const multiLangImageTranslationsRHFormDataToJson = (
+export const multiLangImageMetaRHFormDataToJson = (
   data: any,
-  imageFields: [
-    {
-      id: number;
-      name: string;
-    }
-  ],
+  fieldName: string,
   imageMultiLangFields: string[],
   activeLanguages: string[]
 ) => {
   
-
-  return imageFields.reduce((acc: any[], imageField: any) => {
-    if (!(imageField.name in data)) return acc;
-
-    if (isNaN(data[imageField.name]) || !isFinite(data[imageField.name]) || !data[imageField.name]) return acc;
-
-    const imageTranslations = {
-      id: imageField.id,
-      translations: imageMultiLangFields.reduce((accFields, key) => {
+  return imageMultiLangFields.reduce((accFields, key) => {
+    return {
+      ...activeLanguages.reduce((accLangs, lang) => {
         return {
-          ...accFields,
-          [key]: activeLanguages.reduce((accLangs, lang) => {
-            return {
-              ...accLangs,
-              [lang]: data[`${imageField.name}_${key}_${lang}`] ?? "",
-            };
-          }, {}),
+          ...accLangs,
+          [`${key}_${lang}`]: data[`${fieldName}_${key}_${lang}`] ?? "",
         };
-      }, {}),
+      }, accFields),
     };
-
-    acc.push(imageTranslations);
-
-    return acc;
-  }, []);
+  },{});
 };
 
 export const multiLangImageTranslationsJsonRHFormData = (

@@ -14,16 +14,8 @@ export const locationCreateMutationGQL = gql`
 `;
 
 export const locationUpdateMutationGQL = gql`
-  mutation locationUpdate(
-    $id: Int!
-    $data: LocationUpsertInput!
-    $imagesTranslations: [ImageTranslationInput]
-  ) {
-    locationUpdate(
-      id: $id
-      data: $data
-      imagesTranslations: $imagesTranslations
-    ) {
+  mutation locationUpdate($id: Int!, $data: LocationUpsertInput!) {
+    locationUpdate(id: $id, data: $data) {
       id
       ownerId
       title
