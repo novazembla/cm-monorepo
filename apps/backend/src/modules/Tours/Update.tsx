@@ -42,7 +42,7 @@ import {
   multiLangRHFormDataToJson,
   multiLangSlugUniqueError,
   multiLangImageMetaRHFormDataToJson,
-  multiLangImageTranslationsJsonRHFormData,
+  multiLangTranslationsJsonRHFormData,
 } from "~/utils";
 
 export const tourAndContentAuthorsQueryGQL = gql`
@@ -142,11 +142,11 @@ const Update = () => {
       ownerId: data?.tour?.ownerId,
       path: data?.tour?.path,
       heroImage: data?.tour?.heroImage?.id,
-      ...multiLangImageTranslationsJsonRHFormData(
-        data?.tour,
-        ["heroImage"],
+      ...multiLangTranslationsJsonRHFormData(
+        data?.tour?.heroImage,
         ["alt", "credits"],
-        config.activeLanguages
+        config.activeLanguages,
+        "heroImage",
       ),
     });
   }, [reset, data, config.activeLanguages, modules]);

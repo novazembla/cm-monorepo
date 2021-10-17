@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { useFormContext, Controller } from "react-hook-form";
 import { MultiLangValue } from "~/components/ui";
-import { FieldErrorMessage } from "~/components/forms";
+import { FieldErrorMessage, flattenErrors } from ".";
 
 export type FieldRadioOrCheckboxGroupOption = {
   label: string;
@@ -42,10 +42,12 @@ export const FieldRadioOrCheckboxGroup = ({
 
   if (!options || options.length === 0) return <></>;
 
+  const flattenedErrors = flattenErrors(errors);
+
   return (
     <FormControl
       id={id}
-      isInvalid={errors[name]?.message}
+      isInvalid={flattenedErrors[name]?.message}
       {...{ isRequired, isDisabled }}
     >
       <chakra.fieldset
@@ -78,7 +80,7 @@ export const FieldRadioOrCheckboxGroup = ({
                     onBlur={onBlur}
                     isDisabled={isDisabled}
                     isChecked={value}
-                    isInvalid={errors[name]?.message}
+                    isInvalid={flattenedErrors[name]?.message}
                     pr="6"
                     isRequired={isRequired}
                     mb="2"
@@ -92,7 +94,7 @@ export const FieldRadioOrCheckboxGroup = ({
           ))}
         </Flex>
         <Box transform="translateY(-10px)">
-          <FieldErrorMessage error={errors[name]?.message} />
+          <FieldErrorMessage error={flattenedErrors[name]?.message} />
         </Box>
       </chakra.fieldset>
     </FormControl>

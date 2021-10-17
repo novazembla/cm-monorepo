@@ -21,7 +21,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { HiOutlineEyeOff, HiOutlineEye } from "react-icons/hi";
 
-import FieldErrorMessage from "./FieldErrorMessage";
+import { FieldErrorMessage, flattenErrors } from ".";
 
 export interface FieldInputSettings {
   onChange?: ChangeEventHandler;
@@ -84,7 +84,9 @@ export const FieldInput = ({
 
   fieldProps.placeholder = settings?.placeholder ?? undefined;
 
-  if (errors[name]?.message) fieldProps.valid = undefined;
+  const flattenedErrors = flattenErrors(errors);
+
+  if (flattenedErrors[name]?.message) fieldProps.valid = undefined;
 
   const onChangeHandler: ChangeEventHandler = (
     event: ChangeEvent<HTMLInputElement>
@@ -112,30 +114,44 @@ export const FieldInput = ({
     setRevealFlag.toggle();
     fieldRef?.current?.focus();
   };
-  
-  const { ref, onBlur, onChange } = register(id, {required:isRequired});
 
-  let input = <Input name={name} onBlur={(event) => {onBlur(event);onChangeHandler(event);}} onChange={(event) => {onChange(event);onChangeHandler(event);}} {...fieldProps} ref={(e: HTMLInputElement) => {
-    ref(e)
-    fieldRef.current = e;// you can still assign to ref
-  }} />;
+  const { ref, onBlur, onChange } = register(id, { required: isRequired });
+
+  let input = (
+    <Input
+      name={name}
+      onBlur={(event) => {
+        onBlur(event);
+        onChangeHandler(event);
+      }}
+      onChange={(event) => {
+        onChange(event);
+        onChangeHandler(event);
+      }}
+      {...fieldProps}
+      ref={(e: HTMLInputElement) => {
+        ref(e);
+        fieldRef.current = e; // you can still assign to ref
+      }}
+    />
+  );
 
   // browser auto fill and form initation might be at the wrong times
   // if this happens the "hook forms" does not register the auto filled
   // value and the field does not validate successfully despite being
-  // (visibly) filled. 
+  // (visibly) filled.
   useEffect(() => {
     let interval = setInterval(() => {
       if (fieldRef.current && fieldRef.current.value) {
         setValue(name, fieldRef.current.value);
-        clearInterval(interval)
+        clearInterval(interval);
       }
-    }, 100)
+    }, 100);
 
     return () => {
       clearInterval(interval);
-    }
-  })
+    };
+  });
 
   if (type === "password") {
     input = (
@@ -169,14 +185,14 @@ export const FieldInput = ({
   return (
     <FormControl
       id={id}
-      isInvalid={errors[name]?.message}
-      {...{isRequired, isDisabled}}
+      isInvalid={flattenedErrors[name]?.message}
+      {...{ isRequired, isDisabled }}
     >
       <FormLabel htmlFor={id} mb="0.5">
         {label}
       </FormLabel>
       {input}
-      <FieldErrorMessage error={errors[name]?.message} />
+      <FieldErrorMessage error={flattenedErrors[name]?.message} />
     </FormControl>
   );
 };

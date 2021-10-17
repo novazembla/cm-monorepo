@@ -107,6 +107,13 @@ export const tourStopReadQueryGQL = gql`
         alt
         credits
       }
+      images {
+        id
+        meta
+        status
+        alt
+        credits
+      }
     }
   }
 `;

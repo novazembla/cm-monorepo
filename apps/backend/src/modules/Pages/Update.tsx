@@ -37,7 +37,7 @@ import {
   multiLangJsonToRHFormData,
   multiLangRHFormDataToJson,
   multiLangSlugUniqueError,
-  multiLangImageTranslationsJsonRHFormData,
+  multiLangTranslationsJsonRHFormData,
   multiLangImageMetaRHFormDataToJson,
 } from "~/utils";
 
@@ -116,11 +116,11 @@ const Update = () => {
         config.activeLanguages
       ),
       heroImage: data.page.heroImage?.id,
-      ...multiLangImageTranslationsJsonRHFormData(
-        data.page,
-        ["heroImage"],
+      ...multiLangTranslationsJsonRHFormData(
+        data?.page?.heroImage,
         ["alt", "credits"],
-        config.activeLanguages
+        config.activeLanguages,
+        "heroImage",
       ),
     });
   }, [reset, data, config.activeLanguages]);

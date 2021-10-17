@@ -62,6 +62,9 @@
     },
     "heroImage": {
       "label": "Featured image"
+    },
+    "images": {
+      "label": "Images"
     }
   },
   "fileuploader": {
@@ -84,35 +87,210 @@
     "cancelupload": "Upload abbrechen",
     "error": "Leider konnten wir Ihren Upload nicht abschließen, bitte versuchen Sie es später noch einmal."
   },
-  "imageuploader": {
-    "filesizebetween": "Dateigrösse zwischen {{minFileSize}} und {{maxFileSize}}",
-    "filesizebelow": "Max. Dateigrösse {{maxFileSize}}",
-    "filesizeabove": "Min. Dateigrösse {{minFileSize}}",
-    "droperror": {
-      "toolarge": "Die ausgewählte Datei ist zu groß.",
-      "toosmall": "Die ausgewählte Datei ist zu klein.",
-      "invalidtype": "Dieses Dateiformat kann nicht verwendet werden."
+  "validation": {
+    "image": {
+      "required": "Bitte laden Sie ein Bild hoch"
     },
-    "button": {
-      "deleteimage": "Profilbild löschen"
+    "notunique": "Dieser Wert ist nicht einzigartig",
+    "mixed": {
+      "default": "Dieses Feld ist nicht korrekt",
+      "required": "Dieses Feld ist verpflichtend",
+      "oneOf": "Dieses Feld muss einer der folgenden Werte haben: {{values}}",
+      "notOneOf": "Dieses Feld muss einer der folgenden Typen sein: {{values}}",
+      "notType": "Dieses Feld muss vom Typ {{type}} sein",
+      "defined": "Dieses Feld muss gesetzt werden"
     },
-    "deleteimage": {
-      "error": "Leider konnten wir Ihre Löschanfrage nicht bearbeiten. Bitte versuchen Sie es später erneut."
+    "string": {
+      "length": "{{path}} muss exakt {{length}} Zeichen lang sein",
+      "min": "{{path}} muss mindestens {{min}} Zeichen lang sein",
+      "max": "{{path}} darf maximal {{max}} Zeichen lang sein",
+      "matches": "{{path}} muss mit folgendem übereinstimmen: \"{{regex}}\"",
+      "email": "{{path}} muss eine gültige E-Mail-Adresse sein",
+      "url": "{{path}} muss eine gültige URL sein",
+      "uuid": "{{path}} muss eine gültige UUID sein",
+      "trim": "{{path}} darf kein Leerzeichen am Anfang oder Ende haben",
+      "lowercase": "{{path}} muss ein String in Kleinbuchstaben sein",
+      "uppercase": "{{path}} muss ein String in Grossbuchstaben sein"
     },
-    "pleasedroporclick": "Ziehen Sie eine Datei hierher und legen Sie sie hier ab, oder klicken Sie, um eine Datei auszuwählen.",
-    "uploading": "Hochladen",
-    "cancelupload": "Upload abbrechen",
-    "error": "Leider konnten wir Ihren Upload nicht abschließen, bitte versuchen Sie es später noch einmal."
-  },
-  "ui": {
-    "button": {
-      "label": {
-        "show": "Anzeigen",
-        "hide": "Verstecken"
+    "number": {
+      "min": "{{path}} muss größer oder gleich {{min}} sein",
+      "max": "{{path}} muss kleiner oder gleich {{max}} sein",
+      "lessThan": "{{path}} muss kleiner sein als {{less}}",
+      "moreThan": "{{path}} muss grösser sein als {{more}}",
+      "positive": "{{path}} muss eine positive Zahl sein",
+      "negative": "{{path}} muss eine negative Zahl sein",
+      "integer": "{{path}} muss eine ganze Zahl sein",
+      "nolatitude": "Längengrade sind Zahlen zwischen -90.00 und 90.00",
+      "nolongitude": "Breitengrade sind Zahlen zwischen -180.00 und 180.00"
+    },
+    "date": {
+      "min": "{{path}} Feld muss später sein als {{min}}",
+      "max": "{{path}} Feld muss früher sein als {{max}}"
+    },
+    "boolean": {
+      "isValue": "{{path}} Feld muss {{value}} sein"
+    },
+    "object": {
+      "noUnknown": "{{path}} Feld hat nicht spezifizierte Schlüssel: {{unknown}}"
+    },
+    "array": {
+      "min": "{{path}} Feld muss mindestens {{min}} Elemente enthalten",
+      "max": "{{path}} Feld muss weniger oder gleich {{max}} Elemente enthalten",
+      "length": "{{path}} muss {{length}} Elemente haben",
+      "minOneItem": "Bitte wähle mindestens ein Element aus"
+    },
+    "slug": {
+      "invalidcharacters": "Bitte verwenden Sie ausschliesslich A-Z, -, und Zahlen",
+      "chooselocation": "Bitte wählen Sie einen Ort",
+      "notahexcolor": "Bitte geben Sie eine gültige HEX-Farbe an (z.B. #a8f oder #f9ad9f"
+    },
+    "page": {
+      "login": {
+        "emailRequiredError": "Bitte geben Sie Ihre Emailadresse ein",
+        "passwordRequiredError": "Bitte geben Sie ihr Passwort ein"
+      },
+      "passwordrequest": {
+        "emailRequiredError": "Bitte geben Sie Ihre Emailadresse ein"
+      },
+      "passwordreset": {
+        "pleaseProvideYourNewPassword": "Bitte geben Sie Ihr neues Passwort ein",
+        "pleaseConfirmYourNewPassword": "Bitte bestätigen Sie Ihr neues Passwort"
+      },
+      "register": {
+        "firstNameRequiredError": "Bitte geben Sie Ihren Vornamen ein",
+        "lastNameRequiredError": "Bitte geben Sie Ihren Nachnamen ein",
+        "emailRequiredError": "Bitte geben Sie Ihre Emailadresse ein",
+        "passwordRequiredError": "Bitte geben Sie ihr Passwort ein",
+        "pleaseConfirmYourPassword": "Bitte bestätigen Sie Ihr Passwort",
+        "acceptedTermsRequiredError": "Bitte akzeptieren Sie unsere Nutzungsbedingungen"
       }
     }
   },
+  "form": {
+    "field": {
+      "images": {
+        "label": {
+          "image": "Image",
+          "alttext": "Alternativer Text",
+          "credits": "Uhrheberrechtsinformation"
+        },
+        "button": {
+          "deleteImage": "Bild löschen",
+          "moveUp": "Nach oben verschieben",
+          "moveDown": "Nach unten verschieben"
+        },
+        "noimages": "Keine Bilder hinzugefügt. Bitte laden Sie ein Bild mittels des untrigen Knopfes hoch.",
+        "addimage": "Bild hinzufügen"
+      }
+    },
+    "datepicker": {
+      "close": "Schließen"
+    },
+    "image": {
+      "label": {
+        "image": "Bild",
+        "alttext": "Bildbeschreibung",
+        "credits": "Urheberrechtsinformation"
+      }
+    },
+    "unsavedchanges": "Offenbar haben Sie Änderungen nicht gespeichert. Verlassen ohne zu speichern?",
+    "geolocation": {
+      "lat": {
+        "label": "Breitengrad"
+      },
+      "lng": {
+        "label": "Längengrad"
+      },
+      "button": {
+        "reset": "Zurücksetzen"
+      }
+    },
+    "error": {
+      "notCorrectLatitude": "Dies scheint kein Breitengrad zu sein",
+      "notCorrectLongitude": "Dies scheint kein Längengrad zu sein"
+    },
+    "info": {
+      "pleasesafedraft": "Bitte speichern Sie einen Entwurf um weitere Funktionen freizuschalten"
+    }
+  },
   "module": {
+    "events": {
+      "forms": {
+        "event": {
+          "field": {
+            "dates": {
+              "clone": "Aktuelle Zeile duplizieren",
+              "removedate": "Entfernen"
+            },
+            "label": {
+              "title": "Titel",
+              "slug": "Slug",
+              "description": "Beschreibung"
+            },
+            "placeholder": {
+              "title": "Veranstaltungstitel",
+              "slug": "Slug / URL Zusatz",
+              "description": "Veranstaltungsbeschreibung"
+            },
+            "date": {
+              "placeholder": "Datum"
+            },
+            "begin": {
+              "label": "Beginn"
+            },
+            "end": {
+              "label": "Ende"
+            }
+          },
+          "table": {
+            "column": {
+              "begin": {
+                "label": "Beginn"
+              },
+              "end": {
+                "label": "Ende"
+              }
+            }
+          }
+        },
+        "field": {
+          "label": {
+            "isFree": "Diese Veranstaltung ist kostenfrei",
+            "isImported": "Diese Veranstaltung wird automatisch importiert und aktualisiert"
+          }
+        },
+        "eventdates": {
+          "heading": "Veranstaltungsdatum / -daten",
+          "table": {
+            "column": {
+              "date": {
+                "label": "Datum"
+              }
+            }
+          }
+        }
+      },
+      "title": "Veranstaltungen",
+      "menuitem": {
+        "createevent": "Veranstaltung hinzufügen",
+        "importLogs": "Log importieren",
+        "importLog": "Log"
+      },
+      "button": {
+        "create": "Neue Veranstaltung hinzufügen",
+        "edit": "Veranstaltung bearbeiten",
+        "delete": "Veranstaltung löschen",
+        "viewLog": "Log anzeigen"
+      },
+      "importDate": "Datum des Imports",
+      "noImportErrors": "Anzahl der Importfehler",
+      "noImportWarnings": "Keine Import Warnungen",
+      "event": {
+        "title": {
+          "updatepage": "Veranstaltung aktualisieren"
+        }
+      }
+    },
     "forms": {
       "taxonomy": {
         "label": {
@@ -140,7 +318,7 @@
     "users": {
       "deletealter": {
         "title": "Bitte bestätigen",
-        "message": "Möchten Sie diese BenutzerIn wirklich löschen? Diese Aktion kann nicht rückgängig gemacht machen!"
+        "message": "Möchten Sie wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden!"
       },
       "title": "NutzerIn",
       "page": {
@@ -187,83 +365,6 @@
         "create": "NutzerIn hinzufügen",
         "edit": "NutzerIn bearbeiten",
         "delete": "NutzerIn löschen"
-      }
-    },
-    "events": {
-      "title": "Veranstaltungen",
-      "menuitem": {
-        "createevent": "Veranstaltung hinzufügen",
-        "importLogs": "Log importieren",
-        "importLog": "Log"
-      },
-      "forms": {
-        "event": {
-          "field": {
-            "label": {
-              "title": "Titel",
-              "slug": "Slug",
-              "description": "Beschreibung"
-            },
-            "placeholder": {
-              "title": "Veranstaltungstitel",
-              "slug": "Slug / URL Zusatz",
-              "description": "Veranstaltungsbeschreibung"
-            },
-            "date": {
-              "placeholder": "Datum"
-            },
-            "begin": {
-              "label": "Beginn"
-            },
-            "end": {
-              "label": "Ende"
-            },
-            "dates": {
-              "removedate": "Entfernen",
-              "clone": "Aktuelle Zeile duplizieren"
-            }
-          },
-          "table": {
-            "column": {
-              "begin": {
-                "label": "Beginn"
-              },
-              "end": {
-                "label": "Ende"
-              }
-            }
-          }
-        },
-        "field": {
-          "label": {
-            "isFree": "Diese Veranstaltung ist kostenfrei",
-            "isImported": "Diese Veranstaltung wird automatisch importiert und aktualisiert"
-          }
-        },
-        "eventdates": {
-          "heading": "Veranstaltungsdatum / -daten",
-          "table": {
-            "column": {
-              "date": {
-                "label": "Datum"
-              }
-            }
-          }
-        }
-      },
-      "button": {
-        "create": "Neue Veranstaltung hinzufügen",
-        "edit": "Veranstaltung bearbeiten",
-        "delete": "Veranstaltung löschen",
-        "viewLog": "Log anzeigen"
-      },
-      "importDate": "Datum des Imports",
-      "noImportErrors": "Anzahl der Importfehler",
-      "noImportWarnings": "Keine Import Warnungen",
-      "event": {
-        "title": {
-          "updatepage": "Veranstaltung aktualisieren"
-        }
       }
     },
     "locations": {
@@ -625,6 +726,34 @@
       }
     }
   },
+  "imageuploader": {
+    "filesizebetween": "Dateigrösse zwischen {{minFileSize}} und {{maxFileSize}}",
+    "filesizebelow": "Max. Dateigrösse {{maxFileSize}}",
+    "filesizeabove": "Min. Dateigrösse {{minFileSize}}",
+    "droperror": {
+      "toolarge": "Die ausgewählte Datei ist zu groß.",
+      "toosmall": "Die ausgewählte Datei ist zu klein.",
+      "invalidtype": "Dieses Dateiformat kann nicht verwendet werden."
+    },
+    "button": {
+      "deleteimage": "Bild löschen"
+    },
+    "deleteimage": {
+      "error": "Leider konnten wir Ihre Löschanfrage nicht bearbeiten. Bitte versuchen Sie es später erneut."
+    },
+    "pleasedroporclick": "Ziehen Sie eine Datei hierher und legen Sie sie hier ab, oder klicken Sie, um eine Datei auszuwählen.",
+    "uploading": "Hochladen",
+    "cancelupload": "Upload abbrechen",
+    "error": "Leider konnten wir Ihren Upload nicht abschließen, bitte versuchen Sie es später noch einmal."
+  },
+  "ui": {
+    "button": {
+      "label": {
+        "show": "Anzeigen",
+        "hide": "Verstecken"
+      }
+    }
+  },
   "PublishStatus": {
     "select": {
       "label": "Veröffentlichungsstatus",
@@ -643,37 +772,6 @@
       "unknown": "Unbekannt",
       "autodraft": "automatischer Entwurf",
       "importedwrning": "Importiert mit Warnung(en)"
-    }
-  },
-  "form": {
-    "datepicker": {
-      "close": "schliessen"
-    },
-    "image": {
-      "label": {
-        "image": "Bild",
-        "alttext": "Bildbeschreibung",
-        "credits": "Urheberrechtsinformation"
-      }
-    },
-    "unsavedchanges": "Offenbar haben Sie Änderungen nicht gespeichert. Verlassen ohne zu speichern?",
-    "geolocation": {
-      "lat": {
-        "label": "Breitengrad"
-      },
-      "lng": {
-        "label": "Längengrad"
-      },
-      "button": {
-        "reset": "Zurücksetzen"
-      }
-    },
-    "error": {
-      "notCorrectLatitude": "Dies scheint kein Breitengrad zu sein",
-      "notCorrectLongitude": "Dies scheint kein Längengrad zu sein"
-    },
-    "info": {
-      "pleasesafedraft": "Bitte speichern Sie einen Entwurf um weitere Funktionen freizuschalten"
     }
   },
   "editor": {
@@ -799,82 +897,6 @@
     },
     "empty": {
       "defaultvalue": "Nicht gesetzt! Bitte die Einstellungen aktualisieren"
-    }
-  },
-  "validation": {
-    "notunique": "Dieser Wert ist nicht einzigartig",
-    "mixed": {
-      "default": "{{path}} ist nicht korrekt",
-      "required": "{{path}} ist ein notwendiges Feld",
-      "oneOf": "{{path}} muss einer der folgenden Werte sein: {{values}}",
-      "notOneOf": "{{path}} darf keiner der folgenden Werte sein: {{values}}",
-      "notType": "Dieses Feld darf nicht vom Typ {{type}} sein:",
-      "defined": "{{path}} muss definiert werden"
-    },
-    "string": {
-      "length": "{{path}} muss exakt {{length}} Zeichen lang sein",
-      "min": "{{path}} muss mindestens {{min}} Zeichen lang sein",
-      "max": "{{path}} darf maximal {{max}} Zeichen lang sein",
-      "matches": "{{path}} muss mit folgendem übereinstimmen: \"{{regex}}\"",
-      "email": "{{path}} muss eine gültige E-Mail-Adresse sein",
-      "url": "{{path}} muss eine gültige URL sein",
-      "uuid": "{{path}} muss eine gültige UUID sein",
-      "trim": "{{path}} darf kein Leerzeichen am Anfang oder Ende haben",
-      "lowercase": "{{path}} muss ein String in Kleinbuchstaben sein",
-      "uppercase": "{{path}} muss ein String in Grossbuchstaben sein"
-    },
-    "number": {
-      "min": "{{path}} muss größer oder gleich {{min}} sein",
-      "max": "{{path}} muss kleiner oder gleich {{max}} sein",
-      "lessThan": "{{path}} muss kleiner sein als {{less}}",
-      "moreThan": "{{path}} muss grösser sein als {{more}}",
-      "positive": "{{path}} muss eine positive Zahl sein",
-      "negative": "{{path}} muss eine negative Zahl sein",
-      "integer": "{{path}} muss eine ganze Zahl sein",
-      "nolatitude": "Längengrade sind Zahlen zwischen -90.00 und 90.00",
-      "nolongitude": "Breitengrade sind Zahlen zwischen -180.00 und 180.00"
-    },
-    "date": {
-      "min": "{{path}} Feld muss später sein als {{min}}",
-      "max": "{{path}} Feld muss früher sein als {{max}}"
-    },
-    "boolean": {
-      "isValue": "{{path}} Feld muss {{value}} sein"
-    },
-    "object": {
-      "noUnknown": "{{path}} Feld hat nicht spezifizierte Schlüssel: {{unknown}}"
-    },
-    "array": {
-      "min": "{{path}} Feld muss mindestens {{min}} Elemente enthalten",
-      "max": "{{path}} Feld muss weniger oder gleich {{max}} Elemente enthalten",
-      "length": "{{path}} muss {{length}} Elemente haben",
-      "minOneItem": "Bitte wähle mindestens ein Element aus"
-    },
-    "slug": {
-      "invalidcharacters": "Bitte verwenden Sie ausschliesslich A-Z, -, und Zahlen",
-      "chooselocation": "Bitte wählen Sie einen Ort",
-      "notahexcolor": "Bitte geben Sie eine gültige HEX-Farbe an (z.B. #a8f oder #f9ad9f"
-    },
-    "page": {
-      "login": {
-        "emailRequiredError": "Bitte geben Sie Ihre Emailadresse ein",
-        "passwordRequiredError": "Bitte geben Sie ihr Passwort ein"
-      },
-      "passwordrequest": {
-        "emailRequiredError": "Bitte geben Sie Ihre Emailadresse ein"
-      },
-      "passwordreset": {
-        "pleaseProvideYourNewPassword": "Bitte geben Sie Ihr neues Passwort ein",
-        "pleaseConfirmYourNewPassword": "Bitte bestätigen Sie Ihr neues Passwort"
-      },
-      "register": {
-        "firstNameRequiredError": "Bitte geben Sie Ihren Vornamen ein",
-        "lastNameRequiredError": "Bitte geben Sie Ihren Nachnamen ein",
-        "emailRequiredError": "Bitte geben Sie Ihre Emailadresse ein",
-        "passwordRequiredError": "Bitte geben Sie ihr Passwort ein",
-        "pleaseConfirmYourPassword": "Bitte bestätigen Sie Ihr Passwort",
-        "acceptedTermsRequiredError": "Bitte akzeptieren Sie unsere Nutzungsbedingungen"
-      }
     }
   },
   "toast": {

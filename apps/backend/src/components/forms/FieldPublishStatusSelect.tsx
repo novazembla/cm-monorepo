@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import { FormControl, FormLabel, Select } from "@chakra-ui/react";
 
-import FieldErrorMessage from "./FieldErrorMessage";
+import { FieldErrorMessage, flattenErrors } from ".";
 import { useAuthentication } from "~/hooks";
 
 export const FieldPublishStatusSelect = ({
@@ -68,8 +68,10 @@ export const FieldPublishStatusSelect = ({
     },
   ];
 
+  const flattenedErrors = flattenErrors(errors);
+
   return (
-    <FormControl id={id} isInvalid={errors[name]?.message} isRequired>
+    <FormControl id={id} isInvalid={flattenedErrors[name]?.message} isRequired>
       <FormLabel htmlFor={id} mb="0.5">
         {label}
       </FormLabel>
@@ -89,7 +91,7 @@ export const FieldPublishStatusSelect = ({
             defaultValue={
               status === PublishStatus.AUTODRAFT ? PublishStatus.DRAFT : status
             }
-            valid={!errors[name]?.message ? "valid" : undefined}
+            valid={!flattenedErrors[name]?.message ? "valid" : undefined}
             placeholder={t(
               "PublishStatus.select.placeholder",
               "Please choose a publish status"
@@ -111,7 +113,7 @@ export const FieldPublishStatusSelect = ({
         )}
       />
 
-      <FieldErrorMessage error={errors[name]?.message} />
+      <FieldErrorMessage error={flattenedErrors[name]?.message} />
     </FormControl>
   );
 };

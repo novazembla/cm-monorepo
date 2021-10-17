@@ -24,7 +24,7 @@ import {
 } from "~/hooks";
 import { useFormContext } from "react-hook-form";
 
-import { FieldErrorMessage } from ".";
+import { FieldErrorMessage, flattenErrors } from ".";
 import { ApiImage, ApiImageProps } from "~/components/ui";
 
 import { authentication } from "~/services";
@@ -363,11 +363,13 @@ export const FieldImageUploader = ({
       break;
   }
 
+  const flattenedErrors = flattenErrors(errors);
+
   return (
     <>
       <FormControl
         id={id}
-        isInvalid={errors[name]?.message || isDragReject}
+        isInvalid={flattenedErrors[name]?.message || isDragReject}
         {...{ isRequired, isDisabled }}
       >
         <FormLabel htmlFor={id} mb="0.5">
@@ -509,7 +511,7 @@ export const FieldImageUploader = ({
         )}
 
         <input
-          {...{ valid: !errors[name]?.message ? "valid" : undefined }}
+          {...{ valid: !flattenedErrors[name]?.message ? "valid" : undefined }}
           type="hidden"
           defaultValue={currentImage?.id}
           {...register(name, {
@@ -517,7 +519,7 @@ export const FieldImageUploader = ({
           })}
         />
 
-        <FieldErrorMessage error={errors[name]?.message} />
+        <FieldErrorMessage error={flattenedErrors[name]?.message} />
       </FormControl>
     </>
   );

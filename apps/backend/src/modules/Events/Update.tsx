@@ -40,7 +40,7 @@ import {
   multiLangRHFormDataToJson,
   multiLangSlugUniqueError,
   multiLangImageMetaRHFormDataToJson,
-  multiLangImageTranslationsJsonRHFormData,
+  multiLangTranslationsJsonRHFormData,
   mapGroupOptionsToData,
   mapDataToGroupOptions,
   mapDataToPrimaryTerms,
@@ -240,11 +240,11 @@ const Update = () => {
           ? data?.event?.locations[0].id
           : 0,
       heroImage: data.event.heroImage?.id,
-      ...multiLangImageTranslationsJsonRHFormData(
-        data.event,
-        ["heroImage"],
+      ...multiLangTranslationsJsonRHFormData(
+        data?.event?.heroImage,
         ["alt", "credits"],
-        config.activeLanguages ?? ["en"]
+        config.activeLanguages ?? ["en"],
+        "heroImage",
       ),
     });
   }, [reset, data, config.activeLanguages, setExtendedValidationSchema]);

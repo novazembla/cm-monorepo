@@ -2,7 +2,7 @@ import React from "react";
 import { imageDeleteMutationGQL } from "@culturemap/core";
 
 import { DocumentNode } from "@apollo/client";
-import { Box, chakra, Flex, Grid } from "@chakra-ui/react";
+import { Box, chakra, Grid } from "@chakra-ui/react";
 import { FieldMultiLangInput, FieldRow, FieldImageUploader } from ".";
 import { useTranslation } from "react-i18next";
 import { useFormContext } from "react-hook-form";
@@ -132,7 +132,6 @@ export const FieldSingleImage = ({
           </FieldRow>
         </Box>
       </Grid>
-      <Flex flexWrap="wrap"></Flex>
     </chakra.fieldset>
   );
 };

@@ -1,8 +1,8 @@
-import { string, object, number, mixed } from "yup";
+import { string, object, number, mixed, array } from "yup";
 import { activeLanguages, defaultLanguage } from "~/config";
 
-export const ModuleLocationCreateSchema = object().shape(
-  activeLanguages.reduce(
+export const ModuleLocationCreateSchema = object().shape({
+  ...activeLanguages.reduce(
     (acc, lang) => ({
       ...acc,
       [`title_${lang}`]: string().required(),
@@ -41,8 +41,23 @@ export const ModuleLocationCreateSchema = object().shape(
       website: string().url(),
       agency: string(),
     }
-  )
-);
+  ),
+  images: array().of(
+    object().shape({
+      id: number().typeError("validation.image.required").required(),
+      ...activeLanguages.reduce(
+        (acc, lang) => ({
+          ...acc,
+          [`alt_${lang}`]:
+            lang === defaultLanguage ? string().required() : string(),
+          [`credits_${lang}`]:
+            lang === defaultLanguage ? string().required() : string(),
+        }),
+        {}
+      ),
+    })
+  ),
+});
 
 export const ModuleLocationExportCreateSchema = object().shape({
   title: string().required(),

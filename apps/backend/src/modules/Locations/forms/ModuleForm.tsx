@@ -10,6 +10,7 @@ import {
   LocationPicker,
   TwoColFieldRow,
   FieldSingleImage,
+  FieldImages,
   FieldModuleTaxonomies,
   FieldInput,
 } from "~/components/forms";
@@ -283,7 +284,10 @@ export const ModuleForm = ({
       >
         <legend>
           <chakra.span px="2">
-            {t("module.locations.forms.field.label.contactInformation", "Contact Information")}
+            {t(
+              "module.locations.forms.field.label.contactInformation",
+              "Contact Information"
+            )}
           </chakra.span>
         </legend>
         <TwoColFieldRow>
@@ -386,7 +390,6 @@ export const ModuleForm = ({
         />
       </chakra.fieldset>
 
-      
       <Divider mt="10" />
       <FieldMultiLangTextEditor
         name="description"
@@ -547,7 +550,30 @@ export const ModuleForm = ({
           </FieldRow>
         </TwoColFieldRow>
       </chakra.fieldset>
+
       <Divider mt="10" />
+      <FieldImages
+        id="images"
+        name="images"
+        label={t("forms.images.label", "Images")}
+        currentImages={data?.location?.images}
+        settings={{
+          imageRequired: false,
+          altRequired: false,
+          creditsRequired: false,
+        }}
+        setActiveUploadCounter={setActiveUploadCounter}
+        connectWith={{
+          locations: {
+            connect: {
+              id: data?.location?.id,
+            },
+          },
+        }}
+      />
+
+      <Divider mt="10" />
+
       <chakra.fieldset
         border="1px solid"
         borderColor="gray.400"

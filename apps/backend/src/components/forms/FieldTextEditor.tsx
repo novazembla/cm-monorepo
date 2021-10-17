@@ -2,7 +2,7 @@ import { useFormContext } from "react-hook-form";
 
 import { FormControl, FormLabel, Flex, Box } from "@chakra-ui/react";
 
-import { TextEditor, FieldErrorMessage, TextEditorTypes } from ".";
+import { TextEditor, FieldErrorMessage, TextEditorTypes, flattenErrors } from ".";
 
 export interface FieldTextEditorSettings {
   required?: boolean;
@@ -38,11 +38,13 @@ export const FieldTextEditor = ({
     setValue,
   } = useFormContext();
 
+  const flattenedErrors = flattenErrors(errors);
+
   return (
     <FormControl
       id={id}
       className={settings?.className}
-      isInvalid={errors[name]?.message}
+      isInvalid={flattenedErrors[name]?.message}
       {...{ isRequired, isDisabled }}
     >
       <Flex direction={{ base: "column", mw: "row", t: "column" }}>
@@ -67,11 +69,11 @@ export const FieldTextEditor = ({
           onChange={(content) => {
             setValue(name, content);
           }}
-          isInvalid={errors[name]?.message}
+          isInvalid={flattenedErrors[name]?.message}
           maxLength={settings?.maxLength}
         />}
         <input
-          {...{ valid: !errors[name]?.message ? "valid" : undefined }}
+          {...{ valid: !flattenedErrors[name]?.message ? "valid" : undefined }}
           type="hidden"
           value={settings?.defaultValue}
           {...register(name, {
@@ -79,7 +81,7 @@ export const FieldTextEditor = ({
           })}
         />
       </Flex>
-      <FieldErrorMessage error={errors[name]?.message} />
+      <FieldErrorMessage error={flattenedErrors[name]?.message} />
     </FormControl>
   );
 };

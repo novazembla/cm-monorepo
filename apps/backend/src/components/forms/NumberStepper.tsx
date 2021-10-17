@@ -110,7 +110,7 @@ export {}
 //           <button type="button" title={`+`} onClick={() => onButtonClick('+')} className="stepper-button" disabled={disabled}><span className={`action`}>+</span></button>
 //         </div></label>}
 //       {(helperText && !(name in errors)) && <div className={`helper-text MuiFormLabel-root`}><span className={`scaled`}>{helperText}</span></div>}
-//       {(name in errors) && <div className={`error-text MuiFormLabel-root`}><span className={`scaled`}>{errors[name].message}</span></div>}
+//       {(name in errors) && <div className={`error-text MuiFormLabel-root`}><span className={`scaled`}>{flattenedErrors[name].message}</span></div>}
 //     </div>
 
    

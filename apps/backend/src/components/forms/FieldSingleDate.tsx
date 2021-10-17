@@ -4,7 +4,7 @@ import { FormControl, FormLabel } from "@chakra-ui/react";
 import { useFormContext, Controller } from "react-hook-form";
 import i18n from 'i18next';
 
-import FieldErrorMessage from "./FieldErrorMessage";
+import { FieldErrorMessage, flattenErrors } from ".";
 import { useTranslation } from "react-i18next";
 
 const isValidDate = (d: any) => {
@@ -36,13 +36,14 @@ export const FieldSingleDate = ({
   const {
     formState: { errors },
     control,
-    getValues,
   } = useFormContext();
 
-  return (
+  const flattenedErrors = flattenErrors(errors);
+
+  return (  
     <FormControl
       id={id}
-      isInvalid={errors[name]?.message}
+      isInvalid={flattenedErrors[name]?.message}
       {...{ isRequired }}
     >
       <FormLabel htmlFor={id} mb="0.5">
@@ -95,7 +96,7 @@ export const FieldSingleDate = ({
 
       
         
-      <FieldErrorMessage error={errors[name]?.message} />
+      <FieldErrorMessage error={flattenedErrors[name]?.message} />
     </FormControl>
   );
 };

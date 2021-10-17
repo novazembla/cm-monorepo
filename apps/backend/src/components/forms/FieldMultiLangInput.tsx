@@ -7,6 +7,7 @@ import FieldErrorMessage from "./FieldErrorMessage";
 import TwoColFieldRow from "./TwoColFieldRow";
 import { useConfig } from "~/hooks";
 import FieldRow from "./FieldRow";
+import { flattenErrors } from ".";
 
 export interface FieldMultiLangInputSettings {
   onChange?: ChangeEventHandler;
@@ -51,7 +52,7 @@ export const FieldMultiLangInput = ({
 
   const {
     formState: { errors },
-    register
+    register,
   } = useFormContext();
 
   let fieldProps: FieldMultiLangInputFieldProps = {
@@ -71,6 +72,8 @@ export const FieldMultiLangInput = ({
     settings?.onChange && settings?.onChange.call(null, event);
   };
 
+  const flattenedErrors = flattenErrors(errors);
+  
   return (
     <TwoColFieldRow type="multilang">
       {config.activeLanguages &&
@@ -88,17 +91,21 @@ export const FieldMultiLangInput = ({
           if (settings?.defaultValues && settings.defaultValues[lang])
             fieldProps.defaultValue = settings.defaultValues[lang];
 
-          if (errors[field_name]?.message) fieldProps.valid = undefined;
+          if (flattenedErrors[field_name]?.message) fieldProps.valid = undefined;
 
           return (
             <FieldRow key={field_id}>
               <FormControl
                 id={field_id}
-                isInvalid={errors[field_name]?.message}
+                isInvalid={flattenedErrors[field_name]?.message}
                 {...{ isRequired: field_required, isDisabled }}
               >
-                <Flex direction={{base:"column",mw:"row",t:"column"}}>
-                  <FormLabel htmlFor={field_id} mb="0.5" w={{base:"100%", mw:"30%", t:"100%"}}>
+                <Flex direction={{ base: "column", mw: "row", t: "column" }}>
+                  <FormLabel
+                    htmlFor={field_id}
+                    mb="0.5"
+                    w={{ base: "100%", mw: "30%", t: "100%" }}
+                  >
                     {label} (
                     <chakra.span textTransform="uppercase">{lang}</chakra.span>)
                   </FormLabel>
@@ -115,7 +122,7 @@ export const FieldMultiLangInput = ({
                     {...fieldProps}
                     ref={ref}
                   />
-                  <FieldErrorMessage error={errors[field_name]?.message} />
+                  <FieldErrorMessage error={flattenedErrors[field_name]?.message} />
                 </Flex>
               </FormControl>
             </FieldRow>

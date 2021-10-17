@@ -62,6 +62,9 @@
     },
     "heroImage": {
       "label": "Featured image"
+    },
+    "images": {
+      "label": "Images"
     }
   },
   "fileuploader": {
@@ -84,35 +87,210 @@
     "cancelupload": "Cancel upload",
     "error": "Unfortunately, we could not finish you upload please try again later"
   },
-  "imageuploader": {
-    "filesizebetween": "Size between {{minFileSize}} and {{maxFileSize}}",
-    "filesizebelow": "Size max. {{maxFileSize}}",
-    "filesizeabove": "Size min. {{minFileSize}}",
-    "droperror": {
-      "toolarge": "Chosen file is too large",
-      "toosmall": "Chosen file is too small",
-      "invalidtype": "Type of chosen file is not accepted"
+  "validation": {
+    "image": {
+      "required": "Please upload an image"
     },
-    "button": {
-      "deleteimage": "Delete profile image"
+    "notunique": "This valaue is not unique",
+    "mixed": {
+      "default": "This field is invalid",
+      "required": "This field is a required field",
+      "oneOf": "This field must be one of the following values: {{values}}",
+      "notOneOf": "This field must not be one of the following values: {{values}}",
+      "notType": "This field must be of the type: {{type}}",
+      "defined": "This field must be defined"
     },
-    "deleteimage": {
-      "error": "Unfortunately, we could not process you deletion request please try again later"
+    "string": {
+      "length": "This field must be exactly {{length}} characters",
+      "min": "This field must be at least {{min}} characters long",
+      "max": "This field must be at most {{max}} characters long",
+      "matches": "This field must match the following: \"{{regex}}\"",
+      "email": "This field must be a valid email address",
+      "url": "This field must be a valid URL",
+      "uuid": "This field must be a valid UUID",
+      "trim": "This field must be a trimmed string",
+      "lowercase": "This field must be a lowercase string",
+      "uppercase": "This field must be a upper case string"
     },
-    "pleasedroporclick": "Drag & drop an image here, or click to select one",
-    "uploading": "Uploading",
-    "cancelupload": "Cancel upload",
-    "error": "Unfortunately, we could not finish you upload please try again later"
-  },
-  "ui": {
-    "button": {
-      "label": {
-        "show": "Show",
-        "hide": "Hide"
+    "number": {
+      "min": "This field must be greater than or equal to {{min}}",
+      "max": "This field must be less than or equal to {{max}}",
+      "lessThan": "This field must be less than {{less}}",
+      "moreThan": "This field must be greater than {{more}}",
+      "positive": "This field must be a positive number",
+      "negative": "This field must be a negative number",
+      "integer": "This field must be an integer",
+      "nolatitude": "Longitudes are numbers between -90.00 and 90.00",
+      "nolongitude": "Longitudes are numbers between -180.00 and 180.00"
+    },
+    "date": {
+      "min": "This field must be later than {{min}}",
+      "max": "This field must be at earlier than {{max}}"
+    },
+    "boolean": {
+      "isValue": "This field must be {{value}}"
+    },
+    "object": {
+      "noUnknown": "This field has unspecified keys: {{unknown}}"
+    },
+    "array": {
+      "min": "This field must have at least {{min}} items",
+      "max": "This field must have less than or equal to {{max}} items",
+      "length": "This field must have {{length}} items",
+      "minOneItem": "Please select at least one item"
+    },
+    "slug": {
+      "invalidcharacters": "You can only use A-Z, -, and numbers",
+      "chooselocation": "Please choose a location",
+      "notahexcolor": "Please provide a valid HEX color (like #a8f or #f9ad9f"
+    },
+    "page": {
+      "login": {
+        "emailRequiredError": "Please enter your email address",
+        "passwordRequiredError": "Please enter your password"
+      },
+      "passwordrequest": {
+        "emailRequiredError": "Please enter your email address"
+      },
+      "passwordreset": {
+        "pleaseProvideYourNewPassword": "Please enter your new password",
+        "pleaseConfirmYourNewPassword": "Please confirm your new password"
+      },
+      "register": {
+        "firstNameRequiredError": "Please enter your first name",
+        "lastNameRequiredError": "Please enter your last name",
+        "emailRequiredError": "Please enter your email address",
+        "passwordRequiredError": "Please enter your password",
+        "pleaseConfirmYourPassword": "Please confirm your password",
+        "acceptedTermsRequiredError": "Please accept out terms & conditions"
       }
     }
   },
+  "form": {
+    "field": {
+      "images": {
+        "label": {
+          "image": "Image",
+          "alttext": "Alternative text",
+          "credits": "Copyright information"
+        },
+        "button": {
+          "deleteImage": "Delete image",
+          "moveUp": "Move up",
+          "moveDown": "Move down"
+        },
+        "noimages": "No additional images added. You can add further images by using the buttons below",
+        "addimage": "Add Image"
+      }
+    },
+    "datepicker": {
+      "close": "close"
+    },
+    "image": {
+      "label": {
+        "image": "Image",
+        "alttext": "Alternative text",
+        "credits": "Copyright information"
+      }
+    },
+    "unsavedchanges": "It looks like you've unsaved changes. Leave without saving?",
+    "geolocation": {
+      "lat": {
+        "label": "Latitude"
+      },
+      "lng": {
+        "label": "Longitude"
+      },
+      "button": {
+        "reset": "Reset"
+      }
+    },
+    "error": {
+      "notCorrectLatitude": "This seems not to be a latitiude value",
+      "notCorrectLongitude": "This seems not to be a longitude value"
+    },
+    "info": {
+      "pleasesafedraft": "Please save a draft to unlock further functionality"
+    }
+  },
   "module": {
+    "events": {
+      "forms": {
+        "event": {
+          "field": {
+            "dates": {
+              "clone": "Clone current line",
+              "removedate": "Remove"
+            },
+            "label": {
+              "title": "Title",
+              "slug": "Slug",
+              "description": "Description"
+            },
+            "placeholder": {
+              "title": "Event title",
+              "slug": "Slug / URL part",
+              "description": "Event description"
+            },
+            "date": {
+              "placeholder": "Date"
+            },
+            "begin": {
+              "label": "Begin"
+            },
+            "end": {
+              "label": "End"
+            }
+          },
+          "table": {
+            "column": {
+              "begin": {
+                "label": "Begin"
+              },
+              "end": {
+                "label": "End"
+              }
+            }
+          }
+        },
+        "field": {
+          "label": {
+            "isFree": "This event is free",
+            "isImported": "This event is automatically imported and updated"
+          }
+        },
+        "eventdates": {
+          "heading": "Event date(s)",
+          "table": {
+            "column": {
+              "date": {
+                "label": "Date"
+              }
+            }
+          }
+        }
+      },
+      "title": "Events",
+      "menuitem": {
+        "createevent": "Add new event",
+        "importLogs": "Import Logs",
+        "importLog": "Log"
+      },
+      "button": {
+        "create": "Add new event",
+        "edit": "Edit event",
+        "delete": "Delete event",
+        "viewLog": "View log"
+      },
+      "importDate": "Date of import",
+      "noImportErrors": "No import errors",
+      "noImportWarnings": "No import warnings",
+      "event": {
+        "title": {
+          "updatepage": "Update event"
+        }
+      }
+    },
     "forms": {
       "taxonomy": {
         "label": {
@@ -187,83 +365,6 @@
         "create": "Add user",
         "edit": "Edit user",
         "delete": "Delete user"
-      }
-    },
-    "events": {
-      "title": "Events",
-      "menuitem": {
-        "createevent": "Add new event",
-        "importLogs": "Import Logs",
-        "importLog": "Log"
-      },
-      "forms": {
-        "event": {
-          "field": {
-            "label": {
-              "title": "Title",
-              "slug": "Slug",
-              "description": "Description"
-            },
-            "placeholder": {
-              "title": "Event title",
-              "slug": "Slug / URL part",
-              "description": "Event description"
-            },
-            "date": {
-              "placeholder": "Date"
-            },
-            "begin": {
-              "label": "Begin"
-            },
-            "end": {
-              "label": "End"
-            },
-            "dates": {
-              "removedate": "Remove",
-              "clone": "Clone current line"
-            }
-          },
-          "table": {
-            "column": {
-              "begin": {
-                "label": "Begin"
-              },
-              "end": {
-                "label": "End"
-              }
-            }
-          }
-        },
-        "field": {
-          "label": {
-            "isFree": "This event is free",
-            "isImported": "This event is automatically imported and updated"
-          }
-        },
-        "eventdates": {
-          "heading": "Event date(s)",
-          "table": {
-            "column": {
-              "date": {
-                "label": "Date"
-              }
-            }
-          }
-        }
-      },
-      "button": {
-        "create": "Add new event",
-        "edit": "Edit event",
-        "delete": "Delete event",
-        "viewLog": "View log"
-      },
-      "importDate": "Date of import",
-      "noImportErrors": "No import errors",
-      "noImportWarnings": "No import warnings",
-      "event": {
-        "title": {
-          "updatepage": "Update event"
-        }
       }
     },
     "locations": {
@@ -625,6 +726,34 @@
       }
     }
   },
+  "imageuploader": {
+    "filesizebetween": "Size between {{minFileSize}} and {{maxFileSize}}",
+    "filesizebelow": "Size max. {{maxFileSize}}",
+    "filesizeabove": "Size min. {{minFileSize}}",
+    "droperror": {
+      "toolarge": "Chosen file is too large",
+      "toosmall": "Chosen file is too small",
+      "invalidtype": "Type of chosen file is not accepted"
+    },
+    "button": {
+      "deleteimage": "Delete profile image"
+    },
+    "deleteimage": {
+      "error": "Unfortunately, we could not process you deletion request please try again later"
+    },
+    "pleasedroporclick": "Drag & drop an image here, or click to select one",
+    "uploading": "Uploading",
+    "cancelupload": "Cancel upload",
+    "error": "Unfortunately, we could not finish you upload please try again later"
+  },
+  "ui": {
+    "button": {
+      "label": {
+        "show": "Show",
+        "hide": "Hide"
+      }
+    }
+  },
   "PublishStatus": {
     "select": {
       "label": "Publish status",
@@ -643,37 +772,6 @@
       "unknown": "Unknown",
       "autodraft": "Draft",
       "importedwrning": "Imported with warning(s)"
-    }
-  },
-  "form": {
-    "datepicker": {
-      "close": "close"
-    },
-    "image": {
-      "label": {
-        "image": "Image",
-        "alttext": "Alternative text",
-        "credits": "Copyright information"
-      }
-    },
-    "unsavedchanges": "It looks like you've unsaved changes. Leave without saving?",
-    "geolocation": {
-      "lat": {
-        "label": "Latitude"
-      },
-      "lng": {
-        "label": "Longitude"
-      },
-      "button": {
-        "reset": "Reset"
-      }
-    },
-    "error": {
-      "notCorrectLatitude": "This seems not to be a latitiude value",
-      "notCorrectLongitude": "This seems not to be a longitude value"
-    },
-    "info": {
-      "pleasesafedraft": "Please save a draft to unlock further functionality"
     }
   },
   "editor": {
@@ -799,82 +897,6 @@
     },
     "empty": {
       "defaultvalue": "Empty! Please update the settings"
-    }
-  },
-  "validation": {
-    "notunique": "This valaue is not unique",
-    "mixed": {
-      "default": "This field is invalid",
-      "required": "This field is a required field",
-      "oneOf": "This field must be one of the following values: {{values}}",
-      "notOneOf": "This field must not be one of the following values: {{values}}",
-      "notType": "This field must be of the type: {{type}}",
-      "defined": "This field must be defined"
-    },
-    "string": {
-      "length": "This field must be exactly {{length}} characters",
-      "min": "This field must be at least {{min}} characters long",
-      "max": "This field must be at most {{max}} characters long",
-      "matches": "This field must match the following: \"{{regex}}\"",
-      "email": "This field must be a valid email address",
-      "url": "This field must be a valid URL",
-      "uuid": "This field must be a valid UUID",
-      "trim": "This field must be a trimmed string",
-      "lowercase": "This field must be a lowercase string",
-      "uppercase": "This field must be a upper case string"
-    },
-    "number": {
-      "min": "This field must be greater than or equal to {{min}}",
-      "max": "This field must be less than or equal to {{max}}",
-      "lessThan": "This field must be less than {{less}}",
-      "moreThan": "This field must be greater than {{more}}",
-      "positive": "This field must be a positive number",
-      "negative": "This field must be a negative number",
-      "integer": "This field must be an integer",
-      "nolatitude": "Longitudes are numbers between -90.00 and 90.00",
-      "nolongitude": "Longitudes are numbers between -180.00 and 180.00"
-    },
-    "date": {
-      "min": "This field must be later than {{min}}",
-      "max": "This field must be at earlier than {{max}}"
-    },
-    "boolean": {
-      "isValue": "This field must be {{value}}"
-    },
-    "object": {
-      "noUnknown": "This field has unspecified keys: {{unknown}}"
-    },
-    "array": {
-      "min": "This field must have at least {{min}} items",
-      "max": "This field must have less than or equal to {{max}} items",
-      "length": "This field must have {{length}} items",
-      "minOneItem": "Please select at least one item"
-    },
-    "slug": {
-      "invalidcharacters": "You can only use A-Z, -, and numbers",
-      "chooselocation": "Please choose a location",
-      "notahexcolor": "Please provide a valid HEX color (like #a8f or #f9ad9f"
-    },
-    "page": {
-      "login": {
-        "emailRequiredError": "Please enter your email address",
-        "passwordRequiredError": "Please enter your password"
-      },
-      "passwordrequest": {
-        "emailRequiredError": "Please enter your email address"
-      },
-      "passwordreset": {
-        "pleaseProvideYourNewPassword": "Please enter your new password",
-        "pleaseConfirmYourNewPassword": "Please confirm your new password"
-      },
-      "register": {
-        "firstNameRequiredError": "Please enter your first name",
-        "lastNameRequiredError": "Please enter your last name",
-        "emailRequiredError": "Please enter your email address",
-        "passwordRequiredError": "Please enter your password",
-        "pleaseConfirmYourPassword": "Please confirm your password",
-        "acceptedTermsRequiredError": "Please accept out terms & conditions"
-      }
     }
   },
   "toast": {

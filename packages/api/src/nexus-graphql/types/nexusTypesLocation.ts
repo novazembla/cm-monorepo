@@ -84,6 +84,10 @@ export const Location = objectType({
       type: "Image",
     });
 
+    t.list.field("images", {
+      type: "Image",
+    });
+
     t.list.field("terms", {
       type: "Term",
     });
@@ -300,6 +304,22 @@ export const LocationQueries = extendType({
                 status: true,
                 meta: true,
                 ...daoSharedGetTranslatedSelectColumns(["alt", "credits"]),
+              },
+            },
+          };
+
+        if ((pRI?.fieldsByTypeName?.Location as any)?.images)
+          include = {
+            ...include,
+            images: {
+              select: {
+                id: true,
+                status: true,
+                meta: true,
+                ...daoSharedGetTranslatedSelectColumns(["alt", "credits"]),
+              },
+              orderBy: {
+                orderNumber: "asc",
               },
             },
           };

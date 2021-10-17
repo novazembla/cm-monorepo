@@ -26,7 +26,7 @@ import { useFormContext } from "react-hook-form";
 
 import { ApiFile, ApiFileProps } from "../ui";
 
-import { FieldErrorMessage } from ".";
+import { FieldErrorMessage, flattenErrors } from ".";
 
 import { authentication } from "~/services";
 
@@ -376,11 +376,13 @@ export const FieldFileUploader = ({
       break;
   }
 
+  const flattenedErrors = flattenErrors(errors);
+
   return (
     <>
       <FormControl
         id={id}
-        isInvalid={errors[name]?.message || isDragReject}
+        isInvalid={flattenedErrors[name]?.message || isDragReject}
         {...{ isRequired, isDisabled }}
       >
         <FormLabel htmlFor={id} mb="0.5">
@@ -504,7 +506,7 @@ export const FieldFileUploader = ({
         )}
 
         <input
-          {...{ valid: !errors[name]?.message ? "valid" : undefined }}
+          {...{ valid: !flattenedErrors[name]?.message ? "valid" : undefined }}
           type="hidden"
           defaultValue={currentFile?.id}
           {...register(name, {
@@ -512,7 +514,7 @@ export const FieldFileUploader = ({
           })}
         />
 
-        <FieldErrorMessage error={errors[name]?.message} />
+        <FieldErrorMessage error={flattenedErrors[name]?.message} />
       </FormControl>
     </>
   );

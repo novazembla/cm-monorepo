@@ -68,26 +68,36 @@ const doChores = async () => {
       await Promise.all(
         images.map(async (image) => {
           if (image?.meta) {
-            const meta = image?.meta as any;
+            const { meta } = image as any;
             try {
               const uploadPath = `${apiConfig.baseDir}/${apiConfig.publicDir}${meta.uploadFolder}/`;
 
-              Object.keys(meta.availableSizes).forEach((size) => {
-                const fileName = meta.availableSizes[size].url.split("/").pop();
-                unlinkSync(`${uploadPath}${fileName}`);
-              });
+              if (meta?.availableSizes) {
+                Object.keys(meta.availableSizes).forEach((size) => {
+                  const fileName = meta.availableSizes[size].url
+                    .split("/")
+                    .pop();
+                  unlinkSync(`${uploadPath}${fileName}`);
+                });
+              } else if (meta?.originalFilePath) {
+                unlinkSync(meta?.originalFilePath);
+              }
+
               await prisma.image.delete({
                 where: {
                   id: image.id,
                 },
               });
             } catch (err: any) {
-              postMessage(`Error ${err.message}`);
+              postMessage(
+                `[WORKER:dbHousekeeping]: image cleanup error - ${err.message}`
+              );
             }
           }
         })
       );
     }
+
     postMessage(
       `[WORKER:dbHousekeeping]: Removed ${images.length} image(s) and their files`
     );
@@ -109,7 +119,8 @@ const doChores = async () => {
           if (file?.meta) {
             const meta = file?.meta as any;
             try {
-              unlinkSync(`${meta.originalFilePath}`);
+              if (meta?.originalFilePath)
+                unlinkSync(`${meta.originalFilePath}`);
 
               await prisma.file.delete({
                 where: {
@@ -117,7 +128,9 @@ const doChores = async () => {
                 },
               });
             } catch (err: any) {
-              postMessage(`Error ${err.message}`);
+              postMessage(
+                `[WORKER:dbHousekeeping]: file cleanup error - ${err.message}`
+              );
             }
           }
         })

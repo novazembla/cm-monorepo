@@ -60,6 +60,10 @@ export const TourStop = objectType({
       type: "Image",
     });
 
+    t.list.field("images", {
+      type: "Image",
+    });
+
     t.field("location", {
       type: "Location",
     });
@@ -149,7 +153,6 @@ export const TourStopQueries = extendType({
         if ((pRI?.fieldsByTypeName?.TourStop as any)?.heroImage) {
           include = {
             ...include,
-            // TODO: make better
             heroImage: {
               select: {
                 id: true,
@@ -183,6 +186,20 @@ export const TourStopQueries = extendType({
           // };
         }
 
+        if ((pRI?.fieldsByTypeName?.TourStop as any)?.images) {
+          include = {
+            ...include,
+            images: {
+              select: {
+                id: true,
+                status: true,
+                meta: true,
+                ...daoSharedGetTranslatedSelectColumns(["alt", "credits"]),
+              },
+            },
+          };
+        }
+
         return daoTourStopQuery(
           where,
           Object.keys(include).length > 0 ? include : undefined
@@ -200,6 +217,7 @@ export const TourStopCreateInput = inputObjectType({
     t.nonNull.json("teaser");
     t.nonNull.json("description");
     t.nonNull.int("locationId");
+    t.json("images");
   },
 });
 
@@ -212,6 +230,7 @@ export const TourStopUpdateInput = inputObjectType({
     t.nonNull.json("description");
     t.nonNull.int("locationId");
     t.json("heroImage");
+    t.json("images");
   },
 });
 
@@ -309,7 +328,13 @@ export const TourStopMutations = extendType({
         };
 
         const tourStop = await daoTourStopUpdate(args.id, {
-          ...pick(args.data, ["title", "teaser", "description", "heroImage"]),
+          ...pick(args.data, [
+            "title",
+            "teaser",
+            "description",
+            "heroImage",
+            "images",
+          ]),
           ...connect,
         });
 

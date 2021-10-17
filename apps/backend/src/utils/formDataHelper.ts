@@ -76,7 +76,6 @@ export const multiLangImageMetaRHFormDataToJson = (
   imageMultiLangFields: string[],
   activeLanguages: string[]
 ) => {
-  
   return imageMultiLangFields.reduce((accFields, key) => {
     return {
       ...activeLanguages.reduce((accLangs, lang) => {
@@ -86,58 +85,49 @@ export const multiLangImageMetaRHFormDataToJson = (
         };
       }, accFields),
     };
-  },{});
+  }, {});
 };
 
-export const multiLangImageTranslationsJsonRHFormData = (
-  data: any,
-  imageFields: string[],
+export const multiLangImageMetaRHFormFieldsDataToJson = (
+  fieldData: any,
   imageMultiLangFields: string[],
   activeLanguages: string[]
 ) => {
-  if (!data) return {};
-  
- 
-  return imageFields.reduce((acc: any, imgFieldName: any) => {
-    // if no data is given we still want to return the fields to ensure that they are also correctly reset.
-    if (!(imgFieldName in data) || !data[imgFieldName])
-      return {
-        ...acc,
-        ...imageMultiLangFields.reduce((accFields, fieldName) => {
-          return {
-            ...acc,
-            ...activeLanguages.reduce((accLangs, lang) => {
-              const key = `${imgFieldName}_${fieldName}_${lang}`;
-              return {
-                ...accLangs,
-                [key]: "",
-              };
-            }, accFields),
-          };
-        }, acc),
-      }; 
-    
+  return imageMultiLangFields.reduce((accFields, key) => {
     return {
-      ...acc,
-      ...imageMultiLangFields.reduce((accFields, fieldName) => {
-        if (!data[imgFieldName] || !(fieldName in data[imgFieldName])) return accFields;
+      ...activeLanguages.reduce((accLangs, lang) => {
+        return {
+          ...accLangs,
+          [`${key}_${lang}`]: fieldData[`${key}_${lang}`] ?? "",
+        };
+      }, accFields),
+    };
+  }, {});
+};
+
+export const multiLangTranslationsJsonRHFormData = (
+  data: any,
+  imageMultiLangFields: string[],
+  activeLanguages: string[],
+  prefix?: string
+) => {
+  if (!data) return {};
+
+  return imageMultiLangFields.reduce((accFields, fieldName) => {
+    return {
+      ...accFields,
+      ...activeLanguages.reduce((accLangs, lang) => {
+        if (!data[fieldName] || !(lang in data[fieldName])) return accLangs;
+
+        const key = `${prefix ? `${prefix}_` : ""}${fieldName}_${lang}`;
 
         return {
-          ...acc,
-          ...activeLanguages.reduce((accLangs, lang) => {
-            if (!data[imgFieldName][fieldName] || !(lang in data[imgFieldName][fieldName])) return accLangs;
-
-            const key = `${imgFieldName}_${fieldName}_${lang}`;
-
-            return {
-              ...accLangs,
-              [key]: data[imgFieldName][fieldName][lang],
-            };
-          }, accFields),
+          ...accLangs,
+          [key]: data[fieldName][lang],
         };
-      }, acc),
+      }, accFields),
     };
-  }, {} as any);
+  }, {});
 };
 
 export const multiLangSlugUniqueError = (

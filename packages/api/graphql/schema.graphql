@@ -204,6 +204,7 @@ type Location {
   geoCodingInfo: JSON
   heroImage: Image
   id: Int!
+  images: [Image]
   lat: Float
   lng: Float
   offers: JSON
@@ -526,6 +527,7 @@ type TourStop {
   description: JSON
   heroImage: Image
   id: Int!
+  images: [Image]
   location: Location
   locationId: Int
   number: Int
@@ -538,6 +540,7 @@ type TourStop {
 
 input TourStopCreateInput {
   description: JSON!
+  images: JSON
   locationId: Int!
   teaser: JSON!
   title: JSON!
@@ -558,6 +561,7 @@ type TourStopQueryResult {
 input TourStopUpdateInput {
   description: JSON!
   heroImage: JSON
+  images: JSON
   locationId: Int!
   teaser: JSON!
   title: JSON!

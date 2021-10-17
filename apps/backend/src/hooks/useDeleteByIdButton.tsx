@@ -11,6 +11,7 @@ import { useTranslation } from "react-i18next";
 type dZADState = {
   open: boolean;
   id: number | undefined;
+  onDelete: Function | undefined;
 };
 
 type useDeleteByIdButtonOptions = {
@@ -35,13 +36,15 @@ export const useDeleteByIdButton = (
   const [dZAD, setDZAD] = useState<dZADState>({
     open: false,
     id: undefined,
+    onDelete: undefined,
   });
   const [isDeleteError, setIsDeleteError] = useState(false);
-
-  const deleteButtonOnClick = (id: number) => {
+  
+  const deleteButtonOnClick = (id: number, onDelete?: (id: number) => void) => {
     setDZAD({
       open: true,
       id,
+      onDelete,
     });
   };
 
@@ -49,6 +52,7 @@ export const useDeleteByIdButton = (
     setDZAD({
       open: false,
       id: undefined,
+      onDelete: undefined,
     });
   };
 
@@ -62,9 +66,14 @@ export const useDeleteByIdButton = (
           },
         });
         if (!errors) {
+
+          if (typeof dZAD.onDelete === "function")
+            dZAD.onDelete.call(null, dZAD.id)
+
           setDZAD({
             open: false,
             id: undefined,
+            onDelete: undefined,
           });
 
           refetch.call(null);
@@ -78,6 +87,7 @@ export const useDeleteByIdButton = (
           setDZAD({
             open: false,
             id: undefined,
+            onDelete: undefined,
           });
         }
       } else {
@@ -85,6 +95,7 @@ export const useDeleteByIdButton = (
         setDZAD({
           open: false,
           id: undefined,
+          onDelete: undefined,
         });
       }
     } catch (err) {
@@ -92,6 +103,7 @@ export const useDeleteByIdButton = (
       setDZAD({
         open: false,
         id: undefined,
+        onDelete: undefined,
       });
     }
   };

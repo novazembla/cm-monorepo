@@ -19,7 +19,7 @@ import { RiCloseFill } from "@hacknug/react-icons/ri";
 import { usePopper } from "@chakra-ui/popper";
 
 import { getMultilangValue } from "~/utils";
-import { FieldErrorMessage } from "~/components/forms";
+import { FieldErrorMessage, flattenErrors } from ".";
 
 export interface FieldSingleSelectAutocompleteItem {
   label: string;
@@ -157,10 +157,12 @@ export const FieldSingleSelectAutocomplete = ({
     itemToString: resultItemToString,
   });
 
+  const flattenedErrors = flattenErrors(errors);
+
   return (
     <FormControl
       id={id}
-      isInvalid={errors[name]?.message}
+      isInvalid={flattenedErrors[name]?.message}
       {...{ isRequired, isDisabled }}
     >
       <FormLabel htmlFor={id} mb="0.5">
@@ -339,14 +341,14 @@ export const FieldSingleSelectAutocomplete = ({
       </Box>
 
       <input
-        {...{ valid: !errors[name]?.message ? "valid" : undefined }}
+        {...{ valid: !flattenedErrors[name]?.message ? "valid" : undefined }}
         type="hidden"
         defaultValue={currentItem?.id}
         {...register(name, {
           required: isRequired,
         })}
       />
-      <FieldErrorMessage error={errors[name]?.message} />
+      <FieldErrorMessage error={flattenedErrors[name]?.message} />
     </FormControl>
   );
 };

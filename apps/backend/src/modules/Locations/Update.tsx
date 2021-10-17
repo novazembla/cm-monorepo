@@ -52,12 +52,14 @@ import {
   multiLangJsonToRHFormData,
   multiLangRHFormDataToJson,
   multiLangSlugUniqueError,
+  fieldImagesRFHFormDataToData,
   multiLangImageMetaRHFormDataToJson,
-  multiLangImageTranslationsJsonRHFormData,
+  multiLangTranslationsJsonRHFormData,
   mapGroupOptionsToData,
   mapDataToPrimaryTerms,
   mapPrimaryTermsToData,
   mapDataToGroupOptions,
+  fieldImagesParseIncomingImages,
 } from "~/utils";
 
 import { MultiLangValue } from "~/components/ui";
@@ -98,6 +100,13 @@ export const locationAndContentAuthorsQueryGQL = gql`
       events {
         id
         title
+      }
+      images {
+        id
+        meta
+        status
+        alt
+        credits
       }
       heroImage {
         id
@@ -216,8 +225,6 @@ const Update = () => {
       }, {});
     }
 
-    console.log(data.location.heroImage);
-    
     reset({
       ...multiLangJsonToRHFormData(
         filteredOutputByWhitelist(
@@ -234,6 +241,7 @@ const Update = () => {
         data.moduleTaxonomies
       ),
       heroImage: data.location.heroImage?.id,
+      images: fieldImagesParseIncomingImages(data.location.images),
       lat: data.location?.lat,
       lng: data.location?.lng,
       eventLocationId: data.location?.eventLocationId
@@ -261,11 +269,11 @@ const Update = () => {
         "youtube",
         "website",
       ]),
-      ...multiLangImageTranslationsJsonRHFormData(
-        data.location,
-        ["heroImage"],
+      ...multiLangTranslationsJsonRHFormData(
+        data?.location?.heroImage,
         ["alt", "credits"],
-        config.activeLanguages
+        config.activeLanguages,
+        "heroImage"
       ),
     });
   }, [reset, data, config.activeLanguages]);
@@ -277,6 +285,7 @@ const Update = () => {
     setIsNavigatingAway(false);
     try {
       if (appUser) {
+        
         const heroImage =
           newData.heroImage &&
           !isNaN(newData.heroImage) &&
@@ -287,37 +296,12 @@ const Update = () => {
                     id: newData.heroImage,
                   },
                   update: multiLangImageMetaRHFormDataToJson(
-                      newData,
-                      "heroImage",
-                      ["alt", "credits"],
-                      config.activeLanguages
-                    ),
-                  
+                    newData,
+                    "heroImage",
+                    ["alt", "credits"],
+                    config.activeLanguages
+                  ),
                 },
-                // images: {
-                //   set: [{
-                //     id: 17
-                //   }],
-                //   update: [
-                //     {
-                //       where: {
-                //         id: 17,
-                //       },
-                //       data: {
-                //         alt_de: "17xxx alt_de updated title",
-                //         alt_en: "17xxx alt_en updated title",
-                //         credits_de: "17xxx credits_de updated title",
-                //         credits_en: "17xxx credits_en updated title",
-                //         // ...multiLangImageMetaRHFormDataToJson(
-                //         //   newData,
-                //         //   "heroImage",
-                //         //   ["alt", "credits"],
-                //         //   config.activeLanguages
-                //         // ),
-                //       },
-                //     },
-                //   ],
-                // },
               }
             : undefined;
 
@@ -357,59 +341,52 @@ const Update = () => {
           );
         }
 
-        const { errors } = await firstMutation(
-          parseInt(router.query.id, 10),
-          {
-            owner: {
-              connect: {
-                id: newData.ownerId,
-              },
+        const { errors } = await firstMutation(parseInt(router.query.id, 10), {
+          owner: {
+            connect: {
+              id: newData.ownerId,
             },
-            status: newData.status,
-            lat: newData.lat,
-            lng: newData.lng,
-            eventLocationId: newData.eventLocationId
-              ? parseInt(newData.eventLocationId)
-              : undefined,
-            agency: newData.agency,
+          },
+          status: newData.status,
+          lat: newData.lat,
+          lng: newData.lng,
+          eventLocationId: newData.eventLocationId
+            ? parseInt(newData.eventLocationId)
+            : undefined,
+          agency: newData.agency,
 
-            terms: {
-              set: terms,
-            },
-            ...primaryTerms,
-            address: pick(newData, [
-              "co",
-              "street1",
-              "street2",
-              "houseNumber",
-              "city",
-              "postCode",
-            ]),
-            contactInfo: pick(newData, [
-              "email1",
-              "email2",
-              "phone1",
-              "phone2",
-            ]),
-            socialMedia: pick(newData, [
-              "facebook",
-              "twitter",
-              "instagram",
-              "youtube",
-              "website",
-            ]),
-            ...heroImage,
-            ...filteredOutputByWhitelist(
-              multiLangRHFormDataToJson(
-                newData,
-                multiLangFields,
-                config.activeLanguages
-              ),
-              [],
-              multiLangFields
+          terms: {
+            set: terms,
+          },
+          ...primaryTerms,
+          address: pick(newData, [
+            "co",
+            "street1",
+            "street2",
+            "houseNumber",
+            "city",
+            "postCode",
+          ]),
+          contactInfo: pick(newData, ["email1", "email2", "phone1", "phone2"]),
+          socialMedia: pick(newData, [
+            "facebook",
+            "twitter",
+            "instagram",
+            "youtube",
+            "website",
+          ]),
+          ...heroImage,
+          ...fieldImagesRFHFormDataToData(newData),
+          ...filteredOutputByWhitelist(
+            multiLangRHFormDataToJson(
+              newData,
+              multiLangFields,
+              config.activeLanguages
             ),
-          }
-        );
+            [],
+            multiLangFields
+          ),
+        });
 
         if (!errors) {
           successToast();

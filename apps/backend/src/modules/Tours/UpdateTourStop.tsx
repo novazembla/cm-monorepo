@@ -43,8 +43,10 @@ import {
   multiLangJsonToRHFormData,
   multiLangRHFormDataToJson,
   multiLangSlugUniqueError,
+  fieldImagesRFHFormDataToData,
+  fieldImagesParseIncomingImages,
   multiLangImageMetaRHFormDataToJson,
-  multiLangImageTranslationsJsonRHFormData,
+  multiLangTranslationsJsonRHFormData,
 } from "~/utils";
 
 import { TourStopForm } from "./forms";
@@ -96,12 +98,13 @@ const UpdateTourStop = () => {
       ),
       locationId: data.tourStopRead?.location?.id,
       tourId: data.tourStopRead?.tourId,
+      images: fieldImagesParseIncomingImages(data.tourStopRead.images),
       heroImage: data?.tourStopRead?.heroImage?.id,
-      ...multiLangImageTranslationsJsonRHFormData(
-        data?.tour,
-        ["heroImage"],
+      ...multiLangTranslationsJsonRHFormData(
+        data?.tourStopRead?.heroImage,
         ["alt", "credits"],
-        config.activeLanguages
+        config.activeLanguages,
+        "heroImage",
       ),
     });
   }, [reset, data, config.activeLanguages]);
@@ -129,33 +132,10 @@ const UpdateTourStop = () => {
                     config.activeLanguages
                   ),
                 },
-                // images: {
-                //   set: [{
-                //     id: 17
-                //   }],
-                //   update: [
-                //     {
-                //       where: {
-                //         id: 17,
-                //       },
-                //       data: {
-                //         alt_de: "17xxx alt_de updated title",
-                //         alt_en: "17xxx alt_en updated title",
-                //         credits_de: "17xxx credits_de updated title",
-                //         credits_en: "17xxx credits_en updated title",
-                //         // ...multiLangImageMetaRHFormDataToJson(
-                //         //   newData,
-                //         //   "heroImage",
-                //         //   ["alt", "credits"],
-                //         //   config.activeLanguages
-                //         // ),
-                //       },
-                //     },
-                //   ],
-                // },
               }
             : undefined;
 
+        console.log(fieldImagesRFHFormDataToData(newData));
         const { errors } = await firstMutation(
           parseInt(router.query.tourStopId, 10),
           {
@@ -169,6 +149,7 @@ const UpdateTourStop = () => {
               multiLangFieldsTourStop
             ),
             ...heroImage,
+            ...fieldImagesRFHFormDataToData(newData),
             locationId: newData.locationId,
           }
         );

@@ -43,7 +43,8 @@ const storage = multer.diskStorage({
 export const postImageUpload = multer({ storage });
 
 const createImageMetaInfo = (
-  file: Express.Multer.File
+  file: Express.Multer.File,
+  type: string
 ): {
   fileNanoId: string;
   metainfo: ApiImageMetaInformation;
@@ -65,7 +66,7 @@ const createImageMetaInfo = (
     originalFileUrl: `${apiConfig.baseUrl.api}${uploadFolder}/${file.filename}`,
     originalFilePath: file.path,
     mimeType: file.mimetype,
-    imageType: "square",
+    imageType: type as any,
     size: file.size,
   };
 
@@ -98,7 +99,10 @@ export const postImage = async (
     try {
       if (req.body.ownerId && !Number.isNaN(req.body.ownerId)) {
         if (req.file) {
-          const { fileNanoId, metainfo } = createImageMetaInfo(req.file);
+          const { fileNanoId, metainfo } = createImageMetaInfo(
+            req.file,
+            "normal"
+          );
 
           let connectWith;
           try {
@@ -162,7 +166,10 @@ export const postProfileImage = async (
     try {
       if (req.body.ownerId && !Number.isNaN(req.body.ownerId)) {
         if (req.file) {
-          const { fileNanoId, metainfo } = createImageMetaInfo(req.file);
+          const { fileNanoId, metainfo } = createImageMetaInfo(
+            req.file,
+            "square"
+          );
 
           const image = await imageCreate(
             parseInt(req.body.ownerId, 10),

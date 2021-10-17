@@ -8,7 +8,7 @@ import {
   VisuallyHidden,
 } from "@chakra-ui/react";
 
-import FieldErrorMessage from "./FieldErrorMessage";
+import { FieldErrorMessage, flattenErrors } from ".";
 
 export interface FieldSelectSettings {
   onChange?: ChangeEventHandler;
@@ -59,12 +59,14 @@ export const FieldSelect = ({
 
   fieldProps.placeholder = settings?.placeholder ?? undefined;
 
-  if (errors[name]?.message) fieldProps.valid = undefined;
+  const flattenedErrors = flattenErrors(errors);
+
+  if (flattenedErrors[name]?.message) fieldProps.valid = undefined;
 
   return (
     <FormControl
       id={id}
-      isInvalid={errors[name]?.message}
+      isInvalid={flattenedErrors[name]?.message}
       {...{ isRequired, isDisabled }}
     >
       {settings?.hideLabel ? (
@@ -114,7 +116,7 @@ export const FieldSelect = ({
         }}
       />
 
-      <FieldErrorMessage error={errors[name]?.message} />
+      <FieldErrorMessage error={flattenedErrors[name]?.message} />
     </FormControl>
   );
 };

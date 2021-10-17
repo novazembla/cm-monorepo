@@ -2,7 +2,7 @@ import React from "react";
 import { Checkbox, FormControl, Flex } from "@chakra-ui/react";
 import { useFormContext } from "react-hook-form";
 
-import { FieldErrorMessage } from ".";
+import { FieldErrorMessage, flattenErrors } from ".";
 
 export const FieldCheckbox = ({
   name,
@@ -22,18 +22,21 @@ export const FieldCheckbox = ({
     formState: { errors },
   } = useFormContext();
 
+  const flattenedErrors = flattenErrors(errors);
+
+
   return (
     <FormControl
       mt="1"
       {...{ isRequired, isDisabled }}
-      isInvalid={!!errors[name]?.message}
+      isInvalid={!!flattenedErrors[name]?.message}
     >
       <Flex alignItems="center">
         <Checkbox
           id={name}
           mt="1"
           key={`key-${name}`}
-          isInvalid={!!errors[name]?.message}
+          isInvalid={!!flattenedErrors[name]?.message}
           {...{ isRequired, isDisabled, defaultChecked }}
           {...register(name, { required: isRequired })}
           display="flex"
@@ -41,7 +44,7 @@ export const FieldCheckbox = ({
           {label}
         </Checkbox>
       </Flex>
-      <FieldErrorMessage error={errors[name]?.message} />
+      <FieldErrorMessage error={flattenedErrors[name]?.message} />
     </FormControl>
   );
 };

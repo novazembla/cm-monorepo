@@ -8,7 +8,7 @@ import {
   NumberInputField,
 } from "@chakra-ui/react";
 
-import FieldErrorMessage from "./FieldErrorMessage";
+import { FieldErrorMessage, flattenErrors } from ".";
 
 export interface FieldNumberSettings {
   onChange?: (value: number) => void;
@@ -120,10 +120,12 @@ export const FieldNumberInput = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const flattenedErrors = flattenErrors(errors);
+
   return (
     <FormControl
       id={id}
-      isInvalid={errors[name]?.message}
+      isInvalid={flattenedErrors[name]?.message}
       {...{ isRequired, isDisabled }}
     >
       <FormLabel htmlFor={id} mb="0.5">
@@ -195,7 +197,7 @@ export const FieldNumberInput = ({
           );
         }}
       />
-      <FieldErrorMessage error={errors[name]?.message} />
+      <FieldErrorMessage error={flattenedErrors[name]?.message} />
     </FormControl>
   );
 };

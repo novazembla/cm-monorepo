@@ -2,7 +2,7 @@ import React from "react";
 import { Switch, FormControl, Flex, chakra } from "@chakra-ui/react";
 import { useFormContext, Controller } from "react-hook-form";
 
-import { FieldErrorMessage } from ".";
+import { FieldErrorMessage, flattenErrors } from ".";
 
 export const FieldSwitch = ({
   name,
@@ -28,11 +28,13 @@ export const FieldSwitch = ({
     formState: { errors },
   } = useFormContext();
 
+  const flattenedErrors = flattenErrors(errors);
+
   return (
     <FormControl
       mt="1"
       {...{ isRequired, isDisabled, isReadOnly }}
-      isInvalid={!!errors[name]?.message}
+      isInvalid={!!flattenedErrors[name]?.message}
     >
       <Flex alignItems="center">
         <Controller
@@ -50,7 +52,7 @@ export const FieldSwitch = ({
               onBlur={onBlur}
               isDisabled={isDisabled}
               isChecked={typeof isChecked !== "undefined" ? !!isChecked : value}
-              isInvalid={!!errors[name]?.message}
+              isInvalid={!!flattenedErrors[name]?.message}
               colorScheme={colorScheme}
               isRequired={isRequired}
               isReadOnly={isReadOnly}
@@ -60,7 +62,7 @@ export const FieldSwitch = ({
           )}}
         />
       </Flex>
-      <FieldErrorMessage error={errors[name]?.message} />
+      <FieldErrorMessage error={flattenedErrors[name]?.message} />
     </FormControl>
   );
 };

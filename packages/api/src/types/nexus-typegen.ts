@@ -142,6 +142,7 @@ export interface NexusGenInputs {
   }
   TourStopCreateInput: { // input type
     description: NexusGenScalars['JSON']; // JSON!
+    images?: NexusGenScalars['JSON'] | null; // JSON
     locationId: number; // Int!
     teaser: NexusGenScalars['JSON']; // JSON!
     title: NexusGenScalars['JSON']; // JSON!
@@ -154,6 +155,7 @@ export interface NexusGenInputs {
   TourStopUpdateInput: { // input type
     description: NexusGenScalars['JSON']; // JSON!
     heroImage?: NexusGenScalars['JSON'] | null; // JSON
+    images?: NexusGenScalars['JSON'] | null; // JSON
     locationId: number; // Int!
     teaser: NexusGenScalars['JSON']; // JSON!
     title: NexusGenScalars['JSON']; // JSON!
@@ -340,6 +342,7 @@ export interface NexusGenObjects {
     geoCodingInfo?: NexusGenScalars['JSON'] | null; // JSON
     heroImage?: NexusGenRootTypes['Image'] | null; // Image
     id: number; // Int!
+    images?: Array<NexusGenRootTypes['Image'] | null> | null; // [Image]
     lat?: number | null; // Float
     lng?: number | null; // Float
     ownerId: number; // Int!
@@ -471,6 +474,7 @@ export interface NexusGenObjects {
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
     heroImage?: NexusGenRootTypes['Image'] | null; // Image
     id: number; // Int!
+    images?: Array<NexusGenRootTypes['Image'] | null> | null; // [Image]
     location?: NexusGenRootTypes['Location'] | null; // Location
     locationId?: number | null; // Int
     number?: number | null; // Int
@@ -639,6 +643,7 @@ export interface NexusGenFieldTypes {
     geoCodingInfo: NexusGenScalars['JSON'] | null; // JSON
     heroImage: NexusGenRootTypes['Image'] | null; // Image
     id: number; // Int!
+    images: Array<NexusGenRootTypes['Image'] | null> | null; // [Image]
     lat: number | null; // Float
     lng: number | null; // Float
     offers: NexusGenScalars['JSON'] | null; // JSON
@@ -870,6 +875,7 @@ export interface NexusGenFieldTypes {
     description: NexusGenScalars['JSON'] | null; // JSON
     heroImage: NexusGenRootTypes['Image'] | null; // Image
     id: number; // Int!
+    images: Array<NexusGenRootTypes['Image'] | null> | null; // [Image]
     location: NexusGenRootTypes['Location'] | null; // Location
     locationId: number | null; // Int
     number: number | null; // Int
@@ -1037,6 +1043,7 @@ export interface NexusGenFieldTypeNames {
     geoCodingInfo: 'JSON'
     heroImage: 'Image'
     id: 'Int'
+    images: 'Image'
     lat: 'Float'
     lng: 'Float'
     offers: 'JSON'
@@ -1268,6 +1275,7 @@ export interface NexusGenFieldTypeNames {
     description: 'JSON'
     heroImage: 'Image'
     id: 'Int'
+    images: 'Image'
     location: 'Location'
     locationId: 'Int'
     number: 'Int'
