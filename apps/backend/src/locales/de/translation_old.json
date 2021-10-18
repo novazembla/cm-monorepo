@@ -247,5 +247,15 @@
   },
   "apifile": {
     "fileUploadedWithFilename": "Datei hochgeladen und mit dem Dateinamen gespeichert:"
+  },
+  "mainnav": {
+    "dashboard": {
+      "title": "Startseite"
+    }
+  },
+  "page": {
+    "emailconfirmation": {
+      "button_goto_dashboard": "Gehe zum Dashboard"
+    }
   }
 }

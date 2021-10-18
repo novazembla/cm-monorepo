@@ -169,6 +169,7 @@ const Update = () => {
     handleSubmit,
     reset,
     setError,
+    setValue,
     formState: { isSubmitting, isDirty },
   } = formMethods;
 
@@ -246,6 +247,7 @@ const Update = () => {
       images: fieldImagesParseIncomingImages(data.location.images),
       lat: data.location?.lat,
       lng: data.location?.lng,
+      geoCodingInfo: data?.location?.geoCodingInfo,
       eventLocationId: data.location?.eventLocationId
         ? parseInt(data.location?.eventLocationId)
         : undefined,
@@ -360,7 +362,7 @@ const Update = () => {
             ? parseInt(newData.eventLocationId)
             : undefined,
           agency: newData.agency,
-
+          geoCodingInfo: newData.geoCodingInfo,
           terms: {
             set: terms,
           },
@@ -466,6 +468,11 @@ const Update = () => {
                 data={data}
                 setActiveUploadCounter={setActiveUploadCounter}
                 validationSchema={extendedValidationSchema}
+                clearAlternatives={() => {
+                  setValue("geoCodingInfo", "{}", {
+                    shouldDirty: true
+                  })
+                }}
               />
 
               {data && Array.isArray(data?.location?.events) && (

@@ -61,22 +61,23 @@ const ScrollToTop = () => {
     };
   }, [pathname, dispatch]);
 
-  return null;
+  return (
+    <span
+      className="sr-only"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+    >
+      Navigated to {pathname}
+    </span>
+  );
 };
 
 const App = () => {
   return (
     <AppProviders>
       <SettingsLoader />
-      <span
-        className="sr-only"
-        role="status"
-        aria-live="polite"
-        aria-atomic="true"
-      >
-        Navigated to app/dashboard page.{" "}
-        {/* TODO: announce change, how is this best done? */}
-      </span>
+
       <Suspense fallback={<LoadingIcon type="light" size={120} />}>
         <BrowserRouter>
           <AuthenticationSessionActiveGate

@@ -679,33 +679,33 @@ const doChores = async () => {
                     }
                   });
 
-                  const requiredHeadersCheck = Object.keys(
-                    importRequiredHeaders
-                  ).reduce((agg, rhKey) => {
-                    return {
-                      ...agg,
-                      [rhKey]: !!importRequiredHeaders[rhKey].find((key) =>
-                        mappedHeaders.includes(key)
-                      ),
-                    };
-                  }, {} as any);
+                  // const requiredHeadersCheck = Object.keys(
+                  //   importRequiredHeaders
+                  // ).reduce((agg, rhKey) => {
+                  //   return {
+                  //     ...agg,
+                  //     [rhKey]: !!importRequiredHeaders[rhKey].find((key) =>
+                  //       mappedHeaders.includes(key)
+                  //     ),
+                  //   };
+                  // }, {} as any);
 
-                  Object.keys(requiredHeadersCheck).forEach((key) => {
-                    if (!requiredHeadersCheck[key]) {
-                      const keys = importRequiredHeaders[key].map((k) => {
-                        return importHeaders[k][lang];
-                      });
-                      warnings.push(
-                        lang === "de"
-                          ? `Konnte verpflichtende Spalte(n) "${keys.join(
-                              '" or "'
-                            )}" nicht in der CSV-Datei finden`
-                          : `Required column "${keys.join(
-                              '" or "'
-                            )}" not found in CSV.`
-                      );
-                    }
-                  });
+                  // Object.keys(requiredHeadersCheck).forEach((key) => {
+                  //   if (!requiredHeadersCheck[key]) {
+                  //     const keys = importRequiredHeaders[key].map((k) => {
+                  //       return importHeaders[k][lang];
+                  //     });
+                  //     warnings.push(
+                  //       lang === "de"
+                  //         ? `Konnte verpflichtende Spalte(n) "${keys.join(
+                  //             '" or "'
+                  //           )}" nicht in der CSV-Datei finden`
+                  //         : `Required column "${keys.join(
+                  //             '" or "'
+                  //           )}" not found in CSV.`
+                  //     );
+                  //   }
+                  // });
 
                   return mappedHeaders;
                 },

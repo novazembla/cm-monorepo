@@ -93,8 +93,8 @@ if (config.enableOpenRegistration) {
 
 export const privateRoutes: RoutePrivateParams[] = [
   {
-    key: "dashboard",
-    path: "/dashboard",
+    key: "homepage",
+    path: "/homepage",
     component: DashBoard,
     exact: true,
     ...dashboadModuleAccessRules,

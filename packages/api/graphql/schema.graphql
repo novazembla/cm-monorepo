@@ -263,6 +263,7 @@ input LocationUpsertInput {
   contactInfo: JSON
   description: JSON
   eventLocationId: Int
+  geoCodingInfo: JSON
   heroImage: JSON
   images: JSON
   lat: Float

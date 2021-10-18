@@ -11,9 +11,6 @@
     }
   },
   "mainnav": {
-    "dashboard": {
-      "title": "Startseite"
-    },
     "locations": {
       "title": "Kartenpunkte"
     },
@@ -31,6 +28,9 @@
     },
     "users": {
       "title": "BenutzerInnen"
+    },
+    "homepage": {
+      "title": "Startseite"
     },
     "settings": {
       "title": "Einstellungen"
@@ -216,6 +216,12 @@
       },
       "button": {
         "reset": "Zurücksetzen"
+      },
+      "alternatives": {
+        "info": "Wärend des Imports wurden mehrere potentiell richtige Adressen gefunden. Die dem 'Zentrum der Schwerkraft' nächste wurde verwendet. Alle Alternativen können Sie hier finden.",
+        "distance": "Distanz",
+        "useAddress": "Adresse nutzen",
+        "clearAlternatives": "Auswahl akzeptieren und alternativen löschen"
       }
     },
     "error": {
@@ -381,12 +387,12 @@
       }
     },
     "locations": {
-      "title": "Veranstaltungsort",
+      "title": "Kartenpunkte",
       "menuitem": {
         "dataExports": "Export",
         "importLogs": "Import Logs",
-        "exports": "Exports",
-        "createlocation": "Neuen Veranstaltungsort hinzufügen",
+        "exports": "Exporte",
+        "createlocation": "Neuen Kartenpunkt hinzufügen",
         "imports": "Importe",
         "createimport": "Neuen Import hinzufügen"
       },
@@ -458,15 +464,15 @@
               "accessibilityInformation": "Informationen zur Barrierefreiheit"
             },
             "placeholder": {
-              "title": "Titel des Veranstaltungsortes",
+              "title": "Titel des Kartenpunktes",
               "slug": "Slug / URL Zusatz",
-              "description": "Beschreibung des Veranstaltungsortes",
-              "offers": "Angebote des Veranstaltungsortes",
+              "description": "Beschreibung des Kartenpunktes",
+              "offers": "Angebote des Kartenpunktes",
               "accessibilityInformation": "Informationen zur Barrierefreiheit",
               "csvfile": "CSV Datei hochladen"
             }
           },
-          "geoloaction": "Veranstaltungsort auf der Karte"
+          "geoloaction": "Lage des Kartenpunkts auf der Karte"
         },
         "field": {
           "label": {
@@ -490,7 +496,7 @@
             "youtube": "YouTube",
             "additionalInformation": "Zusätzliche Informationen",
             "agency": "Träger",
-            "eventLocationId": "ID des Veranstaltungsortes auf berlin.de"
+            "eventLocationId": "ID des korrespondierenden Veranstaltungsortes auf berlin.de"
           }
         }
       },
@@ -502,13 +508,13 @@
       },
       "location": {
         "title": {
-          "updatepage": "Veranstaltungsort aktualisieren"
+          "updatepage": "Kartenpunkt aktualisieren"
         }
       },
       "button": {
-        "create": "Veranstaltungsort hinzufügen",
-        "edit": "Veranstaltungsort bearbeiten",
-        "delete": "Veranstaltungsort löschen"
+        "create": "Kartenpunkt hinzufügen",
+        "edit": "Kartenpunkt bearbeiten",
+        "delete": "Kartenpunkt löschen"
       },
       "associatedevents": {
         "title": "Zugehörige Veranstaltungen"
@@ -1012,7 +1018,7 @@
       "form_button_submit": "Link zum Zurücksetzen anfordern"
     },
     "emailconfirmation": {
-      "button_goto_dashboard": "Gehe zum Dashboard",
+      "button_goto_backend": "Zum Administrationswerkzeug",
       "button_goto_login": "Zum Login",
       "requestsuccesstitles": "Vielen Dank",
       "errorExplanation": "Wir konnten Ihre E-Mail-Adresse anhand der bereitgestellten Informationen nicht verifizieren.",

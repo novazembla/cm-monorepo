@@ -90,11 +90,11 @@ const EmailConfirmation = () => {
   let content = (<Flex height="220" alignItems="center" justify="center" position="relative"><LoadingIcon type="inline" size={90} /></Flex>);
   
   let buttonDashboardLogin = (<Text>
-    <Button as={RouterLink} to={isLoggedIn() ? "/dashboard" : "/login"} textDecoration="none">
+    <Button as={RouterLink} to={isLoggedIn() ? "/locations" : "/login"} textDecoration="none">
       {isLoggedIn()
         ? t(
-            "page.emailconfirmation.button_goto_dashboard",
-            "Goto dashboard"
+            "page.emailconfirmation.button_goto_backend",
+            "Goto backend"
           )
         : t("page.emailconfirmation.button_goto_login", "Goto login")}
     </Button>

@@ -376,6 +376,7 @@ export const LocationUpsertInput = inputObjectType({
     t.nonNull.int("status");
     t.json("description");
     t.json("address");
+    t.json("geoCodingInfo");
     t.json("contactInfo");
     t.json("accessibilityInformation");
     t.json("socialMedia");

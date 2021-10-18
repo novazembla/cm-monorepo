@@ -24,12 +24,14 @@ export const ModuleForm = ({
   action,
   validationSchema,
   setActiveUploadCounter,
+  clearAlternatives,
 }: {
   data?: any;
   errors?: any;
   validationSchema: any;
   action: "create" | "update";
   setActiveUploadCounter?: Function;
+  clearAlternatives?: () => void;
 }) => {
   const [appUser] = useAuthentication();
 
@@ -37,6 +39,15 @@ export const ModuleForm = ({
   const { register } = useFormContext();
 
   let updateActions;
+
+  let alternativeLocations;
+
+  if (
+    data?.location?.geoCodingInfo?.count > 1 &&
+    Array.isArray(data?.location?.geoCodingInfo?.geojson?.features) &&
+    data?.location?.geoCodingInfo?.geojson?.features?.length > 0
+  )
+    alternativeLocations = data?.location?.geoCodingInfo?.geojson?.features;
 
   if (action === "update") {
     if (data?.adminUsers) {
@@ -386,6 +397,8 @@ export const ModuleForm = ({
         <LocationPicker
           lat={data?.location?.lat}
           lng={data?.location?.lng}
+          alternativeLocations={alternativeLocations}
+          clearAlternatives={clearAlternatives}
           required
         />
       </chakra.fieldset>

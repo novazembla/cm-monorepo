@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { Grid, Box, AspectRatio, Button } from "@chakra-ui/react";
+import { Grid, Box, AspectRatio, Button, Flex } from "@chakra-ui/react";
 import { geocodeQueryGQL } from "@culturemap/core";
 
 import L from "leaflet";
@@ -8,7 +8,12 @@ import "maplibre-gl";
 import "@maplibre/maplibre-gl-leaflet";
 import "leaflet/dist/leaflet.css";
 
-import { FieldRow, FieldNumberInput, FieldAutocomplete, FieldAutocompleteItem } from ".";
+import {
+  FieldRow,
+  FieldNumberInput,
+  FieldAutocomplete,
+  FieldAutocompleteItem,
+} from ".";
 
 import type { GeoLocation } from "~/types";
 import { useConfig, useSettings } from "~/hooks";
@@ -127,12 +132,16 @@ export const LocationPicker = ({
   required,
   fieldNameLat = "lat",
   fieldNameLng = "lng",
+  alternativeLocations,
+  clearAlternatives,
 }: {
   lat: number;
   lng: number;
   required: boolean;
   fieldNameLat?: string;
   fieldNameLng?: string;
+  alternativeLocations?: any[];
+  clearAlternatives?: () => void;
 }) => {
   const settings = useSettings();
   const { t } = useTranslation();
@@ -141,7 +150,8 @@ export const LocationPicker = ({
   const refMapContainer = useRef<HTMLDivElement>(null);
   const refMap = useRef<LeafletLocationPicker>();
 
-  const [shouldSetIsDirty, setShouldSetIsDirty] = useState(false)
+  const [hideAlternatives, setHideAlternatives] = useState(false);
+  const [shouldSetIsDirty, setShouldSetIsDirty] = useState(false);
   const [point, setPoint] = useState<GeoLocation>({
     lat,
     lng,
@@ -195,7 +205,7 @@ export const LocationPicker = ({
       setInitialState(point);
       setNewPoint(point);
     }
-    
+
     setValue(fieldNameLat, point.lat, {
       shouldDirty: shouldSetIsDirty,
     });
@@ -259,14 +269,12 @@ export const LocationPicker = ({
                   (agg: any, item: any) => {
                     if (
                       item?.geometry?.coordinates &&
-                      item?.geometry?.type === "Point" && 
-
+                      item?.geometry?.type === "Point" &&
                       // lng
-                      item?.geometry?.coordinates[0] >= bounds[0][1] && 
-                      item?.geometry?.coordinates[0] <= bounds[1][1] && 
-
+                      item?.geometry?.coordinates[0] >= bounds[0][1] &&
+                      item?.geometry?.coordinates[0] <= bounds[1][1] &&
                       // lat
-                      item?.geometry?.coordinates[1] >= bounds[0][0] && 
+                      item?.geometry?.coordinates[1] >= bounds[0][0] &&
                       item?.geometry?.coordinates[1] <= bounds[1][0]
                     ) {
                       agg.push({
@@ -304,7 +312,7 @@ export const LocationPicker = ({
                     }
                   );
                 }
-                
+
                 return result;
               }
               return [];
@@ -338,7 +346,12 @@ export const LocationPicker = ({
         gap={{ base: "4", s: "6" }}
       >
         <Box>
-          <AspectRatio ratio={16 / 9} border="1px solid" borderColor="gray.400" borderRadius="md">
+          <AspectRatio
+            ratio={16 / 9}
+            border="1px solid"
+            borderColor="gray.400"
+            borderRadius="md"
+          >
             <Box w="100%" h="100%" ref={refMapContainer}></Box>
           </AspectRatio>
         </Box>
@@ -406,6 +419,81 @@ export const LocationPicker = ({
           </FieldRow>
         </Box>
       </Grid>
+      {Array.isArray(alternativeLocations) && alternativeLocations.length > 1 && !hideAlternatives && (
+        <FieldRow>
+          <Box w="100%">
+            <Box maxW="900px">
+              {t(
+                "form.geolocation.alternatives.info",
+                "During import the geocoding retrieved more than one location candidate. While the closest to the configured 'center of gravity' has been used. You can select an alternative here."
+              )}
+            </Box>
+
+            <Box mt="4" borderTop="1px solid" borderColor="gray.200" w="100%">
+              {alternativeLocations.map((feature, index) => {
+                return (
+                  <Box key={`alternative-${index}`} w="100%">
+                    {feature?.geometry?.type === "Point" &&
+                      feature?.properties?.distance && (
+                        <Flex
+                          borderBottom="1px solid"
+                          borderColor="gray.200"
+                          pb="2"
+                          pt="2"
+                          w="100%"
+                          justifyContent="space-between"
+                          alignItems="center"
+                        >
+                          <Box pr="2">
+                            {feature?.properties?.title}
+                            <br />
+                            {t(
+                              "form.geolocation.alternatives.distance",
+                              "Distance"
+                            )}
+                            : {feature?.properties?.distance.toFixed(2)}
+                            km
+                          </Box>
+                          <Button
+                            onClick={() =>
+                              setNewPoint({
+                                lng: feature?.geometry?.coordinates[0],
+                                lat: feature?.geometry?.coordinates[1],
+                              })
+                            }
+                            isDisabled={
+                              point.lng === feature?.geometry?.coordinates[0] &&
+                              point.lat === feature?.geometry?.coordinates[1]
+                            }
+                            px="2"
+                          >
+                            {t(
+                              "form.geolocation.alternatives.useAddress",
+                              "Use address"
+                            )}
+                          </Button>
+                        </Flex>
+                      )}
+                  </Box>
+                );
+              })}
+            </Box>
+            {clearAlternatives && (
+              <Box mt="4">
+                <Button onClick={() => {
+                  setHideAlternatives(true);
+                  clearAlternatives();
+                }} px="2">
+                  {t(
+                    "form.geolocation.alternatives.clearAlternatives",
+                    "Accept choice and remove alternatives"
+                  )}
+                </Button>
+              </Box>
+            )}
+          </Box>
+        </FieldRow>
+      )}
     </Box>
   );
 };

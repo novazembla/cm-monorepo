@@ -2,12 +2,15 @@
 import Prisma from "@prisma/client";
 
 import { getApiConfig } from "../config";
+import { geocodingGetCenterOfGravity } from "../utils/geocoding";
+
+const { PrismaClient } = Prisma;
 
 const doChores = async () => {
   const apiConfig = getApiConfig();
   let prisma: Prisma.PrismaClient;
+  
   try {
-    const { PrismaClient } = Prisma;
     prisma = new PrismaClient({
       datasources: {
         db: {
@@ -16,39 +19,9 @@ const doChores = async () => {
       },
     });
 
-    const tables = [
-      "user",
-      "location",
-      "event",
-      "eventDate",
-      "eventImportLog",
-      "token",
-      "setting",
-      "module",
-      "taxonomy",
-      "term",
-      "tour", 
-      "tourStop",
-      "page",
-      "image",
-      "import",
-      "dataExport",
-      "locationExport",
-      
-      "player",
-      "file",
-    ];
+    const centerOfGravity = await geocodingGetCenterOfGravity(prisma);
 
-    await Promise.all(
-      tables.map(async (name: string) => {
-        try {
-          console.log(name);
-          console.log(await prisma[name].findMany());
-        } catch (err) {
-          console.log(err);
-        }
-      })
-    );
+    console.log(centerOfGravity);
 
     // console.log(await prisma.dataExport.findMany());
   } catch (err: any) {

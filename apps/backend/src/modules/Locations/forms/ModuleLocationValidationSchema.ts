@@ -94,6 +94,7 @@ export const ModuleLocationUpdateSchema = ModuleLocationCreateSchema.concat(
         //     return (value && !isNaN(value) && value > 0)
         //   },
         // ),
+        geoCodingInfo: mixed(),
       } as any
     )
   )

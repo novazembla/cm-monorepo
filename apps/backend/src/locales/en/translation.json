@@ -11,9 +11,6 @@
     }
   },
   "mainnav": {
-    "dashboard": {
-      "title": "Dashboard"
-    },
     "locations": {
       "title": "Locations"
     },
@@ -31,6 +28,9 @@
     },
     "users": {
       "title": "Users"
+    },
+    "homepage": {
+      "title": "Homepage"
     },
     "settings": {
       "title": "Settings"
@@ -216,6 +216,12 @@
       },
       "button": {
         "reset": "Reset"
+      },
+      "alternatives": {
+        "info": "During import the geocoding retrieved more than one location candidate. While the closest to the configured 'center of gravity' has been used. You can select an alternative here.",
+        "distance": "Distance",
+        "useAddress": "Use address",
+        "clearAlternatives": "Accept choice and remove alternatives"
       }
     },
     "error": {
@@ -1012,7 +1018,7 @@
       "form_button_submit": "Request reset link"
     },
     "emailconfirmation": {
-      "button_goto_dashboard": "Goto dashboard",
+      "button_goto_backend": "Goto backend",
       "button_goto_login": "Goto login",
       "requestsuccesstitles": "Thanky you",
       "errorExplanation": "We could not verify your email address based on the information provided.",

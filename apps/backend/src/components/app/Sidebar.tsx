@@ -101,13 +101,7 @@ export const Sidebar = () => {
   // TODO: use useEffect ot monitor tw, close menu when change ...
 
   const mainNavLinks = [
-    {
-      title: t("mainnav.dashboard.title", "Dashboard"),
-      path: "/dashboard",
-      exact: true,
-      icon: HiOutlineHome,
-      ...dashboadModuleAccessRules,
-    },
+    
     {
       title: t("mainnav.locations.title", "Locations"),
       path: "/locations",
@@ -149,6 +143,13 @@ export const Sidebar = () => {
       exact: false,
       icon: HiOutlineUsers,
       ...usersModuleAccessRules,
+    },
+    {
+      title: t("mainnav.homepage.title", "Homepage"),
+      path: "/homepage",
+      exact: true,
+      icon: HiOutlineHome,
+      ...dashboadModuleAccessRules,
     },
     {
       title: t("mainnav.settings.title", "Settings"),

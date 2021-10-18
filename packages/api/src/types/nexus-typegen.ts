@@ -94,6 +94,7 @@ export interface NexusGenInputs {
     contactInfo?: NexusGenScalars['JSON'] | null; // JSON
     description?: NexusGenScalars['JSON'] | null; // JSON
     eventLocationId?: number | null; // Int
+    geoCodingInfo?: NexusGenScalars['JSON'] | null; // JSON
     heroImage?: NexusGenScalars['JSON'] | null; // JSON
     images?: NexusGenScalars['JSON'] | null; // JSON
     lat?: number | null; // Float

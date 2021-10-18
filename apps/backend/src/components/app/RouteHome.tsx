@@ -10,7 +10,7 @@ export const RouteHome = () => {
       render={(routeRenderProps) => (
         <Redirect
           to={{
-            pathname: isLoggedIn() ? "/dashboard" : "/login",
+            pathname: isLoggedIn() ? "/locations" : "/login",
             state: { from: routeRenderProps.location },
           }}
         />

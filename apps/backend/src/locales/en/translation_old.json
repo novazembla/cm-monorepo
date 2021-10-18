@@ -247,5 +247,15 @@
   },
   "apifile": {
     "fileUploadedWithFilename": "File uploaded and saved with the file name:"
+  },
+  "mainnav": {
+    "dashboard": {
+      "title": "Dashboard"
+    }
+  },
+  "page": {
+    "emailconfirmation": {
+      "button_goto_dashboard": "Goto dashboard"
+    }
   }
 }

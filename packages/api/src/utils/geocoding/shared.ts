@@ -29,11 +29,11 @@ export const geocodingGetCenterOfGravity = async (
 
   if (
     centerOfGravity &&
-    (centerOfGravity?.value as any)?.lat &&
-    (centerOfGravity?.value as any)?.lng
+    (centerOfGravity?.value as any)?.json?.lat &&
+    (centerOfGravity?.value as any)?.json?.lng
   ) {
-    center.lat = (centerOfGravity?.value as any)?.lat;
-    center.lng = (centerOfGravity?.value as any)?.lng;
+    center.lat = (centerOfGravity?.value as any)?.json?.lat;
+    center.lng = (centerOfGravity?.value as any)?.json?.lng;
   } else {
     center.lat = (bounds[0][0] + bounds[1][0]) / 2;
     center.lng = (bounds[0][1] + bounds[1][1]) / 2;

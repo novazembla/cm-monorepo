@@ -74,7 +74,7 @@ export const Header = (/* props */) => {
               display={showLogo}
               as={NavLink}
               exact
-              to="/dashboard"
+              to="/locations"
               color="black"
               textDecoration="none !important"
             >
