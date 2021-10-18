@@ -190,12 +190,7 @@ const locationToArray = (location: any, lang: string) => {
       : "",
   ];
 
-  return [
-    ...cols,
-    ...(Array.isArray(location?.images)
-      ? location?.images.map((img: any) => img.meta?.originalFileUrl)
-      : []),
-  ];
+  return cols;
 };
 
 const getTranslatedHeader = (key: string, lang: string) => {

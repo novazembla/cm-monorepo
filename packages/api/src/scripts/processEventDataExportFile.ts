@@ -170,12 +170,7 @@ const eventToArray = (event: any, lang: string) => {
     event?.heroImage?.meta?.originalFileUrl ?? "",
   ];
 
-  return [
-    ...cols,
-    ...(Array.isArray(event?.images)
-      ? event?.images.map((img: any) => img.meta?.originalFileUrl)
-      : []),
-  ];
+  return cols;
 };
 
 const doChores = async () => {
