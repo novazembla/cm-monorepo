@@ -13,5 +13,5 @@ export * from "./eventImportLog";
 export * from "./tour";
 export * from "./tourStop";
 export * from "./import";
-export * from "./locationExport";
+export * from "./dataExport";
 export * from "./file";

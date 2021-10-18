@@ -118,7 +118,8 @@ export const adminTableCreateQueryVariables = (
   tState: AdminTableState,
   multilangColumns?: string[],
   activeLanguage?: string,
-  activeLanguages?: string[]
+  activeLanguages?: string[],
+  additionalWhere?: any,
 ) => {
   let variables: AdminTableQueryVariables = {
     pageIndex: tState.pageIndex,
@@ -180,6 +181,9 @@ export const adminTableCreateQueryVariables = (
     }
   }
 
+  if (additionalWhere)
+    where.push(additionalWhere);
+
   if (where.length > 0) {
     variables = {
       ...variables,
@@ -190,8 +194,12 @@ export const adminTableCreateQueryVariables = (
             }
           : where[0],
     };
+
+    
   }
 
+  console.log(variables);
+  
   return variables;
 };
 

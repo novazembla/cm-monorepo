@@ -245,7 +245,7 @@ const doChores = async () => {
       }
     }
 
-    const locationExportsToDelete = await prisma.locationExport.findMany({
+    const dataExportsToDelete = await prisma.dataExport.findMany({
       where: {
         updatedAt: {
           lt: new Date(new Date().getTime() - 1000 * 60 * 60 * 24),
@@ -256,8 +256,8 @@ const doChores = async () => {
       },
     });
 
-    if (locationExportsToDelete && locationExportsToDelete.length) {
-      const fileIds: number[] = locationExportsToDelete.reduce((acc, imp) => {
+    if (dataExportsToDelete && dataExportsToDelete.length) {
+      const fileIds: number[] = dataExportsToDelete.reduce((acc, imp) => {
         if (imp?.file && imp?.file?.id) {
           acc.push(imp?.file?.id);
         }
@@ -276,11 +276,11 @@ const doChores = async () => {
           },
         });
         postMessage(
-          `[WORKER:dbHousekeeping]: Scheduled ${fileIds.length} uploaded locationExport files to be deleted`
+          `[WORKER:dbHousekeeping]: Scheduled ${fileIds.length} uploaded dataExport files to be deleted`
         );
       }
 
-      const locationExportCleanup = await prisma.locationExport.deleteMany({
+      const dataExportCleanup = await prisma.dataExport.deleteMany({
         where: {
           updatedAt: {
             lt: new Date(new Date().getTime() - 1000 * 60 * 60 * 24),
@@ -289,11 +289,11 @@ const doChores = async () => {
       });
 
       postMessage(
-        `[WORKER:dbHousekeeping]: Deleted ${locationExportCleanup.count} expired locationExport(s)`
+        `[WORKER:dbHousekeeping]: Deleted ${dataExportCleanup.count} expired dataExport(s)`
       );
     }
 
-    const scheduledLocationExport = await prisma.locationExport.findFirst({
+    const scheduledDataExport = await prisma.dataExport.findFirst({
       where: {
         status: {
           in: [ExportStatus.PROCESS],
@@ -304,37 +304,50 @@ const doChores = async () => {
       },
     });
 
-    if (scheduledLocationExport) {
+    if (scheduledDataExport) {
       try {
         // TODO: adjust to production server configuration
         const buildFolder =
           process.env.NODE_ENV !== "production" ? "dist" : "dist";
 
-        spawn(
-          "node",
-          [
-            `${apiConfig.packageBaseDir}/${buildFolder}/scripts/processLocationExportFile.js`,
-            `--exportId=${scheduledLocationExport.id}`,
-          ],
-          {
-            detached: true,
-          }
-        );
-        postMessage(
-          `[WORKER:dbHousekeeping]: Triggered locationExport script for locationExport: ${scheduledLocationExport.id}`
-        );
+        let script;
+        if (scheduledDataExport.exportType === "location")
+          script = "processLocationDataExportFile.js";
+
+        if (scheduledDataExport.exportType === "event")
+          script = "processEventDataExportFile.js";
+
+        if (script) {
+          spawn(
+            "node",
+            [
+              `${apiConfig.packageBaseDir}/${buildFolder}/scripts/${script}`,
+              `--exportId=${scheduledDataExport.id}`,
+            ],
+            {
+              detached: true,
+            }
+          );
+          postMessage(
+            `[WORKER:dbHousekeeping]: Triggered dataExport script for dataExport: ${scheduledDataExport.id}`
+          );
+        } else {
+          postMessage(
+            `[WORKER:dbHousekeeping]: Could not find export script for ID: ${scheduledDataExport.id} Type:  ${scheduledDataExport.exportType}`
+          );
+        }
       } catch (err) {
-        await prisma.locationExport.update({
+        await prisma.dataExport.update({
           data: {
             status: ExportStatus.ERROR,
-            errors: ["Could not execute locationExport script"],
+            errors: ["Could not execute dataExport script"],
           },
           where: {
-            id: scheduledLocationExport.id,
+            id: scheduledDataExport.id,
           },
         });
         postMessage(
-          `[WORKER:dbHousekeeping]: could not trigger script for locationExport: ${scheduledLocationExport.id}`
+          `[WORKER:dbHousekeeping]: could not trigger script for dataExport: ${scheduledDataExport.id}`
         );
       }
     }

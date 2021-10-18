@@ -26,8 +26,8 @@ import {
 
 import { FieldInput, FieldRow, TextErrorMessage } from "~/components/forms";
 
-import { useLocationExportCreateMutation } from "./hooks";
-import { ModuleLocationExportCreateSchema } from "./forms";
+import { useDataExportCreateMutation } from "./hooks";
+import { ModuleDataExportCreateSchema } from "./forms";
 
 import {
   AdminTable,
@@ -118,7 +118,7 @@ const Index = () => {
   );
 
   const [firstMutation] =
-    useLocationExportCreateMutation();
+    useDataExportCreateMutation();
 
   const previousRoute = useTypedSelector(
     ({ router }) => router.router.previous
@@ -142,7 +142,7 @@ const Index = () => {
       and: !!tableState.and,
       title: undefined,
     },
-    resolver: yupResolver(ModuleLocationExportCreateSchema),
+    resolver: yupResolver(ModuleDataExportCreateSchema),
   });
 
   const { getValues, reset, handleSubmit } = formMethods;
@@ -331,7 +331,7 @@ const Index = () => {
   const tableTotalCount = data?.locations?.totalCount ?? refetchTotalCount;
 
   const onSubmit = async (
-    newData: yup.InferType<typeof ModuleLocationExportCreateSchema>
+    newData: yup.InferType<typeof ModuleDataExportCreateSchema>
   ) => {
     setHasFormError(false);
 

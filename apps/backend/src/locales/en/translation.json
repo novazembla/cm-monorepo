@@ -384,7 +384,7 @@
       "menuitem": {
         "importLogs": "Import Logs",
         "createlocation": "Add new location",
-        "locationExports": "Exports",
+        "dataExports": "Exports",
         "imports": "Imports",
         "createimport": "Add new import",
         "exports": "Exports"

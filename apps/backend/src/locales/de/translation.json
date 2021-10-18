@@ -384,7 +384,7 @@
       "menuitem": {
         "importLogs": "Import Logs",
         "createlocation": "Neuen Veranstaltungsort hinzufügen",
-        "locationExports": "Export",
+        "dataExports": "Export",
         "imports": "Importe",
         "createimport": "Neuen Import hinzufügen",
         "exports": "Exports"

@@ -12,6 +12,11 @@ generator client {
   previewFeatures = ["filterJson"]
 }
 
+model Player {
+  id                 Int      @id @default(autoincrement())
+  level              Int
+}
+
 model User {
   id                 Int      @id @default(autoincrement())
   email              String   @unique
@@ -26,6 +31,8 @@ model User {
   password           String
   createdAt          DateTime @default(now())
   updatedAt          DateTime @default(now()) @updatedAt
+
+  fullText String? @default("")
 
   locations Location[]
 
@@ -43,10 +50,8 @@ model User {
 
   tourStops TourStop[]
 
-  fullText String? @default("")
-
   imports Import[]
-  locationExports LocationExport[]
+  dataExports DataExport[]
 
   profileImageId Int?
   profileImage   Image? @relation(fields: [profileImageId], references: [id], name: "profileImage", onDelete: Cascade)
@@ -359,6 +364,8 @@ model Page {
   @@index([ownerId], name: "indexPageOwnerId")
 }
 
+
+
 // TODO: add a retry mechanism
 model Image {
   id Int @id @default(autoincrement())
@@ -400,6 +407,28 @@ model Image {
   @@index([status], name: "indexImageStatus")
 }
 
+model DataExport {
+  id       Int    @id @default(autoincrement())
+  title    String
+  lang      String @default("en")
+  exportType      String @default("location")
+  log      Json?  @default("[]")
+  errors   Json?  @default("[]")
+  meta  Json?  @default("{}")
+  status   Int    @default(0)
+
+  fileId Int?
+  file   File? @relation(fields: [fileId], references: [id], name: "dataExportFiles")
+
+  ownerId Int?
+  owner   User? @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+
+
 model Import {
   id       Int    @id @default(autoincrement())
   title    String
@@ -413,26 +442,6 @@ model Import {
 
   fileId Int?
   file   File? @relation(fields: [fileId], references: [id], name: "importFiles")
-
-  ownerId Int
-  owner   User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
-}
-
-
-model LocationExport {
-  id       Int    @id @default(autoincrement())
-  title    String
-  lang      String @default("en")
-  log      Json?  @default("[]")
-  errors   Json?  @default("[]")
-  meta  Json?  @default("{}")
-  status   Int    @default(0)
-
-  fileId Int?
-  file   File? @relation(fields: [fileId], references: [id], name: "locationExportFiles")
 
   ownerId Int
   owner   User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
@@ -462,7 +471,6 @@ model File {
   title_en       String @default("") 
   credits_en        String @default("") 
 
-
   imports Import[] @relation("importFiles")
-  locationExports LocationExport[] @relation("locationExportFiles")
+  dataExports DataExport[] @relation("dataExportFiles")
 }

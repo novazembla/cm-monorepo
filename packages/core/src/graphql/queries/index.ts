@@ -9,6 +9,6 @@ export * from "./pageQueriesGQL";
 export * from "./imageQueriesGQL";
 export * from "./locationQueriesGQL";
 export * from "./importQueriesGQL";
-export * from "./locationExportQueriesGQL";
+export * from "./dataExportQueriesGQL";
 export * from "./eventQueriesGQL";
 export * from "./mapQueriesGQL";

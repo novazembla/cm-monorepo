@@ -8,7 +8,7 @@ import ImportCreate from "./ImportCreate";
 import ImportUpdate from "./ImportUpdate";
 
 import { moduleRootPath } from "./moduleConfig";
-import LocationExports from "./LocationExports";
+import DataExports from "./DataExports";
 import Export from "./Export";
 
 export const moduleRoutes: RoutePrivateParams[] = [
@@ -43,7 +43,7 @@ export const moduleRoutes: RoutePrivateParams[] = [
   {
     key: "exports",
     path: `${moduleRootPath}/exports`,
-    component: LocationExports,
+    component: DataExports,
     exact: true,
     userCan: "locationUpdateOwn",
   },{

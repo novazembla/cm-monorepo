@@ -15,4 +15,4 @@ export * from "./nexusTypesTour";
 export * from "./nexusTypesTourStop";
 export * from "./nexusTypesMap";
 export * from "./nexusTypesImport";
-export * from "./nexusTypesLocationExport";
+export * from "./nexusTypesDataExport";

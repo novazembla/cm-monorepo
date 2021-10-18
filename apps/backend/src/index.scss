@@ -20,12 +20,13 @@ code {
     top:0;
 
     left: 0;
-    background: #333;
+    
 
     > div,
     img,picture {
       width: 100%;
       height: 100%;
+      background: #333;
     }
   }
 } 
@@ -56,7 +57,7 @@ code {
     
     .wrapper {
       min-height: 100px;
-      max-height: 600px;
+      max-height: 1000px;
       overflow-y: auto;
 
     }
@@ -76,7 +77,7 @@ code {
 
   &.large {
     .wrapper {
-      max-height: 1200px;
+      max-height: 2000px;
     }
   }
 

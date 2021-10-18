@@ -11,7 +11,7 @@ import {
   UnorderedList,
   IconButton,
 } from "@chakra-ui/react";
-import { locationExportReadQueryGQL, ExportStatus } from "@culturemap/core";
+import { dataExportReadQueryGQL, ExportStatus } from "@culturemap/core";
 
 import { useQuery } from "@apollo/client";
 import { FieldRow } from "~/components/forms";
@@ -30,7 +30,7 @@ const Export = () => {
 
   const { t } = useTranslation();
 
-  const { data, loading, error } = useQuery(locationExportReadQueryGQL, {
+  const { data, loading, error } = useQuery(dataExportReadQueryGQL, {
     variables: {
       id: parseInt(router.query.id, 10),
     },
@@ -43,7 +43,7 @@ const Export = () => {
     },
     {
       path: `${moduleRootPath}/exports`,
-      title: t("module.locations.menuitem.locationExports", "Exports"),
+      title: t("module.locations.menuitem.dataExports", "Exports"),
     },
     {
       title: t("module.locations.breadcrumb.exportdetail", "Export detail"),
@@ -61,13 +61,13 @@ const Export = () => {
 
   let errorList = undefined;
   let errorValue = "";
-  if (data?.locationExportRead.errors.length > 0) {
-    errorList = data?.locationExportRead.errors.map(
+  if (data?.dataExportRead.errors.length > 0) {
+    errorList = data?.dataExportRead.errors.map(
       (err: any, index: number) => (
         <ListItem key={`error-${index}`}>{err}</ListItem>
       )
     );
-    errorValue = data?.locationExportRead.errors
+    errorValue = data?.dataExportRead.errors
       .map((e: string, index: number) => `${index + 1}. ${e}`)
       .join("\n");
   }
@@ -75,21 +75,21 @@ const Export = () => {
 
   let logList = undefined;
   let logValue = "";
-  if (data?.locationExportRead.log.length > 0) {
-    logList = data?.locationExportRead.log.map((err: any, index: number) => (
+  if (data?.dataExportRead.log.length > 0) {
+    logList = data?.dataExportRead.log.map((err: any, index: number) => (
       <ListItem key={`log-${index}`}>{err}</ListItem>
     ));
-    logValue = data?.locationExportRead.log.join("\n");
+    logValue = data?.dataExportRead.log.join("\n");
   }
   const clipboardLog = useClipboard(logValue);
 
-  console.log(data?.locationExportRead);
+  console.log(data?.dataExportRead);
   return (
     <>
       <ModuleSubNav breadcrumb={breadcrumb} buttonList={buttonList} />
       <ModulePage isLoading={loading} isError={!!error}>
         {[ExportStatus.PROCESS, ExportStatus.PROCESSING].includes(
-          data?.locationExportRead?.status
+          data?.dataExportRead?.status
         ) && (
           <Alert borderRadius="lg">
             <AlertIcon />
@@ -100,7 +100,7 @@ const Export = () => {
           </Alert>
         )}
         {[ExportStatus.PROCESSED].includes(
-          data?.locationExportRead?.status
+          data?.dataExportRead?.status
         ) && (
           <Alert borderRadius="lg" colorScheme="green">
             <AlertIcon />
@@ -114,15 +114,15 @@ const Export = () => {
           <b>
             {t("module.locations.export.field.label.exportName", "Export Name")}
           </b>
-          : {data?.locationExportRead?.title}
+          : {data?.dataExportRead?.title}
         </FieldRow>
-        {data?.locationExportRead?.file?.id &&
-          ExportStatus.PROCESSED === data?.locationExportRead?.status && (
+        {data?.dataExportRead?.file?.id &&
+          ExportStatus.PROCESSED === data?.dataExportRead?.status && (
             <FieldRow>
               <ApiFile
-                id={data?.locationExportRead?.file?.id}
-                status={data?.locationExportRead?.file?.status}
-                meta={data?.locationExportRead?.file?.meta}
+                id={data?.dataExportRead?.file?.id}
+                status={data?.dataExportRead?.file?.status}
+                meta={data?.dataExportRead?.file?.meta}
                 allowDownload={true}
               />
             </FieldRow>

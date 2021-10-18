@@ -59,7 +59,7 @@ export const ModuleLocationCreateSchema = object().shape({
   ),
 });
 
-export const ModuleLocationExportCreateSchema = object().shape({
+export const ModuleDataExportCreateSchema = object().shape({
   title: string().required(),
 });
 
