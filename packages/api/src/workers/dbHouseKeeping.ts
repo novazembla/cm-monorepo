@@ -314,8 +314,8 @@ const doChores = async () => {
         if (scheduledDataExport.type === "location")
           script = "processLocationDataExportFile.js";
 
-        // if (scheduledDataExport.type === "event")
-        //   script = "processEventDataExportFile.js";
+        if (scheduledDataExport.type === "event")
+          script = "processEventDataExportFile.js";
 
         if (script) {
           spawn(

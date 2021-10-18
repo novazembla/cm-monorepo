@@ -144,14 +144,14 @@ export const ApiImage = ({
         p="4"
         textAlign="center"
       >
-        <Text pb="4" w="90%">
+        <Text pb="4" w="90%" color="#fff">
           {t(
             "apiimage.processsing",
             "Image uploaded. We are processing it now"
           )}
         </Text>
 
-        <BeatLoader />
+        <BeatLoader color="#fff" />
       </Flex>
     );
 

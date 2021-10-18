@@ -1,7 +1,7 @@
 // TODO: visibility
 //
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { locationDeleteMutationGQL, PublishStatus } from "@culturemap/core";
 import { useQuery, gql } from "@apollo/client";
@@ -109,16 +109,15 @@ const statusFilter = [
 
 const Index = () => {
   const { t, i18n } = useTranslation();
-  const [hasFormError, setHasFormError] = useState(false);
   const [appUser] = useAuthentication();
+  const [hasFormError, setHasFormError] = useState(false);
   const successToast = useSuccessfullySavedToast();
   const [tableState, setTableState] = useLocalStorage(
     `${moduleRootPath}/Index`,
     intitalTableState
   );
 
-  const [firstMutation] =
-    useDataExportCreateMutation();
+  const [firstMutation] = useDataExportCreateMutation();
 
   const previousRoute = useTypedSelector(
     ({ router }) => router.router.previous
@@ -148,27 +147,29 @@ const Index = () => {
   const { getValues, reset, handleSubmit } = formMethods;
 
   const [isTableStateReset, setIsTableStateReset] = useState(false);
+
+  const resetFilter = useCallback(() => {
+    reset({
+      ...intitalTableState.statusFilter.reduce((acc: any, s: PublishStatus) => {
+        return {
+          ...acc,
+          [`filter_status_${s}`]: true,
+        };
+      }, {}),
+      ...intitalTableState.taxFilter.reduce((acc: any, t: number) => {
+        return {
+          ...acc,
+          [`tax_${t}`]: true,
+        };
+      }, {}),
+      and: !!intitalTableState.and,
+    });
+  }, [reset]);
+
   useEffect(() => {
     if (previousRoute?.indexOf(moduleRootPath) === -1 && !isTableStateReset) {
       setTableState(intitalTableState);
-      reset({
-        ...intitalTableState.statusFilter.reduce(
-          (acc: any, s: PublishStatus) => {
-            return {
-              ...acc,
-              [`filter_status_${s}`]: true,
-            };
-          },
-          {}
-        ),
-        ...intitalTableState.taxFilter.reduce((acc: any, t: number) => {
-          return {
-            ...acc,
-            [`tax_${t}`]: true,
-          };
-        }, {}),
-        and: !!intitalTableState.and,
-      });
+      resetFilter();
       setIsTableStateReset(true);
     }
   }, [
@@ -176,7 +177,7 @@ const Index = () => {
     setTableState,
     setIsTableStateReset,
     isTableStateReset,
-    reset,
+    resetFilter,
   ]);
 
   const [isRefetching, setIsRefetching] = useState(false);
@@ -292,7 +293,8 @@ const Index = () => {
     pageIndex: number,
     pageSize: number,
     sortBy: SortingRule<Object>[],
-    filterKeyword: string
+    filterKeyword: string,
+    forceRefetch?: boolean
   ) => {
     refetchPageIndex = undefined;
 
@@ -306,7 +308,7 @@ const Index = () => {
         getValues()
       );
 
-    if (doRefetch) {
+    if (doRefetch || forceRefetch) {
       refetchPageIndex = pageIndex !== newPageIndex ? newPageIndex : undefined;
       refetchDataCache = data?.locations?.locations ?? [];
       refetchTotalCount = data?.locations?.totalCount ?? 0;
@@ -390,6 +392,7 @@ const Index = () => {
               isLoading={loading}
               showFilter={true}
               showKeywordSearch={true}
+              resetFilter={resetFilter}
               {...{
                 tableTotalCount,
                 tablePageCount,
@@ -425,9 +428,8 @@ const Index = () => {
                       "module.locations.export.introduction",
                       "Export all {{num}} items as .xlsx file",
                       {
-                        num: tableTotalCount
+                        num: tableTotalCount,
                       }
-
                     )}
                   </Box>
                 </FieldRow>

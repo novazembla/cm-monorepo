@@ -119,7 +119,7 @@ export const adminTableCreateQueryVariables = (
   multilangColumns?: string[],
   activeLanguage?: string,
   activeLanguages?: string[],
-  additionalWhere?: any,
+  additionalWhere?: any
 ) => {
   let variables: AdminTableQueryVariables = {
     pageIndex: tState.pageIndex,
@@ -181,8 +181,7 @@ export const adminTableCreateQueryVariables = (
     }
   }
 
-  if (additionalWhere)
-    where.push(additionalWhere);
+  if (additionalWhere) where.push(additionalWhere);
 
   if (where.length > 0) {
     variables = {
@@ -194,12 +193,10 @@ export const adminTableCreateQueryVariables = (
             }
           : where[0],
     };
-
-    
   }
 
   console.log(variables);
-  
+
   return variables;
 };
 
@@ -519,8 +516,9 @@ export const AdminTable = ({
   tableTotalCount,
   refetchPageIndex,
   showKeywordSearch = true,
-  showFilter = true, // TODO: make use of
+  showFilter = true,
   statusFilter = [],
+  resetFilter,
 }: {
   data: any[];
   taxonomies?: any[];
@@ -534,8 +532,10 @@ export const AdminTable = ({
     page: number,
     pageSize: number,
     sortBy: SortingRule<Object>[],
-    filterKeyword: string
+    filterKeyword: string,
+    forceRefetch?: boolean
   ) => boolean;
+  resetFilter?: () => void,
   intitalTableState: AdminTableState;
   tablePageCount: number;
   tableTotalCount: number;
@@ -644,6 +644,8 @@ export const AdminTable = ({
     );
   });
 
+  const keywordInputRef = useRef<HTMLInputElement>(null);
+
   return (
     <>
       <VisuallyHidden>
@@ -661,13 +663,15 @@ export const AdminTable = ({
             borderColor="gray.300"
           >
             <Box width="80%" pr="6">
-              {showFilter && <Button
-                onClick={() => {
-                  setFilterIsOpen(!filterIsOpen);
-                }}
-              >
-                {t("admintable.filter.button.toggle", "Filter")}
-              </Button>}
+              {showFilter && (
+                <Button
+                  onClick={() => {
+                    setFilterIsOpen(!filterIsOpen);
+                  }}
+                >
+                  {t("admintable.filter.button.toggle", "Filter")}
+                </Button>
+              )}
             </Box>
             <Box w="20%">
               <FormLabel htmlFor="filter" m="0">
@@ -679,13 +683,14 @@ export const AdminTable = ({
                   id="filter"
                   onChange={onFilterChange}
                   onBlur={onFilterChange}
+                  ref={keywordInputRef}
                   defaultValue={intitalTableState.filterKeyword}
                   placeholder={t("admintable.search", "Keyword search")}
                 />
               </FormLabel>
             </Box>
           </Flex>
-          {showFilter && (taxonomies || statusFilter ) && (
+          {showFilter && (taxonomies || statusFilter) && (
             <Box
               position="relative"
               overflowY="hidden"
@@ -840,13 +845,45 @@ export const AdminTable = ({
                         />
                       )}
                     </Box>
-                    <Button
-                      onClick={() => {
-                        onFetchData(pageIndex, pageSize, sortBy, filterKeyword);
-                      }}
-                    >
-                      {t("admintable.filter.button.filter", "Filtern")}
-                    </Button>
+
+                    <HStack>
+                      <Button
+                        colorScheme="gray"
+                        onClick={() => {
+                          setFilterKeyword("");
+
+                          if (keywordInputRef.current)
+                            keywordInputRef.current.value ="";
+
+                          if (typeof resetFilter === "function")
+                            resetFilter.call(null);
+
+                          onFetchData(
+                            intitalTableState.pageIndex,
+                            intitalTableState.pageSize,
+                            intitalTableState.sortBy,
+                            intitalTableState.filterKeyword,
+                            true
+                          );
+                          setFilterIsOpen(false);
+                        }}
+                      >
+                        {t("admintable.filter.button.reset", "Reset")}
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          onFetchData(
+                            pageIndex,
+                            pageSize,
+                            sortBy,
+                            filterKeyword
+                          );
+                          setFilterIsOpen(false);
+                        }}
+                      >
+                        {t("admintable.filter.button.filter", "Filter")}
+                      </Button>
+                    </HStack>
                   </Flex>
                 </Box>
               </Box>

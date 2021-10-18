@@ -381,19 +381,56 @@
       }
     },
     "locations": {
+      "title": "Veranstaltungsort",
       "menuitem": {
-        "importLogs": "Import Logs",
-        "createlocation": "Neuen Veranstaltungsort hinzufügen",
         "dataExports": "Export",
+        "importLogs": "Import Logs",
+        "exports": "Exports",
+        "createlocation": "Neuen Veranstaltungsort hinzufügen",
         "imports": "Importe",
-        "createimport": "Neuen Import hinzufügen",
-        "exports": "Exports"
+        "createimport": "Neuen Import hinzufügen"
+      },
+      "exports": {
+        "button": {
+          "view": "Import ansehen"
+        }
+      },
+      "import": {
+        "button": {
+          "delete": "Import löschen",
+          "create": "Neuer Import",
+          "edit": "Import bearbeiten"
+        }
+      },
+      "breadcrumb": {
+        "exportdetail": "Exportdetail"
+      },
+      "export": {
+        "exportIsProcessing": "Ihr Export wird auf dem Server bearbeited.",
+        "exportProcessed": "Ihr Export wurde vollständig durchgeführt.",
+        "field": {
+          "label": {
+            "exportName": "Exportname"
+          },
+          "placeholder": {
+            "title": "Kurzer Titel um den Export in der Exportliste wiedererkennen zu können"
+          }
+        },
+        "create": {
+          "label": "Exportieren"
+        },
+        "introduction": "Exportiere alle {{num}} Einträge als .xlsx Datei",
+        "button": {
+          "label": {
+            "scheduleExport": "Export durchführen"
+          }
+        }
       },
       "forms": {
         "import": {
           "errors": "Fehlermeldungen",
-          "warnings": "Warnungen",
           "log": "Log",
+          "warnings": "Warnungen",
           "field": {
             "label": {
               "title": "Titel",
@@ -457,38 +494,6 @@
           }
         }
       },
-      "title": "Veranstaltungsort",
-      "breadcrumb": {
-        "exportdetail": "Exportdetail"
-      },
-      "export": {
-        "exportIsProcessing": "Ihr Export wird auf dem Server bearbeited.",
-        "exportProcessed": "Ihr Export wurde vollständig durchgeführt.",
-        "field": {
-          "label": {
-            "exportName": "Exportname"
-          },
-          "placeholder": {
-            "title": "Kurzer Titel um den Export in der Exportliste wiedererkennen zu können"
-          }
-        },
-        "create": {
-          "label": "Exportieren"
-        },
-        "introduction": "Exportiere alle {{num}} Einträge als .xlsx Datei",
-        "button": {
-          "label": {
-            "scheduleExport": "Export durchführen"
-          }
-        }
-      },
-      "import": {
-        "button": {
-          "create": "Neuer Import",
-          "edit": "Import bearbeiten",
-          "delete": "Import löschen"
-        }
-      },
       "imports": {
         "title": "Importe",
         "requiredMissing": "Die folgenden erforderlichen Spalten sind nicht zugewiesen: ",
@@ -504,11 +509,6 @@
         "create": "Veranstaltungsort hinzufügen",
         "edit": "Veranstaltungsort bearbeiten",
         "delete": "Veranstaltungsort löschen"
-      },
-      "exports": {
-        "button": {
-          "view": "Import ansehen"
-        }
       },
       "associatedevents": {
         "title": "Zugehörige Veranstaltungen"
@@ -855,6 +855,7 @@
     "filter": {
       "button": {
         "toggle": "Filter",
+        "reset": "Zurücksetzen",
         "filter": "Filtern"
       },
       "status": "Pulikationsstatus",
@@ -921,13 +922,25 @@
       "datadeleted": "Die gewünschten Daten wurden gelöscht"
     }
   },
+  "import": {
+    "status": {
+      "created": "Erstellt",
+      "scheduled": "In Auftrag",
+      "processing": "In Bearbeitung",
+      "published": "Berarbeitet",
+      "error": "Fehler",
+      "trashed": "Gelöscht",
+      "autodraft": "CSV Datei fehlt",
+      "forreview": "Spalten zuweisen"
+    }
+  },
   "table": {
     "label": {
-      "actions": "Aktionen",
       "id": "ID",
       "lastUpdate": "Zuletzt aktualisiert",
       "status": "Status",
       "title": "Titel",
+      "actions": "Aktionen",
       "date": "Datum",
       "errors": "Fehler",
       "warnings": "Warnungen",
@@ -954,18 +967,6 @@
           "eventLocationId": "berlin.de Veranstaltungsort ID"
         }
       }
-    }
-  },
-  "import": {
-    "status": {
-      "autodraft": "CSV Datei fehlt",
-      "forreview": "Spalten zuweisen",
-      "scheduled": "In Auftrag",
-      "processing": "In Bearbeitung",
-      "published": "Berarbeitet",
-      "error": "Fehler",
-      "trashed": "Gelöscht",
-      "created": "Erstellt"
     }
   },
   "page": {

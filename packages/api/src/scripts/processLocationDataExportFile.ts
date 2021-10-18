@@ -177,16 +177,16 @@ const locationToArray = (location: any, lang: string) => {
       ? location.images[5]?.meta?.originalFileUrl
       : "",
     location?.images && location.images.length > 6
-      ? location.images[7]?.meta?.originalFileUrl
+      ? location.images[6]?.meta?.originalFileUrl
       : "",
     location?.images && location.images.length > 7
-      ? location.images[8]?.meta?.originalFileUrl
+      ? location.images[7]?.meta?.originalFileUrl
       : "",
     location?.images && location.images.length > 8
-      ? location.images[9]?.meta?.originalFileUrl
+      ? location.images[8]?.meta?.originalFileUrl
       : "",
     location?.images && location.images.length > 9
-      ? location.images[10]?.meta?.originalFileUrl
+      ? location.images[9]?.meta?.originalFileUrl
       : "",
   ];
 
@@ -495,26 +495,16 @@ const doChores = async () => {
               getTranslatedHeader("youtube", exportInDb.lang),
               getTranslatedHeader("eventLocationId", exportInDb.lang),
               exportInDb.lang === "de" ? "Poster Bild" : "Featured image",
-              exportInDb.lang === "de" ? "Bilder ..." : "Further images ...",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
+              exportInDb.lang === "de" ? "Bilder (1)" : "Further images (1)",
+              exportInDb.lang === "de" ? "Bilder (2)" : "Further images (2)",
+              exportInDb.lang === "de" ? "Bilder (3)" : "Further images (3)",
+              exportInDb.lang === "de" ? "Bilder (4)" : "Further images (4)",
+              exportInDb.lang === "de" ? "Bilder (5)" : "Further images (5)",
+              exportInDb.lang === "de" ? "Bilder (6)" : "Further images (6)",
+              exportInDb.lang === "de" ? "Bilder (7)" : "Further images (7)",
+              exportInDb.lang === "de" ? "Bilder (8)" : "Further images (8)",
+              exportInDb.lang === "de" ? "Bilder (9)" : "Further images (9)",
+              exportInDb.lang === "de" ? "Bilder (10)" : "Further images (10)",
             ]);
 
             for (let i = 0; i < locations.length; i++) {

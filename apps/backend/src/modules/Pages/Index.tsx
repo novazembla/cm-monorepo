@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { pagesQueryGQL, pageDeleteMutationGQL, PublishStatus} from "@culturemap/core";
 import { useQuery } from "@apollo/client";
@@ -88,28 +88,32 @@ const Index = () => {
 
   const { getValues, reset } = formMethods;
 
+  const resetFilter = useCallback(() => {
+    reset({
+      ...intitalTableState.statusFilter.reduce(
+        (acc: any, s: PublishStatus) => {
+          return {
+            ...acc,
+            [`filter_status_${s}`]: true,
+          };
+        },
+        {}
+      ),
+      ...intitalTableState.taxFilter.reduce((acc: any, t: number) => {
+        return {
+          ...acc,
+          [`tax_${t}`]: true,
+        };
+      }, {}),
+      and: !!intitalTableState.and,
+    });
+  }, [reset]);
+
   const [isTableStateReset, setIsTableStateReset] = useState(false);
   useEffect(() => {
     if (previousRoute?.indexOf(moduleRootPath) === -1 && !isTableStateReset) {
       setTableState(intitalTableState);
-      reset({
-        ...intitalTableState.statusFilter.reduce(
-          (acc: any, s: PublishStatus) => {
-            return {
-              ...acc,
-              [`filter_status_${s}`]: true,
-            };
-          },
-          {}
-        ),
-        ...intitalTableState.taxFilter.reduce((acc: any, t: number) => {
-          return {
-            ...acc,
-            [`tax_${t}`]: true,
-          };
-        }, {}),
-        and: !!intitalTableState.and,
-      });
+      resetFilter();
       setIsTableStateReset(true);
     }
   }, [
@@ -117,7 +121,7 @@ const Index = () => {
     setTableState,
     setIsTableStateReset,
     isTableStateReset,
-    reset,
+    resetFilter,
   ]);
 
   const { loading, error, data, refetch } = useQuery(pagesQueryGQL, {
@@ -277,6 +281,7 @@ const Index = () => {
           columns={AdminTableColumns}
           isLoading={loading}
           showFilter={true}
+          resetFilter={resetFilter}
           statusFilter={statusFilter}
           showKeywordSearch={true}
           {...{

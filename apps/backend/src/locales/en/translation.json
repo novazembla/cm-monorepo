@@ -381,19 +381,56 @@
       }
     },
     "locations": {
+      "title": "Locations",
       "menuitem": {
-        "importLogs": "Import Logs",
-        "createlocation": "Add new location",
         "dataExports": "Exports",
+        "importLogs": "Import Logs",
+        "exports": "Exports",
+        "createlocation": "Add new location",
         "imports": "Imports",
-        "createimport": "Add new import",
-        "exports": "Exports"
+        "createimport": "Add new import"
+      },
+      "exports": {
+        "button": {
+          "view": "View import"
+        }
+      },
+      "import": {
+        "button": {
+          "delete": "Delete import",
+          "create": "New import",
+          "edit": "Edit import"
+        }
+      },
+      "breadcrumb": {
+        "exportdetail": "Export detail"
+      },
+      "export": {
+        "exportIsProcessing": "Your export is being processed on the server.",
+        "exportProcessed": "Your export has been processed.",
+        "field": {
+          "label": {
+            "exportName": "Export Name"
+          },
+          "placeholder": {
+            "title": "Short name to find your export in the export listing"
+          }
+        },
+        "create": {
+          "label": "Export"
+        },
+        "introduction": "Export all {{num}} items as .xlsx file",
+        "button": {
+          "label": {
+            "scheduleExport": "Schedule export"
+          }
+        }
       },
       "forms": {
         "import": {
           "errors": "Errors",
-          "warnings": "Warnings",
           "log": "Log",
+          "warnings": "Warnings",
           "field": {
             "label": {
               "title": "Title",
@@ -457,38 +494,6 @@
           }
         }
       },
-      "title": "Locations",
-      "breadcrumb": {
-        "exportdetail": "Export detail"
-      },
-      "export": {
-        "exportIsProcessing": "Your export is being processed on the server.",
-        "exportProcessed": "Your export has been processed.",
-        "field": {
-          "label": {
-            "exportName": "Export Name"
-          },
-          "placeholder": {
-            "title": "Short name to find your export in the export listing"
-          }
-        },
-        "create": {
-          "label": "Export"
-        },
-        "introduction": "Export all {{num}} items as .xlsx file",
-        "button": {
-          "label": {
-            "scheduleExport": "Schedule export"
-          }
-        }
-      },
-      "import": {
-        "button": {
-          "create": "New import",
-          "edit": "Edit import",
-          "delete": "Delete import"
-        }
-      },
       "imports": {
         "title": "Imports",
         "requiredMissing": "The following required columns are not assigned: ",
@@ -504,11 +509,6 @@
         "create": "Add new location",
         "edit": "Edit location",
         "delete": "Delete location"
-      },
-      "exports": {
-        "button": {
-          "view": "View import"
-        }
       },
       "associatedevents": {
         "title": "Associated events"
@@ -855,6 +855,7 @@
     "filter": {
       "button": {
         "toggle": "Filter",
+        "reset": "Reset",
         "filter": "Filtern"
       },
       "status": "Pulication status",
@@ -921,13 +922,25 @@
       "datadeleted": "The data has been deleted"
     }
   },
+  "import": {
+    "status": {
+      "created": "Created",
+      "scheduled": "Scheduled",
+      "processing": "Processing",
+      "published": "Processed",
+      "error": "Error",
+      "trashed": "Trashed",
+      "autodraft": "CSV DATA NEEDED",
+      "forreview": "Assign columns"
+    }
+  },
   "table": {
     "label": {
-      "actions": "Actions",
       "id": "Id",
       "lastUpdate": "Last update",
       "status": "status",
       "title": "Title",
+      "actions": "Actions",
       "date": "date",
       "errors": "Errors",
       "warnings": "Warnings",
@@ -954,18 +967,6 @@
           "eventLocationId": "berlin.de Event Location ID"
         }
       }
-    }
-  },
-  "import": {
-    "status": {
-      "autodraft": "CSV DATA NEEDED",
-      "forreview": "Assign columns",
-      "scheduled": "Scheduled",
-      "processing": "Processing",
-      "published": "Processed",
-      "error": "Error",
-      "trashed": "Trashed",
-      "created": "Created"
     }
   },
   "page": {
