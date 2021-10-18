@@ -311,11 +311,11 @@ const doChores = async () => {
           process.env.NODE_ENV !== "production" ? "dist" : "dist";
 
         let script;
-        if (scheduledDataExport.exportType === "location")
+        if (scheduledDataExport.type === "location")
           script = "processLocationDataExportFile.js";
 
-        if (scheduledDataExport.exportType === "event")
-          script = "processEventDataExportFile.js";
+        // if (scheduledDataExport.type === "event")
+        //   script = "processEventDataExportFile.js";
 
         if (script) {
           spawn(
@@ -333,7 +333,7 @@ const doChores = async () => {
           );
         } else {
           postMessage(
-            `[WORKER:dbHousekeeping]: Could not find export script for ID: ${scheduledDataExport.id} Type:  ${scheduledDataExport.exportType}`
+            `[WORKER:dbHousekeeping]: Could not find export script for ID: ${scheduledDataExport.id} Type:  ${scheduledDataExport.type}`
           );
         }
       } catch (err) {

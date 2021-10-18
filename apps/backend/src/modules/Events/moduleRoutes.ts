@@ -5,6 +5,8 @@ import Update from "./Update";
 import Index from "./Index";
 import Logs from "./Logs";
 import Log from "./Log";
+import DataExports from "./DataExports";
+import Export from "./Export";
 
 import { moduleRootPath } from './moduleConfig';
 
@@ -29,6 +31,19 @@ export const moduleRoutes: RoutePrivateParams[] = [
     component: Logs,
     exact: true,
     userCan: "eventReadOwn",
+  },
+  {
+    key: "exports",
+    path: `${moduleRootPath}/exports`,
+    component: DataExports,
+    exact: true,
+    userCan: "locationUpdateOwn",
+  },{
+    key: "export",
+    path: `${moduleRootPath}/export/:id`,
+    component: Export,
+    exact: true,
+    userCan: "locationUpdateOwn",
   },
   
   {

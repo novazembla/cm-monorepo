@@ -29,7 +29,7 @@ export const dataExportReadQueryGQL = gql`
     dataExportRead(id: $id, type: $type) {
       id
       title
-      exportType
+      type
       lang
       log
       errors

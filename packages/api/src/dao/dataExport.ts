@@ -55,7 +55,7 @@ export const daoDataExportQueryCount = async (
         id: true,
         title: true,
         lang: true,
-        exportType: true,
+        type: true,
         log: true,
         errors: true,
         meta: true,

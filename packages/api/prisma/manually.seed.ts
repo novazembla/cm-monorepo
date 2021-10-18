@@ -539,7 +539,7 @@ async function main() {
       where: {
         slug: {
           path: ["de"],
-          string_contains: "veranstaltungsarten",
+          string_contains: "veranstaltungsart",
         },
       },
     });
@@ -555,7 +555,7 @@ async function main() {
           },
           multiTerm: true,
           slug: {
-            de: "veranstaltungsarten",
+            de: "veranstaltungsart",
             en: "event-categories",
           },
           modules: {
@@ -564,7 +564,7 @@ async function main() {
             },
           },
           fullText:
-            "Veranstaltungsart veranstaltungsarten Event Categories event-categories",
+            "Veranstaltungsart veranstaltungsart Event Categories event-categories",
           terms: {
             createMany: {
               data: eventCategories.map((term) => ({

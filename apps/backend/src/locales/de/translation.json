@@ -475,7 +475,7 @@
         "create": {
           "label": "Exportieren"
         },
-        "introduction": "Exportiere alle {{num}} Einträge aks .xlsx Datei",
+        "introduction": "Exportiere alle {{num}} Einträge als .xlsx Datei",
         "button": {
           "label": {
             "scheduleExport": "Export durchführen"

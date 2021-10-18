@@ -64,3 +64,7 @@ export const ModuleEventUpdateSchema = ModuleEventCreateSchema.concat(
     )
   )
 );
+
+export const ModuleDataExportCreateSchema = object().shape({
+  title: string().required(),
+});

@@ -233,7 +233,6 @@ async function main() {
     await prisma.file.deleteMany();
     await prisma.import.deleteMany();
     await prisma.image.deleteMany();
-    await prisma.imageTranslation.deleteMany();
     await prisma.location.deleteMany();
     await prisma.page.deleteMany();
     await prisma.user.deleteMany();
@@ -417,7 +416,7 @@ async function main() {
 
     const eventTaxonomy = await prisma.taxonomy.findFirst({
       where: {
-        slug_de: "veranstaltungsarten",
+        slug_de: "veranstaltungsart",
       },
     });
 
@@ -429,7 +428,7 @@ async function main() {
           name_de: "Veranstaltungsart",
           name_en: "Event Categories",
           multiTerm: true,
-          slug_de: "veranstaltungsarten",
+          slug_de: "veranstaltungsart",
           slug_en: "event-categories",
           modules: {
             connect: {
@@ -437,7 +436,7 @@ async function main() {
             },
           },
           fullText:
-            "Veranstaltungsart veranstaltungsarten Event Categories event-categories",
+            "Veranstaltungsart veranstaltungsart Event Categories event-categories",
           terms: {
             createMany: {
               data: eventCategories.map((term) => ({

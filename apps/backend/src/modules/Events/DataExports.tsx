@@ -140,7 +140,7 @@ const DataExports = () => {
       i18n.language,
       config.activeLanguages,
       {
-        type: "location"
+        type: "event"
       }
     ),
   });

@@ -55,10 +55,10 @@ declare global {
 
 export interface NexusGenInputs {
   DataExportUpsertInput: { // input type
-    exportType: string; // String!
     lang?: string | null; // String
     meta?: NexusGenScalars['JSON'] | null; // JSON
     title: string; // String!
+    type: string; // String!
   }
   EventUpsertInput: { // input type
     dates?: NexusGenScalars['JSON'] | null; // JSON
@@ -253,7 +253,6 @@ export interface NexusGenObjects {
   DataExport: { // root type
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
     errors?: NexusGenScalars['JSON'] | null; // JSON
-    exportType?: string | null; // String
     file?: NexusGenScalars['JSON'] | null; // JSON
     id: number; // Int!
     lang?: string | null; // String
@@ -261,6 +260,7 @@ export interface NexusGenObjects {
     meta?: NexusGenScalars['JSON'] | null; // JSON
     status?: number | null; // Int
     title?: NexusGenScalars['JSON'] | null; // JSON
+    type?: string | null; // String
     updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
   }
   DataExportQueryResult: { // root type
@@ -549,7 +549,6 @@ export interface NexusGenFieldTypes {
   DataExport: { // field return type
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
     errors: NexusGenScalars['JSON'] | null; // JSON
-    exportType: string | null; // String
     file: NexusGenScalars['JSON'] | null; // JSON
     id: number; // Int!
     lang: string | null; // String
@@ -557,6 +556,7 @@ export interface NexusGenFieldTypes {
     meta: NexusGenScalars['JSON'] | null; // JSON
     status: number | null; // Int
     title: NexusGenScalars['JSON'] | null; // JSON
+    type: string | null; // String
     updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
   }
   DataExportQueryResult: { // field return type
@@ -951,7 +951,6 @@ export interface NexusGenFieldTypeNames {
   DataExport: { // field return type name
     createdAt: 'DateTime'
     errors: 'JSON'
-    exportType: 'String'
     file: 'JSON'
     id: 'Int'
     lang: 'String'
@@ -959,6 +958,7 @@ export interface NexusGenFieldTypeNames {
     meta: 'JSON'
     status: 'Int'
     title: 'JSON'
+    type: 'String'
     updatedAt: 'DateTime'
   }
   DataExportQueryResult: { // field return type name
@@ -1356,8 +1356,8 @@ export interface NexusGenArgTypes {
       data: NexusGenInputs['DataExportUpsertInput']; // DataExportUpsertInput!
     }
     dataExportDelete: { // args
-      exportType: string; // String!
       id: number; // Int!
+      type: string; // String!
     }
     eventCreate: { // args
       data: NexusGenInputs['EventUpsertInput']; // EventUpsertInput!
@@ -1493,8 +1493,8 @@ export interface NexusGenArgTypes {
       roles: Array<string | null>; // [String]!
     }
     dataExportRead: { // args
-      exportType: string; // String!
       id: number; // Int!
+      type: string; // String!
     }
     dataExports: { // args
       orderBy?: NexusGenScalars['JSON'] | null; // JSON

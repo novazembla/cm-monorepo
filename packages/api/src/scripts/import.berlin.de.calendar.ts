@@ -45,7 +45,7 @@ const prepareDatesForDb = (dates: any[]) => {
   return dates;
 };
 
-const eventCategoriesSlugDE = "veranstaltungsarten";
+const eventCategoriesSlugDE = "veranstaltungsart";
 let eventCategories: any = {};
 let log: string[] = [];
 let errors: string[] = [];

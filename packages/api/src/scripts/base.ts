@@ -33,6 +33,7 @@ const doChores = async () => {
       "image",
       "import",
       "dataExport",
+      "locationExport",
       
       "player",
       "file",

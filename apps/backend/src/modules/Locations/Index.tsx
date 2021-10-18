@@ -340,6 +340,7 @@ const Index = () => {
         const mutationResults = await firstMutation({
           title: newData.title,
           lang: i18n.language,
+          type: "location",
           meta: adminTableCreateQueryVariables(
             tableState,
             multiLangFields,

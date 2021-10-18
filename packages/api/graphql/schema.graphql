@@ -41,7 +41,6 @@ type BooleanResult {
 type DataExport {
   createdAt: DateTime
   errors: JSON
-  exportType: String
   file: JSON
   id: Int!
   lang: String
@@ -49,6 +48,7 @@ type DataExport {
   meta: JSON
   status: Int
   title: JSON
+  type: String
   updatedAt: DateTime
 }
 
@@ -59,10 +59,10 @@ type DataExportQueryResult {
 }
 
 input DataExportUpsertInput {
-  exportType: String!
   lang: String
   meta: JSON
   title: String!
+  type: String!
 }
 
 """
@@ -293,7 +293,7 @@ type Mutation {
   authRequestEmailVerificationEmail(scope: String!, userId: Int!): BooleanResult!
   authVerifyEmail(token: String!): BooleanResult!
   dataExportCreate(data: DataExportUpsertInput!): DataExport!
-  dataExportDelete(exportType: String!, id: Int!): BooleanResult!
+  dataExportDelete(id: Int!, type: String!): BooleanResult!
   eventCreate(data: EventUpsertInput!): Event!
   eventDelete(id: Int!): BooleanResult!
   eventUpdate(data: EventUpsertInput!, id: Int!): Event!
@@ -374,7 +374,7 @@ type ProfileUser implements UserBaseNode {
 
 type Query {
   adminUsers(roles: [String]!): [AdminUser] @deprecated(reason: "A publicly accessible list Lists all users that have a the given roles")
-  dataExportRead(exportType: String!, id: Int!): DataExport!
+  dataExportRead(id: Int!, type: String!): DataExport!
   dataExports(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): DataExportQueryResult
   event(id: Int, slug: String): Event!
   eventImportLog(id: Int!): EventImportLog!

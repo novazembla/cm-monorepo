@@ -6,7 +6,7 @@ import Prisma from "@prisma/client";
 import minimist from "minimist";
 
 import { getApiConfig } from "../config";
-import { ExportStatus, PublishStatus, importHeaders } from "@culturemap/core";
+import { ExportStatus, PublishStatus } from "@culturemap/core";
 import { daoSharedGetTranslatedSelectColumns } from "../dao/shared";
 import Excel from "exceljs";
 
@@ -29,9 +29,7 @@ const apiConfig = getApiConfig();
 const log: string[] = [];
 const errors: string[] = [];
 
-let termsType: any = {};
-let termsTargetAudience: any = {};
-let termsInstitutionType: any = {};
+let termsEventType: any = {};
 
 const htmlToText = (str: string) => {
   let out = str.replaceAll("<br>", "BBBRRR<br>");
@@ -53,23 +51,9 @@ const getTermName = (
 
   const termsInTax = terms.filter((term) => {
     switch (taxonomy) {
-      case "type":
+      case "eventType":
         return (
-          typeof termsType[term.id] !== "undefined" &&
-          (!Array.isArray(primaryTerms) ||
-            !primaryTerms.find((pt) => pt.id === term.id))
-        );
-
-      case "targetAudience":
-        return (
-          typeof termsTargetAudience[term.id] !== "undefined" &&
-          (!Array.isArray(primaryTerms) ||
-            !primaryTerms.find((pt) => pt.id === term.id))
-        );
-
-      case "institutionType":
-        return (
-          typeof termsInstitutionType[term.id] !== "undefined" &&
+          typeof termsEventType[term.id] !== "undefined" &&
           (!Array.isArray(primaryTerms) ||
             !primaryTerms.find((pt) => pt.id === term.id))
         );
@@ -86,124 +70,112 @@ const getTermName = (
   return "";
 };
 
-const locationToArray = (location: any, lang: string) => {
+const eventToArray = (event: any, lang: string) => {
   let pubState = "";
 
-  if (location.status === PublishStatus.AUTODRAFT) {
+  if (event.status === PublishStatus.AUTODRAFT) {
     pubState = lang === "de" ? "Entwurf" : "Draft";
-  } else if (location.status === PublishStatus.DRAFT) {
+  } else if (event.status === PublishStatus.DRAFT) {
     pubState = lang === "de" ? "Entwurf" : "Draft";
-  } else if (location.status === PublishStatus.FORREVIEW) {
+  } else if (event.status === PublishStatus.FORREVIEW) {
     pubState = lang === "de" ? "Zur Kontrolle" : "For review";
-  } else if (location.status === PublishStatus.REJECTED) {
+  } else if (event.status === PublishStatus.REJECTED) {
     pubState = lang === "de" ? "Zurückgewiesen" : "Rejected";
-  } else if (location.status === PublishStatus.IMPORTEDWARNINGS) {
+  } else if (event.status === PublishStatus.IMPORTEDWARNINGS) {
     pubState =
       lang === "de" ? "Importiert mit Warnung(en)" : "Imported with warnings";
-  } else if (location.status === PublishStatus.IMPORTED) {
+  } else if (event.status === PublishStatus.IMPORTED) {
     pubState = lang === "de" ? "Importiert" : "Imported";
-  } else if (location.status === PublishStatus.PUBLISHED) {
+  } else if (event.status === PublishStatus.PUBLISHED) {
     pubState = lang === "de" ? "Publiziert" : "Published";
-  } else if (location.status === PublishStatus.TRASHED) {
+  } else if (event.status === PublishStatus.TRASHED) {
     pubState = lang === "de" ? "Gelöscht" : "Trashed";
   } else {
     pubState = lang === "de" ? "Unbekannt" : "Unknown";
   }
 
+  const getValue = (val: any) => {
+    if (val) return `${val}`.trim() ?? "";
+    return "";
+  };
+
   const cols = [
-    location.id,
+    event.id,
     pubState,
-    location.updatedAt,
-    location.lng,
-    location.lat,
-    location.title_de,
-    location.title_en,
-    location.agency,
-    getTermName("institutionType", location.terms, 0, lang),
-    getTermName("institutionType", location.terms, 1, lang),
+    event.updatedAt,
+    event.title_de,
+    event.title_en,
 
-    getTermName("type", location.primaryTerms, 0, lang),
-    getTermName("type", location.terms, 0, lang, location.primaryTerms),
-    getTermName("type", location.terms, 1, lang, location.primaryTerms),
-    getTermName("type", location.terms, 2, lang, location.primaryTerms),
-    getTermName("type", location.terms, 3, lang, location.primaryTerms),
+    Array.isArray(event.locations) && event.locations.length > 0
+      ? event.locations[0].id
+      : "",
+    Array.isArray(event.locations) && event.locations.length > 0
+      ? event.locations[0].title_de
+      : "",
+    Array.isArray(event.locations) && event.locations.length > 0
+      ? event.locations[0].title_en
+      : "",
 
-    getTermName("targetAudience", location.terms, 0, lang),
-    getTermName("targetAudience", location.terms, 1, lang),
-    getTermName("targetAudience", location.terms, 2, lang),
-    getTermName("targetAudience", location.terms, 3, lang),
+    htmlToText(event.description_de),
+    htmlToText(event.description_en),
+    `${getValue(event?.meta?.veranstalter?.name)}
+    ${getValue(event?.meta?.veranstalter?.strasse)} ${getValue(
+      event?.meta?.veranstalter?.hausnummer
+    )}
+    ${getValue(event?.meta?.veranstalter?.plz)} ${getValue(
+      event?.meta?.veranstalter?.ort
+    )}
+    `.trim(),
+    `${getValue(event?.meta?.veranstaltungsort?.name)}
+    ${getValue(event?.meta?.veranstaltungsort?.strasse)} ${getValue(
+      event?.meta?.veranstaltungsort?.hausnummer
+    )}
+    ${getValue(event?.meta?.veranstaltungsort?.plz)} ${getValue(
+      event?.meta?.veranstaltungsort?.ort
+    )}
+    `.trim(),
+    event?.meta?.event?.termine &&
+    Object.keys(event?.meta?.event?.termine).length > 0
+      ? Object.keys(event?.meta?.event?.termine)
+          .reduce((out: string[], tId: any) => {
+            const termin: any = event?.meta?.event?.termine[tId];
 
-    location?.address?.co ?? "",
-    location?.address?.street1 ?? "",
-    location?.address?.street2 ?? "",
-    location?.address?.houseNumber ?? "",
-    location?.address?.postCode ?? "",
-    location?.address?.city ?? "",
-    location?.contactInfo?.phone1 ?? "",
-    location?.contactInfo?.phone2 ?? "",
-    location?.contactInfo?.email1 ?? "",
-    location?.contactInfo?.email2 ?? "",
-    htmlToText(location.description_de ?? ""),
-    htmlToText(location.description_en ?? ""),
-    htmlToText(location.offers_de ?? ""),
-    htmlToText(location.offers_en ?? ""),
-    htmlToText(location.accessibilityInformation_de ?? ""),
-    htmlToText(location.accessibilityInformation_en ?? ""),
+            out.push(
+              `${termin.tag_von} ${termin.uhrzeit_von}-${termin.uhrzeit_bis},\n`
+            );
+            return out;
+          }, [] as string[])
+          .join("")
+      : "",
 
-    location?.socialMedia?.website ?? "",
-    location?.socialMedia?.facebook ?? "",
-    location?.socialMedia?.instagram ?? "",
-    location?.socialMedia?.twitter ?? "",
-    location?.socialMedia?.youtube ?? "",
-    location?.eventLocationId ?? "",
+    lang === "de"
+      ? event.isFree
+        ? "Ja"
+        : "Nein"
+      : event.isFree
+      ? "Yes"
+      : "No",
 
-    location?.heroImage?.meta?.originalFileUrl ?? "",
-    location?.images && location.images.length > 0
-      ? location.images[0]?.meta?.originalFileUrl
-      : "",
-    location?.images && location.images.length > 1
-      ? location.images[1]?.meta?.originalFileUrl
-      : "",
-    location?.images && location.images.length > 2
-      ? location.images[2]?.meta?.originalFileUrl
-      : "",
-    location?.images && location.images.length > 3
-      ? location.images[3]?.meta?.originalFileUrl
-      : "",
-    location?.images && location.images.length > 4
-      ? location.images[4]?.meta?.originalFileUrl
-      : "",
-    location?.images && location.images.length > 5
-      ? location.images[5]?.meta?.originalFileUrl
-      : "",
-    location?.images && location.images.length > 6
-      ? location.images[7]?.meta?.originalFileUrl
-      : "",
-    location?.images && location.images.length > 7
-      ? location.images[8]?.meta?.originalFileUrl
-      : "",
-    location?.images && location.images.length > 8
-      ? location.images[9]?.meta?.originalFileUrl
-      : "",
-    location?.images && location.images.length > 9
-      ? location.images[10]?.meta?.originalFileUrl
-      : "",
+    getTermName("eventType", event.terms, 0, lang),
+    getTermName("eventType", event.terms, 1, lang),
+    getTermName("eventType", event.terms, 2, lang),
+    getTermName("eventType", event.terms, 3, lang),
+    getTermName("eventType", event.terms, 4, lang),
+    getTermName("eventType", event.terms, 5, lang),
+    getTermName("eventType", event.terms, 6, lang),
+    getTermName("eventType", event.terms, 7, lang),
+    getTermName("eventType", event.terms, 8, lang),
+    getTermName("eventType", event.terms, 9, lang),
+
+    event?.heroImage?.meta?.originalFileUrl ?? "",
   ];
 
   return [
     ...cols,
-    ...(Array.isArray(location?.images)
-      ? location?.images.map((img: any) => img.meta?.originalFileUrl)
+    ...(Array.isArray(event?.images)
+      ? event?.images.map((img: any) => img.meta?.originalFileUrl)
       : []),
   ];
-};
-
-const getTranslatedHeader = (key: string, lang: string) => {
-  try {
-    return importHeaders[key][lang];
-  } finally {
-    return key;
-  }
 };
 
 const doChores = async () => {
@@ -245,14 +217,14 @@ const doChores = async () => {
         throw err;
       }
 
-      if (!apiUser || !apiUser.permissions.includes("locationReadOwn"))
+      if (!apiUser || !apiUser.permissions.includes("eventReadOwn"))
         throw Error("Access denied");
 
       logger.info(`Export id: ${exportInDb.id} found to be valid for export`);
 
       let tax = await prisma.taxonomy.findFirst({
         where: {
-          slug_de: "einrichtungsart",
+          slug_de: "veranstaltungsart",
         },
       });
 
@@ -266,7 +238,7 @@ const doChores = async () => {
         });
 
         if (terms) {
-          termsType = terms.reduce((acc: any, t: any) => {
+          termsEventType = terms.reduce((acc: any, t: any) => {
             return {
               ...acc,
               [t.id]: {
@@ -278,81 +250,13 @@ const doChores = async () => {
         } else {
           throw Error(
             exportInDb.lang === "de"
-              ? "Konnte die Begriffe der Taxonomie 'Einrichtungsart' - Slug 'einrichtungsart' nicht finden"
-              : "Could not retrieve terms for 'Einrichtungsart' - Slug 'einrichtungsart'"
-          );
-        }
-      }
-
-      tax = await prisma.taxonomy.findFirst({
-        where: {
-          slug_de: "zielgruppe",
-        },
-      });
-
-      if (tax && tax.id) {
-        const terms = await prisma.term.findMany({
-          where: {
-            taxonomy: {
-              id: tax.id,
-            },
-          },
-        });
-
-        if (terms) {
-          termsTargetAudience = terms.reduce((acc: any, t: any) => {
-            return {
-              ...acc,
-              [t.id]: {
-                de: t.name_de,
-                en: t.name_en,
-              },
-            };
-          }, {} as any);
-        } else {
-          throw Error(
-            exportInDb.lang === "de"
-              ? "Konnte die Begriffe der Taxonomie 'Zielgruppe' - Slug 'zielgruppe' nicht finden"
-              : "Could not retrieve terms for 'Zielgruppe' - Slug 'zielgruppe'"
+              ? "Konnte die Begriffe der Taxonomie 'Veranstaltungsart' - Slug 'veranstaltungsart' nicht finden"
+              : "Could not retrieve terms for 'Veranstaltungsart' - Slug 'veranstaltungsart'"
           );
         }
       }
 
       logger.debug(`Export id: ${exportInDb.id} terms loaded`);
-
-      tax = await prisma.taxonomy.findFirst({
-        where: {
-          slug_de: "traegerart",
-        },
-      });
-
-      if (tax && tax.id) {
-        const terms = await prisma.term.findMany({
-          where: {
-            taxonomy: {
-              id: tax.id,
-            },
-          },
-        });
-
-        if (terms) {
-          termsInstitutionType = terms.reduce((acc: any, t: any) => {
-            return {
-              ...acc,
-              [t.id]: {
-                de: t.name_de,
-                en: t.name_en,
-              },
-            };
-          }, {} as any);
-        } else {
-          throw Error(
-            exportInDb.lang === "de"
-              ? "Konnte die Begriffe der Taxonomie 'Trägerart' - Slug 'traegerart' nicht finden"
-              : "Could not retrieve terms for 'Trägerart' - Slug 'traegerart'"
-          );
-        }
-      }
 
       log.push(
         exportInDb.lang === "de"
@@ -381,11 +285,11 @@ const doChores = async () => {
           );
 
         let totalCount;
-        let locations: Prisma.Location[] = [];
-        let include: Prisma.Prisma.LocationInclude = {};
-        let where: Prisma.Prisma.LocationWhereInput = meta?.where ?? {};
+        let events: Prisma.Event[] = [];
+        let include: Prisma.Prisma.EventInclude = {};
+        let where: Prisma.Prisma.EventWhereInput = meta?.where ?? {};
 
-        if (!apiUser.permissions.includes("locationRead")) {
+        if (!apiUser.permissions.includes("eventRead")) {
           where = {
             ...where,
             owner: {
@@ -394,13 +298,13 @@ const doChores = async () => {
           };
         }
 
-        totalCount = await prisma.location.count({
+        totalCount = await prisma.event.count({
           where,
         });
 
         log.push(
           exportInDb.lang === "de"
-            ? `Beginne den Export von ${totalCount} Kartenpunkten`
+            ? `Beginne den Export von ${totalCount} Veranstaltungen`
             : `Attempting to export query with ${totalCount} items`
         );
         logger.info(
@@ -408,6 +312,12 @@ const doChores = async () => {
         );
         include = {
           ...include,
+          locations: {
+            select: {
+              id: true,
+              ...daoSharedGetTranslatedSelectColumns(["title"]),
+            },
+          },
           terms: {
             select: {
               id: true,
@@ -421,17 +331,26 @@ const doChores = async () => {
             },
           },
           heroImage: true,
-          images: true,
+          dates: {
+            select: {
+              date: true,
+              begin: true,
+              end: true,
+            },
+            orderBy: {
+              date: "asc",
+            },
+          },
         };
 
         if (totalCount > 0) {
-          locations = await prisma.location.findMany({
+          events = await prisma.event.findMany({
             where,
             include,
             orderBy: meta?.orderBy ?? undefined,
           });
 
-          if (locations) {
+          if (events) {
             const filePath = `${apiConfig.baseDir}/${apiConfig.publicDir}/exports`;
             const nanoId = customNanoId();
 
@@ -456,75 +375,51 @@ const doChores = async () => {
               exportInDb.lang === "de"
                 ? "Letzte Aktualisierung"
                 : "Last update",
-              exportInDb.lang === "de" ? "Längengrad" : "Longitude",
-              exportInDb.lang === "de" ? "Breitengrad" : "Latitude",
-              getTranslatedHeader("title-de", exportInDb.lang),
-              getTranslatedHeader("title-en", exportInDb.lang),
-              getTranslatedHeader("agency", exportInDb.lang),
-              getTranslatedHeader("tax-agency-type-1", exportInDb.lang),
-              getTranslatedHeader("tax-agency-type-2", exportInDb.lang),
-              getTranslatedHeader("tax-type-1", exportInDb.lang),
-              getTranslatedHeader("tax-type-2", exportInDb.lang),
-              getTranslatedHeader("tax-type-3", exportInDb.lang),
-              getTranslatedHeader("tax-type-4", exportInDb.lang),
-              getTranslatedHeader("tax-type-5", exportInDb.lang),
-              getTranslatedHeader("tax-audience-1", exportInDb.lang),
-              getTranslatedHeader("tax-audience-2", exportInDb.lang),
-              getTranslatedHeader("tax-audience-3", exportInDb.lang),
-              getTranslatedHeader("tax-audience-4", exportInDb.lang),
-              getTranslatedHeader("co", exportInDb.lang),
-              getTranslatedHeader("street1", exportInDb.lang),
-              getTranslatedHeader("street2", exportInDb.lang),
-              getTranslatedHeader("houseNumber", exportInDb.lang),
-              getTranslatedHeader("postCode", exportInDb.lang),
-              getTranslatedHeader("city", exportInDb.lang),
-              getTranslatedHeader("phone1", exportInDb.lang),
-              getTranslatedHeader("phone2", exportInDb.lang),
-              getTranslatedHeader("email1", exportInDb.lang),
-              getTranslatedHeader("email2", exportInDb.lang),
-              getTranslatedHeader("description-de", exportInDb.lang),
-              getTranslatedHeader("description-en", exportInDb.lang),
-              getTranslatedHeader("offers-de", exportInDb.lang),
-              getTranslatedHeader("offers-en", exportInDb.lang),
-              getTranslatedHeader("accessibility-de", exportInDb.lang),
-              getTranslatedHeader("accessibility-en", exportInDb.lang),
-              getTranslatedHeader("website", exportInDb.lang),
-              getTranslatedHeader("facebook", exportInDb.lang),
-              getTranslatedHeader("instagram", exportInDb.lang),
-              getTranslatedHeader("twitter", exportInDb.lang),
-              getTranslatedHeader("youtube", exportInDb.lang),
-              getTranslatedHeader("eventLocationId", exportInDb.lang),
+              exportInDb.lang === "de" ? "Titel (DE)" : "Title (DE)",
+              exportInDb.lang === "de" ? "Titel (EN)" : "Title (EN)",
+              exportInDb.lang === "de" ? "Kartenpunkt (ID)" : "Location (ID)",
+              exportInDb.lang === "de"
+                ? "Kartenpunkttitel (DE)"
+                : "Location title (DE)",
+
+              exportInDb.lang === "de"
+                ? "Kartenpunkttitel (EN)"
+                : "Location title (EN)",
+
+              exportInDb.lang === "de"
+                ? "Beschreibung (DE)"
+                : "Description (DE)",
+              exportInDb.lang === "de"
+                ? "Beschreibung (EN)"
+                : "Description (EN)",
+              exportInDb.lang === "de" ? "Veranstalter" : "Organiser",
+              exportInDb.lang === "de" ? "Veranstaltungsort" : "Event location",
+              exportInDb.lang === "de" ? "Termine" : "Dates",
+              exportInDb.lang === "de" ? "Eintritt Frei" : "Free Entry",
+              exportInDb.lang === "de" ? "Veranstaltungsart 1" : "Event Type 1",
+              exportInDb.lang === "de" ? "Veranstaltungsart 2" : "Event Type 2",
+              exportInDb.lang === "de" ? "Veranstaltungsart 3" : "Event Type 3",
+              exportInDb.lang === "de" ? "Veranstaltungsart 4" : "Event Type 4",
+              exportInDb.lang === "de" ? "Veranstaltungsart 5" : "Event Type 5",
+              exportInDb.lang === "de" ? "Veranstaltungsart 6" : "Event Type 6",
+              exportInDb.lang === "de" ? "Veranstaltungsart 7" : "Event Type 7",
+              exportInDb.lang === "de" ? "Veranstaltungsart 8" : "Event Type 8",
+              exportInDb.lang === "de" ? "Veranstaltungsart 9" : "Event Type 9",
+              exportInDb.lang === "de"
+                ? "Veranstaltungsart 10"
+                : "Event Type 10",
+
               exportInDb.lang === "de" ? "Poster Bild" : "Featured image",
-              exportInDb.lang === "de" ? "Bilder ..." : "Further images ...",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
             ]);
 
-            for (let i = 0; i < locations.length; i++) {
+            for (let i = 0; i < events.length; i++) {
               worksheet
-                .addRow(locationToArray(locations[i], exportInDb.lang))
+                .addRow(eventToArray(events[i], exportInDb.lang))
                 .commit();
               log.push(
                 exportInDb.lang === "de"
-                  ? `Kartenpunkt: ${locations[i].id} bearbeitet`
-                  : `Processed location id: ${locations[i].id}`
+                  ? `Veranstaltung: ${events[i].id} bearbeitet`
+                  : `Processed event id: ${events[i].id}`
               );
             }
             worksheet.commit();

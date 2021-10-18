@@ -285,7 +285,7 @@ CREATE TABLE "DataExport" (
     "id" SERIAL NOT NULL,
     "title" TEXT NOT NULL,
     "lang" TEXT NOT NULL DEFAULT E'en',
-    "exportType" TEXT NOT NULL DEFAULT E'location',
+    "type" TEXT NOT NULL DEFAULT E'location',
     "log" JSONB DEFAULT E'[]',
     "errors" JSONB DEFAULT E'[]',
     "meta" JSONB DEFAULT E'{}',

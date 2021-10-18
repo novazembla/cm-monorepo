@@ -39,7 +39,7 @@ export const DataExport = objectType({
     t.nonNull.int("id");
     t.json("title");
     t.string("lang");
-    t.string("exportType");
+    t.string("type");
     t.json("log");
     t.json("errors");
     t.json("meta");
@@ -88,7 +88,7 @@ export const DataExportQueries = extendType({
 
       // authorize: (...[, args, ctx]) => {
       //   console.log(args);
-      //   const type = args?.where?.exportType ?? "none";
+      //   const type = args?.where?.type ?? "none";
       //   return authorizeApiUser(ctx, `${type}ReadOwn` as any);
       // },
 
@@ -97,7 +97,7 @@ export const DataExportQueries = extendType({
 
         const pRI = parseResolveInfo(info);
 
-        const type = args?.where?.exportType ?? "none";
+        const type = args?.where?.type ?? "none";
         let totalCount;
         let dataExports;
         let include: Prisma.DataExportInclude = {};
@@ -153,11 +153,11 @@ export const DataExportQueries = extendType({
 
       args: {
         id: nonNull(intArg()),
-        exportType: nonNull(stringArg()),
+        type: nonNull(stringArg()),
       },
 
       authorize: async (...[, args, ctx]) => {
-        const type = args?.exportType ?? "none";
+        const type = args?.type ?? "none";
 
         if (!authorizeApiUser(ctx, `${type}UpdateOwn` as any)) return false;
 
@@ -185,7 +185,7 @@ export const DataExportUpsertInput = inputObjectType({
   name: "DataExportUpsertInput",
   definition(t) {
     t.nonNull.string("title");
-    t.nonNull.string("exportType");
+    t.nonNull.string("type");
     t.string("lang");
     t.json("meta");
   },
@@ -203,7 +203,7 @@ export const DataExportMutations = extendType({
       },
 
       authorize: (...[, args, ctx]) => {
-        const type = args?.data?.exportType ?? "none";
+        const type = args?.data?.type ?? "none";
         return authorizeApiUser(ctx, `${type}Create` as any);
       },
 
@@ -211,7 +211,7 @@ export const DataExportMutations = extendType({
         const location = await daoDataExportCreate({
           ...args.data,
           lang: args.data?.lang ?? "en",
-          exportType: args.data?.exportType ?? "none",
+          type: args.data?.type ?? "none",
           owner: {
             connect: {
               id: ctx?.apiUser?.id ?? 0,
@@ -235,11 +235,11 @@ export const DataExportMutations = extendType({
 
       args: {
         id: nonNull(intArg()),
-        exportType: nonNull(stringArg()),
+        type: nonNull(stringArg()),
       },
 
       authorize: async (...[, args, ctx]) => {
-        const type = args?.exportType ?? "none";
+        const type = args?.type ?? "none";
         if (!authorizeApiUser(ctx, `${type}DeleteOwn` as any)) return false;
 
         if (apiUserCan(ctx, `${type}Delete` as any)) return true;

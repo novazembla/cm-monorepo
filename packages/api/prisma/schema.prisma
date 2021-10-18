@@ -12,11 +12,6 @@ generator client {
   previewFeatures = ["filterJson"]
 }
 
-model Player {
-  id                 Int      @id @default(autoincrement())
-  level              Int
-}
-
 model User {
   id                 Int      @id @default(autoincrement())
   email              String   @unique
@@ -411,7 +406,7 @@ model DataExport {
   id       Int    @id @default(autoincrement())
   title    String
   lang      String @default("en")
-  exportType      String @default("location")
+  type      String @default("location")
   log      Json?  @default("[]")
   errors   Json?  @default("[]")
   meta  Json?  @default("{}")
