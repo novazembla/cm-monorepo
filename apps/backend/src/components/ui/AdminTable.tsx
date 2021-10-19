@@ -31,6 +31,7 @@ import {
   Input,
   Badge,
 } from "@chakra-ui/react";
+import { RiCloseFill } from "@hacknug/react-icons/ri";
 
 import {
   usePagination,
@@ -533,7 +534,7 @@ export const AdminTable = ({
     filterKeyword: string,
     forceRefetch?: boolean
   ) => boolean;
-  resetFilter?: () => void,
+  resetFilter?: () => void;
   intitalTableState: AdminTableState;
   tablePageCount: number;
   tableTotalCount: number;
@@ -672,7 +673,7 @@ export const AdminTable = ({
               )}
             </Box>
             <Box w="20%">
-              <FormLabel htmlFor="filter" m="0">
+              <FormLabel position="relative" htmlFor="filter" m="0">
                 <VisuallyHidden>
                   {t("admintable.search", "Keyword search")}
                 </VisuallyHidden>
@@ -684,7 +685,34 @@ export const AdminTable = ({
                   ref={keywordInputRef}
                   defaultValue={intitalTableState.filterKeyword}
                   placeholder={t("admintable.search", "Keyword search")}
+                  pr="50px"
                 />
+                {filterKeyword && <IconButton
+                  position="absolute"
+                  right="6px"
+                  top="6px"
+                  variant="outline"
+                  icon={<RiCloseFill />}
+                  zIndex="10"
+                  onClick={() => {
+                    setFilterKeyword("");
+
+                    if (keywordInputRef.current)
+                      keywordInputRef.current.value = "";
+
+                  }}
+                  borderColor="gray.400"
+                  color="gray.800"
+                  fontSize="lg"
+                  h="38px"
+                  w="30px"
+                  minW="38px"
+                  p="0"
+                  aria-label={t(
+                    "forms.select.autocomplete.clearselection",
+                    "Clear selected element"
+                  )}
+                />}
               </FormLabel>
             </Box>
           </Flex>
@@ -851,7 +879,7 @@ export const AdminTable = ({
                           setFilterKeyword("");
 
                           if (keywordInputRef.current)
-                            keywordInputRef.current.value ="";
+                            keywordInputRef.current.value = "";
 
                           if (typeof resetFilter === "function")
                             resetFilter.call(null);
