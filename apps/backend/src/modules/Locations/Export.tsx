@@ -84,7 +84,6 @@ const Export = () => {
   }
   const clipboardLog = useClipboard(logValue);
 
-  console.log(data?.dataExportRead);
   return (
     <>
       <ModuleSubNav breadcrumb={breadcrumb} buttonList={buttonList} />

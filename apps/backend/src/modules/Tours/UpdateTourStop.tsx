@@ -141,7 +141,6 @@ const UpdateTourStop = () => {
               }
             : undefined;
 
-        console.log(fieldImagesRFHFormDataToData(newData));
         const { errors } = await firstMutation(
           parseInt(router.query.tourStopId, 10),
           {

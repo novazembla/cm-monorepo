@@ -192,6 +192,9 @@
           "moveUp": "Nach oben verschieben",
           "moveDown": "Nach unten verschieben"
         },
+        "butto": {
+          "addOneBelow": "Neues Bild unter diesem hinzufügen"
+        },
         "noimages": "Keine Bilder hinzugefügt. Bitte laden Sie ein Bild mittels des untrigen Knopfes hoch.",
         "addimage": "Bild hinzufügen"
       }
@@ -232,84 +235,35 @@
       "pleasesafedraft": "Bitte speichern Sie einen Entwurf um weitere Funktionen freizuschalten"
     }
   },
-  "module": {
-    "events": {
-      "forms": {
-        "event": {
-          "field": {
-            "dates": {
-              "clone": "Aktuelle Zeile duplizieren",
-              "removedate": "Entfernen"
-            },
-            "label": {
-              "title": "Titel",
-              "slug": "Slug",
-              "description": "Beschreibung"
-            },
-            "placeholder": {
-              "title": "Veranstaltungstitel",
-              "slug": "Slug / URL Zusatz",
-              "description": "Veranstaltungsbeschreibung"
-            },
-            "date": {
-              "placeholder": "Datum"
-            },
-            "begin": {
-              "label": "Beginn"
-            },
-            "end": {
-              "label": "Ende"
-            }
-          },
-          "table": {
-            "column": {
-              "begin": {
-                "label": "Beginn"
-              },
-              "end": {
-                "label": "Ende"
-              }
-            }
-          }
-        },
-        "field": {
-          "label": {
-            "isFree": "Diese Veranstaltung ist kostenfrei",
-            "isImported": "Diese Veranstaltung wird automatisch importiert und aktualisiert"
-          }
-        },
-        "eventdates": {
-          "heading": "Veranstaltungsdatum / -daten",
-          "table": {
-            "column": {
-              "date": {
-                "label": "Datum"
-              }
-            }
-          }
-        }
-      },
-      "title": "Veranstaltungen",
-      "menuitem": {
-        "createevent": "Veranstaltung hinzufügen",
-        "importLogs": "Log importieren",
-        "importLog": "Log"
-      },
-      "button": {
-        "create": "Neue Veranstaltung hinzufügen",
-        "edit": "Veranstaltung bearbeiten",
-        "delete": "Veranstaltung löschen",
-        "viewLog": "Log anzeigen"
-      },
-      "importDate": "Datum des Imports",
-      "noImportErrors": "Anzahl der Importfehler",
-      "noImportWarnings": "Keine Import Warnungen",
-      "event": {
-        "title": {
-          "updatepage": "Veranstaltung aktualisieren"
-        }
-      }
+  "imageuploader": {
+    "filesizebetween": "Dateigrösse zwischen {{minFileSize}} und {{maxFileSize}}",
+    "filesizebelow": "Max. Dateigrösse {{maxFileSize}}",
+    "filesizeabove": "Min. Dateigrösse {{minFileSize}}",
+    "droperror": {
+      "toolarge": "Die ausgewählte Datei ist zu groß.",
+      "toosmall": "Die ausgewählte Datei ist zu klein.",
+      "invalidtype": "Dieses Dateiformat kann nicht verwendet werden."
     },
+    "button": {
+      "deleteimage": "Bild löschen"
+    },
+    "deleteimage": {
+      "error": "Leider konnten wir Ihre Löschanfrage nicht bearbeiten. Bitte versuchen Sie es später erneut."
+    },
+    "pleasedroporclick": "Hier ein Bild mit der Maus fallen lassen, oder klicken Sie, um eine Bild auszuwählen.",
+    "uploading": "Hochladen",
+    "cancelupload": "Upload abbrechen",
+    "error": "Leider konnten wir Ihren Upload nicht abschließen, bitte versuchen Sie es später noch einmal."
+  },
+  "ui": {
+    "button": {
+      "label": {
+        "show": "Anzeigen",
+        "hide": "Verstecken"
+      }
+    }
+  },
+  "module": {
     "forms": {
       "taxonomy": {
         "label": {
@@ -329,10 +283,10 @@
     "button": {
       "cancel": "Abbrechen",
       "update": "Aktualisieren",
+      "save": "Speichern",
       "savedraft": "Entwurf speichern",
       "back": "Zurück",
-      "import": "Importieren",
-      "save": "Speichern"
+      "import": "Importieren"
     },
     "users": {
       "deletealter": {
@@ -384,6 +338,122 @@
         "create": "NutzerIn hinzufügen",
         "edit": "NutzerIn bearbeiten",
         "delete": "NutzerIn löschen"
+      }
+    },
+    "homepage": {
+      "field": {
+        "label": {
+          "highlights": "Highlights",
+          "missionStatement": "Mission statement"
+        },
+        "type": {
+          "label": "Typ",
+          "location": {
+            "label": "Kartenpunkt"
+          },
+          "event": {
+            "label": "Veranstaltung"
+          },
+          "tour": {
+            "label": "Tour"
+          }
+        },
+        "autocomplete": "Suchanfrage",
+        "button": {
+          "delte": "Löschen",
+          "addOneBelow": "Neues Highlight unter dem jetzigen hinzufügen"
+        },
+        "highlights": {
+          "noneConfigured": "Keine Highlights ausgewählt. Bitte nutzen Sie den untrigen Schaltknopf um ein erstes Highlight auszuwählen",
+          "add": "Highlight hinzufügen"
+        },
+        "placeholder": {
+          "missionStatement": "Kurzes auf der Homepage angezeigtes Mission Statement ..."
+        }
+      },
+      "forms": {
+        "field": {
+          "label": {
+            "searchitem": "Suche"
+          }
+        }
+      }
+    },
+    "events": {
+      "title": "Veranstaltungen",
+      "menuitem": {
+        "createevent": "Veranstaltung hinzufügen",
+        "importLogs": "Log importieren",
+        "importLog": "Log"
+      },
+      "forms": {
+        "event": {
+          "field": {
+            "label": {
+              "title": "Titel",
+              "slug": "Slug",
+              "description": "Beschreibung"
+            },
+            "placeholder": {
+              "title": "Veranstaltungstitel",
+              "slug": "Slug / URL Zusatz",
+              "description": "Veranstaltungsbeschreibung"
+            },
+            "date": {
+              "placeholder": "Datum"
+            },
+            "begin": {
+              "label": "Beginn"
+            },
+            "end": {
+              "label": "Ende"
+            },
+            "dates": {
+              "removedate": "Entfernen",
+              "clone": "Aktuelle Zeile duplizieren"
+            }
+          },
+          "table": {
+            "column": {
+              "begin": {
+                "label": "Beginn"
+              },
+              "end": {
+                "label": "Ende"
+              }
+            }
+          }
+        },
+        "field": {
+          "label": {
+            "isFree": "Diese Veranstaltung ist kostenfrei",
+            "isImported": "Diese Veranstaltung wird automatisch importiert und aktualisiert"
+          }
+        },
+        "eventdates": {
+          "heading": "Veranstaltungsdatum / -daten",
+          "table": {
+            "column": {
+              "date": {
+                "label": "Datum"
+              }
+            }
+          }
+        }
+      },
+      "button": {
+        "create": "Neue Veranstaltung hinzufügen",
+        "edit": "Veranstaltung bearbeiten",
+        "delete": "Veranstaltung löschen",
+        "viewLog": "Log anzeigen"
+      },
+      "importDate": "Datum des Imports",
+      "noImportErrors": "Anzahl der Importfehler",
+      "noImportWarnings": "Keine Import Warnungen",
+      "event": {
+        "title": {
+          "updatepage": "Veranstaltung aktualisieren"
+        }
       }
     },
     "locations": {
@@ -742,34 +812,6 @@
             "add": "Tour Stop hinzufügen"
           }
         }
-      }
-    }
-  },
-  "imageuploader": {
-    "filesizebetween": "Dateigrösse zwischen {{minFileSize}} und {{maxFileSize}}",
-    "filesizebelow": "Max. Dateigrösse {{maxFileSize}}",
-    "filesizeabove": "Min. Dateigrösse {{minFileSize}}",
-    "droperror": {
-      "toolarge": "Die ausgewählte Datei ist zu groß.",
-      "toosmall": "Die ausgewählte Datei ist zu klein.",
-      "invalidtype": "Dieses Dateiformat kann nicht verwendet werden."
-    },
-    "button": {
-      "deleteimage": "Bild löschen"
-    },
-    "deleteimage": {
-      "error": "Leider konnten wir Ihre Löschanfrage nicht bearbeiten. Bitte versuchen Sie es später erneut."
-    },
-    "pleasedroporclick": "Ziehen Sie eine Datei hierher und legen Sie sie hier ab, oder klicken Sie, um eine Datei auszuwählen.",
-    "uploading": "Hochladen",
-    "cancelupload": "Upload abbrechen",
-    "error": "Leider konnten wir Ihren Upload nicht abschließen, bitte versuchen Sie es später noch einmal."
-  },
-  "ui": {
-    "button": {
-      "label": {
-        "show": "Anzeigen",
-        "hide": "Verstecken"
       }
     }
   },

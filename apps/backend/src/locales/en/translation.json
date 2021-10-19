@@ -192,7 +192,10 @@
           "moveUp": "Move up",
           "moveDown": "Move down"
         },
-        "noimages": "No additional images added. You can add further images by using the buttons below",
+        "butto": {
+          "addOneBelow": "Add a new image below the current one"
+        },
+        "noimages": "No additional images added. You can add further images by using the button below",
         "addimage": "Add Image"
       }
     },
@@ -232,84 +235,35 @@
       "pleasesafedraft": "Please save a draft to unlock further functionality"
     }
   },
-  "module": {
-    "events": {
-      "forms": {
-        "event": {
-          "field": {
-            "dates": {
-              "clone": "Clone current line",
-              "removedate": "Remove"
-            },
-            "label": {
-              "title": "Title",
-              "slug": "Slug",
-              "description": "Description"
-            },
-            "placeholder": {
-              "title": "Event title",
-              "slug": "Slug / URL part",
-              "description": "Event description"
-            },
-            "date": {
-              "placeholder": "Date"
-            },
-            "begin": {
-              "label": "Begin"
-            },
-            "end": {
-              "label": "End"
-            }
-          },
-          "table": {
-            "column": {
-              "begin": {
-                "label": "Begin"
-              },
-              "end": {
-                "label": "End"
-              }
-            }
-          }
-        },
-        "field": {
-          "label": {
-            "isFree": "This event is free",
-            "isImported": "This event is automatically imported and updated"
-          }
-        },
-        "eventdates": {
-          "heading": "Event date(s)",
-          "table": {
-            "column": {
-              "date": {
-                "label": "Date"
-              }
-            }
-          }
-        }
-      },
-      "title": "Events",
-      "menuitem": {
-        "createevent": "Add new event",
-        "importLogs": "Import Logs",
-        "importLog": "Log"
-      },
-      "button": {
-        "create": "Add new event",
-        "edit": "Edit event",
-        "delete": "Delete event",
-        "viewLog": "View log"
-      },
-      "importDate": "Date of import",
-      "noImportErrors": "No import errors",
-      "noImportWarnings": "No import warnings",
-      "event": {
-        "title": {
-          "updatepage": "Update event"
-        }
-      }
+  "imageuploader": {
+    "filesizebetween": "Size between {{minFileSize}} and {{maxFileSize}}",
+    "filesizebelow": "Size max. {{maxFileSize}}",
+    "filesizeabove": "Size min. {{minFileSize}}",
+    "droperror": {
+      "toolarge": "Chosen file is too large",
+      "toosmall": "Chosen file is too small",
+      "invalidtype": "Type of chosen file is not accepted"
     },
+    "button": {
+      "deleteimage": "Delete image"
+    },
+    "deleteimage": {
+      "error": "Unfortunately, we could not process you deletion request please try again later"
+    },
+    "pleasedroporclick": "Drag & drop an image here, or click to select one",
+    "uploading": "Uploading",
+    "cancelupload": "Cancel upload",
+    "error": "Unfortunately, we could not finish you upload please try again later"
+  },
+  "ui": {
+    "button": {
+      "label": {
+        "show": "Show",
+        "hide": "Hide"
+      }
+    }
+  },
+  "module": {
     "forms": {
       "taxonomy": {
         "label": {
@@ -329,10 +283,10 @@
     "button": {
       "cancel": "Cancel",
       "update": "Update",
+      "save": "Save",
       "savedraft": "Save draft",
       "back": "Go back",
-      "import": "Schedule import",
-      "save": "Save"
+      "import": "Schedule import"
     },
     "users": {
       "deletealter": {
@@ -384,6 +338,122 @@
         "create": "Add user",
         "edit": "Edit user",
         "delete": "Delete user"
+      }
+    },
+    "homepage": {
+      "field": {
+        "label": {
+          "highlights": "Highlights",
+          "missionStatement": "Mission statement"
+        },
+        "type": {
+          "label": "Type",
+          "location": {
+            "label": "Location"
+          },
+          "event": {
+            "label": "Event"
+          },
+          "tour": {
+            "label": "Tour"
+          }
+        },
+        "autocomplete": "Please enter a search phrase",
+        "button": {
+          "delte": "Delete highlight",
+          "addOneBelow": "Add new highlight below the current one"
+        },
+        "highlights": {
+          "noneConfigured": "No highlights configured. Add the first highlight using the button below.",
+          "add": "Add highlight"
+        },
+        "placeholder": {
+          "missionStatement": "Short mission statement shown on the homepage ..."
+        }
+      },
+      "forms": {
+        "field": {
+          "label": {
+            "searchitem": "Search item"
+          }
+        }
+      }
+    },
+    "events": {
+      "title": "Events",
+      "menuitem": {
+        "createevent": "Add new event",
+        "importLogs": "Import Logs",
+        "importLog": "Log"
+      },
+      "forms": {
+        "event": {
+          "field": {
+            "label": {
+              "title": "Title",
+              "slug": "Slug",
+              "description": "Description"
+            },
+            "placeholder": {
+              "title": "Event title",
+              "slug": "Slug / URL part",
+              "description": "Event description"
+            },
+            "date": {
+              "placeholder": "Date"
+            },
+            "begin": {
+              "label": "Begin"
+            },
+            "end": {
+              "label": "End"
+            },
+            "dates": {
+              "removedate": "Remove",
+              "clone": "Clone current line"
+            }
+          },
+          "table": {
+            "column": {
+              "begin": {
+                "label": "Begin"
+              },
+              "end": {
+                "label": "End"
+              }
+            }
+          }
+        },
+        "field": {
+          "label": {
+            "isFree": "This event is free",
+            "isImported": "This event is automatically imported and updated"
+          }
+        },
+        "eventdates": {
+          "heading": "Event date(s)",
+          "table": {
+            "column": {
+              "date": {
+                "label": "Date"
+              }
+            }
+          }
+        }
+      },
+      "button": {
+        "create": "Add new event",
+        "edit": "Edit event",
+        "delete": "Delete event",
+        "viewLog": "View log"
+      },
+      "importDate": "Date of import",
+      "noImportErrors": "No import errors",
+      "noImportWarnings": "No import warnings",
+      "event": {
+        "title": {
+          "updatepage": "Update event"
+        }
       }
     },
     "locations": {
@@ -742,34 +812,6 @@
             "add": "Add tour stop"
           }
         }
-      }
-    }
-  },
-  "imageuploader": {
-    "filesizebetween": "Size between {{minFileSize}} and {{maxFileSize}}",
-    "filesizebelow": "Size max. {{maxFileSize}}",
-    "filesizeabove": "Size min. {{minFileSize}}",
-    "droperror": {
-      "toolarge": "Chosen file is too large",
-      "toosmall": "Chosen file is too small",
-      "invalidtype": "Type of chosen file is not accepted"
-    },
-    "button": {
-      "deleteimage": "Delete profile image"
-    },
-    "deleteimage": {
-      "error": "Unfortunately, we could not process you deletion request please try again later"
-    },
-    "pleasedroporclick": "Drag & drop an image here, or click to select one",
-    "uploading": "Uploading",
-    "cancelupload": "Cancel upload",
-    "error": "Unfortunately, we could not finish you upload please try again later"
-  },
-  "ui": {
-    "button": {
-      "label": {
-        "show": "Show",
-        "hide": "Hide"
       }
     }
   },

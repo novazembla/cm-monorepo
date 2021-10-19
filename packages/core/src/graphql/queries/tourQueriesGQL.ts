@@ -21,6 +21,18 @@ export const toursQueryGQL = gql`
   }
 `;
 
+export const toursSearchGQL = gql`
+  query tours($where: JSON) {
+    tours(where: $where, orderBy: { id: "asc" }, pageIndex: 0, pageSize: 50) {
+      tours {
+        id
+        title
+      }
+      totalCount
+    }
+  }
+`;
+
 export const tourQueryGQL = gql`
   query tour($id: Int!) {
     tour(id: $id) {

@@ -119,6 +119,7 @@ export interface NexusGenInputs {
   }
   SettingsUpdateInput: { // input type
     key: string; // String!
+    scope: string; // String!
     value: NexusGenScalars['JSON']; // JSON!
   }
   TaxonomyUpsertInput: { // input type
@@ -428,6 +429,7 @@ export interface NexusGenObjects {
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
     id: number; // Int!
     key?: string | null; // String
+    scope?: string | null; // String
     updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
     value?: NexusGenScalars['JSON'] | null; // JSON
   }
@@ -818,6 +820,7 @@ export interface NexusGenFieldTypes {
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
     id: number; // Int!
     key: string | null; // String
+    scope: string | null; // String
     updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
     value: NexusGenScalars['JSON'] | null; // JSON
   }
@@ -1220,6 +1223,7 @@ export interface NexusGenFieldTypeNames {
     createdAt: 'DateTime'
     id: 'Int'
     key: 'String'
+    scope: 'String'
     updatedAt: 'DateTime'
     value: 'JSON'
   }
@@ -1577,6 +1581,9 @@ export interface NexusGenArgTypes {
     }
     setting: { // args
       id: number; // Int!
+    }
+    settings: { // args
+      scope: string; // String!
     }
     taxonomies: { // args
       orderBy?: NexusGenScalars['JSON'] | null; // JSON

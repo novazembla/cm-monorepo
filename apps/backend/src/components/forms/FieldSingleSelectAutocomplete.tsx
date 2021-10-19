@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useCombobox } from "downshift";
 import { useLazyQuery, DocumentNode } from "@apollo/client";
 import debounce from "lodash.debounce";
@@ -13,6 +13,7 @@ import {
   Input,
   chakra,
   useToken,
+  VisuallyHidden,
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { RiCloseFill } from "@hacknug/react-icons/ri";
@@ -28,6 +29,8 @@ export interface FieldSingleSelectAutocompleteItem {
 
 export interface FieldSingleSelectAutocompleteSettings {
   placeholder?: string;
+  hideLabel?: boolean;
+  onItemChange?: (item: any) => void;
 }
 
 export const FieldSingleSelectAutocomplete = ({
@@ -41,6 +44,7 @@ export const FieldSingleSelectAutocomplete = ({
   resultItemToString = (item: any) =>
     item?.label ?? item?.title ?? item?.name ?? item?.id,
   searchQueryGQL,
+  searchQueryDataKey,
 }: {
   settings?: FieldSingleSelectAutocompleteSettings;
   item?: FieldSingleSelectAutocompleteItem | undefined;
@@ -51,6 +55,7 @@ export const FieldSingleSelectAutocomplete = ({
   name: string;
   resultItemToString?: (item: any) => string;
   searchQueryGQL: DocumentNode;
+  searchQueryDataKey: string;
 }) => {
   const { t } = useTranslation();
   const { popperRef, referenceRef } = usePopper({
@@ -69,6 +74,7 @@ export const FieldSingleSelectAutocomplete = ({
   const {
     formState: { errors },
     register,
+    watch,
     setValue,
   } = useFormContext();
 
@@ -89,8 +95,13 @@ export const FieldSingleSelectAutocomplete = ({
   }, 350);
 
   let searchResult = [];
-  if (data && data.locations && data?.locations?.totalCount > 0) {
-    searchResult = data.locations.locations.map((item: any, index: number) => ({
+  if (
+    data &&
+    searchQueryDataKey in data &&
+    searchQueryDataKey in data[searchQueryDataKey] &&
+    data[searchQueryDataKey]?.totalCount > 0
+  ) {
+    searchResult = data[searchQueryDataKey][searchQueryDataKey].map((item: any, index: number) => ({
       id: item.id,
       label: getMultilangValue(item.title),
     }));
@@ -148,6 +159,9 @@ export const FieldSingleSelectAutocomplete = ({
           setCurrentItem(selectedItem);
           setValue(name, selectedItem.id, { shouldDirty: true });
 
+          if (typeof settings?.onItemChange === "function")
+            settings?.onItemChange.call(null, selectedItem);
+
           break;
 
         default:
@@ -157,6 +171,14 @@ export const FieldSingleSelectAutocomplete = ({
     itemToString: resultItemToString,
   });
 
+  const currentValue = watch(name);
+  useEffect(() => {
+    if (!currentValue && currentItem) {
+      setCurrentItem(undefined);
+      reset();
+    }
+  }, [currentValue, reset, currentItem]);
+
   const flattenedErrors = flattenErrors(errors);
 
   return (
@@ -165,9 +187,17 @@ export const FieldSingleSelectAutocomplete = ({
       isInvalid={flattenedErrors[name]?.message}
       {...{ isRequired, isDisabled }}
     >
-      <FormLabel htmlFor={id} mb="0.5">
-        {label}
-      </FormLabel>
+      {settings?.hideLabel ? (
+        <VisuallyHidden>
+          <FormLabel htmlFor={id} mb="0.5">
+            {label}
+          </FormLabel>
+        </VisuallyHidden>
+      ) : (
+        <FormLabel htmlFor={id} mb="0.5">
+          {label}
+        </FormLabel>
+      )}
 
       {currentItem?.id && (
         <Box>
@@ -198,6 +228,8 @@ export const FieldSingleSelectAutocomplete = ({
               onClick={() => {
                 setCurrentItem(undefined);
                 setValue(name, undefined, { shouldDirty: true });
+                if (typeof settings?.onItemChange === "function")
+                  settings?.onItemChange.call(null, undefined);
                 reset();
               }}
               borderColor="gray.400"

@@ -50,7 +50,11 @@ const Update = () => {
   const successToast = useSuccessfullySavedToast();
   const [isNavigatingAway, setIsNavigatingAway] = useState(false);
 
-  const { data, loading, error } = useQuery(settingsQueryGQL);
+  const { data, loading, error } = useQuery(settingsQueryGQL, {
+    variables: {
+      scope: "settings",
+    },
+  });
 
   const [firstMutation, firstMutationResults] = useSettingsUpdateMutation();
   const [hasFormError, setHasFormError] = useState(false);
@@ -91,6 +95,7 @@ const Update = () => {
           ] as AppSettingField;
           return {
             key,
+            scope: "settings",
             value: fieldDef.getUpdateValue
               ? fieldDef.getUpdateValue(fieldDef, newData)
               : newData[key],
@@ -121,7 +126,7 @@ const Update = () => {
             {},
             {
               keepDirty: false,
-              keepValues: true
+              keepValues: true,
             }
           );
         } else {
@@ -155,7 +160,7 @@ const Update = () => {
     {
       type: "submit",
       isLoading: isSubmitting,
-      label: t("module.button.update", "Update"),
+      label: t("module.button.save", "Save"),
       userCan: "settingUpdate",
     },
   ];

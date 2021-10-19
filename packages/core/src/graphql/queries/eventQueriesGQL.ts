@@ -31,6 +31,18 @@ export const eventsQueryGQL = gql`
   }
 `;
 
+export const eventsSearchGQL = gql`
+  query events($where: JSON) {
+    events(where: $where, orderBy: { id: "asc" }, pageIndex: 0, pageSize: 50) {
+      events {
+        id
+        title
+      }
+      totalCount
+    }
+  }
+`;
+
 export const eventGQL = gql`
   query event($id: Int!) {
     event(id: $id) {

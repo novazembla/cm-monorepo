@@ -195,8 +195,6 @@ export const adminTableCreateQueryVariables = (
     };
   }
 
-  console.log(variables);
-
   return variables;
 };
 

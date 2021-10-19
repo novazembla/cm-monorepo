@@ -395,7 +395,7 @@ type Query {
   pages(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): PageQueryResult
   quickSearch(modules: [String], search: String!, termIds: [Int]): [SearchResult]
   setting(id: Int!): [Setting]
-  settings: [Setting]
+  settings(scope: String!): [Setting]
   taxonomies(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): TaxonomyQueryResult
   taxonomy(id: Int!): Taxonomy!
   term(id: Int!): Term!
@@ -429,12 +429,14 @@ type Setting {
   createdAt: DateTime
   id: Int!
   key: String
+  scope: String
   updatedAt: DateTime
   value: JSON
 }
 
 input SettingsUpdateInput {
   key: String!
+  scope: String!
   value: JSON!
 }
 

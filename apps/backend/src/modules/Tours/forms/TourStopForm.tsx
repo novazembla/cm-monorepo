@@ -70,6 +70,7 @@ export const TourStopForm = ({
               : undefined
           }
           searchQueryGQL={locationsSearchGQL}
+          searchQueryDataKey="locations"
           settings={{
             placeholder: t(
               "forms.field.placeholder.locationsearch",

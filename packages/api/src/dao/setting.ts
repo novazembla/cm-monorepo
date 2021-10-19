@@ -9,11 +9,15 @@ const apiConfig = getApiConfig();
 
 export type SettingUpdateData = {
   key: string;
+  scope: string;
   value: any;
 };
 
-export const daoSettingQuery = async (): Promise<Setting[]> => {
+export const daoSettingQuery = async (
+  where: Prisma.SettingWhereInput
+): Promise<Setting[]> => {
   const settings: Setting[] = await prisma.setting.findMany({
+    where,
     orderBy: {
       key: "asc",
     },

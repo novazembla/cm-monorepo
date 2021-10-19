@@ -151,30 +151,6 @@ const Update = () => {
                 ),
               },
             },
-            // images: {
-            //   set: [{
-            //     id: 17
-            //   }],
-            //   update: [
-            //     {
-            //       where: {
-            //         id: 17,
-            //       },
-            //       data: {
-            //         alt_de: "17xxx alt_de updated title",
-            //         alt_en: "17xxx alt_en updated title",
-            //         credits_de: "17xxx credits_de updated title",
-            //         credits_en: "17xxx credits_en updated title",
-            //         // ...multiLangImageMetaRHFormDataToJson(
-            //         //   newData,
-            //         //   "heroImage",
-            //         //   ["alt", "credits"],
-            //         //   config.activeLanguages
-            //         // ),
-            //       },
-            //     },
-            //   ],
-            // },
           }
         : undefined;
 

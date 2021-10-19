@@ -13,7 +13,11 @@ export const settingUpsertSettings = async (
       data.map((setting) =>
         daoSettingUpsert(
           setting.key,
-          { value: { json: setting.value }, key: setting.key },
+          {
+            value: { json: setting.value },
+            key: setting.key,
+            scope: setting.scope,
+          },
           { value: { json: setting.value } }
         )
       )
@@ -31,6 +35,8 @@ export const settingUpsertSettings = async (
   }
 };
 
-export default {
+const defaults = {
   settingUpsertSettings,
 };
+
+export default defaults;

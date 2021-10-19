@@ -1,8 +1,8 @@
 import gql from "graphql-tag";
 
 export const settingsQueryGQL = gql`
-  query settings {
-    settings {
+  query settings($scope: String!) {
+    settings(scope: $scope) {
       id
       key
       value

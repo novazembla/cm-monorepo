@@ -10,7 +10,12 @@ import {
   ModulePage,
   ButtonListElement,
 } from "~/components/modules";
-import { getSettingsFieldDefinitions, AppSettingsFieldKeys, AppSettingField, AppSettingsFieldDefinitions } from "~/config";
+import {
+  getSettingsFieldDefinitions,
+  AppSettingsFieldKeys,
+  AppSettingField,
+  AppSettingsFieldDefinitions,
+} from "~/config";
 
 import { moduleRootPath, findSettingDbValueByKey } from "./moduleConfig";
 
@@ -21,7 +26,8 @@ const Setting = ({
   setting: AppSettingsFieldKeys;
   valueInDb: any;
 }) => {
-  const settingsFieldDefinitions: AppSettingsFieldDefinitions = getSettingsFieldDefinitions();
+  const settingsFieldDefinitions: AppSettingsFieldDefinitions =
+    getSettingsFieldDefinitions();
   const { t } = useTranslation();
 
   let value = valueInDb ?? settingsFieldDefinitions[setting]?.defaultValue;
@@ -59,7 +65,9 @@ const Setting = ({
   return (
     <Stat mb="4">
       <StatLabel fontSize="md">
-        {settingsFieldDefinitions[setting]?.label ? t(`${settingsFieldDefinitions[setting]?.label}`) : t("settings.error.label")}
+        {settingsFieldDefinitions[setting]?.label
+          ? t(`${settingsFieldDefinitions[setting]?.label}`)
+          : t("settings.error.label")}
       </StatLabel>
       <StatNumber mt="-1">{print}</StatNumber>
     </Stat>
@@ -67,10 +75,15 @@ const Setting = ({
 };
 
 const Index = () => {
-  const settingsFieldDefinitions: AppSettingsFieldDefinitions  = getSettingsFieldDefinitions();
+  const settingsFieldDefinitions: AppSettingsFieldDefinitions =
+    getSettingsFieldDefinitions();
   const { t } = useTranslation();
 
-  const { data, loading, error } = useQuery(settingsQueryGQL);
+  const { data, loading, error } = useQuery(settingsQueryGQL, {
+    variables: {
+      scope: "settings",
+    },
+  });
 
   const breadcrumb = [
     {
@@ -93,15 +106,21 @@ const Index = () => {
       <ModuleSubNav breadcrumb={breadcrumb} buttonList={buttonList} />
       <ModulePage isLoading={loading} isError={!!error}>
         {Array.isArray(data?.settings) &&
-          Object.entries(settingsFieldDefinitions).map(([settingKey, fieldDefinition] , index:number) => {
-            return (
-              <Setting
-                key={index}
-                valueInDb={findSettingDbValueByKey((settingKey as AppSettingsFieldKeys), data.settings, (fieldDefinition as AppSettingField))}
-                setting={settingKey as AppSettingsFieldKeys}
-              />
-            );
-          })}
+          Object.entries(settingsFieldDefinitions).map(
+            ([settingKey, fieldDefinition], index: number) => {
+              return (
+                <Setting
+                  key={index}
+                  valueInDb={findSettingDbValueByKey(
+                    settingKey as AppSettingsFieldKeys,
+                    data.settings,
+                    fieldDefinition as AppSettingField
+                  )}
+                  setting={settingKey as AppSettingsFieldKeys}
+                />
+              );
+            }
+          )}
       </ModulePage>
     </>
   );

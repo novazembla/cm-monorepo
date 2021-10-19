@@ -29,6 +29,8 @@ import { FieldInput, FieldRow, TextErrorMessage } from "~/components/forms";
 import { useDataExportCreateMutation } from "./hooks";
 import { ModuleDataExportCreateSchema } from "./forms";
 
+import { AlertEmailVerification } from "~/components/housekeeping";
+
 import {
   AdminTable,
   AdminTableColumn,
@@ -374,6 +376,7 @@ const Index = () => {
 
   return (
     <>
+      <AlertEmailVerification />
       <ModuleSubNav breadcrumb={breadcrumb} buttonList={buttonList} />
       <ModulePage
         isLoading={loading && !isRefetching}

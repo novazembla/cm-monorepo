@@ -169,7 +169,7 @@ export const FieldImages = ({
                           <IconButton
                             aria-label={t(
                               "form.field.images.button.deleteImage",
-                              "Delte image"
+                              "Delete image"
                             )}
                             fontSize="xl"
                             colorScheme="red"
@@ -234,8 +234,8 @@ export const FieldImages = ({
 
                           <IconButton
                             aria-label={t(
-                              "module.events.forms.event.field.dates.clone",
-                              "Clone current line"
+                              "form.field.images.butto.addOneBelow",
+                              "Add a new image below the current one"
                             )}
                             variant="outline"
                             icon={<MdPlusOne />}
@@ -296,7 +296,7 @@ export const FieldImages = ({
           <Box>
             {t(
               "form.field.images.noimages",
-              "No additional images added. You can add further images by using the buttons below"
+              "No additional images added. You can add further images by using the button below"
             )}
           </Box>
         )}

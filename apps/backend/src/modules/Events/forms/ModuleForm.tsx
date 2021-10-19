@@ -266,6 +266,7 @@ export const ModuleForm = ({
               : undefined
           }
           searchQueryGQL={locationsSearchGQL}
+          searchQueryDataKey="locations"
           settings={{
             placeholder: t(
               "forms.field.placeholder.locationsearch",

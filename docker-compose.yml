@@ -21,26 +21,6 @@ services:
       timeout: 10s
       retries: 5
 
-  postgrestest:
-    container_name: 'CultureMapTestDB'
-    image: postgres:13
-    restart: unless-stopped
-    ports:
-      - "${DB_PORT:-5433}:5432"
-    volumes:
-      - './data/postgres-test:/var/lib/postgresql/data'
-    environment:
-      POSTGRES_USER: '${POSTGRES_USER:-culturemap}' # The PostgreSQL user (useful to connect to the database)
-      POSTGRES_PASSWORD: '${POSTGRES_PASSWORD:-culturemap}' # The PostgreSQL password (useful to connect to the database)
-      POSTGRES_DB: '${POSTGRES_DB:-culturemap}' # The PostgreSQL default database (automatically created at first launch)
-    networks:
-      - culturemap
-    healthcheck:
-      test: [ "CMD", "psql", "-U", "culturemap", "-c", "SELECT 1;" ]
-      interval: 1m
-      timeout: 10s
-      retries: 5
-    
   mailhog:
     container_name: 'CultureMapMailHog'
     image: 'mailhog/mailhog:latest'

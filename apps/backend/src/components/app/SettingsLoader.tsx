@@ -7,7 +7,7 @@ import { modulesSet } from "~/redux/slices/modules";
 
 const QUERY_SETTINGS = gql`
   query settings {
-    settings {
+    settings(scope: "settings") {
       id
       key
       value

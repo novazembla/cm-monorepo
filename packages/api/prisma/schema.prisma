@@ -184,7 +184,8 @@ model Token {
 }
 
 model Setting {
-  id    Int    @id @default(autoincrement())
+  id    Int           @id @default(autoincrement())
+  scope  String        @default("settings")
   key   String @unique @db.VarChar(128)
   value Json
 

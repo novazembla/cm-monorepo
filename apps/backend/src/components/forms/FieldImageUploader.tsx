@@ -405,11 +405,11 @@ export const FieldImageUploader = ({
                 }}
                 aria-label={t(
                   "imageuploader.button.deleteimage",
-                  "Delete profile image"
+                  "Delete image"
                 )}
                 title={t(
                   "imageuploader.button.deleteimage",
-                  "Delete profile image"
+                  "Delete image"
                 )}
               />
             )}
