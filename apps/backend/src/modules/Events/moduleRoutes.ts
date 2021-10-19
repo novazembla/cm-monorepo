@@ -3,8 +3,9 @@ import type { RoutePrivateParams } from '~/types';
 import Create from "./Create";
 import Update from "./Update";
 import Index from "./Index";
-import Logs from "./Logs";
-import Log from "./Log";
+import Import from "./Import";
+import ImportCreate from "./ImportCreate";
+import ImportUpdate from "./ImportUpdate";
 import DataExports from "./DataExports";
 import Export from "./Export";
 
@@ -26,13 +27,6 @@ export const moduleRoutes: RoutePrivateParams[] = [
     userCan: "eventUpdateOwn",
   },
   {
-    key: "logs",
-    path: `${moduleRootPath}/logs`,
-    component: Logs,
-    exact: true,
-    userCan: "eventReadOwn",
-  },
-  {
     key: "exports",
     path: `${moduleRootPath}/exports`,
     component: DataExports,
@@ -45,13 +39,26 @@ export const moduleRoutes: RoutePrivateParams[] = [
     exact: true,
     userCan: "locationUpdateOwn",
   },
-  
   {
-    key: "log",
-    path: `${moduleRootPath}/log/:id`,
-    component: Log,
+    key: "import",
+    path: `${moduleRootPath}/import`,
+    component: Import,
     exact: true,
-    userCan: "eventReadOwn",
+    userCan: "locationCreate",
+  },
+  {
+    key: "importcreate",
+    path: `${moduleRootPath}/import/create`,
+    component: ImportCreate,
+    exact: true,
+    userCan: "locationCreate",
+  },
+  {
+    key: "importupdate",
+    path: `${moduleRootPath}/import/:id`,
+    component: ImportUpdate,
+    exact: true,
+    userCan: "locationCreate",
   },
   {
     key: "index",

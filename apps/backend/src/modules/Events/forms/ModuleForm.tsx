@@ -25,6 +25,7 @@ import { yupIsFieldRequired } from "~/validation";
 import {
   FieldMultiLangInput,
   FieldMultiLangTextEditor,
+  FieldTextEditor,
   FieldSelect,
   FieldPublishStatusSelect,
   FieldRow,
@@ -123,8 +124,7 @@ export const ModuleForm = ({
                 isDisabled={
                   !(
                     appUser &&
-                    (appUser.has("editor") ||
-                      data.event.ownerId === appUser.id)
+                    (appUser.has("editor") || data.event.ownerId === appUser.id)
                   )
                 }
                 settings={{
@@ -246,8 +246,10 @@ export const ModuleForm = ({
       {updateActions}
 
       {data && data?.moduleTaxonomies && (
-        <><Divider mt="10" /><FieldModuleTaxonomies data={data} /></>
-          
+        <>
+          <Divider mt="10" />
+          <FieldModuleTaxonomies data={data} />
+        </>
       )}
 
       <Divider mt="10" />
@@ -298,6 +300,31 @@ export const ModuleForm = ({
         }}
       />
 
+      <Divider mt="10" />
+      <TwoColFieldRow>
+        <FieldRow>
+          <FieldTextEditor
+            id="address"
+            type="basic"
+            name="address"
+            label={t("module.events.forms.field.address", "Address")}
+            settings={{
+              defaultValue: data?.event?.address
+            }}
+          />
+        </FieldRow>
+        <FieldRow>
+          <FieldTextEditor
+            id="organiser"
+            type="basic"
+            name="organiser"
+            label={t("module.events.forms.field.organiser", "Organiser")}
+            settings={{
+              defaultValue: data?.event?.organiser
+            }}
+          />
+        </FieldRow>
+      </TwoColFieldRow>
       <Divider mt="10" />
 
       <Box>

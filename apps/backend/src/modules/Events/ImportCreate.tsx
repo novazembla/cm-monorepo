@@ -86,7 +86,7 @@ const Create = () => {
   const breadcrumb = [
     {
       path: moduleRootPath,
-      title: t("module.locations.title", "Locations"),
+      title: t("module.events.title", "Events"),
     },
     {
       path: `${moduleRootPath}/import`,

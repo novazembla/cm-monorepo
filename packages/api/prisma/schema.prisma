@@ -45,7 +45,7 @@ model User {
 
   tourStops TourStop[]
 
-  imports Import[]
+  dataImports DataImport[]
   dataExports DataExport[]
 
   profileImageId Int?
@@ -120,6 +120,8 @@ model Event {
   title_en        String @default("")
   slug_en         String @default("")
   description_en  String @default("")
+  address         String @default("")
+  organiser       String @default("")
 
   meta        Json? @default("{}")
 
@@ -158,15 +160,6 @@ model EventDate {
   end     DateTime
   eventId Int?
   event   Event?   @relation(fields: [eventId], references: [id], onDelete: Cascade)
-}
-
-model EventImportLog {
-  id        Int      @id @default(autoincrement())
-  log       Json?    @default("[]")
-  errors    Json?    @default("[]")
-  warnings  Json?    @default("[]")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
 }
 
 model Token {
@@ -423,13 +416,11 @@ model DataExport {
   updatedAt DateTime @default(now()) @updatedAt
 }
 
-
-
-model Import {
+model DataImport {
   id       Int    @id @default(autoincrement())
   title    String
   lang      String @default("en")
-  
+  type      String @default("location")
   log      Json?  @default("[]")
   errors   Json?  @default("[]")
   mapping  Json?  @default("[]")
@@ -437,7 +428,7 @@ model Import {
   status   Int    @default(0)
 
   fileId Int?
-  file   File? @relation(fields: [fileId], references: [id], name: "importFiles")
+  file   File? @relation(fields: [fileId], references: [id], name: "dataImportFiles")
 
   ownerId Int
   owner   User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
@@ -467,6 +458,6 @@ model File {
   title_en       String @default("") 
   credits_en        String @default("") 
 
-  imports Import[] @relation("importFiles")
+  dataImports DataImport[] @relation("dataImportFiles")
   dataExports DataExport[] @relation("dataExportFiles")
 }

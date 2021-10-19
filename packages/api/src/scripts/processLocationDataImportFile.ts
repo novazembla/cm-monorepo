@@ -15,9 +15,9 @@ import pMap from "p-map";
 
 import { getApiConfig } from "../config";
 import {
-  ImportStatus,
-  importHeaders,
-  importRequiredHeaders,
+  DataImportStatus,
+  dataImportHeadersLocation,
+  dataImportRequiredHeadersLocation,
   PublishStatus,
 } from "@culturemap/core";
 
@@ -118,7 +118,7 @@ const getRowValueOrEmptyString = (mapping: any[], row: any[], key: string) => {
   return "";
 };
 
-const processImportedRow = async (
+const processDataImportedRow = async (
   prisma: Prisma.PrismaClient,
   mapping: any[],
   row: any[],
@@ -479,7 +479,7 @@ const doChores = async () => {
   });
 
   try {
-    const importInDb = await prisma.import.findUnique({
+    const importInDb = await prisma.dataImport.findUnique({
       where: {
         id: args.importId,
       },
@@ -490,7 +490,7 @@ const doChores = async () => {
     });
 
     if (importInDb) {
-      if (![ImportStatus.PROCESS].includes(importInDb.status ?? -1))
+      if (![DataImportStatus.PROCESS].includes(importInDb.status ?? -1))
         throw Error("Status of import excludes it from processing");
 
       lang = importInDb.lang;
@@ -499,23 +499,23 @@ const doChores = async () => {
       if (!file)
         throw Error(
           lang === "de"
-            ? `Keine Datei für Import id ${args.importId} gefunden`
+            ? `Keine Datei für DataImport id ${args.importId} gefunden`
             : `No file uploaded for import id ${args.importId}`
         );
 
       if (!importInDb?.owner?.id)
         throw Error(
           lang === "de"
-            ? `Keine BesiterIn für Import id ${args.importId} gefunden`
+            ? `Keine BesiterIn für DataImport id ${args.importId} gefunden`
             : `No owner found for import id ${args.importId}`
         );
 
       log.push(
-        lang === "de" ? `Beginne Import ...` : `Starting to process import.`
+        lang === "de" ? `Beginne DataImport ...` : `Starting to process import.`
       );
-      await prisma.import.update({
+      await prisma.dataImport.update({
         data: {
-          status: ImportStatus.PROCESSING,
+          status: DataImportStatus.PROCESSING,
           log,
           warnings,
           errors,
@@ -658,15 +658,20 @@ const doChores = async () => {
                       return hTrimmed;
                     }
 
-                    const k = Object.keys(importHeaders).find((iHk) => {
-                      const t = Object.keys(importHeaders[iHk]).find((lng) => {
-                        return (
-                          importHeaders[iHk][lng].toLowerCase() ===
-                          hTrimmed.toLowerCase()
-                        );
-                      });
-                      return !!t;
-                    });
+                    const k = Object.keys(dataImportHeadersLocation).find(
+                      (iHk) => {
+                        const t = Object.keys(
+                          dataImportHeadersLocation[iHk]
+                        ).find((lng) => {
+                          return (
+                            dataImportHeadersLocation[iHk][
+                              lng
+                            ].toLowerCase() === hTrimmed.toLowerCase()
+                          );
+                        });
+                        return !!t;
+                      }
+                    );
 
                     if (k) {
                       headersUnparsed[k] = hTrimmed;
@@ -680,11 +685,11 @@ const doChores = async () => {
                   });
 
                   // const requiredHeadersCheck = Object.keys(
-                  //   importRequiredHeaders
+                  //   dataImportRequiredHeadersLocation
                   // ).reduce((agg, rhKey) => {
                   //   return {
                   //     ...agg,
-                  //     [rhKey]: !!importRequiredHeaders[rhKey].find((key) =>
+                  //     [rhKey]: !!dataImportRequiredHeadersLocation[rhKey].find((key) =>
                   //       mappedHeaders.includes(key)
                   //     ),
                   //   };
@@ -692,8 +697,8 @@ const doChores = async () => {
 
                   // Object.keys(requiredHeadersCheck).forEach((key) => {
                   //   if (!requiredHeadersCheck[key]) {
-                  //     const keys = importRequiredHeaders[key].map((k) => {
-                  //       return importHeaders[k][lang];
+                  //     const keys = dataImportRequiredHeadersLocation[key].map((k) => {
+                  //       return dataImportHeadersLocation[k][lang];
                   //     });
                   //     warnings.push(
                   //       lang === "de"
@@ -713,7 +718,7 @@ const doChores = async () => {
               })
             )
             .on("error", (error) => {
-              logger.info(`processImportFile() ${error.message}§`);
+              logger.info(`processDataImportFile() ${error.message}§`);
               reject(error);
             })
             .on("headers", (hdrs) => {
@@ -721,15 +726,16 @@ const doChores = async () => {
 
               if (
                 !Array.isArray(headers) ||
-                headers.length - 1 < Object.keys(importRequiredHeaders).length
+                headers.length - 1 <
+                  Object.keys(dataImportRequiredHeadersLocation).length
               ) {
                 errors.push(
                   lang === "de"
                     ? `Die hochgeladene Datei enthält weniger Spalten als die Anzahl der verpflichtenden Spalten. Bitte laden Sie nur Dateien mit mindestens ${
-                        Object.keys(importRequiredHeaders).length
+                        Object.keys(dataImportRequiredHeadersLocation).length
                       } Spalten, sowie einer Laufnummerspalte hoch`
                     : `The uploaded CSV did not contain the minimum number of columns. Please ensure to only upload documents that contain at least ${
-                        Object.keys(importRequiredHeaders).length
+                        Object.keys(dataImportRequiredHeadersLocation).length
                       } content columns and one ID column`
                 );
               }
@@ -747,28 +753,28 @@ const doChores = async () => {
             .on("end", (rowCount: number) => {
               log.push(
                 lang === "de"
-                  ? `Import beendet: ${rowCount} Zeilen bearbeitet`
-                  : `Import done: processed ${rowCount} rows`
+                  ? `DataImport beendet: ${rowCount} Zeilen bearbeitet`
+                  : `DataImport done: processed ${rowCount} rows`
               );
-              logger.debug(`Import done: processed ${rowCount} rows`);
+              logger.debug(`DataImport done: processed ${rowCount} rows`);
               resolve(true);
             });
         });
 
         const processPMappedRow = async (row: any[]) => {
           try {
-            await processImportedRow(
+            await processDataImportedRow(
               prisma,
               mapping as any[],
               row,
               importInDb?.owner?.id
             );
-            await prisma.import.update({
+            await prisma.dataImport.update({
               data: {
                 status:
                   errors.length > 0
-                    ? ImportStatus.ERROR
-                    : ImportStatus.PROCESSED,
+                    ? DataImportStatus.ERROR
+                    : DataImportStatus.PROCESSED,
                 log,
                 warnings,
                 errors,
@@ -790,12 +796,15 @@ const doChores = async () => {
         errors.push(err.message);
       }
     } else {
-      throw Error(`Import id:${args.importId} not found`);
+      throw Error(`DataImport id:${args.importId} not found`);
     }
 
-    await prisma.import.update({
+    await prisma.dataImport.update({
       data: {
-        status: errors.length > 0 ? ImportStatus.ERROR : ImportStatus.PROCESSED,
+        status:
+          errors.length > 0
+            ? DataImportStatus.ERROR
+            : DataImportStatus.PROCESSED,
         log,
         warnings,
         errors,
@@ -806,7 +815,7 @@ const doChores = async () => {
     });
     await prisma.$disconnect();
   } catch (err: any) {
-    const importInDb = await prisma.import.findUnique({
+    const importInDb = await prisma.dataImport.findUnique({
       where: {
         id: args.importId,
       },
@@ -814,9 +823,9 @@ const doChores = async () => {
 
     if (importInDb) {
       errors.push(`${err.name} - ${err.message}`);
-      await prisma.import.update({
+      await prisma.dataImport.update({
         data: {
-          status: ImportStatus.ERROR,
+          status: DataImportStatus.ERROR,
           log,
           warnings,
           errors,

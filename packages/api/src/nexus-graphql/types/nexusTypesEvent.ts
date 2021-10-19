@@ -95,6 +95,9 @@ export const Event = objectType({
       type: "Image",
     });
 
+    t.string("address");
+    t.string("organiser");
+
     t.date("createdAt");
     t.date("updatedAt");
   },
@@ -375,6 +378,8 @@ export const EventUpsertInput = inputObjectType({
     t.nonNull.int("status");
     t.nonNull.boolean("isFree");
     t.nonNull.boolean("isImported");
+    t.nonNull.string("address");
+    t.nonNull.string("organiser");
     t.json("description");
     t.nonNull.json("owner");
     t.json("terms");

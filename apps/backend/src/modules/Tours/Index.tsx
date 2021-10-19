@@ -38,10 +38,12 @@ import { SortingRule } from "react-table";
 const intitalTableState: AdminTableState = {
   pageIndex: 0,
   pageSize: config.defaultPageSize ?? 30,
-  sortBy: [{
-    id: "orderNumber",
-    desc: false
-  }],
+  sortBy: [
+    {
+      id: "orderNumber",
+      desc: false,
+    },
+  ],
   filterKeyword: "",
   statusFilter: [],
   taxFilter: [],
@@ -97,15 +99,12 @@ const Index = () => {
 
   const resetFilter = useCallback(() => {
     reset({
-      ...intitalTableState.statusFilter.reduce(
-        (acc: any, s: PublishStatus) => {
-          return {
-            ...acc,
-            [`filter_status_${s}`]: true,
-          };
-        },
-        {}
-      ),
+      ...intitalTableState.statusFilter.reduce((acc: any, s: PublishStatus) => {
+        return {
+          ...acc,
+          [`filter_status_${s}`]: true,
+        };
+      }, {}),
       ...intitalTableState.taxFilter.reduce((acc: any, t: number) => {
         return {
           ...acc,

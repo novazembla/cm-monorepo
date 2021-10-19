@@ -18,6 +18,7 @@ type useDeleteByIdButtonOptions = {
   requireTextualConfirmation?: boolean;
   title?: string;
   message?: string;
+  additionalDeleteData?: any;
 };
 
 export const useDeleteByIdButton = (
@@ -63,6 +64,7 @@ export const useDeleteByIdButton = (
           variables: {
             id: dZAD.id,
             scope: config.scope,
+            ...(typeof options?.additionalDeleteData === "object" ? options?.additionalDeleteData : {}),
           },
         });
         if (!errors) {

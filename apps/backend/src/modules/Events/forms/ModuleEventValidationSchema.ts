@@ -25,6 +25,8 @@ export const ModuleEventCreateSchema = object().shape(
       locationId: mixed(),
       status: number(),
       isFree: boolean(),
+      address: string(),
+      organiser: string(),
     }
   )
 );
@@ -68,3 +70,13 @@ export const ModuleEventUpdateSchema = ModuleEventCreateSchema.concat(
 export const ModuleDataExportCreateSchema = object().shape({
   title: string().required(),
 });
+
+export const ModuleImportCreateSchema = object().shape({
+  title: string().required(),
+});
+
+export const ModuleImportUpdateSchema = ModuleImportCreateSchema.concat(
+  object().shape({
+    status: number().required(),
+  })
+);

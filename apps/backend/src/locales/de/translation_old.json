@@ -99,6 +99,9 @@
             }
           }
         }
+      },
+      "menuitem": {
+        "importLogs": "Import Logs"
       }
     },
     "events": {
@@ -129,7 +132,17 @@
             "location": "Please choose the event's location"
           }
         }
-      }
+      },
+      "menuitem": {
+        "importLogs": "Log importieren",
+        "importLog": "Log"
+      },
+      "button": {
+        "viewLog": "Log anzeigen"
+      },
+      "importDate": "Datum des Imports",
+      "noImportErrors": "Anzahl der Importfehler",
+      "noImportWarnings": "Keine Import Warnungen"
     },
     "profile": {
       "button": {
@@ -256,6 +269,11 @@
   "page": {
     "emailconfirmation": {
       "button_goto_dashboard": "Gehe zum Dashboard"
+    }
+  },
+  "table": {
+    "label": {
+      "date": "Datum"
     }
   }
 }

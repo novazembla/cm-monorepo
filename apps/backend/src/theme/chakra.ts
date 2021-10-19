@@ -219,5 +219,5 @@ export const chakraTheme = extendTheme(
   }
 );
 
-console.log(chakraTheme);
+// console.log(chakraTheme);
 export default chakraTheme;

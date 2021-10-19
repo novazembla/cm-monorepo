@@ -60,13 +60,25 @@ export interface NexusGenInputs {
     title: string; // String!
     type: string; // String!
   }
+  DataImportUpsertInput: { // input type
+    errors?: NexusGenScalars['JSON'] | null; // JSON
+    lang?: string | null; // String
+    log?: NexusGenScalars['JSON'] | null; // JSON
+    mapping?: NexusGenScalars['JSON'] | null; // JSON
+    status: number; // Int!
+    title: string; // String!
+    type: string; // String!
+    warnings?: NexusGenScalars['JSON'] | null; // JSON
+  }
   EventUpsertInput: { // input type
+    address: string; // String!
     dates?: NexusGenScalars['JSON'] | null; // JSON
     description?: NexusGenScalars['JSON'] | null; // JSON
     heroImage?: NexusGenScalars['JSON'] | null; // JSON
     isFree: boolean; // Boolean!
     isImported: boolean; // Boolean!
     locations?: NexusGenScalars['JSON'] | null; // JSON
+    organiser: string; // String!
     owner: NexusGenScalars['JSON']; // JSON!
     primaryTerms?: NexusGenScalars['JSON'] | null; // JSON
     slug: NexusGenScalars['JSON']; // JSON!
@@ -77,15 +89,6 @@ export interface NexusGenInputs {
   ImageUpdateInput: { // input type
     meta: NexusGenScalars['JSON']; // JSON!
     ownerId: number; // Int!
-  }
-  ImportUpsertInput: { // input type
-    errors?: NexusGenScalars['JSON'] | null; // JSON
-    lang?: string | null; // String
-    log?: NexusGenScalars['JSON'] | null; // JSON
-    mapping?: NexusGenScalars['JSON'] | null; // JSON
-    status: number; // Int!
-    title: string; // String!
-    warnings?: NexusGenScalars['JSON'] | null; // JSON
   }
   LocationUpsertInput: { // input type
     accessibilityInformation?: NexusGenScalars['JSON'] | null; // JSON
@@ -183,7 +186,7 @@ export interface NexusGenInputs {
     firstName: string; // String!
     lastName: string; // String!
     ownsConentOnDelete: boolean; // Boolean!
-    ownsEventImports: boolean; // Boolean!
+    ownsEventDataImports: boolean; // Boolean!
     password: string; // String!
     role: string; // String!
     userBanned: boolean; // Boolean!
@@ -205,7 +208,7 @@ export interface NexusGenInputs {
     firstName: string; // String!
     lastName: string; // String!
     ownsConentOnDelete: boolean; // Boolean!
-    ownsEventImports: boolean; // Boolean!
+    ownsEventDataImports: boolean; // Boolean!
     role: string; // String!
     userBanned: boolean; // Boolean!
   }
@@ -269,7 +272,25 @@ export interface NexusGenObjects {
     dataExports?: Array<NexusGenRootTypes['DataExport'] | null> | null; // [DataExport]
     totalCount?: number | null; // Int
   }
+  DataImport: { // root type
+    createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
+    errors?: NexusGenScalars['JSON'] | null; // JSON
+    file?: NexusGenScalars['JSON'] | null; // JSON
+    id: number; // Int!
+    lang?: string | null; // String
+    log?: NexusGenScalars['JSON'] | null; // JSON
+    mapping?: NexusGenScalars['JSON'] | null; // JSON
+    status?: number | null; // Int
+    title?: NexusGenScalars['JSON'] | null; // JSON
+    updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
+    warnings?: NexusGenScalars['JSON'] | null; // JSON
+  }
+  DataImportQueryResult: { // root type
+    dataImports?: Array<NexusGenRootTypes['DataImport'] | null> | null; // [DataImport]
+    totalCount?: number | null; // Int
+  }
   Event: { // root type
+    address?: string | null; // String
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
     dates?: Array<NexusGenRootTypes['EventDate'] | null> | null; // [EventDate]
     heroImage?: NexusGenRootTypes['Image'] | null; // Image
@@ -278,6 +299,7 @@ export interface NexusGenObjects {
     isImported?: boolean | null; // Boolean
     locations?: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
     meta?: NexusGenScalars['JSON'] | null; // JSON
+    organiser?: string | null; // String
     ownerId: number; // Int!
     primaryTerms?: Array<NexusGenRootTypes['Term'] | null> | null; // [Term]
     status: number; // Int!
@@ -291,18 +313,6 @@ export interface NexusGenObjects {
     end?: NexusGenScalars['DateTime'] | null; // DateTime
     id: number; // Int!
     updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
-  }
-  EventImportLog: { // root type
-    createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
-    errors?: NexusGenScalars['JSON'] | null; // JSON
-    id: number; // Int!
-    log?: NexusGenScalars['JSON'] | null; // JSON
-    updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
-    warnings?: NexusGenScalars['JSON'] | null; // JSON
-  }
-  EventImportLogQueryResult: { // root type
-    eventImportLogs?: Array<NexusGenRootTypes['EventImportLog'] | null> | null; // [EventImportLog]
-    totalCount?: number | null; // Int
   }
   EventQueryResult: { // root type
     events?: Array<NexusGenRootTypes['Event'] | null> | null; // [Event]
@@ -335,23 +345,6 @@ export interface NexusGenObjects {
     id: number; // Int!
     meta?: NexusGenScalars['JSON'] | null; // JSON
     status: number; // Int!
-  }
-  Import: { // root type
-    createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
-    errors?: NexusGenScalars['JSON'] | null; // JSON
-    file?: NexusGenScalars['JSON'] | null; // JSON
-    id: number; // Int!
-    lang?: string | null; // String
-    log?: NexusGenScalars['JSON'] | null; // JSON
-    mapping?: NexusGenScalars['JSON'] | null; // JSON
-    status?: number | null; // Int
-    title?: NexusGenScalars['JSON'] | null; // JSON
-    updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
-    warnings?: NexusGenScalars['JSON'] | null; // JSON
-  }
-  ImportQueryResult: { // root type
-    imports?: Array<NexusGenRootTypes['Import'] | null> | null; // [Import]
-    totalCount?: number | null; // Int
   }
   Location: { // root type
     address?: NexusGenScalars['JSON'] | null; // JSON
@@ -500,7 +493,7 @@ export interface NexusGenObjects {
     id: number; // Int!
     lastName?: string | null; // String
     ownsConentOnDelete?: boolean | null; // Boolean
-    ownsEventImports?: boolean | null; // Boolean
+    ownsEventDataImports?: boolean | null; // Boolean
     profileImageId?: number | null; // Int
     role?: string | null; // String
     updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
@@ -566,7 +559,25 @@ export interface NexusGenFieldTypes {
     dataExports: Array<NexusGenRootTypes['DataExport'] | null> | null; // [DataExport]
     totalCount: number | null; // Int
   }
+  DataImport: { // field return type
+    createdAt: NexusGenScalars['DateTime'] | null; // DateTime
+    errors: NexusGenScalars['JSON'] | null; // JSON
+    file: NexusGenScalars['JSON'] | null; // JSON
+    id: number; // Int!
+    lang: string | null; // String
+    log: NexusGenScalars['JSON'] | null; // JSON
+    mapping: NexusGenScalars['JSON'] | null; // JSON
+    status: number | null; // Int
+    title: NexusGenScalars['JSON'] | null; // JSON
+    updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
+    warnings: NexusGenScalars['JSON'] | null; // JSON
+  }
+  DataImportQueryResult: { // field return type
+    dataImports: Array<NexusGenRootTypes['DataImport'] | null> | null; // [DataImport]
+    totalCount: number | null; // Int
+  }
   Event: { // field return type
+    address: string | null; // String
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
     dates: Array<NexusGenRootTypes['EventDate'] | null> | null; // [EventDate]
     description: NexusGenScalars['JSON'] | null; // JSON
@@ -576,6 +587,7 @@ export interface NexusGenFieldTypes {
     isImported: boolean | null; // Boolean
     locations: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
     meta: NexusGenScalars['JSON'] | null; // JSON
+    organiser: string | null; // String
     ownerId: number; // Int!
     primaryTerms: Array<NexusGenRootTypes['Term'] | null> | null; // [Term]
     slug: NexusGenScalars['JSON'] | null; // JSON
@@ -591,18 +603,6 @@ export interface NexusGenFieldTypes {
     end: NexusGenScalars['DateTime'] | null; // DateTime
     id: number; // Int!
     updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
-  }
-  EventImportLog: { // field return type
-    createdAt: NexusGenScalars['DateTime'] | null; // DateTime
-    errors: NexusGenScalars['JSON'] | null; // JSON
-    id: number; // Int!
-    log: NexusGenScalars['JSON'] | null; // JSON
-    updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
-    warnings: NexusGenScalars['JSON'] | null; // JSON
-  }
-  EventImportLogQueryResult: { // field return type
-    eventImportLogs: Array<NexusGenRootTypes['EventImportLog'] | null> | null; // [EventImportLog]
-    totalCount: number | null; // Int
   }
   EventQueryResult: { // field return type
     events: Array<NexusGenRootTypes['Event'] | null> | null; // [Event]
@@ -637,23 +637,6 @@ export interface NexusGenFieldTypes {
     id: number; // Int!
     meta: NexusGenScalars['JSON'] | null; // JSON
     status: number; // Int!
-  }
-  Import: { // field return type
-    createdAt: NexusGenScalars['DateTime'] | null; // DateTime
-    errors: NexusGenScalars['JSON'] | null; // JSON
-    file: NexusGenScalars['JSON'] | null; // JSON
-    id: number; // Int!
-    lang: string | null; // String
-    log: NexusGenScalars['JSON'] | null; // JSON
-    mapping: NexusGenScalars['JSON'] | null; // JSON
-    status: number | null; // Int
-    title: NexusGenScalars['JSON'] | null; // JSON
-    updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
-    warnings: NexusGenScalars['JSON'] | null; // JSON
-  }
-  ImportQueryResult: { // field return type
-    imports: Array<NexusGenRootTypes['Import'] | null> | null; // [Import]
-    totalCount: number | null; // Int
   }
   Location: { // field return type
     accessibilityInformation: NexusGenScalars['JSON'] | null; // JSON
@@ -704,15 +687,15 @@ export interface NexusGenFieldTypes {
     authVerifyEmail: NexusGenRootTypes['BooleanResult']; // BooleanResult!
     dataExportCreate: NexusGenRootTypes['DataExport']; // DataExport!
     dataExportDelete: NexusGenRootTypes['BooleanResult']; // BooleanResult!
+    dataImportCreate: NexusGenRootTypes['DataImport']; // DataImport!
+    dataImportDelete: NexusGenRootTypes['BooleanResult']; // BooleanResult!
+    dataImportFileDelete: NexusGenRootTypes['BooleanResult']; // BooleanResult!
+    dataImportUpdate: NexusGenRootTypes['DataImport']; // DataImport!
     eventCreate: NexusGenRootTypes['Event']; // Event!
     eventDelete: NexusGenRootTypes['BooleanResult']; // BooleanResult!
     eventUpdate: NexusGenRootTypes['Event']; // Event!
     imageDelete: NexusGenRootTypes['BooleanResult']; // BooleanResult!
     imageUpdate: NexusGenRootTypes['Image']; // Image!
-    importCreate: NexusGenRootTypes['Import']; // Import!
-    importDelete: NexusGenRootTypes['BooleanResult']; // BooleanResult!
-    importFileDelete: NexusGenRootTypes['BooleanResult']; // BooleanResult!
-    importUpdate: NexusGenRootTypes['Import']; // Import!
     locationCreate: NexusGenRootTypes['Location']; // Location!
     locationDelete: NexusGenRootTypes['BooleanResult']; // BooleanResult!
     locationUpdate: NexusGenRootTypes['Location']; // Location!
@@ -771,16 +754,14 @@ export interface NexusGenFieldTypes {
     adminUsers: Array<NexusGenRootTypes['AdminUser'] | null> | null; // [AdminUser]
     dataExportRead: NexusGenRootTypes['DataExport']; // DataExport!
     dataExports: NexusGenRootTypes['DataExportQueryResult'] | null; // DataExportQueryResult
+    dataImportRead: NexusGenRootTypes['DataImport']; // DataImport!
+    dataImports: NexusGenRootTypes['DataImportQueryResult'] | null; // DataImportQueryResult
     event: NexusGenRootTypes['Event']; // Event!
-    eventImportLog: NexusGenRootTypes['EventImportLog']; // EventImportLog!
-    eventImportLogs: NexusGenRootTypes['EventImportLogQueryResult'] | null; // EventImportLogQueryResult
     events: NexusGenRootTypes['EventQueryResult'] | null; // EventQueryResult
     geocode: NexusGenRootTypes['GeoCodeResult'] | null; // GeoCodeResult
     imageRead: NexusGenRootTypes['Image']; // Image!
     imageStatus: NexusGenRootTypes['ImageStatus']; // ImageStatus!
     images: NexusGenRootTypes['ImageQueryResult'] | null; // ImageQueryResult
-    importRead: NexusGenRootTypes['Import']; // Import!
-    imports: NexusGenRootTypes['ImportQueryResult'] | null; // ImportQueryResult
     location: NexusGenRootTypes['Location']; // Location!
     locations: NexusGenRootTypes['LocationQueryResult'] | null; // LocationQueryResult
     moduleTaxonomies: Array<NexusGenRootTypes['Taxonomy'] | null> | null; // [Taxonomy]
@@ -906,7 +887,7 @@ export interface NexusGenFieldTypes {
     id: number; // Int!
     lastName: string | null; // String
     ownsConentOnDelete: boolean | null; // Boolean
-    ownsEventImports: boolean | null; // Boolean
+    ownsEventDataImports: boolean | null; // Boolean
     profileImageId: number | null; // Int
     role: string | null; // String
     updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
@@ -969,7 +950,25 @@ export interface NexusGenFieldTypeNames {
     dataExports: 'DataExport'
     totalCount: 'Int'
   }
+  DataImport: { // field return type name
+    createdAt: 'DateTime'
+    errors: 'JSON'
+    file: 'JSON'
+    id: 'Int'
+    lang: 'String'
+    log: 'JSON'
+    mapping: 'JSON'
+    status: 'Int'
+    title: 'JSON'
+    updatedAt: 'DateTime'
+    warnings: 'JSON'
+  }
+  DataImportQueryResult: { // field return type name
+    dataImports: 'DataImport'
+    totalCount: 'Int'
+  }
   Event: { // field return type name
+    address: 'String'
     createdAt: 'DateTime'
     dates: 'EventDate'
     description: 'JSON'
@@ -979,6 +978,7 @@ export interface NexusGenFieldTypeNames {
     isImported: 'Boolean'
     locations: 'Location'
     meta: 'JSON'
+    organiser: 'String'
     ownerId: 'Int'
     primaryTerms: 'Term'
     slug: 'JSON'
@@ -994,18 +994,6 @@ export interface NexusGenFieldTypeNames {
     end: 'DateTime'
     id: 'Int'
     updatedAt: 'DateTime'
-  }
-  EventImportLog: { // field return type name
-    createdAt: 'DateTime'
-    errors: 'JSON'
-    id: 'Int'
-    log: 'JSON'
-    updatedAt: 'DateTime'
-    warnings: 'JSON'
-  }
-  EventImportLogQueryResult: { // field return type name
-    eventImportLogs: 'EventImportLog'
-    totalCount: 'Int'
   }
   EventQueryResult: { // field return type name
     events: 'Event'
@@ -1040,23 +1028,6 @@ export interface NexusGenFieldTypeNames {
     id: 'Int'
     meta: 'JSON'
     status: 'Int'
-  }
-  Import: { // field return type name
-    createdAt: 'DateTime'
-    errors: 'JSON'
-    file: 'JSON'
-    id: 'Int'
-    lang: 'String'
-    log: 'JSON'
-    mapping: 'JSON'
-    status: 'Int'
-    title: 'JSON'
-    updatedAt: 'DateTime'
-    warnings: 'JSON'
-  }
-  ImportQueryResult: { // field return type name
-    imports: 'Import'
-    totalCount: 'Int'
   }
   Location: { // field return type name
     accessibilityInformation: 'JSON'
@@ -1107,15 +1078,15 @@ export interface NexusGenFieldTypeNames {
     authVerifyEmail: 'BooleanResult'
     dataExportCreate: 'DataExport'
     dataExportDelete: 'BooleanResult'
+    dataImportCreate: 'DataImport'
+    dataImportDelete: 'BooleanResult'
+    dataImportFileDelete: 'BooleanResult'
+    dataImportUpdate: 'DataImport'
     eventCreate: 'Event'
     eventDelete: 'BooleanResult'
     eventUpdate: 'Event'
     imageDelete: 'BooleanResult'
     imageUpdate: 'Image'
-    importCreate: 'Import'
-    importDelete: 'BooleanResult'
-    importFileDelete: 'BooleanResult'
-    importUpdate: 'Import'
     locationCreate: 'Location'
     locationDelete: 'BooleanResult'
     locationUpdate: 'Location'
@@ -1174,16 +1145,14 @@ export interface NexusGenFieldTypeNames {
     adminUsers: 'AdminUser'
     dataExportRead: 'DataExport'
     dataExports: 'DataExportQueryResult'
+    dataImportRead: 'DataImport'
+    dataImports: 'DataImportQueryResult'
     event: 'Event'
-    eventImportLog: 'EventImportLog'
-    eventImportLogs: 'EventImportLogQueryResult'
     events: 'EventQueryResult'
     geocode: 'GeoCodeResult'
     imageRead: 'Image'
     imageStatus: 'ImageStatus'
     images: 'ImageQueryResult'
-    importRead: 'Import'
-    imports: 'ImportQueryResult'
     location: 'Location'
     locations: 'LocationQueryResult'
     moduleTaxonomies: 'Taxonomy'
@@ -1309,7 +1278,7 @@ export interface NexusGenFieldTypeNames {
     id: 'Int'
     lastName: 'String'
     ownsConentOnDelete: 'Boolean'
-    ownsEventImports: 'Boolean'
+    ownsEventDataImports: 'Boolean'
     profileImageId: 'Int'
     role: 'String'
     updatedAt: 'DateTime'
@@ -1364,6 +1333,21 @@ export interface NexusGenArgTypes {
       id: number; // Int!
       type: string; // String!
     }
+    dataImportCreate: { // args
+      data: NexusGenInputs['DataImportUpsertInput']; // DataImportUpsertInput!
+    }
+    dataImportDelete: { // args
+      id: number; // Int!
+      type: string; // String!
+    }
+    dataImportFileDelete: { // args
+      id: number; // Int!
+      type: string; // String!
+    }
+    dataImportUpdate: { // args
+      data: NexusGenInputs['DataImportUpsertInput']; // DataImportUpsertInput!
+      id: number; // Int!
+    }
     eventCreate: { // args
       data: NexusGenInputs['EventUpsertInput']; // EventUpsertInput!
     }
@@ -1379,19 +1363,6 @@ export interface NexusGenArgTypes {
     }
     imageUpdate: { // args
       data: NexusGenInputs['ImageUpdateInput']; // ImageUpdateInput!
-      id: number; // Int!
-    }
-    importCreate: { // args
-      data: NexusGenInputs['ImportUpsertInput']; // ImportUpsertInput!
-    }
-    importDelete: { // args
-      id: number; // Int!
-    }
-    importFileDelete: { // args
-      id: number; // Int!
-    }
-    importUpdate: { // args
-      data: NexusGenInputs['ImportUpsertInput']; // ImportUpsertInput!
       id: number; // Int!
     }
     locationCreate: { // args
@@ -1507,18 +1478,19 @@ export interface NexusGenArgTypes {
       pageSize: number | null; // Int
       where?: NexusGenScalars['JSON'] | null; // JSON
     }
-    event: { // args
-      id?: number | null; // Int
-      slug?: string | null; // String
-    }
-    eventImportLog: { // args
+    dataImportRead: { // args
       id: number; // Int!
+      type: string; // String!
     }
-    eventImportLogs: { // args
+    dataImports: { // args
       orderBy?: NexusGenScalars['JSON'] | null; // JSON
       pageIndex?: number | null; // Int
       pageSize: number | null; // Int
       where?: NexusGenScalars['JSON'] | null; // JSON
+    }
+    event: { // args
+      id?: number | null; // Int
+      slug?: string | null; // String
     }
     events: { // args
       orderBy?: NexusGenScalars['JSON'] | null; // JSON
@@ -1540,15 +1512,6 @@ export interface NexusGenArgTypes {
       pageIndex?: number | null; // Int
       pageSize: number | null; // Int
       taxonomyId?: number | null; // Int
-      where?: NexusGenScalars['JSON'] | null; // JSON
-    }
-    importRead: { // args
-      id: number; // Int!
-    }
-    imports: { // args
-      orderBy?: NexusGenScalars['JSON'] | null; // JSON
-      pageIndex?: number | null; // Int
-      pageSize: number | null; // Int
       where?: NexusGenScalars['JSON'] | null; // JSON
     }
     location: { // args

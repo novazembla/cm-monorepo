@@ -180,6 +180,8 @@ const Create = () => {
           dates: {
             create: newData.dates,
           },
+          address: newData?.address ?? "",
+          organiser: newData?.organiser ?? "",
           isFree: !!newData.isFree,
           isImported: false,
           lat: newData.lat,
@@ -198,8 +200,6 @@ const Create = () => {
             multiLangFields
           ),
         });
-
-        // TODO Image
 
         if (!mutationResults.errors) {
           successToast();

@@ -2,12 +2,13 @@ import axios, { AxiosResponse } from "axios";
 import axiosRetry from "axios-retry";
 import pMap from "p-map";
 import hash from "object-hash";
-import { PublishStatus } from "@culturemap/core";
+import { DataImportStatus, PublishStatus } from "@culturemap/core";
+import dedent from "dedent";
 
 import logger from "../services/serviceLogging";
 
 // !!!! ALWAY REMEMBER TO CLOSE YOU DB CONNECTION !!!
-import Prisma, { EventImportLog } from "@prisma/client";
+import Prisma, { DataImport } from "@prisma/client";
 
 import { getApiConfig } from "../config";
 
@@ -51,25 +52,43 @@ let log: string[] = [];
 let errors: string[] = [];
 let warnings: string[] = [];
 
-let importLog: EventImportLog;
+let importLog: DataImport;
 
-const saveImportLog = async (prisma: Prisma.PrismaClient) => {
+const getValue = (val: any) => {
+  if (val) return `${val}`.trim() ?? "";
+  return "";
+};
+
+const saveDataImportLog = async (
+  prisma: Prisma.PrismaClient,
+  status: DataImportStatus,
+  owner?: Prisma.User
+) => {
   if (!importLog) {
-    importLog = await prisma.eventImportLog.create({
+    importLog = await prisma.dataImport.create({
       data: {
+        title: "Berlin.de Kalender Import",
+        type: "event",
+        owner: {
+          connect: {
+            id: owner?.id ?? 0,
+          },
+        },
         log,
         warnings,
         errors,
+        status,
       },
     });
   }
 
   if (importLog) {
-    importLog = await prisma.eventImportLog.update({
+    importLog = await prisma.dataImport.update({
       data: {
         log,
         warnings,
         errors,
+        status,
       },
       where: {
         id: importLog.id,
@@ -214,362 +233,392 @@ const doChores = async () => {
     const client = axios.create();
     axiosRetry(client, { retries: 3 });
 
-    log.push("Beginne Import Prozess");
+    log.push("Beginne DataImport Prozess");
 
     const eventOwner = await findEventOwner(prisma);
     if (!eventOwner || !eventOwner?.id)
       throw Error(
-        "Konnte die KartenpunktautorIn nicht bestimmen. Bitte setzen Sie bei einer NutzerIn das Attribug: ImportbesitzerIn"
+        "Konnte die KartenpunktautorIn nicht bestimmen. Bitte setzen Sie bei einer NutzerIn das Attribut: DataImportBesitzerIn"
       );
 
-    await saveImportLog(prisma);
-    await client
-      .get(apiConfig.eventImportUrl, {
-        headers: { "User-Agent": "CultureMap 1.0" },
-      })
-      .then(async (response: AxiosResponse<any>) => {
-        if (response.data && isObject(response?.data?.events)) {
-          log.push(`Kalender von ${apiConfig.eventImportUrl} eingelesen`);
-          await saveImportLog(prisma);
+    try {
+      await saveDataImportLog(prisma, DataImportStatus.PROCESSING, eventOwner);
+      await client
+        .get(apiConfig.eventDataImportUrl, {
+          headers: { "User-Agent": "CultureMap 1.0" },
+        })
+        .then(async (response: AxiosResponse<any>) => {
+          if (response.data && isObject(response?.data?.events)) {
+            log.push(`Kalender von ${apiConfig.eventDataImportUrl} eingelesen`);
+            await saveDataImportLog(prisma, DataImportStatus.PROCESSING);
 
-          if (isObject(response?.data?.kategorien)) {
-            await registerEventCategoies(prisma, response?.data?.kategorien);
-            await saveImportLog(prisma);
-          }
-
-          let today = getTodayInCurrentTZ();
-          const count = Object.keys(response?.data?.events).reduce(
-            (cnt: any, key: string) => {
-              const event: any = response?.data?.events[key];
-              let dates = [];
-              if (isObject(event?.termine)) {
-                dates = Object.keys(event?.termine).map(
-                  (tkey: string) => event?.termine[tkey]
-                );
-              }
-
-              return {
-                events: cnt.events + 1,
-                datesAll: cnt.datesAll + dates.length,
-                datesCurrent:
-                  cnt.datesCurrent +
-                  dates.filter((dF) => new Date(dF.tag_von) >= today).length,
-              };
-            },
-            {
-              events: 0,
-              datesAll: 0,
-              datesCurrent: 0,
+            if (isObject(response?.data?.kategorien)) {
+              await registerEventCategoies(prisma, response?.data?.kategorien);
+              await saveDataImportLog(prisma, DataImportStatus.PROCESSING);
             }
-          );
 
-          log.push(
-            `${count.events} Veranstaltungen mit ${count.datesCurrent} Terminen gefunden`
-          );
-          log.push(`Beginne den import dieser ....`);
-          await saveImportLog(prisma);
+            let today = getTodayInCurrentTZ();
+            const count = Object.keys(response?.data?.events).reduce(
+              (cnt: any, key: string) => {
+                const event: any = response?.data?.events[key];
+                let dates = [];
+                if (isObject(event?.termine)) {
+                  dates = Object.keys(event?.termine).map(
+                    (tkey: string) => event?.termine[tkey]
+                  );
+                }
 
-          const processEvent = async (key: string) => {
-            try {
-              const event: any = response?.data?.events[key];
-              const eventHash = hash({
-                id: event.event_id,
-              });
-
-              let eventInDb: any = await prisma.event.findFirst({
-                where: {
-                  importedEventHash: eventHash,
-                },
-                include: {
-                  locations: true,
-                },
-              });
-
-              const locationId =
-                event.event_veranstaltungsort_id.trim() !== ""
-                  ? parseInt(event.event_veranstaltungsort_id.trim())
-                  : 0;
-
-              const location = await findLocationByEventLocationId(
-                prisma,
-                locationId,
-                response?.data?.veranstaltungsorte[
-                  event.event_veranstaltungsort_id
-                ]?.name
-              );
-
-              let dates = [];
-              today = getTodayInCurrentTZ();
-
-              if (isObject(event?.termine)) {
-                dates = Object.keys(event?.termine).map(
-                  (tkey: string) => event?.termine[tkey]
-                );
-                dates = dates.filter((dF) => new Date(dF.tag_von) >= today);
+                return {
+                  events: cnt.events + 1,
+                  datesAll: cnt.datesAll + dates.length,
+                  datesCurrent:
+                    cnt.datesCurrent +
+                    dates.filter((dF) => new Date(dF.tag_von) >= today).length,
+                };
+              },
+              {
+                events: 0,
+                datesAll: 0,
+                datesCurrent: 0,
               }
+            );
 
-              let mappedIds = [];
-              let terms = {};
-              if (
-                event.kategorie_ids &&
-                Object.keys(event.kategorie_ids).length > 0
-              ) {
-                mappedIds = Object.keys(event.kategorie_ids).reduce(
-                  (agg, kKey) => {
-                    if (eventCategories[kKey]) agg.push(eventCategories[kKey]);
-                    return agg;
-                  },
-                  [] as any
-                );
-              }
+            log.push(
+              `${count.events} Veranstaltungen mit ${count.datesCurrent} Terminen gefunden`
+            );
+            log.push(`Beginne den import dieser ....`);
+            await saveDataImportLog(prisma, DataImportStatus.PROCESSING);
 
-              const sharedData = {
-                description_de: convertToHtml(event.event_beschreibung_de),
-                description_en: convertToHtml(event.event_beschreibung_en),
-                title_de: event.event_titel_de,
-                title_en:
-                  event.event_titel_en !== ""
-                    ? event.event_titel_en
-                    : event.event_titel_de,
-                slug_de: `veranstaltung-${slugify(event.event_titel_de)}-${
-                  event.event_id
-                }`,
-                slug_en: `event-${slugify(event.event_titel_en)}-${
-                  event.event_id
-                }`,
+            const processEvent = async (key: string) => {
+              try {
+                const event: any = response?.data?.events[key];
+                const eventHash = hash({
+                  id: event.event_id,
+                });
 
-                meta: {
-                  event,
-                  veranstalter:
-                    response?.data?.veranstalter && event?.event_veranstalter_id
-                      ? response?.data?.veranstalter[
-                          event?.event_veranstalter_id
-                        ]
-                      : null,
-                  veranstaltungsort:
-                    response?.data?.veranstaltungsorte &&
-                    event?.event_veranstaltungsort_id
-                      ? response?.data?.veranstaltungsorte[
-                          event?.event_veranstaltungsort_id
-                        ]
-                      : null,
-                  lastUpdate: new Date().toUTCString(),
-                } as any,
-                isFree: event?.event_ist_gratis === "1",
-                isImported: true,
-              };
-
-              const datesForDb = prepareDatesForDb(dates);
-
-              if (!eventInDb) {
-                if (dates.length > 0) {
-                  if (mappedIds.length > 0) {
-                    terms = {
-                      terms: {
-                        connect: mappedIds.map((id: number) => ({
-                          id,
-                        })),
-                      },
-                    };
-                  }
-
-                  const data = {
-                    ...sharedData,
-                    ...terms,
-                    dates: {
-                      create: datesForDb,
-                    },
+                let eventInDb: any = await prisma.event.findFirst({
+                  where: {
                     importedEventHash: eventHash,
-                    status: PublishStatus.PUBLISHED,
-                    owner: {
-                      connect: {
-                        id: eventOwner.id,
+                  },
+                  include: {
+                    locations: true,
+                  },
+                });
+
+                const locationId =
+                  event.event_veranstaltungsort_id.trim() !== ""
+                    ? parseInt(event.event_veranstaltungsort_id.trim())
+                    : 0;
+
+                const location = await findLocationByEventLocationId(
+                  prisma,
+                  locationId,
+                  response?.data?.veranstaltungsorte[
+                    event.event_veranstaltungsort_id
+                  ]?.name
+                );
+
+                let dates = [];
+                today = getTodayInCurrentTZ();
+
+                if (isObject(event?.termine)) {
+                  dates = Object.keys(event?.termine).map(
+                    (tkey: string) => event?.termine[tkey]
+                  );
+                  dates = dates.filter((dF) => new Date(dF.tag_von) >= today);
+                }
+
+                let mappedIds = [];
+                let terms = {};
+                if (
+                  event.kategorie_ids &&
+                  Object.keys(event.kategorie_ids).length > 0
+                ) {
+                  mappedIds = Object.keys(event.kategorie_ids).reduce(
+                    (agg, kKey) => {
+                      if (eventCategories[kKey])
+                        agg.push(eventCategories[kKey]);
+                      return agg;
+                    },
+                    [] as any
+                  );
+                }
+
+                let veranstalter =
+                  response?.data?.veranstalter && event?.event_veranstalter_id
+                    ? response?.data?.veranstalter[event?.event_veranstalter_id]
+                    : null;
+
+                const veranstaltungsort =
+                  response?.data?.veranstaltungsorte &&
+                  event?.event_veranstaltungsort_id
+                    ? response?.data?.veranstaltungsorte[
+                        event?.event_veranstaltungsort_id
+                      ]
+                    : null;
+
+                const sharedData = {
+                  description_de: convertToHtml(event.event_beschreibung_de),
+                  description_en: convertToHtml(event.event_beschreibung_en),
+                  title_de: event.event_titel_de,
+                  title_en:
+                    event.event_titel_en !== ""
+                      ? event.event_titel_en
+                      : event.event_titel_de,
+                  slug_de: `veranstaltung-${slugify(event.event_titel_de)}-${
+                    event.event_id
+                  }`,
+                  slug_en: `event-${slugify(event.event_titel_en)}-${
+                    event.event_id
+                  }`,
+
+                  organiser: convertToHtml(
+                    dedent`${getValue(veranstalter?.name)}
+                  ${getValue(veranstalter?.strasse)} ${getValue(
+                      veranstalter?.hausnummer
+                    )}
+                  ${getValue(veranstalter?.plz)} ${getValue(veranstalter?.ort)}
+                  `.trim()
+                  ),
+                  address: convertToHtml(
+                    dedent`${getValue(veranstaltungsort?.name)}
+                  ${getValue(veranstaltungsort?.strasse)} ${getValue(
+                      veranstaltungsort?.hausnummer
+                    )}
+                  ${getValue(veranstaltungsort?.plz)} ${getValue(
+                      veranstaltungsort?.ort
+                    )}
+                  `.trim()
+                  ),
+                  meta: {
+                    event,
+                    veranstalter,
+                    veranstaltungsort,
+                    lastUpdate: new Date().toUTCString(),
+                  } as any,
+                  isFree: event?.event_ist_gratis === "1",
+                  isImported: true,
+                };
+
+                const datesForDb = prepareDatesForDb(dates);
+
+                if (!eventInDb) {
+                  if (dates.length > 0) {
+                    if (mappedIds.length > 0) {
+                      terms = {
+                        terms: {
+                          connect: mappedIds.map((id: number) => ({
+                            id,
+                          })),
+                        },
+                      };
+                    }
+
+                    const data = {
+                      ...sharedData,
+                      ...terms,
+                      dates: {
+                        createMany: { data: datesForDb },
                       },
-                    },
-                    ...(location
-                      ? {
-                          locations: {
-                            connect: {
-                              id: location.id,
+                      importedEventHash: eventHash,
+                      status: PublishStatus.PUBLISHED,
+                      owner: {
+                        connect: {
+                          id: eventOwner.id,
+                        },
+                      },
+                      ...(location
+                        ? {
+                            locations: {
+                              connect: {
+                                id: location.id,
+                              },
                             },
-                          },
-                        }
-                      : {}),
-                  };
+                          }
+                        : {}),
+                    };
 
-                  eventInDb = await prisma.event.create({
-                    data: {
-                      ...data,
-                      fullText: extractFullText(data),
-                    },
-                  });
+                    eventInDb = await prisma.event.create({
+                      data: {
+                        ...data,
+                        fullText: extractFullText(data),
+                      },
+                    });
 
-                  if (eventInDb) {
+                    if (eventInDb) {
+                      log.push(
+                        `Neue Veranstaltung mit der ID: ${eventInDb?.id} erstellt`
+                      );
+                    }
+                  } else {
                     log.push(
-                      `Neue Veranstaltung mit der ID: ${eventInDb?.id} erstellt`
+                      `Überspringe die Veranstaltung (berlin.de ID: ${event?.event_id}) da diese keine zukünftigen Termine hat`
                     );
                   }
                 } else {
-                  log.push(
-                    `Überspringe die Veranstaltung (berlin.de ID: ${event?.event_id}) da diese keine zukünftigen Termine hat`
-                  );
-                }
-              } else {
-                if (!eventInDb.isImported) {
-                  log.push(
-                    `Überspringe Veranstaltung ID: ${eventInDb?.id} (berlin.de id: ${event.event_id}) da sie vom Import ausgenommen wurde`
-                  );
-                } else {
-                  if (dates.length > 0) {
-                    let skip = false;
-                    if (eventInDb.meta.lastUpdate) {
-                      const updated = new Date(eventInDb.meta.lastUpdate);
-                      const modified = new Date(
-                        new Date().setTime(
-                          parseInt(event.event_last_mod) * 1000
-                        )
-                      );
-                      skip = true;
-                      if (modified > updated) skip = false;
-                    }
-
-                    if (
-                      location &&
-                      (!eventInDb.locations ||
-                        eventInDb.locations.length === 0 ||
-                        (eventInDb.locations.length &&
-                          !eventInDb.locations.find(
-                            (l: any) => l.id === location.id
-                          )))
-                    ) {
-                      // location needs update
-                      skip = false;
-                    }
-
-                    if (!skip) {
-                      await prisma.eventDate.deleteMany({
-                        where: {
-                          event: {
-                            id: eventInDb.id,
-                          },
-                        },
-                      });
-
-                      if (mappedIds.length > 0) {
-                        terms = {
-                          terms: {
-                            set: mappedIds.map((id: number) => ({
-                              id,
-                            })),
-                          },
-                        };
+                  if (!eventInDb.isImported) {
+                    log.push(
+                      `Überspringe Veranstaltung ID: ${eventInDb?.id} (berlin.de id: ${event.event_id}) da sie vom DataImport ausgenommen wurde`
+                    );
+                  } else {
+                    if (dates.length > 0) {
+                      let skip = false;
+                      if (eventInDb.meta.lastUpdate) {
+                        const updated = new Date(eventInDb.meta.lastUpdate);
+                        const modified = new Date(
+                          new Date().setTime(
+                            parseInt(event.event_last_mod) * 1000
+                          )
+                        );
+                        skip = true;
+                        if (modified > updated) skip = false;
                       }
 
-                      const data = {
-                        ...sharedData,
-                        ...terms,
-                        dates: {
-                          create: datesForDb,
-                        },
-                        locations: {
-                          set: location
-                            ? [
-                                {
-                                  id: location.id,
-                                },
-                              ]
-                            : [],
-                        },
-                      };
+                      if (
+                        location &&
+                        (!eventInDb.locations ||
+                          eventInDb.locations.length === 0 ||
+                          (eventInDb.locations.length &&
+                            !eventInDb.locations.find(
+                              (l: any) => l.id === location.id
+                            )))
+                      ) {
+                        // location needs update
+                        skip = false;
+                      }
 
-                      eventInDb = await prisma.event.update({
-                        data: {
-                          ...data,
-                          fullText: extractFullText(data),
-                        },
+                      if (!skip) {
+                        await prisma.eventDate.deleteMany({
+                          where: {
+                            event: {
+                              id: eventInDb.id,
+                            },
+                          },
+                        });
+
+                        if (mappedIds.length > 0) {
+                          terms = {
+                            terms: {
+                              set: mappedIds.map((id: number) => ({
+                                id,
+                              })),
+                            },
+                          };
+                        }
+
+                        const data = {
+                          ...sharedData,
+                          ...terms,
+                          dates: {
+                            createMany: { data: datesForDb },
+                          },
+                          locations: {
+                            set: location
+                              ? [
+                                  {
+                                    id: location.id,
+                                  },
+                                ]
+                              : [],
+                          },
+                        };
+
+                        eventInDb = await prisma.event.update({
+                          data: {
+                            ...data,
+                            fullText: extractFullText(data),
+                          },
+                          where: {
+                            id: eventInDb.id,
+                          },
+                        });
+
+                        // TODO: that next.js trigger updates on frontend via get request
+                        log.push(
+                          `Veranstaltung : ${eventInDb?.id} (berlin.de id: ${event.event_id}) aktualisiert`
+                        );
+                      } else {
+                        log.push(
+                          `Überspringe Veranstaltung ID: ${eventInDb?.id} (berlin.de id: ${event.event_id}) da die Daten in der Datenbank aktuell sind`
+                        );
+                      }
+                    } else {
+                      // TODO: that next.js trigger updates on frontend via get request
+                      await prisma.event.delete({
                         where: {
                           id: eventInDb.id,
                         },
                       });
-
-                      // TODO: that next.js trigger updates on frontend via get request
                       log.push(
-                        `Veranstaltung : ${eventInDb?.id} (berlin.de id: ${event.event_id}) aktualisiert`
-                      );
-                    } else {
-                      log.push(
-                        `Überspringe Veranstaltung ID: ${eventInDb?.id} (berlin.de id: ${event.event_id}) da die Daten in der Datenbank aktuell sind`
+                        `Lösche Veranstaltung ID: ${eventInDb?.id} (berlin.de id: ${event.event_id}) da keine zukünftigen Termine mehr vorhanden sind`
                       );
                     }
-                  } else {
-                    // TODO: that next.js trigger updates on frontend via get request
-                    await prisma.event.delete({
-                      where: {
-                        id: eventInDb.id,
-                      },
-                    });
-                    log.push(
-                      `Lösche Veranstaltung ID: ${eventInDb?.id} (berlin.de id: ${event.event_id}) da keine zukünftigen Termine mehr vorhanden sind`
-                    );
                   }
                 }
+              } catch (err: any) {
+                logger.error(err);
+                errors.push(`${err.name} ${err.message}`);
               }
-            } catch (err: any) {
-              logger.error(err);
-              errors.push(`${err.name} ${err.message}`);
-            }
-            await saveImportLog(prisma);
-          };
+              await saveDataImportLog(prisma, DataImportStatus.PROCESSING);
+            };
 
-          await pMap(Object.keys(response?.data?.events), processEvent, {
-            concurrency: 1,
-          });
+            await pMap(Object.keys(response?.data?.events), processEvent, {
+              concurrency: 1,
+            });
 
-          const toBeDeleted = await prisma.event.findMany({
-            select: {
-              id: true,
-              slug_de: true,
-              slug_en: true,
-            },
-            where: {
-              isImported: true,
-              importedEventHash: {
-                not: {
-                  in: Object.keys(response?.data?.events).map((eKey) =>
-                    hash({
-                      id: response.data.events[eKey].event_id,
-                    })
-                  ),
-                },
+            const toBeDeleted = await prisma.event.findMany({
+              select: {
+                id: true,
+                slug_de: true,
+                slug_en: true,
               },
-            },
-          });
-
-          if (toBeDeleted && toBeDeleted.length > 0) {
-            // TODO: that next.js trigger updates on frontend via get request
-            const deleteResult = await prisma.event.deleteMany({
               where: {
-                id: {
-                  in: toBeDeleted.map((e) => e.id),
+                isImported: true,
+                importedEventHash: {
+                  not: {
+                    in: Object.keys(response?.data?.events).map((eKey) =>
+                      hash({
+                        id: response.data.events[eKey].event_id,
+                      })
+                    ),
+                  },
                 },
               },
             });
-            log.push(
-              `Löschte ${deleteResult.count} nicht mehr im Kalender vorhandene Veranstaltungen.`
-            );
+
+            if (toBeDeleted && toBeDeleted.length > 0) {
+              // TODO: that next.js trigger updates on frontend via get request
+              const deleteResult = await prisma.event.deleteMany({
+                where: {
+                  id: {
+                    in: toBeDeleted.map((e) => e.id),
+                  },
+                },
+              });
+              log.push(
+                `Löschte ${deleteResult.count} nicht mehr im Kalender vorhandene Veranstaltungen.`
+              );
+            }
           }
-        }
-      })
-      .catch((err) => {
-        throw err;
-      });
-    log.push("Import beendet");
+        })
+        .catch((err) => {
+          throw err;
+        });
+      log.push("DataImport beendet");
+      await saveDataImportLog(prisma, DataImportStatus.PROCESSED);
+    } catch (err: any) {
+      logger.error(`import.berlin.de: ${err.name} ${err.message}`);
+      errors.push(`import.berlin.de: ${err.name} ${err.message}`);
+      logger.debug(JSON.stringify(err));
+      await saveDataImportLog(prisma, DataImportStatus.ERROR);
+    } finally {
+      if (prisma) await prisma.$disconnect();
+    }
   } catch (err: any) {
     logger.error(`import.berlin.de: ${err.name} ${err.message}`);
     errors.push(`import.berlin.de: ${err.name} ${err.message}`);
     logger.debug(JSON.stringify(err));
   } finally {
-    await saveImportLog(prisma);
     if (prisma) await prisma.$disconnect();
   }
 };

@@ -1,17 +1,24 @@
 import gql from "graphql-tag";
 
 export const importsQueryGQL = gql`
-  query imports($where: JSON, $orderBy: JSON, $pageIndex: Int, $pageSize: Int) {
-    imports(
+  query dataImports(
+    $where: JSON
+    $orderBy: JSON
+    $pageIndex: Int
+    $pageSize: Int
+  ) {
+    dataImports(
       where: $where
       orderBy: $orderBy
       pageIndex: $pageIndex
       pageSize: $pageSize
     ) {
-      imports {
+      dataImports {
         id
         title
         status
+        warnings
+        errors
         updatedAt
       }
       totalCount
@@ -19,9 +26,9 @@ export const importsQueryGQL = gql`
   }
 `;
 
-export const importReadQueryGQL = gql`
-  query importRead($id: Int!) {
-    importRead(id: $id) {
+export const dataImportReadQueryGQL = gql`
+  query dataImportRead($id: Int!, $type: String!) {
+    dataImportRead(id: $id, type: $type) {
       id
       title
       log

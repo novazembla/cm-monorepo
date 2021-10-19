@@ -47,29 +47,6 @@ export const daoDataExportQueryFirst = async (
 export const daoDataExportQueryCount = async (
   where: Prisma.DataExportWhereInput
 ): Promise<number> => {
-  console.log(
-    await prisma.dataExport.findMany({
-      take: 100,
-      skip: 0,
-      select: {
-        id: true,
-        title: true,
-        lang: true,
-        type: true,
-        log: true,
-        errors: true,
-        meta: true,
-        status: true,
-        fileId: true,
-        file: true,
-        ownerId: true,
-        owner: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    })
-  );
-
   return prisma.dataExport.count({
     where,
   });

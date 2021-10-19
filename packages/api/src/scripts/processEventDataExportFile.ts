@@ -6,7 +6,7 @@ import Prisma from "@prisma/client";
 import minimist from "minimist";
 
 import { getApiConfig } from "../config";
-import { ExportStatus, PublishStatus } from "@culturemap/core";
+import { DataExportStatus, PublishStatus } from "@culturemap/core";
 import { daoSharedGetTranslatedSelectColumns } from "../dao/shared";
 import Excel from "exceljs";
 
@@ -83,9 +83,11 @@ const eventToArray = (event: any, lang: string) => {
     pubState = lang === "de" ? "Zurückgewiesen" : "Rejected";
   } else if (event.status === PublishStatus.IMPORTEDWARNINGS) {
     pubState =
-      lang === "de" ? "Importiert mit Warnung(en)" : "Imported with warnings";
+      lang === "de"
+        ? "DataImportiert mit Warnung(en)"
+        : "DataImported with warnings";
   } else if (event.status === PublishStatus.IMPORTED) {
-    pubState = lang === "de" ? "Importiert" : "Imported";
+    pubState = lang === "de" ? "DataImportiert" : "DataImported";
   } else if (event.status === PublishStatus.PUBLISHED) {
     pubState = lang === "de" ? "Publiziert" : "Published";
   } else if (event.status === PublishStatus.TRASHED) {
@@ -94,10 +96,19 @@ const eventToArray = (event: any, lang: string) => {
     pubState = lang === "de" ? "Unbekannt" : "Unknown";
   }
 
-  const getValue = (val: any) => {
-    if (val) return `${val}`.trim() ?? "";
-    return "";
-  };
+  const dates: string[] = Array.isArray(event.dates)
+    ? event.dates.map((date: any) => {
+        return `${date.begin.toLocaleString(lang)} - ${date.end.toLocaleString(
+          lang
+        )}`;
+      })
+    : [];
+
+  const datesISO: string[] = Array.isArray(event.dates)
+    ? event.dates.map((date: any) => {
+        return `${date.begin.toISOString()} - ${date.end.toISOString()}`;
+      })
+    : [];
 
   const cols = [
     event.id,
@@ -105,7 +116,7 @@ const eventToArray = (event: any, lang: string) => {
     event.updatedAt,
     event.title_de,
     event.title_en,
-
+    event?.meta?.event?.event_veranstaltungsort_id,
     Array.isArray(event.locations) && event.locations.length > 0
       ? event.locations[0].id
       : "",
@@ -118,36 +129,11 @@ const eventToArray = (event: any, lang: string) => {
 
     htmlToText(event.description_de),
     htmlToText(event.description_en),
-    `${getValue(event?.meta?.veranstalter?.name)}
-    ${getValue(event?.meta?.veranstalter?.strasse)} ${getValue(
-      event?.meta?.veranstalter?.hausnummer
-    )}
-    ${getValue(event?.meta?.veranstalter?.plz)} ${getValue(
-      event?.meta?.veranstalter?.ort
-    )}
-    `.trim(),
-    `${getValue(event?.meta?.veranstaltungsort?.name)}
-    ${getValue(event?.meta?.veranstaltungsort?.strasse)} ${getValue(
-      event?.meta?.veranstaltungsort?.hausnummer
-    )}
-    ${getValue(event?.meta?.veranstaltungsort?.plz)} ${getValue(
-      event?.meta?.veranstaltungsort?.ort
-    )}
-    `.trim(),
-    event?.meta?.event?.termine &&
-    Object.keys(event?.meta?.event?.termine).length > 0
-      ? Object.keys(event?.meta?.event?.termine)
-          .reduce((out: string[], tId: any) => {
-            const termin: any = event?.meta?.event?.termine[tId];
+    htmlToText(event.organiser),
+    htmlToText(event.address),
 
-            out.push(
-              `${termin.tag_von} ${termin.uhrzeit_von}-${termin.uhrzeit_bis},\n`
-            );
-            return out;
-          }, [] as string[])
-          .join("")
-      : "",
-
+    dates.join(",\n"),
+    datesISO.join(",\n"),
     lang === "de"
       ? event.isFree
         ? "Ja"
@@ -200,7 +186,7 @@ const doChores = async () => {
     });
 
     if (exportInDb && exportInDb?.owner?.id) {
-      if (ExportStatus.PROCESS !== exportInDb.status ?? -1)
+      if (DataExportStatus.PROCESS !== exportInDb.status ?? -1)
         throw Error("Status of import excludes it from processing");
 
       logger.info(`Export id: ${exportInDb.id} found to be valid for export`);
@@ -260,7 +246,7 @@ const doChores = async () => {
       );
       await prisma.dataExport.update({
         data: {
-          status: ExportStatus.PROCESSING,
+          status: DataExportStatus.PROCESSING,
           log,
           errors,
         },
@@ -372,6 +358,9 @@ const doChores = async () => {
                 : "Last update",
               exportInDb.lang === "de" ? "Titel (DE)" : "Title (DE)",
               exportInDb.lang === "de" ? "Titel (EN)" : "Title (EN)",
+              exportInDb.lang === "de"
+                ? "Veranstaltungsort ID"
+                : "Event Loctation ID",
               exportInDb.lang === "de" ? "Kartenpunkt (ID)" : "Location (ID)",
               exportInDb.lang === "de"
                 ? "Kartenpunkttitel (DE)"
@@ -390,6 +379,7 @@ const doChores = async () => {
               exportInDb.lang === "de" ? "Veranstalter" : "Organiser",
               exportInDb.lang === "de" ? "Veranstaltungsort" : "Event location",
               exportInDb.lang === "de" ? "Termine" : "Dates",
+              exportInDb.lang === "de" ? "Termine (ISO)" : "Dates (ISO)",
               exportInDb.lang === "de" ? "Eintritt Frei" : "Free Entry",
               exportInDb.lang === "de" ? "Veranstaltungsart 1" : "Event Type 1",
               exportInDb.lang === "de" ? "Veranstaltungsart 2" : "Event Type 2",
@@ -454,8 +444,8 @@ const doChores = async () => {
               data: {
                 status:
                   errors.length > 0
-                    ? ExportStatus.ERROR
-                    : ExportStatus.PROCESSED,
+                    ? DataExportStatus.ERROR
+                    : DataExportStatus.PROCESSED,
                 log,
                 errors,
                 file: {
@@ -482,7 +472,9 @@ const doChores = async () => {
       await prisma.dataExport.update({
         data: {
           status:
-            errors.length > 0 ? ExportStatus.ERROR : ExportStatus.PROCESSED,
+            errors.length > 0
+              ? DataExportStatus.ERROR
+              : DataExportStatus.PROCESSED,
           log,
           errors,
         },
@@ -509,7 +501,7 @@ const doChores = async () => {
       errors.push(`${err.name} - ${err.message}`);
       await prisma.dataExport.update({
         data: {
-          status: ExportStatus.ERROR,
+          status: DataExportStatus.ERROR,
           log,
           errors,
         },

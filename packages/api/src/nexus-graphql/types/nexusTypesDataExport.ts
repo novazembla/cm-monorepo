@@ -28,7 +28,7 @@ import {
   daoDataExportCreate,
 } from "../../dao";
 import { Prisma } from ".prisma/client";
-import { ExportStatus } from "@culturemap/core";
+import { DataExportStatus } from "@culturemap/core";
 import { dataExportDelete } from "../../services/serviceDataExport";
 
 const apiConfig = getApiConfig();
@@ -86,15 +86,12 @@ export const DataExportQueries = extendType({
         }),
       },
 
-      // authorize: (...[, args, ctx]) => {
-      //   console.log(args);
-      //   const type = args?.where?.type ?? "none";
-      //   return authorizeApiUser(ctx, `${type}ReadOwn` as any);
-      // },
+      authorize: (...[, args, ctx]) => {
+        const type = args?.where?.type ?? "none";
+        return authorizeApiUser(ctx, `${type}ReadOwn` as any);
+      },
 
       async resolve(...[, args, ctx, info]) {
-        console.log(args);
-
         const pRI = parseResolveInfo(info);
 
         const type = args?.where?.type ?? "none";
@@ -105,7 +102,7 @@ export const DataExportQueries = extendType({
           ...args.where,
           status: {
             not: {
-              in: [ExportStatus.DELETED],
+              in: [DataExportStatus.DELETED],
             },
           },
         };
@@ -119,16 +116,13 @@ export const DataExportQueries = extendType({
           };
         }
 
-        console.log(where);
-        console.log(123);
-
         if ((pRI?.fieldsByTypeName?.DataExportQueryResult as any)?.totalCount) {
           totalCount = await daoDataExportQueryCount({});
 
           if (totalCount === 0)
             return {
               totalCount,
-              imports: [],
+              dataExports: [],
             };
         }
 
@@ -217,7 +211,7 @@ export const DataExportMutations = extendType({
               id: ctx?.apiUser?.id ?? 0,
             },
           },
-          status: ExportStatus.PROCESS,
+          status: DataExportStatus.PROCESS,
         });
 
         if (!location)

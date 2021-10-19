@@ -227,8 +227,8 @@ const Index = () => {
     },
     {
       type: "navigation",
-      to: `${moduleRootPath}/logs`,
-      label: t("module.locations.menuitem.importLogs", "Import Logs"),
+      to: `${moduleRootPath}/import`,
+      label: t("module.locations.menuitem.imports", "Imports"),
       userCan: "eventRead",
     },
     {

@@ -332,6 +332,53 @@ export const adminTableCreateNewTableState = (
   return [newTableState, doRefetch, newPageIndex];
 };
 
+export const AdminTableErrorsCountCell = (cell: Cell) => {
+  let count = 0;
+  let color = "gray";
+
+  if (Array.isArray(cell.value) && cell.value.length > 0) {
+    color = "red";
+    count = cell.value.length;
+  }
+
+  return (
+    <Badge
+      minW="8rem"
+      variant="subtle"
+      textAlign="center"
+      colorScheme={color}
+      p="2"
+      borderRadius="lg"
+    >
+      {count}
+    </Badge>
+  );
+};
+
+export const AdminTableWarningsCountCell = (cell: Cell) => {
+  let count = 0;
+  let color = "gray";
+
+  if (Array.isArray(cell.value) && cell.value.length > 0) {
+    color = "orange";
+    count = cell.value.length;
+  }
+
+  return (
+    <Badge
+      minW="8rem"
+      variant="subtle"
+      textAlign="center"
+      colorScheme={color}
+      p="2"
+      borderRadius="lg"
+    >
+      {count}
+    </Badge>
+  );
+};
+
+
 export const AdminTableActionButtonEdit = (cell: Cell) => {
   const column: any = cell.column;
 

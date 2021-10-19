@@ -54,6 +54,8 @@ export const eventAndContentAuthorsQueryGQL = gql`
       slug
       description
       status
+      address
+      organiser
       isFree
       isImported
       meta
@@ -232,6 +234,8 @@ const Update = () => {
       ),
       ...moduleTerms,
       ...mapDataToPrimaryTerms(data.event.primaryTerms, data.moduleTaxonomies),
+      address: data?.address ?? "",
+      organiser: data?.organiser ?? "",
       isFree: !!data.event.isFree,
       isImported: !!data.event.isImported,
       date: new Date("12/20/2021"),
@@ -276,31 +280,7 @@ const Update = () => {
                       config.activeLanguages
                     ),
                   },
-                },
-                // images: {
-                //   set: [{
-                //     id: 17
-                //   }],
-                //   update: [
-                //     {
-                //       where: {
-                //         id: 17,
-                //       },
-                //       data: {
-                //         alt_de: "17xxx alt_de updated title",
-                //         alt_en: "17xxx alt_en updated title",
-                //         credits_de: "17xxx credits_de updated title",
-                //         credits_en: "17xxx credits_en updated title",
-                //         // ...multiLangImageMetaRHFormDataToJson(
-                //         //   newData,
-                //         //   "heroImage",
-                //         //   ["alt", "credits"],
-                //         //   config.activeLanguages
-                //         // ),
-                //       },
-                //     },
-                //   ],
-                // },
+                },               
               }
             : undefined;
 
@@ -319,7 +299,7 @@ const Update = () => {
             }
             return acc;
           }, []);
-        }
+        } 
 
         const { errors } = await firstMutation(parseInt(router.query.id, 10), {
           owner: {
@@ -340,6 +320,8 @@ const Update = () => {
                   set: [],
                 },
               }),
+          address: newData?.address ?? "",
+          organiser: newData?.organiser ?? "",
           isFree: !!newData.isFree,
           isImported: !!newData.isImported,
           dates: newData.dates,

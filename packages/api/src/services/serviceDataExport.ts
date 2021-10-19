@@ -6,7 +6,7 @@ import {
   daoFileSetToDelete,
   daoDataExportDelete,
 } from "../dao";
-import { ExportStatus } from "@culturemap/core";
+import { DataExportStatus } from "@culturemap/core";
 
 export const dataExportDelete = async (id: number): Promise<DataExport> => {
   const dataExportInDb: DataExport = await daoDataExportGetById(id);
@@ -17,7 +17,7 @@ export const dataExportDelete = async (id: number): Promise<DataExport> => {
       "DataExport could not be deleted"
     );
 
-  if (dataExportInDb.status === ExportStatus.PROCESSING)
+  if (dataExportInDb.status === DataExportStatus.PROCESSING)
     throw new ApiError(
       httpStatus.INTERNAL_SERVER_ERROR,
       "DataExport could not be deleted"

@@ -1,7 +1,7 @@
-type ImportHeaders = Record<string, Record<string, string>>;
-type ImportRequiredHeaders = Record<string, string[]>;
+export type DataImportHeaders = Record<string, Record<string, string>>;
+export type DataImportRequiredHeaders = Record<string, string[]>;
 
-export const importRequiredHeaders: ImportRequiredHeaders = {
+export const dataImportRequiredHeadersLocation: DataImportRequiredHeaders = {
   title: ["title-de", "title-en"],
   description: ["description-de", "description-en"],
   "tax-type-1": ["tax-type-1"],
@@ -11,7 +11,7 @@ export const importRequiredHeaders: ImportRequiredHeaders = {
   city: ["city"],
 };
 
-export const importHeaders: ImportHeaders = {
+export const dataImportHeadersLocation: DataImportHeaders = {
   "title-de": { en: "Title (DE)", de: "Name der Einrichtung (DE)" },
   "title-en": { en: "Title (EN)", de: "Name der Einrichtung (EN)" },
   agency: { en: "Name of Agency", de: "Name des Trägers" },
@@ -57,4 +57,35 @@ export const importHeaders: ImportHeaders = {
     en: "Berlin.de Event Location Nummer",
     de: "Berlin.de Veranstaltungsort Nummer",
   },
+};
+
+export const dataImportRequiredHeadersEvent: DataImportRequiredHeaders = {
+  title: ["title-de", "title-en"],
+  eventId: ["eventId"],
+  description: ["description-de", "description-en"],
+  "tax-event-type-1": ["tax-event-type-1"],
+  dates: ["dates"],
+};
+
+export const dataImportHeadersEvent: DataImportHeaders = {
+  "title-de": { en: "Title (DE)", de: "Veranstaltungstitel (DE)" },
+  "title-en": { en: "Title (EN)", de: "Veranstaltungstitel (EN)" },
+  "description-de": { en: "Description (DE)", de: "Kurzbeschreibung (DE)" },
+  "description-en": { en: "Description (EN)", de: "Kurzbeschreibung (EN)" },
+  address: { en: "Address", de: "Veranstaltungsort" },
+  eventId: { en: "Event ID", de: "Veranstaltungs ID" },
+  eventLocationId: { en: "Event Location ID", de: "Veranstaltungsort ID" },
+  organiser: { en: "Organiser", de: "Veranstalter" },
+  isFree: { en: "Free Event (yes/no)", de: "Freier Eintritt (ja/nein)" },
+  "tax-event-type-1": { en: "Event type (1)", de: "Veranstaltungsart (1)" },
+  "tax-event-type-2": { en: "Event type (2)", de: "Veranstaltungsart (2)" },
+  "tax-event-type-3": { en: "Event type (3)", de: "Veranstaltungsart (3)" },
+  "tax-event-type-4": { en: "Event type (4)", de: "Veranstaltungsart (4)" },
+  "tax-event-type-5": { en: "Event type (5)", de: "Veranstaltungsart (5)" },
+  "tax-event-type-6": { en: "Event type (6)", de: "Veranstaltungsart (6)" },
+  "tax-event-type-7": { en: "Event type (7)", de: "Veranstaltungsart (7)" },
+  "tax-event-type-8": { en: "Event type (8)", de: "Veranstaltungsart (8)" },
+  "tax-event-type-9": { en: "Event type (9)", de: "Veranstaltungsart (9)" },
+  "tax-event-type-10": { en: "Event type (10)", de: "Veranstaltungsart (10)" },
+  dates: { en: "Dates (ISO)", de: "Termine (ISO)" },
 };

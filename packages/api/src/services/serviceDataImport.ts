@@ -1,21 +1,30 @@
-import { Import } from "@prisma/client";
+import { DataImport } from "@prisma/client";
 import { parse } from "@fast-csv/parse";
 import httpStatus from "http-status";
 import { access } from "fs/promises";
 import { createReadStream } from "fs";
 import {
-  importHeaders,
-  importRequiredHeaders,
-  ImportStatus,
+  dataImportHeadersLocation,
+  dataImportRequiredHeadersLocation,
+  dataImportHeadersEvent,
+  dataImportRequiredHeadersEvent,
+  DataImportStatus,
+  DataImportHeaders,
+  DataImportRequiredHeaders,
 } from "@culturemap/core";
 import { ApiError } from "../utils";
 import { logger } from "./serviceLogging";
-import { daoImportGetById, daoFileSetToDelete, daoImportDelete } from "../dao";
+import {
+  daoDataImportGetById,
+  daoFileSetToDelete,
+  daoDataImportDelete,
+} from "../dao";
 
 const trimString = (str: string, length: number) =>
   str.length > length ? str.substring(0, length - 3) + "..." : str;
 
-export const importParseInitialCsv = async (
+export const dataImportParseInitialCsv = async (
+  type: string,
   file: string,
   numRows: number,
   lang: string
@@ -30,7 +39,25 @@ export const importParseInitialCsv = async (
   let unknownHeadersCounter = 0;
   let missingRequiredHeadersCounter = 0;
 
+  let importHeaders: DataImportHeaders = {},
+    requiredImportHeaders: DataImportRequiredHeaders = {};
+
+  if (type === "location") {
+    importHeaders = dataImportHeadersLocation;
+    requiredImportHeaders = dataImportRequiredHeadersLocation;
+  }
+  if (type === "event") {
+    importHeaders = dataImportHeadersEvent;
+    requiredImportHeaders = dataImportRequiredHeadersEvent;
+  }
+
   try {
+    if (
+      Object.keys(importHeaders).length === 0 ||
+      Object.keys(requiredImportHeaders).length === 0
+    )
+      throw Error(`Import header definitions not found for type ${type}`);
+
     await access(file);
 
     await new Promise((resolve, reject) => {
@@ -84,11 +111,11 @@ export const importParseInitialCsv = async (
               });
 
               const requiredHeadersCheck = Object.keys(
-                importRequiredHeaders
+                requiredImportHeaders
               ).reduce((agg, rhKey) => {
                 return {
                   ...agg,
-                  [rhKey]: !!importRequiredHeaders[rhKey].find((key) =>
+                  [rhKey]: !!requiredImportHeaders[rhKey].find((key) =>
                     mappedHeaders.includes(key)
                   ),
                 };
@@ -97,7 +124,7 @@ export const importParseInitialCsv = async (
               Object.keys(requiredHeadersCheck).forEach((key) => {
                 if (!requiredHeadersCheck[key]) {
                   missingRequiredHeadersCounter += 1;
-                  const keys = importRequiredHeaders[key].map((k) => {
+                  const keys = requiredImportHeaders[key].map((k) => {
                     return importHeaders[k][lang];
                   });
                   warnings.push(
@@ -119,7 +146,7 @@ export const importParseInitialCsv = async (
           })
         )
         .on("error", (error) => {
-          logger.info(`importParseInitialCsv() ${error.message}§`);
+          logger.info(`dataImportParseInitialCsv() ${error.message}§`);
           reject(error);
         })
         .on("headers", (hdrs) => {
@@ -127,15 +154,15 @@ export const importParseInitialCsv = async (
 
           if (
             !Array.isArray(headers) ||
-            headers.length - 1 < Object.keys(importRequiredHeaders).length
+            headers.length - 1 < Object.keys(requiredImportHeaders).length
           ) {
             errors.push(
               lang === "de"
                 ? `Die hochgeladene Datei enthält weniger Spalten als die Anzahl der verpflichtenden Spalten. Bitte laden Sie nur Dateien mit mindestens ${
-                    Object.keys(importRequiredHeaders).length
+                    Object.keys(requiredImportHeaders).length
                   } Spalten, sowie einer Laufnummerspalte hoch`
                 : `The uploaded CSV did not contain the minimum number of columns. Please ensure to only upload documents that contain at least ${
-                    Object.keys(importRequiredHeaders).length
+                    Object.keys(requiredImportHeaders).length
                   } content columns and one ID column`
             );
           }
@@ -198,9 +225,9 @@ export const importParseInitialCsv = async (
     }
   }
 
-  logger.info(`importParseInitialCsv() parsed ${file}`);
+  logger.info(`dataImportParseInitialCsv() parsed ${file}`);
   logger.info(
-    `importParseInitialCsv() Headers:${headers.length} Errors:${errors.length} MissingHeaders:${missingRequiredHeadersCounter} UnknownHeaders:${unknownHeadersCounter} Rows:${rows.length}`
+    `dataImportParseInitialCsv() Headers:${headers.length} Errors:${errors.length} MissingHeaders:${missingRequiredHeadersCounter} UnknownHeaders:${unknownHeadersCounter} Rows:${rows.length}`
   );
   if (errors.length) logger.info(errors);
 
@@ -214,24 +241,24 @@ export const importParseInitialCsv = async (
   };
 };
 
-export const importDelete = async (id: number): Promise<Import> => {
-  const importInDb: Import = await daoImportGetById(id);
+export const dataImportDelete = async (id: number): Promise<DataImport> => {
+  const importInDb: DataImport = await daoDataImportGetById(id);
 
   if (!importInDb)
     throw new ApiError(
       httpStatus.INTERNAL_SERVER_ERROR,
-      "Import could not be deleted"
+      "DataImport could not be deleted"
     );
 
-  if (importInDb.status === ImportStatus.PROCESSING)
+  if (importInDb.status === DataImportStatus.PROCESSING)
     throw new ApiError(
       httpStatus.INTERNAL_SERVER_ERROR,
-      "Import could not be deleted"
+      "DataImport could not be deleted"
     );
 
   if (importInDb?.fileId) daoFileSetToDelete(importInDb?.fileId);
 
-  return daoImportDelete(id);
+  return daoDataImportDelete(id);
 };
 
-export default importParseInitialCsv;
+export default dataImportParseInitialCsv;

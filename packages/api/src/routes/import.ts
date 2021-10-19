@@ -11,9 +11,13 @@ import { createFileMetaInfo } from ".";
 
 import { ApiError } from "../utils";
 // import { authAuthenticateUserByToken } from "../services/serviceAuth";
-import { importParseInitialCsv } from "../services/serviceImport";
-import { daoFileGetById, daoImportUpdate, daoImportGetById } from "../dao";
-import { ImportStatus } from "@culturemap/core";
+import { dataImportParseInitialCsv } from "../services/serviceDataImport";
+import {
+  daoFileGetById,
+  daoDataImportUpdate,
+  daoDataImportGetById,
+} from "../dao";
+import { DataImportStatus } from "@culturemap/core";
 
 const storagePrivate = multer.diskStorage({
   destination: async (_req: Request, _file, cb) => {
@@ -42,9 +46,9 @@ const storagePrivate = multer.diskStorage({
   },
 });
 
-export const postImportFileUpload = multer({ storage: storagePrivate });
+export const postDataImportFileUpload = multer({ storage: storagePrivate });
 
-export const postImportFile = async (
+export const postDataImportFile = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -86,15 +90,19 @@ export const postImportFile = async (
             // nothing to be done ...
           }
 
-          console.log(connectWith);
-
-          const importId = connectWith?.imports?.connect?.id;
+          const importId = connectWith?.dataImports?.connect?.id;
           let importInDb;
-          if (importId) importInDb = await daoImportGetById(importId);
+          if (importId) importInDb = await daoDataImportGetById(importId);
+
+          if (!importInDb)
+            throw new ApiError(
+              httpStatus.BAD_REQUEST,
+              "DataImport file upload failed #1"
+            );
 
           const { fileNanoId, metainfo } = createFileMetaInfo(req.file, true);
-
-          const initialParseResult = await importParseInitialCsv(
+          const initialParseResult = await dataImportParseInitialCsv(
+            importInDb?.type ?? "none",
             metainfo.originalFilePath,
             5,
             importInDb?.lang ?? "en"
@@ -110,23 +118,23 @@ export const postImportFile = async (
 
             if (file) {
               const fileInDb: any = await daoFileGetById(file.id, {
-                imports: true,
+                dataImports: true,
               });
 
               if (
                 fileInDb &&
-                Array.isArray(fileInDb?.imports) &&
-                fileInDb?.imports.length > 0
+                Array.isArray(fileInDb?.dataImports) &&
+                fileInDb?.dataImports.length > 0
               ) {
-                const ids = fileInDb?.imports.map((imp: any) => imp.id);
+                const ids = fileInDb?.dataImports.map((imp: any) => imp.id);
 
                 if (ids && ids.length > 0)
-                  await daoImportUpdate(ids[0], {
+                  await daoDataImportUpdate(ids[0], {
                     log: initialParseResult.log,
                     errors: initialParseResult.errors,
                     warnings: initialParseResult.warnings,
                     mapping: initialParseResult.mapping,
-                    status: ImportStatus.ASSIGN,
+                    status: DataImportStatus.ASSIGN,
                   });
               }
             }
@@ -145,20 +153,20 @@ export const postImportFile = async (
         } else {
           throw new ApiError(
             httpStatus.BAD_REQUEST,
-            "Import file upload failed #1"
+            "DataImport file upload failed #1"
           );
         }
       } else {
         throw new ApiError(
           httpStatus.BAD_REQUEST,
-          "Import file upload failed #2"
+          "DataImport file upload failed #2"
         );
       }
     } catch (err) {
       logger.error(err);
       throw new ApiError(
         httpStatus.INTERNAL_SERVER_ERROR,
-        "Import file upload failed #3"
+        "DataImport file upload failed #3"
       );
     }
   } catch (err: any) {
@@ -166,4 +174,4 @@ export const postImportFile = async (
   }
 };
 
-export default postImportFile;
+export default postDataImportFile;

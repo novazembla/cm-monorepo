@@ -20,9 +20,9 @@ import {
 import { Divider, Alert, AlertIcon } from "@chakra-ui/react";
 import {
   dataImportReadQueryGQL,
-  dataImportHeadersLocation,
+  dataImportHeadersEvent,
   DataImportStatus,
-  dataImportRequiredHeadersLocation,
+  dataImportRequiredHeadersEvent,
 } from "@culturemap/core";
 
 import { useQuery } from "@apollo/client";
@@ -141,7 +141,7 @@ const Update = () => {
   const breadcrumb = [
     {
       path: moduleRootPath,
-      title: t("module.locations.title", "Locations"),
+      title: t("module.events.title", "Events"),
     },
     {
       path: `${moduleRootPath}/import`,
@@ -159,17 +159,17 @@ const Update = () => {
     const allSet = !mapping.find(
       (m) =>
         m.match === "" ||
-        !Object.keys(dataImportHeadersLocation).includes(m.match)
+        !Object.keys(dataImportHeadersEvent).includes(m.match)
     );
 
     const matchedKeys = mapping.map((m) => m.match);
 
     const requiredHeadersCheck = Object.keys(
-      dataImportRequiredHeadersLocation
+      dataImportRequiredHeadersEvent
     ).reduce((agg, rhKey) => {
       return {
         ...agg,
-        [rhKey]: !!dataImportRequiredHeadersLocation[rhKey].find((key) =>
+        [rhKey]: !!dataImportRequiredHeadersEvent[rhKey].find((key) =>
           matchedKeys.includes(key)
         ),
       };
@@ -177,8 +177,8 @@ const Update = () => {
 
     Object.keys(requiredHeadersCheck).forEach((key) => {
       if (!requiredHeadersCheck[key]) {
-        const keys = dataImportRequiredHeadersLocation[key].map((k) => {
-          return dataImportHeadersLocation[k].en;
+        const keys = dataImportRequiredHeadersEvent[key].map((k) => {
+          return dataImportHeadersEvent[k].en;
         });
         allRequiredErrors.push(`"${keys.join('" or "')}"`);
       }

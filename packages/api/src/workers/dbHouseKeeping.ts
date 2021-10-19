@@ -9,8 +9,8 @@ import { getApiConfig } from "../config";
 import {
   ImageStatus,
   FileStatus,
-  ImportStatus,
-  ExportStatus,
+  DataImportStatus,
+  DataExportStatus,
 } from "@culturemap/core";
 
 // https://github.com/breejs/bree#long-running-jobs
@@ -138,20 +138,7 @@ const doChores = async () => {
     }
     postMessage(`[WORKER:dbHousekeeping]: Removed ${files.length} file(s)`);
 
-    // delete event import logs older than 120 days
-    const eventImportEventLogCleanup = await prisma.eventImportLog.deleteMany({
-      where: {
-        updatedAt: {
-          lt: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 120),
-        },
-      },
-    });
-
-    postMessage(
-      `[WORKER:dbHousekeeping]: Deleted ${eventImportEventLogCleanup.count} expired event import logs`
-    );
-
-    const importsToDelete = await prisma.import.findMany({
+    const importsToDelete = await prisma.dataImport.findMany({
       where: {
         updatedAt: {
           lt: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 60),
@@ -182,11 +169,11 @@ const doChores = async () => {
           },
         });
         postMessage(
-          `[WORKER:dbHousekeeping]: Scheduled ${fileIds.length} uploaded import files to be deleted`
+          `[WORKER:dbHousekeeping]: Set ${fileIds.length} import files to be deleted`
         );
       }
 
-      const importCleanup = await prisma.import.deleteMany({
+      const importCleanup = await prisma.dataImport.deleteMany({
         where: {
           updatedAt: {
             lt: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 60),
@@ -199,10 +186,10 @@ const doChores = async () => {
       );
     }
 
-    const scheduledImport = await prisma.import.findFirst({
+    const scheduledDataImport = await prisma.dataImport.findFirst({
       where: {
         status: {
-          in: [ImportStatus.PROCESS],
+          in: [DataImportStatus.PROCESS],
         },
       },
       orderBy: {
@@ -210,37 +197,47 @@ const doChores = async () => {
       },
     });
 
-    if (scheduledImport) {
+    if (scheduledDataImport) {
       try {
         // TODO: adjust to production server configuration
         const buildFolder =
           process.env.NODE_ENV !== "production" ? "dist" : "dist";
 
-        spawn(
-          "node",
-          [
-            `${apiConfig.packageBaseDir}/${buildFolder}/scripts/processImportFile.js`,
-            `--importId=${scheduledImport.id}`,
-          ],
-          {
-            detached: true,
-          }
-        );
+        let script;
+        if (scheduledDataImport.type === "location")
+          script = "processLocationDataImportFile.js";
+
+        if (scheduledDataImport.type === "event")
+          script = "processEventDataImportFile.js";
+
+        if (script) {
+          spawn(
+            "node",
+            [
+              `${apiConfig.packageBaseDir}/${buildFolder}/scripts/${script}`,
+              `--importId=${scheduledDataImport.id}`,
+            ],
+            {
+              detached: true,
+            }
+          );
+        }
+
         postMessage(
-          `[WORKER:dbHousekeeping]: Triggered import script for import: ${scheduledImport.id}`
+          `[WORKER:dbHousekeeping]: Triggered import script for import: ${scheduledDataImport.id}`
         );
       } catch (err) {
-        await prisma.import.update({
+        await prisma.dataImport.update({
           data: {
-            status: ImportStatus.ERROR,
+            status: DataImportStatus.ERROR,
             errors: ["Could not execute import script"],
           },
           where: {
-            id: scheduledImport.id,
+            id: scheduledDataImport.id,
           },
         });
         postMessage(
-          `[WORKER:dbHousekeeping]: could not trigger script for import: ${scheduledImport.id}`
+          `[WORKER:dbHousekeeping]: could not trigger script for import: ${scheduledDataImport.id}`
         );
       }
     }
@@ -296,7 +293,7 @@ const doChores = async () => {
     const scheduledDataExport = await prisma.dataExport.findFirst({
       where: {
         status: {
-          in: [ExportStatus.PROCESS],
+          in: [DataExportStatus.PROCESS],
         },
       },
       orderBy: {
@@ -339,7 +336,7 @@ const doChores = async () => {
       } catch (err) {
         await prisma.dataExport.update({
           data: {
-            status: ExportStatus.ERROR,
+            status: DataExportStatus.ERROR,
             errors: ["Could not execute dataExport script"],
           },
           where: {

@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import {
   dataExportsQueryGQL,
   dataExportDeleteMutationGQL,
-  ExportStatus,
+  DataExportStatus,
 } from "@culturemap/core";
 import { useQuery } from "@apollo/client";
 
@@ -13,7 +13,7 @@ import {
   ModulePage,
 } from "~/components/modules";
 
-import { moduleRootPath } from "./moduleConfig";
+import { moduleRootPath, dataImportExportType } from "./moduleConfig";
 import {
   useDeleteByIdButton,
   useAuthentication,
@@ -30,44 +30,43 @@ import {
   adminTableCreateQueryVariables,
   adminTableCreateNewTableState,
   AdminTableActionCell,
-  AdminTableMultiLangCell,
   AdminTableDateCell,
 } from "~/components/ui";
 import { config } from "~/config";
 import { SortingRule, Cell } from "react-table";
 
-export const AdminTableExportStatusCell = (cell: Cell) => {
+export const AdminTableDataExportStatusCell = (cell: Cell) => {
   const { t } = useTranslation();
   let color = "gray";
   let variant = "subtle";
   let label = t("publish.status.unknown", "Unknown");
 
-  if (cell.value === ExportStatus.CREATED) {
+  if (cell.value === DataExportStatus.CREATED) {
     color = "orange";
     label = t("import.status.created", "Created");
   }
 
-  if (cell.value === ExportStatus.PROCESS) {
+  if (cell.value === DataExportStatus.PROCESS) {
     color = "cyan";
     label = t("import.status.scheduled", "Scheduled");
   }
 
-  if (cell.value === ExportStatus.PROCESSING) {
+  if (cell.value === DataExportStatus.PROCESSING) {
     color = "cyan";
     label = t("import.status.processing", "Processing");
   }
 
-  if (cell.value === ExportStatus.PROCESSED) {
+  if (cell.value === DataExportStatus.PROCESSED) {
     color = "green";
     label = t("import.status.published", "Processed");
   }
 
-  if (cell.value === ExportStatus.ERROR) {
+  if (cell.value === DataExportStatus.ERROR) {
     color = "red";
     label = t("import.status.error", "Error");
   }
 
-  if (cell.value === ExportStatus.DELETED) {
+  if (cell.value === DataExportStatus.DELETED) {
     color = "red";
     label = t("import.status.trashed", "Trashed");
   }
@@ -140,7 +139,7 @@ const DataExports = () => {
       i18n.language,
       config.activeLanguages,
       {
-        type: "location"
+        type: dataImportExportType
       }
     ),
   });
@@ -153,6 +152,9 @@ const DataExports = () => {
       },
       {
         requireTextualConfirmation: true,
+        additionalDeleteData: {
+          type: dataImportExportType,
+        },
       }
     );
 
@@ -187,12 +189,11 @@ const DataExports = () => {
       accessor: "updatedAt",
     } as AdminTableColumn,
     {
-      Cell: AdminTableExportStatusCell,
+      Cell: AdminTableDataExportStatusCell,
       Header: t("table.label.status", "status"),
       accessor: "status",
     } as AdminTableColumn,
     {
-      Cell: AdminTableMultiLangCell,
       Header: t("table.label.title", "Title"),
       accessor: "title",
     } as AdminTableColumn,
@@ -217,7 +218,7 @@ const DataExports = () => {
           (appUser?.can("locationDelete") ||
             (appUser.can("locationDeleteOwn") &&
               appUser.id === (cell?.row?.original as any)?.ownerId)) &&
-          (cell?.row?.original as any).status !== ExportStatus.PROCESSING
+          (cell?.row?.original as any).status !== DataExportStatus.PROCESSING
         );
       },
 
@@ -264,7 +265,7 @@ const DataExports = () => {
           i18n.language,
           config.activeLanguages,
           {
-            type: "location"
+            type: dataImportExportType
           }
         )
       );

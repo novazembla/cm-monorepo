@@ -8,6 +8,7 @@ import {
   inputObjectType,
   nonNull,
   intArg,
+  stringArg,
   arg,
   list,
 } from "nexus";
@@ -21,22 +22,22 @@ import { authorizeApiUser, apiUserCan } from "../helpers";
 import { getApiConfig } from "../../config";
 
 import {
-  daoImportGetById,
-  daoImportQuery,
-  daoImportCreate,
-  daoImportUpdate,
+  daoDataImportGetById,
+  daoDataImportQuery,
+  daoDataImportCreate,
+  daoDataImportUpdate,
   daoFileSetToDelete,
   daoFileGetById,
-  daoImportQueryCount,
+  daoDataImportQueryCount,
 } from "../../dao";
 import { Prisma } from ".prisma/client";
-import { ImportStatus } from "@culturemap/core";
-import { importDelete } from "../../services/serviceImport";
+import { DataImportStatus } from "@culturemap/core";
+import { dataImportDelete } from "../../services/serviceDataImport";
 
 const apiConfig = getApiConfig();
 
-export const Import = objectType({
-  name: "Import",
+export const DataImport = objectType({
+  name: "DataImport",
   definition(t) {
     t.nonNull.int("id");
     t.json("title");
@@ -52,24 +53,24 @@ export const Import = objectType({
   },
 });
 
-export const ImportQueryResult = objectType({
-  name: "ImportQueryResult",
+export const DataImportQueryResult = objectType({
+  name: "DataImportQueryResult",
   description: dedent`
     List all the imports in the database.     
   `,
   definition: (t) => {
     t.int("totalCount");
-    t.field("imports", {
-      type: list("Import"),
+    t.field("dataImports", {
+      type: list("DataImport"),
     });
   },
 });
 
-export const ImportQueries = extendType({
+export const DataImportQueries = extendType({
   type: "Query",
   definition(t) {
-    t.field("imports", {
-      type: ImportQueryResult,
+    t.field("dataImports", {
+      type: DataImportQueryResult,
 
       args: {
         pageIndex: intArg({
@@ -88,24 +89,28 @@ export const ImportQueries = extendType({
         }),
       },
 
-      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "locationReadOwn"),
+      authorize: (...[, args, ctx]) => {
+        const type = args?.where?.type ?? "none";
+        return authorizeApiUser(ctx, `${type}ReadOwn` as any);
+      },
 
       async resolve(...[, args, ctx, info]) {
         const pRI = parseResolveInfo(info);
 
+        const type = args?.where?.type ?? "none";
         let totalCount;
-        let imports;
-        let include: Prisma.ImportInclude = {};
-        let where: Prisma.ImportWhereInput = {
+        let dataImports;
+        let include: Prisma.DataImportInclude = {};
+        let where: Prisma.DataImportWhereInput = {
           ...args.where,
           status: {
             not: {
-              in: [ImportStatus.DELETED],
+              in: [DataImportStatus.DELETED],
             },
           },
         };
 
-        if (!apiUserCan(ctx, "locationRead")) {
+        if (!apiUserCan(ctx, `${type}Read` as any)) {
           where = {
             ...where,
             owner: {
@@ -114,18 +119,18 @@ export const ImportQueries = extendType({
           };
         }
 
-        if ((pRI?.fieldsByTypeName?.ImportQueryResult as any)?.totalCount) {
-          totalCount = await daoImportQueryCount(where);
+        if ((pRI?.fieldsByTypeName?.DataImportQueryResult as any)?.totalCount) {
+          totalCount = await daoDataImportQueryCount(where);
 
           if (totalCount === 0)
             return {
               totalCount,
-              imports: [],
+              dataImports: [],
             };
         }
 
-        if ((pRI?.fieldsByTypeName?.ImportQueryResult as any)?.imports)
-          imports = await daoImportQuery(
+        if ((pRI?.fieldsByTypeName?.DataImportQueryResult as any)?.dataImports)
+          dataImports = await daoDataImportQuery(
             where,
             Object.keys(include).length > 0 ? include : undefined,
             args.orderBy,
@@ -135,24 +140,27 @@ export const ImportQueries = extendType({
 
         return {
           totalCount,
-          imports,
+          dataImports,
         };
       },
     });
 
-    t.nonNull.field("importRead", {
-      type: "Import",
+    t.nonNull.field("dataImportRead", {
+      type: "DataImport",
 
       args: {
         id: nonNull(intArg()),
+        type: nonNull(stringArg()),
       },
 
       authorize: async (...[, args, ctx]) => {
-        if (!authorizeApiUser(ctx, "locationUpdateOwn")) return false;
+        const type = args?.type ?? "none";
 
-        if (apiUserCan(ctx, "locationUpdate")) return true;
+        if (!authorizeApiUser(ctx, `${type}UpdateOwn` as any)) return false;
 
-        const count = await daoImportQueryCount({
+        if (apiUserCan(ctx, `${type}Update` as any)) return true;
+
+        const count = await daoDataImportQueryCount({
           id: args.id,
           owner: {
             id: ctx.apiUser?.id ?? 0,
@@ -164,16 +172,17 @@ export const ImportQueries = extendType({
 
       // resolve(root, args, ctx, info)
       async resolve(...[, args]) {
-        return daoImportGetById(args.id, { file: true });
+        return daoDataImportGetById(args.id, { file: true });
       },
     });
   },
 });
 
-export const ImportUpsertInput = inputObjectType({
-  name: "ImportUpsertInput",
+export const DataImportUpsertInput = inputObjectType({
+  name: "DataImportUpsertInput",
   definition(t) {
     t.nonNull.string("title");
+    t.nonNull.string("type");
     t.json("log");
     t.json("errors");
     t.json("warnings");
@@ -183,21 +192,24 @@ export const ImportUpsertInput = inputObjectType({
   },
 });
 
-export const ImportMutations = extendType({
+export const DataImportMutations = extendType({
   type: "Mutation",
 
   definition(t) {
-    t.nonNull.field("importCreate", {
-      type: "Import",
+    t.nonNull.field("dataImportCreate", {
+      type: "DataImport",
 
       args: {
-        data: nonNull("ImportUpsertInput"),
+        data: nonNull("DataImportUpsertInput"),
       },
 
-      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "locationCreate"),
+      authorize: (...[, args, ctx]) => {
+        const type = args?.data?.type ?? "none";
+        return authorizeApiUser(ctx, `${type}Create` as any);
+      },
 
       async resolve(...[, args, ctx]) {
-        const location = await daoImportCreate({
+        const location = await daoDataImportCreate({
           ...args.data,
           lang: args.data?.lang ?? "en",
           owner: {
@@ -217,20 +229,21 @@ export const ImportMutations = extendType({
       },
     });
 
-    t.nonNull.field("importUpdate", {
-      type: "Import",
+    t.nonNull.field("dataImportUpdate", {
+      type: "DataImport",
 
       args: {
         id: nonNull(intArg()),
-        data: nonNull("ImportUpsertInput"),
+        data: nonNull("DataImportUpsertInput"),
       },
 
       authorize: async (...[, args, ctx]) => {
-        if (!authorizeApiUser(ctx, "locationUpdateOwn")) return false;
+        const type = args?.data?.type ?? "none";
+        if (!authorizeApiUser(ctx, `${type}UpdateOwn` as any)) return false;
 
-        if (apiUserCan(ctx, "locationUpdate")) return true;
+        if (apiUserCan(ctx, `${type}Update` as any)) return true;
 
-        const count = await daoImportQueryCount({
+        const count = await daoDataImportQueryCount({
           id: args.id,
           owner: {
             id: ctx.apiUser?.id ?? 0,
@@ -241,7 +254,7 @@ export const ImportMutations = extendType({
       },
 
       async resolve(...[, args]) {
-        const location = await daoImportUpdate(args.id, {
+        const location = await daoDataImportUpdate(args.id, {
           ...args.data,
           lang: undefined,
         });
@@ -253,19 +266,21 @@ export const ImportMutations = extendType({
       },
     });
 
-    t.nonNull.field("importFileDelete", {
+    t.nonNull.field("dataImportFileDelete", {
       type: "BooleanResult",
 
       args: {
         id: nonNull(intArg()),
+        type: nonNull(stringArg()),
       },
 
       authorize: async (...[, args, ctx]) => {
-        if (!authorizeApiUser(ctx, "locationDeleteOwn")) return false;
+        const type = args?.type ?? "none";
+        if (!authorizeApiUser(ctx, `${type}DeleteOwn` as any)) return false;
 
-        if (apiUserCan(ctx, "locationDelete")) return true;
+        if (apiUserCan(ctx, `${type}Delete` as any)) return true;
 
-        const count = await daoImportQueryCount({
+        const count = await daoDataImportQueryCount({
           id: args.id,
           owner: {
             id: ctx.apiUser?.id ?? 0,
@@ -277,7 +292,7 @@ export const ImportMutations = extendType({
 
       async resolve(...[, args]) {
         const fileInDb: any = await daoFileGetById(args.id, {
-          imports: true,
+          dataImports: true,
         });
 
         if (!fileInDb)
@@ -285,18 +300,18 @@ export const ImportMutations = extendType({
 
         if (
           fileInDb &&
-          Array.isArray(fileInDb?.imports) &&
-          fileInDb?.imports.length > 0
+          Array.isArray(fileInDb?.dataImports) &&
+          fileInDb?.dataImports.length > 0
         ) {
-          const ids = fileInDb?.imports.map((imp: any) => imp.id);
+          const ids = fileInDb?.dataImports.map((imp: any) => imp.id);
 
           if (ids && ids.length > 0)
-            await daoImportUpdate(ids[0], {
+            await daoDataImportUpdate(ids[0], {
               log: [],
               errors: [],
               mapping: [],
               warnings: [],
-              status: ImportStatus.CREATED,
+              status: DataImportStatus.CREATED,
             });
         }
 
@@ -309,19 +324,21 @@ export const ImportMutations = extendType({
       },
     });
 
-    t.nonNull.field("importDelete", {
+    t.nonNull.field("dataImportDelete", {
       type: "BooleanResult",
 
       args: {
         id: nonNull(intArg()),
+        type: nonNull(stringArg()),
       },
 
       authorize: async (...[, args, ctx]) => {
-        if (!authorizeApiUser(ctx, "locationDeleteOwn")) return false;
+        const type = args?.type ?? "none";
+        if (!authorizeApiUser(ctx, `${type}DeleteOwn` as any)) return false;
 
-        if (apiUserCan(ctx, "locationDelete")) return true;
+        if (apiUserCan(ctx, `${type}Delete` as any)) return true;
 
-        const count = await daoImportQueryCount({
+        const count = await daoDataImportQueryCount({
           id: args.id,
           owner: {
             id: ctx.apiUser?.id ?? 0,
@@ -332,7 +349,7 @@ export const ImportMutations = extendType({
       },
 
       async resolve(...[, args]) {
-        const location = await importDelete(args.id);
+        const location = await dataImportDelete(args.id);
 
         if (!location)
           throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Delete failed");

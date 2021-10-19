@@ -104,8 +104,8 @@ export interface ApiConfig {
   geoCodingProvider: Record<CulturemapGeoCodingScopes, string>;
   geoCodingRegions: string[];
   geoCodingThrottle: number;
-  eventImportUrl: string;
-  eventImportScriptName: string;
+  eventDataImportUrl: string;
+  eventDataImportScriptName: string;
   activeLanguages: string[];
   defaultLanguage: string;
 }
@@ -131,8 +131,8 @@ export interface ApiConfigOverwrite {
   // https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3 country codes
   geoCodingRegions?: string[];
   geoCodingThrottle?: number;
-  eventImportUrl?: string;
-  eventImportScriptName?: string;
+  eventDataImportUrl?: string;
+  eventDataImportScriptName?: string;
   activeLanguages?: string[];
   defaultLanguage?: string;
 }
@@ -403,8 +403,8 @@ let apiConfig = {
   },
   geoCodingThrottle: 500,
   geoCodingRegions: ["DEU"],
-  eventImportUrl: "https://www.berlin.de/land/kalender/json.php?c=5",
-  eventImportScriptName: "import.berlin.de.js",
+  eventDataImportUrl: "https://www.berlin.de/land/kalender/json.php?c=5",
+  eventDataImportScriptName: "import.berlin.de.js",
   activeLanguages: ["de", "en"],
   defaultLanguage: "de",
 };

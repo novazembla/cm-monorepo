@@ -131,6 +131,8 @@ export const FieldFileUploader = ({
   setActiveUploadCounter,
   shouldSetFormDirtyOnUpload = false,
   shouldSetFormDirtyOnDelete = false,
+  additionalFormData,
+  additionalDeleteData,
 }: {
   settings?: FieldFileUploaderSettings;
   id: string;
@@ -148,6 +150,8 @@ export const FieldFileUploader = ({
   setActiveUploadCounter?: Function;
   connectWith?: any;
   route?: string;
+  additionalFormData?: any[];
+  additionalDeleteData?: {};
 }) => {
   const [appUser] = useAuthentication();
   const { t } = useTranslation();
@@ -201,6 +205,12 @@ export const FieldFileUploader = ({
           formData.append("ownerId", `${appUser.id}`);
           formData.append("connectWith", JSON.stringify(connectWith));
 
+          if (Array.isArray(additionalFormData))
+            additionalFormData.forEach((d) => {
+              if (d?.name && typeof d?.value !== undefined)
+                formData.append(d.name, d.value);
+            });
+            
           const cancelToken = createNewCancelToken();
 
           if (setActiveUploadCounter)
@@ -298,6 +308,7 @@ export const FieldFileUploader = ({
       },
       {
         requireTextualConfirmation: false,
+        additionalDeleteData
       }
     );
 

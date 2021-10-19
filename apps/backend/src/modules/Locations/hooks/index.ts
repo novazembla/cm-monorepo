@@ -1,8 +1,8 @@
 import {
   locationUpdateMutationGQL,
   locationCreateMutationGQL,
-  importCreateMutationGQL,
-  importUpdateMutationGQL,
+  dataImportCreateMutationGQL,
+  dataImportUpdateMutationGQL,
   dataExportCreateMutationGQL,
 } from "@culturemap/core";
 import { useMutation } from "@apollo/client";
@@ -39,7 +39,7 @@ export const useLocationUpdateMutation = () => {
 };
 
 export const useImportCreateMutation = () => {
-  const [mutation, mutationResults] = useMutation(importCreateMutationGQL, {
+  const [mutation, mutationResults] = useMutation(dataImportCreateMutationGQL, {
     // onCompleted: (data) => {},
   });
 
@@ -54,7 +54,7 @@ export const useImportCreateMutation = () => {
 };
 
 export const useImportUpdateMutation = () => {
-  const [mutation, mutationResults] = useMutation(importUpdateMutationGQL, {
+  const [mutation, mutationResults] = useMutation(dataImportUpdateMutationGQL, {
     // onCompleted: (data) => {},
   });
 

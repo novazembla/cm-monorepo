@@ -20,7 +20,7 @@ import {
 import {
   dataImportFileDeleteMutationGQL,
   DataImportStatus,
-  dataImportHeadersLocation,
+  dataImportHeadersEvent,
 } from "@culturemap/core";
 
 import { useTranslation } from "react-i18next";
@@ -33,6 +33,7 @@ import {
 import { MdContentCopy } from "react-icons/md";
 import { useFormContext } from "react-hook-form";
 import { getMultilangValue } from "~/utils";
+
 import { dataImportExportType } from "../moduleConfig";
 
 export const ModuleImportUpdateForm = ({
@@ -127,11 +128,11 @@ export const ModuleImportUpdateForm = ({
   }
   const clipboardLog = useClipboard(logValue);
 
-  const options = Object.keys(dataImportHeadersLocation).reduce(
+  const options = Object.keys(dataImportHeadersEvent).reduce(
     (agg: any, key: string) => {
       agg.push({
         value: key,
-        label: getMultilangValue(dataImportHeadersLocation[key]),
+        label: getMultilangValue(dataImportHeadersEvent[key]),
       });
       return agg;
     },
@@ -150,7 +151,7 @@ export const ModuleImportUpdateForm = ({
   const isProcessing = [
     DataImportStatus.PROCESS,
     DataImportStatus.PROCESSING,
-  ].includes(data?.dataImportRead?.status);
+  ].includes(dataImportRead?.status);
   return (
     <>
       {action === "create" && (
@@ -192,12 +193,7 @@ export const ModuleImportUpdateForm = ({
           DataImportStatus.PROCESSING,
           DataImportStatus.PROCESSED,
         ].includes(dataImportRead.status) && !!!dataImportRead?.file ? (
-          <Box>
-            {t(
-              "module.locations.forms.import.nofile",
-              "This is the log of an automated import without an uploaded file"
-            )}
-          </Box>
+          <Box>{t("module.locations.forms.import.nofile","This is the log of an automated import without an uploaded file")}</Box>
         ) : (
           <FieldFileUploader
             name="file"

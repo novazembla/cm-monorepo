@@ -99,6 +99,9 @@
             }
           }
         }
+      },
+      "menuitem": {
+        "importLogs": "Import Logs"
       }
     },
     "events": {
@@ -129,7 +132,17 @@
             "location": "Please choose the event's location"
           }
         }
-      }
+      },
+      "menuitem": {
+        "importLogs": "Import Logs",
+        "importLog": "Log"
+      },
+      "button": {
+        "viewLog": "View log"
+      },
+      "importDate": "Date of import",
+      "noImportErrors": "No import errors",
+      "noImportWarnings": "No import warnings"
     },
     "profile": {
       "button": {
@@ -256,6 +269,11 @@
   "page": {
     "emailconfirmation": {
       "button_goto_dashboard": "Goto dashboard"
+    }
+  },
+  "table": {
+    "label": {
+      "date": "date"
     }
   }
 }

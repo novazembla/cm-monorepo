@@ -65,6 +65,37 @@ input DataExportUpsertInput {
   type: String!
 }
 
+type DataImport {
+  createdAt: DateTime
+  errors: JSON
+  file: JSON
+  id: Int!
+  lang: String
+  log: JSON
+  mapping: JSON
+  status: Int
+  title: JSON
+  updatedAt: DateTime
+  warnings: JSON
+}
+
+"""List all the imports in the database."""
+type DataImportQueryResult {
+  dataImports: [DataImport]
+  totalCount: Int
+}
+
+input DataImportUpsertInput {
+  errors: JSON
+  lang: String
+  log: JSON
+  mapping: JSON
+  status: Int!
+  title: String!
+  type: String!
+  warnings: JSON
+}
+
 """
 A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
 """
@@ -76,6 +107,7 @@ A field whose value conforms to the standard internet email address format as sp
 scalar EmailAddress @specifiedBy(url: "https://www.w3.org/Protocols/rfc822/")
 
 type Event {
+  address: String
   createdAt: DateTime
   dates: [EventDate]
   description: JSON
@@ -85,6 +117,7 @@ type Event {
   isImported: Boolean
   locations: [Location]
   meta: JSON
+  organiser: String
   ownerId: Int!
   primaryTerms: [Term]
   slug: JSON
@@ -103,21 +136,6 @@ type EventDate {
   updatedAt: DateTime
 }
 
-type EventImportLog {
-  createdAt: DateTime
-  errors: JSON
-  id: Int!
-  log: JSON
-  updatedAt: DateTime
-  warnings: JSON
-}
-
-"""List all the event import logs in the database."""
-type EventImportLogQueryResult {
-  eventImportLogs: [EventImportLog]
-  totalCount: Int
-}
-
 """List all the events in the database."""
 type EventQueryResult {
   events: [Event]
@@ -125,12 +143,14 @@ type EventQueryResult {
 }
 
 input EventUpsertInput {
+  address: String!
   dates: JSON
   description: JSON
   heroImage: JSON
   isFree: Boolean!
   isImported: Boolean!
   locations: JSON
+  organiser: String!
   owner: JSON!
   primaryTerms: JSON
   slug: JSON!
@@ -178,36 +198,6 @@ type ImageStatus {
 input ImageUpdateInput {
   meta: JSON!
   ownerId: Int!
-}
-
-type Import {
-  createdAt: DateTime
-  errors: JSON
-  file: JSON
-  id: Int!
-  lang: String
-  log: JSON
-  mapping: JSON
-  status: Int
-  title: JSON
-  updatedAt: DateTime
-  warnings: JSON
-}
-
-"""List all the imports in the database."""
-type ImportQueryResult {
-  imports: [Import]
-  totalCount: Int
-}
-
-input ImportUpsertInput {
-  errors: JSON
-  lang: String
-  log: JSON
-  mapping: JSON
-  status: Int!
-  title: String!
-  warnings: JSON
 }
 
 """
@@ -295,15 +285,15 @@ type Mutation {
   authVerifyEmail(token: String!): BooleanResult!
   dataExportCreate(data: DataExportUpsertInput!): DataExport!
   dataExportDelete(id: Int!, type: String!): BooleanResult!
+  dataImportCreate(data: DataImportUpsertInput!): DataImport!
+  dataImportDelete(id: Int!, type: String!): BooleanResult!
+  dataImportFileDelete(id: Int!, type: String!): BooleanResult!
+  dataImportUpdate(data: DataImportUpsertInput!, id: Int!): DataImport!
   eventCreate(data: EventUpsertInput!): Event!
   eventDelete(id: Int!): BooleanResult!
   eventUpdate(data: EventUpsertInput!, id: Int!): Event!
   imageDelete(id: Int!): BooleanResult!
   imageUpdate(data: ImageUpdateInput!, id: Int!): Image!
-  importCreate(data: ImportUpsertInput!): Import!
-  importDelete(id: Int!): BooleanResult!
-  importFileDelete(id: Int!): BooleanResult!
-  importUpdate(data: ImportUpsertInput!, id: Int!): Import!
   locationCreate(data: LocationUpsertInput!): Location!
   locationDelete(id: Int!): BooleanResult!
   locationUpdate(data: LocationUpsertInput!, id: Int!): Location!
@@ -377,16 +367,14 @@ type Query {
   adminUsers(roles: [String]!): [AdminUser] @deprecated(reason: "A publicly accessible list Lists all users that have a the given roles")
   dataExportRead(id: Int!, type: String!): DataExport!
   dataExports(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): DataExportQueryResult
+  dataImportRead(id: Int!, type: String!): DataImport!
+  dataImports(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): DataImportQueryResult
   event(id: Int, slug: String): Event!
-  eventImportLog(id: Int!): EventImportLog!
-  eventImportLogs(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): EventImportLogQueryResult
   events(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): EventQueryResult
   geocode(q: String!): GeoCodeResult
   imageRead(id: Int!): Image!
   imageStatus(id: Int!): ImageStatus!
   images(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, taxonomyId: Int, where: JSON): ImageQueryResult
-  importRead(id: Int!): Import!
-  imports(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): ImportQueryResult
   location(id: Int, slug: String): Location!
   locations(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): LocationQueryResult
   moduleTaxonomies(key: String!): [Taxonomy]
@@ -596,7 +584,7 @@ type User implements UserBaseNode {
   id: Int!
   lastName: String
   ownsConentOnDelete: Boolean
-  ownsEventImports: Boolean
+  ownsEventDataImports: Boolean
   profileImageId: Int
   role: String
   updatedAt: DateTime
@@ -618,7 +606,7 @@ input UserCreateInput {
   firstName: String!
   lastName: String!
   ownsConentOnDelete: Boolean!
-  ownsEventImports: Boolean!
+  ownsEventDataImports: Boolean!
   password: String!
   role: String!
   userBanned: Boolean!
@@ -643,7 +631,7 @@ input UserUpdateInput {
   firstName: String!
   lastName: String!
   ownsConentOnDelete: Boolean!
-  ownsEventImports: Boolean!
+  ownsEventDataImports: Boolean!
   role: String!
   userBanned: Boolean!
 }

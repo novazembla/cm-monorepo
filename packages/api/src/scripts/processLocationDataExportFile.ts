@@ -6,7 +6,7 @@ import Prisma from "@prisma/client";
 import minimist from "minimist";
 
 import { getApiConfig } from "../config";
-import { ExportStatus, PublishStatus, importHeaders } from "@culturemap/core";
+import { DataExportStatus, PublishStatus, dataImportHeadersLocation } from "@culturemap/core";
 import { daoSharedGetTranslatedSelectColumns } from "../dao/shared";
 import Excel from "exceljs";
 
@@ -99,9 +99,9 @@ const locationToArray = (location: any, lang: string) => {
     pubState = lang === "de" ? "Zurückgewiesen" : "Rejected";
   } else if (location.status === PublishStatus.IMPORTEDWARNINGS) {
     pubState =
-      lang === "de" ? "Importiert mit Warnung(en)" : "Imported with warnings";
+      lang === "de" ? "DataImportiert mit Warnung(en)" : "DataImported with warnings";
   } else if (location.status === PublishStatus.IMPORTED) {
-    pubState = lang === "de" ? "Importiert" : "Imported";
+    pubState = lang === "de" ? "DataImportiert" : "DataImported";
   } else if (location.status === PublishStatus.PUBLISHED) {
     pubState = lang === "de" ? "Publiziert" : "Published";
   } else if (location.status === PublishStatus.TRASHED) {
@@ -195,7 +195,7 @@ const locationToArray = (location: any, lang: string) => {
 
 const getTranslatedHeader = (key: string, lang: string) => {
   try {
-    return importHeaders[key][lang];
+    return dataImportHeadersLocation[key][lang];
   } finally {
     return key;
   }
@@ -228,7 +228,7 @@ const doChores = async () => {
     });
 
     if (exportInDb && exportInDb?.owner?.id) {
-      if (ExportStatus.PROCESS !== exportInDb.status ?? -1)
+      if (DataExportStatus.PROCESS !== exportInDb.status ?? -1)
         throw Error("Status of import excludes it from processing");
 
       logger.info(`Export id: ${exportInDb.id} found to be valid for export`);
@@ -356,7 +356,7 @@ const doChores = async () => {
       );
       await prisma.dataExport.update({
         data: {
-          status: ExportStatus.PROCESSING,
+          status: DataExportStatus.PROCESSING,
           log,
           errors,
         },
@@ -549,8 +549,8 @@ const doChores = async () => {
               data: {
                 status:
                   errors.length > 0
-                    ? ExportStatus.ERROR
-                    : ExportStatus.PROCESSED,
+                    ? DataExportStatus.ERROR
+                    : DataExportStatus.PROCESSED,
                 log,
                 errors,
                 file: {
@@ -577,7 +577,7 @@ const doChores = async () => {
       await prisma.dataExport.update({
         data: {
           status:
-            errors.length > 0 ? ExportStatus.ERROR : ExportStatus.PROCESSED,
+            errors.length > 0 ? DataExportStatus.ERROR : DataExportStatus.PROCESSED,
           log,
           errors,
         },
@@ -604,7 +604,7 @@ const doChores = async () => {
       errors.push(`${err.name} - ${err.message}`);
       await prisma.dataExport.update({
         data: {
-          status: ExportStatus.ERROR,
+          status: DataExportStatus.ERROR,
           log,
           errors,
         },

@@ -229,7 +229,7 @@ async function main() {
     await prisma.image.deleteMany();
     await prisma.event.deleteMany();
     await prisma.eventDate.deleteMany();
-    await prisma.eventImportLog.deleteMany();
+    await prisma.eventDataImportLog.deleteMany();
     await prisma.file.deleteMany();
     await prisma.import.deleteMany();
     await prisma.image.deleteMany();

@@ -382,9 +382,7 @@
     "events": {
       "title": "Events",
       "menuitem": {
-        "createevent": "Add new event",
-        "importLogs": "Import Logs",
-        "importLog": "Log"
+        "createevent": "Add new event"
       },
       "forms": {
         "event": {
@@ -428,7 +426,9 @@
           "label": {
             "isFree": "This event is free",
             "isImported": "This event is automatically imported and updated"
-          }
+          },
+          "address": "Address",
+          "organiser": "Organiser"
         },
         "eventdates": {
           "heading": "Event date(s)",
@@ -444,12 +444,8 @@
       "button": {
         "create": "Add new event",
         "edit": "Edit event",
-        "delete": "Delete event",
-        "viewLog": "View log"
+        "delete": "Delete event"
       },
-      "importDate": "Date of import",
-      "noImportErrors": "No import errors",
-      "noImportWarnings": "No import warnings",
       "event": {
         "title": {
           "updatepage": "Update event"
@@ -457,14 +453,12 @@
       }
     },
     "locations": {
-      "title": "Locations",
       "menuitem": {
         "dataExports": "Exports",
-        "importLogs": "Import Logs",
-        "exports": "Exports",
-        "createlocation": "Add new location",
         "imports": "Imports",
-        "createimport": "Add new import"
+        "createimport": "Add new import",
+        "exports": "Exports",
+        "createlocation": "Add new location"
       },
       "exports": {
         "button": {
@@ -506,7 +500,6 @@
         "import": {
           "errors": "Errors",
           "log": "Log",
-          "warnings": "Warnings",
           "field": {
             "label": {
               "title": "Title",
@@ -517,29 +510,31 @@
             }
           },
           "select": "Select target column",
+          "nofile": "This is the log of an automated import without an uploaded file",
           "mapping": {
             "title": "CSV column(s) to database columns mapping",
             "columCSV": "Header in CSV",
             "firstRow": "Example (1st row in CSV)",
             "columnInDb": "Column in DB"
-          }
+          },
+          "warnings": "Warnings"
         },
         "location": {
           "field": {
+            "placeholder": {
+              "csvfile": "Upload CSV",
+              "title": "Location title",
+              "slug": "Slug / URL part",
+              "description": "Location description",
+              "offers": "Location offers",
+              "accessibilityInformation": "Location accessibilityInformation"
+            },
             "label": {
               "title": "Title",
               "slug": "Slug",
               "description": "Description",
               "offers": "Offers",
               "accessibilityInformation": "Accessibility Information"
-            },
-            "placeholder": {
-              "title": "Location title",
-              "slug": "Slug / URL part",
-              "description": "Location description",
-              "offers": "Location offers",
-              "accessibilityInformation": "Location accessibilityInformation",
-              "csvfile": "Upload CSV"
             }
           },
           "geoloaction": "Location on map"
@@ -581,6 +576,7 @@
           "updatepage": "Update location"
         }
       },
+      "title": "Locations",
       "button": {
         "create": "Add new location",
         "edit": "Edit location",
@@ -989,7 +985,6 @@
       "status": "status",
       "title": "Title",
       "actions": "Actions",
-      "date": "date",
       "errors": "Errors",
       "warnings": "Warnings",
       "name": "Name",

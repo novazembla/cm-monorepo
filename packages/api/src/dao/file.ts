@@ -75,7 +75,7 @@ export const daoFileSetToDelete = async (id: number): Promise<File> => {
     data: {
       status: FileStatus.DELETED,
 
-      imports: {
+      dataImports: {
         set: [],
       },
     },

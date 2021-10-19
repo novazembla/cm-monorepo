@@ -354,6 +354,9 @@ const Index = () => {
         });
 
         if (!mutationResults.errors) {
+          reset({
+            title: "",
+          });
           successToast();
         } else {
           setHasFormError(true);

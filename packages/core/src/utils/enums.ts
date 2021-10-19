@@ -28,7 +28,7 @@ export enum PublishStatus {
   IMPORTEDWARNINGS,
 }
 
-export enum ImportStatus {
+export enum DataImportStatus {
   CREATED, // 0
   ASSIGN, // 1
   PROCESS, // 2
@@ -38,7 +38,7 @@ export enum ImportStatus {
   DELETED, // 6
 }
 
-export enum ExportStatus {
+export enum DataExportStatus {
   CREATED, // 0
   PROCESS, // 1
   PROCESSING, // 2

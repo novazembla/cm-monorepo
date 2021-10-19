@@ -382,9 +382,7 @@
     "events": {
       "title": "Veranstaltungen",
       "menuitem": {
-        "createevent": "Veranstaltung hinzufügen",
-        "importLogs": "Log importieren",
-        "importLog": "Log"
+        "createevent": "Veranstaltung hinzufügen"
       },
       "forms": {
         "event": {
@@ -428,7 +426,9 @@
           "label": {
             "isFree": "Diese Veranstaltung ist kostenfrei",
             "isImported": "Diese Veranstaltung wird automatisch importiert und aktualisiert"
-          }
+          },
+          "address": "Veranstaltungsort",
+          "organiser": "Veranstalter"
         },
         "eventdates": {
           "heading": "Veranstaltungsdatum / -daten",
@@ -444,12 +444,8 @@
       "button": {
         "create": "Neue Veranstaltung hinzufügen",
         "edit": "Veranstaltung bearbeiten",
-        "delete": "Veranstaltung löschen",
-        "viewLog": "Log anzeigen"
+        "delete": "Veranstaltung löschen"
       },
-      "importDate": "Datum des Imports",
-      "noImportErrors": "Anzahl der Importfehler",
-      "noImportWarnings": "Keine Import Warnungen",
       "event": {
         "title": {
           "updatepage": "Veranstaltung aktualisieren"
@@ -457,14 +453,12 @@
       }
     },
     "locations": {
-      "title": "Kartenpunkte",
       "menuitem": {
         "dataExports": "Export",
-        "importLogs": "Import Logs",
-        "exports": "Exporte",
-        "createlocation": "Neuen Kartenpunkt hinzufügen",
         "imports": "Importe",
-        "createimport": "Neuen Import hinzufügen"
+        "createimport": "Neuen Import hinzufügen",
+        "exports": "Exporte",
+        "createlocation": "Neuen Kartenpunkt hinzufügen"
       },
       "exports": {
         "button": {
@@ -506,7 +500,6 @@
         "import": {
           "errors": "Fehlermeldungen",
           "log": "Log",
-          "warnings": "Warnungen",
           "field": {
             "label": {
               "title": "Titel",
@@ -517,29 +510,31 @@
             }
           },
           "select": "Zielspalte auswählen",
+          "nofile": "Dieses ist der Importbericht eines dateilosen automatisierten Importes",
           "mapping": {
             "title": "Zuordnung von CSV-Spalte(n) zu Datenbankspalten",
             "columCSV": "Kopfzeile in CSV",
             "firstRow": "Beispiel (1. Zeile in CSV)",
             "columnInDb": "Spalte in DB"
-          }
+          },
+          "warnings": "Warnungen"
         },
         "location": {
           "field": {
+            "placeholder": {
+              "csvfile": "CSV Datei hochladen",
+              "title": "Titel des Kartenpunktes",
+              "slug": "Slug / URL Zusatz",
+              "description": "Beschreibung des Kartenpunktes",
+              "offers": "Angebote des Kartenpunktes",
+              "accessibilityInformation": "Informationen zur Barrierefreiheit"
+            },
             "label": {
               "title": "Titel",
               "slug": "Slug",
               "description": "Beschreibung",
               "offers": "Angebote",
               "accessibilityInformation": "Informationen zur Barrierefreiheit"
-            },
-            "placeholder": {
-              "title": "Titel des Kartenpunktes",
-              "slug": "Slug / URL Zusatz",
-              "description": "Beschreibung des Kartenpunktes",
-              "offers": "Angebote des Kartenpunktes",
-              "accessibilityInformation": "Informationen zur Barrierefreiheit",
-              "csvfile": "CSV Datei hochladen"
             }
           },
           "geoloaction": "Lage des Kartenpunkts auf der Karte"
@@ -581,6 +576,7 @@
           "updatepage": "Kartenpunkt aktualisieren"
         }
       },
+      "title": "Kartenpunkte",
       "button": {
         "create": "Kartenpunkt hinzufügen",
         "edit": "Kartenpunkt bearbeiten",
@@ -989,7 +985,6 @@
       "status": "Status",
       "title": "Titel",
       "actions": "Aktionen",
-      "date": "Datum",
       "errors": "Fehler",
       "warnings": "Warnungen",
       "name": "Name",

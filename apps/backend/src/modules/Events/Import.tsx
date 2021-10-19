@@ -34,8 +34,8 @@ import {
   adminTableCreateNewTableState,
   AdminTableActionCell,
   AdminTableDateCell,
-  AdminTableWarningsCountCell,
   AdminTableErrorsCountCell,
+  AdminTableWarningsCountCell,
 } from "~/components/ui";
 import { config } from "~/config";
 import { SortingRule, Cell } from "react-table";
@@ -171,7 +171,7 @@ const Import = () => {
   const breadcrumb = [
     {
       path: moduleRootPath,
-      title: t("module.locations.title", "Locations"),
+      title: t("module.events.title", "Events"),
     },
     {
       title: t("module.locations.menuitem.imports", "Imports"),

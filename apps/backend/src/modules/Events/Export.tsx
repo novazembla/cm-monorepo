@@ -11,7 +11,7 @@ import {
   UnorderedList,
   IconButton,
 } from "@chakra-ui/react";
-import { dataExportReadQueryGQL, ExportStatus } from "@culturemap/core";
+import { dataExportReadQueryGQL, DataExportStatus } from "@culturemap/core";
 
 import { useQuery } from "@apollo/client";
 import { FieldRow } from "~/components/forms";
@@ -23,7 +23,7 @@ import {
 
 import { ApiFile } from "~/components/ui";
 
-import { moduleRootPath } from "./moduleConfig";
+import { moduleRootPath, dataImportExportType } from "./moduleConfig";
 
 const Export = () => {
   const router = useRouter();
@@ -33,14 +33,14 @@ const Export = () => {
   const { data, loading, error } = useQuery(dataExportReadQueryGQL, {
     variables: {
       id: parseInt(router.query.id, 10),
-      type: "location",
+      type: dataImportExportType,
     },
   });
 
   const breadcrumb = [
     {
       path: moduleRootPath,
-      title: t("module.locations.title", "Locations"),
+      title: t("module.events.title", "Events"),
     },
     {
       path: `${moduleRootPath}/exports`,
@@ -56,7 +56,7 @@ const Export = () => {
       type: "back",
       to: `${moduleRootPath}/exports`,
       label: t("module.button.back", "Go back"),
-      userCan: "locationRead",
+      userCan: "eventRead",
     },
   ];
 
@@ -88,7 +88,7 @@ const Export = () => {
     <>
       <ModuleSubNav breadcrumb={breadcrumb} buttonList={buttonList} />
       <ModulePage isLoading={loading} isError={!!error}>
-        {[ExportStatus.PROCESS, ExportStatus.PROCESSING].includes(
+        {[DataExportStatus.PROCESS, DataExportStatus.PROCESSING].includes(
           data?.dataExportRead?.status
         ) && (
           <Alert borderRadius="lg">
@@ -99,7 +99,7 @@ const Export = () => {
             )}
           </Alert>
         )}
-        {[ExportStatus.PROCESSED].includes(
+        {[DataExportStatus.PROCESSED].includes(
           data?.dataExportRead?.status
         ) && (
           <Alert borderRadius="lg" colorScheme="green">
@@ -117,7 +117,7 @@ const Export = () => {
           : {data?.dataExportRead?.title}
         </FieldRow>
         {data?.dataExportRead?.file?.id &&
-          ExportStatus.PROCESSED === data?.dataExportRead?.status && (
+          DataExportStatus.PROCESSED === data?.dataExportRead?.status && (
             <FieldRow>
               <ApiFile
                 id={data?.dataExportRead?.file?.id}

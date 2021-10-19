@@ -65,7 +65,7 @@ export const FieldSingleSelectAutocomplete = ({
   const [wine100] = useToken("colors", ["wine.100"]);
 
   const [lastSearch, setLastSearch] = useState("");
-  const [currentItem, setCurrentItem] = useState(item);
+  const [currentItem, setCurrentItem] = useState<any>();
 
   const [findItems, { loading, data, error }] = useLazyQuery(searchQueryGQL, {
     fetchPolicy: "no-cache",
@@ -101,10 +101,12 @@ export const FieldSingleSelectAutocomplete = ({
     searchQueryDataKey in data[searchQueryDataKey] &&
     data[searchQueryDataKey]?.totalCount > 0
   ) {
-    searchResult = data[searchQueryDataKey][searchQueryDataKey].map((item: any, index: number) => ({
-      id: item.id,
-      label: getMultilangValue(item.title),
-    }));
+    searchResult = data[searchQueryDataKey][searchQueryDataKey].map(
+      (item: any, index: number) => ({
+        id: item.id,
+        label: getMultilangValue(item.title),
+      })
+    );
 
     searchResult.sort(
       (
@@ -170,6 +172,15 @@ export const FieldSingleSelectAutocomplete = ({
     },
     itemToString: resultItemToString,
   });
+
+  useEffect(() => {
+    setCurrentItem(item);
+    setValue(name, item, {
+      shouldDirty: false,
+    });
+
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const currentValue = watch(name);
   useEffect(() => {
