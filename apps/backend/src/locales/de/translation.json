@@ -286,7 +286,8 @@
       "save": "Speichern",
       "savedraft": "Entwurf speichern",
       "back": "Zurück",
-      "import": "Importieren"
+      "import": "Importieren",
+      "preview": "Vorschau"
     },
     "users": {
       "deletealter": {

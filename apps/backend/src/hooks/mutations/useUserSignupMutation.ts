@@ -11,14 +11,23 @@ export const useUserSignupMutation = () => {
 
   const [mutation, mutationResults] = useMutation(userSignupMutationGQL, {
     onCompleted: (data) => {
-
       // TODO: xxx find out if data sanity check is needed?
 
-      if (data?.userSignup?.tokens?.access && data?.userSignup?.tokens?.refresh) {
-        const payload = authentication.getTokenPayload(data.userSignup.tokens.access);
+      if (
+        data?.userSignup?.tokens?.access &&
+        data?.userSignup?.tokens?.preview &&
+        data?.userSignup?.tokens?.refresh
+      ) {
+        const payload = authentication.getTokenPayload(
+          data.userSignup.tokens.access
+        );
+        const payloadPreview = authentication.getTokenPayload(
+          data.userSignup.tokens.preview
+        );
 
-        if (payload) {
+        if (payload && payloadPreview) {
           authentication.setAuthToken(data.userSignup.tokens.access);
+          authentication.setPreviewToken(data.userSignup.tokens.preview);
           authentication.setRefreshCookie(data.userSignup.tokens.refresh);
           login(payload.user);
         }
@@ -27,16 +36,15 @@ export const useUserSignupMutation = () => {
   });
 
   // full login function
-  // data should probably not be "Any" TODO: 
+  // data should probably not be "Any" TODO:
   const execute = (data: any) => {
-    if (appUser)
-      throw Error("You're already logged in");
-  
+    if (appUser) throw Error("You're already logged in");
+
     return mutation({
       variables: {
         scope: config.scope,
         ...data,
-      }
+      },
     });
   };
   return [execute, mutationResults] as const;

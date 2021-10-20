@@ -155,13 +155,20 @@ export const LocationQueries = extendType({
         let include: Prisma.LocationInclude = {};
         let where: Prisma.LocationWhereInput = args.where;
 
-        // here needs to be the preview access bypass TODO:
         if (!apiUserCan(ctx, "locationReadOwn")) {
           where = {
             ...where,
             status: PublishStatus.PUBLISHED,
           };
         } else {
+          if (!apiUserCan(ctx, "canAccessTrash")) {
+            where = {
+              ...where,
+              status: {
+                not: { in: [PublishStatus.TRASHED, PublishStatus.DELETED] },
+              },
+            };
+          }
           if (!apiUserCan(ctx, "locationRead")) {
             where = {
               ...where,
@@ -340,12 +347,18 @@ export const LocationQueries = extendType({
           });
         }
 
-        // here needs to be the preview access bypass TODO:
         if (!apiUserCan(ctx, "locationReadOwn")) {
           where.push({
             status: PublishStatus.PUBLISHED,
           });
         } else {
+          if (!apiUserCan(ctx, "canAccessTrash")) {
+            where.push({
+              status: {
+                not: { in: [PublishStatus.TRASHED, PublishStatus.DELETED] },
+              },
+            });
+          }
           if (!apiUserCan(ctx, "locationRead")) {
             where.push({
               owner: {

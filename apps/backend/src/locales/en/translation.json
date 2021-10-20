@@ -286,7 +286,8 @@
       "save": "Save",
       "savedraft": "Save draft",
       "back": "Go back",
-      "import": "Schedule import"
+      "import": "Schedule import",
+      "preview": "Preview"
     },
     "users": {
       "deletealter": {

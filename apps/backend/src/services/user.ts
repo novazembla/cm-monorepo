@@ -33,14 +33,19 @@ const refreshToken = async () => {
       .then(({ data }: any) => {
         if (
           data?.authRefresh?.tokens?.access &&
+          data?.authRefresh?.tokens?.preview &&
           data?.authRefresh?.tokens?.refresh
         ) {
           const payload = authentication.getTokenPayload(
             data.authRefresh.tokens.access
           );
+          const payloadPreview = authentication.getTokenPayload(
+            data.authRefresh.tokens.preview
+          );
 
-          if (payload) {
+          if (payload && payloadPreview) {
             authentication.setAuthToken(data.authRefresh.tokens.access);
+            authentication.setPreviewToken(data.authRefresh.tokens.preview);
             authentication.setRefreshCookie(data.authRefresh.tokens.refresh);
 
             login(payload.user);

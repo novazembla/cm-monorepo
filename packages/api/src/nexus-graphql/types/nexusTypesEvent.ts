@@ -149,13 +149,20 @@ export const EventQueries = extendType({
         let include: Prisma.EventInclude = {};
         let where: Prisma.EventWhereInput = args.where;
 
-        // here needs to be the preview access bypass TODO:
         if (!apiUserCan(ctx, "eventReadOwn")) {
           where = {
             ...where,
             status: PublishStatus.PUBLISHED,
           };
         } else {
+          if (!apiUserCan(ctx, "canAccessTrash")) {
+            where = {
+              ...where,
+              status: {
+                not: { in: [PublishStatus.TRASHED, PublishStatus.DELETED] },
+              },
+            };
+          }
           if (!apiUserCan(ctx, "eventRead")) {
             where = {
               ...where,
@@ -342,12 +349,18 @@ export const EventQueries = extendType({
           });
         }
 
-        // here needs to be the preview access bypass TODO:
         if (!apiUserCan(ctx, "eventReadOwn")) {
           where.push({
             status: PublishStatus.PUBLISHED,
           });
         } else {
+          if (!apiUserCan(ctx, "canAccessTrash")) {
+            where.push({
+              status: {
+                not: { in: [PublishStatus.TRASHED, PublishStatus.DELETED] },
+              },
+            });
+          }
           if (!apiUserCan(ctx, "eventRead")) {
             where.push({
               owner: {

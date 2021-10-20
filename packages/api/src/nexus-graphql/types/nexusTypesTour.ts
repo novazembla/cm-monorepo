@@ -146,13 +146,20 @@ export const TourQueries = extendType({
         let include: Prisma.TourInclude = {};
         let where: Prisma.TourWhereInput = args.where;
 
-        // here needs to be the preview access bypass TODO:
         if (!apiUserCan(ctx, "tourReadOwn")) {
           where = {
             ...where,
             status: PublishStatus.PUBLISHED,
           };
         } else {
+          if (!apiUserCan(ctx, "canAccessTrash")) {
+            where = {
+              ...where,
+              status: {
+                not: { in: [PublishStatus.TRASHED, PublishStatus.DELETED] },
+              },
+            };
+          }
           if (!apiUserCan(ctx, "tourRead")) {
             where = {
               ...where,
@@ -399,12 +406,18 @@ export const TourQueries = extendType({
           });
         }
 
-        // here needs to be the preview access bypass TODO:
         if (!apiUserCan(ctx, "tourReadOwn")) {
           where.push({
             status: PublishStatus.PUBLISHED,
           });
         } else {
+          if (!apiUserCan(ctx, "canAccessTrash")) {
+            where.push({
+              status: {
+                not: { in: [PublishStatus.TRASHED, PublishStatus.DELETED] },
+              },
+            });
+          }
           if (!apiUserCan(ctx, "tourRead")) {
             where.push({
               owner: {

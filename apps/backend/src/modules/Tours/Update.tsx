@@ -24,7 +24,7 @@ import {
 } from "~/hooks";
 
 import { Divider } from "@chakra-ui/react";
-import { filteredOutputByWhitelist } from "@culturemap/core";
+import { filteredOutputByWhitelist, PublishStatus } from "@culturemap/core";
 
 import { useQuery, gql } from "@apollo/client";
 
@@ -43,6 +43,7 @@ import {
   multiLangSlugUniqueError,
   multiLangImageMetaRHFormDataToJson,
   multiLangTranslationsJsonRHFormData,
+  getMultilangValue,
 } from "~/utils";
 
 export const tourAndContentAuthorsQueryGQL = gql`
@@ -93,7 +94,7 @@ export const tourAndContentAuthorsQueryGQL = gql`
 const Update = () => {
   const router = useRouter();
   const config = useConfig();
-  const [appUser] = useAuthentication();
+  const [appUser, {getPreviewUrl}] = useAuthentication();
   const { t } = useTranslation();
   const successToast = useSuccessfullySavedToast();
   const [isNavigatingAway, setIsNavigatingAway] = useState(false);
@@ -263,13 +264,21 @@ const Update = () => {
       title: t("module.tours.page.title.updatetour", "Update tour"),
     },
   ];
-
+  
   const buttonList: ButtonListElement[] = [
     {
       type: "back",
       to: moduleRootPath,
       label: t("module.button.cancel", "Cancel"),
       userCan: "tourRead",
+    },
+    {
+      type: "link",
+      href: getPreviewUrl(`/tour/${getMultilangValue(data?.tour?.slug)}`),
+      label: t("module.button.preview", "Preview"),
+      targetBlank: true,
+      userCan: "pageReadOwn",
+      isDisabled: [PublishStatus.TRASHED, PublishStatus.DELETED].includes(data?.tour?.status)
     },
     {
       type: "submit",

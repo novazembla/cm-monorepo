@@ -10,6 +10,8 @@ import type { Complete, GeoLocation } from "~/types";
 export type AppConfigSettings = {
   appName?: string | undefined;
   apiUrl?: string | undefined;
+  frontendUrl?: string | undefined;
+  frontendPreviewSecret?: string | undefined;
   apiGraphQLUrl?: string | undefined;
   scope?: string | undefined;
   enableOpenRegistration?: boolean;
@@ -27,6 +29,8 @@ export type AppConfig = Complete<AppConfigSettings>;
 const configDefault: AppConfig = {
   appName: "CultureMap",
   apiUrl: `${process.env.REACT_APP_API_URL}`,
+  frontendPreviewSecret: `${process.env.REACT_APP_PREVIEW_SECRET}`,
+  frontendUrl: `${process.env.REACT_APP_FRONTEND_URL}`,
   apiGraphQLUrl: `${process.env.REACT_APP_API_URL}/graphql`,
   scope: "backend",
   enableOpenRegistration: true,

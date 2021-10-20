@@ -46,3 +46,16 @@ npm run install
 ``` 
 
 before you start to develop
+
+
+# Environment Variables Backend
+REACT_APP_FRONTEND_URL
+REACT_APP_API_URL
+REACT_APP_PREVIEW_SECRET=xZlkdelGi5KdxcpndXX
+
+# Environment Variables API
+
+
+# Environment Variables Frontend
+PREVIEW_SECRET="xZlkdelGi5KdxcpndXX"
+NEXT_PUBLIC_API_GRAPHQL_URL=https://localhost:4002/graphql

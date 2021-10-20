@@ -116,13 +116,21 @@ export const PageQueries = extendType({
         let include: Prisma.PageInclude = {};
         let where: Prisma.PageWhereInput = args.where ?? {};
 
-        // here needs to be the preview access bypass TODO:
         if (!apiUserCan(ctx, "pageReadOwn")) {
           where = {
             ...where,
             status: PublishStatus.PUBLISHED,
           };
         } else {
+          if (!apiUserCan(ctx, "canAccessTrash")) {
+            where = {
+              ...where,
+              status: {
+                not: { in: [PublishStatus.TRASHED, PublishStatus.DELETED] },
+              },
+            };
+          }
+
           if (!apiUserCan(ctx, "pageRead")) {
             where = {
               ...where,
@@ -195,20 +203,6 @@ export const PageQueries = extendType({
         let where: Prisma.PageWhereInput[] = [];
         let include: Prisma.PageInclude = {};
 
-        if ((pRI?.fieldsByTypeName?.Page as any)?.heroImage)
-          include = {
-            ...include,
-            heroImage: {
-              select: {
-                id: true,
-                status: true,
-                meta: true,
-                cropPosition: true,
-                ...daoSharedGetTranslatedSelectColumns(["alt", "credits"]),
-              },
-            },
-          };
-
         if (args.slug && args.slug.trim() !== "") {
           where.push({
             OR: config?.activeLanguages.map((lang) => ({
@@ -223,12 +217,18 @@ export const PageQueries = extendType({
           });
         }
 
-        // here needs to be the preview access bypass TODO:
         if (!apiUserCan(ctx, "pageReadOwn")) {
           where.push({
             status: PublishStatus.PUBLISHED,
           });
         } else {
+          if (!apiUserCan(ctx, "canAccessTrash")) {
+            where.push({
+              status: {
+                not: { in: [PublishStatus.TRASHED, PublishStatus.DELETED] },
+              },
+            });
+          }
           if (!apiUserCan(ctx, "pageRead")) {
             where.push({
               owner: {
@@ -237,6 +237,20 @@ export const PageQueries = extendType({
             });
           }
         }
+
+        if ((pRI?.fieldsByTypeName?.Page as any)?.heroImage)
+          include = {
+            ...include,
+            heroImage: {
+              select: {
+                id: true,
+                status: true,
+                meta: true,
+                cropPosition: true,
+                ...daoSharedGetTranslatedSelectColumns(["alt", "credits"]),
+              },
+            },
+          };
 
         if (Object.keys(where).length > 0) {
           return daoPageQueryFirst(

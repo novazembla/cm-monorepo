@@ -2,13 +2,13 @@ import type { AuthenticatedAppUserData } from "@culturemap/core";
 import { createAuthenticatedAppUser } from "@culturemap/core";
 
 import { useHistory } from "react-router";
-import { useTypedSelector } from "~/hooks";
+import { useConfig, useTypedSelector } from "~/hooks";
 
-import { user } from "~/services";
+import { user, authentication } from "~/services";
 
 export const useAuthentication = () => {
   const { authenticated, appUserData } = useTypedSelector(({ user }) => user);
-
+  const config = useConfig();
   const appUser =
     appUserData && appUserData?.id && appUserData.firstName
       ? createAuthenticatedAppUser(appUserData, "backend")
@@ -34,5 +34,10 @@ export const useAuthentication = () => {
     return result;
   };
 
-  return [appUser, { isLoggedIn, login, logout, logoutAndRedirect }] as const;
+  const getPreviewUrl = (slug: string) => {
+    return `${config.frontendUrl}/api/preview?secret=${
+      config.frontendPreviewSecret
+    }&token=${authentication.getPreviewToken()?.token}&slug=${slug}`;
+  };
+  return [appUser, { isLoggedIn, login, logout, logoutAndRedirect, getPreviewUrl }] as const;
 };

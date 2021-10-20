@@ -35,7 +35,7 @@ import {
   HStack,
   chakra,
 } from "@chakra-ui/react";
-import { filteredOutputByWhitelist } from "@culturemap/core";
+import { filteredOutputByWhitelist, PublishStatus } from "@culturemap/core";
 
 import { useQuery, gql } from "@apollo/client";
 
@@ -60,6 +60,7 @@ import {
   mapPrimaryTermsToData,
   mapDataToGroupOptions,
   fieldImagesParseIncomingImages,
+  getMultilangValue,
 } from "~/utils";
 
 import { MultiLangValue } from "~/components/ui";
@@ -140,7 +141,7 @@ export const locationAndContentAuthorsQueryGQL = gql`
 const Update = () => {
   const router = useRouter();
   const config = useConfig();
-  const [appUser] = useAuthentication();
+  const [appUser, { getPreviewUrl }] = useAuthentication();
   const { t } = useTranslation();
   const successToast = useSuccessfullySavedToast();
   const [isNavigatingAway, setIsNavigatingAway] = useState(false);
@@ -436,6 +437,16 @@ const Update = () => {
       userCan: "locationReadOwn",
     },
     {
+      type: "link",
+      href: getPreviewUrl(`/location/${getMultilangValue(data?.location?.slug)}`),
+      label: t("module.button.preview", "Preview"),
+      targetBlank: true,
+      userCan: "pageReadOwn",
+      isDisabled: [PublishStatus.TRASHED, PublishStatus.DELETED].includes(
+        data?.location?.status
+      ),
+    },
+    {
       type: "submit",
       isLoading: isSubmitting,
       label: t("module.button.update", "Update"),
@@ -470,8 +481,8 @@ const Update = () => {
                 validationSchema={extendedValidationSchema}
                 clearAlternatives={() => {
                   setValue("geoCodingInfo", "{}", {
-                    shouldDirty: true
-                  })
+                    shouldDirty: true,
+                  });
                 }}
               />
 

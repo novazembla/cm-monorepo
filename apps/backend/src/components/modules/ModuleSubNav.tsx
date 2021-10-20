@@ -13,8 +13,18 @@ export interface ButtonListElementLink extends ModuleAccessRules {
   label: string;
   to?: string;
   as?: React.ReactNode;
+  targetBlank?: boolean;
   isDisabled?: boolean;
-  type: "back" | "navigation";
+  type: "back" | "navigation" | "link";
+}
+
+export interface ButtonListElementHtmlLink extends ModuleAccessRules {
+  label: string;
+  href: string;
+  as?: React.ReactNode;
+  targetBlank?: boolean;
+  isDisabled?: boolean;
+  type: "link";
 }
 
 export interface ButtonListElementSubmit extends ModuleAccessRules {
@@ -22,7 +32,6 @@ export interface ButtonListElementSubmit extends ModuleAccessRules {
   isLoading: boolean;
   isDisabled?: boolean;
   type: "submit";
-  
 }
 
 export interface ButtonListElementButton extends ModuleAccessRules {
@@ -36,15 +45,20 @@ export interface ButtonListElementButton extends ModuleAccessRules {
 export interface ButtonListRenderElement extends ModuleAccessRules {
   key?: string;
   to?: string | undefined;
+  href?: string | undefined;
+  targetBlank?: boolean;
   as?: any;
   onClick?: MouseEventHandler | undefined;
   isLoading?: boolean | undefined;
   isDisabled?: boolean | undefined;
   colorScheme?: string | undefined;
   type?: "submit";
+  target?: string;
+  rel?: string;
 }
 
 export type ButtonListElement =
+  | ButtonListElementHtmlLink
   | ButtonListElementLink
   | ButtonListElementSubmit
   | ButtonListElementButton;
@@ -66,7 +80,7 @@ export const ModuleSubNav = ({
   if (Array.isArray(buttonList) && buttonList.length) {
     permissisionedButtonList = buttonList.reduce(function (
       pButtonList,
-      button,
+      button: ButtonListElement,
       index
     ) {
       if (button.userIs && !appUser?.has(button.userIs)) return pButtonList;
@@ -78,6 +92,20 @@ export const ModuleSubNav = ({
       };
 
       switch (button.type) {
+        case "link":
+          buttonProps = {
+            ...buttonProps,
+            href: (button as any).href,
+            as: Link,
+            target: button.targetBlank ? "_blank" : undefined,
+            rel: button.targetBlank ? "no-referrer" : undefined,
+            isDisabled: button.isDisabled,
+            color: "white !important",
+            textDecoration: "none !important",
+            pointerEvents: button.isDisabled ? "none" : undefined,
+          } as any;
+          break;
+
         case "navigation":
           buttonProps = {
             ...buttonProps,
@@ -163,9 +191,10 @@ export const ModuleSubNav = ({
             })}
           </Heading>
           <Box>
-            {(permissisionedButtonList && permissisionedButtonList.length > 0) && (
-              <HStack spacing="2">{permissisionedButtonList}</HStack>
-            )}
+            {permissisionedButtonList &&
+              permissisionedButtonList.length > 0 && (
+                <HStack spacing="2">{permissisionedButtonList}</HStack>
+              )}
 
             {children}
           </Box>

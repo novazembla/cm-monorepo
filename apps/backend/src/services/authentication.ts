@@ -1,5 +1,5 @@
 import Cookies, { CookieSetOptions } from "universal-cookie";
-import type { AuthenticatedAppUserData } from "@culturemap/core"
+import type { AuthenticatedAppUserData } from "@culturemap/core";
 
 import { decode, JwtPayload } from "jsonwebtoken";
 
@@ -18,6 +18,7 @@ export interface TokenPayload extends JwtPayload {
 }
 
 let authToken: Token | null = null;
+let previewToken: Token | null = null;
 
 const cookies = new Cookies();
 
@@ -29,6 +30,8 @@ const options: CookieSetOptions = {
 };
 
 export const getAuthToken = (): Token | null => authToken;
+
+export const getPreviewToken = (): Token | null => previewToken;
 
 export const getRefreshCookie = (): string =>
   cookies.get(HAS_REFRESH_COOKIE_NAME);
@@ -63,6 +66,11 @@ export const getTokenPayload = (token: Token): TokenPayload | null => {
 
 export const removeAuthToken = () => {
   authToken = null;
+  previewToken = null;
+};
+
+export const removePreviewToken = () => {
+  previewToken = null;
 };
 
 export const removeRefreshCookie = () => {
@@ -73,8 +81,14 @@ export const setAuthToken = (token: Token): void => {
   authToken = token;
 };
 
+export const setPreviewToken = (token: Token): void => {
+  previewToken = token;
+};
+
 export const setRefreshCookie = (token: Token) => {
-  console.log(`Create refresh token ${token.expires} ${new Date(token.expires) }`)
+  console.log(
+    `Create refresh token ${token.expires} ${new Date(token.expires)}`
+  );
   cookies.set(HAS_REFRESH_COOKIE_NAME, token.expires, {
     ...options,
     ...{ expires: new Date(token.expires) },
@@ -83,12 +97,15 @@ export const setRefreshCookie = (token: Token) => {
 
 export const authentication = {
   getAuthToken,
+  getPreviewToken,
   getRefreshCookie,
   setAuthToken,
+  setPreviewToken,
   setRefreshCookie,
   removeRefreshCookie,
   removeAuthToken,
+  removePreviewToken,
   getTokenPayload,
 };
 
-export default authentication
+export default authentication;

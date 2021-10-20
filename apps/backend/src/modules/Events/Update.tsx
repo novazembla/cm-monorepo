@@ -22,7 +22,7 @@ import {
 } from "~/hooks";
 
 import { Divider } from "@chakra-ui/react";
-import { filteredOutputByWhitelist } from "@culturemap/core";
+import { filteredOutputByWhitelist, PublishStatus } from "@culturemap/core";
 
 import { useQuery, gql } from "@apollo/client";
 
@@ -44,6 +44,7 @@ import {
   mapGroupOptionsToData,
   mapDataToGroupOptions,
   mapDataToPrimaryTerms,
+  getMultilangValue,
 } from "~/utils";
 
 export const eventAndContentAuthorsQueryGQL = gql`
@@ -112,7 +113,7 @@ export const eventAndContentAuthorsQueryGQL = gql`
 const Update = () => {
   const router = useRouter();
   const config = useConfig();
-  const [appUser] = useAuthentication();
+  const [appUser, { getPreviewUrl }] = useAuthentication();
   const { t } = useTranslation();
   const successToast = useSuccessfullySavedToast();
 
@@ -250,7 +251,7 @@ const Update = () => {
         data?.event?.heroImage,
         ["alt", "credits"],
         config.activeLanguages ?? ["en"],
-        "heroImage",
+        "heroImage"
       ),
     });
   }, [reset, data, config.activeLanguages, setExtendedValidationSchema]);
@@ -272,7 +273,9 @@ const Update = () => {
                     id: newData.heroImage,
                   },
                   update: {
-                    cropPosition: newData.heroImage_cropPosition ? parseInt(newData.heroImage_cropPosition) : 0,
+                    cropPosition: newData.heroImage_cropPosition
+                      ? parseInt(newData.heroImage_cropPosition)
+                      : 0,
                     ...multiLangImageMetaRHFormDataToJson(
                       newData,
                       "heroImage",
@@ -280,7 +283,7 @@ const Update = () => {
                       config.activeLanguages
                     ),
                   },
-                },               
+                },
               }
             : undefined;
 
@@ -299,7 +302,7 @@ const Update = () => {
             }
             return acc;
           }, []);
-        } 
+        }
 
         const { errors } = await firstMutation(parseInt(router.query.id, 10), {
           owner: {
@@ -379,6 +382,16 @@ const Update = () => {
       to: moduleRootPath,
       label: t("module.button.cancel", "Cancel"),
       userCan: "eventRead",
+    },
+    {
+      type: "link",
+      href: getPreviewUrl(`/event/${getMultilangValue(data?.event?.slug)}`),
+      label: t("module.button.preview", "Preview"),
+      targetBlank: true,
+      userCan: "pageReadOwn",
+      isDisabled: [PublishStatus.TRASHED, PublishStatus.DELETED].includes(
+        data?.event?.status
+      ),
     },
     {
       type: "submit",

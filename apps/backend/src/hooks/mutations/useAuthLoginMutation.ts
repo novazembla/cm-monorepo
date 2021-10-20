@@ -9,14 +9,22 @@ export const useAuthLoginMutation = () => {
 
   const [mutation, mutationResults] = useMutation(authLoginMutationGQL, {
     onCompleted: (data) => {
-
       // TODO: xxx find out if data sanity check is needed?
-       
-      if (data?.authLogin?.tokens?.access && data?.authLogin?.tokens?.refresh) {
-        const payload = authentication.getTokenPayload(data.authLogin.tokens.access);
 
-        if (payload) {
+      if (
+        data?.authLogin?.tokens?.access &&
+        data?.authLogin?.tokens?.preview &&
+        data?.authLogin?.tokens?.refresh
+      ) {
+        const payload = authentication.getTokenPayload(
+          data.authLogin.tokens.access
+        );
+        const payloadPreview = authentication.getTokenPayload(
+          data.authLogin.tokens.preview
+        );
+        if (payload && payloadPreview) {
           authentication.setAuthToken(data.authLogin.tokens.access);
+          authentication.setPreviewToken(data.authLogin.tokens.preview);
           authentication.setRefreshCookie(data.authLogin.tokens.refresh);
           login(payload.user);
         }

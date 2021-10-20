@@ -20,7 +20,7 @@ import {
 } from "~/hooks";
 
 import { Divider } from "@chakra-ui/react";
-import { filteredOutputByWhitelist } from "@culturemap/core";
+import { filteredOutputByWhitelist, PublishStatus } from "@culturemap/core";
 
 import { useQuery, gql } from "@apollo/client";
 
@@ -39,6 +39,7 @@ import {
   multiLangSlugUniqueError,
   multiLangTranslationsJsonRHFormData,
   multiLangImageMetaRHFormDataToJson,
+  getMultilangValue,
 } from "~/utils";
 
 export const pageAndContentAuthorsQueryGQL = gql`
@@ -74,7 +75,7 @@ export const pageAndContentAuthorsQueryGQL = gql`
 const Update = () => {
   const router = useRouter();
   const config = useConfig();
-  const [appUser] = useAuthentication();
+  const [appUser, {getPreviewUrl}] = useAuthentication();
   const { t } = useTranslation();
   const successToast = useSuccessfullySavedToast();
   const [isNavigatingAway, setIsNavigatingAway] = useState(false);
@@ -207,12 +208,22 @@ const Update = () => {
     },
   ];
 
+  
+
   const buttonList: ButtonListElement[] = [
     {
       type: "back",
       to: moduleRootPath,
       label: t("module.button.cancel", "Cancel"),
       userCan: "pageRead",
+    },
+    {
+      type: "link",
+      href: getPreviewUrl(`/page/${getMultilangValue(data?.page?.slug)}`),
+      label: t("module.button.preview", "Preview"),
+      targetBlank: true,
+      userCan: "pageReadOwn",
+      isDisabled: [PublishStatus.TRASHED, PublishStatus.DELETED].includes(data?.page?.status)
     },
     {
       type: "submit",

@@ -41,6 +41,7 @@ export type PermissionsOfEditor =
 
 // !!! Also add new permissions to the constructing arrays on the bottom
 export type PermissionsOfContributor =
+  | "canAccessTrash"
   | "locationCreate"
   | "locationReadOwn"
   | "locationUpdateOwn"
@@ -219,6 +220,7 @@ roles.add(
 roles.add(
   "contributor",
   TsEnsureArrayOfAll<PermissionsOfContributor>()([
+    "canAccessTrash",
     "locationReadOwn",
     "locationCreate",
     "locationUpdateOwn",
