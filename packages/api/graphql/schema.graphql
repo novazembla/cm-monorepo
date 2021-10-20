@@ -584,7 +584,7 @@ type User implements UserBaseNode {
   id: Int!
   lastName: String
   ownsConentOnDelete: Boolean
-  ownsEventDataImports: Boolean
+  ownsEventImports: Boolean
   profileImageId: Int
   role: String
   updatedAt: DateTime
@@ -606,7 +606,7 @@ input UserCreateInput {
   firstName: String!
   lastName: String!
   ownsConentOnDelete: Boolean!
-  ownsEventDataImports: Boolean!
+  ownsEventImports: Boolean!
   password: String!
   role: String!
   userBanned: Boolean!
@@ -631,7 +631,7 @@ input UserUpdateInput {
   firstName: String!
   lastName: String!
   ownsConentOnDelete: Boolean!
-  ownsEventDataImports: Boolean!
+  ownsEventImports: Boolean!
   role: String!
   userBanned: Boolean!
 }

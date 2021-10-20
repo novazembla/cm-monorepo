@@ -101,8 +101,10 @@ const Update = () => {
     getValues,
     setValue,
     control,
-    formState: { isSubmitting, isDirty },
+    formState: { isSubmitting, isDirty, errors },
   } = formMethods;
+
+  console.log(errors);
 
   const { fields, remove, swap, insert, append } = useFieldArray({
     control,
@@ -220,7 +222,7 @@ const Update = () => {
       userCan: "settingUpdate",
     },
   ];
-
+  // t("module.homepage.field.highlights.chooseAtLeastOne", "Choosing highlights is mandatory. We suggest to select at least 5 highlights")
   return (
     <>
       <FormNavigationBlock
@@ -361,6 +363,8 @@ const Update = () => {
                                   fontSize="xl"
                                   colorScheme="red"
                                   variant="outline"
+                                  h="50px"
+                                  w="50px"
                                   icon={<HiOutlineTrash />}
                                   onClick={() => {
                                     setValue(
@@ -383,6 +387,8 @@ const Update = () => {
                                   )}
                                   fontSize="xl"
                                   variant="outline"
+                                  h="50px"
+                                  w="50px"
                                   icon={<HiArrowNarrowUp />}
                                   onClick={() => swap(index - 1, index)}
                                   isDisabled={index === 0}
@@ -395,6 +401,8 @@ const Update = () => {
                                   )}
                                   fontSize="xl"
                                   variant="outline"
+                                  h="50px"
+                                  w="50px"
                                   icon={<HiArrowNarrowDown />}
                                   onClick={() => swap(index, index + 1)}
                                   isDisabled={index === fields.length - 1}
@@ -406,6 +414,8 @@ const Update = () => {
                                     "Add new highlight below the current one"
                                   )}
                                   variant="outline"
+                                  h="50px"
+                                  w="50px"
                                   icon={<MdPlusOne />}
                                   fontSize="xl"
                                   onClick={() => {
@@ -431,6 +441,8 @@ const Update = () => {
                       )}
                     </Box>
                   )}
+
+                  {errors?.highlights?.message && <Box><TextErrorMessage error="module.homepage.field.highlights.chooseAtLeastOne" /></Box>}
 
                   <Flex justifyContent="flex-end">
                     <Button

@@ -342,6 +342,11 @@
     },
     "homepage": {
       "field": {
+        "highlights": {
+          "chooseAtLeastOne": "Bitte wählen Sie mindestens 1 Highlight aus. Wir empfehlen die Auswahl von 5 bis 10 Highlights.",
+          "noneConfigured": "Keine Highlights ausgewählt. Bitte nutzen Sie den untrigen Schaltknopf um ein erstes Highlight auszuwählen",
+          "add": "Highlight hinzufügen"
+        },
         "label": {
           "highlights": "Highlights",
           "missionStatement": "Mission statement"
@@ -362,10 +367,6 @@
         "button": {
           "delte": "Löschen",
           "addOneBelow": "Neues Highlight unter dem jetzigen hinzufügen"
-        },
-        "highlights": {
-          "noneConfigured": "Keine Highlights ausgewählt. Bitte nutzen Sie den untrigen Schaltknopf um ein erstes Highlight auszuwählen",
-          "add": "Highlight hinzufügen"
         },
         "placeholder": {
           "missionStatement": "Kurzes auf der Homepage angezeigtes Mission Statement ..."
@@ -942,7 +943,7 @@
       "label": "Label"
     },
     "error": {
-      "label": "Es wurde kein Labelübersetzungsschlüssel definiert"
+      "label": "Es wurde kein Übersetzungsschlüssel definiert"
     },
     "contactEmail": {
       "label": "Kontakt-E-Mailadresse"

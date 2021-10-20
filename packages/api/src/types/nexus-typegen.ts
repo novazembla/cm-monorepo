@@ -186,7 +186,7 @@ export interface NexusGenInputs {
     firstName: string; // String!
     lastName: string; // String!
     ownsConentOnDelete: boolean; // Boolean!
-    ownsEventDataImports: boolean; // Boolean!
+    ownsEventImports: boolean; // Boolean!
     password: string; // String!
     role: string; // String!
     userBanned: boolean; // Boolean!
@@ -208,7 +208,7 @@ export interface NexusGenInputs {
     firstName: string; // String!
     lastName: string; // String!
     ownsConentOnDelete: boolean; // Boolean!
-    ownsEventDataImports: boolean; // Boolean!
+    ownsEventImports: boolean; // Boolean!
     role: string; // String!
     userBanned: boolean; // Boolean!
   }
@@ -493,7 +493,7 @@ export interface NexusGenObjects {
     id: number; // Int!
     lastName?: string | null; // String
     ownsConentOnDelete?: boolean | null; // Boolean
-    ownsEventDataImports?: boolean | null; // Boolean
+    ownsEventImports?: boolean | null; // Boolean
     profileImageId?: number | null; // Int
     role?: string | null; // String
     updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
@@ -887,7 +887,7 @@ export interface NexusGenFieldTypes {
     id: number; // Int!
     lastName: string | null; // String
     ownsConentOnDelete: boolean | null; // Boolean
-    ownsEventDataImports: boolean | null; // Boolean
+    ownsEventImports: boolean | null; // Boolean
     profileImageId: number | null; // Int
     role: string | null; // String
     updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
@@ -1278,7 +1278,7 @@ export interface NexusGenFieldTypeNames {
     id: 'Int'
     lastName: 'String'
     ownsConentOnDelete: 'Boolean'
-    ownsEventDataImports: 'Boolean'
+    ownsEventImports: 'Boolean'
     profileImageId: 'Int'
     role: 'String'
     updatedAt: 'DateTime'

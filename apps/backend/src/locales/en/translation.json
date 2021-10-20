@@ -342,6 +342,11 @@
     },
     "homepage": {
       "field": {
+        "highlights": {
+          "chooseAtLeastOne": "Choosing highlights is mandatory. We suggest to select at least 5 highlights",
+          "noneConfigured": "No highlights configured. Add the first highlight using the button below.",
+          "add": "Add highlight"
+        },
         "label": {
           "highlights": "Highlights",
           "missionStatement": "Mission statement"
@@ -362,10 +367,6 @@
         "button": {
           "delte": "Delete highlight",
           "addOneBelow": "Add new highlight below the current one"
-        },
-        "highlights": {
-          "noneConfigured": "No highlights configured. Add the first highlight using the button below.",
-          "add": "Add highlight"
         },
         "placeholder": {
           "missionStatement": "Short mission statement shown on the homepage ..."
