@@ -49,7 +49,7 @@ hooks:
 mounts:
   'logs':
     source: local
-    source_path: log
+    source_path: logs
   'csv':
     source: service
     service: files
@@ -58,6 +58,10 @@ mounts:
     source: service
     service: files
     source_path: img
+  'public/exports':
+    source: service
+    service: files
+    source_path: exports
     
 
 # The relationships of the application with services or other applications.

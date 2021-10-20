@@ -606,8 +606,8 @@ const doChores = async () => {
             .on("end", (rowCount: number) => {
               log.push(
                 lang === "de"
-                  ? `DataImport beendet: ${rowCount} Zeilen bearbeitet`
-                  : `DataImport done: processed ${rowCount} rows`
+                  ? `Importierung beendet: ${rowCount} Zeilen bearbeitet`
+                  : `Import done: processed ${rowCount} rows`
               );
               logger.debug(`DataImport done: processed ${rowCount} rows`);
               resolve(true);

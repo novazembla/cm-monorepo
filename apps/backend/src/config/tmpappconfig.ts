@@ -8,6 +8,7 @@ import type { AppConfigSettings } from "./config";
 export type AppConfigSettingsFiledKeys = "none";
 
 export const appConfig: AppConfigSettings = {
+  appName: "CultureMap",
   scope: "backend", // Used throughout the site and the API to identify a client/scope
   enableOpenRegistration: false,
   enableProfilePicture: false,

@@ -290,10 +290,10 @@ const processDataImportedRow = async (
         hasWarnings = true;
         warnings.push(
           lang === "de"
-            ? `Geocoding: Kartenpunkt ID: (${locationInDb?.id}) - row# ${
+            ? `Geocoding: Kartenpunkt ID: (${locationInDb?.id}) - Zeile #${
                 row["###" as any]
               } die Addresse hat sich geändert bitte überprüfen Sie das Resultat`
-            : `Geocoding: location ID: (${locationInDb?.id}) - row# ${
+            : `Geocoding: location ID: (${locationInDb?.id}) - row #${
                 row["###" as any]
               } address change please check geo coding result`
         );
@@ -399,10 +399,10 @@ const processDataImportedRow = async (
         if (!point || !point.lat || !point.lng) {
           warnings.push(
             lang === "de"
-              ? `Geocoding: Kartenpunkt ID: (${locationInDb?.id}) - row# ${
+              ? `Geocoding: Kartenpunkt ID: (${locationInDb?.id}) - Zeile #${
                   row["###" as any]
                 } konnte Adresse nicht auflösen`
-              : `Geocoding: Location ID: (${locationInDb?.id}) - row# ${
+              : `Geocoding: Location ID: (${locationInDb?.id}) - row #${
                   row["###" as any]
                 } could not find location on map`
           );
@@ -425,8 +425,10 @@ const processDataImportedRow = async (
         lang === "de"
           ? `Falsche Email Addresse: Kartenpunkt ID: (${
               locationInDb?.id
-            }) - row# ${row["###" as any]} Email Addresse (1) ist nicht korrekt`
-          : `Invalid email: location ID: (${locationInDb?.id}) - row# ${
+            }) - Zeile #${
+              row["###" as any]
+            } Email Addresse (1) ist nicht korrekt`
+          : `Invalid email: location ID: (${locationInDb?.id}) - row #${
               row["###" as any]
             } Email (1) is not valid email address`
       );
@@ -438,8 +440,10 @@ const processDataImportedRow = async (
         lang === "de"
           ? `Falsche Email Addresse: Kartenpunkt ID: (${
               locationInDb?.id
-            }) - row# ${row["###" as any]} Email Addresse (2) ist nicht korrekt`
-          : `Invalid email: location ID: (${locationInDb?.id}) - row# ${
+            }) - Zeile #${
+              row["###" as any]
+            } Email Addresse (2) ist nicht korrekt`
+          : `Invalid email: location ID: (${locationInDb?.id}) - row #${
               row["###" as any]
             } Email (2) is not valid email address`
       );
@@ -450,10 +454,10 @@ const processDataImportedRow = async (
       if (socialLinks[key] !== "" && !isUrl(socialLinks[key]))
         warnings.push(
           lang === "de"
-            ? `Falsche URL: Kartenpunkt ID: (${locationInDb?.id}) - row# ${
+            ? `Falsche URL: Kartenpunkt ID: (${locationInDb?.id}) - Zeile #${
                 row["###" as any]
               } "${key}" ist keine URL`
-            : `Invalid URL: location ID: (${locationInDb?.id}) - row# ${
+            : `Invalid URL: location ID: (${locationInDb?.id}) - row #${
                 row["###" as any]
               } "${key}" is not valid url`
         );
@@ -753,8 +757,8 @@ const doChores = async () => {
             .on("end", (rowCount: number) => {
               log.push(
                 lang === "de"
-                  ? `DataImport beendet: ${rowCount} Zeilen bearbeitet`
-                  : `DataImport done: processed ${rowCount} rows`
+                  ? `Importierung beendet: ${rowCount} Zeilen bearbeitet`
+                  : `Import done: processed ${rowCount} rows`
               );
               logger.debug(`DataImport done: processed ${rowCount} rows`);
               resolve(true);

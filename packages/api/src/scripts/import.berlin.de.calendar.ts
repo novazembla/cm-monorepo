@@ -604,7 +604,7 @@ const doChores = async () => {
         .catch((err) => {
           throw err;
         });
-      log.push("DataImport beendet");
+      log.push("Importierung beendet");
       await saveDataImportLog(prisma, DataImportStatus.PROCESSED);
     } catch (err: any) {
       logger.error(`import.berlin.de: ${err.name} ${err.message}`);

@@ -1,5 +1,6 @@
 import React, { Suspense, useEffect, lazy } from "react";
 import { BrowserRouter, Route, Switch, useLocation } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 import "@fontsource/raleway/400.css";
 import "@fontsource/raleway/700.css";
@@ -35,6 +36,7 @@ import { LoadingIcon } from "~/components/ui";
 import { AuthenticationSessionActiveGate } from "~/components/app";
 import { useTypedDispatch } from "~/hooks";
 import { setPreviousRoute } from "~/redux/slices/router";
+import { getAppConfig } from "~/config";
 
 const LayoutFull = lazy(() => import("~/components/app/LayoutFull"));
 const ScrollToTop = () => {
@@ -74,10 +76,15 @@ const ScrollToTop = () => {
 };
 
 const App = () => {
+  const config = getAppConfig();
+
   return (
     <AppProviders>
       <SettingsLoader />
-
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>{config.appName}</title>
+      </Helmet>
       <Suspense fallback={<LoadingIcon type="light" size={120} />}>
         <BrowserRouter>
           <AuthenticationSessionActiveGate
