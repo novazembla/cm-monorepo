@@ -161,7 +161,7 @@ export const TourForm = ({
         id="duration"
         type="text"
         label={t("module.tours.forms.tour.field.label.duration", "Duration")}
-        isRequired={true}
+        isRequired={action === "update"}
         settings={{
           defaultValues: data?.tour?.duration,
           placeholder: t(
@@ -176,7 +176,7 @@ export const TourForm = ({
         id="distance"
         type="text"
         label={t("module.tours.forms.tour.field.label.distance", "Distance")}
-        isRequired={true}
+        isRequired={action === "update"}
         settings={{
           defaultValues: data?.tour?.distance,
           placeholder: t(

@@ -104,8 +104,6 @@ const Update = () => {
     formState: { isSubmitting, isDirty, errors },
   } = formMethods;
 
-  console.log(errors);
-
   const { fields, remove, swap, insert, append } = useFieldArray({
     control,
     name: "highlights",

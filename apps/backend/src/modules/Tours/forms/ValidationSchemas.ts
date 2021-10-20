@@ -21,8 +21,8 @@ export const ModuleTourSchemaCreate = object().shape(
         lang === defaultLanguage
           ? string().nonEmptyHtml().required()
           : string(),
-      [`duration_${lang}`]: string().required(),
-      [`distance_${lang}`]: string().required(),
+      [`duration_${lang}`]: string(),
+      [`distance_${lang}`]: string(),
     }),
     {
       orderNumber: number().required(),
@@ -36,6 +36,8 @@ export const ModuleTourSchemaUpdate = ModuleTourSchemaCreate.concat(
     activeLanguages.reduce(
       (acc: any, lang: any) => ({
         ...acc,
+        [`duration_${lang}`]: string().required(),
+        [`distance_${lang}`]: string().required(),
         [`heroImage_alt_${lang}`]:
           lang === defaultLanguage
             ? mixed().when("heroImage", {

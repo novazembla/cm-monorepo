@@ -94,7 +94,7 @@ export const TourPathEditor = ({
       <Box className="map" w="100%">
         <Box className="editor" position="relative">
           <Box className="mapcontainer" ref={refMapContainer}></Box>
-          <Box position="absolute" bottom="2" left="2" zIndex="9999" p="1" bg="#fff" borderRadius="md" border="1px solid" fontSize="sm" borderColor="gray.400">~{(length / 1000).toFixed(2)} km</Box>
+          <Box position="absolute" bottom="2" left="2" zIndex="9999" p="1" bg="#fff" borderRadius="md" border="1px solid" fontSize="sm" borderColor="gray.400">~{(length / 1000).toFixed(2)}km / {(length / 1600).toFixed(2)}mi</Box>
         </Box>
       </Box>
       <input type="hidden" {...register(name)} />

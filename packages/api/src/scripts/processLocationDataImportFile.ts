@@ -86,7 +86,7 @@ const getTermsOfRow = (mapping: any[], row: any[], primaryTermKey?: string) => {
 
     const value =
       row[headerKey] && row[headerKey].trim() !== ""
-        ? row[headerKey].trim().toLowerCase()
+        ? slugify(row[headerKey].trim().toLowerCase())
         : undefined;
 
     if (value) {
@@ -98,10 +98,11 @@ const getTermsOfRow = (mapping: any[], row: any[], primaryTermKey?: string) => {
 
       if (key.indexOf("tax-agency") > -1) term = termsInstitutionType[value];
 
-      if (term?.id)
+      if (term?.id) {
         acc.push({
           id: term.id,
         });
+      }
     }
 
     return acc;
@@ -559,7 +560,7 @@ const doChores = async () => {
 
           if (terms) {
             termsType = terms.reduce((acc: any, t: any) => {
-              const name = t?.name?.de?.toLowerCase();
+              const name = slugify(t.name_de.trim().toLowerCase());
               return {
                 ...acc,
                 [name]: t,
@@ -591,7 +592,7 @@ const doChores = async () => {
 
           if (terms) {
             termsTargetAudience = terms.reduce((acc: any, t: any) => {
-              const name = t?.name?.de?.toLowerCase();
+              const name = slugify(t.name_de.trim().toLowerCase());
               return {
                 ...acc,
                 [name]: t,
@@ -623,7 +624,7 @@ const doChores = async () => {
 
           if (terms) {
             termsInstitutionType = terms.reduce((acc: any, t: any) => {
-              const name = t?.name?.de?.toLowerCase();
+              const name = slugify(t.name_de.trim().toLowerCase());
               return {
                 ...acc,
                 [name]: t,

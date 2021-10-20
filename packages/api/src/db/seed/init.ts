@@ -144,7 +144,7 @@ const targetAudience = [
   ["Kinder/Jugendliche", "Children/Adolecents"],
   ["Menschen mit Beeinträchtigungen", "People with impairments"],
   ["Migrant*innen", "Migrants"],
-  ["Senior*inne", "Senior Citizens"],
+  ["Senior*innen", "Senior Citizens"],
 ];
 
 const institutionType = [
