@@ -20,6 +20,7 @@ type AuthPayloadToken {
 
 type AuthPayloadTokens {
   access: AuthPayloadToken
+  preview: AuthPayloadToken
   refresh: AuthPayloadToken
 }
 

@@ -245,6 +245,7 @@ export interface NexusGenObjects {
   }
   AuthPayloadTokens: { // root type
     access?: NexusGenRootTypes['AuthPayloadToken'] | null; // AuthPayloadToken
+    preview?: NexusGenRootTypes['AuthPayloadToken'] | null; // AuthPayloadToken
     refresh?: NexusGenRootTypes['AuthPayloadToken'] | null; // AuthPayloadToken
   }
   AuthUser: { // root type
@@ -532,6 +533,7 @@ export interface NexusGenFieldTypes {
   }
   AuthPayloadTokens: { // field return type
     access: NexusGenRootTypes['AuthPayloadToken'] | null; // AuthPayloadToken
+    preview: NexusGenRootTypes['AuthPayloadToken'] | null; // AuthPayloadToken
     refresh: NexusGenRootTypes['AuthPayloadToken'] | null; // AuthPayloadToken
   }
   AuthUser: { // field return type
@@ -923,6 +925,7 @@ export interface NexusGenFieldTypeNames {
   }
   AuthPayloadTokens: { // field return type name
     access: 'AuthPayloadToken'
+    preview: 'AuthPayloadToken'
     refresh: 'AuthPayloadToken'
   }
   AuthUser: { // field return type name

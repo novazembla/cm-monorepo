@@ -64,6 +64,17 @@ export const generateToken = (
           permissions: roles.getExtendedPermissions("refresh"),
         },
       };
+
+    if (type === "preview")
+      user = {
+        ...user,
+        ...{
+          roles: ["preview"],
+          permissions: (role ? roles.getExtendedPermissions(role) : []).filter(
+            (p) => p.indexOf("Read") > -1 || p.indexOf("ReadOwn") > -1
+          ),
+        },
+      };
   }
 
   // expose roles in token TODO: expose roles
@@ -162,12 +173,25 @@ export const tokenGenerateAuthTokens = async (
     apiConfig.jwt.expiration.access
   );
 
+  const previewTokenExpires = addMinutes(
+    new Date(),
+    apiConfig.jwt.expiration.preview
+  );
+
   const accessToken = generateToken(
     scope,
     user,
     role,
     accessTokenExpires,
     TokenTypes.ACCESS
+  );
+
+  const previewToken = generateToken(
+    scope,
+    user,
+    role,
+    previewTokenExpires,
+    TokenTypes.PREVIEW
   );
 
   const refreshTokenExpires = addDays(
@@ -202,6 +226,10 @@ export const tokenGenerateAuthTokens = async (
       refresh: {
         token: refreshToken,
         expires: refreshTokenExpires.toISOString(),
+      },
+      preview: {
+        token: previewToken,
+        expires: previewTokenExpires.toISOString(),
       },
     },
   };

@@ -5,6 +5,7 @@ export type RoleNames =
   | "editor"
   | "contributor"
   | "user"
+  | "preview"
   | "refresh"
   | "api"
   | "test";
@@ -62,6 +63,9 @@ export type PermissionsOfContributor =
   | "pageDeleteOwn";
 
 // !!! Also add new permissions to the constructing arrays on the bottom
+export type PermissionsOfPreview = "canPreview";
+
+// !!! Also add new permissions to the constructing arrays on the bottom
 export type PermissionsOfUser =
   | "accessAsAuthenticatedUser"
   | "profileRead"
@@ -78,6 +82,7 @@ export type PermissionNames =
   | PermissionsOfEditor
   | PermissionsOfContributor
   | PermissionsOfUser
+  | PermissionsOfPreview
   | PermissionsOfRefresh
   | PermissionsOfApi;
 
@@ -245,6 +250,10 @@ roles.add(
   ])
 );
 roles.add(
+  "preview",
+  TsEnsureArrayOfAll<PermissionsOfPreview>()(["canPreview"])
+);
+roles.add(
   "refresh",
   TsEnsureArrayOfAll<PermissionsOfRefresh>()(["canRefreshAccessToken"])
 );
@@ -254,11 +263,13 @@ roles.extend("administrator", [
   "editor",
   "contributor",
   "user",
+  "preview",
   "refresh",
   "api",
 ]);
-roles.extend("editor", ["contributor", "user", "refresh", "api"]);
-roles.extend("contributor", ["user", "refresh", "api"]);
-roles.extend("user", ["refresh", "api"]);
+roles.extend("editor", ["contributor", "user", "preview", "refresh", "api"]);
+roles.extend("contributor", ["user", "preview", "refresh", "api"]);
+roles.extend("user", ["preview", "refresh", "api"]);
+roles.extend("preview", "api");
 roles.extend("refresh", "api");
 export default roles;

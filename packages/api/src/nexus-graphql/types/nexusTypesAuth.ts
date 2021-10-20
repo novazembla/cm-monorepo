@@ -50,6 +50,9 @@ export const AuthPayloadTokens = objectType({
     t.field("refresh", {
       type: AuthPayloadToken,
     });
+    t.field("preview", {
+      type: AuthPayloadToken,
+    });
   },
 });
 

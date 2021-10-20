@@ -78,6 +78,7 @@ export interface ApiConfigJwt {
   expiration: {
     access: number;
     refresh: number;
+    preview: number;
     passwordReset: number;
     emailConfirmation: number;
   };
@@ -364,6 +365,14 @@ let apiConfig = {
         10,
         "Error: missing/wrong .env config: JWT_ACCESS_EXPIRATION_MINUTES"
       ),
+      preview:
+        safeGuardVariable(
+          logger,
+          "int",
+          process.env.JWT_ACCESS_EXPIRATION_MINUTES,
+          10,
+          "Error: missing/wrong .env config: JWT_ACCESS_EXPIRATION_MINUTES"
+        ) * 4,
       refresh: safeGuardVariable(
         logger,
         "int",

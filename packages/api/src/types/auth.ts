@@ -6,6 +6,7 @@ import {
 export type AuthTokenType =
   | "access"
   | "refresh"
+  | "preview"
   | "resetPassword"
   | "verifyEmail";
 

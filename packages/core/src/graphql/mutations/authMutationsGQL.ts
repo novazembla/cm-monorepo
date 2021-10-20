@@ -39,6 +39,10 @@ export const authLoginMutationGQL = gql`
         refresh {
           expires
         }
+        preview {
+          token
+          expires
+        }
       }
     }
   }
@@ -53,6 +57,10 @@ export const authRefreshMutationGQL = gql`
           expires
         }
         refresh {
+          expires
+        }
+        preview {
+          token
           expires
         }
       }
