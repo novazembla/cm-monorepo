@@ -1,10 +1,9 @@
 TODO: GraphQl
 - add query complexity plugin 
 
-TODO: taxonomy term delete needs to remove connected objects (Location, Events, ...)
-
 TODO: DB/Psql
 - full text search: https://www.postgresql.org/docs/12/textsearch-tables.html, https://github.com/prisma/prisma/issues/1684
+TODO: fullText index creation
 
 TODO: Users
 - User delete which user will take over content of deleted user? 
@@ -12,13 +11,14 @@ TODO: Users
 TODO: GraphQL Upload Crashes node if cancelled while stream is being parsed .. 
 https://github.com/jaydenseric/apollo-upload-client/issues/149
 
-TODO: fullText index creation
 
 TODO: Maybe switch from Bcrypt to Argon2 (if the hosting platform does support it)
 
 TODO:
-- Image File Delete, Cleanup of image table of image with status deleted.
-- Also ensure that the translations are gone 
+- Api upload file size limits on the server site too. Reject if too big.
 
 TODO:
-- Api upload file size limits on the server site too. Reject if too big.
+- Refresh token in file upload
+
+TODO: 
+- Single file upload component
