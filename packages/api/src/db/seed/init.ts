@@ -228,10 +228,11 @@ async function main() {
     await prisma.taxonomy.deleteMany();
     await prisma.image.deleteMany();
     await prisma.event.deleteMany();
+    await prisma.setting.deleteMany();
     await prisma.eventDate.deleteMany();
-    await prisma.eventDataImportLog.deleteMany();
     await prisma.file.deleteMany();
-    await prisma.import.deleteMany();
+    await prisma.dataImport.deleteMany();
+    await prisma.dataExport.deleteMany();
     await prisma.image.deleteMany();
     await prisma.location.deleteMany();
     await prisma.page.deleteMany();
