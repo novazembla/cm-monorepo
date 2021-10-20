@@ -6,7 +6,11 @@ import Prisma from "@prisma/client";
 import minimist from "minimist";
 
 import { getApiConfig } from "../config";
-import { DataExportStatus, PublishStatus, dataImportHeadersLocation } from "@culturemap/core";
+import {
+  DataExportStatus,
+  PublishStatus,
+  dataImportHeadersLocation,
+} from "@culturemap/core";
 import { daoSharedGetTranslatedSelectColumns } from "../dao/shared";
 import Excel from "exceljs";
 
@@ -99,7 +103,9 @@ const locationToArray = (location: any, lang: string) => {
     pubState = lang === "de" ? "Zurückgewiesen" : "Rejected";
   } else if (location.status === PublishStatus.IMPORTEDWARNINGS) {
     pubState =
-      lang === "de" ? "DataImportiert mit Warnung(en)" : "DataImported with warnings";
+      lang === "de"
+        ? "DataImportiert mit Warnung(en)"
+        : "DataImported with warnings";
   } else if (location.status === PublishStatus.IMPORTED) {
     pubState = lang === "de" ? "DataImportiert" : "DataImported";
   } else if (location.status === PublishStatus.PUBLISHED) {
@@ -577,7 +583,9 @@ const doChores = async () => {
       await prisma.dataExport.update({
         data: {
           status:
-            errors.length > 0 ? DataExportStatus.ERROR : DataExportStatus.PROCESSED,
+            errors.length > 0
+              ? DataExportStatus.ERROR
+              : DataExportStatus.PROCESSED,
           log,
           errors,
         },

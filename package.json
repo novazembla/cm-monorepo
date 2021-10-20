@@ -7,6 +7,7 @@
       "pre-commit": "npm run lint"
     }
   },
+  
   "scripts": {
     "build:api": "NODE_ENV=production npm run package:core:build && npm run package:api:build && npm run app:api:build",
     "build:backend": "NODE_ENV=production npm run package:core:build && npm run app:backend:build",
@@ -23,6 +24,8 @@
     "app:api:watch:node": "env-cmd -f ./.env nodemon --watch ./apps/api/build --watch ./packages/api/dist --watch ./packages/core/dist --watch ./plugins/example/dist ./apps/api/build/index.js",
     "app:api:lint": "eslint ./apps/api/src --ext .js,.ts",
     "app:backend:build": "npm run build -w backend",
+    "app:backend:dev:build": "REACT_APP_API_URL=$(grep '^BASE_URL_API' .env | cut -d '=' -f2) SKIP_PREFLIGHT_CHECK=true npm run build -w backend",
+    "app:backend:dev:build:serve": "REACT_APP_API_URL=$(grep '^BASE_URL_API' .env | cut -d '=' -f2) SKIP_PREFLIGHT_CHECK=true npx serve apps/backend/build",
     "app:backend:dev": "PORT=$(grep DEV_BACKEND_PORT .env | cut -d '=' -f2) REACT_APP_API_URL=$(grep '^BASE_URL_API' .env | cut -d '=' -f2) SKIP_PREFLIGHT_CHECK=true npm run start -w backend",
     "app:backend:lint": "eslint ./apps/backend/ --ext .js,.jsx,.ts,.tsx",
     "app:backend:translations": "echo \"Please run 'npm run i18n-extract' right in the ./app/backend folder\"",

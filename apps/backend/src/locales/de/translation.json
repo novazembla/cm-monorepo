@@ -567,21 +567,26 @@
         }
       },
       "imports": {
-        "title": "Importe",
+        "title": {
+          "updatepage": "Import bearbeiten"
+        },
+        "menu": {
+          "title": "Importe"
+        },
         "requiredMissing": "Die folgenden erforderlichen Spalten sind nicht zugewiesen: ",
         "assignColumnsToTriggerImport": "Um den Import planen zu können, müssen Sie alle (erforderlichen) Spalten zuweisen",
         "importIsProcessing": "Ihr Import wird auf dem Server verarbeitet."
-      },
-      "location": {
-        "title": {
-          "updatepage": "Kartenpunkt aktualisieren"
-        }
       },
       "title": "Kartenpunkte",
       "button": {
         "create": "Kartenpunkt hinzufügen",
         "edit": "Kartenpunkt bearbeiten",
         "delete": "Kartenpunkt löschen"
+      },
+      "location": {
+        "title": {
+          "updatepage": "Kartenpunkt aktualisieren"
+        }
       },
       "associatedevents": {
         "title": "Zugehörige Veranstaltungen"
@@ -949,7 +954,7 @@
       "label": "Kontakt-E-Mailadresse"
     },
     "frontendMapStyeJsonUrl": {
-      "label": "Backend Map Api Key"
+      "label": "Frontend Map Style JSON Url"
     },
     "centerOfGravity": {
       "label": "Kartenmitte (Georeferenzierung)"

@@ -145,10 +145,10 @@ const Update = () => {
     },
     {
       path: `${moduleRootPath}/import`,
-      title: t("module.locations.imports.title", "Imports"),
+      title: t("module.locations.imports.menu.title", "Imports"),
     },
     {
-      title: t("module.locations.location.title.updatepage", "Update location"),
+      title: t("module.locations.imports.title.updatepage", "Update import"),
     },
   ];
 
@@ -319,8 +319,6 @@ const Update = () => {
                         {} as any
                       ),
                     });
-
-                    setValue("mapping-col-0", "title-de");
                   }
                 }}
               />

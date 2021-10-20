@@ -567,21 +567,26 @@
         }
       },
       "imports": {
-        "title": "Imports",
+        "title": {
+          "updatepage": "Update import"
+        },
+        "menu": {
+          "title": "Imports"
+        },
         "requiredMissing": "The following required columns are not assigned: ",
         "assignColumnsToTriggerImport": "To be able to schedule the import you need to assign all (required) columns",
         "importIsProcessing": "Your import is being processed on the server."
-      },
-      "location": {
-        "title": {
-          "updatepage": "Update location"
-        }
       },
       "title": "Locations",
       "button": {
         "create": "Add new location",
         "edit": "Edit location",
         "delete": "Delete location"
+      },
+      "location": {
+        "title": {
+          "updatepage": "Update location"
+        }
       },
       "associatedevents": {
         "title": "Associated events"
@@ -949,7 +954,7 @@
       "label": "Contact email address"
     },
     "frontendMapStyeJsonUrl": {
-      "label": "Backend Map Api Key"
+      "label": "Frontend Map Style JSON Url"
     },
     "centerOfGravity": {
       "label": "Center of map (geo referencing)"
