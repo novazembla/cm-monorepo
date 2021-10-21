@@ -125,7 +125,7 @@ const Update = () => {
           setting.key === "highlights" &&
           setting?.value?.json &&
           Array.isArray(setting?.value?.json)
-        )
+        ) {
           return {
             ...acc,
             highlights: setting.value.json.reduce(
@@ -142,6 +142,7 @@ const Update = () => {
               []
             ),
           };
+        }
 
         if (setting.key === "missionStatement" && setting?.value?.json)
           return {
@@ -166,6 +167,8 @@ const Update = () => {
     setHasFormError(false);
     setIsNavigatingAway(false);
     try {
+      console.log(newData);
+
       if (appUser) {
         const multiLangNewData = multiLangRHFormDataToJson(
           newData,
@@ -220,6 +223,7 @@ const Update = () => {
       userCan: "settingUpdate",
     },
   ];
+
   // t("module.homepage.field.highlights.chooseAtLeastOne", "Choosing highlights is mandatory. We suggest to select at least 5 highlights")
   return (
     <>
@@ -329,8 +333,8 @@ const Update = () => {
                             </Box>
                             <Box flexGrow={2} px="3">
                               <FieldSingleSelectAutocomplete
-                                name={`highlights[${index}].id`}
-                                id={`highlights[${index}].id`}
+                                name={`highlights[${index}].item`}
+                                id={`highlights[${index}].item`}
                                 label={t(
                                   "module.homepage.forms.field.label.searchitem",
                                   "Search item"
@@ -347,6 +351,10 @@ const Update = () => {
                                   ),
                                   onItemChange: (item: any) => {
                                     setValue(`highlights[${index}].item`, item);
+                                    setValue(
+                                      `highlights[${index}].id`,
+                                      item?.id
+                                    );
                                   },
                                 }}
                               />
@@ -440,7 +448,11 @@ const Update = () => {
                     </Box>
                   )}
 
-                  {errors?.highlights?.message && <Box><TextErrorMessage error="module.homepage.field.highlights.chooseAtLeastOne" /></Box>}
+                  {errors?.highlights?.message && (
+                    <Box>
+                      <TextErrorMessage error="module.homepage.field.highlights.chooseAtLeastOne" />
+                    </Box>
+                  )}
 
                   <Flex justifyContent="flex-end">
                     <Button

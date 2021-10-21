@@ -185,7 +185,7 @@
         "label": {
           "image": "Image",
           "alttext": "Alternativer Text",
-          "credits": "Uhrheberrechtsinformation"
+          "credits": "Urheberrechtsinformation"
         },
         "button": {
           "deleteImage": "Bild löschen",

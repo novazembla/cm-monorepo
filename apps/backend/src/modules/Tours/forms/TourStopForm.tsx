@@ -138,26 +138,30 @@ export const TourStopForm = ({
               },
             }}
           />
-          <Divider mt="10" />
-          <FieldImages
-            id="images"
-            name="images"
-            label={t("forms.images.label", "Images")}
-            currentImages={data?.tourStopRead?.images}
-            settings={{
-              imageRequired: false,
-              altRequired: false,
-              creditsRequired: false,
-            }}
-            setActiveUploadCounter={setActiveUploadCounter}
-            connectWith={{
-              tourStops: {
-                connect: {
-                  id: data?.tourStopRead?.id,
-                },
-              },
-            }}
-          />
+          {action === "update" && (
+            <>
+              <Divider mt="10" />
+              <FieldImages
+                id="images"
+                name="images"
+                label={t("forms.images.label", "Images")}
+                currentImages={data?.tourStopRead?.images}
+                settings={{
+                  imageRequired: false,
+                  altRequired: false,
+                  creditsRequired: false,
+                }}
+                setActiveUploadCounter={setActiveUploadCounter}
+                connectWith={{
+                  tourStops: {
+                    connect: {
+                      id: data?.tourStopRead?.id,
+                    },
+                  },
+                }}
+              />
+            </>
+          )}
         </>
       )}
     </>

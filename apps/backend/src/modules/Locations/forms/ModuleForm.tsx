@@ -564,26 +564,30 @@ export const ModuleForm = ({
         </TwoColFieldRow>
       </chakra.fieldset>
 
-      <Divider mt="10" />
-      <FieldImages
-        id="images"
-        name="images"
-        label={t("forms.images.label", "Images")}
-        currentImages={data?.location?.images}
-        settings={{
-          imageRequired: false,
-          altRequired: false,
-          creditsRequired: false,
-        }}
-        setActiveUploadCounter={setActiveUploadCounter}
-        connectWith={{
-          locations: {
-            connect: {
-              id: data?.location?.id,
-            },
-          },
-        }}
-      />
+      {action === "update" && (
+        <>
+          <Divider mt="10" />
+          <FieldImages
+            id="images"
+            name="images"
+            label={t("forms.images.label", "Images")}
+            currentImages={data?.location?.images}
+            settings={{
+              imageRequired: false,
+              altRequired: false,
+              creditsRequired: false,
+            }}
+            setActiveUploadCounter={setActiveUploadCounter}
+            connectWith={{
+              locations: {
+                connect: {
+                  id: data?.location?.id,
+                },
+              },
+            }}
+          />
+        </>
+      )}
 
       <Divider mt="10" />
 
