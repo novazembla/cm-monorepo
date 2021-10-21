@@ -54,7 +54,6 @@ const start = async () => {
     });
   */
 
-  // change TODO:
   // this is to make sure that the root domain is anwering something.
   app.get("/", function (req, res) {
     res.send("ok");

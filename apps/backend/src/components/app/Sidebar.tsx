@@ -1,4 +1,4 @@
-import React, { MouseEventHandler } from "react";
+import React, { MouseEventHandler, useEffect, useState } from "react";
 import {
   HiMenu,
   HiOutlineHome,
@@ -92,16 +92,29 @@ export const Sidebar = () => {
 
   const [tw] = useMediaQuery("(min-width: 55em)");
 
+  const [isMobile, setIsMobile] = useState(false);
+
   const menuState = tw ? false : true;
 
-  const { isOpen, onToggle } = useDisclosure();
+  const { isOpen, onToggle, onClose } = useDisclosure();
+
+  useEffect(() => {
+    if (!tw) {
+      if (!isMobile) {
+        setIsMobile(true);
+        if (isOpen) onClose();
+      }
+    } else {
+      if (isMobile) {
+        setIsMobile(false);
+        if (isOpen) onClose();
+      }
+    }
+  }, [isMobile, setIsMobile, tw, isOpen, onClose]);
 
   if (!appUser) return <></>;
 
-  // TODO: use useEffect ot monitor tw, close menu when change ...
-
   const mainNavLinks = [
-    
     {
       title: t("mainnav.locations.title", "Locations"),
       path: "/locations",

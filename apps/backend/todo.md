@@ -12,22 +12,15 @@ TODO: UserProfile
 TODO: AdminTable
 - is using (... as any)
 - should be having batch processing
-- should be having a "status" or "role" filter above the table 
+- should be having a "owner" or "role" filter above the table 
 - on pagination table should probably scroll to top, right? 
 - filter input could have a clear button if something has been entered
 - is there a way to return to default if module is loaded via main navigation ... 
 - useRef with the table header is caching the AppUser changes to the user will not be reflected by the future evaluation of the permissions
-- Json column filtering is not caseinsensitive: https://github.com/prisma/prisma/issues/7390
 - Mouse over of row does not look too nice in firefox
-
-
-TODO: Menu/Sidebar
-- if you go smaller the slideout menu default state does not toggle to closed? Why? 
-- Click on menu items (how could this reset the listing page to start)
 
 TODO: Taxonomy
 - Change of taxonomy to module relations need also to remove connected terms to items ... 
-
 
 TODO: CSS
 - Nicer action bar on mobile phones
@@ -51,21 +44,6 @@ monitor if you can switch back to the original one in a few month https://github
 
 Installation
 Important to mention to clone src/config/appconfig.example.ts to src/config/appconfig.ts and to fill in the required settings .. 
-
-TODO: N-M 1-N Connection (autocomplete, or modal)
-No select box on events and locations ...
-
-monmitor is dirty and block back if data has been added ... 
-
-TODO: GraphQL Cancellation
-https://opensourcelibs.com/lib/jaydenseric-graphql-upload
-
-Choc UI 
-
-https://github.com/anubra266/choc-ui
-
-
-
 
 Does the server need compression? 
 
