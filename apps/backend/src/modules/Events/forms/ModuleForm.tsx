@@ -91,7 +91,6 @@ export const ModuleForm = ({
     getValues,
   } = useFormContext();
 
-  // TODO: any need to make use of append? const { fields, remove, append, insert } = useFieldArray({
   const { fields, remove, insert } = useFieldArray({
     control,
     name: "dates",

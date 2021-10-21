@@ -1,6 +1,3 @@
-// TODO: visibility
-//
-
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { locationDeleteMutationGQL, PublishStatus } from "@culturemap/core";

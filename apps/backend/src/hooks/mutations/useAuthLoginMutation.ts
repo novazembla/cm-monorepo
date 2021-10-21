@@ -9,8 +9,6 @@ export const useAuthLoginMutation = () => {
 
   const [mutation, mutationResults] = useMutation(authLoginMutationGQL, {
     onCompleted: (data) => {
-      // TODO: xxx find out if data sanity check is needed?
-
       if (
         data?.authLogin?.tokens?.access &&
         data?.authLogin?.tokens?.preview &&

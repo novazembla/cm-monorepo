@@ -21,7 +21,6 @@ export interface Plugins {
 export const plugins: Plugins = {
   plugins: [],
   register(plugin: Plugin) {
-    // TODO: the plugins mus do some sanity check, right?
     this.plugins.push(plugin);
   },
   apply(scope: string) {
