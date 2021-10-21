@@ -1,8 +1,3 @@
-TODO: Why can I try to access some random ID on update and still see a screen it should return 404 error ... 
-
-TODO: Scroll to (first) form error ... 
-TODO: Is it possible to pause/queue apollo requests until the refresh action has come through? 
-      And fail all of if the refresh didn't come through .. 
 
 TODO: Solve the need for a custom config file the the admin tool... Maybe load more settings from the api? 
 
@@ -42,9 +37,6 @@ TODO: CSS
 TODO: TextEditor
 - Position bubble position nicer 
 - OnTouch should clear red invalid frame of the editor
-
-TODO: Image Uloader 
-- Needs better UI for rejection of large images ... 
 
 TODO: Form Validation, should show char count in html too long exception 
 

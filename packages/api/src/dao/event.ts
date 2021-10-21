@@ -312,7 +312,25 @@ export const daoEventGetBySlug = async (
   );
 };
 
+export const daoEventChangeOwner = async (
+  oldOwnerId: number,
+  newOwnerId: number
+): Promise<number> => {
+  const result = await prisma.event.updateMany({
+    data: {
+      ownerId: newOwnerId,
+    },
+
+    where: {
+      ownerId: oldOwnerId,
+    },
+  });
+
+  return result.count;
+};
+
 const defaults = {
+  daoEventChangeOwner,
   daoEventQuery,
   daoEventQueryFirst,
   daoEventQueryCount,

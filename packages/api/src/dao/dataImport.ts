@@ -130,7 +130,25 @@ export const daoDataImportDelete = async (id: number): Promise<DataImport> => {
   );
 };
 
+export const daoDataImportChangeOwner = async (
+  oldOwnerId: number,
+  newOwnerId: number
+): Promise<number> => {
+  const result = await prisma.dataImport.updateMany({
+    data: {
+      ownerId: newOwnerId,
+    },
+
+    where: {
+      ownerId: oldOwnerId,
+    },
+  });
+
+  return result.count;
+};
+
 const defaults = {
+  daoDataImportChangeOwner,
   daoDataImportQuery,
   daoDataImportQueryFirst,
   daoDataImportQueryCount,

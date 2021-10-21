@@ -78,7 +78,7 @@ export const daoUserQuery = async (
   );
 };
 
-export const daoUserFindFirst = async (
+export const daoUserQueryFirst = async (
   where: Prisma.UserWhereInput,
   include?: Prisma.UserInclude | undefined
 ): Promise<User> => {
@@ -207,7 +207,7 @@ const defaults = {
   daoUserGetByEmail,
   daoUserUpdate,
   daoUserDelete,
-  daoUserFindFirst,
+  daoUserQueryFirst,
   daoUserProfileImageDelete,
   daoUserCheckIsEmailTaken,
 };

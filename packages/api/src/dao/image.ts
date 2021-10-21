@@ -148,7 +148,26 @@ export const daoImageSetToDelete = async (id: number): Promise<Image> => {
     apiConfig.db.privateJSONDataKeys.image
   );
 };
+
+export const daoImageChangeOwner = async (
+  oldOwnerId: number,
+  newOwnerId: number
+): Promise<number> => {
+  const result = await prisma.image.updateMany({
+    data: {
+      ownerId: newOwnerId,
+    },
+
+    where: {
+      ownerId: oldOwnerId,
+    },
+  });
+
+  return result.count;
+};
+
 const defaults = {
+  daoImageChangeOwner,
   daoImageQuery,
   daoImageQueryCount,
   daoImageGetById,

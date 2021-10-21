@@ -130,7 +130,25 @@ export const daoDataExportDelete = async (id: number): Promise<DataExport> => {
   );
 };
 
+export const daoDataExportChangeOwner = async (
+  oldOwnerId: number,
+  newOwnerId: number
+): Promise<number> => {
+  const result = await prisma.dataExport.updateMany({
+    data: {
+      ownerId: newOwnerId,
+    },
+
+    where: {
+      ownerId: oldOwnerId,
+    },
+  });
+
+  return result.count;
+};
+
 const defaults = {
+  daoDataExportChangeOwner,
   daoDataExportQuery,
   daoDataExportQueryFirst,
   daoDataExportQueryCount,

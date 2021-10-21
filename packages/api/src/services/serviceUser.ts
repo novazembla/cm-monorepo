@@ -8,7 +8,17 @@ import {
   daoUserUpdate,
   daoUserGetById,
   daoUserCheckIsEmailTaken,
-} from "../dao/user";
+  daoUserQueryFirst,
+  daoLocationChangeOwner,
+  daoEventChangeOwner,
+  daoTourChangeOwner,
+  daoTourStopChangeOwner,
+  daoPageChangeOwner,
+  daoImageChangeOwner,
+  daoDataImportChangeOwner,
+  daoDataExportChangeOwner,
+  daoFileChangeOwner,
+} from "../dao";
 
 import { daoTokenDeleteMany } from "../dao/token";
 
@@ -121,17 +131,46 @@ export const userRead = async (id: number): Promise<User> => {
   return daoUserGetById(id);
 };
 
-export const userDelete = async (scope: string, id: number): Promise<User> => {
-  if (Number.isNaN(id))
+export const userDelete = async (
+  scope: string,
+  userId: number,
+  apiUserId?: number
+): Promise<User> => {
+  if (Number.isNaN(userId))
     throw new ApiError(httpStatus.UNPROCESSABLE_ENTITY, "Invalid input data");
 
-  // TODO: this must more solid,
-  // Also other content will have to be taken over by someone else.
-  await daoTokenDeleteMany({
-    userId: id,
+  const contentOwner = await daoUserQueryFirst({
+    ownsConentOnDelete: true,
   });
 
-  return daoUserDelete(id);
+  let contentOwnerId = null;
+  if (contentOwner) {
+    contentOwnerId = contentOwner?.id;
+  }
+
+  if (!contentOwnerId && apiUserId) contentOwnerId = apiUserId;
+
+  if (!contentOwnerId)
+    throw new ApiError(
+      httpStatus.UNPROCESSABLE_ENTITY,
+      "Could not find content takover user"
+    );
+
+  await daoLocationChangeOwner(userId, contentOwnerId);
+  await daoEventChangeOwner(userId, contentOwnerId);
+  await daoTourChangeOwner(userId, contentOwnerId);
+  await daoTourStopChangeOwner(userId, contentOwnerId);
+  await daoPageChangeOwner(userId, contentOwnerId);
+  await daoImageChangeOwner(userId, contentOwnerId);
+  await daoDataImportChangeOwner(userId, contentOwnerId);
+  await daoDataExportChangeOwner(userId, contentOwnerId);
+  await daoFileChangeOwner(userId, contentOwnerId);
+
+  await daoTokenDeleteMany({
+    userId,
+  });
+
+  return daoUserDelete(userId);
 };
 
 export const userProfileUpdate = async (

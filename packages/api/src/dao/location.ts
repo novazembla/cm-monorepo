@@ -238,6 +238,23 @@ export const daoLocationGetBySlug = async (
   );
 };
 
+export const daoLocationChangeOwner = async (
+  oldOwnerId: number,
+  newOwnerId: number
+): Promise<number> => {
+  const result = await prisma.location.updateMany({
+    data: {
+      ownerId: newOwnerId,
+    },
+
+    where: {
+      ownerId: oldOwnerId,
+    },
+  });
+
+  return result.count;
+};
+
 const defaults = {
   daoLocationQuery,
   daoLocationQueryFirst,
@@ -249,6 +266,7 @@ const defaults = {
   daoLocationDelete,
   daoLocationSearchQuery,
   daoLocationGetBySlug,
+  daoLocationChangeOwner,
 };
 
 export default defaults;

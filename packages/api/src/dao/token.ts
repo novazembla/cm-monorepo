@@ -14,7 +14,7 @@ export const daoTokenDeleteMany = async (
   return count;
 };
 
-export const daoTokenFindFirst = async (
+export const daoTokenQueryFirst = async (
   where: Prisma.TokenWhereInput
 ): Promise<Token | null> => {
   const token: Token | null = await prisma.token.findFirst({
@@ -84,7 +84,7 @@ export const daoTokenDeleteExpired = async (): Promise<number> => {
 export default {
   TokenTypes,
   daoTokenDeleteMany,
-  daoTokenFindFirst,
+  daoTokenQueryFirst,
   daoTokenCreate,
   daoTokenFindByUserId,
   daoTokenDeleteByUserId,

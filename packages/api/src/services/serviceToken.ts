@@ -10,7 +10,7 @@ import { Response } from "express";
 
 import { getApiConfig } from "../config";
 import { AuthPayload } from "../types/auth";
-import { daoTokenCreate, daoTokenFindFirst } from "../dao/token";
+import { daoTokenCreate, daoTokenQueryFirst } from "../dao/token";
 import { daoUserGetByEmail } from "../dao/user";
 
 import { ApiError, TokenTypes } from "../utils";
@@ -135,7 +135,7 @@ export const tokenVerifyInDB = async (
 
     // this should be dao
 
-    const tokenInDB = await daoTokenFindFirst({
+    const tokenInDB = await daoTokenQueryFirst({
       token,
       type,
       userId: parseInt((tokenPayload as any).user.id, 10),

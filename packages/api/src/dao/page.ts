@@ -223,7 +223,25 @@ export const daoPageDelete = async (id: number): Promise<Page> => {
   );
 };
 
+export const daoPageChangeOwner = async (
+  oldOwnerId: number,
+  newOwnerId: number
+): Promise<number> => {
+  const result = await prisma.page.updateMany({
+    data: {
+      ownerId: newOwnerId,
+    },
+
+    where: {
+      ownerId: oldOwnerId,
+    },
+  });
+
+  return result.count;
+};
+
 const defaults = {
+  daoPageChangeOwner,
   daoPageQuery,
   daoPageQueryCount,
   daoPageGetById,

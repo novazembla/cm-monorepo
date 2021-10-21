@@ -41,7 +41,7 @@ import { getApiConfig } from "../../config";
 import {
   daoUserQuery,
   daoUserQueryCount,
-  daoUserFindFirst,
+  daoUserQueryFirst,
   daoImageGetById,
   daoUserProfileImageDelete,
 } from "../../dao";
@@ -414,7 +414,7 @@ export const UserMutations = extendType({
       },
 
       authorize: async (...[, args, ctx]) => {
-        const user = await daoUserFindFirst({ profileImageId: args.id });
+        const user = await daoUserQueryFirst({ profileImageId: args.id });
 
         if (user) {
           return (
@@ -454,8 +454,12 @@ export const UserMutations = extendType({
         authorizeApiUser(ctx, "userDelete") &&
         isNotCurrentApiUser(ctx, args.id),
 
-      async resolve(...[, args]) {
-        const user = await userDelete(args.scope as AppScopes, args.id);
+      async resolve(...[, args, ctx]) {
+        const user = await userDelete(
+          args.scope as AppScopes,
+          args.id,
+          ctx?.apiUser?.id ?? 0
+        );
 
         if (!user)
           throw new ApiError(

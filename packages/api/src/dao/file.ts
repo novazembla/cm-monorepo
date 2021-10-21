@@ -106,7 +106,25 @@ export const daoFileGetStatusById = async (id: number): Promise<File> => {
   );
 };
 
+export const daoFileChangeOwner = async (
+  oldOwnerId: number,
+  newOwnerId: number
+): Promise<number> => {
+  const result = await prisma.file.updateMany({
+    data: {
+      ownerId: newOwnerId,
+    },
+
+    where: {
+      ownerId: oldOwnerId,
+    },
+  });
+
+  return result.count;
+};
+
 const defaults = {
+  daoFileChangeOwner,
   daoFileGetById,
   daoFileCreate,
   daoFileUpdate,

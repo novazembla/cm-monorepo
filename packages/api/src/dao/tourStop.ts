@@ -218,7 +218,25 @@ export const daoTourStopDelete = async (id: number): Promise<TourStop> => {
   );
 };
 
+export const daoTourStopChangeOwner = async (
+  oldOwnerId: number,
+  newOwnerId: number
+): Promise<number> => {
+  const result = await prisma.tourStop.updateMany({
+    data: {
+      ownerId: newOwnerId,
+    },
+
+    where: {
+      ownerId: oldOwnerId,
+    },
+  });
+
+  return result.count;
+};
+
 const defaults = {
+  daoTourStopChangeOwner,
   daoTourStopsQuery,
   daoTourStopsCountQuery,
   daoTourStopGetById,
