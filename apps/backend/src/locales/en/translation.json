@@ -376,7 +376,8 @@
       "forms": {
         "field": {
           "label": {
-            "searchitem": "Search item"
+            "searchitem": "Search item",
+            "missionStatementPage": "Mission Statement Page"
           }
         }
       }
