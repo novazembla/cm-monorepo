@@ -389,7 +389,7 @@ const Update = () => {
       label: t("module.button.preview", "Preview"),
       targetBlank: true,
       userCan: "pageReadOwn",
-      isDisabled: [PublishStatus.TRASHED, PublishStatus.DELETED].includes(
+      isDisabled: !!error || [PublishStatus.TRASHED, PublishStatus.DELETED].includes(
         data?.event?.status
       ),
     },
@@ -398,6 +398,7 @@ const Update = () => {
       isLoading: isSubmitting,
       label: t("module.button.update", "Update"),
       userCan: "eventUpdate",
+      isDisabled: !!error,
     },
   ];
 

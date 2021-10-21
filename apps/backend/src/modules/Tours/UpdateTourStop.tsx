@@ -212,6 +212,7 @@ const UpdateTourStop = () => {
       isLoading: isSubmitting,
       label: t("module.button.update", "Update"),
       userCan: "tourUpdate",
+      isDisabled: !!error,
     },
   ];
 

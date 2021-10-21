@@ -438,21 +438,27 @@ const Update = () => {
     },
     {
       type: "link",
-      href: getPreviewUrl(`/location/${getMultilangValue(data?.location?.slug)}`),
+      href: getPreviewUrl(
+        `/location/${getMultilangValue(data?.location?.slug)}`
+      ),
       label: t("module.button.preview", "Preview"),
       targetBlank: true,
       userCan: "pageReadOwn",
-      isDisabled: [PublishStatus.TRASHED, PublishStatus.DELETED].includes(
-        data?.location?.status
-      ),
+      isDisabled:
+        [PublishStatus.TRASHED, PublishStatus.DELETED].includes(
+          data?.location?.status || !!error
+        ) || !!error,
     },
     {
       type: "submit",
       isLoading: isSubmitting,
       label: t("module.button.update", "Update"),
       userCan: "locationUpdateOwn",
+      isDisabled: !!error,
     },
   ];
+
+  console.log(!!error);
 
   return (
     <>

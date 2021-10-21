@@ -152,7 +152,7 @@ const Update = () => {
       isLoading: isSubmitting,
       label: t("module.button.update", "Update"),
       userCan: "profileUpdate",
-      isDisabled: disableNavigation,
+      isDisabled: !!error || disableNavigation,
     },
   ];
 

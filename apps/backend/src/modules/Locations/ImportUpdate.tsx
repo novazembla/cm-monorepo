@@ -198,7 +198,7 @@ const Update = () => {
       isLoading: isSubmitting,
       label: t("module.button.update", "Update"),
       userCan: "locationCreate",
-      isDisabled: ![DataImportStatus.CREATED, DataImportStatus.ASSIGN].includes(
+      isDisabled: !!error || ![DataImportStatus.CREATED, DataImportStatus.ASSIGN].includes(
         data?.dataImportRead?.status
       ),
     },
@@ -211,6 +211,7 @@ const Update = () => {
       isLoading: isSubmitting,
       label: t("module.button.import", "Schedule import"),
       isDisabled:
+        !!error ||
         !canProcess ||
         isDirty ||
         ![DataImportStatus.CREATED, DataImportStatus.ASSIGN].includes(

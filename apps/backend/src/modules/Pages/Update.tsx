@@ -223,13 +223,14 @@ const Update = () => {
       label: t("module.button.preview", "Preview"),
       targetBlank: true,
       userCan: "pageReadOwn",
-      isDisabled: [PublishStatus.TRASHED, PublishStatus.DELETED].includes(data?.page?.status)
+      isDisabled: !!error || [PublishStatus.TRASHED, PublishStatus.DELETED].includes(data?.page?.status)
     },
     {
       type: "submit",
       isLoading: isSubmitting,
       label: t("module.button.update", "Update"),
       userCan: "pageUpdate",
+      isDisabled: !!error,
     },
   ];
 

@@ -150,6 +150,7 @@ const Update = () => {
       isLoading: isSubmitting,
       label: t("module.button.update", "Update"),
       userCan: "userUpdate",
+      isDisabled: !!error,
     },
   ];
 

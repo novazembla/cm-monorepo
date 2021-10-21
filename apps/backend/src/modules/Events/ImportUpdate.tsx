@@ -158,8 +158,7 @@ const Update = () => {
   if (mapping && Array.isArray(mapping)) {
     const allSet = !mapping.find(
       (m) =>
-        m.match === "" ||
-        !Object.keys(dataImportHeadersEvent).includes(m.match)
+        m.match === "" || !Object.keys(dataImportHeadersEvent).includes(m.match)
     );
 
     const matchedKeys = mapping.map((m) => m.match);
@@ -198,9 +197,11 @@ const Update = () => {
       isLoading: isSubmitting,
       label: t("module.button.update", "Update"),
       userCan: "locationCreate",
-      isDisabled: ![DataImportStatus.CREATED, DataImportStatus.ASSIGN].includes(
-        data?.dataImportRead?.status
-      ),
+      isDisabled:
+        !!error ||
+        ![DataImportStatus.CREATED, DataImportStatus.ASSIGN].includes(
+          data?.dataImportRead?.status
+        ),
     },
     {
       type: "button",
@@ -211,6 +212,7 @@ const Update = () => {
       isLoading: isSubmitting,
       label: t("module.button.import", "Schedule import"),
       isDisabled:
+        !!error ||
         !canProcess ||
         isDirty ||
         ![DataImportStatus.CREATED, DataImportStatus.ASSIGN].includes(

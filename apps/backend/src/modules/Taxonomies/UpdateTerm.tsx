@@ -160,6 +160,7 @@ const UpdateTerm = () => {
       isLoading: isSubmitting,
       label: t("module.button.update", "Update"),
       userCan: "taxUpdate",
+      isDisabled: !!error,
     },
   ];
 
