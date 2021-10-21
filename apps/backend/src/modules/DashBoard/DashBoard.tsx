@@ -8,10 +8,12 @@ import {
   locationsSearchGQL,
   toursSearchGQL,
   eventsSearchGQL,
+  pagesSearchGQL,
 } from "@culturemap/core";
 
 import {
   TextErrorMessage,
+  FieldRow,
   FormNavigationBlock,
   FormScrollInvalidIntoView,
 } from "~/components/forms";
@@ -156,6 +158,12 @@ const Update = () => {
             ),
           };
 
+        if (setting.key === "missionStatementPage" && setting?.value?.json)
+          return {
+            ...acc,
+            missionStatementPage: setting.value.json,
+          };
+
         return acc;
       }, {})
     );
@@ -181,6 +189,11 @@ const Update = () => {
             key: "missionStatement",
             scope: "homepage",
             value: multiLangNewData?.missionStatement ?? {},
+          },
+          {
+            key: "missionStatementPage",
+            scope: "homepage",
+            value: multiLangNewData?.missionStatementPage ?? {},
           },
           {
             key: "highlights",
@@ -476,7 +489,7 @@ const Update = () => {
               <FieldMultiLangTextEditor
                 name="missionStatement"
                 id="missionStatement"
-                type="basic"
+                type="nomenu"
                 label={t(
                   "module.homepage.field.label.missionStatement",
                   "Mission statement"
@@ -495,6 +508,38 @@ const Update = () => {
                   ),
                 }}
               />
+              <Divider mt="10" />
+              <FieldRow>
+                <FieldSingleSelectAutocomplete
+                  name={`missionStatementPage`}
+                  id={`missionStatementPage`}
+                  label={t(
+                    "module.homepage.forms.field.label.missionStatementPage",
+                    "Mission Statement Page"
+                  )}
+                  isRequired={true}
+                  item={data?.settings?.reduce((acc: any, setting: any) => {
+                    if (
+                      setting.key === "missionStatementPage" &&
+                      setting?.value?.json
+                    )
+                      return setting.value.json;
+
+                    return acc;
+                  }, undefined)}
+                  searchQueryGQL={pagesSearchGQL}
+                  searchQueryDataKey={`pages`}
+                  settings={{
+                    placeholder: t(
+                      "module.homepage.field.autocomplete",
+                      "Please enter a search phrase"
+                    ),
+                    onItemChange: (item: any) => {
+                      setValue(`missionStatementPage`, item);
+                    },
+                  }}
+                />
+              </FieldRow>
             </ModulePage>
           </fieldset>
         </form>

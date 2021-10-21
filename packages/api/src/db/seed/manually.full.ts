@@ -174,7 +174,7 @@
 //   ["Experimentelle Musik", "Experimental Music"],
 //   ["Lesung", "Lecture"],
 //   ["Workshop", "Workshop"],
-//   ["Ausstellungen", "Exhibitions"],
+//   ["Austellungen", "Exhibitions"],
 // ];
 
 // const pages = [

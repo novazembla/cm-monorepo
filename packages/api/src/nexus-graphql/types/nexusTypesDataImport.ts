@@ -46,7 +46,10 @@ export const DataImport = objectType({
     t.json("warnings");
     t.json("mapping");
     t.int("status");
-    t.json("file");
+    t.field("file", {
+      type: "File",
+    });
+
     t.string("lang");
     t.date("createdAt");
     t.date("updatedAt");

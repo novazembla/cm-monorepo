@@ -43,7 +43,25 @@ export const Image = objectType({
     t.string("nanoid");
     t.int("status");
     t.int("cropPosition");
-    t.json("meta");
+
+    t.json("meta", {
+      // we want to prune the meta data from some values that are maybe giving somethis away (like server paths)
+      // so only expose save attributes
+      resolve: (...[p]) => {
+        const meta = (p as any)?.meta;
+
+        if (meta && meta?.availableSizes) {
+          return {
+            availableSizes: meta?.availableSizes,
+            mimeType: meta?.mimeType,
+            size: meta?.size,
+            imageType: meta?.imageType,
+          };
+        }
+        return null;
+      },
+    });
+
     t.int("orderNumber");
     t.json("alt", {
       resolve: (...[p]) => daoSharedMapTranslatedColumnsInRowToJson(p, "alt"),

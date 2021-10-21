@@ -9,7 +9,6 @@ import {
   daoSharedCheckSlugUnique,
   daoSharedGenerateFullText,
   daoSharedMapJsonToTranslatedColumns,
-  daoSharedGetTranslatedSelectColumns,
 } from ".";
 
 const prisma = getPrismaClient();
@@ -65,19 +64,17 @@ export const daoLocationQuery = async (
   );
 };
 
-export const daoLocationSearchQuery = async (
+export const daoLocationSelectQuery = async (
   where: Prisma.LocationWhereInput,
+  select: Prisma.LocationSelect | undefined,
+  orderBy?: any,
   pageIndex: number = 0,
   pageSize: number = apiConfig.db.defaultPageSize * 3
 ): Promise<Location[]> => {
   const locations = await prisma.location.findMany({
     where,
-    select: {
-      id: true,
-      ...daoSharedGetTranslatedSelectColumns(["title", "slug", "description"]),
-      lat: true,
-      lng: true,
-    },
+    select,
+    orderBy,
     skip: pageIndex * pageSize,
     take: Math.min(pageSize, apiConfig.db.maxPageSize),
   });
@@ -264,7 +261,7 @@ const defaults = {
   daoLocationCreate,
   daoLocationUpdate,
   daoLocationDelete,
-  daoLocationSearchQuery,
+  daoLocationSelectQuery,
   daoLocationGetBySlug,
   daoLocationChangeOwner,
 };

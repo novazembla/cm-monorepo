@@ -16,3 +16,15 @@ TODO:
 
 TODO: 
 - Single file upload component
+
+
+TODO: 
+- Multilang emails 
+
+
+TODO: 
+Location visibility (from until )
+
+TODO: 
+Tourstops witout location? 
+

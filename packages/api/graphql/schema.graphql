@@ -42,7 +42,7 @@ type BooleanResult {
 type DataExport {
   createdAt: DateTime
   errors: JSON
-  file: JSON
+  file: File
   id: Int!
   lang: String
   log: JSON
@@ -69,7 +69,7 @@ input DataExportUpsertInput {
 type DataImport {
   createdAt: DateTime
   errors: JSON
-  file: JSON
+  file: File
   id: Int!
   lang: String
   log: JSON
@@ -160,6 +160,19 @@ input EventUpsertInput {
   title: JSON!
 }
 
+type File {
+  createdAt: DateTime
+  credits: JSON
+  id: Int!
+  meta: JSON
+  nanoid: String
+  orderNumber: Int
+  ownerId: Int!
+  status: Int
+  title: JSON
+  updatedAt: DateTime
+}
+
 type GeoCodeResult {
   count: Int!
   geojson: JSON!
@@ -168,6 +181,11 @@ type GeoCodeResult {
 type GeoPoint {
   lat: Float
   lng: Float
+}
+
+type Homepage {
+  highlights: JSON
+  missionStatement: JSON
 }
 
 type Image {
@@ -373,6 +391,7 @@ type Query {
   event(id: Int, slug: String): Event!
   events(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): EventQueryResult
   geocode(q: String!): GeoCodeResult
+  homepage: Homepage
   imageRead(id: Int!): Image!
   imageStatus(id: Int!): ImageStatus!
   images(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, taxonomyId: Int, where: JSON): ImageQueryResult
@@ -382,7 +401,7 @@ type Query {
   modules: [Module]
   page(id: Int, slug: String): Page!
   pages(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): PageQueryResult
-  quickSearch(modules: [String], search: String!, termIds: [Int]): [SearchResult]
+  quickSearch(lang: String!, modules: [String], search: String!, termIds: [Int]): [SearchResult]
   setting(id: Int!): [Setting]
   settings(scope: String!): [Setting]
   taxonomies(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): TaxonomyQueryResult
@@ -404,9 +423,11 @@ type SearchResult {
 }
 
 type SearchResultItem {
+  countTourStops: Int
   dates: [EventDate]
   excerpt: JSON
   geopoint: GeoPoint
+  heroImage: Image
   id: Int!
   locations: [Location]
   slug: JSON!

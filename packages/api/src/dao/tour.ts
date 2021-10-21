@@ -13,7 +13,6 @@ import {
   daoSharedCheckSlugUnique,
   daoSharedGenerateFullText,
   daoSharedMapJsonToTranslatedColumns,
-  daoSharedGetTranslatedSelectColumns,
 } from ".";
 
 const prisma = getPrismaClient();
@@ -103,22 +102,17 @@ export const daoTourQueryCount = async (
   });
 };
 
-export const daoTourSearchQuery = async (
+export const daoTourSelectQuery = async (
   where: Prisma.TourWhereInput,
+  select: Prisma.TourSelect,
+  orderBy?: any,
   pageIndex: number = 0,
   pageSize: number = apiConfig.db.defaultPageSize * 3
 ): Promise<Event[]> => {
   const tours = await prisma.tour.findMany({
     where,
-    select: {
-      id: true,
-      ...daoSharedGetTranslatedSelectColumns(["title", "slug", "teaser"]),
-      orderNumber: true,
-      count: {
-        tourStops: true,
-      },
-    },
-
+    select,
+    orderBy,
     skip: pageIndex * pageSize,
     take: Math.min(pageSize, apiConfig.db.maxPageSize),
   });
@@ -268,7 +262,7 @@ const defaults = {
   daoTourCheckSlugUnique,
   daoTourCreate,
   daoTourUpdate,
-  daoTourSearchQuery,
+  daoTourSelectQuery,
   daoTourDelete,
 };
 export default defaults;

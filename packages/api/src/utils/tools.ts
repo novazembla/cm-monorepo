@@ -15,14 +15,5 @@ export const isObject = (objValue: any) => {
   );
 };
 
-export const convertToHtml = (str: string) => {
-  let out = str.replace(/\r\n/g, "\n");
-  out = out.replace(/\r/g, "\n");
-
-  return (
-    "<p>" + out.replace(/\n{2,}/g, "</p><p>").replace(/\n/g, "<br>") + "</p>"
-  );
-};
-
 export const awaitTimeout = (delay: number) =>
   new Promise((resolve) => setTimeout(resolve, delay));

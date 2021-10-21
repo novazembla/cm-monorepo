@@ -22,4 +22,16 @@ export const pagesQueryGQL = gql`
   }
 `;
 
+export const pagesSearchGQL = gql`
+  query pages($where: JSON) {
+    pages(where: $where, orderBy: { id: "asc" }, pageIndex: 0, pageSize: 50) {
+      pages {
+        id
+        title
+      }
+      totalCount
+    }
+  }
+`;
+
 export default pagesQueryGQL;

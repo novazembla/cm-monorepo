@@ -9,7 +9,6 @@ import {
   daoSharedCheckSlugUnique,
   daoSharedGenerateFullText,
   daoSharedMapJsonToTranslatedColumns,
-  daoSharedGetTranslatedSelectColumns,
 } from ".";
 
 const prisma = getPrismaClient();
@@ -126,17 +125,17 @@ export const daoPageGetById = async (
   );
 };
 
-export const daoPageSearchQuery = async (
+export const daoPageSelectQuery = async (
   where: Prisma.PageWhereInput,
+  select: Prisma.PageSelect,
+  orderBy?: any,
   pageIndex: number = 0,
   pageSize: number = apiConfig.db.defaultPageSize * 3
 ): Promise<Page[]> => {
   const pages = await prisma.page.findMany({
     where,
-    select: {
-      id: true,
-      ...daoSharedGetTranslatedSelectColumns(["title", "slug"]),
-    },
+    select,
+    orderBy,
     skip: pageIndex * pageSize,
     take: Math.min(pageSize, apiConfig.db.maxPageSize),
   });
@@ -249,6 +248,7 @@ const defaults = {
   daoPageCreate,
   daoPageUpdate,
   daoPageDelete,
+  daoPageSelectQuery,
   daoPageGetBySlug,
   daoPageQueryFirst,
 };

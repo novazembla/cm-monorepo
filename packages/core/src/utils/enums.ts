@@ -1,31 +1,31 @@
 export enum ImageStatus {
-  UPLOADED,
-  PROCESSING,
-  FAILEDRETRY,
-  ERROR,
-  READY,
-  TRASHED,
-  DELETED,
+  UPLOADED, // 0
+  PROCESSING, // 1
+  FAILEDRETRY, // 2
+  ERROR, // 3
+  READY, // 4
+  TRASHED, // 5
+  DELETED, // 6
 }
 
 export enum FileStatus {
-  UPLOADED,
-  PROCESSING,
-  OK,
-  ERROR,
-  DELETED,
+  UPLOADED, // 0
+  PROCESSING, // 1
+  OK, // 2
+  ERROR, // 3
+  DELETED, // 4
 }
 
 export enum PublishStatus {
-  AUTODRAFT,
-  DRAFT,
-  FORREVIEW,
-  REJECTED,
-  PUBLISHED,
-  TRASHED,
-  DELETED,
-  IMPORTED,
-  IMPORTEDWARNINGS,
+  AUTODRAFT, // 0
+  DRAFT, // 1
+  FORREVIEW, // 2
+  REJECTED, // 3
+  PUBLISHED, // 4
+  TRASHED, // 5
+  DELETED, // 6
+  IMPORTED, // 7
+  IMPORTEDWARNINGS, // 8
 }
 
 export enum DataImportStatus {

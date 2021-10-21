@@ -36,7 +36,11 @@ export const dataImportReadQueryGQL = gql`
       status
       warnings
       mapping
-      file
+      file {
+        id
+        status
+        meta
+      }
       createdAt
       updatedAt
     }

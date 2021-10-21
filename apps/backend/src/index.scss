@@ -50,6 +50,31 @@ code {
     border-bottom: 1px solid  var(--chakra-colors-gray-400);
   }
   
+  &.nomenu {
+    border-radius: var(--chakra-radii-md);
+    border: 1px solid var(--chakra-colors-gray-400);
+    transition: all 0.25s;
+    
+    .wrapper {
+      min-height: 100px;
+      max-height: 1000px;
+      overflow-y: auto;
+
+    }
+    &.is-focussed {
+      border-color: var(--chakra-colors-gray-500);
+      box-shadow: 0 0 0 1px var(--chakra-colors-gray-500);
+    }
+
+    .ProseMirror {
+      height: 100%;
+      min-height: 100px;
+      background-color:#fff;
+      overflow-y: auto;
+      padding: var(--chakra-space-2);
+    }
+  }
+
   &.basic {
     border-radius: var(--chakra-radii-md);
     border: 1px solid var(--chakra-colors-gray-400);

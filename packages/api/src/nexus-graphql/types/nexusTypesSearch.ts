@@ -16,12 +16,22 @@ import type { NexusGenObjects } from "../../types/nexus-typegen";
 // import { authorizeApiUser } from "../helpers";
 
 import {
-  daoLocationSearchQuery,
-  daoEventSearchQuery,
-  daoPageSearchQuery,
-  daoTourSearchQuery,
+  daoLocationSelectQuery,
+  daoEventSelectQuery,
+  daoPageSelectQuery,
+  daoTourSelectQuery,
+  daoSharedGetTranslatedSelectColumns,
+  daoSharedMapTranslatedColumnsInRowToJson,
 } from "../../dao";
-import { PublishStatus } from "@culturemap/core";
+import { PublishStatus, ImageStatus } from "@culturemap/core";
+
+import { htmlToTrimmedString } from "../../utils";
+
+const descriptionMaxLength = 300;
+
+const asTrimmedText = (val: any) => {
+  return htmlToTrimmedString(val, descriptionMaxLength);
+};
 
 export const SearchResultItem = objectType({
   name: "SearchResultItem",
@@ -32,6 +42,7 @@ export const SearchResultItem = objectType({
     t.nonNull.json("title");
     t.nonNull.json("slug");
     t.json("excerpt");
+    t.int("countTourStops");
     t.list.field("dates", {
       type: "EventDate",
     });
@@ -40,6 +51,9 @@ export const SearchResultItem = objectType({
     });
     t.field("geopoint", {
       type: "GeoPoint",
+    });
+    t.field("heroImage", {
+      type: "Image",
     });
   },
 });
@@ -63,6 +77,7 @@ export const SearchQueries = extendType({
 
       args: {
         search: nonNull(stringArg()),
+        lang: nonNull(stringArg()),
         termIds: list(intArg()),
         modules: list(stringArg()),
       },
@@ -84,26 +99,56 @@ export const SearchQueries = extendType({
                 })),
               };
 
-        const locations = await daoLocationSearchQuery({
-          status: PublishStatus.PUBLISHED,
-          fullText: query,
-        });
+        const locations = await daoLocationSelectQuery(
+          {
+            status: PublishStatus.PUBLISHED,
+            fullText: query,
+          },
+          {
+            id: true,
+            ...daoSharedGetTranslatedSelectColumns([
+              "title",
+              "slug",
+              "description",
+            ]),
+            lat: true,
+            lng: true,
+            heroImage: {
+              select: {
+                id: true,
+                status: true,
+                meta: true,
+                cropPosition: true,
+              },
+            },
+          },
+          {
+            [`title_${args.lang}`]: "asc",
+          },
+          0,
+          25
+        );
 
         if (locations && locations.length > 0) {
-          const items = locations.map((loc) => ({
+          const items = locations.map((loc: any) => ({
             id: loc.id,
             type: "location",
-            title: "TODO:",
-            excerpt: "TODO:",
-            slug: "TODO:",
-            // XXX TODO: Fix
-            // title: loc.title,
-            // excerpt: loc.description,
-            // slug: loc.slug,
+            title: daoSharedMapTranslatedColumnsInRowToJson(loc, "title"),
+            // TODO: howto trim to 200 chars ...
+            excerpt: daoSharedMapTranslatedColumnsInRowToJson(
+              loc,
+              "description",
+              asTrimmedText
+            ),
+            slug: daoSharedMapTranslatedColumnsInRowToJson(loc, "slug"),
             geopoint: {
               lng: loc.lng ?? 0,
               lat: loc.lat ?? 0,
             },
+            heroImage:
+              loc?.heroImage?.id && loc?.heroImage?.status === ImageStatus.READY
+                ? loc?.heroImage
+                : undefined,
           }));
 
           result.push({
@@ -113,21 +158,86 @@ export const SearchQueries = extendType({
           });
         }
 
-        const events = await daoEventSearchQuery({
-          status: PublishStatus.PUBLISHED,
-          fullText: query,
-        });
+        const events = await daoEventSelectQuery(
+          {
+            status: PublishStatus.PUBLISHED,
+            fullText: query,
+          },
+          {
+            id: true,
+            ...daoSharedGetTranslatedSelectColumns([
+              "title",
+              "slug",
+              "description",
+            ]),
+            heroImage: {
+              select: {
+                id: true,
+                status: true,
+                meta: true,
+                cropPosition: true,
+              },
+            },
+            dates: {
+              select: {
+                date: true,
+                begin: true,
+                end: true,
+              },
+              where: {
+                date: {
+                  gt: new Date(new Date().setHours(0, 0, 0, 0)),
+                },
+              },
+              orderBy: {
+                date: "asc",
+              },
+              take: 1,
+            },
+            locations: {
+              select: {
+                id: true,
+                ...daoSharedGetTranslatedSelectColumns(["title", "slug"]),
+                lng: true,
+                lat: true,
+              },
+              where: {
+                status: PublishStatus.PUBLISHED,
+              },
+            },
+          },
+          {
+            [`title_${args.lang}`]: "asc",
+          },
+          0,
+          25
+        );
 
         if (events && events.length > 0) {
           const items = events.map((evnt: any) => ({
             id: evnt.id,
             type: "event",
-            title: evnt.title,
-            excerpt: evnt.description,
-            slug: evnt.slug,
+            title: daoSharedMapTranslatedColumnsInRowToJson(evnt, "title"),
+            excerpt: daoSharedMapTranslatedColumnsInRowToJson(
+              evnt,
+              "description",
+              asTrimmedText
+            ),
+            slug: daoSharedMapTranslatedColumnsInRowToJson(evnt, "slug"),
             dates: evnt.dates,
             locations: evnt?.locations,
-            geopoint: null,
+            heroImage:
+              evnt?.heroImage?.id &&
+              evnt?.heroImage?.status === ImageStatus.READY
+                ? evnt?.heroImage
+                : undefined,
+            geopoint:
+              evnt?.locations?.length > 0
+                ? {
+                    lat: evnt?.locations[0].lat,
+                    lng: evnt?.locations[0].lng,
+                  }
+                : null,
           }));
 
           result.push({
@@ -137,17 +247,46 @@ export const SearchQueries = extendType({
           });
         }
 
-        const pages = await daoPageSearchQuery({
-          status: PublishStatus.PUBLISHED,
-          fullText: query,
-        });
+        const pages = await daoPageSelectQuery(
+          {
+            status: PublishStatus.PUBLISHED,
+            fullText: query,
+          },
+          {
+            id: true,
+            ...daoSharedGetTranslatedSelectColumns(["title", "slug"]),
+            heroImage: {
+              select: {
+                id: true,
+                status: true,
+                meta: true,
+                cropPosition: true,
+              },
+            },
+          },
+          {
+            [`title_${args.lang}`]: "asc",
+          },
+          0,
+          25
+        );
 
         if (pages && pages.length > 0) {
           const items = pages.map((page: any) => ({
             id: page.id,
             type: "page",
-            title: page.title,
-            slug: page.slug,
+            title: daoSharedMapTranslatedColumnsInRowToJson(page, "title"),
+            excerpt: daoSharedMapTranslatedColumnsInRowToJson(
+              page,
+              "intro",
+              asTrimmedText
+            ),
+            slug: daoSharedMapTranslatedColumnsInRowToJson(page, "slug"),
+            heroImage:
+              page?.heroImage?.id &&
+              page?.heroImage?.status === ImageStatus.READY
+                ? page?.heroImage
+                : undefined,
           }));
 
           result.push({
@@ -159,17 +298,47 @@ export const SearchQueries = extendType({
 
         /// tour stop count ... TODO:
 
-        const tours = await daoTourSearchQuery({
-          status: PublishStatus.PUBLISHED,
-          fullText: query,
-        });
+        const tours = await daoTourSelectQuery(
+          {
+            status: PublishStatus.PUBLISHED,
+            fullText: query,
+          },
+          {
+            id: true,
+            ...daoSharedGetTranslatedSelectColumns(["title", "slug", "teaser"]),
+            heroImage: {
+              select: {
+                id: true,
+                status: true,
+                meta: true,
+                cropPosition: true,
+              },
+            },
+            orderNumber: true,
+            _count: {
+              select: { tourStops: true },
+            },
+          },
+          {
+            orderNumber: "asc",
+          },
+          0,
+          25
+        );
 
         if (tours && tours.length > 0) {
           const items = tours.map((tour: any) => ({
             id: tour.id,
             type: "tour",
-            title: tour.title,
-            slug: tour.slug,
+            title: daoSharedMapTranslatedColumnsInRowToJson(tour, "title"),
+            teaser: daoSharedMapTranslatedColumnsInRowToJson(tour, "teaser"),
+            slug: daoSharedMapTranslatedColumnsInRowToJson(tour, "slug"),
+            heroImage:
+              tour?.heroImage?.id &&
+              tour?.heroImage?.status === ImageStatus.READY
+                ? tour?.heroImage
+                : undefined,
+            countTourStops: tour?._count?.tourStops,
           }));
 
           result.push({

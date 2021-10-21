@@ -259,7 +259,7 @@ export interface NexusGenObjects {
   DataExport: { // root type
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
     errors?: NexusGenScalars['JSON'] | null; // JSON
-    file?: NexusGenScalars['JSON'] | null; // JSON
+    file?: NexusGenRootTypes['File'] | null; // File
     id: number; // Int!
     lang?: string | null; // String
     log?: NexusGenScalars['JSON'] | null; // JSON
@@ -276,7 +276,7 @@ export interface NexusGenObjects {
   DataImport: { // root type
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
     errors?: NexusGenScalars['JSON'] | null; // JSON
-    file?: NexusGenScalars['JSON'] | null; // JSON
+    file?: NexusGenRootTypes['File'] | null; // File
     id: number; // Int!
     lang?: string | null; // String
     log?: NexusGenScalars['JSON'] | null; // JSON
@@ -319,6 +319,15 @@ export interface NexusGenObjects {
     events?: Array<NexusGenRootTypes['Event'] | null> | null; // [Event]
     totalCount?: number | null; // Int
   }
+  File: { // root type
+    createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
+    id: number; // Int!
+    nanoid?: string | null; // String
+    orderNumber?: number | null; // Int
+    ownerId: number; // Int!
+    status?: number | null; // Int
+    updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
+  }
   GeoCodeResult: { // root type
     count: number; // Int!
     geojson: NexusGenScalars['JSON']; // JSON!
@@ -327,11 +336,14 @@ export interface NexusGenObjects {
     lat?: number | null; // Float
     lng?: number | null; // Float
   }
+  Homepage: { // root type
+    highlights?: NexusGenScalars['JSON'] | null; // JSON
+    missionStatement?: NexusGenScalars['JSON'] | null; // JSON
+  }
   Image: { // root type
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
     cropPosition?: number | null; // Int
     id: number; // Int!
-    meta?: NexusGenScalars['JSON'] | null; // JSON
     nanoid?: string | null; // String
     orderNumber?: number | null; // Int
     ownerId: number; // Int!
@@ -410,9 +422,11 @@ export interface NexusGenObjects {
     totalCount: number; // Int!
   }
   SearchResultItem: { // root type
+    countTourStops?: number | null; // Int
     dates?: Array<NexusGenRootTypes['EventDate'] | null> | null; // [EventDate]
     excerpt?: NexusGenScalars['JSON'] | null; // JSON
     geopoint?: NexusGenRootTypes['GeoPoint'] | null; // GeoPoint
+    heroImage?: NexusGenRootTypes['Image'] | null; // Image
     id: number; // Int!
     locations?: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
     slug: NexusGenScalars['JSON']; // JSON!
@@ -547,7 +561,7 @@ export interface NexusGenFieldTypes {
   DataExport: { // field return type
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
     errors: NexusGenScalars['JSON'] | null; // JSON
-    file: NexusGenScalars['JSON'] | null; // JSON
+    file: NexusGenRootTypes['File'] | null; // File
     id: number; // Int!
     lang: string | null; // String
     log: NexusGenScalars['JSON'] | null; // JSON
@@ -564,7 +578,7 @@ export interface NexusGenFieldTypes {
   DataImport: { // field return type
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
     errors: NexusGenScalars['JSON'] | null; // JSON
-    file: NexusGenScalars['JSON'] | null; // JSON
+    file: NexusGenRootTypes['File'] | null; // File
     id: number; // Int!
     lang: string | null; // String
     log: NexusGenScalars['JSON'] | null; // JSON
@@ -610,6 +624,18 @@ export interface NexusGenFieldTypes {
     events: Array<NexusGenRootTypes['Event'] | null> | null; // [Event]
     totalCount: number | null; // Int
   }
+  File: { // field return type
+    createdAt: NexusGenScalars['DateTime'] | null; // DateTime
+    credits: NexusGenScalars['JSON'] | null; // JSON
+    id: number; // Int!
+    meta: NexusGenScalars['JSON'] | null; // JSON
+    nanoid: string | null; // String
+    orderNumber: number | null; // Int
+    ownerId: number; // Int!
+    status: number | null; // Int
+    title: NexusGenScalars['JSON'] | null; // JSON
+    updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
+  }
   GeoCodeResult: { // field return type
     count: number; // Int!
     geojson: NexusGenScalars['JSON']; // JSON!
@@ -617,6 +643,10 @@ export interface NexusGenFieldTypes {
   GeoPoint: { // field return type
     lat: number | null; // Float
     lng: number | null; // Float
+  }
+  Homepage: { // field return type
+    highlights: NexusGenScalars['JSON'] | null; // JSON
+    missionStatement: NexusGenScalars['JSON'] | null; // JSON
   }
   Image: { // field return type
     alt: NexusGenScalars['JSON'] | null; // JSON
@@ -761,6 +791,7 @@ export interface NexusGenFieldTypes {
     event: NexusGenRootTypes['Event']; // Event!
     events: NexusGenRootTypes['EventQueryResult'] | null; // EventQueryResult
     geocode: NexusGenRootTypes['GeoCodeResult'] | null; // GeoCodeResult
+    homepage: NexusGenRootTypes['Homepage'] | null; // Homepage
     imageRead: NexusGenRootTypes['Image']; // Image!
     imageStatus: NexusGenRootTypes['ImageStatus']; // ImageStatus!
     images: NexusGenRootTypes['ImageQueryResult'] | null; // ImageQueryResult
@@ -790,9 +821,11 @@ export interface NexusGenFieldTypes {
     totalCount: number; // Int!
   }
   SearchResultItem: { // field return type
+    countTourStops: number | null; // Int
     dates: Array<NexusGenRootTypes['EventDate'] | null> | null; // [EventDate]
     excerpt: NexusGenScalars['JSON'] | null; // JSON
     geopoint: NexusGenRootTypes['GeoPoint'] | null; // GeoPoint
+    heroImage: NexusGenRootTypes['Image'] | null; // Image
     id: number; // Int!
     locations: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
     slug: NexusGenScalars['JSON']; // JSON!
@@ -939,7 +972,7 @@ export interface NexusGenFieldTypeNames {
   DataExport: { // field return type name
     createdAt: 'DateTime'
     errors: 'JSON'
-    file: 'JSON'
+    file: 'File'
     id: 'Int'
     lang: 'String'
     log: 'JSON'
@@ -956,7 +989,7 @@ export interface NexusGenFieldTypeNames {
   DataImport: { // field return type name
     createdAt: 'DateTime'
     errors: 'JSON'
-    file: 'JSON'
+    file: 'File'
     id: 'Int'
     lang: 'String'
     log: 'JSON'
@@ -1002,6 +1035,18 @@ export interface NexusGenFieldTypeNames {
     events: 'Event'
     totalCount: 'Int'
   }
+  File: { // field return type name
+    createdAt: 'DateTime'
+    credits: 'JSON'
+    id: 'Int'
+    meta: 'JSON'
+    nanoid: 'String'
+    orderNumber: 'Int'
+    ownerId: 'Int'
+    status: 'Int'
+    title: 'JSON'
+    updatedAt: 'DateTime'
+  }
   GeoCodeResult: { // field return type name
     count: 'Int'
     geojson: 'JSON'
@@ -1009,6 +1054,10 @@ export interface NexusGenFieldTypeNames {
   GeoPoint: { // field return type name
     lat: 'Float'
     lng: 'Float'
+  }
+  Homepage: { // field return type name
+    highlights: 'JSON'
+    missionStatement: 'JSON'
   }
   Image: { // field return type name
     alt: 'JSON'
@@ -1153,6 +1202,7 @@ export interface NexusGenFieldTypeNames {
     event: 'Event'
     events: 'EventQueryResult'
     geocode: 'GeoCodeResult'
+    homepage: 'Homepage'
     imageRead: 'Image'
     imageStatus: 'ImageStatus'
     images: 'ImageQueryResult'
@@ -1182,9 +1232,11 @@ export interface NexusGenFieldTypeNames {
     totalCount: 'Int'
   }
   SearchResultItem: { // field return type name
+    countTourStops: 'Int'
     dates: 'EventDate'
     excerpt: 'JSON'
     geopoint: 'GeoPoint'
+    heroImage: 'Image'
     id: 'Int'
     locations: 'Location'
     slug: 'JSON'
@@ -1541,6 +1593,7 @@ export interface NexusGenArgTypes {
       where?: NexusGenScalars['JSON'] | null; // JSON
     }
     quickSearch: { // args
+      lang: string; // String!
       modules?: Array<string | null> | null; // [String]
       search: string; // String!
       termIds?: Array<number | null> | null; // [Int]

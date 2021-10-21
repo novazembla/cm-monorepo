@@ -182,14 +182,18 @@ export const daoSharedGetTranslatedSelectColumns = (
 
 export const daoSharedMapTranslatedColumnsInRowToJson = (
   p: any,
-  column: string
+  column: string,
+  process?: (val: any) => any
 ) => {
   const config = getApiConfig();
 
   return config.activeLanguages.reduce((j: any, lang: string) => {
     return {
       ...j,
-      [lang]: p[`${column}_${lang}`] ?? null,
+      [lang]:
+        (typeof process == "function"
+          ? process(p[`${column}_${lang}`])
+          : p[`${column}_${lang}`]) ?? null,
     };
   }, {});
 };

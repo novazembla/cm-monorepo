@@ -54,32 +54,17 @@ export const daoEventQuery = async (
   );
 };
 
-export const daoEventSearchQuery = async (
+export const daoEventSelectQuery = async (
   where: Prisma.EventWhereInput,
+  select: Prisma.EventSelect,
+  orderBy?: any,
   pageIndex: number = 0,
   pageSize: number = apiConfig.db.defaultPageSize * 3
 ): Promise<Event[]> => {
   const events = await prisma.event.findMany({
     where,
-    select: {
-      id: true,
-      ...daoSharedGetTranslatedSelectColumns(["title", "slug", "description"]),
-      dates: {
-        select: {
-          date: true,
-          begin: true,
-          end: true,
-        },
-      },
-      locations: {
-        select: {
-          id: true,
-          ...daoSharedGetTranslatedSelectColumns(["title", "slug"]),
-          lng: true,
-          lat: true,
-        },
-      },
-    },
+    select,
+    orderBy,
     skip: pageIndex * pageSize,
     take: Math.min(pageSize, apiConfig.db.maxPageSize),
   });
@@ -340,7 +325,7 @@ const defaults = {
   daoEventCreate,
   daoEventUpdate,
   daoEventDelete,
-  daoEventSearchQuery,
+  daoEventSelectQuery,
   daoEventGetDatesById,
 };
 

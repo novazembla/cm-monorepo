@@ -35,7 +35,11 @@ export const dataExportReadQueryGQL = gql`
       errors
       status
       meta
-      file
+      file {
+        id
+        status
+        meta
+      }
       createdAt
       updatedAt
     }

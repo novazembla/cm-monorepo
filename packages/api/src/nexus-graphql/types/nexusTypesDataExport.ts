@@ -44,7 +44,9 @@ export const DataExport = objectType({
     t.json("errors");
     t.json("meta");
     t.int("status");
-    t.json("file");
+    t.field("file", {
+      type: "File",
+    });
     t.date("createdAt");
     t.date("updatedAt");
   },

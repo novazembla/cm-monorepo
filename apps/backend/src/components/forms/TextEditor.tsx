@@ -51,7 +51,7 @@ import { useTranslation } from "react-i18next";
 //   OrderedListOptions,
 // } from "@tiptap/extension-ordered-list";
 
-export type TextEditorTypes = "full" | "basic";
+export type TextEditorTypes = "full" | "basic" | "nomenu";
 
 const EditorMenuBarButton = ({
   icon,
@@ -377,9 +377,11 @@ export const TextEditor = ({
         maxLength && maxLength > 0 ? "has-char-count" : ""
       } ${isInvalid ? "is-error" : ""}`}
     >
-      <EditorMenuBar
-        {...{ type, editor, name, editorIsFocussed: isFocussed }}
-      />
+      {type !== "nomenu" && (
+        <EditorMenuBar
+          {...{ type, editor, name, editorIsFocussed: isFocussed }}
+        />
+      )}
       <Box className="wrapper">
         <EditorContent editor={editor} />
       </Box>
