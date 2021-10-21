@@ -339,6 +339,7 @@ export interface NexusGenObjects {
   Homepage: { // root type
     highlights?: NexusGenScalars['JSON'] | null; // JSON
     missionStatement?: NexusGenScalars['JSON'] | null; // JSON
+    missionStatementPage?: NexusGenScalars['JSON'] | null; // JSON
   }
   Image: { // root type
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
@@ -647,6 +648,7 @@ export interface NexusGenFieldTypes {
   Homepage: { // field return type
     highlights: NexusGenScalars['JSON'] | null; // JSON
     missionStatement: NexusGenScalars['JSON'] | null; // JSON
+    missionStatementPage: NexusGenScalars['JSON'] | null; // JSON
   }
   Image: { // field return type
     alt: NexusGenScalars['JSON'] | null; // JSON
@@ -1058,6 +1060,7 @@ export interface NexusGenFieldTypeNames {
   Homepage: { // field return type name
     highlights: 'JSON'
     missionStatement: 'JSON'
+    missionStatementPage: 'JSON'
   }
   Image: { // field return type name
     alt: 'JSON'

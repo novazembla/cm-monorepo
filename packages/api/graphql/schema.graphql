@@ -186,6 +186,7 @@ type GeoPoint {
 type Homepage {
   highlights: JSON
   missionStatement: JSON
+  missionStatementPage: JSON
 }
 
 type Image {

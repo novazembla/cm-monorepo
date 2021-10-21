@@ -10,6 +10,7 @@ import {
   daoEventSelectQuery,
   daoSharedMapTranslatedColumnsInRowToJson,
   daoSharedGetTranslatedSelectColumns,
+  daoPageGetById,
 } from "../../dao";
 
 import { htmlToTrimmedString, htmlToText } from "../../utils";
@@ -18,6 +19,7 @@ export const Homepage = objectType({
   name: "Homepage",
   definition(t) {
     t.json("highlights");
+    t.json("missionStatementPage");
     t.json("missionStatement");
   },
 });
@@ -321,8 +323,31 @@ export const HomepageQuery = extendType({
           );
         }
 
+        const missionStatementPageSetting: any = settings.reduce(
+          (acc, setting: any) => {
+            if (setting.key === "missionStatementPage") {
+              return setting?.value?.json;
+            }
+            return acc;
+          },
+          undefined
+        );
+
+        let missionStatementPage: any;
+        if (missionStatementPageSetting?.id) {
+          const page = await daoPageGetById(missionStatementPageSetting?.id);
+          if (page && page?.status === PublishStatus.PUBLISHED) {
+            missionStatementPage = {
+              id: page.id,
+              title: daoSharedMapTranslatedColumnsInRowToJson(page, "title"),
+              slug: daoSharedMapTranslatedColumnsInRowToJson(page, "slug"),
+            };
+          }
+        }
+
         return {
           highlights,
+          missionStatementPage,
           missionStatement: settings.reduce((acc, setting: any) => {
             if (setting.key === "missionStatement") {
               return Object.keys(setting?.value?.json).reduce(

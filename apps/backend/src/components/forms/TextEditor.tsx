@@ -40,16 +40,17 @@ import {
   RiArrowGoForwardLine,
   RiCheckFill,
   RiCloseFill,
+  RiH2,
+  RiListOrdered,
+  RiListUnordered,
 } from "@hacknug/react-icons/ri";
 import { useTranslation } from "react-i18next";
 
 // import Blockquote, { BlockquoteOptions } from "@tiptap/extension-blockquote";
-// import BulletList, { BulletListOptions } from "@tiptap/extension-bullet-list";
-// import Heading, { HeadingOptions } from "@tiptap/extension-heading";
-// import ListItem, { ListItemOptions } from "@tiptap/extension-list-item";
-// import OrderedList, {
-//   OrderedListOptions,
-// } from "@tiptap/extension-ordered-list";
+import BulletList from "@tiptap/extension-bullet-list";
+import Heading from "@tiptap/extension-heading";
+import ListItem from "@tiptap/extension-list-item";
+import OrderedList from "@tiptap/extension-ordered-list";
 
 export type TextEditorTypes = "full" | "basic" | "nomenu";
 
@@ -145,6 +146,7 @@ const EditorMenuBar = ({
     setShowLinkEditScreen(false);
     return false;
   };
+
   return (
     <>
       {showLinkEditScreen && (
@@ -189,6 +191,21 @@ const EditorMenuBar = ({
       )}
       {!showLinkEditScreen && (
         <HStack className="menu-bar" spacing="1" h="48px">
+          {type === "full" && (
+            <EditorMenuBarButton
+              icon={<RiH2 />}
+              label={
+                editor.isActive("italic")
+                  ? t("editor.button.unitalic", "Remove italic text format")
+                  : t("editor.button.italic", "Format text italic")
+              }
+              onClick={() =>
+                editor.chain().focus().toggleHeading({ level: 2 }).run()
+              }
+              isActive={editor.isActive("heading", { level: 2 })}
+            />
+          )}
+
           <EditorMenuBarButton
             icon={<RiBold />}
             label={
@@ -209,7 +226,25 @@ const EditorMenuBar = ({
             onClick={() => editor.chain().focus().toggleItalic().run()}
             isActive={editor.isActive("italic")}
           />
+
           <EditorMenuBarSeparator />
+
+          {type === "full" && (
+            <>
+              <EditorMenuBarButton
+                icon={<RiListOrdered />}
+                label={t("editor.button.orderList", "Toggle ordered list")}
+                onClick={() => editor.chain().focus().toggleOrderedList().run()}
+              />
+              <EditorMenuBarButton
+                icon={<RiListUnordered />}
+                label={t("editor.button.bulletList", "Toggle bullet list")}
+                onClick={() => editor.chain().focus().toggleBulletList().run()}
+              />
+
+              <EditorMenuBarSeparator />
+            </>
+          )}
 
           <EditorMenuBarButton
             icon={<RiTextWrap />}
@@ -237,6 +272,7 @@ const EditorMenuBar = ({
             onClick={() => editor.chain().focus().redo().run()}
           />
           <EditorMenuBarSeparator />
+
           <EditorMenuBarButton
             icon={<RiLink />}
             isDisabled={
@@ -260,56 +296,6 @@ const EditorMenuBar = ({
           )}
         </HStack>
       )}
-
-      {/* <Button onClick={() => editor.chain().focus().unsetAllMarks().run()}>
-        clear marks
-      </Button>
-      
-
-      <Button
-        onClick={() => editor.chain().focus().setParagraph().run()}
-        className={editor.isActive('paragraph') ? 'is-active' : ''}
-      >
-        paragraph
-      </Button>
-      <Button
-        onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-        className={editor.isActive('heading', { level: 1 }) ? 'is-active' : ''}
-      >
-        h1
-      </Button>
-      <Button
-        onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-        className={editor.isActive('heading', { level: 2 }) ? 'is-active' : ''}
-      >
-        h2
-      </Button>
-      <Button
-        onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-        className={editor.isActive('heading', { level: 3 }) ? 'is-active' : ''}
-      >
-        h3
-      </Button>
-      
-      <Button
-        onClick={() => editor.chain().focus().toggleBulletList().run()}
-        className={editor.isActive('bulletList') ? 'is-active' : ''}
-      >
-        bullet list
-      </Button>
-      <Button
-        onClick={() => editor.chain().focus().toggleOrderedList().run()}
-        className={editor.isActive('orderedList') ? 'is-active' : ''}
-      >
-        ordered list
-      </Button>
-      
-      <Button
-        onClick={() => editor.chain().focus().toggleBlockquote().run()}
-        className={editor.isActive('blockquote') ? 'is-active' : ''}
-      >
-        blockquote
-  </Button> */}
     </>
   );
 };
@@ -340,7 +326,8 @@ export const TextEditor = ({
   const extensions = [];
   extensions.push(Document, Text, Paragraph);
   extensions.push(Dropcursor, Gapcursor);
-  extensions.push(Bold, Italic);
+  extensions.push(Bold, Italic, Heading);
+  extensions.push(BulletList, OrderedList, ListItem);
   extensions.push(History);
   extensions.push(
     Link.configure({

@@ -146,7 +146,7 @@ export const PageForm = ({
       <FieldMultiLangTextEditor
         name="intro"
         id="intro"
-        type="basic"
+        type="full"
         label={t("module.pages.forms.page.field.label.intro", "Intro")}
         isRequired={false}
         settings={{
@@ -162,7 +162,7 @@ export const PageForm = ({
       <FieldMultiLangTextEditor
         name="content"
         id="content"
-        type="basic"
+        type="full"
         size="large"
         label={t("module.pages.forms.page.field.label.content", "Content")}
         isRequired={false}

@@ -100,6 +100,31 @@ code {
     }
   }
 
+  &.full {
+    border-radius: var(--chakra-radii-md);
+    border: 1px solid var(--chakra-colors-gray-400);
+    transition: all 0.25s;
+    
+    .wrapper {
+      min-height: 100px;
+      max-height: 1000px;
+      overflow-y: auto;
+
+    }
+    &.is-focussed {
+      border-color: var(--chakra-colors-gray-500);
+      box-shadow: 0 0 0 1px var(--chakra-colors-gray-500);
+    }
+
+    .ProseMirror {
+      height: 100%;
+      min-height: 100px;
+      background-color:#fff;
+      overflow-y: auto;
+      padding: var(--chakra-space-2);
+    }
+  }
+
   &.large {
     .wrapper {
       max-height: 2000px;
@@ -154,4 +179,24 @@ code {
   color: var(--chakra-colors-gray-400);
   pointer-events: none;
   height: 0;
+}
+
+.ProseMirror {
+  h1,h2,h3,h4 {
+    font-size: 1.1em;
+    font-weight: bold;
+    ;
+  }
+
+  ul, ol {
+    margin-bottom: 0.6em;
+    li {
+      margin-bottom: 0.1em;
+      margin-left: 1em;
+    }
+  }
+
+  ul li {
+    list-style-type: disc;
+  }
 }

@@ -629,7 +629,7 @@
             "label": {
               "title": "Titel",
               "slug": "Slug",
-              "intro": "Zusammenfassung",
+              "intro": "Einleitung",
               "content": "Inhalt"
             },
             "placeholder": {
@@ -843,10 +843,12 @@
     "button": {
       "save": "Speichern",
       "cancel": "Abbrechen",
-      "unbold": "Fettgedrucktes Textformat entfernen",
-      "bold": "Text fett formatieren",
       "unitalic": "Kursivgedrucktes Textformat entfernen",
       "italic": "Text kursiv formatieren",
+      "unbold": "Fettgedrucktes Textformat entfernen",
+      "bold": "Text fett formatieren",
+      "orderList": "Nummerierte Auflistung an- oder ausschalten",
+      "bulletList": "Auflistung an- oder ausschalten",
       "addNewLine": "Neue Zeile einfügen",
       "clearFormatting": "Formatierungen entfernen",
       "undo": "Rückgängig machen",
