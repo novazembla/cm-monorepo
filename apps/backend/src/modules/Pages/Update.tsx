@@ -75,7 +75,7 @@ export const pageAndContentAuthorsQueryGQL = gql`
 const Update = () => {
   const router = useRouter();
   const config = useConfig();
-  const [appUser, {getPreviewUrl}] = useAuthentication();
+  const [appUser, { getPreviewUrl }] = useAuthentication();
   const { t } = useTranslation();
   const successToast = useSuccessfullySavedToast();
   const [isNavigatingAway, setIsNavigatingAway] = useState(false);
@@ -101,6 +101,7 @@ const Update = () => {
     handleSubmit,
     reset,
     setError,
+    watch,
     formState: { isSubmitting, isDirty },
   } = formMethods;
 
@@ -208,8 +209,6 @@ const Update = () => {
     },
   ];
 
-  
-
   const buttonList: ButtonListElement[] = [
     {
       type: "back",
@@ -223,7 +222,13 @@ const Update = () => {
       label: t("module.button.preview", "Preview"),
       targetBlank: true,
       userCan: "pageReadOwn",
-      isDisabled: !!error || [PublishStatus.TRASHED, PublishStatus.DELETED].includes(data?.page?.status)
+      isDisabled:
+        !!error ||
+        [
+          PublishStatus.PUBLISHED,
+          PublishStatus.TRASHED,
+          PublishStatus.DELETED,
+        ].includes(parseInt(watch("status") ?? "0")),
     },
     {
       type: "submit",

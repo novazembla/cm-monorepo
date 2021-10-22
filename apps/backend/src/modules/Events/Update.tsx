@@ -147,6 +147,7 @@ const Update = () => {
     handleSubmit,
     reset,
     setError,
+    watch,
     formState: { isSubmitting, isDirty },
   } = formMethods;
 
@@ -389,9 +390,13 @@ const Update = () => {
       label: t("module.button.preview", "Preview"),
       targetBlank: true,
       userCan: "pageReadOwn",
-      isDisabled: !!error || [PublishStatus.TRASHED, PublishStatus.DELETED].includes(
-        data?.event?.status
-      ),
+      isDisabled:
+        !!error ||
+        [
+          PublishStatus.PUBLISHED,
+          PublishStatus.TRASHED,
+          PublishStatus.DELETED,
+        ].includes(parseInt(watch("status") ?? "0")),
     },
     {
       type: "submit",

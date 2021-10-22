@@ -171,6 +171,7 @@ const Update = () => {
     reset,
     setError,
     setValue,
+    watch,
     formState: { isSubmitting, isDirty },
   } = formMethods;
 
@@ -445,9 +446,12 @@ const Update = () => {
       targetBlank: true,
       userCan: "pageReadOwn",
       isDisabled:
-        [PublishStatus.TRASHED, PublishStatus.DELETED].includes(
-          data?.location?.status || !!error
-        ) || !!error,
+        !!error ||
+        [
+          PublishStatus.PUBLISHED,
+          PublishStatus.TRASHED,
+          PublishStatus.DELETED,
+        ].includes(parseInt(watch("status") ?? "0")),
     },
     {
       type: "submit",
