@@ -26,6 +26,7 @@ import {
 import { PublishStatus, ImageStatus } from "@culturemap/core";
 
 import { htmlToTrimmedString } from "../../utils";
+import { getSettings } from "../../services/serviceSetting";
 
 const descriptionMaxLength = 300;
 
@@ -91,6 +92,7 @@ export const SearchQueries = extendType({
       async resolve(...[, args]) {
         const parsedQuery = args.search.trim().split(" ");
         const result: NexusGenObjects["SearchResult"][] = [];
+        const settings = await getSettings("settings");
 
         const query =
           parsedQuery.length === 1
@@ -127,9 +129,11 @@ export const SearchQueries = extendType({
                 colorDark: true,
               },
               take: 1,
-              // where: { // TODO: how to best link a taxonomy to a fixed id ?
-              //   taxonomyId: 1,
-              // },
+              where: {
+                taxonomyId: parseInt(
+                  settings?.taxMapping?.typeOfInstitution ?? "0"
+                ),
+              },
             },
             terms: {
               select: {
@@ -139,9 +143,11 @@ export const SearchQueries = extendType({
                 colorDark: true,
               },
               take: 1,
-              // where: { // TODO: how to best link a taxonomy to a fixed id ?
-              //   taxonomyId: 1,
-              // },
+              where: {
+                taxonomyId: parseInt(
+                  settings?.taxMapping?.typeOfInstitution ?? "0"
+                ),
+              },
             },
             heroImage: {
               select: {

@@ -13,8 +13,9 @@ import Excel from "exceljs";
 import { customAlphabet } from "nanoid";
 
 import logger from "../services/serviceLogging";
-import { createApiUserFromUser, htmlToString } from "../utils";
+import { createApiUserFromUser, htmlToString, parseSettings } from "../utils";
 
+let settings: any = {};
 const customNanoId = customAlphabet(
   "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGIJKLMNOPQRSTUVW",
   24
@@ -203,9 +204,20 @@ const doChores = async () => {
 
       logger.info(`Export id: ${exportInDb.id} found to be valid for export`);
 
-      let tax = await prisma.taxonomy.findFirst({
+      const settingsInDb = await prisma.setting.findMany({
         where: {
-          slug_de: "veranstaltungsart",
+          scope: "settings",
+        },
+        orderBy: {
+          key: "asc",
+        },
+      });
+
+      settings = parseSettings(settingsInDb);
+
+      let tax = await await prisma.taxonomy.findUnique({
+        where: {
+          id: parseInt(settings?.taxMapping?.eventType ?? "0"),
         },
       });
 

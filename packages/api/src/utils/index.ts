@@ -8,3 +8,4 @@ export * from "./string-convert";
 export * from "./htmlHelpers";
 export * from "./tools";
 export * from "./apiUser";
+export * from "./settings";

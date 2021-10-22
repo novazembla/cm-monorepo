@@ -17,13 +17,13 @@ import Excel from "exceljs";
 import { customAlphabet } from "nanoid";
 
 import logger from "../services/serviceLogging";
-import { createApiUserFromUser, htmlToString } from "../utils";
+import { createApiUserFromUser, htmlToString, parseSettings } from "../utils";
 
 const customNanoId = customAlphabet(
   "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGIJKLMNOPQRSTUVW",
   24
 );
-
+let settings: any = {};
 const { PrismaClient } = Prisma;
 
 dotenv.config();
@@ -251,9 +251,20 @@ const doChores = async () => {
 
       logger.info(`Export id: ${exportInDb.id} found to be valid for export`);
 
-      let tax = await prisma.taxonomy.findFirst({
+      const settingsInDb = await prisma.setting.findMany({
         where: {
-          slug_de: "einrichtungsart",
+          scope: "settings",
+        },
+        orderBy: {
+          key: "asc",
+        },
+      });
+
+      settings = parseSettings(settingsInDb);
+
+      let tax = await prisma.taxonomy.findUnique({
+        where: {
+          id: parseInt(settings?.taxMapping?.typeOfInstitution ?? "0"),
         },
       });
 
@@ -285,9 +296,9 @@ const doChores = async () => {
         }
       }
 
-      tax = await prisma.taxonomy.findFirst({
+      tax = await prisma.taxonomy.findUnique({
         where: {
-          slug_de: "zielgruppe",
+          id: parseInt(settings?.taxMapping?.targetAudience ?? "0"),
         },
       });
 
@@ -321,9 +332,9 @@ const doChores = async () => {
 
       logger.debug(`Export id: ${exportInDb.id} terms loaded`);
 
-      tax = await prisma.taxonomy.findFirst({
+      tax = await prisma.taxonomy.findUnique({
         where: {
-          slug_de: "traegerart",
+          id: parseInt(settings?.taxMapping?.typeOfOrganisation ?? "0"),
         },
       });
 

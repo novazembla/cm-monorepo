@@ -4,7 +4,6 @@ import { objectType, extendType } from "nexus";
 import { PublishStatus, ImageStatus } from "@culturemap/core";
 
 import {
-  daoSettingQuery,
   daoLocationSelectQuery,
   daoTourSelectQuery,
   daoEventSelectQuery,
@@ -14,6 +13,7 @@ import {
 } from "../../dao";
 
 import { htmlToTrimmedString, htmlToText } from "../../utils";
+import { getSettings } from "../../services/serviceSetting";
 
 export const Homepage = objectType({
   name: "Homepage",
@@ -37,29 +37,19 @@ export const HomepageQuery = extendType({
       type: "Homepage",
 
       async resolve() {
-        const settings = await daoSettingQuery({
-          scope: "homepage",
-        });
+        const settings = await getSettings("homepage");
 
-        if (!Array.isArray(settings) || settings.length === 0)
+        if (Object.keys(settings).length === 0)
           return {
             highlights: [],
+            missionStatementPage: null,
             missionStatment: null,
           };
 
-        const configured = settings.reduce((acc, setting: any) => {
-          if (
-            setting.key === "highlights" &&
-            Array.isArray(setting?.value?.json)
-          )
-            return setting?.value?.json;
-          return acc;
-        }, []);
-
         let highlights: any[] = [];
 
-        if (configured?.length) {
-          let mappedHighlights: any = configured.reduce(
+        if (settings?.highlights?.length) {
+          let mappedHighlights: any = settings?.highlights.reduce(
             (acc: any, item: any) => {
               return {
                 ...acc,
@@ -69,7 +59,7 @@ export const HomepageQuery = extendType({
             {}
           );
 
-          const cLocations = configured.reduce(
+          const cLocations = settings?.highlights.reduce(
             (acc: any[], h: any, index: number) => {
               if (h.type === "location" && h?.id && h?.item?.id)
                 acc.push({
@@ -86,7 +76,7 @@ export const HomepageQuery = extendType({
             const locations = await daoLocationSelectQuery(
               {
                 id: {
-                  in: cLocations.map((l) => l.id),
+                  in: cLocations.map((l: any) => l.id),
                 },
                 status: PublishStatus.PUBLISHED,
               },
@@ -198,7 +188,7 @@ export const HomepageQuery = extendType({
             }
           }
 
-          const cTours = configured.reduce(
+          const cTours = settings?.highlights.reduce(
             (acc: any[], h: any, index: number) => {
               if (h.type === "tour" && h?.id && h?.item?.id)
                 acc.push({
@@ -215,7 +205,7 @@ export const HomepageQuery = extendType({
             const tours = await daoTourSelectQuery(
               {
                 id: {
-                  in: cTours.map((l) => l.id),
+                  in: cTours.map((l: any) => l.id),
                 },
                 status: PublishStatus.PUBLISHED,
               },
@@ -290,7 +280,7 @@ export const HomepageQuery = extendType({
             }
           }
 
-          const cEvents = configured.reduce(
+          const cEvents = settings?.highlights.reduce(
             (acc: any[], h: any, index: number) => {
               if (h.type === "event" && h?.id && h?.item?.id)
                 acc.push({
@@ -307,7 +297,7 @@ export const HomepageQuery = extendType({
             const events = await daoEventSelectQuery(
               {
                 id: {
-                  in: cEvents.map((l) => l.id),
+                  in: cEvents.map((l: any) => l.id),
                 },
                 status: PublishStatus.PUBLISHED,
               },
@@ -375,19 +365,9 @@ export const HomepageQuery = extendType({
           );
         }
 
-        const missionStatementPageSetting: any = settings.reduce(
-          (acc, setting: any) => {
-            if (setting.key === "missionStatementPage") {
-              return setting?.value?.json;
-            }
-            return acc;
-          },
-          undefined
-        );
-
         let missionStatementPage: any;
-        if (missionStatementPageSetting?.id) {
-          const page = await daoPageGetById(missionStatementPageSetting?.id);
+        if (settings?.missionStatementPage?.id) {
+          const page = await daoPageGetById(settings?.missionStatementPage?.id);
           if (page && page?.status === PublishStatus.PUBLISHED) {
             missionStatementPage = {
               id: page.id,
@@ -397,21 +377,21 @@ export const HomepageQuery = extendType({
           }
         }
 
+        let missionStatement: any;
+        if (settings?.missionStatement) {
+          missionStatement = Object.keys(settings?.missionStatement).reduce(
+            (accMS: any, lang: any) => ({
+              ...accMS,
+              [lang]: htmlToText(settings?.missionStatement[lang]),
+            }),
+            {}
+          );
+        }
+
         return {
           highlights,
           missionStatementPage,
-          missionStatement: settings.reduce((acc, setting: any) => {
-            if (setting.key === "missionStatement") {
-              return Object.keys(setting?.value?.json).reduce(
-                (accMS: any, lang: any) => ({
-                  ...accMS,
-                  [lang]: htmlToText(setting?.value?.json[lang]),
-                }),
-                {}
-              );
-            }
-            return acc;
-          }, {}),
+          missionStatement,
         };
       },
     });

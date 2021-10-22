@@ -21,12 +21,13 @@ import {
 } from "@culturemap/core";
 
 import logger from "../services/serviceLogging";
-import { slugify, convertToHtml } from "../utils";
+import { slugify, convertToHtml, parseSettings } from "../utils";
 
 import { daoSharedGenerateFullText } from "../dao/shared";
 
 const { PrismaClient } = Prisma;
 
+let settings: any = {};
 const nanoid = customAlphabet("1234567890abcdef", 12);
 
 dotenv.config();
@@ -39,7 +40,6 @@ const errors: string[] = [];
 let headers: any[] = [];
 let headersUnparsed: any = {};
 let unknownHeadersCounter = 0;
-const eventCategoriesSlugDE = "veranstaltungsart";
 
 let eventTypeTax: any;
 let termsEventType: any = {};
@@ -463,16 +463,20 @@ const doChores = async () => {
         // is the file readable?
         await access(file);
 
-        eventTypeTax = await prisma.taxonomy.findFirst({
+        const settingsInDb = await prisma.setting.findMany({
           where: {
-            OR: [
-              {
-                slug_de: eventCategoriesSlugDE,
-              },
-              {
-                slug_en: eventCategoriesSlugDE,
-              },
-            ],
+            scope: "settings",
+          },
+          orderBy: {
+            key: "asc",
+          },
+        });
+
+        settings = parseSettings(settingsInDb);
+
+        eventTypeTax = await await prisma.taxonomy.findUnique({
+          where: {
+            id: parseInt(settings?.taxMapping?.eventType ?? "0"),
           },
         });
 

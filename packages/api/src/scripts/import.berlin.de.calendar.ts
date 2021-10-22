@@ -12,7 +12,7 @@ import Prisma, { DataImport } from "@prisma/client";
 
 import { getApiConfig } from "../config";
 
-import { slugify, convertToHtml, isObject } from "../utils";
+import { slugify, convertToHtml, isObject, parseSettings } from "../utils";
 
 const getTodayInCurrentTZ = () => {
   let today = new Date();
@@ -46,7 +46,7 @@ const prepareDatesForDb = (dates: any[]) => {
   return dates;
 };
 
-const eventCategoriesSlugDE = "veranstaltungsart";
+let settings: any = {};
 let eventCategories: any = {};
 let log: string[] = [];
 let errors: string[] = [];
@@ -153,9 +153,20 @@ const registerEventCategoies = async (
   prisma: Prisma.PrismaClient,
   categories: any
 ) => {
-  let taxonomy = await prisma.taxonomy.findFirst({
+  const settingsInDb = await prisma.setting.findMany({
     where: {
-      slug_de: eventCategoriesSlugDE,
+      scope: "settings",
+    },
+    orderBy: {
+      key: "asc",
+    },
+  });
+
+  settings = parseSettings(settingsInDb);
+
+  let taxonomy = await prisma.taxonomy.findUnique({
+    where: {
+      id: parseInt(settings?.taxMapping?.eventType ?? "0"),
     },
   });
 

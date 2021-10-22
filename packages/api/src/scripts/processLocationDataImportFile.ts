@@ -22,7 +22,7 @@ import {
 } from "@culturemap/core";
 
 import logger from "../services/serviceLogging";
-import { slugify, convertToHtml, awaitTimeout } from "../utils";
+import { slugify, convertToHtml, awaitTimeout, parseSettings } from "../utils";
 
 import {
   geocodingGetAddressCandidates,
@@ -30,7 +30,7 @@ import {
 } from "../utils/geocoding";
 
 import { daoSharedGenerateFullText } from "../dao/shared";
-
+let settings: any = {};
 const { PrismaClient } = Prisma;
 
 const nanoid = customAlphabet("1234567890abcdef", 12);
@@ -543,9 +543,20 @@ const doChores = async () => {
         // is the file readable?
         await access(file);
 
-        let tax = await prisma.taxonomy.findFirst({
+        const settingsInDb = await prisma.setting.findMany({
           where: {
-            slug_de: "einrichtungsart",
+            scope: "settings",
+          },
+          orderBy: {
+            key: "asc",
+          },
+        });
+
+        settings = parseSettings(settingsInDb);
+
+        let tax = await prisma.taxonomy.findUnique({
+          where: {
+            id: parseInt(settings?.taxMapping?.typeOfInstitution ?? "0"),
           },
         });
 
@@ -575,9 +586,9 @@ const doChores = async () => {
           }
         }
 
-        tax = await prisma.taxonomy.findFirst({
+        tax = await prisma.taxonomy.findUnique({
           where: {
-            slug_de: "zielgruppe",
+            id: parseInt(settings?.taxMapping?.targetAudience ?? "0"),
           },
         });
 
@@ -607,9 +618,9 @@ const doChores = async () => {
           }
         }
 
-        tax = await prisma.taxonomy.findFirst({
+        tax = await prisma.taxonomy.findUnique({
           where: {
-            slug_de: "traegerart",
+            id: parseInt(settings?.taxMapping?.typeOfOrganisation ?? "0"),
           },
         });
 

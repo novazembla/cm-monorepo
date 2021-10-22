@@ -1,8 +1,12 @@
 import httpStatus from "http-status";
 
-import { daoSettingUpsert, SettingUpdateData } from "../dao/setting";
+import {
+  daoSettingUpsert,
+  SettingUpdateData,
+  daoSettingQuery,
+} from "../dao/setting";
 
-import { ApiError } from "../utils";
+import { ApiError, parseSettings } from "../utils";
 import { logger } from "./serviceLogging";
 
 export const settingUpsertSettings = async (
@@ -35,7 +39,15 @@ export const settingUpsertSettings = async (
   }
 };
 
+export const getSettings = async (scope: string) => {
+  const settingsInDb = await daoSettingQuery({
+    scope,
+  });
+  return parseSettings(settingsInDb);
+};
+
 const defaults = {
+  getSettings,
   settingUpsertSettings,
 };
 
