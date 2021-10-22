@@ -27,31 +27,42 @@ export const MappedTaxonomies = ({ ...props }: { props: any }) => {
 
   return (
     <Box borderBottom="1px solid" borderColor="gray.300" pb="2" mt="2">
-      {options.map((o) => (
-        <Flex
-          key={`tax-${o}`}
-          borderTop="1px solid"
-          borderColor="gray.300"
-          pt="2"
-          alignItems="center"
-        >
-          <Box w="25%" minW="200px">
-            <b>{t(`settings.taxMapping.options.label.${o}`)}</b>
-          </Box>
-          <Box px="3">
-            <HiOutlineArrowRight />
-          </Box>
-          <Box>
-            <MultiLangValue
-              json={data?.taxonomies?.taxonomies.reduce((acc: any, t: any) => {
-                if (t.id.toString() === (props as any)[o]) return t.name;
+      {options.map((o) => {
+        const value = data?.taxonomies?.taxonomies.reduce(
+          (acc: any, t: any) => {
+            if (t.id.toString() === (props as any)[o]) return t.name;
 
-                return acc;
-              }, {})}
-            />
-          </Box>
-        </Flex>
-      ))}
+            return acc;
+          },
+          {}
+        );
+        return (
+          <Flex
+            key={`tax-${o}`}
+            borderTop="1px solid"
+            borderColor="gray.300"
+            pt="2"
+            alignItems="center"
+          >
+            <Box w="25%" minW="200px">
+              <b>{t(`settings.taxMapping.options.label.${o}`)}</b>
+            </Box>
+            <Box px="3">
+              <HiOutlineArrowRight />
+            </Box>
+            <Box>
+              {value ? (
+                <MultiLangValue json={value} />
+              ) : (
+                t(
+                  "settings.empty.defaultvalue",
+                  "Empty! Please update the settings"
+                )
+              )}
+            </Box>
+          </Flex>
+        );
+      })}
     </Box>
   );
 };
