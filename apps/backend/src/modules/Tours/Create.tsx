@@ -54,10 +54,8 @@ const Create = () => {
   const {
     handleSubmit,
     setError,
-    formState: { isSubmitting, isDirty, errors },
+    formState: { isSubmitting, isDirty },
   } = formMethods;
-
-  console.log(errors);
 
   const onSubmit = async (
     newData: yup.InferType<typeof ModuleTourSchemaCreate>

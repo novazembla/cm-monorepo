@@ -85,7 +85,12 @@ export const eventsQueryGQL = gql`
 const intitalTableState: AdminTableState = {
   pageIndex: 0,
   pageSize: config.defaultPageSize ?? 30,
-  sortBy: [],
+  sortBy: [
+    {
+      id: "updatedAt",
+      desc: true,
+    },
+  ],
   filterKeyword: "",
   statusFilter: [],
   taxFilter: [],
@@ -149,11 +154,11 @@ const Index = () => {
 
   const resetFilter = useCallback(() => {
     reset({
-      ...intitalTableState.statusFilter.reduce(
+      ...statusFilter.reduce(
         (acc: any, s: PublishStatus) => {
           return {
             ...acc,
-            [`filter_status_${s}`]: true,
+            [`filter_status_${s}`]: intitalTableState.statusFilter.includes(s),
           };
         },
         {}

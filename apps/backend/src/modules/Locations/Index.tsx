@@ -85,7 +85,12 @@ export const locationsQueryGQL = gql`
 const intitalTableState: AdminTableState = {
   pageIndex: 0,
   pageSize: config.defaultPageSize ?? 30,
-  sortBy: [],
+  sortBy: [
+    {
+      id: "updatedAt",
+      desc: true,
+    },
+  ],
   filterKeyword: "",
   statusFilter: [],
   taxFilter: [],
@@ -149,10 +154,10 @@ const Index = () => {
 
   const resetFilter = useCallback(() => {
     reset({
-      ...intitalTableState.statusFilter.reduce((acc: any, s: PublishStatus) => {
+      ...statusFilter.reduce((acc: any, s: PublishStatus) => {
         return {
           ...acc,
-          [`filter_status_${s}`]: true,
+          [`filter_status_${s}`]: intitalTableState.statusFilter.includes(s),
         };
       }, {}),
       ...intitalTableState.taxFilter.reduce((acc: any, t: number) => {

@@ -32,7 +32,12 @@ import { SortingRule } from "react-table";
 const intitalTableState: AdminTableState = {
   pageIndex: 0,
   pageSize: config.defaultPageSize ?? 30,
-  sortBy: [],
+  sortBy: [
+    {
+      id: "updatedAt",
+      desc: true,
+    },
+  ],
   filterKeyword: "",
   statusFilter: [],
   taxFilter: [],

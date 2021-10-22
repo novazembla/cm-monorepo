@@ -140,7 +140,7 @@ export const TourForm = ({
             currentImage={data?.tour?.heroImage}
             setActiveUploadCounter={setActiveUploadCounter}
             settings={{
-              imageRequired: true,
+              imageRequired: false,
               altRequired: true,
               creditsRequired: true,
             }}

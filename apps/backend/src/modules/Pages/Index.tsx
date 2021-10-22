@@ -1,6 +1,10 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { pagesQueryGQL, pageDeleteMutationGQL, PublishStatus} from "@culturemap/core";
+import {
+  pagesQueryGQL,
+  pageDeleteMutationGQL,
+  PublishStatus,
+} from "@culturemap/core";
 import { useQuery } from "@apollo/client";
 import { useForm, FormProvider } from "react-hook-form";
 
@@ -34,7 +38,12 @@ import { SortingRule } from "react-table";
 const intitalTableState: AdminTableState = {
   pageIndex: 0,
   pageSize: config.defaultPageSize ?? 30,
-  sortBy: [],
+  sortBy: [
+    {
+      id: "updatedAt",
+      desc: true,
+    },
+  ],
   filterKeyword: "",
   statusFilter: [],
   taxFilter: [],
@@ -90,15 +99,12 @@ const Index = () => {
 
   const resetFilter = useCallback(() => {
     reset({
-      ...intitalTableState.statusFilter.reduce(
-        (acc: any, s: PublishStatus) => {
-          return {
-            ...acc,
-            [`filter_status_${s}`]: true,
-          };
-        },
-        {}
-      ),
+      ...statusFilter.reduce((acc: any, s: PublishStatus) => {
+        return {
+          ...acc,
+          [`filter_status_${s}`]: intitalTableState.statusFilter.includes(s),
+        };
+      }, {}),
       ...intitalTableState.taxFilter.reduce((acc: any, t: number) => {
         return {
           ...acc,
@@ -277,24 +283,25 @@ const Index = () => {
             onSubmit={(event) => {
               event.preventDefault();
             }}
-          ><AdminTable
-          columns={AdminTableColumns}
-          isLoading={loading}
-          showFilter={true}
-          resetFilter={resetFilter}
-          statusFilter={statusFilter}
-          showKeywordSearch={true}
-          {...{
-            tableTotalCount,
-            tablePageCount,
-            isRefetching,
-            onFetchData,
-            refetchPageIndex,
-          }}
-          data={isRefetching ? refetchDataCache : data?.pages?.pages ?? []}
-          intitalTableState={tableState}
-        />
-        </form>
+          >
+            <AdminTable
+              columns={AdminTableColumns}
+              isLoading={loading}
+              showFilter={true}
+              resetFilter={resetFilter}
+              statusFilter={statusFilter}
+              showKeywordSearch={true}
+              {...{
+                tableTotalCount,
+                tablePageCount,
+                isRefetching,
+                onFetchData,
+                refetchPageIndex,
+              }}
+              data={isRefetching ? refetchDataCache : data?.pages?.pages ?? []}
+              intitalTableState={tableState}
+            />
+          </form>
         </FormProvider>
       </ModulePage>
       {DeleteAlertDialog}

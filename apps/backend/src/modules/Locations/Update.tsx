@@ -458,8 +458,6 @@ const Update = () => {
     },
   ];
 
-  console.log(!!error);
-
   return (
     <>
       <FormNavigationBlock

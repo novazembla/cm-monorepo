@@ -99,10 +99,10 @@ const Index = () => {
 
   const resetFilter = useCallback(() => {
     reset({
-      ...intitalTableState.statusFilter.reduce((acc: any, s: PublishStatus) => {
+      ...statusFilter.reduce((acc: any, s: PublishStatus) => {
         return {
           ...acc,
-          [`filter_status_${s}`]: true,
+          [`filter_status_${s}`]: intitalTableState.statusFilter.includes(s),
         };
       }, {}),
       ...intitalTableState.taxFilter.reduce((acc: any, t: number) => {
