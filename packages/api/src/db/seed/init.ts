@@ -298,21 +298,31 @@ async function main() {
   });
 
   if (administrator) {
+    let taxMapping: any = {
+      typeOfInstitution: "",
+      typeOfOrganisation: "",
+      eventType: "",
+      targetAudience: "",
+    };
+
     let testTaxonomy = await prisma.taxonomy.findFirst({
       where: {
         slug_de: "einrichtungsart",
       },
     });
 
+    taxMapping.typeOfInstitution = testTaxonomy?.id ?? "";
     if (!testTaxonomy) {
       console.log("create new tax: Einrichtungsart");
 
-      await prisma.taxonomy.create({
+      const taxType = await prisma.taxonomy.create({
         data: {
           name_de: "Einrichtungsart",
           name_en: "Type of Institution",
           slug_de: "einrichtungsart",
           slug_en: "type",
+          hasColor: true,
+          collectPrimaryTerm: true,
           multiTerm: true,
           modules: {
             connect: {
@@ -335,6 +345,8 @@ async function main() {
           },
         },
       });
+
+      if (taxType) taxMapping.typeOfInstitution = taxType.id.toString();
     }
 
     testTaxonomy = await prisma.taxonomy.findFirst({
@@ -343,10 +355,12 @@ async function main() {
       },
     });
 
+    taxMapping.targetAudience = testTaxonomy?.id ?? "";
+
     if (!testTaxonomy) {
       console.log("create new tax: Zielgruppe");
 
-      await prisma.taxonomy.create({
+      const taxTarget = await prisma.taxonomy.create({
         data: {
           name_de: "Zielgruppe",
           name_en: "Target Audience",
@@ -374,6 +388,7 @@ async function main() {
           },
         },
       });
+      if (taxTarget) taxMapping.targetAudience = taxTarget.id.toString();
     }
 
     testTaxonomy = await prisma.taxonomy.findFirst({
@@ -382,10 +397,11 @@ async function main() {
       },
     });
 
+    taxMapping.typeOfOrganisation = testTaxonomy?.id ?? "";
     if (!testTaxonomy) {
       console.log("create new tax: Trägerart");
 
-      await prisma.taxonomy.create({
+      const taxOrg = await prisma.taxonomy.create({
         data: {
           name_de: "Trägerart",
           name_en: "Type of Organisation",
@@ -413,6 +429,7 @@ async function main() {
           },
         },
       });
+      if (taxOrg) taxMapping.typeOfOrganisation = taxOrg.id.toString();
     }
 
     const eventTaxonomy = await prisma.taxonomy.findFirst({
@@ -421,10 +438,11 @@ async function main() {
       },
     });
 
+    taxMapping.eventType = eventTaxonomy?.id ?? "";
     if (!eventTaxonomy) {
       console.log("create new veranstaltungsart");
 
-      await prisma.taxonomy.create({
+      const taxEvent = await prisma.taxonomy.create({
         data: {
           name_de: "Veranstaltungsart",
           name_en: "Event Categories",
@@ -453,7 +471,18 @@ async function main() {
           },
         },
       });
+      if (taxEvent) taxMapping.eventType = taxEvent.id.toString();
     }
+
+    await prisma.setting.create({
+      data: {
+        scope: "setting",
+        key: "taxMapping",
+        value: {
+          json: taxMapping,
+        },
+      },
+    });
   }
 
   if (contributor && editor && administrator) {

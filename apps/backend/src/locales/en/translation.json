@@ -839,6 +839,41 @@
       "importedwrning": "Imported with warning(s)"
     }
   },
+  "settings": {
+    "taxMapping": {
+      "options": {
+        "label": {
+          "typeOfInstitution": "Type of Institution",
+          "typeOfOrganisation": "Type of Organisation",
+          "targetAudience": "Target Audience",
+          "eventType": "Event type"
+        }
+      },
+      "taxonmies": {
+        "label": "Taxonomies",
+        "pleaseChoose": "Please choose a taxonomy"
+      },
+      "label": "Mapped taxonomies"
+    },
+    "nameofyoursetting": {
+      "label": "Label"
+    },
+    "error": {
+      "label": "No label translation key has been defined"
+    },
+    "contactEmail": {
+      "label": "Contact email address"
+    },
+    "frontendMapStyeJsonUrl": {
+      "label": "Frontend Map Style JSON Url"
+    },
+    "centerOfGravity": {
+      "label": "Center of map (geo referencing)"
+    },
+    "empty": {
+      "defaultvalue": "Empty! Please update the settings"
+    }
+  },
   "editor": {
     "button": {
       "save": "Save",
@@ -947,26 +982,6 @@
     "placeholder": "{{token}}"
   },
   "translationnotfound": "Trans. not found",
-  "settings": {
-    "nameofyoursetting": {
-      "label": "Label"
-    },
-    "error": {
-      "label": "No label translation key has been defined"
-    },
-    "contactEmail": {
-      "label": "Contact email address"
-    },
-    "frontendMapStyeJsonUrl": {
-      "label": "Frontend Map Style JSON Url"
-    },
-    "centerOfGravity": {
-      "label": "Center of map (geo referencing)"
-    },
-    "empty": {
-      "defaultvalue": "Empty! Please update the settings"
-    }
-  },
   "toast": {
     "title": {
       "success": "Success!"

@@ -839,6 +839,41 @@
       "importedwrning": "Importiert mit Warnung(en)"
     }
   },
+  "settings": {
+    "taxMapping": {
+      "options": {
+        "label": {
+          "typeOfInstitution": "Einrichtungsart",
+          "typeOfOrganisation": "Trägerart",
+          "targetAudience": "Zielgruppe",
+          "eventType": "Veranstaltungsart"
+        }
+      },
+      "taxonmies": {
+        "label": "Taxonomien",
+        "pleaseChoose": "Bitte wählen Sie eine Taxonomie"
+      },
+      "label": "Taxonomiezuweisung"
+    },
+    "nameofyoursetting": {
+      "label": "Label"
+    },
+    "error": {
+      "label": "Es wurde kein Übersetzungsschlüssel definiert"
+    },
+    "contactEmail": {
+      "label": "Kontakt-E-Mailadresse"
+    },
+    "frontendMapStyeJsonUrl": {
+      "label": "Frontend Map Style JSON Url"
+    },
+    "centerOfGravity": {
+      "label": "Kartenmitte (Georeferenzierung)"
+    },
+    "empty": {
+      "defaultvalue": "Nicht gesetzt! Bitte die Einstellungen aktualisieren"
+    }
+  },
   "editor": {
     "button": {
       "save": "Speichern",
@@ -947,26 +982,6 @@
     "placeholder": "{{token}}"
   },
   "translationnotfound": "Übersetzung nicht gefunden",
-  "settings": {
-    "nameofyoursetting": {
-      "label": "Label"
-    },
-    "error": {
-      "label": "Es wurde kein Übersetzungsschlüssel definiert"
-    },
-    "contactEmail": {
-      "label": "Kontakt-E-Mailadresse"
-    },
-    "frontendMapStyeJsonUrl": {
-      "label": "Frontend Map Style JSON Url"
-    },
-    "centerOfGravity": {
-      "label": "Kartenmitte (Georeferenzierung)"
-    },
-    "empty": {
-      "defaultvalue": "Nicht gesetzt! Bitte die Einstellungen aktualisieren"
-    }
-  },
   "toast": {
     "title": {
       "success": "Okay!"

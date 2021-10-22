@@ -16,6 +16,9 @@ import {
   FieldRow,
   FormNavigationBlock,
   FormScrollInvalidIntoView,
+  FieldSingleSelectAutocomplete,
+  FieldMultiLangTextEditor,
+  FieldSelect,
 } from "~/components/forms";
 
 import { useSettingsUpdateMutation } from "~/hooks/mutations";
@@ -24,11 +27,6 @@ import {
   useSuccessfullySavedToast,
   useConfig,
 } from "~/hooks";
-import {
-  FieldSingleSelectAutocomplete,
-  FieldMultiLangTextEditor,
-  FieldSelect,
-} from "~/components/forms";
 
 import {
   HiOutlineTrash,
@@ -175,8 +173,6 @@ const Update = () => {
     setHasFormError(false);
     setIsNavigatingAway(false);
     try {
-      console.log(newData);
-
       if (appUser) {
         const multiLangNewData = multiLangRHFormDataToJson(
           newData,

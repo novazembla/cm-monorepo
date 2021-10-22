@@ -431,7 +431,9 @@ type SearchResultItem {
   heroImage: Image
   id: Int!
   locations: [Location]
+  primaryTerms: [Term]
   slug: JSON!
+  terms: [Term]
   title: JSON!
   type: String!
 }

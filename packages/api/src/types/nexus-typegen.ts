@@ -430,7 +430,9 @@ export interface NexusGenObjects {
     heroImage?: NexusGenRootTypes['Image'] | null; // Image
     id: number; // Int!
     locations?: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
+    primaryTerms?: Array<NexusGenRootTypes['Term'] | null> | null; // [Term]
     slug: NexusGenScalars['JSON']; // JSON!
+    terms?: Array<NexusGenRootTypes['Term'] | null> | null; // [Term]
     title: NexusGenScalars['JSON']; // JSON!
     type: string; // String!
   }
@@ -830,7 +832,9 @@ export interface NexusGenFieldTypes {
     heroImage: NexusGenRootTypes['Image'] | null; // Image
     id: number; // Int!
     locations: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
+    primaryTerms: Array<NexusGenRootTypes['Term'] | null> | null; // [Term]
     slug: NexusGenScalars['JSON']; // JSON!
+    terms: Array<NexusGenRootTypes['Term'] | null> | null; // [Term]
     title: NexusGenScalars['JSON']; // JSON!
     type: string; // String!
   }
@@ -1242,7 +1246,9 @@ export interface NexusGenFieldTypeNames {
     heroImage: 'Image'
     id: 'Int'
     locations: 'Location'
+    primaryTerms: 'Term'
     slug: 'JSON'
+    terms: 'Term'
     title: 'JSON'
     type: 'String'
   }

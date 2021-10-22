@@ -3,9 +3,9 @@ import { AppConfigSettings } from "./config";
 
 // this is the full list of the keys that are used for custom settings.
 // replace "none"
-// export type AppConfigSettingsFiledKeys = "none";
+// export type AppConfigSettingsFieldKeys = "none";
 // the keys of the settings
-// export type AppConfigSettingsFiledKeys = "phonenumber" | ....
+// export type AppConfigSettingsFieldKeys = "phonenumber" | ....
 
 export const appConfig: AppConfigSettings = {
   scope: "backend", // Used throughout the site and the API to identify a client/scope

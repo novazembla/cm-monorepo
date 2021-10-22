@@ -1,7 +1,7 @@
 import i18n from "i18next";
 import * as config from "~/config";
 
-const isObject = (objValue: any) => {
+export const isObject = (objValue: any) => {
   return (
     objValue && typeof objValue === "object" && objValue.constructor === Object
   );

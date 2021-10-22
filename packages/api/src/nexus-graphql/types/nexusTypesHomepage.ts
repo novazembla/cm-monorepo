@@ -99,6 +99,30 @@ export const HomepageQuery = extendType({
                   "slug",
                   "description",
                 ]),
+                primaryTerms: {
+                  select: {
+                    id: true,
+                    ...daoSharedGetTranslatedSelectColumns(["name"]),
+                    color: true,
+                    colorDark: true,
+                  },
+                  take: 1,
+                  // where: { // TODO: how to best link a taxonomy to a fixed id ?
+                  //   taxonomyId: 1,
+                  // },
+                },
+                terms: {
+                  select: {
+                    id: true,
+                    ...daoSharedGetTranslatedSelectColumns(["name"]),
+                    color: true,
+                    colorDark: true,
+                  },
+                  take: 1,
+                  // where: { // TODO: how to best link a taxonomy to a fixed id ?
+                  //   taxonomyId: 1,
+                  // },
+                },
                 heroImage: {
                   select: {
                     id: true,
@@ -134,6 +158,34 @@ export const HomepageQuery = extendType({
                         "description",
                         asTrimmedText
                       ),
+                      primaryTerm:
+                        loc?.primaryTerms?.length > 0
+                          ? {
+                              id: loc?.primaryTerms[0].id,
+                              name: daoSharedMapTranslatedColumnsInRowToJson(
+                                loc?.primaryTerms[0],
+                                "name"
+                              ),
+                              slug: daoSharedMapTranslatedColumnsInRowToJson(
+                                loc?.primaryTerms[0],
+                                "slug"
+                              ),
+                            }
+                          : undefined,
+                      term:
+                        loc?.term?.length > 0
+                          ? {
+                              id: loc?.term[0].id,
+                              name: daoSharedMapTranslatedColumnsInRowToJson(
+                                loc?.term[0],
+                                "name"
+                              ),
+                              slug: daoSharedMapTranslatedColumnsInRowToJson(
+                                loc?.term[0],
+                                "slug"
+                              ),
+                            }
+                          : undefined,
                       heroImage:
                         loc?.heroImage?.id &&
                         loc?.heroImage?.status === ImageStatus.READY

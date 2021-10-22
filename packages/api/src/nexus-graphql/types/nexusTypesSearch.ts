@@ -49,6 +49,12 @@ export const SearchResultItem = objectType({
     t.list.field("locations", {
       type: "Location",
     });
+    t.list.field("terms", {
+      type: "Term",
+    });
+    t.list.field("primaryTerms", {
+      type: "Term",
+    });
     t.field("geopoint", {
       type: "GeoPoint",
     });
@@ -113,6 +119,30 @@ export const SearchQueries = extendType({
             ]),
             lat: true,
             lng: true,
+            primaryTerms: {
+              select: {
+                id: true,
+                ...daoSharedGetTranslatedSelectColumns(["name", "slug"]),
+                color: true,
+                colorDark: true,
+              },
+              take: 1,
+              // where: { // TODO: how to best link a taxonomy to a fixed id ?
+              //   taxonomyId: 1,
+              // },
+            },
+            terms: {
+              select: {
+                id: true,
+                ...daoSharedGetTranslatedSelectColumns(["name", "slug"]),
+                color: true,
+                colorDark: true,
+              },
+              take: 1,
+              // where: { // TODO: how to best link a taxonomy to a fixed id ?
+              //   taxonomyId: 1,
+              // },
+            },
             heroImage: {
               select: {
                 id: true,
@@ -145,6 +175,8 @@ export const SearchQueries = extendType({
               lng: loc.lng ?? 0,
               lat: loc.lat ?? 0,
             },
+            primaryTerms: loc.primaryTerms,
+            terms: loc.terms,
             heroImage:
               loc?.heroImage?.id && loc?.heroImage?.status === ImageStatus.READY
                 ? loc?.heroImage

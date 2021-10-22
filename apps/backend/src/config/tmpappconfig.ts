@@ -5,7 +5,7 @@ import type { AppConfigSettings } from "./config";
 
 // this is the full list of the keys that are used for custom settings.
 // replace none
-export type AppConfigSettingsFiledKeys = "none";
+export type AppConfigSettingsFieldKeys = "none";
 
 export const appConfig: AppConfigSettings = {
   appName: "CultureMap",

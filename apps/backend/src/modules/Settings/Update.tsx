@@ -20,7 +20,7 @@ import {
 import { settingsSet } from "~/redux/slices/settings";
 
 import { Divider } from "@chakra-ui/react";
-import { settingsQueryGQL, filteredOutputByWhitelist } from "@culturemap/core";
+import { settingsQueryGQL } from "@culturemap/core";
 
 import { useQuery } from "@apollo/client";
 
@@ -42,6 +42,7 @@ import {
   AppSettingField,
   AppSettingsFieldKeys,
 } from "~/config";
+import { isObject } from "~/utils";
 
 const Update = () => {
   const dispatch = useTypedDispatch();
@@ -75,7 +76,26 @@ const Update = () => {
   } = formMethods;
 
   useEffect(() => {
-    reset(filteredOutputByWhitelist(data?.settings, getSettingsFieldKeys()));
+    if (
+      !data ||
+      !data.settings ||
+      !Array.isArray(data.settings) ||
+      data.settings.length === 0
+    )
+      return;
+
+    const settingKeys = getSettingsFieldKeys();
+    reset(
+      data.settings.reduce((acc: any, setting: any) => {
+        if (settingKeys.includes(setting.key) && isObject(setting.value.json))
+          return {
+            ...acc,
+            ...setting.value.json,
+          };
+
+        return acc;
+      }, {})
+    );
   }, [reset, data]);
 
   const onSubmit = async (

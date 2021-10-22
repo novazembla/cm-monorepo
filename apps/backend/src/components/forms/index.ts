@@ -28,3 +28,4 @@ export * from "./FieldImages";
 export * from "./FieldModuleTaxonomies";
 export * from "./FieldImageCropPositionSelect";
 export * from "./FieldTextEditor";
+export * from "./MappedTaxonomiesPicker";

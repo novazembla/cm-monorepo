@@ -2,10 +2,12 @@ import { object, string, number, SchemaOf } from "yup";
 import { PartialRecord } from "@culturemap/core";
 
 import { getAppConfig } from "./config";
-import { AppConfigSettingsFiledKeys } from "./tmpappconfig";
+import { AppConfigSettingsFieldKeys } from "./tmpappconfig";
 
 import { MapLocation } from "~/components/ui";
 import { LocationPicker } from "~/components/forms";
+import { MappedTaxonomies } from "~/components/ui";
+import { MappedTaxonomiesPicker } from "~/components/forms";
 
 export type AppSetting = {
   key: string;
@@ -27,10 +29,11 @@ export type AppSettingField = {
 export type AppSettingsDefaultFieldKeys =
   | "contactEmail"
   | "frontendMapStyeJsonUrl"
+  | "taxMapping"
   | "centerOfGravity";
 
 export type AppSettingsFieldKeys =
-  | AppConfigSettingsFiledKeys
+  | AppConfigSettingsFieldKeys
   | AppSettingsDefaultFieldKeys;
 
 export type AppSettingsFieldDefinitions = PartialRecord<
@@ -48,7 +51,7 @@ export const settingFields: AppSettingsFieldDefinitions = {
     // t("settings.contactEmail.label", "Contact email address")
     label: "settings.contactEmail.label",
     validationSchema: object().shape({
-      contactEmail: string().email().required()
+      contactEmail: string().email().required(),
     }),
     required: true,
   },
@@ -59,7 +62,7 @@ export const settingFields: AppSettingsFieldDefinitions = {
     label: "settings.frontendMapStyeJsonUrl.label",
     required: true,
     validationSchema: object().shape({
-      frontendMapStyeJsonUrl: string().required()
+      frontendMapStyeJsonUrl: string().required(),
     }),
   },
   centerOfGravity: {
@@ -95,13 +98,50 @@ export const settingFields: AppSettingsFieldDefinitions = {
       return {
         lng: value["lng"] ?? fieldDefs.defaultValue.lng,
         lat: value["lat"] ?? fieldDefs.defaultValue.lat,
-      }
+      };
     },
     getUpdateValue: (fieldDefs: AppSettingField, newData: any) => {
       return {
         lng: newData["lng"],
         lat: newData["lat"],
-      }
+      };
+    },
+  },
+  taxMapping: {
+    defaultValue: {
+      typeOfInstitution: "",
+      typeOfOrganisation: "",
+      eventType: "",
+      targetAudience: "",
+    },
+    type: "taxMapping",
+    // t("settings.taxMapping.label","Mapped taxonomies")
+    label: "settings.taxMapping.label",
+    required: true,
+    validationSchema: object().shape({
+      typeOfInstitution: string().required(),
+      typeOfOrganisation: string().required(),
+      targetAudience: string().required(),
+      eventType: string().required(),
+    }),
+    printComponent: MappedTaxonomies,
+    formComponent: MappedTaxonomiesPicker,
+    getFormComponentProps: (fieldDefs: AppSettingField, value: any) => {
+      return {
+        typeOfInstitution: value["typeOfInstitution"] ?? fieldDefs.defaultValue.type,
+        typeOfOrganisation: value["typeOfOrganisation"] ?? fieldDefs.defaultValue.type,
+        targetAudience:
+          value["targetAudience"] ?? fieldDefs.defaultValue.targetAudience,
+        eventType: value["eventType"] ?? fieldDefs.defaultValue.eventType,
+      };
+    },
+    getUpdateValue: (fieldDefs: AppSettingField, newData: any) => {
+      return {
+        typeOfInstitution: newData["typeOfInstitution"],
+        typeOfOrganisation: newData["typeOfOrganisation"],
+        targetAudience: newData["targetAudience"],
+        eventType: newData["eventType"],
+      };
     },
   },
 };
@@ -152,13 +192,13 @@ export const getSettingsValidationSchema = () => {
 
   (Object.keys(fieldDefs) as AppSettingsFieldKeys[]).forEach((setting) => {
     if (!completeSchema) {
-      completeSchema = fieldDefs[setting]?.validationSchema
+      completeSchema = fieldDefs[setting]?.validationSchema;
     } else {
-      completeSchema = completeSchema.concat(fieldDefs[setting]?.validationSchema)
+      completeSchema = completeSchema.concat(
+        fieldDefs[setting]?.validationSchema
+      );
     }
-      
   });
 
   return completeSchema;
-  
 };

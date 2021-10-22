@@ -12,3 +12,4 @@ export * from "./ApiFile";
 export * from "./MultiLangValue";
 export * from "./DangerZoneAlertDialog";
 export * from "./SortableList";
+export * from "./MappedTaxonomies";
