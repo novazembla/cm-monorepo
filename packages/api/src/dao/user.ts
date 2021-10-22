@@ -111,7 +111,14 @@ export const daoUserGetById = async (id: number): Promise<User> => {
 };
 
 export const daoUserGetByEmail = async (email: string): Promise<User> => {
-  const user: User | null = await prisma.user.findUnique({ where: { email } });
+  const user: User | null = await prisma.user.findFirst({
+    where: {
+      email: {
+        equals: email,
+        mode: "insensitive",
+      },
+    },
+  });
 
   return filteredOutputByBlacklistOrNotFound(
     user,
@@ -123,7 +130,14 @@ export const daoUserGetByLogin = async (
   email: string,
   password: string
 ): Promise<User | null> => {
-  const user: User | null = await prisma.user.findUnique({ where: { email } });
+  const user: User | null = await prisma.user.findFirst({
+    where: {
+      email: {
+        equals: email,
+        mode: "insensitive",
+      },
+    },
+  });
 
   if (!user || !(await bcrypt.compare(password, user.password))) return null;
 
