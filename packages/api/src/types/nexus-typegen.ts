@@ -328,6 +328,12 @@ export interface NexusGenObjects {
     status?: number | null; // Int
     updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
   }
+  FrontendSettings: { // root type
+    centerOfGravity?: NexusGenScalars['JSON'] | null; // JSON
+    mapJsonUrl?: string | null; // String
+    taxMapping?: NexusGenScalars['JSON'] | null; // JSON
+    taxonomies?: Array<NexusGenRootTypes['Taxonomy'] | null> | null; // [Taxonomy]
+  }
   GeoCodeResult: { // root type
     count: number; // Int!
     geojson: NexusGenScalars['JSON']; // JSON!
@@ -639,6 +645,12 @@ export interface NexusGenFieldTypes {
     title: NexusGenScalars['JSON'] | null; // JSON
     updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
   }
+  FrontendSettings: { // field return type
+    centerOfGravity: NexusGenScalars['JSON'] | null; // JSON
+    mapJsonUrl: string | null; // String
+    taxMapping: NexusGenScalars['JSON'] | null; // JSON
+    taxonomies: Array<NexusGenRootTypes['Taxonomy'] | null> | null; // [Taxonomy]
+  }
   GeoCodeResult: { // field return type
     count: number; // Int!
     geojson: NexusGenScalars['JSON']; // JSON!
@@ -794,6 +806,7 @@ export interface NexusGenFieldTypes {
     dataImports: NexusGenRootTypes['DataImportQueryResult'] | null; // DataImportQueryResult
     event: NexusGenRootTypes['Event']; // Event!
     events: NexusGenRootTypes['EventQueryResult'] | null; // EventQueryResult
+    frontendSettings: NexusGenRootTypes['FrontendSettings'] | null; // FrontendSettings
     geocode: NexusGenRootTypes['GeoCodeResult'] | null; // GeoCodeResult
     homepage: NexusGenRootTypes['Homepage'] | null; // Homepage
     imageRead: NexusGenRootTypes['Image']; // Image!
@@ -1053,6 +1066,12 @@ export interface NexusGenFieldTypeNames {
     title: 'JSON'
     updatedAt: 'DateTime'
   }
+  FrontendSettings: { // field return type name
+    centerOfGravity: 'JSON'
+    mapJsonUrl: 'String'
+    taxMapping: 'JSON'
+    taxonomies: 'Taxonomy'
+  }
   GeoCodeResult: { // field return type name
     count: 'Int'
     geojson: 'JSON'
@@ -1208,6 +1227,7 @@ export interface NexusGenFieldTypeNames {
     dataImports: 'DataImportQueryResult'
     event: 'Event'
     events: 'EventQueryResult'
+    frontendSettings: 'FrontendSettings'
     geocode: 'GeoCodeResult'
     homepage: 'Homepage'
     imageRead: 'Image'

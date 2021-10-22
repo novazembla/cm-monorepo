@@ -56,6 +56,27 @@ export const daoTaxonomyQuery = async (
   );
 };
 
+export const daoTaxonomySelectQuery = async (
+  where: Prisma.TaxonomyWhereInput,
+  select: Prisma.TaxonomySelect | undefined,
+  orderBy: any,
+  pageIndex: number = 0,
+  pageSize: number = apiConfig.db.defaultPageSize
+): Promise<Taxonomy[]> => {
+  const taxonomies = await prisma.taxonomy.findMany({
+    where,
+    select,
+    orderBy,
+    skip: pageIndex * pageSize,
+    take: Math.min(pageSize, apiConfig.db.maxPageSize),
+  });
+
+  return filteredOutputByBlacklist(
+    taxonomies,
+    apiConfig.db.privateJSONDataKeys.taxonomy
+  );
+};
+
 export const daoTaxonomyQueryFirst = async (
   where: Prisma.TaxonomyWhereInput,
   include?: Prisma.TaxonomyInclude | undefined,
@@ -202,6 +223,7 @@ export const daoTaxonomyDelete = async (id: number): Promise<Taxonomy> => {
 
 const defaults = {
   daoTaxonomyQuery,
+  daoTaxonomySelectQuery,
   daoTaxonomyQueryFirst,
   daoTaxonomyQueryCount,
   daoTaxonomyGetById,

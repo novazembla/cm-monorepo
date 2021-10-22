@@ -40,11 +40,13 @@ export const FieldSingleImage = ({
   currentImage,
   connectWith,
   setActiveUploadCounter,
+  doNotCollectCropPosition,
 }: {
   settings: FieldSingleImageSettings;
   id: string;
   deleteButtonGQL?: DocumentNode;
   isDisabled?: boolean;
+  doNotCollectCropPosition?: boolean;
   label: string;
   name: string;
   currentImage: Record<string, any>;
@@ -57,7 +59,9 @@ export const FieldSingleImage = ({
 
   let mappedCropPosition = "center";
 
-  const watchedValue = watch(`${name}_cropPosition`) ? parseInt(watch(`${name}_cropPosition`)) : 0;
+  const watchedValue = watch(`${name}_cropPosition`)
+    ? parseInt(watch(`${name}_cropPosition`))
+    : 0;
 
   switch (watchedValue) {
     case ImageCropPosition.TOP:
@@ -76,7 +80,7 @@ export const FieldSingleImage = ({
       mappedCropPosition = "left";
       break;
 
-    default: 
+    default:
       mappedCropPosition = "center";
       break;
   }
@@ -168,9 +172,14 @@ export const FieldSingleImage = ({
               }}
             />
           </FieldRow>
-          <FieldRow>
-            <FieldImageCropPositionSelect name={`${name}_cropPosition`} cropPosition={currentImage?.cropPosition} />
-          </FieldRow>
+          {!doNotCollectCropPosition && (
+            <FieldRow>
+              <FieldImageCropPositionSelect
+                name={`${name}_cropPosition`}
+                cropPosition={currentImage?.cropPosition}
+              />
+            </FieldRow>
+          )}
         </Box>
       </Grid>
     </chakra.fieldset>

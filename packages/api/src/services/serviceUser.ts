@@ -97,7 +97,10 @@ export const userUpdate = async (
   let newEmailAddress = false;
   let dbData = data;
 
-  if (data.email && data.email !== userInDb.email) {
+  if (
+    data.email &&
+    (data.email as string).toLowerCase() !== userInDb.email.toLowerCase()
+  ) {
     newEmailAddress = true;
     dbData = {
       ...dbData,

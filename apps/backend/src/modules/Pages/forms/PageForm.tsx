@@ -87,6 +87,7 @@ export const PageForm = ({
               altRequired: false,
               creditsRequired: false,
             }}
+            doNotCollectCropPosition={true}
             connectWith={{
               heroImagePages: {
                 connect: {

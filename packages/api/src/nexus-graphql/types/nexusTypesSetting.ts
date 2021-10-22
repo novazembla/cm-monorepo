@@ -13,9 +13,14 @@ import httpStatus from "http-status";
 import { filteredOutputByWhitelist } from "@culturemap/core";
 
 import { BooleanResult } from "./nexusTypesShared";
-import { daoSettingQuery, daoSettingGetById } from "../../dao";
+import {
+  daoSettingQuery,
+  daoSettingGetById,
+  daoTaxonomySelectQuery,
+  daoSharedGetTranslatedSelectColumns,
+} from "../../dao";
 import { settingUpsertSettings } from "../../services/serviceSetting";
-import { ApiError } from "../../utils";
+import { ApiError, parseSettings } from "../../utils";
 import { authorizeApiUser } from "../helpers";
 
 // TODO this white listing of keys is rather annoying,
@@ -30,6 +35,18 @@ export const Setting = objectType({
     t.json("value");
     t.date("createdAt");
     t.date("updatedAt");
+  },
+});
+
+export const FrontendSettings = objectType({
+  name: "FrontendSettings",
+  definition(t) {
+    t.json("centerOfGravity");
+    t.json("taxMapping");
+    t.string("mapJsonUrl");
+    t.list.field("taxonomies", {
+      type: "Taxonomy",
+    });
   },
 });
 
@@ -66,6 +83,55 @@ export const SettingsQuery = extendType({
         const setting = daoSettingGetById(args.id);
 
         return filteredOutputByWhitelist(setting, FIELD_KEYS_SETTING, "value");
+      },
+    });
+
+    t.field("frontendSettings", {
+      type: "FrontendSettings",
+
+      async resolve() {
+        const settingsInDb = await daoSettingQuery({
+          scope: "settings",
+        });
+
+        const settings = parseSettings(settingsInDb);
+
+        const taxonomies = await daoTaxonomySelectQuery(
+          {
+            id: {
+              in: settings?.taxMapping
+                ? Object.keys(settings.taxMapping).reduce(
+                    (acc: any, key: any) => {
+                      acc.push(parseInt(settings.taxMapping[key] ?? "0"));
+                      return acc;
+                    },
+                    []
+                  )
+                : [],
+            },
+          },
+          {
+            id: true,
+            ...daoSharedGetTranslatedSelectColumns(["name", "slug"]),
+
+            terms: {
+              select: {
+                id: true,
+                color: true,
+                colorDark: true,
+                ...daoSharedGetTranslatedSelectColumns(["name", "slug"]),
+              },
+            },
+          },
+          undefined
+        );
+
+        return {
+          centerOfGravity: settings?.centerOfGravity,
+          taxMapping: settings?.taxMapping,
+          taxonomies,
+          mapJsonUrl: settings?.frontendMapStyeJsonUrl,
+        };
       },
     });
   },

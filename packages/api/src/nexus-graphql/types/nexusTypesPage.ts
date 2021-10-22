@@ -246,7 +246,6 @@ export const PageQueries = extendType({
                 id: true,
                 status: true,
                 meta: true,
-                cropPosition: true,
                 ...daoSharedGetTranslatedSelectColumns(["alt", "credits"]),
               },
             },

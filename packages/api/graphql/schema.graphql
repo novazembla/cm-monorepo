@@ -173,6 +173,13 @@ type File {
   updatedAt: DateTime
 }
 
+type FrontendSettings {
+  centerOfGravity: JSON
+  mapJsonUrl: String
+  taxMapping: JSON
+  taxonomies: [Taxonomy]
+}
+
 type GeoCodeResult {
   count: Int!
   geojson: JSON!
@@ -391,6 +398,7 @@ type Query {
   dataImports(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): DataImportQueryResult
   event(id: Int, slug: String): Event!
   events(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): EventQueryResult
+  frontendSettings: FrontendSettings
   geocode(q: String!): GeoCodeResult
   homepage: Homepage
   imageRead(id: Int!): Image!
