@@ -150,7 +150,7 @@ const eventCategories = [
 
 const pages = [
   ["Kultur in Lichtenberg", "Culture Map Project"],
-  ["Nutzungshinweiser", "How to use"],
+  ["Nutzungshinweise", "How to use"],
   ["Impressum", "Imprint"],
   ["Über uns", "About Us"],
   ["Datenschutz", "Privacy information"],

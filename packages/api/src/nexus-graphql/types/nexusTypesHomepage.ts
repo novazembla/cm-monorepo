@@ -271,7 +271,7 @@ export const HomepageQuery = extendType({
                         item,
                         "slug"
                       ),
-                      description: daoSharedMapTranslatedColumnsInRowToJson(
+                      teaser: daoSharedMapTranslatedColumnsInRowToJson(
                         item,
                         "teaser",
                         asTrimmedText
