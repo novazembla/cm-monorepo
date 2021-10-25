@@ -294,10 +294,12 @@ export interface NexusGenObjects {
     address?: string | null; // String
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
     dates?: Array<NexusGenRootTypes['EventDate'] | null> | null; // [EventDate]
+    firstEventDate?: NexusGenScalars['DateTime'] | null; // DateTime
     heroImage?: NexusGenRootTypes['Image'] | null; // Image
     id: number; // Int!
     isFree?: boolean | null; // Boolean
     isImported?: boolean | null; // Boolean
+    lastEventDate?: NexusGenScalars['DateTime'] | null; // DateTime
     locations?: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
     meta?: NexusGenScalars['JSON'] | null; // JSON
     organiser?: string | null; // String
@@ -606,10 +608,12 @@ export interface NexusGenFieldTypes {
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
     dates: Array<NexusGenRootTypes['EventDate'] | null> | null; // [EventDate]
     description: NexusGenScalars['JSON'] | null; // JSON
+    firstEventDate: NexusGenScalars['DateTime'] | null; // DateTime
     heroImage: NexusGenRootTypes['Image'] | null; // Image
     id: number; // Int!
     isFree: boolean | null; // Boolean
     isImported: boolean | null; // Boolean
+    lastEventDate: NexusGenScalars['DateTime'] | null; // DateTime
     locations: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
     meta: NexusGenScalars['JSON'] | null; // JSON
     organiser: string | null; // String
@@ -1027,10 +1031,12 @@ export interface NexusGenFieldTypeNames {
     createdAt: 'DateTime'
     dates: 'EventDate'
     description: 'JSON'
+    firstEventDate: 'DateTime'
     heroImage: 'Image'
     id: 'Int'
     isFree: 'Boolean'
     isImported: 'Boolean'
+    lastEventDate: 'DateTime'
     locations: 'Location'
     meta: 'JSON'
     organiser: 'String'

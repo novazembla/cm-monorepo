@@ -112,10 +112,12 @@ type Event {
   createdAt: DateTime
   dates: [EventDate]
   description: JSON
+  firstEventDate: DateTime
   heroImage: Image
   id: Int!
   isFree: Boolean
   isImported: Boolean
+  lastEventDate: DateTime
   locations: [Location]
   meta: JSON
   organiser: String

@@ -309,7 +309,7 @@
               "lastName": "Nachname",
               "email": "Email Adresse",
               "role": "Rolle der NutzerIn",
-              "ownsEventImports": "Besitzt neu erstellte importierte Events",
+              "ownsEventImports": "Besitzt automatisch neu importierte Events",
               "ownsConentOnDelete": "Dieser NutzerIn die Inhalte der gelöschten NutzerIn hinzufügen",
               "userBanned": "NutzerIn sperren"
             },

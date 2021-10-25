@@ -270,12 +270,14 @@ export const LocationQueries = extendType({
               select: {
                 id: true,
                 ...daoSharedGetTranslatedSelectColumns(["name", "slug"]),
+                taxonomyId: true,
               },
             },
             primaryTerms: {
               select: {
                 id: true,
                 ...daoSharedGetTranslatedSelectColumns(["name", "slug"]),
+                taxonomyId: true,                
               },
             },
           };
@@ -286,8 +288,13 @@ export const LocationQueries = extendType({
             events: {
               select: {
                 id: true,
-                ...daoSharedGetTranslatedSelectColumns(["title", "slug"]),
-
+                ...daoSharedGetTranslatedSelectColumns([
+                  "title",
+                  "slug",
+                  "description",
+                ]),
+                firstEventDate: true,
+                lastEventDate: true,
                 dates: {
                   select: {
                     date: true,
@@ -298,6 +305,15 @@ export const LocationQueries = extendType({
                     date: "asc",
                   },
                   take: 3,
+                },
+                heroImage: {
+                  select: {
+                    id: true,
+                    status: true,
+                    meta: true,
+                    cropPosition: true,
+                    ...daoSharedGetTranslatedSelectColumns(["alt", "credits"]),
+                  },
                 },
               },
             },

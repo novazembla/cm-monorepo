@@ -37,9 +37,10 @@ export const HomepageQuery = extendType({
       type: "Homepage",
 
       async resolve() {
-        const settings = await getSettings("homepage");
+        const settingsHomepage = await getSettings("homepage");
+        const settings = await getSettings("settings");
 
-        if (Object.keys(settings).length === 0)
+        if (Object.keys(settingsHomepage).length === 0)
           return {
             highlights: [],
             missionStatementPage: null,
@@ -48,8 +49,8 @@ export const HomepageQuery = extendType({
 
         let highlights: any[] = [];
 
-        if (settings?.highlights?.length) {
-          let mappedHighlights: any = settings?.highlights.reduce(
+        if (settingsHomepage?.highlights?.length) {
+          let mappedHighlights: any = settingsHomepage?.highlights.reduce(
             (acc: any, item: any) => {
               return {
                 ...acc,
@@ -59,7 +60,7 @@ export const HomepageQuery = extendType({
             {}
           );
 
-          const cLocations = settings?.highlights.reduce(
+          const cLocations = settingsHomepage?.highlights.reduce(
             (acc: any[], h: any, index: number) => {
               if (h.type === "location" && h?.id && h?.item?.id)
                 acc.push({
@@ -97,9 +98,11 @@ export const HomepageQuery = extendType({
                     colorDark: true,
                   },
                   take: 1,
-                  // where: { // TODO: how to best link a taxonomy to a fixed id ?
-                  //   taxonomyId: 1,
-                  // },
+                  where: {
+                    taxonomyId: parseInt(
+                      settings?.taxMapping?.typeOfInstitution ?? "0"
+                    ),
+                  },
                 },
                 terms: {
                   select: {
@@ -109,9 +112,11 @@ export const HomepageQuery = extendType({
                     colorDark: true,
                   },
                   take: 1,
-                  // where: { // TODO: how to best link a taxonomy to a fixed id ?
-                  //   taxonomyId: 1,
-                  // },
+                  where: {
+                    taxonomyId: parseInt(
+                      settings?.taxMapping?.typeOfInstitution ?? "0"
+                    ),
+                  },
                 },
                 heroImage: {
                   select: {
@@ -148,34 +153,38 @@ export const HomepageQuery = extendType({
                         "description",
                         asTrimmedText
                       ),
-                      primaryTerm:
+                      primaryTerms:
                         loc?.primaryTerms?.length > 0
-                          ? {
-                              id: loc?.primaryTerms[0].id,
-                              name: daoSharedMapTranslatedColumnsInRowToJson(
-                                loc?.primaryTerms[0],
-                                "name"
-                              ),
-                              slug: daoSharedMapTranslatedColumnsInRowToJson(
-                                loc?.primaryTerms[0],
-                                "slug"
-                              ),
-                            }
-                          : undefined,
-                      term:
+                          ? [
+                              {
+                                id: loc?.primaryTerms[0].id,
+                                name: daoSharedMapTranslatedColumnsInRowToJson(
+                                  loc?.primaryTerms[0],
+                                  "name"
+                                ),
+                                slug: daoSharedMapTranslatedColumnsInRowToJson(
+                                  loc?.primaryTerms[0],
+                                  "slug"
+                                ),
+                              },
+                            ]
+                          : [],
+                      terms:
                         loc?.term?.length > 0
-                          ? {
-                              id: loc?.term[0].id,
-                              name: daoSharedMapTranslatedColumnsInRowToJson(
-                                loc?.term[0],
-                                "name"
-                              ),
-                              slug: daoSharedMapTranslatedColumnsInRowToJson(
-                                loc?.term[0],
-                                "slug"
-                              ),
-                            }
-                          : undefined,
+                          ? [
+                              {
+                                id: loc?.term[0].id,
+                                name: daoSharedMapTranslatedColumnsInRowToJson(
+                                  loc?.term[0],
+                                  "name"
+                                ),
+                                slug: daoSharedMapTranslatedColumnsInRowToJson(
+                                  loc?.term[0],
+                                  "slug"
+                                ),
+                              },
+                            ]
+                          : [],
                       heroImage:
                         loc?.heroImage?.id &&
                         loc?.heroImage?.status === ImageStatus.READY
@@ -188,7 +197,7 @@ export const HomepageQuery = extendType({
             }
           }
 
-          const cTours = settings?.highlights.reduce(
+          const cTours = settingsHomepage?.highlights.reduce(
             (acc: any[], h: any, index: number) => {
               if (h.type === "tour" && h?.id && h?.item?.id)
                 acc.push({
@@ -280,7 +289,7 @@ export const HomepageQuery = extendType({
             }
           }
 
-          const cEvents = settings?.highlights.reduce(
+          const cEvents = settingsHomepage?.highlights.reduce(
             (acc: any[], h: any, index: number) => {
               if (h.type === "event" && h?.id && h?.item?.id)
                 acc.push({
@@ -308,12 +317,25 @@ export const HomepageQuery = extendType({
                   "slug",
                   "description",
                 ]),
+                firstEventDate: true,
+                lastEventDate: true,
                 heroImage: {
                   select: {
                     id: true,
                     status: true,
                     meta: true,
                     cropPosition: true,
+                  },
+                },
+                dates: {
+                  select: {
+                    id: true,
+                    date: true,
+                    begin: true,
+                    end: true,
+                  },
+                  orderBy: {
+                    date: "asc",
                   },
                 },
               },
@@ -343,6 +365,9 @@ export const HomepageQuery = extendType({
                         "description",
                         asTrimmedText
                       ),
+                      dates: item?.dates?.length > 0 ? item?.dates : [],
+                      firstEventDate: item?.firstEventDate ?? null,
+                      lastEventDate: item?.lastEventDate ?? null,
                       heroImage:
                         item?.heroImage?.id &&
                         item?.heroImage?.status === ImageStatus.READY
@@ -366,8 +391,10 @@ export const HomepageQuery = extendType({
         }
 
         let missionStatementPage: any;
-        if (settings?.missionStatementPage?.id) {
-          const page = await daoPageGetById(settings?.missionStatementPage?.id);
+        if (settingsHomepage?.missionStatementPage?.id) {
+          const page = await daoPageGetById(
+            settingsHomepage?.missionStatementPage?.id
+          );
           if (page && page?.status === PublishStatus.PUBLISHED) {
             missionStatementPage = {
               id: page.id,
@@ -378,11 +405,13 @@ export const HomepageQuery = extendType({
         }
 
         let missionStatement: any;
-        if (settings?.missionStatement) {
-          missionStatement = Object.keys(settings?.missionStatement).reduce(
+        if (settingsHomepage?.missionStatement) {
+          missionStatement = Object.keys(
+            settingsHomepage?.missionStatement
+          ).reduce(
             (accMS: any, lang: any) => ({
               ...accMS,
-              [lang]: htmlToText(settings?.missionStatement[lang]),
+              [lang]: htmlToText(settingsHomepage?.missionStatement[lang]),
             }),
             {}
           );

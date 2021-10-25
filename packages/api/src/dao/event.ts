@@ -99,6 +99,29 @@ export const daoEventQueryCount = async (
   });
 };
 
+export const daoEventUpdateBeginAndEnd = async (id: number) => {
+  const eventDates: EventDate[] = await prisma.eventDate.findMany({
+    where: {
+      eventId: id,
+    },
+    orderBy: {
+      date: "asc",
+    },
+  });
+
+  if (eventDates?.length > 0) {
+    await prisma.event.update({
+      data: {
+        firstEventDate: eventDates[0].date,
+        lastEventDate: eventDates[eventDates.length - 1].date,
+      },
+      where: {
+        id,
+      },
+    });
+  }
+};
+
 export const daoEventCreate = async (
   data: Prisma.EventCreateInput
 ): Promise<Event> => {
@@ -128,6 +151,8 @@ export const daoEventCreate = async (
       ),
     },
   });
+
+  if (event) await daoEventUpdateBeginAndEnd(event.id);
 
   return filteredOutputByBlacklistOrNotFound(
     event,
@@ -185,6 +210,8 @@ export const daoEventUpdate = async (
       id,
     },
   });
+
+  if (event) await daoEventUpdateBeginAndEnd(event.id);
 
   return filteredOutputByBlacklistOrNotFound(
     event,

@@ -119,6 +119,7 @@ export const SettingsQuery = extendType({
                 id: true,
                 color: true,
                 colorDark: true,
+                taxonomyId: true,
                 ...daoSharedGetTranslatedSelectColumns(["name", "slug"]),
               },
             },

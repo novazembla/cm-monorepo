@@ -476,7 +476,7 @@ async function main() {
 
     await prisma.setting.create({
       data: {
-        scope: "setting",
+        scope: "settings",
         key: "taxMapping",
         value: {
           json: taxMapping,

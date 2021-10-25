@@ -85,6 +85,7 @@ const Update = () => {
       return;
 
     const settingKeys = getSettingsFieldKeys();
+
     reset(
       data.settings.reduce((acc: any, setting: any) => {
         if (settingKeys.includes(setting.key) && isObject(setting.value.json))

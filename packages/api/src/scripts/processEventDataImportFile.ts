@@ -58,6 +58,33 @@ const mapKeyToHeader = (mapping: any[], key: string) => {
 
   return match.headerKey;
 };
+
+const eventUpdateBeginAndEnd = async (
+  prisma: Prisma.PrismaClient,
+  id: number
+) => {
+  const eventDates: Prisma.EventDate[] = await prisma.eventDate.findMany({
+    where: {
+      eventId: id,
+    },
+    orderBy: {
+      date: "asc",
+    },
+  });
+
+  if (eventDates?.length > 0) {
+    await prisma.event.update({
+      data: {
+        firstEventDate: eventDates[0].date,
+        lastEventDate: eventDates[eventDates.length - 1].date,
+      },
+      where: {
+        id,
+      },
+    });
+  }
+};
+
 const getTermsOfRow = async (
   mapping: any[],
   row: any[],
@@ -315,6 +342,7 @@ const processDataImportedRow = async (
       });
 
       if (eventInDb?.id) {
+        await eventUpdateBeginAndEnd(prisma, eventInDb.id);
         log.push(
           lang === "de"
             ? `Veranstaltung Id ${eventInDb.id} aktualisiert`
@@ -369,6 +397,7 @@ const processDataImportedRow = async (
       });
 
       if (eventInDb?.id) {
+        await eventUpdateBeginAndEnd(prisma, eventInDb.id);
         log.push(
           lang === "de"
             ? `Neuer Veranstaltung mit der ID ${eventInDb.id} erstellt`

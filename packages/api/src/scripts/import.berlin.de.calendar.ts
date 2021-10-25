@@ -149,6 +149,32 @@ const findEventOwner = async (
   });
 };
 
+const eventUpdateBeginAndEnd = async (
+  prisma: Prisma.PrismaClient,
+  id: number
+) => {
+  const eventDates: Prisma.EventDate[] = await prisma.eventDate.findMany({
+    where: {
+      eventId: id,
+    },
+    orderBy: {
+      date: "asc",
+    },
+  });
+
+  if (eventDates?.length > 0) {
+    await prisma.event.update({
+      data: {
+        firstEventDate: eventDates[0].date,
+        lastEventDate: eventDates[eventDates.length - 1].date,
+      },
+      where: {
+        id,
+      },
+    });
+  }
+};
+
 const registerEventCategoies = async (
   prisma: Prisma.PrismaClient,
   categories: any
@@ -457,6 +483,8 @@ const doChores = async () => {
                     });
 
                     if (eventInDb) {
+                      await eventUpdateBeginAndEnd(prisma, eventInDb.id);
+
                       log.push(
                         `Neue Veranstaltung mit der ID: ${eventInDb?.id} erstellt`
                       );
@@ -543,6 +571,8 @@ const doChores = async () => {
                             id: eventInDb.id,
                           },
                         });
+
+                        await eventUpdateBeginAndEnd(prisma, eventInDb.id);
 
                         // TODO: that next.js trigger updates on frontend via get request
                         log.push(

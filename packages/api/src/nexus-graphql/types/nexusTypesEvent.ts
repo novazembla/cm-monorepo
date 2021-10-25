@@ -98,6 +98,9 @@ export const Event = objectType({
     t.string("address");
     t.string("organiser");
 
+    t.date("firstEventDate");
+    t.date("lastEventDate");
+
     t.date("createdAt");
     t.date("updatedAt");
   },
@@ -192,6 +195,9 @@ export const EventQueries = extendType({
             terms: {
               select: {
                 id: true,
+                taxonomyId: true,
+                color: true,
+                colorDark: true,
                 ...daoSharedGetTranslatedSelectColumns(["name", "slug"]),
               },
             },
@@ -216,6 +222,9 @@ export const EventQueries = extendType({
                 date: true,
                 begin: true,
                 end: true,
+              },
+              orderBy: {
+                date: "asc",
               },
             },
           };
@@ -336,9 +345,24 @@ export const EventQueries = extendType({
             locations: {
               select: {
                 id: true,
-                ...daoSharedGetTranslatedSelectColumns(["title", "slug"]),
+                ...daoSharedGetTranslatedSelectColumns([
+                  "title",
+                  "description",
+                  "slug",
+                ]),
                 lat: true,
                 lng: true,
+                primaryTerms: true,
+                terms: true,
+                heroImage: {
+                  select: {
+                    id: true,
+                    status: true,
+                    meta: true,
+                    cropPosition: true,
+                    ...daoSharedGetTranslatedSelectColumns(["alt", "credits"]),
+                  },
+                },
               },
             },
           };

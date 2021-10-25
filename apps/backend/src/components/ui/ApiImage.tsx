@@ -32,14 +32,14 @@ export const ApiImage = ({
   showPlaceholder,
   sizes = "100vw",
   objectFit = "contain",
-  objectPosition = "center",
+  objectPosition = "center center",
 }: ApiImageProps) => {
   const { t } = useTranslation();
 
   const [polledStatus, polledMeta] = useImageStatusPoll(id, status);
 
   let content;
-  let imageAspectRationPB;
+  let imageAspectRatioPB;
 
   if (status === ImageStatus.READY || polledStatus === ImageStatus.READY) {
     const aSizes =
@@ -48,11 +48,11 @@ export const ApiImage = ({
     if (aSizes) {
       const originalUrl = aSizes.original?.url ?? "";
       const originalWidth = aSizes.original?.width ?? 0;
-      const originalHeight = aSizes.original?.width ?? 0;
+      const originalHeight = aSizes.original?.height ?? 0;
 
       if (useImageAspectRatioPB && originalWidth > 0)
-        imageAspectRationPB = Math.floor(
-          (originalHeight / originalHeight) * 100
+        imageAspectRatioPB = Math.floor(
+          (originalHeight / originalWidth) * 100
         );
 
       const sourceWebp = Object.keys(aSizes).reduce((acc: any, key: any) => {
@@ -94,7 +94,7 @@ export const ApiImage = ({
               width={originalWidth}
               height={originalHeight}
               objectFit={(objectFit ?? "contain") as any}
-              objectPosition={(objectPosition ?? "center") as any}
+              objectPosition={(objectPosition ?? "center center") as any}
             />
           </picture>
         );
@@ -175,8 +175,8 @@ export const ApiImage = ({
       </Flex>
     );
 
-  if (content && (forceAspectRatioPB || imageAspectRationPB)) {
-    const aPB = forceAspectRatioPB ?? imageAspectRationPB;
+  if (content && (forceAspectRatioPB || imageAspectRatioPB)) {
+    const aPB = forceAspectRatioPB ?? imageAspectRatioPB;
     content = (
       <Box className="aspect" pb={`${aPB}%`}>
         <Box className="ratio">{content}</Box>

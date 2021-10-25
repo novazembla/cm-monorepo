@@ -148,6 +148,9 @@ model Event {
 
   primaryTerms  Term[] @relation(name: "eventPrimaryTerms")
 
+  firstEventDate      DateTime?
+  lastEventDate  DateTime?
+
   importedEventHash String?
 
   @@index([ownerId], name: "indexEventOwnerId")
