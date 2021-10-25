@@ -5,6 +5,7 @@ TODO: Learn from: https://github.com/belgattitude/nextjs-monorepo-example
 TODO: Monitor seed issue https://github.com/prisma/prisma/issues/7053 
 Would be much nicer to use prisma db seed instead of the 
 
+
 #Installation
 
 Don't forget to run the following commands 
