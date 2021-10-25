@@ -325,8 +325,32 @@ export const TourQueries = extendType({
                     ...daoSharedGetTranslatedSelectColumns(["title", "slug"]),
                     lat: true,
                     lng: true,
+                    terms: {
+                      select: {
+                        id: true,
+                        taxonomyId: true,
+                        color: true,
+                        colorDark: true,
+                        ...daoSharedGetTranslatedSelectColumns([
+                          "name",
+                          "slug",
+                        ]),
+                      },
+                    },
+                    primaryTerms: {
+                      select: {
+                        id: true,
+                        ...daoSharedGetTranslatedSelectColumns([
+                          "name",
+                          "slug",
+                        ]),
+                      },
+                    },
                   },
                 },
+              },
+              orderBy: {
+                number: "asc",
               },
             },
           };
