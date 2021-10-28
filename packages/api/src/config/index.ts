@@ -109,6 +109,7 @@ export interface ApiConfig {
   eventDataImportScriptName: string;
   activeLanguages: string[];
   defaultLanguage: string;
+  defaultPinColor: string;
 }
 
 export interface ApiConfigOverwrite {
@@ -136,6 +137,7 @@ export interface ApiConfigOverwrite {
   eventDataImportScriptName?: string;
   activeLanguages?: string[];
   defaultLanguage?: string;
+  defaultPinColor?: string;
 }
 const db: ApiConfigDB = {
   url: safeGuardVariable(
@@ -416,6 +418,7 @@ let apiConfig = {
   eventDataImportScriptName: "import.berlin.de.js",
   activeLanguages: ["de", "en"],
   defaultLanguage: "de",
+  defaultPinColor: "#660D36",
 };
 
 export const updateApiConfig = (aCfg: ApiConfigOverwrite) => {

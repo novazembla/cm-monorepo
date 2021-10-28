@@ -27,7 +27,7 @@ export const Homepage = objectType({
 const descriptionMaxLength = 300;
 
 const asTrimmedText = (val: any) => {
-  return htmlToTrimmedString(val, descriptionMaxLength);
+  return htmlToTrimmedString(val, descriptionMaxLength, true);
 };
 
 export const HomepageQuery = extendType({

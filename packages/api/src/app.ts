@@ -25,6 +25,7 @@ import {
   postFileUpload,
   postDataImportFile,
   postDataImportFileUpload,
+  getGeoJson,
 } from "./routes";
 
 export const app: Application = express();
@@ -41,10 +42,16 @@ export const initializeExpressApp = () => {
   app.use(morganSuccessHandler);
   app.use(morganErrorHandler);
 
+  app.get("/geojson", getGeoJson);
+
   app.post("/profileImage", postImageUpload.single("image"), postProfileImage);
   app.post("/image", postImageUpload.single("image"), postImage);
   app.post("/file", postFileUpload.single("file"), postFile);
-  app.post("/import", postDataImportFileUpload.single("file"), postDataImportFile);
+  app.post(
+    "/import",
+    postDataImportFileUpload.single("file"),
+    postDataImportFile
+  );
 
   // TODO: openar
   app.use(

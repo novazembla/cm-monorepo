@@ -1,7 +1,9 @@
 import { JSDOM } from "jsdom";
 
-export const htmlToString = (html: string): string | null => {
+export const htmlToString = (html: string, fast?: boolean): string | null => {
   try {
+    if (fast) return html.replace(/(<([^>]+)>)/gi, "");
+
     const dom = new JSDOM(html ?? "");
     return dom?.window?.document?.querySelector("body")?.textContent ?? null;
   } catch (err) {
@@ -27,10 +29,14 @@ export const convertToHtml = (str: string) => {
   );
 };
 
-export const htmlToTrimmedString = (val: any, length: number) => {
-  if (typeof val !== "string") return val;
+export const htmlToTrimmedString = (
+  val: any,
+  length: number,
+  fast?: boolean
+) => {
+  if (typeof val !== "string" || val === "") return "";
 
-  let str = htmlToString(val) ?? "";
+  let str = htmlToString(val, fast) ?? "";
 
   if (str.length > length)
     return str.replace(new RegExp("^(.{" + length + "}[^\\s]*).*"), "$1");

@@ -31,7 +31,7 @@ import { getSettings } from "../../services/serviceSetting";
 const descriptionMaxLength = 300;
 
 const asTrimmedText = (val: any) => {
-  return htmlToTrimmedString(val, descriptionMaxLength);
+  return htmlToTrimmedString(val, descriptionMaxLength, true);
 };
 
 export const SearchResultItem = objectType({

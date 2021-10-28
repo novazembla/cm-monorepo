@@ -132,14 +132,14 @@ const EditorMenuBar = ({
   const onLinkFormSubmit = (event?: FormEvent) => {
     if (event) event.preventDefault();
 
-    if (linkValue.length < 2) {
+    if (linkValue.length < 1) {
       editor.chain().focus().unsetLink().run();
     } else {
       editor
         .chain()
         .focus()
         .extendMarkRange("link")
-        .setLink({ href: linkValue })
+        .setLink({ href: linkValue, target: "_self" })
         .run();
     }
 
@@ -332,6 +332,10 @@ export const TextEditor = ({
   extensions.push(
     Link.configure({
       openOnClick: false,
+      linkOnPaste: true,
+      HTMLAttributes: {
+        target: "",
+      }
     })
   );
   extensions.push(HardBreak);
