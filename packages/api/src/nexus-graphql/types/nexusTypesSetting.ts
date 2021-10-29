@@ -121,6 +121,13 @@ export const SettingsQuery = extendType({
                 colorDark: true,
                 taxonomyId: true,
                 ...daoSharedGetTranslatedSelectColumns(["name", "slug"]),
+                _count: {
+                  select: {
+                    // TODO: this should list the taxonomies that have actually modules enabled...
+                    locations: true,
+                    events: true,
+                  },
+                },
               },
             },
           },

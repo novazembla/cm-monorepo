@@ -467,6 +467,7 @@ export interface NexusGenObjects {
     totalCount?: number | null; // Int
   }
   Term: { // root type
+    _count?: NexusGenScalars['JSON'] | null; // JSON
     color?: string | null; // String
     colorDark?: string | null; // String
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
@@ -881,6 +882,7 @@ export interface NexusGenFieldTypes {
     totalCount: number | null; // Int
   }
   Term: { // field return type
+    _count: NexusGenScalars['JSON'] | null; // JSON
     color: string | null; // String
     colorDark: string | null; // String
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
@@ -1304,6 +1306,7 @@ export interface NexusGenFieldTypeNames {
     totalCount: 'Int'
   }
   Term: { // field return type name
+    _count: 'JSON'
     color: 'String'
     colorDark: 'String'
     createdAt: 'DateTime'

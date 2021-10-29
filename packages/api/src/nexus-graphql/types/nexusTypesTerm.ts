@@ -45,7 +45,7 @@ export const Term = objectType({
     t.json("name", {
       resolve: (...[p]) => daoSharedMapTranslatedColumnsInRowToJson(p, "name"),
     });
-
+    t.json("_count");
     t.json("slug", {
       resolve: (...[p]) => daoSharedMapTranslatedColumnsInRowToJson(p, "slug"),
     });

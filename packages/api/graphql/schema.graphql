@@ -493,6 +493,7 @@ input TaxonomyUpsertInput {
 }
 
 type Term {
+  _count: JSON
   color: String
   colorDark: String
   createdAt: DateTime
