@@ -121,23 +121,31 @@ export const SettingsQuery = extendType({
                 colorDark: true,
                 taxonomyId: true,
                 ...daoSharedGetTranslatedSelectColumns(["name", "slug"]),
-                _count: {
-                  select: {
-                    // TODO: this should list the taxonomies that have actually modules enabled...
-                    locations: true,
-                    events: true,
-                  },
-                },
+                events: true,
+                locations: true,
               },
             },
           },
           undefined
         );
-
         return {
           centerOfGravity: settings?.centerOfGravity,
           taxMapping: settings?.taxMapping,
-          taxonomies,
+          taxonomies: taxonomies?.length
+            ? taxonomies.map((tax: any) => ({
+                ...tax,
+                terms:
+                  tax?.terms?.length > 0
+                    ? tax?.terms.map((tt: any) => ({
+                        ...tt,
+                        _count: {
+                          locations: tt?.locations?.length ?? 0,
+                          events: tt?.events?.length ?? 0,
+                        },
+                      }))
+                    : [],
+              }))
+            : [],
           mapJsonUrl: settings?.frontendMapStyeJsonUrl,
         };
       },

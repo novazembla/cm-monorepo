@@ -198,12 +198,23 @@ export const LocationQueries = extendType({
             terms: {
               select: {
                 id: true,
+                taxonomyId: true,
                 ...daoSharedGetTranslatedSelectColumns(["name", "slug"]),
               },
             },
+          };
+        }
+
+        if (
+          (pRI?.fieldsByTypeName?.LocationQueryResult as any)?.locations
+            ?.fieldsByTypeName?.Location?.primaryTerms
+        ) {
+          include = {
+            ...include,
             primaryTerms: {
               select: {
                 id: true,
+                taxonomyId: true,
                 ...daoSharedGetTranslatedSelectColumns(["name", "slug"]),
               },
             },
@@ -227,6 +238,8 @@ export const LocationQueries = extendType({
             },
           };
         }
+
+        console.log(include);
 
         if ((pRI?.fieldsByTypeName?.LocationQueryResult as any)?.locations)
           locations = await daoLocationQuery(
