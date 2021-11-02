@@ -861,8 +861,8 @@
     "error": {
       "label": "No label translation key has been defined"
     },
-    "contactEmail": {
-      "label": "Contact email address"
+    "contactInfo": {
+      "label": "Contact information at bottom of admin tool"
     },
     "frontendMapStyeJsonUrl": {
       "label": "Frontend Map Style JSON Url"

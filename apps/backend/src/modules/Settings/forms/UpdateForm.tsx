@@ -1,5 +1,5 @@
 import React from "react";
-import { FieldInput, FieldRow } from "~/components/forms";
+import { FieldInput, FieldRow, FieldTextEditor } from "~/components/forms";
 import { Text, Box } from "@chakra-ui/react";
 
 import {
@@ -44,6 +44,22 @@ export const UpdateForm = ({ data, errors }: { data?: any; errors?: any }) => {
                   })}
                 </Box>
               </Box>
+            );
+
+          if (fieldDefinition.type === "texteditor")
+            return (
+              <FieldRow key={i}>
+                <FieldTextEditor
+                  type="basic"
+                  name={settingKey}
+                  id={settingKey}
+                  label={t(fieldDefinition.label)}
+                  isRequired={fieldDefinition.required}
+                  settings={{
+                    defaultValue: value,
+                  }}
+                />
+              </FieldRow>
             );
           return (
             <FieldRow key={i}>

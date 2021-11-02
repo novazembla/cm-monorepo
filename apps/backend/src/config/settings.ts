@@ -27,7 +27,7 @@ export type AppSettingField = {
 };
 
 export type AppSettingsDefaultFieldKeys =
-  | "contactEmail"
+  | "contactInfo"
   | "frontendMapStyeJsonUrl"
   | "taxMapping"
   | "centerOfGravity";
@@ -45,13 +45,13 @@ export type AppSettings = PartialRecord<AppSettingsFieldKeys, AppSetting>;
 
 // t("settings.error.label", "No label translation key has been defined")
 export const settingFields: AppSettingsFieldDefinitions = {
-  contactEmail: {
+  contactInfo: {
     defaultValue: "",
-    type: "email",
-    // t("settings.contactEmail.label", "Contact email address")
-    label: "settings.contactEmail.label",
+    type: "texteditor",
+    // t("settings.contactInfo.label", "Contact information at bottom of admin tool")
+    label: "settings.contactInfo.label",
     validationSchema: object().shape({
-      contactEmail: string().email().required(),
+      contactInfo: string(),
     }),
     required: true,
   },

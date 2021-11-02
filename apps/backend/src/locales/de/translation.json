@@ -861,8 +861,8 @@
     "error": {
       "label": "Es wurde kein Übersetzungsschlüssel definiert"
     },
-    "contactEmail": {
-      "label": "Kontakt-E-Mailadresse"
+    "contactInfo": {
+      "label": "Kontaktinformation für technische Fragen"
     },
     "frontendMapStyeJsonUrl": {
       "label": "Frontend Map Style JSON Url"

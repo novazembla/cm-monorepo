@@ -1,22 +1,24 @@
 import React from "react";
-import { Box, Link } from "@chakra-ui/react";
-import { useTranslation } from "react-i18next";
+import { Box } from "@chakra-ui/react";
 
 import { useSettings } from "~/hooks";
+
+import { isEmptyHtml } from "~/utils";
 
 export const Footer = ({ type = "full" }: { type?: string }) => {
   const settings = useSettings();
 
-  const { t } = useTranslation();
+  if (!settings.contactInfo || isEmptyHtml(settings.contactInfo)) return null;
 
   return (
-    <Box textAlign="center">
-      <Link
-        href={`mailto:${settings.contactEmail}`}
-        color={type === "light" ? "wine.700" : "wine.700"}
-      >
-        {t("footer.contactLink.title", "Contact")}
-      </Link>
-    </Box>
+    <Box
+      textAlign="center"
+      dangerouslySetInnerHTML={{
+        __html: settings.contactInfo,
+      }}
+      sx={{
+        a: {},
+      }}
+    ></Box>
   );
 };

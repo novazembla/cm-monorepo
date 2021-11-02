@@ -736,8 +736,8 @@ export const AdminTable = ({
                 />
                 {filterKeyword && <IconButton
                   position="absolute"
-                  right="6px"
-                  top="6px"
+                  right="5px"
+                  top="5px"
                   variant="outline"
                   icon={<RiCloseFill />}
                   zIndex="10"
@@ -751,9 +751,9 @@ export const AdminTable = ({
                   borderColor="gray.400"
                   color="gray.800"
                   fontSize="lg"
-                  h="38px"
+                  h="30px"
                   w="30px"
-                  minW="38px"
+                  minW="30px"
                   p="0"
                   aria-label={t(
                     "forms.select.autocomplete.clearselection",
@@ -921,6 +921,7 @@ export const AdminTable = ({
 
                     <HStack>
                       <Button
+                        
                         colorScheme="gray"
                         onClick={() => {
                           setFilterKeyword("");
