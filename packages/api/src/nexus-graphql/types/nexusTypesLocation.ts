@@ -239,8 +239,6 @@ export const LocationQueries = extendType({
           };
         }
 
-        console.log(include);
-
         if ((pRI?.fieldsByTypeName?.LocationQueryResult as any)?.locations)
           locations = await daoLocationQuery(
             where,

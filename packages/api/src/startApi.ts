@@ -61,6 +61,10 @@ export const startApi = async () => {
             name: "importCalendar",
             cron: "0 6 * * *",
           },
+          {
+            name: "dbClearItems",
+            cron: "0 4 * * *",
+          },
         ],
       });
       bree.start();
