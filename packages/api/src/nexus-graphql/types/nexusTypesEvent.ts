@@ -237,6 +237,13 @@ export const EventQueries = extendType({
           include = {
             ...include,
             locations: {
+              ...(!apiUserCan(ctx, "eventReadOwn")
+                ? {
+                    where: {
+                      status: PublishStatus.PUBLISHED,
+                    },
+                  }
+                : {}),
               select: {
                 id: true,
                 ...daoSharedGetTranslatedSelectColumns([
@@ -343,6 +350,13 @@ export const EventQueries = extendType({
           include = {
             ...include,
             locations: {
+              ...(!apiUserCan(ctx, "eventReadOwn")
+                ? {
+                    where: {
+                      status: PublishStatus.PUBLISHED,
+                    },
+                  }
+                : {}),
               select: {
                 id: true,
                 ...daoSharedGetTranslatedSelectColumns([

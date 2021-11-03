@@ -297,6 +297,22 @@ export const LocationQueries = extendType({
           include = {
             ...include,
             events: {
+              ...(!apiUserCan(ctx, "locationReadOwn")
+                ? {
+                    where: {
+                      status: PublishStatus.PUBLISHED,
+                      lastEventDate: {
+                        gt: new Date(new Date().setHours(0, 0, 0, 0)),
+                      },
+                    },
+                  }
+                : {
+                    where: {
+                      lastEventDate: {
+                        gt: new Date(new Date().setHours(0, 0, 0, 0)),
+                      },
+                    },
+                  }),
               select: {
                 id: true,
                 ...daoSharedGetTranslatedSelectColumns([
