@@ -22,9 +22,74 @@ export const getGeoJson = async (
   const config = getApiConfig();
   try {
     try {
-      const locations = await daoLocationSelectQuery(
+      let where: any = [
         {
           status: PublishStatus.PUBLISHED,
+        },
+      ];
+
+      try {
+        const and = req?.query?.and === "1" ? true : false;
+        const s = req?.query?.s ?? "";
+        let terms: any[] =
+          typeof req?.query?.terms === "string" &&
+          req?.query?.terms.trim() !== ""
+            ? req?.query?.terms.trim().split(",")
+            : [];
+        let subWhere: any[] = [];
+
+        terms = terms.map((t: string) => parseInt(t.trim()));
+
+        if (typeof s === "string" && s.trim() !== "") {
+          subWhere.push({
+            fullText: {
+              contains: typeof s === "string" ? s.trim() : s,
+              mode: "insensitive",
+            },
+          });
+        }
+
+        if (terms?.length > 0) {
+          if (and) {
+            subWhere = [
+              ...where,
+              ...terms.map((t: any) => ({
+                terms: {
+                  some: {
+                    id: t,
+                  },
+                },
+              })),
+            ];
+          } else {
+            subWhere.push({
+              terms: {
+                some: {
+                  id: {
+                    in: terms,
+                  },
+                },
+              },
+            });
+          }
+        }
+
+        if (subWhere?.length) {
+          if (and) {
+            where = [...where, ...subWhere];
+          } else {
+            where.push({
+              OR: subWhere,
+            });
+          }
+        }
+      } catch (err) {
+        // nothing to be done ...
+      }
+
+      const locations = await daoLocationSelectQuery(
+        {
+          AND: where,
         },
         {
           id: true,
@@ -104,11 +169,12 @@ export const getGeoJson = async (
       logger.error(err);
       throw new ApiError(
         httpStatus.INTERNAL_SERVER_ERROR,
-        "File to generate GeoJson"
+        "Failed to generate GeoJson"
       );
     }
   } catch (err: any) {
     next(err);
   }
 };
+
 export default getGeoJson;
