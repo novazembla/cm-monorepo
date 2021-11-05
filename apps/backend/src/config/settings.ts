@@ -28,7 +28,6 @@ export type AppSettingField = {
 
 export type AppSettingsDefaultFieldKeys =
   | "contactInfo"
-  | "frontendMapStyeJsonUrl"
   | "taxMapping"
   | "centerOfGravity";
 
@@ -54,16 +53,6 @@ export const settingFields: AppSettingsFieldDefinitions = {
       contactInfo: string(),
     }),
     required: true,
-  },
-  frontendMapStyeJsonUrl: {
-    defaultValue: "",
-    type: "text",
-    // t("settings.frontendMapStyeJsonUrl.label", "Frontend Map Style Json Url")
-    label: "settings.frontendMapStyeJsonUrl.label",
-    required: true,
-    validationSchema: object().shape({
-      frontendMapStyeJsonUrl: string().required(),
-    }),
   },
   centerOfGravity: {
     defaultValue: {

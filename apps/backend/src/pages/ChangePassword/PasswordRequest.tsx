@@ -28,7 +28,7 @@ const PasswordRequest = () => {
 
   const formMethods = useForm<any>({
     'mode':'onTouched',
-    resolver: yupResolver(PasswordRequestValidationSchema),
+    resolver: yupResolver(PasswordRequestValidationSchema as any),
   });
   const {
     handleSubmit,

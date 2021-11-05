@@ -147,7 +147,7 @@ const Index = () => {
       }, {}),
       and: !!tableState.and,
     },
-    resolver: yupResolver(ModuleDataExportCreateSchema),
+    resolver: yupResolver(ModuleDataExportCreateSchema as any),
   });
 
   const { getValues, reset, handleSubmit } = formMethods;

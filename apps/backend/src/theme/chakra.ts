@@ -10,6 +10,9 @@ import { components } from "./chakra.components";
 // https://smart-swatch.netlify.app/#b248bb
 
 const themeConfig = {
+  initialColorMode: "dark",
+  useSystemColorMode: false,
+  colorMode: "dark",
   fonts: {
     heading: "Raleway",
     body: "Open Sans",
@@ -219,5 +222,5 @@ export const chakraTheme = extendTheme(
   }
 );
 
-// console.log(chakraTheme);
+console.log(chakraTheme);
 export default chakraTheme;

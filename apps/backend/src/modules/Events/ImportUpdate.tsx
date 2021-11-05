@@ -60,7 +60,7 @@ const Update = () => {
 
   const formMethods = useForm<any>({
     mode: "onTouched",
-    resolver: yupResolver(ModuleImportUpdateSchema),
+    resolver: yupResolver(ModuleImportUpdateSchema as any),
   });
 
   const {

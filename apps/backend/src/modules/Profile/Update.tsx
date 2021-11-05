@@ -64,7 +64,7 @@ const Update = () => {
 
   const formMethods = useForm<any>({
     mode: "onTouched",
-    resolver: yupResolver(UserProfileUpdateValidationSchema),
+    resolver: yupResolver(UserProfileUpdateValidationSchema as any),
   });
 
   const {

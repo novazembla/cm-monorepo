@@ -44,7 +44,7 @@ const Create = () => {
 
   const formMethods = useForm<any>({
     mode: "onTouched",
-    resolver: yupResolver(ModuleUsersCreateSchema),
+    resolver: yupResolver(ModuleUsersCreateSchema as any),
   });
 
   const {

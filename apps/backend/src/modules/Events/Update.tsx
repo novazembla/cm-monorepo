@@ -136,7 +136,7 @@ const Update = () => {
 
   const formMethods = useForm<any>({
     mode: "onTouched",
-    resolver: yupResolver(extendedValidationSchema),
+    resolver: yupResolver(extendedValidationSchema as any),
     defaultValues: {
       dates: [],
       locationId: undefined,

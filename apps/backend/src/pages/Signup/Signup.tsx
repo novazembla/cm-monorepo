@@ -45,7 +45,7 @@ const Signup = () => {
 
   const formMethods = useForm<any>({
     mode: "onTouched",
-    resolver: yupResolver(UserSignupValidationSchema),
+    resolver: yupResolver(UserSignupValidationSchema as any),
   });
 
   const {

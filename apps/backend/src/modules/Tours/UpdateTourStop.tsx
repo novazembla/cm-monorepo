@@ -73,7 +73,7 @@ const UpdateTourStop = () => {
 
   const formMethods = useForm<any>({
     mode: "onTouched",
-    resolver: yupResolver(ModuleTourStopUpdateSchema),
+    resolver: yupResolver(ModuleTourStopUpdateSchema as any),
   });
 
   const {

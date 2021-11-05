@@ -61,7 +61,7 @@ const CreateTerm = () => {
 
   const formMethods = useForm<any>({
     mode: "onTouched",
-    resolver: yupResolver(ModuleTermSchema),
+    resolver: yupResolver(ModuleTermSchema as any),
   });
 
   const {

@@ -61,7 +61,7 @@ const CreateTourStop = () => {
 
   const formMethods = useForm<any>({
     mode: "onTouched",
-    resolver: yupResolver(ModuleTourStopCreateSchema),
+    resolver: yupResolver(ModuleTourStopCreateSchema as any),
   });
 
   const {

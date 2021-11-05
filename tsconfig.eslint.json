@@ -87,6 +87,6 @@
     "apps/backend/**/*",
     "apps/frontend/**/*"
   ],
-  "exclude": ["node_modules","apps/*/.next"]
+  "exclude": ["node_modules","apps/*/.next","packages/*/node_modules"]
 
 }

@@ -94,7 +94,7 @@ const Update = () => {
 
   const formMethods = useForm<any>({
     mode: "onTouched",
-    resolver: yupResolver(ModulePageUpdateSchema),
+    resolver: yupResolver(ModulePageUpdateSchema as any),
   });
 
   const {

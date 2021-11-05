@@ -39,7 +39,7 @@ const Update = () => {
 
   const formMethods = useForm<any>({
     mode: "onTouched",
-    resolver: yupResolver(PasswordResetValidationSchema),
+    resolver: yupResolver(PasswordResetValidationSchema as any),
   });
 
   const {

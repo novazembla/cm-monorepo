@@ -81,7 +81,7 @@ const Create = () => {
 
   const formMethods = useForm<any>({
     mode: "onTouched",
-    resolver: yupResolver(ExtendedModuleTaxonomySchema),
+    resolver: yupResolver(ExtendedModuleTaxonomySchema as any),
   });
 
   const {

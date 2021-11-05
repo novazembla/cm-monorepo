@@ -45,7 +45,7 @@ const Create = () => {
 
   const formMethods = useForm<any>({
     mode: "onTouched",
-    resolver: yupResolver(ModuleImportCreateSchema),
+    resolver: yupResolver(ModuleImportCreateSchema as any),
   });
   const {
     handleSubmit,
