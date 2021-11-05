@@ -25,7 +25,6 @@ const corsOptions: CorsOptions = {
   allowedHeaders: "Content-Type,Authorization",
 };
 
-dotenv.config();
 export type CulturemapGeoCodingScopes = "autocomplete" | "import";
 
 export type CulturemapScopes =

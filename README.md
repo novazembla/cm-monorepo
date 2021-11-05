@@ -1,9 +1,3 @@
-TODO: so much to do 
-TODO: Learn from: https://github.com/belgattitude/nextjs-monorepo-example
-                  https://github.com/atlassian/changesets
-
-TODO: Monitor seed issue https://github.com/prisma/prisma/issues/7053 
-Would be much nicer to use prisma db seed instead of the 
 
 
 #Installation
@@ -60,3 +54,4 @@ REACT_APP_PREVIEW_SECRET=xZlkdelGi5KdxcpndXX
 # Environment Variables Frontend
 PREVIEW_SECRET="xZlkdelGi5KdxcpndXX"
 NEXT_PUBLIC_API_GRAPHQL_URL=https://localhost:4002/graphql
+
