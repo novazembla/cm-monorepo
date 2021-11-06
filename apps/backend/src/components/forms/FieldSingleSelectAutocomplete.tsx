@@ -192,6 +192,8 @@ export const FieldSingleSelectAutocomplete = ({
 
   const flattenedErrors = flattenErrors(errors);
 
+  console.log(data, searchResult);
+
   return (
     <FormControl
       id={id}
@@ -337,7 +339,7 @@ export const FieldSingleSelectAutocomplete = ({
                         );
                       })}
 
-                    {(data?.locations?.totalCount === 0 || error) &&
+                    {(searchResult?.length === 0 || error) &&
                       !loading &&
                       inputValue.length > 2 && (
                         <chakra.li
@@ -345,7 +347,7 @@ export const FieldSingleSelectAutocomplete = ({
                           m="1"
                           px="2"
                           borderColor="gray.400"
-                          cursor="pointer"
+                          cursor="default"
                           h="42px"
                           borderRadius="md"
                           lineHeight="42px"
