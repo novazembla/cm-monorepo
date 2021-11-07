@@ -169,7 +169,8 @@
           "blueBG": "\u001b[44mImports\u001b[49m",
           "magentaBG": "\u001b[45mImports\u001b[49m",
           "cyanBG": "\u001b[46mImports\u001b[49m",
-          "whiteBG": "\u001b[47mImports\u001b[49m"
+          "whiteBG": "\u001b[47mImports\u001b[49m",
+          "updatepage": "Update import"
         }
       }
     },
@@ -343,6 +344,16 @@
   "table": {
     "label": {
       "date": "date"
+    }
+  },
+  "footer": {
+    "contactLink": {
+      "title": "Contact"
+    }
+  },
+  "settings": {
+    "frontendMapStyeJsonUrl": {
+      "label": "Frontend Map Style JSON Url"
     }
   }
 }

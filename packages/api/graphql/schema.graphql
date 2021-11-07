@@ -269,7 +269,12 @@ type Location {
   visibleUntilTime: DateTime
 }
 
-"""List all the locations in the database."""
+"""Query the ids of all the locations in the database."""
+type LocationIDsQueryResult {
+  ids: [Int]
+}
+
+"""Query all the locations in the database."""
 type LocationQueryResult {
   locations: [Location]
   totalCount: Int
@@ -407,6 +412,7 @@ type Query {
   imageStatus(id: Int!): ImageStatus!
   images(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, taxonomyId: Int, where: JSON): ImageQueryResult
   location(id: Int, slug: String): Location!
+  locationIds(where: JSON): LocationIDsQueryResult
   locations(orderBy: JSON, pageIndex: Int = 0, pageSize: Int = 50, where: JSON): LocationQueryResult
   moduleTaxonomies(key: String!): [Taxonomy]
   modules: [Module]
@@ -619,8 +625,9 @@ type User implements UserBaseNode {
   firstName: String
   id: Int!
   lastName: String
-  ownsConentOnDelete: Boolean
+  ownsContentOnDelete: Boolean
   ownsEventImports: Boolean
+  ownsSubmittedSuggestions: Boolean
   profileImageId: Int
   role: String
   updatedAt: DateTime
@@ -641,8 +648,9 @@ input UserCreateInput {
   email: String!
   firstName: String!
   lastName: String!
-  ownsConentOnDelete: Boolean!
+  ownsContentOnDelete: Boolean!
   ownsEventImports: Boolean!
+  ownsSubmittedSuggestions: Boolean!
   password: String!
   role: String!
   userBanned: Boolean!
@@ -666,8 +674,9 @@ input UserUpdateInput {
   email: String!
   firstName: String!
   lastName: String!
-  ownsConentOnDelete: Boolean!
+  ownsContentOnDelete: Boolean!
   ownsEventImports: Boolean!
+  ownsSubmittedSuggestions: Boolean!
   role: String!
   userBanned: Boolean!
 }

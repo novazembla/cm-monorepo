@@ -185,8 +185,9 @@ export interface NexusGenInputs {
     email: string; // String!
     firstName: string; // String!
     lastName: string; // String!
-    ownsConentOnDelete: boolean; // Boolean!
+    ownsContentOnDelete: boolean; // Boolean!
     ownsEventImports: boolean; // Boolean!
+    ownsSubmittedSuggestions: boolean; // Boolean!
     password: string; // String!
     role: string; // String!
     userBanned: boolean; // Boolean!
@@ -207,8 +208,9 @@ export interface NexusGenInputs {
     email: string; // String!
     firstName: string; // String!
     lastName: string; // String!
-    ownsConentOnDelete: boolean; // Boolean!
+    ownsContentOnDelete: boolean; // Boolean!
     ownsEventImports: boolean; // Boolean!
+    ownsSubmittedSuggestions: boolean; // Boolean!
     role: string; // String!
     userBanned: boolean; // Boolean!
   }
@@ -392,6 +394,9 @@ export interface NexusGenObjects {
     visibleUntil?: NexusGenScalars['DateTime'] | null; // DateTime
     visibleUntilTime?: NexusGenScalars['DateTime'] | null; // DateTime
   }
+  LocationIDsQueryResult: { // root type
+    ids?: Array<number | null> | null; // [Int]
+  }
   LocationQueryResult: { // root type
     locations?: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
     totalCount?: number | null; // Int
@@ -519,8 +524,9 @@ export interface NexusGenObjects {
     firstName?: string | null; // String
     id: number; // Int!
     lastName?: string | null; // String
-    ownsConentOnDelete?: boolean | null; // Boolean
+    ownsContentOnDelete?: boolean | null; // Boolean
     ownsEventImports?: boolean | null; // Boolean
+    ownsSubmittedSuggestions?: boolean | null; // Boolean
     profileImageId?: number | null; // Int
     role?: string | null; // String
     updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
@@ -720,6 +726,9 @@ export interface NexusGenFieldTypes {
     visibleUntil: NexusGenScalars['DateTime'] | null; // DateTime
     visibleUntilTime: NexusGenScalars['DateTime'] | null; // DateTime
   }
+  LocationIDsQueryResult: { // field return type
+    ids: Array<number | null> | null; // [Int]
+  }
   LocationQueryResult: { // field return type
     locations: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
     totalCount: number | null; // Int
@@ -818,6 +827,7 @@ export interface NexusGenFieldTypes {
     imageStatus: NexusGenRootTypes['ImageStatus']; // ImageStatus!
     images: NexusGenRootTypes['ImageQueryResult'] | null; // ImageQueryResult
     location: NexusGenRootTypes['Location']; // Location!
+    locationIds: NexusGenRootTypes['LocationIDsQueryResult'] | null; // LocationIDsQueryResult
     locations: NexusGenRootTypes['LocationQueryResult'] | null; // LocationQueryResult
     moduleTaxonomies: Array<NexusGenRootTypes['Taxonomy'] | null> | null; // [Taxonomy]
     modules: Array<NexusGenRootTypes['Module'] | null> | null; // [Module]
@@ -946,8 +956,9 @@ export interface NexusGenFieldTypes {
     firstName: string | null; // String
     id: number; // Int!
     lastName: string | null; // String
-    ownsConentOnDelete: boolean | null; // Boolean
+    ownsContentOnDelete: boolean | null; // Boolean
     ownsEventImports: boolean | null; // Boolean
+    ownsSubmittedSuggestions: boolean | null; // Boolean
     profileImageId: number | null; // Int
     role: string | null; // String
     updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
@@ -1144,6 +1155,9 @@ export interface NexusGenFieldTypeNames {
     visibleUntil: 'DateTime'
     visibleUntilTime: 'DateTime'
   }
+  LocationIDsQueryResult: { // field return type name
+    ids: 'Int'
+  }
   LocationQueryResult: { // field return type name
     locations: 'Location'
     totalCount: 'Int'
@@ -1242,6 +1256,7 @@ export interface NexusGenFieldTypeNames {
     imageStatus: 'ImageStatus'
     images: 'ImageQueryResult'
     location: 'Location'
+    locationIds: 'LocationIDsQueryResult'
     locations: 'LocationQueryResult'
     moduleTaxonomies: 'Taxonomy'
     modules: 'Module'
@@ -1370,8 +1385,9 @@ export interface NexusGenFieldTypeNames {
     firstName: 'String'
     id: 'Int'
     lastName: 'String'
-    ownsConentOnDelete: 'Boolean'
+    ownsContentOnDelete: 'Boolean'
     ownsEventImports: 'Boolean'
+    ownsSubmittedSuggestions: 'Boolean'
     profileImageId: 'Int'
     role: 'String'
     updatedAt: 'DateTime'
@@ -1610,6 +1626,9 @@ export interface NexusGenArgTypes {
     location: { // args
       id?: number | null; // Int
       slug?: string | null; // String
+    }
+    locationIds: { // args
+      where?: NexusGenScalars['JSON'] | null; // JSON
     }
     locations: { // args
       orderBy?: NexusGenScalars['JSON'] | null; // JSON

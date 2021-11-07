@@ -22,7 +22,8 @@ model User {
   acceptedTerms      Boolean  @default(false)
   userBanned         Boolean  @default(false)
   ownsEventImports   Boolean  @default(false)
-  ownsConentOnDelete Boolean  @default(false)
+  ownsContentOnDelete Boolean  @default(false)
+  ownsSubmittedSuggestions Boolean  @default(false)
   password           String
   createdAt          DateTime @default(now())
   updatedAt          DateTime @default(now()) @updatedAt

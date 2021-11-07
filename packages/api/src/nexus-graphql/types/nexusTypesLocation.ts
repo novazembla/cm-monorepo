@@ -26,6 +26,7 @@ import { getApiConfig } from "../../config";
 
 import {
   daoLocationQuery,
+  daoLocationSelectQuery,
   daoLocationQueryCount,
   daoLocationQueryFirst,
   daoLocationCreate,
@@ -111,13 +112,23 @@ export const Location = objectType({
 export const LocationQueryResult = objectType({
   name: "LocationQueryResult",
   description: dedent`
-    List all the locations in the database.     
+    Query all the locations in the database.     
   `,
   definition: (t) => {
     t.int("totalCount");
     t.field("locations", {
       type: list("Location"),
     });
+  },
+});
+
+export const LocationIDsQueryResult = objectType({
+  name: "LocationIDsQueryResult",
+  description: dedent`
+    Query the ids of all the locations in the database.     
+  `,
+  definition: (t) => {
+    t.list.int("ids");
   },
 });
 
@@ -251,6 +262,61 @@ export const LocationQueries = extendType({
         return {
           totalCount,
           locations,
+        };
+      },
+    });
+
+    t.field("locationIds", {
+      type: LocationIDsQueryResult,
+
+      args: {
+        where: arg({
+          type: GQLJson,
+          default: undefined,
+        }),
+      },
+
+      authorize: (...[, , ctx]) =>
+        authorizeApiUser(ctx, "locationReadOwn", true),
+
+      async resolve(...[, args, ctx, info]) {
+        const pRI = parseResolveInfo(info);
+
+        let where: Prisma.LocationWhereInput = args.where;
+
+        if (!apiUserCan(ctx, "locationReadOwn")) {
+          where = {
+            ...where,
+            status: PublishStatus.PUBLISHED,
+          };
+        } else {
+          if (!apiUserCan(ctx, "canAccessTrash")) {
+            where = {
+              ...where,
+              status: {
+                not: { in: [PublishStatus.TRASHED, PublishStatus.DELETED] },
+              },
+            };
+          }
+          if (!apiUserCan(ctx, "locationRead")) {
+            where = {
+              ...where,
+              owner: {
+                id: ctx?.apiUser?.id ?? 0,
+              },
+            };
+          }
+        }
+
+        const ids = await daoLocationSelectQuery(
+            where,
+            {
+              id: true
+            }    
+          );
+
+        return {
+          ids: ids?.length ? ids.map((l) => l.id) : [],
         };
       },
     });

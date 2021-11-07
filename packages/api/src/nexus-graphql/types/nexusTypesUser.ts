@@ -69,7 +69,8 @@ export const User = objectType({
     t.string("role");
     t.boolean("userBanned");
     t.boolean("ownsEventImports");
-    t.boolean("ownsConentOnDelete");
+    t.boolean("ownsContentOnDelete");
+    t.boolean("ownsSubmittedSuggestions");
     t.date("createdAt");
     t.date("updatedAt");
   },
@@ -255,7 +256,8 @@ export const UserCreateInput = inputObjectType({
     t.nonNull.string("role");
     t.nonNull.boolean("userBanned");
     t.nonNull.boolean("ownsEventImports");
-    t.nonNull.boolean("ownsConentOnDelete");
+    t.nonNull.boolean("ownsContentOnDelete");
+    t.nonNull.boolean("ownsSubmittedSuggestions");
     t.nonNull.boolean("acceptedTerms");
   },
 });
@@ -268,7 +270,8 @@ export const UserUpdateInput = inputObjectType({
     t.nonNull.string("role");
     t.nonNull.boolean("userBanned");
     t.nonNull.boolean("ownsEventImports");
-    t.nonNull.boolean("ownsConentOnDelete");
+    t.nonNull.boolean("ownsContentOnDelete");
+    t.nonNull.boolean("ownsSubmittedSuggestions");
   },
 });
 

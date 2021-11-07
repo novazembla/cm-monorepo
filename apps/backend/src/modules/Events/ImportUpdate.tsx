@@ -148,7 +148,7 @@ const Update = () => {
       title: t("module.locations.imports.menu.title", "Imports"),
     },
     {
-      title: t("module.locations.imports.title.updatepage", "Update import"),
+      title: t("module.locations.imports.updatepage.title", "Update import"),
     },
   ];
 

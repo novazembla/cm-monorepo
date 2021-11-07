@@ -9,7 +9,7 @@ CREATE TABLE "User" (
     "acceptedTerms" BOOLEAN NOT NULL DEFAULT false,
     "userBanned" BOOLEAN NOT NULL DEFAULT false,
     "ownsEventImports" BOOLEAN NOT NULL DEFAULT false,
-    "ownsConentOnDelete" BOOLEAN NOT NULL DEFAULT false,
+    "ownsContentOnDelete" BOOLEAN NOT NULL DEFAULT false,
     "password" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,

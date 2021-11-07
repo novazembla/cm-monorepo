@@ -8,7 +8,7 @@ export const ModuleUsersUpdateSchema = object().shape({
   email: string().required().email(),
   role: string().required(),
   ownsEventImports: boolean(),
-  ownsConentOnDelete: boolean(),
+  ownsContentOnDelete: boolean(),
 });
 
 export const ModuleUsersCreateSchema = ModuleUsersUpdateSchema.concat(

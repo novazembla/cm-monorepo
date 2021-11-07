@@ -182,16 +182,31 @@ export const UserForm = ({
 
       <FieldRow>
         <FieldSwitch
-          name="ownsConentOnDelete"
+          name="ownsContentOnDelete"
           label={
             <span>
               {t(
-                "module.users.forms.update.field.label.ownsConentOnDelete",
+                "module.users.forms.update.field.label.ownsContentOnDelete",
                 "This user will take over ownership of deleted users' content"
               )}
             </span>
           }
-          isRequired={yupIsFieldRequired("ownsConentOnDelete", validationSchema)}
+          isRequired={yupIsFieldRequired("ownsContentOnDelete", validationSchema)}
+        />
+      </FieldRow>
+
+      <FieldRow>
+        <FieldSwitch
+          name="ownsSubmittedSuggestions"
+          label={
+            <span>
+              {t(
+                "module.users.forms.update.field.label.ownsSubmittedSuggestions",
+                "This user will be the owner of submitted suggestions"
+              )}
+            </span>
+          }
+          isRequired={yupIsFieldRequired("ownsSubmittedSuggestions", validationSchema)}
         />
       </FieldRow>
 

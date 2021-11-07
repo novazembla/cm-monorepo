@@ -217,30 +217,7 @@ const upsertUser = async (
 };
 
 async function main() {
-  const clearDb = true;
-
-  if (clearDb) {
-    await prisma.module.deleteMany();
-    await prisma.token.deleteMany();
-    await prisma.term.deleteMany();
-    await prisma.tour.deleteMany();
-    await prisma.tourStop.deleteMany();
-    await prisma.taxonomy.deleteMany();
-    await prisma.image.deleteMany();
-    await prisma.event.deleteMany();
-    await prisma.setting.deleteMany();
-    await prisma.eventDate.deleteMany();
-    await prisma.file.deleteMany();
-    await prisma.dataImport.deleteMany();
-    await prisma.dataExport.deleteMany();
-    await prisma.image.deleteMany();
-    await prisma.location.deleteMany();
-    await prisma.page.deleteMany();
-    await prisma.user.deleteMany();
-  }
-
-  console.log("Create modules");
-
+  
   // eslint-disable-next-line no-console
 
   await Promise.all(

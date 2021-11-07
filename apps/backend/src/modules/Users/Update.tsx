@@ -77,7 +77,8 @@ const Update = () => {
         "role",
         "userBanned",
         "ownsEventImports",
-        "ownsConentOnDelete",
+        "ownsContentOnDelete",
+        "ownsSubmittedSuggestions",
       ])
     );
   }, [reset, data]);

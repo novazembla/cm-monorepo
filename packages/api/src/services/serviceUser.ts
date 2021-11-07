@@ -143,7 +143,7 @@ export const userDelete = async (
     throw new ApiError(httpStatus.UNPROCESSABLE_ENTITY, "Invalid input data");
 
   const contentOwner = await daoUserQueryFirst({
-    ownsConentOnDelete: true,
+    ownsContentOnDelete: true,
   });
 
   let contentOwnerId = null;

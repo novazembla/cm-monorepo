@@ -1,9 +1,4 @@
 {
-  "footer": {
-    "contactLink": {
-      "title": "Kontakt"
-    }
-  },
   "avatar": {
     "menu": {
       "myprofile": "Mein Profil",
@@ -310,7 +305,8 @@
               "email": "Email Adresse",
               "role": "Rolle der NutzerIn",
               "ownsEventImports": "Besitzt automatisch neu importierte Events",
-              "ownsConentOnDelete": "Dieser NutzerIn die Inhalte der gelöschten NutzerIn hinzufügen",
+              "ownsContentOnDelete": "Dieser NutzerIn die Inhalte der gelöschter NutzerInnen zuweisen",
+              "ownsSubmittedSuggestions": "Dieser NutzerIn Kartenpunktvorschläge zuweisen",
               "userBanned": "NutzerIn sperren"
             },
             "placeholder": {
@@ -569,11 +565,12 @@
         }
       },
       "imports": {
-        "title": {
-          "updatepage": "Import bearbeiten"
-        },
+        "title": "Imports",
         "menu": {
           "title": "Importe"
+        },
+        "updatepage": {
+          "title": "Import bearbeiten"
         },
         "requiredMissing": "Die folgenden erforderlichen Spalten sind nicht zugewiesen: ",
         "assignColumnsToTriggerImport": "Um den Import planen zu können, müssen Sie alle (erforderlichen) Spalten zuweisen",
@@ -855,6 +852,9 @@
       },
       "label": "Taxonomiezuweisung"
     },
+    "empty": {
+      "defaultvalue": "Nicht gesetzt! Bitte die Einstellungen aktualisieren"
+    },
     "nameofyoursetting": {
       "label": "Label"
     },
@@ -864,14 +864,8 @@
     "contactInfo": {
       "label": "Kontaktinformation für technische Fragen"
     },
-    "frontendMapStyeJsonUrl": {
-      "label": "Frontend Map Style JSON Url"
-    },
     "centerOfGravity": {
       "label": "Kartenmitte (Georeferenzierung)"
-    },
-    "empty": {
-      "defaultvalue": "Nicht gesetzt! Bitte die Einstellungen aktualisieren"
     }
   },
   "editor": {

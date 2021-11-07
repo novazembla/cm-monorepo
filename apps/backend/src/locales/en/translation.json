@@ -1,9 +1,4 @@
 {
-  "footer": {
-    "contactLink": {
-      "title": "Contact"
-    }
-  },
   "avatar": {
     "menu": {
       "myprofile": "My profile",
@@ -310,7 +305,8 @@
               "email": "Email Address",
               "role": "User role",
               "ownsEventImports": "Owns newly created imported events",
-              "ownsConentOnDelete": "This user will take over ownership of deleted users' content",
+              "ownsContentOnDelete": "This user will take over ownership of deleted users' content",
+              "ownsSubmittedSuggestions": "This user will be the owner of submitted suggestions",
               "userBanned": "Ban user on the platform"
             },
             "placeholder": {
@@ -569,11 +565,12 @@
         }
       },
       "imports": {
-        "title": {
-          "updatepage": "Update import"
-        },
+        "title": "Imports",
         "menu": {
           "title": "Imports"
+        },
+        "updatepage": {
+          "title": "Update import"
         },
         "requiredMissing": "The following required columns are not assigned: ",
         "assignColumnsToTriggerImport": "To be able to schedule the import you need to assign all (required) columns",
@@ -855,6 +852,9 @@
       },
       "label": "Mapped taxonomies"
     },
+    "empty": {
+      "defaultvalue": "Empty! Please update the settings"
+    },
     "nameofyoursetting": {
       "label": "Label"
     },
@@ -864,14 +864,8 @@
     "contactInfo": {
       "label": "Contact information at bottom of admin tool"
     },
-    "frontendMapStyeJsonUrl": {
-      "label": "Frontend Map Style JSON Url"
-    },
     "centerOfGravity": {
       "label": "Center of map (geo referencing)"
-    },
-    "empty": {
-      "defaultvalue": "Empty! Please update the settings"
     }
   },
   "editor": {

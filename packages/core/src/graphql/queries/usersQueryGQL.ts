@@ -17,7 +17,8 @@ export const usersQueryGQL = gql`
         role
         userBanned
         ownsEventImports
-        ownsConentOnDelete
+        ownsContentOnDelete
+        ownsSubmittedSuggestions
         createdAt
         updatedAt
       }
