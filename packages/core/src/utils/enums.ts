@@ -26,6 +26,7 @@ export enum PublishStatus {
   DELETED, // 6
   IMPORTED, // 7
   IMPORTEDWARNINGS, // 8
+  SUGGESTION, // 9
 }
 
 export enum DataImportStatus {

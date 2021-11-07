@@ -106,6 +106,7 @@ const statusFilter = [
   PublishStatus.FORREVIEW,
   PublishStatus.IMPORTED,
   PublishStatus.IMPORTEDWARNINGS,
+  PublishStatus.SUGGESTION,
   PublishStatus.PUBLISHED,
   PublishStatus.REJECTED,
   PublishStatus.TRASHED,

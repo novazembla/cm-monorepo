@@ -7,7 +7,7 @@ import { nanoid } from "nanoid";
 import type { ApiImageMetaInformation } from "@culturemap/core";
 
 import { logger } from "../services/serviceLogging";
-import { imageCreate, imageGetUploadInfo } from "../services/serviceImage";
+import { imageCreate, suggestionImageCreate, imageGetUploadInfo } from "../services/serviceImage";
 
 import { getApiConfig } from "../config";
 import { ApiError } from "../utils";
@@ -196,6 +196,43 @@ export const postProfileImage = async (
       throw new ApiError(
         httpStatus.INTERNAL_SERVER_ERROR,
         "Profile image upload failed #3"
+      );
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const postSuggestionImage = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    try {
+      if (req.file) {
+        const { fileNanoId, metainfo } = createImageMetaInfo(
+          req.file,
+          "normal"
+        );
+
+        const image = await suggestionImageCreate(
+          fileNanoId,
+          metainfo
+        );
+
+        res.json(image);
+      } else {
+        throw new ApiError(
+          httpStatus.BAD_REQUEST,
+          "Suggestion image upload failed #1"
+        );
+      }      
+    } catch (err) {
+      logger.error(err);
+      throw new ApiError(
+        httpStatus.INTERNAL_SERVER_ERROR,
+        "Suggestion image upload failed #2"
       );
     }
   } catch (err) {

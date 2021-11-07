@@ -824,6 +824,7 @@
   },
   "publish": {
     "status": {
+      "suggestion": "Suggestion",
       "imported": "Imported",
       "importedwarning": "Imported with warning(s)",
       "draft": "Draft",

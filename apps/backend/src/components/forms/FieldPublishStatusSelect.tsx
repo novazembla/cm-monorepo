@@ -31,6 +31,10 @@ export const FieldPublishStatusSelect = ({
 
   const options = [
     {
+      value: PublishStatus.SUGGESTION,
+      label: t("publish.status.suggestion", "Suggestion"),
+    },
+    {
       value: PublishStatus.IMPORTED,
       label: t("publish.status.imported", "Imported"),
     },

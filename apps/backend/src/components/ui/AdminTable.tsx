@@ -378,7 +378,6 @@ export const AdminTableWarningsCountCell = (cell: Cell) => {
   );
 };
 
-
 export const AdminTableActionButtonEdit = (cell: Cell) => {
   const column: any = cell.column;
 
@@ -505,6 +504,11 @@ export const AdminTablePublishStatusCell = (cell: Cell) => {
   if (cell.value === PublishStatus.IMPORTEDWARNINGS) {
     color = "orange";
     label = t("publish.status.importedwrning", "Imported with warning(s)");
+  }
+
+  if (cell.value === PublishStatus.SUGGESTION) {
+    color = "cyan";
+    label = t("publish.status.suggestion", "Suggestion");
   }
 
   if (cell.value === PublishStatus.REJECTED) {
@@ -734,32 +738,33 @@ export const AdminTable = ({
                   placeholder={t("admintable.search", "Keyword search")}
                   pr="50px"
                 />
-                {filterKeyword && <IconButton
-                  position="absolute"
-                  right="5px"
-                  top="5px"
-                  variant="outline"
-                  icon={<RiCloseFill />}
-                  zIndex="10"
-                  onClick={() => {
-                    setFilterKeyword("");
+                {filterKeyword && (
+                  <IconButton
+                    position="absolute"
+                    right="5px"
+                    top="5px"
+                    variant="outline"
+                    icon={<RiCloseFill />}
+                    zIndex="10"
+                    onClick={() => {
+                      setFilterKeyword("");
 
-                    if (keywordInputRef.current)
-                      keywordInputRef.current.value = "";
-
-                  }}
-                  borderColor="gray.400"
-                  color="gray.800"
-                  fontSize="lg"
-                  h="30px"
-                  w="30px"
-                  minW="30px"
-                  p="0"
-                  aria-label={t(
-                    "forms.select.autocomplete.clearselection",
-                    "Clear selected element"
-                  )}
-                />}
+                      if (keywordInputRef.current)
+                        keywordInputRef.current.value = "";
+                    }}
+                    borderColor="gray.400"
+                    color="gray.800"
+                    fontSize="lg"
+                    h="30px"
+                    w="30px"
+                    minW="30px"
+                    p="0"
+                    aria-label={t(
+                      "forms.select.autocomplete.clearselection",
+                      "Clear selected element"
+                    )}
+                  />
+                )}
               </FormLabel>
             </Box>
           </Flex>
@@ -824,6 +829,16 @@ export const AdminTable = ({
                                   label: t(
                                     "publish.status.importedwarning",
                                     "Imported with warning(s)"
+                                  ),
+                                };
+                                break;
+
+                              case PublishStatus.SUGGESTION:
+                                value = {
+                                  id: PublishStatus.SUGGESTION,
+                                  label: t(
+                                    "publish.status.suggestion",
+                                    "Suggestion"
                                   ),
                                 };
                                 break;
@@ -921,7 +936,6 @@ export const AdminTable = ({
 
                     <HStack>
                       <Button
-                        
                         colorScheme="gray"
                         onClick={() => {
                           setFilterKeyword("");
