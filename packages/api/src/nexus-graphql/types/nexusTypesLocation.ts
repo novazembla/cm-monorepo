@@ -86,7 +86,7 @@ export const Location = objectType({
     t.json("meta", {
       resolve: (...[p, args, ctx]) => {
         if (!apiUserCan(ctx, "locationReadOwn")) return null;
-        return p?.meta;
+        return (p as any)?.meta;
       }        
     });
     t.int("eventLocationId");
