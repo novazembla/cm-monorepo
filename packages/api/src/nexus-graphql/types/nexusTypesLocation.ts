@@ -83,6 +83,12 @@ export const Location = objectType({
     t.json("contactInfo");
     t.json("geoCodingInfo");
     t.json("socialMedia");
+    t.json("meta", {
+      resolve: (...[p, args, ctx]) => {
+        if (!apiUserCan(ctx, "locationReadOwn")) return null;
+        return p?.meta;
+      }        
+    });
     t.int("eventLocationId");
     t.string("agency");
     t.field("heroImage", {

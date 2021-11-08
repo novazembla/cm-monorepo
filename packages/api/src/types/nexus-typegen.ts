@@ -724,6 +724,7 @@ export interface NexusGenFieldTypes {
     images: Array<NexusGenRootTypes['Image'] | null> | null; // [Image]
     lat: number | null; // Float
     lng: number | null; // Float
+    meta: NexusGenScalars['JSON'] | null; // JSON
     offers: NexusGenScalars['JSON'] | null; // JSON
     ownerId: number; // Int!
     primaryTerms: Array<NexusGenRootTypes['Term'] | null> | null; // [Term]
@@ -1154,6 +1155,7 @@ export interface NexusGenFieldTypeNames {
     images: 'Image'
     lat: 'Float'
     lng: 'Float'
+    meta: 'JSON'
     offers: 'JSON'
     ownerId: 'Int'
     primaryTerms: 'Term'

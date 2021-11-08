@@ -1032,6 +1032,14 @@
       }
     }
   },
+  "location": {
+    "suggestion": {
+      "fieldName": {
+        "name": "Suggester's name",
+        "email": "Suggester's email address"
+      }
+    }
+  },
   "page": {
     "passwordreset": {
       "form_field_password_label": "New Password",

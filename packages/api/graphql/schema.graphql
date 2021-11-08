@@ -254,6 +254,7 @@ type Location {
   images: [Image]
   lat: Float
   lng: Float
+  meta: JSON
   offers: JSON
   ownerId: Int!
   primaryTerms: [Term]

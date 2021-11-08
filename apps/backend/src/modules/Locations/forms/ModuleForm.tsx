@@ -640,6 +640,24 @@ export const ModuleForm = ({
             }}
           />
         </FieldRow>
+        {data?.location?.meta?.suggestionSubmittersName && (
+          <FieldRow>
+            {t("location.suggestion.fieldName.name", "Suggester's name")}
+            <br />
+            <b>{data?.location?.meta?.suggestionSubmittersName}</b>
+          </FieldRow>
+        )}
+        {data?.location?.meta?.suggestionSubmittersEmail && (
+          <FieldRow>
+            {t("location.suggestion.fieldName.email", "Suggester's email address")}
+            <br />
+            <a
+              href={`mailto:${data?.location?.meta?.suggestionSubmittersEmail}`}
+            >
+              {data?.location?.meta?.suggestionSubmittersEmail}
+            </a>
+          </FieldRow>
+        )}
       </chakra.fieldset>
     </>
   );

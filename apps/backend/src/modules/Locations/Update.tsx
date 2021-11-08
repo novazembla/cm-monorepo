@@ -77,7 +77,7 @@ export const locationAndContentAuthorsQueryGQL = gql`
       accessibilityInformation
       socialMedia
       geoCodingInfo
-
+      meta
       offers
       lat
       lng

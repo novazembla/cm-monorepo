@@ -1032,6 +1032,14 @@
       }
     }
   },
+  "location": {
+    "suggestion": {
+      "fieldName": {
+        "name": "Kartenpunktvorschlage(r): Name",
+        "email": "Kartenpunktvorschlage(r): Emailadresse"
+      }
+    }
+  },
   "page": {
     "passwordreset": {
       "form_field_password_label": "Neues Passwort",
