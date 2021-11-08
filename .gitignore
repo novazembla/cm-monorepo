@@ -141,6 +141,7 @@ temp/
 
 dist/
 build/
+live/
 
 data/*
 !data/.keep
