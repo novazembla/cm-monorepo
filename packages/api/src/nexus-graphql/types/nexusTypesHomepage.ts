@@ -93,7 +93,7 @@ export const HomepageQuery = extendType({
                 primaryTerms: {
                   select: {
                     id: true,
-                    ...daoSharedGetTranslatedSelectColumns(["name"]),
+                    ...daoSharedGetTranslatedSelectColumns(["name", "slug"]),
                     color: true,
                     colorDark: true,
                   },
@@ -107,7 +107,7 @@ export const HomepageQuery = extendType({
                 terms: {
                   select: {
                     id: true,
-                    ...daoSharedGetTranslatedSelectColumns(["name"]),
+                    ...daoSharedGetTranslatedSelectColumns(["name", "slug"]),
                     color: true,
                     colorDark: true,
                   },
@@ -251,7 +251,10 @@ export const HomepageQuery = extendType({
                         primaryTerms: {
                           select: {
                             id: true,
-                            ...daoSharedGetTranslatedSelectColumns(["name"]),
+                            ...daoSharedGetTranslatedSelectColumns([
+                              "name",
+                              "slug",
+                            ]),
                             color: true,
                             colorDark: true,
                           },
@@ -264,7 +267,10 @@ export const HomepageQuery = extendType({
                         terms: {
                           select: {
                             id: true,
-                            ...daoSharedGetTranslatedSelectColumns(["name"]),
+                            ...daoSharedGetTranslatedSelectColumns([
+                              "name",
+                              "slug",
+                            ]),
                             color: true,
                             colorDark: true,
                           },
@@ -310,7 +316,60 @@ export const HomepageQuery = extendType({
                         "teaser",
                         asTrimmedText
                       ),
-                      tourStops: item?.tourStops ?? [],
+                      tourStops:
+                        item?.tourStops.map((ts: any) => ({
+                          id: ts.id,
+                          number: ts.number,
+                          title: daoSharedMapTranslatedColumnsInRowToJson(
+                            ts,
+                            "title"
+                          ),
+                          location: ts?.location
+                            ? {
+                                id: ts?.location.id,
+                                title: daoSharedMapTranslatedColumnsInRowToJson(
+                                  ts?.location,
+                                  "title"
+                                ),
+                                slug: daoSharedMapTranslatedColumnsInRowToJson(
+                                  ts?.location,
+                                  "slug"
+                                ),
+                                primaryTerms: ts?.location?.primaryTerms?.length
+                                  ? ts?.location?.primaryTerms.map(
+                                      (term: any) => ({
+                                        id: term.id,
+                                        color: term.color,
+                                        colorDark: term.colorDark,
+                                        name: daoSharedMapTranslatedColumnsInRowToJson(
+                                          term,
+                                          "name"
+                                        ),
+                                        slug: daoSharedMapTranslatedColumnsInRowToJson(
+                                          term,
+                                          "slug"
+                                        ),
+                                      })
+                                    )
+                                  : null,
+                                terms: ts?.location?.terms?.length
+                                  ? ts?.location?.terms.map((term: any) => ({
+                                      id: term.id,
+                                      color: term.color,
+                                      colorDark: term.colorDark,
+                                      name: daoSharedMapTranslatedColumnsInRowToJson(
+                                        term,
+                                        "name"
+                                      ),
+                                      slug: daoSharedMapTranslatedColumnsInRowToJson(
+                                        term,
+                                        "slug"
+                                      ),
+                                    }))
+                                  : null,
+                              }
+                            : null,
+                        })) ?? [],
                       heroImage:
                         item?.heroImage?.id &&
                         item?.heroImage?.status === ImageStatus.READY
@@ -381,7 +440,10 @@ export const HomepageQuery = extendType({
                     primaryTerms: {
                       select: {
                         id: true,
-                        ...daoSharedGetTranslatedSelectColumns(["name"]),
+                        ...daoSharedGetTranslatedSelectColumns([
+                          "name",
+                          "slug",
+                        ]),
                         color: true,
                         colorDark: true,
                       },
@@ -389,7 +451,10 @@ export const HomepageQuery = extendType({
                     terms: {
                       select: {
                         id: true,
-                        ...daoSharedGetTranslatedSelectColumns(["name"]),
+                        ...daoSharedGetTranslatedSelectColumns([
+                          "name",
+                          "slug",
+                        ]),
                         color: true,
                         colorDark: true,
                       },
@@ -421,8 +486,6 @@ export const HomepageQuery = extendType({
 
             if (events?.length) {
               mappedHighlights = events.reduce((acc, item: any) => {
-                console.log(item);
-
                 if (`event_${item.id}` in mappedHighlights)
                   return {
                     ...acc,
@@ -444,7 +507,52 @@ export const HomepageQuery = extendType({
                       ),
                       dates: item?.dates?.length > 0 ? item?.dates : [],
                       location:
-                        item?.locations?.length > 0 ? item?.locations[0] : null,
+                        item?.locations?.length > 0
+                          ? {
+                              id: item?.locations[0].id,
+                              title: daoSharedMapTranslatedColumnsInRowToJson(
+                                item?.locations[0],
+                                "title"
+                              ),
+                              slug: daoSharedMapTranslatedColumnsInRowToJson(
+                                item?.locations[0],
+                                "slug"
+                              ),
+                              primaryTerms: item?.locations[0].primaryTerms
+                                ?.length
+                                ? item?.locations[0].primaryTerms.map(
+                                    (term: any) => ({
+                                      id: term.id,
+                                      color: term.color,
+                                      colorDark: term.colorDark,
+                                      name: daoSharedMapTranslatedColumnsInRowToJson(
+                                        term,
+                                        "name"
+                                      ),
+                                      slug: daoSharedMapTranslatedColumnsInRowToJson(
+                                        term,
+                                        "slug"
+                                      ),
+                                    })
+                                  )
+                                : null,
+                              terms: item?.locations[0].terms?.length
+                                ? item?.locations[0].terms.map((term: any) => ({
+                                    id: term.id,
+                                    color: term.color,
+                                    colorDark: term.colorDark,
+                                    name: daoSharedMapTranslatedColumnsInRowToJson(
+                                      term,
+                                      "name"
+                                    ),
+                                    slug: daoSharedMapTranslatedColumnsInRowToJson(
+                                      term,
+                                      "slug"
+                                    ),
+                                  }))
+                                : null,
+                            }
+                          : null,
                       firstEventDate: item?.firstEventDate ?? null,
                       lastEventDate: item?.lastEventDate ?? null,
                       heroImage:
