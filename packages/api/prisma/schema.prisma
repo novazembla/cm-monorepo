@@ -72,6 +72,7 @@ model Location {
   contactInfo              Json? @default("{}")
   geoCodingInfo            Json? @default("{}")
   socialMedia              Json? @default("{}")
+  meta              Json? @default("{}")
 
   visibleFrom     DateTime?
   visibleFromTime DateTime?

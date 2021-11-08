@@ -36,6 +36,10 @@ import {
   daoSharedGetTranslatedSelectColumns,
 } from "../../dao";
 
+import {
+  locationSuggestionCreate
+} from "../../services/serviceLocation";
+
 const apiConfig = getApiConfig();
 
 export const Location = objectType({
@@ -515,10 +519,47 @@ export const LocationUpsertInput = inputObjectType({
   },
 });
 
+export const LocationSuggestionInput = objectType({
+  name: "LocationSuggestionInput",
+  definition(t) {
+    t.nonNull.json("title");
+    t.json("description");
+    t.json("address");
+    t.json("contactInfo");
+    t.json("accessibilityInformation");
+    t.json("socialMedia");
+    t.json("offers");
+    t.json("terms");
+    t.json("heroImage");
+    t.json("meta");
+  },
+});
+
 export const LocationMutations = extendType({
   type: "Mutation",
 
   definition(t) {
+
+    t.nonNull.field("suggestion", {
+      type: "Location",
+
+      args: {
+        data: nonNull(LocationSuggestionInput),
+      },
+
+      async resolve(...[, args]) {
+        const location = await locationSuggestionCreate(args.data);
+
+        if (!location)
+          throw new ApiError(
+            httpStatus.INTERNAL_SERVER_ERROR,
+            "Creation failed"
+          );
+
+        return location;
+      },
+    });
+
     t.nonNull.field("locationCreate", {
       type: "Location",
 

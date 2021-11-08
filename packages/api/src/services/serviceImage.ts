@@ -50,11 +50,13 @@ export const suggestionImageCreate = async (
     ownsSubmittedSuggestions: true,
   });
 
-  if (!imageOwner)
+  if (!imageOwner) {
+    logger.error("suggestionImageCreate suggestion owner not found");
     throw new ApiError(
       httpStatus.INTERNAL_SERVER_ERROR,
       "New suggested image could not be created #1"
     );
+  }
 
   return await imageCreate(
     imageOwner.id,
