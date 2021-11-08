@@ -239,13 +239,47 @@ export const HomepageQuery = extendType({
                     id: true,
                     number: true,
                     ...daoSharedGetTranslatedSelectColumns(["title"]),
-
                     location: {
                       select: {
                         id: true,
                         lat: true,
                         lng: true,
+                        ...daoSharedGetTranslatedSelectColumns([
+                          "title",
+                          "slug",
+                        ]),
+                        primaryTerms: {
+                          select: {
+                            id: true,
+                            ...daoSharedGetTranslatedSelectColumns(["name"]),
+                            color: true,
+                            colorDark: true,
+                          },
+                          where: {
+                            taxonomyId: parseInt(
+                              settings?.taxMapping?.typeOfInstitution ?? "0"
+                            ),
+                          },
+                        },
+                        terms: {
+                          select: {
+                            id: true,
+                            ...daoSharedGetTranslatedSelectColumns(["name"]),
+                            color: true,
+                            colorDark: true,
+                          },
+                          where: {
+                            taxonomyId: parseInt(
+                              settings?.taxMapping?.typeOfInstitution ?? "0"
+                            ),
+                          },
+                        },
                       },
+                    },
+                  },
+                  where: {
+                    location: {
+                      status: PublishStatus.PUBLISHED,
                     },
                   },
                 },
@@ -338,6 +372,47 @@ export const HomepageQuery = extendType({
                     date: "asc",
                   },
                 },
+                locations: {
+                  select: {
+                    id: true,
+                    lat: true,
+                    lng: true,
+                    ...daoSharedGetTranslatedSelectColumns(["title", "slug"]),
+                    primaryTerms: {
+                      select: {
+                        id: true,
+                        ...daoSharedGetTranslatedSelectColumns(["name"]),
+                        color: true,
+                        colorDark: true,
+                      },
+                    },
+                    terms: {
+                      select: {
+                        id: true,
+                        ...daoSharedGetTranslatedSelectColumns(["name"]),
+                        color: true,
+                        colorDark: true,
+                      },
+                    },
+                  },
+                  where: {
+                    status: PublishStatus.PUBLISHED,
+                    primaryTerms: {
+                      every: {
+                        taxonomyId: parseInt(
+                          settings?.taxMapping?.typeOfInstitution ?? "0"
+                        ),
+                      },
+                    },
+                    terms: {
+                      every: {
+                        taxonomyId: parseInt(
+                          settings?.taxMapping?.typeOfInstitution ?? "0"
+                        ),
+                      },
+                    },
+                  },
+                },
               },
               {
                 id: "asc",
@@ -346,6 +421,8 @@ export const HomepageQuery = extendType({
 
             if (events?.length) {
               mappedHighlights = events.reduce((acc, item: any) => {
+                console.log(item);
+
                 if (`event_${item.id}` in mappedHighlights)
                   return {
                     ...acc,
@@ -366,6 +443,8 @@ export const HomepageQuery = extendType({
                         asTrimmedText
                       ),
                       dates: item?.dates?.length > 0 ? item?.dates : [],
+                      location:
+                        item?.locations?.length > 0 ? item?.locations[0] : null,
                       firstEventDate: item?.firstEventDate ?? null,
                       lastEventDate: item?.lastEventDate ?? null,
                       heroImage:
