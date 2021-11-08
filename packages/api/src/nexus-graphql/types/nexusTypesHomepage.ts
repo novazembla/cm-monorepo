@@ -139,6 +139,8 @@ export const HomepageQuery = extendType({
                     ...acc,
                     [`location_${loc.id}`]: {
                       id: loc.id,
+                      lng: loc.lng,
+                      lat: loc.lat,
                       type: "location",
                       title: daoSharedMapTranslatedColumnsInRowToJson(
                         loc,
@@ -327,6 +329,8 @@ export const HomepageQuery = extendType({
                           location: ts?.location
                             ? {
                                 id: ts?.location.id,
+                                lng: ts?.location.lng,
+                                lat: ts?.location.lat,
                                 title: daoSharedMapTranslatedColumnsInRowToJson(
                                   ts?.location,
                                   "title"
@@ -510,6 +514,8 @@ export const HomepageQuery = extendType({
                         item?.locations?.length > 0
                           ? {
                               id: item?.locations[0].id,
+                              lng: item?.locations[0].lng,
+                              lat: item?.locations[0].lat,
                               title: daoSharedMapTranslatedColumnsInRowToJson(
                                 item?.locations[0],
                                 "title"
