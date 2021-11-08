@@ -5,55 +5,83 @@
 Don't forget to run the following commands 
 
 # Docker Setup
-We support your development with a docker-compose.yml file. It provides two Postgresql instances (development and test), and a [Mailhog](https://github.com/mailhog/MailHog)instance providing a SMTP replacement that allows you to quickly check outgoing emails.
+We support your development with a docker-compose.yml file. It provides a Postgresql instance and a [Mailhog](https://github.com/mailhog/MailHog)instance providing a SMTP replacement that allows you to quickly check outgoing emails.
 
 Please ensure that the following folders do exists in your project root
 
 ```console
 foo@bar:~$ mkdir data
 foo@bar:~$ mkdir data/postgres
-foo@bar:~$ mkdir data/postgres-test
 ```
 
-Both databased have to be installed 
+## Installation
+The api and the backend are build for node v.16 (and probably up)
+
+For production install the packages using 
+
+```bash
+npm ci 
+```
+
+For development use
+
+```bash
+npm i 
+```
+
+# Database Setup
+We are using [Prisma](https://www.prisma.io/) as our ORM. It comes with a basic migration tool. To setup the database just run either 
 
 ```console
-foo@bar:~$ npm run package:api:db:push
-foo@bar:~$ npm run package:api:test:db:push
+foo@bar:~$ npx prisma migrate
 ```
-
-
-
-
-ln -s /opt/plesk/node/v14.17.5/bin/node /usr/bin/node
-ln -s /opt/plesk/node/v14.17.5/bin/npm /usr/bin/npm
-ln -s /opt/plesk/node/v14.17.5/bin/npx /usr/bin/npx
-
-psql -d "postgresql://culturemap:culturemap@localhost/culturemap" -c "select now();"
-
-alter user culturemap with encrypted password 'culturemap';
-
-Granting privileges on database
-
-
-```
-npm run install
-``` 
-
-before you start to develop
-
 
 # Environment Variables Backend
-REACT_APP_FRONTEND_URL
-REACT_APP_API_URL
-REACT_APP_PREVIEW_SECRET=xZlkdelGi5KdxcpndXX
+
+Make use to register the following environment variables 
+```
+REACT_APP_FRONTEND_URL=....
+REACT_APP_API_URL=....
+REACT_APP_PREVIEW_SECRET=...
+```
+The PREVIEW_SECRET is shared between between backend and front end and needs to be the same.
 
 # Environment Variables API
 
+Please make sure to register the following environmental variables.
 
-# Environment Variables Frontend
-PREVIEW_SECRET="xZlkdelGi5KdxcpndXX"
-NEXT_PUBLIC_API_GRAPHQL_URL=https://localhost:4002/graphql
+```
+
+BASE_URL_FRONTEND=http://localhost:3000
+BASE_URL_BACKEND=http://localhost:4001
+BASE_URL_API=http://localhost:4002
+
+DATABASE_URL="postgresql://culturemap:culturemap@localhost:5432/culturemap?schema=public&connection_limit=5"
+
+HERE_API_KEY=...
+
+MAIL_MAILER=smtp
+MAIL_HOST=localhost
+MAIL_PORT=1025
+MAIL_USERNAME=user
+MAIL_PASSWORD=password
+MAIL_SECURE=false
+MAIL_EMAIL_SUBJECT_PREFIX="[TEST NAME]: "
+MAIL_FROM_ADDRESS=info@your-project.test
+MAIL_FROM_NAME="${APP_NAME}"
+
+# JWT
+# JWT secret key
+JWT_SECRET=thisis23123--23423afdsa0--casfdsf
+# Number of minutes after which an access token expires
+JWT_ACCESS_EXPIRATION_MINUTES=15
+# Number of days after which a refresh token expires
+JWT_REFRESH_EXPIRATION_DAYS=30
+# Number of minutes after which a reset password token expires
+JWT_RESET_PASSWORD_EXPIRATION_MINUTES=30
+# Number of minutes after which a verify email token expires
+JWT_VERIFY_EMAIL_EXPIRATION_DAYS=2
+```
 
 
 # The following packages are currently locked to a certain version as compile error make an update impossible
