@@ -36,7 +36,9 @@ We are using [Prisma](https://www.prisma.io/) as our ORM. It comes with a basic 
 foo@bar:~$ npx prisma migrate
 ```
 
-# Environment Variables Backend
+# Backend
+
+## Environment variables
 
 Make use to register the following environment variables 
 ```
@@ -46,7 +48,28 @@ REACT_APP_PREVIEW_SECRET=...
 ```
 The PREVIEW_SECRET is shared between between backend and front end and needs to be the same.
 
-# Environment Variables API
+## Production
+You can choose to build the backend (in the folder `./apps/backend/dist` or *deploy* which means that the app will be build into `./packages/api/dist` but then moved into `./packages/api/live` to reduce potential downtime of the server. 
+
+*Build*
+```console
+foo@bar:~$ npm run app:backend:build
+```
+
+*Deploy*
+```console
+foo@bar:~$ npm run app:backend:deploy
+foo@bar:~$ ... restart your server
+```
+
+## Development
+```console
+foo@bar:~$ npm run dev:api
+```
+
+# API
+
+## Environment variables
 
 Please make sure to register the following environmental variables.
 
@@ -82,15 +105,38 @@ JWT_RESET_PASSWORD_EXPIRATION_MINUTES=30
 # Number of minutes after which a verify email token expires
 JWT_VERIFY_EMAIL_EXPIRATION_DAYS=2
 ```
+## Production
+You can choose to build the API (in the folder `./packages/api/dist` or *deploy* which means that the app will be build into `./packages/api/dist` but then moved into `./packages/api/live` to reduce potential downtime of the server. 
 
+*Build*
+```console
+foo@bar:~$ npm run package:api:build
+```
+
+*Deploy*
+```console
+foo@bar:~$ npm run package:api:deploy
+foo@bar:~$ ... restart your server
+```
+
+## Development
+```console
+foo@bar:~$ npm run dev:api
+```
+
+# Development
+You can also run api and backend dev at the same time 
+```console
+foo@bar:~$ npm run dev 
+```
 
 # The following packages are currently locked to a certain version as compile error make an update impossible
 
-@chakra-ui/react                    1.6.9  1.6.12       1.6.12  node_modules/@chakra-ui/react                  cm-monorepo
-@typescript-eslint/eslint-plugin   4.29.3  4.33.0        5.3.0  node_modules/@typescript-eslint/eslint-plugin  cm-monorepo
-autoprefixer                        9.8.8   9.8.8       10.4.0  node_modules/autoprefixer                      backend@0.1.0
-eslint                             7.32.0  7.32.0        8.1.0  node_modules/eslint                            cm-monorepo
-graphql                            15.6.1  15.7.2       16.0.1  packages/api/node_modules/graphql              api@npm:@culturemap/api@0.0.1
-graphql-scalars                    1.12.0  1.13.1       1.13.1  node_modules/graphql-scalars                   api@npm:@culturemap/api@0.0.1
-maplibre-gl                        1.15.2  1.15.2  2.0.0-pre.1  node_modules/maplibre-gl                       backend@0.1.0
-react-router-dom                    5.3.0   5.3.0        6.0.0  node_modules/react-router-dom                  backend@0.1.0
+- @chakra-ui/react                    1.6.9 cm-monorepo
+- @typescript-eslint/eslint-plugin   4.29.3 cm-monorepo
+- autoprefixer                        9.8.8 backend
+- eslint                             7.32.0 cm-monorepo
+- graphql                            15.6.1 @culturemap/api
+- graphql-scalars                    1.12.0 @culturemap/api
+- maplibre-gl                        1.15.2 backend
+- react-router-dom                    5.3.0 backend
