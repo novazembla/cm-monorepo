@@ -90,6 +90,18 @@ export interface NexusGenInputs {
     meta: NexusGenScalars['JSON']; // JSON!
     ownerId: number; // Int!
   }
+  LocationSuggestionInput: { // input type
+    accessibilityInformation?: NexusGenScalars['JSON'] | null; // JSON
+    address?: NexusGenScalars['JSON'] | null; // JSON
+    contactInfo?: NexusGenScalars['JSON'] | null; // JSON
+    description?: NexusGenScalars['JSON'] | null; // JSON
+    heroImage?: NexusGenScalars['JSON'] | null; // JSON
+    meta?: NexusGenScalars['JSON'] | null; // JSON
+    offers?: NexusGenScalars['JSON'] | null; // JSON
+    socialMedia?: NexusGenScalars['JSON'] | null; // JSON
+    terms?: NexusGenScalars['JSON'] | null; // JSON
+    title: NexusGenScalars['JSON']; // JSON!
+  }
   LocationUpsertInput: { // input type
     accessibilityInformation?: NexusGenScalars['JSON'] | null; // JSON
     address?: NexusGenScalars['JSON'] | null; // JSON
@@ -765,6 +777,7 @@ export interface NexusGenFieldTypes {
     pageDelete: NexusGenRootTypes['BooleanResult']; // BooleanResult!
     pageUpdate: NexusGenRootTypes['Page']; // Page!
     settingsUpdate: NexusGenRootTypes['BooleanResult']; // BooleanResult!
+    suggestion: NexusGenRootTypes['Location']; // Location!
     taxonomyCreate: NexusGenRootTypes['Taxonomy']; // Taxonomy!
     taxonomyDelete: NexusGenRootTypes['BooleanResult']; // BooleanResult!
     taxonomyUpdate: NexusGenRootTypes['Taxonomy']; // Taxonomy!
@@ -1194,6 +1207,7 @@ export interface NexusGenFieldTypeNames {
     pageDelete: 'BooleanResult'
     pageUpdate: 'Page'
     settingsUpdate: 'BooleanResult'
+    suggestion: 'Location'
     taxonomyCreate: 'Taxonomy'
     taxonomyDelete: 'BooleanResult'
     taxonomyUpdate: 'Taxonomy'
@@ -1496,6 +1510,9 @@ export interface NexusGenArgTypes {
     }
     settingsUpdate: { // args
       data?: NexusGenInputs['SettingsUpdateInput'][] | null; // [SettingsUpdateInput!]
+    }
+    suggestion: { // args
+      data: NexusGenInputs['LocationSuggestionInput']; // LocationSuggestionInput!
     }
     taxonomyCreate: { // args
       data: NexusGenInputs['TaxonomyUpsertInput']; // TaxonomyUpsertInput!

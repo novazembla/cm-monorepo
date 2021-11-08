@@ -519,7 +519,7 @@ export const LocationUpsertInput = inputObjectType({
   },
 });
 
-export const LocationSuggestionInput = objectType({
+export const LocationSuggestionInput = inputObjectType({
   name: "LocationSuggestionInput",
   definition(t) {
     t.nonNull.json("title");
@@ -544,7 +544,7 @@ export const LocationMutations = extendType({
       type: "Location",
 
       args: {
-        data: nonNull(LocationSuggestionInput),
+        data: nonNull("LocationSuggestionInput"),
       },
 
       async resolve(...[, args]) {

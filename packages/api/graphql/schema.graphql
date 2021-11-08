@@ -280,6 +280,19 @@ type LocationQueryResult {
   totalCount: Int
 }
 
+input LocationSuggestionInput {
+  accessibilityInformation: JSON
+  address: JSON
+  contactInfo: JSON
+  description: JSON
+  heroImage: JSON
+  meta: JSON
+  offers: JSON
+  socialMedia: JSON
+  terms: JSON
+  title: JSON!
+}
+
 input LocationUpsertInput {
   accessibilityInformation: JSON
   address: JSON
@@ -335,6 +348,7 @@ type Mutation {
   pageDelete(id: Int!): BooleanResult!
   pageUpdate(data: PageUpsertInput!, id: Int!): Page!
   settingsUpdate(data: [SettingsUpdateInput!]): BooleanResult!
+  suggestion(data: LocationSuggestionInput!): Location!
   taxonomyCreate(data: TaxonomyUpsertInput!): Taxonomy!
   taxonomyDelete(id: Int!): BooleanResult!
   taxonomyUpdate(data: TaxonomyUpsertInput!, id: Int!): Taxonomy!
