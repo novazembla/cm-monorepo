@@ -39,7 +39,6 @@ export type CulturemapScopes =
   | "page";
 
 export interface ApiConfigDB {
-  connectionLimit: number;
   url: string;
   defaultPageSize: number;
   maxPageSize: number;
@@ -146,7 +145,6 @@ const db: ApiConfigDB = {
     "",
     "Error: missing/wrong .env config: DATABASE_URL"
   ),
-  connectionLimit: 5,
   defaultPageSize: 50,
   maxPageSize: 500,
   privateJSONDataKeys: {

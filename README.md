@@ -74,7 +74,8 @@ foo@bar:~$ npm run dev:api
 Please make sure to register the following environmental variables.
 
 ```
-
+API_PORT=3000
+API_HOST=localthost
 BASE_URL_FRONTEND=http://localhost:3000
 BASE_URL_BACKEND=http://localhost:4001
 BASE_URL_API=http://localhost:4002

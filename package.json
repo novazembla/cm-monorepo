@@ -9,7 +9,9 @@
   },
   "scripts": {
     "build:api": "NODE_ENV=production npm run package:core:build && npm run package:api:build && npm run app:api:build",
-    "build:backend": "NODE_ENV=production npm run package:core:build && npm run app:backend:build",
+    "build:backend": "NODE_ENV=production npm run package:core:build && npm run app:backend:build && ",
+
+    "deploy:api": "NODE_ENV=production npm run package:core:build && npm run package:api:build && npm run app:api:build && if [ -d ./packages/api/live ]; then mv ./packages/api/live ./packages/api/x; fi && mv ./packages/api/dist ./packages/api/live && if [ -d ./packages/api/x ]; then rimraf ./packages/api/x; fi && if [ -d ./apps/api/live ]; then mv ./apps/api/live ./apps/api/x; fi && mv ./apps/api/build ./apps/api/live && if [ -d ./apps/api/x ]; then rimraf ./apps/api/x; fi",
     "dev": "NODE_ENV=development npx concurrently -k -p \"[{name}]\" -n \"P:CORE,P:API,A:API,A:BACKEND,P:EXAMPLE\" -c \"#d531f5,#4d5ffa,#09e3b4,#f41788,#f1610a,#61f10a\" \"npm run package:core:dev\" \"npm run package:api:dev\" \"npm run app:api:dev\" \"npm run app:backend:dev\"",
     "dev:api": "NODE_ENV=development npx concurrently -k -p \"[{name}]\" -n \"P:CORE,P:API,A:API,P:EXAMPLE\" -c \"#d531f5,#4d5ffa,#09e3b4,#f41788,#f1610a,#61f10a\" \"npm run package:core:dev\" \"npm run package:api:dev\" \"npm run app:api:dev\"",
     "dev:backend": "NODE_ENV=development npx concurrently -k -p \"[{name}]\" -n \"P:CORE,P:API,A:API,A:BACKEND\" -c \"#d531f5,#4d5ffa,#09e3b4,#f41788,#f1610a,#61f10a\" \"npm run package:core:dev\" \"npm run package:api:dev\" \"npm run app:api:dev\" \"npm run app:backend:dev\"",

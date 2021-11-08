@@ -17,7 +17,7 @@ export const createPrismaClient = (): Prisma.PrismaClient => {
   return new PrismaClient({
     datasources: {
       db: {
-        url: `${apiConfig.db.url}&connection_limit=${apiConfig.db.connectionLimit}`,
+        url: `${apiConfig.db.url}`,
       },
     },
     log:
