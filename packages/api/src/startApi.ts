@@ -33,11 +33,14 @@ export const startApi = async () => {
       const port =
         process.env.API_PORT ?? process.env.DEV_API_PORT ?? process.env.PORT;
 
+      const host =
+        process.env.DEV_HOST ?? process.env.DEV_DEV_HOST ?? "127.0.0.1";
+
       // eslint-disable-next-line no-console
-      console.log(`🔨 Attempting to run app.listen on port: ${port}`);
+      console.log(`🔨 Attempting to run app.listen on ${host}:${port}`);
 
       // finally listen to the configured port
-      const expressServer = app.listen({ port }, () => {
+      const expressServer = app.listen({ port, host }, () => {
         // eslint-disable-next-line no-console
         console.log(
           `🚀 Server ready at ${apiConfig.baseUrl.api}${server?.graphqlPath}`
