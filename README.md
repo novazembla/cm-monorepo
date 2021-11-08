@@ -40,26 +40,35 @@ foo@bar:~$ npx prisma migrate
 
 ## Environment variables
 
-Make use to register the following environment variables 
+Make use to register the following environment variables (if stored in memory)
 ```
 REACT_APP_FRONTEND_URL=....
 REACT_APP_API_URL=....
 REACT_APP_PREVIEW_SECRET=...
 ```
+
+Or if you want to retrieve the values from the .env file you only need to add (all other values will be taken from the API settings)
+
+```
+APP_PREVIEW_SECRET=...
+```
 The PREVIEW_SECRET is shared between between backend and front end and needs to be the same.
 
+
 ## Production
-You can choose to build the backend (in the folder `./apps/backend/dist` or *deploy* which means that the app will be build into `./packages/api/dist` but then moved into `./packages/api/live` to reduce potential downtime of the server. 
+You can choose to build the backend (in the folder `./apps/backend/dist` or *deploy* which means that the app will be build into `./apps/backend/build` but then moved into `./apps/backend/live` to reduce potential downtime of the server. 
 
 *Build*
 ```console
-foo@bar:~$ npm run app:backend:build
+foo@bar:~$ npm run build:backend <-- if your environment variables are stored in memory
+foo@bar:~$ npm run build:backend-read-env <-- if your environment variables should be read from the .env file on build time
 ```
 
 *Deploy*
 ```console
-foo@bar:~$ npm run app:backend:deploy
-foo@bar:~$ ... restart your server
+foo@bar:~$ npm run app:backend:deploy <-- if your environment variables are stored in memory
+foo@bar:~$ npm run app:backend:deploy-read-env <-- if your environment variables should be read from the .env file on build time
+foo@bar:~$ ... restart your server (if)
 ```
 
 ## Development
@@ -74,8 +83,8 @@ foo@bar:~$ npm run dev:api
 Please make sure to register the following environmental variables.
 
 ```
-API_PORT=3000
-API_HOST=localthost
+API_PORT=3002
+API_HOST=localhost
 BASE_URL_FRONTEND=http://localhost:3000
 BASE_URL_BACKEND=http://localhost:4001
 BASE_URL_API=http://localhost:4002
@@ -107,16 +116,16 @@ JWT_RESET_PASSWORD_EXPIRATION_MINUTES=30
 JWT_VERIFY_EMAIL_EXPIRATION_DAYS=2
 ```
 ## Production
-You can choose to build the API (in the folder `./packages/api/dist` or *deploy* which means that the app will be build into `./packages/api/dist` but then moved into `./packages/api/live` to reduce potential downtime of the server. 
+You can choose to build the API (in the folder `./apps/api/dist` or *deploy* which means that the app will be build into `./apps/api/dist` but then moved into `./apps/api/live` to reduce potential downtime of the server. 
 
 *Build*
 ```console
-foo@bar:~$ npm run package:api:build
+foo@bar:~$ npm run build:api
 ```
 
 *Deploy*
 ```console
-foo@bar:~$ npm run package:api:deploy
+foo@bar:~$ npm run deploy:api
 foo@bar:~$ ... restart your server
 ```
 

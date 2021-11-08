@@ -24,11 +24,13 @@ export const locationSuggestionCreate = async (
     status: PublishStatus.SUGGESTION,
     owner: {
       connect: {
-        id: imageOwner.id
-      }
-    }
+        id: imageOwner.id,
+      },
+    },
   });
 };
-export default {
+const defaults = {
   locationSuggestionCreate,
 };
+
+export default defaults;

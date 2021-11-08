@@ -1,6 +1,13 @@
 import winston from "winston";
 import { ApiError } from "../utils";
 
+// TODO: maybe it's worth to overwrite the logger ...
+// console.log = (...args) => logger.info.call(logger, ...args);
+// console.info = (...args) => logger.info.call(logger, ...args);
+// console.warn = (...args) => logger.warn.call(logger, ...args);
+// console.error = (...args) => logger.error.call(logger, ...args);
+// console.debug = (...args) => logger.debug.call(logger, ...args);
+
 const levels = {
   error: 0,
   warn: 1,

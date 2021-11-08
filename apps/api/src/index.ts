@@ -5,6 +5,10 @@ import {
   initializeApolloServer,
   config,
 } from "@culturemap/api";
+import express, {
+  Request,
+  Response,
+} from "express";
 // #ENABLE FOR PLUGIN USE import { plugins } from "@culturemap/core";
 
 // #ENABLE FOR PLUGIN USE import examplePlugins from "plugin-example";
@@ -55,7 +59,7 @@ const start = async () => {
   */
 
   // this is to make sure that the root domain is anwering something.
-  app.get("/", function (req, res) {
+  app.get("/", function (req: Request, res: Response) {
     res.send("ok");
   });
 
