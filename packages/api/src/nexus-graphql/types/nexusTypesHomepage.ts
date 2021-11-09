@@ -451,6 +451,11 @@ export const HomepageQuery = extendType({
                         color: true,
                         colorDark: true,
                       },
+                      where: {
+                        taxonomyId: parseInt(
+                          settings?.taxMapping?.typeOfInstitution ?? "0"
+                        ),
+                      },
                     },
                     terms: {
                       select: {
@@ -462,19 +467,7 @@ export const HomepageQuery = extendType({
                         color: true,
                         colorDark: true,
                       },
-                    },
-                  },
-                  where: {
-                    status: PublishStatus.PUBLISHED,
-                    primaryTerms: {
-                      every: {
-                        taxonomyId: parseInt(
-                          settings?.taxMapping?.typeOfInstitution ?? "0"
-                        ),
-                      },
-                    },
-                    terms: {
-                      every: {
+                      where: {
                         taxonomyId: parseInt(
                           settings?.taxMapping?.typeOfInstitution ?? "0"
                         ),
