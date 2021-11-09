@@ -26,14 +26,16 @@ export const TourPathEditor = ({
 
   const refMapContainer = useRef<HTMLDivElement>(null);
   const refMap = useRef<LeafletMapGeoman>();
+  const refInitialDataSet = useRef<boolean>(true);
 
   const [geoJSON, setGeoJSON] = useState<any>({});
+  
 
   let length = 0;
   if (geoJSON && geoJSON?.features && Array.isArray(geoJSON?.features)) {
-    length = geoJSON.features.reduce((l: number, f:any) => {
+    length = geoJSON.features.reduce((l: number, f: any) => {
       return l + geoJSONLineLength(f.geometry);
-    }, 0)
+    }, 0);
   }
 
   useEffect(() => {
@@ -54,7 +56,9 @@ export const TourPathEditor = ({
       refMapContainer,
       (gJSON: any) => {
         setGeoJSON(gJSON);
-        setValue(name, gJSON, { shouldDirty: true });
+        console.log("initial data set", refInitialDataSet.current);
+
+        setValue(name, gJSON, { shouldDirty: !refInitialDataSet.current });
       },
       bounds[0][0],
       bounds[0][1],
@@ -66,6 +70,12 @@ export const TourPathEditor = ({
       config.mapStyleUrl ?? "",
       i18n.language as any
     );
+
+    // give the other effect a little bit of time to be applied 
+    // and then make any path change dirty the form
+    setTimeout(() => {
+      refInitialDataSet.current = false;
+    }, 500)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -73,6 +83,7 @@ export const TourPathEditor = ({
     if (refMap.current) {
       refMap.current.setTourStops(tourStops);
       refMap.current.loadGeoJson(path);
+      
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -94,7 +105,20 @@ export const TourPathEditor = ({
       <Box className="map" w="100%">
         <Box className="editor" position="relative">
           <Box className="mapcontainer" ref={refMapContainer}></Box>
-          <Box position="absolute" bottom="2" left="2" zIndex="9999" p="1" bg="#fff" borderRadius="md" border="1px solid" fontSize="sm" borderColor="gray.400">~{(length / 1000).toFixed(2)}km / {(length / 1600).toFixed(2)}mi</Box>
+          <Box
+            position="absolute"
+            bottom="2"
+            left="2"
+            zIndex="9999"
+            p="1"
+            bg="#fff"
+            borderRadius="md"
+            border="1px solid"
+            fontSize="sm"
+            borderColor="gray.400"
+          >
+            ~{(length / 1000).toFixed(2)}km / {(length / 1600).toFixed(2)}mi
+          </Box>
         </Box>
       </Box>
       <input type="hidden" {...register(name)} />
