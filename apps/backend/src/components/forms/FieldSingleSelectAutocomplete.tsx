@@ -192,8 +192,6 @@ export const FieldSingleSelectAutocomplete = ({
 
   const flattenedErrors = flattenErrors(errors);
 
-  console.log(data, searchResult);
-
   return (
     <FormControl
       id={id}

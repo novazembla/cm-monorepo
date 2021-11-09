@@ -11,13 +11,9 @@
     "start:api": "NODE_ENV=production node ./apps/api/build/index.js",
 
     "build:api": "NODE_ENV=production npm run package:core:build && npm run package:api:build && npm run app:api:build",
-    "deploy:api": "NODE_ENV=production npm run package:core:build && npm run package:api:build && npm run app:api:build && if [ -d ./packages/api/live ]; then mv ./packages/api/live ./packages/api/x; fi && mv ./packages/api/dist ./packages/api/live && if [ -d ./packages/api/x ]; then rimraf ./packages/api/x; fi && if [ -d ./apps/api/live ]; then mv ./apps/api/live ./apps/api/x; fi && mv ./apps/api/build ./apps/api/live && if [ -d ./apps/api/x ]; then rimraf ./apps/api/x; fi",
     
     "build:backend": "NODE_ENV=production npm run package:core:build && npm run app:backend:build",
     "build:backend-read-env": "NODE_ENV=production REACT_APP_API_URL=$(grep '^BASE_URL_API' .env | cut -d '=' -f2) REACT_APP_FRONTEND_URL=$(grep '^BASE_URL_FRONTEND' .env | cut -d '=' -f2) REACT_APP_PREVIEW_SECRET=$(grep '^APP_PREVIEW_SECRET' .env | cut -d '=' -f2) npm run package:core:build && npm run app:backend:build",
-
-    "deploy:backend": "NODE_ENV=production npm run build -w backend && if [ -d ./apps/backend/live ]; then mv ./apps/backend/live ./apps/backend/x; fi && mv ./apps/backend/build ./apps/backend/live && if [ -d ./apps/backend/x ]; then rimraf ./apps/backend/x; fi",
-    "deploy:backend-read-env": "NODE_ENV=production REACT_APP_API_URL=$(grep '^BASE_URL_API' .env | cut -d '=' -f2) REACT_APP_FRONTEND_URL=$(grep '^BASE_URL_FRONTEND' .env | cut -d '=' -f2) REACT_APP_PREVIEW_SECRET=$(grep '^APP_PREVIEW_SECRET' .env | cut -d '=' -f2) npm run build -w backend && if [ -d ./apps/backend/live ]; then mv ./apps/backend/live ./apps/backend/x; fi && mv ./apps/backend/build ./apps/backend/live && if [ -d ./apps/backend/x ]; then rimraf ./apps/backend/x; fi;",
     
     "dev": "NODE_ENV=development npx concurrently -k -p \"[{name}]\" -n \"P:CORE,P:API,A:API,A:BACKEND,P:EXAMPLE\" -c \"#d531f5,#4d5ffa,#09e3b4,#f41788,#f1610a,#61f10a\" \"npm run package:core:dev\" \"npm run package:api:dev\" \"npm run app:api:dev\" \"npm run app:backend:dev\"",
     "dev:api": "NODE_ENV=development npx concurrently -k -p \"[{name}]\" -n \"P:CORE,P:API,A:API,P:EXAMPLE\" -c \"#d531f5,#4d5ffa,#09e3b4,#f41788,#f1610a,#61f10a\" \"npm run package:core:dev\" \"npm run package:api:dev\" \"npm run app:api:dev\"",
@@ -27,14 +23,11 @@
     
     "app:api:dev": "npx concurrently -k -p \"[{name}]\" -n \"BABEL,NODE\" -c \"#dddddd,#aaaaaa,#777777\" \"npm run app:api:watch:babel\" \"sleep 5 && npm run app:api:watch:node\"",
     "app:api:build": "npx rimraf ./apps/api/build && npm run app:api:babel",
-    "app:api:deploy": "npx rimraf ./apps/api/build && npm run app:api:babel",
     "app:api:babel": "npx babel ./apps/api/src --out-dir ./apps/api/build --extensions .ts",
     "app:api:watch:babel": "npx babel ./apps/api/src --watch --out-dir ./apps/api/build --extensions .ts",
     "app:api:watch:node": "env-cmd -f ./.env nodemon --watch ./apps/api/build --watch ./packages/api/dist --watch ./packages/core/dist ./apps/api/build/index.js",
     "app:api:lint": "eslint ./apps/api/src --ext .js,.ts",
     "app:backend:build": "NODE_ENV=production npm run build -w backend",
-    "app:backend:deploy": "NODE_ENV=production npm run build -w backend && if [ -d ./apps/backend/live ]; then mv ./apps/backend/live ./apps/backend/x; fi && mv ./apps/backend/build ./apps/backend/live && if [ -d ./apps/backend/x ]; then rimraf ./apps/backend/x; fi",
-    "app:backend:deploy-read-env": "NODE_ENV=production REACT_APP_API_URL=$(grep '^BASE_URL_API' .env | cut -d '=' -f2) REACT_APP_FRONTEND_URL=$(grep '^BASE_URL_FRONTEND' .env | cut -d '=' -f2) REACT_APP_PREVIEW_SECRET=$(grep '^APP_PREVIEW_SECRET' .env | cut -d '=' -f2) npm run build -w backend && if [ -d ./apps/backend/live ]; then mv ./apps/backend/live ./apps/backend/x; fi && mv ./apps/backend/build ./apps/backend/live && if [ -d ./apps/backend/x ]; then rimraf ./apps/backend/x; fi;",
     "app:backend:dev:build": "REACT_APP_API_URL=$(grep '^BASE_URL_API' .env | cut -d '=' -f2) REACT_APP_FRONTEND_URL=$(grep '^BASE_URL_FRONTEND' .env | cut -d '=' -f2) REACT_APP_PREVIEW_SECRET=$(grep '^APP_PREVIEW_SECRET' .env | cut -d '=' -f2) SKIP_PREFLIGHT_CHECK=true npm run build -w backend",
     "app:backend:dev:build:serve": "REACT_APP_API_URL=$(grep '^BASE_URL_API' .env | cut -d '=' -f2) REACT_APP_FRONTEND_URL=$(grep '^BASE_URL_FRONTEND' .env | cut -d '=' -f2) REACT_APP_PREVIEW_SECRET=$(grep '^APP_PREVIEW_SECRET' .env | cut -d '=' -f2) SKIP_PREFLIGHT_CHECK=true npx serve apps/backend/build",
     "app:backend:dev": "PORT=$(grep DEV_BACKEND_PORT .env | cut -d '=' -f2) REACT_APP_API_URL=$(grep '^BASE_URL_API' .env | cut -d '=' -f2) REACT_APP_API_URL=$(grep '^BASE_URL_API' .env | cut -d '=' -f2) REACT_APP_FRONTEND_URL=$(grep '^BASE_URL_FRONTEND' .env | cut -d '=' -f2) REACT_APP_PREVIEW_SECRET=$(grep '^APP_PREVIEW_SECRET' .env | cut -d '=' -f2) SKIP_PREFLIGHT_CHECK=true npm run start -w backend",
@@ -42,7 +35,6 @@
     "app:backend:translations": "echo \"Please run 'npm run i18n-extract' right in the ./app/backend folder\"",
     "package:api:dev": "npx concurrently -k -p \"[{name}]\" -n \"BABEL,TYPINGS\" -c \"#dddddd,#aaaaaa,#777777\" \"npm run package:api:watch:babel\" \"npm run package:api:watch:typings\"",
     "package:api:build": "NODE_ENV=production npx rimraf ./packages/api/dist && npm run package:api:db:generate && npm run package:api:nexus && npm run package:api:babel && npm run package:api:typings",
-    "package:api:deploy": "NODE_ENV=production npx rimraf ./packages/api/dist && npm run package:api:db:generate && npm run package:api:nexus && npm run package:api:babel && npm run package:api:typings && if [ -d ./packages/api/live ]; then mv ./packages/api/live ./packages/api/x; fi && mv ./packages/api/dist ./packages/api/live && if [ -d ./packages/api/x ]; then rimraf ./packages/api/x; fi",
     "package:api:babel": "npx babel ./packages/api/src --out-dir ./packages/api/dist --extensions .ts",
     "package:api:typings": "npx tsc ./packages/api/src/*.ts --target 'es2020' --moduleResolution 'node' --declaration --esModuleInterop  --emitDeclarationOnly --outDir ./packages/api/dist",
     "package:api:watch:babel": "npx babel ./packages/api/src --watch --out-dir ./packages/api/dist --extensions .ts",
