@@ -56,8 +56,6 @@ export const TourPathEditor = ({
       refMapContainer,
       (gJSON: any) => {
         setGeoJSON(gJSON);
-        console.log("initial data set", refInitialDataSet.current);
-
         setValue(name, gJSON, { shouldDirty: !refInitialDataSet.current });
       },
       bounds[0][0],
