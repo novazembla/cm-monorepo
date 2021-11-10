@@ -91,12 +91,11 @@ export interface NexusGenInputs {
     ownerId: number; // Int!
   }
   LocationSuggestionInput: { // input type
-    accessibilityInformation?: NexusGenScalars['JSON'] | null; // JSON
-    address?: NexusGenScalars['JSON'] | null; // JSON
+    address: NexusGenScalars['JSON']; // JSON!
     contactInfo?: NexusGenScalars['JSON'] | null; // JSON
-    description?: NexusGenScalars['JSON'] | null; // JSON
+    description: NexusGenScalars['JSON']; // JSON!
     heroImage?: NexusGenScalars['JSON'] | null; // JSON
-    meta?: NexusGenScalars['JSON'] | null; // JSON
+    meta: NexusGenScalars['JSON']; // JSON!
     offers?: NexusGenScalars['JSON'] | null; // JSON
     socialMedia?: NexusGenScalars['JSON'] | null; // JSON
     terms?: NexusGenScalars['JSON'] | null; // JSON
@@ -347,6 +346,8 @@ export interface NexusGenObjects {
   FrontendSettings: { // root type
     centerOfGravity?: NexusGenScalars['JSON'] | null; // JSON
     mapJsonUrl?: string | null; // String
+    suggestionsIntro?: NexusGenScalars['JSON'] | null; // JSON
+    suggestionsTandCInfo?: NexusGenScalars['JSON'] | null; // JSON
     taxMapping?: NexusGenScalars['JSON'] | null; // JSON
     taxonomies?: Array<NexusGenRootTypes['Taxonomy'] | null> | null; // [Taxonomy]
   }
@@ -671,6 +672,8 @@ export interface NexusGenFieldTypes {
   FrontendSettings: { // field return type
     centerOfGravity: NexusGenScalars['JSON'] | null; // JSON
     mapJsonUrl: string | null; // String
+    suggestionsIntro: NexusGenScalars['JSON'] | null; // JSON
+    suggestionsTandCInfo: NexusGenScalars['JSON'] | null; // JSON
     taxMapping: NexusGenScalars['JSON'] | null; // JSON
     taxonomies: Array<NexusGenRootTypes['Taxonomy'] | null> | null; // [Taxonomy]
   }
@@ -1102,6 +1105,8 @@ export interface NexusGenFieldTypeNames {
   FrontendSettings: { // field return type name
     centerOfGravity: 'JSON'
     mapJsonUrl: 'String'
+    suggestionsIntro: 'JSON'
+    suggestionsTandCInfo: 'JSON'
     taxMapping: 'JSON'
     taxonomies: 'Taxonomy'
   }

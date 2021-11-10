@@ -36,9 +36,7 @@ import {
   daoSharedGetTranslatedSelectColumns,
 } from "../../dao";
 
-import {
-  locationSuggestionCreate
-} from "../../services/serviceLocation";
+import { locationSuggestionCreate } from "../../services/serviceLocation";
 
 const apiConfig = getApiConfig();
 
@@ -84,10 +82,10 @@ export const Location = objectType({
     t.json("geoCodingInfo");
     t.json("socialMedia");
     t.json("meta", {
-      resolve: (...[p, args, ctx]) => {
+      resolve: (...[p, , ctx]) => {
         if (!apiUserCan(ctx, "locationReadOwn")) return null;
         return (p as any)?.meta;
-      }        
+      },
     });
     t.int("eventLocationId");
     t.string("agency");
@@ -289,9 +287,7 @@ export const LocationQueries = extendType({
       authorize: (...[, , ctx]) =>
         authorizeApiUser(ctx, "locationReadOwn", true),
 
-      async resolve(...[, args, ctx, info]) {
-        const pRI = parseResolveInfo(info);
-
+      async resolve(...[, args, ctx]) {
         let where: Prisma.LocationWhereInput = args.where;
 
         if (!apiUserCan(ctx, "locationReadOwn")) {
@@ -318,12 +314,9 @@ export const LocationQueries = extendType({
           }
         }
 
-        const ids = await daoLocationSelectQuery(
-            where,
-            {
-              id: true
-            }    
-          );
+        const ids = await daoLocationSelectQuery(where, {
+          id: true,
+        });
 
         return {
           ids: ids?.length ? ids.map((l) => l.id) : [],
@@ -529,15 +522,14 @@ export const LocationSuggestionInput = inputObjectType({
   name: "LocationSuggestionInput",
   definition(t) {
     t.nonNull.json("title");
-    t.json("description");
-    t.json("address");
+    t.nonNull.json("description");
+    t.nonNull.json("meta");
+    t.nonNull.json("address");
     t.json("contactInfo");
-    t.json("accessibilityInformation");
     t.json("socialMedia");
     t.json("offers");
     t.json("terms");
     t.json("heroImage");
-    t.json("meta");
   },
 });
 
@@ -545,7 +537,6 @@ export const LocationMutations = extendType({
   type: "Mutation",
 
   definition(t) {
-
     t.nonNull.field("suggestion", {
       type: "Location",
 

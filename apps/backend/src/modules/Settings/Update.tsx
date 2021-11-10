@@ -83,7 +83,6 @@ const Update = () => {
       data.settings.length === 0
     )
       return;
-
     const settingKeys = getSettingsFieldKeys();
 
     reset(

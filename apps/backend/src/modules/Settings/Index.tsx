@@ -17,6 +17,8 @@ import {
   AppSettingsFieldDefinitions,
 } from "~/config";
 
+import { MultiLangHtml } from "~/components/ui";
+
 import { moduleRootPath, findSettingDbValueByKey } from "./moduleConfig";
 
 const Setting = ({
@@ -43,22 +45,30 @@ const Setting = ({
       props
     );
   } else {
-    if (typeof value === "object") {
-      print = Object.entries(value)
-        .map(([, value]) => value)
-        .join(", ");
+    if (
+      ["multilangtexteditor", "texteditor"].includes(
+        settingsFieldDefinitions[setting]?.type ?? ""
+      )
+    ) {
+      print = <MultiLangHtml json={value} />;
     } else {
-      if (!value)
-        value = (
-          <Text color="red.600">
-            {t(
-              "settings.empty.defaultvalue",
-              "Empty! Please update the settings"
-            )}
-          </Text>
-        );
+      if (typeof value === "object") {
+        print = Object.entries(value)
+          .map(([, value]) => value)
+          .join(", ");
+      } else {
+        if (!value)
+          value = (
+            <Text color="red.600">
+              {t(
+                "settings.empty.defaultvalue",
+                "Empty! Please update the settings"
+              )}
+            </Text>
+          );
 
-      print = value;
+        print = value;
+      }
     }
   }
 

@@ -1,5 +1,10 @@
 import React from "react";
-import { FieldInput, FieldRow, FieldTextEditor } from "~/components/forms";
+import {
+  FieldInput,
+  FieldRow,
+  FieldTextEditor,
+  FieldMultiLangTextEditor,
+} from "~/components/forms";
 import { Text, Box } from "@chakra-ui/react";
 
 import {
@@ -61,6 +66,23 @@ export const UpdateForm = ({ data, errors }: { data?: any; errors?: any }) => {
                 />
               </FieldRow>
             );
+          if (fieldDefinition.type === "multilangtexteditor")
+            return (
+              <FieldRow key={i}>
+                <FieldMultiLangTextEditor
+                  type="basic"
+                  name={settingKey}
+                  id={settingKey}
+                  label={t(fieldDefinition.label)}
+                  isRequired={fieldDefinition.required}
+                  settings={{
+                    defaultRequired: fieldDefinition.required,
+                    defaultValues: value,
+                  }}
+                />
+              </FieldRow>
+            );
+
           return (
             <FieldRow key={i}>
               <FieldInput

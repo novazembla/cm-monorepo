@@ -10,6 +10,7 @@ export * from "./AdminTable";
 export * from "./ApiImage";
 export * from "./ApiFile";
 export * from "./MultiLangValue";
+export * from "./MultiLangHtml";
 export * from "./DangerZoneAlertDialog";
 export * from "./SortableList";
 export * from "./MappedTaxonomies";

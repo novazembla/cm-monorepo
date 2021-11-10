@@ -28,6 +28,8 @@ export type AppSettingField = {
 
 export type AppSettingsDefaultFieldKeys =
   | "contactInfo"
+  | "suggestionsIntro"
+  | "suggestionsTandCInfo"
   | "taxMapping"
   | "centerOfGravity";
 
@@ -53,6 +55,48 @@ export const settingFields: AppSettingsFieldDefinitions = {
       contactInfo: string(),
     }),
     required: true,
+  },
+  suggestionsIntro: {
+    defaultValue: "",
+    type: "multilangtexteditor",
+    // t("settings.suggestionsIntro.label", "Intro on the suggestion page")
+    label: "settings.suggestionsIntro.label",
+    validationSchema: object().shape({
+      suggestionsIntro: string(),
+    }),
+    required: true,
+    getUpdateValue: (fieldDefs: AppSettingField, newData: any) => {
+      const config = getAppConfig();
+      return config.activeLanguages.reduce(
+        (acc: any, lang: any) => ({
+          ...acc,
+
+          [lang]: newData[`suggestionsIntro_${lang}`],
+        }),
+        {}
+      );
+    },
+  },
+  suggestionsTandCInfo: {
+    defaultValue: "",
+    type: "multilangtexteditor",
+    // t("settings.suggestionsTandCInfo.label", "Short text above the consent tick box on the suggestion page.")
+    label: "settings.suggestionsTandCInfo.label",
+    validationSchema: object().shape({
+      suggestionsTandCInfo: string(),
+    }),
+    required: true,
+    getUpdateValue: (fieldDefs: AppSettingField, newData: any) => {
+      const config = getAppConfig();
+      return config.activeLanguages.reduce(
+        (acc: any, lang: any) => ({
+          ...acc,
+
+          [lang]: newData[`suggestionsTandCInfo_${lang}`],
+        }),
+        {}
+      );
+    },
   },
   centerOfGravity: {
     defaultValue: {
@@ -117,8 +161,10 @@ export const settingFields: AppSettingsFieldDefinitions = {
     formComponent: MappedTaxonomiesPicker,
     getFormComponentProps: (fieldDefs: AppSettingField, value: any) => {
       return {
-        typeOfInstitution: value["typeOfInstitution"] ?? fieldDefs.defaultValue.type,
-        typeOfOrganisation: value["typeOfOrganisation"] ?? fieldDefs.defaultValue.type,
+        typeOfInstitution:
+          value["typeOfInstitution"] ?? fieldDefs.defaultValue.type,
+        typeOfOrganisation:
+          value["typeOfOrganisation"] ?? fieldDefs.defaultValue.type,
         targetAudience:
           value["targetAudience"] ?? fieldDefs.defaultValue.targetAudience,
         eventType: value["eventType"] ?? fieldDefs.defaultValue.eventType,
