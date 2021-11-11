@@ -865,6 +865,12 @@
     "contactInfo": {
       "label": "Kontaktinformation für technische Fragen"
     },
+    "suggestionsIntro": {
+      "label": "Kartenpunktvorschlag: Einleitung"
+    },
+    "suggestionsTandCInfo": {
+      "label": "Kartenpunktvorschlag: Kurzer text über Einverständniserklärung"
+    },
     "centerOfGravity": {
       "label": "Kartenmitte (Georeferenzierung)"
     }
@@ -873,6 +879,7 @@
     "button": {
       "save": "Speichern",
       "cancel": "Abbrechen",
+      "openInNewTabl": "Link in neuem Tab öffnen",
       "unitalic": "Kursivgedrucktes Textformat entfernen",
       "italic": "Text kursiv formatieren",
       "unbold": "Fettgedrucktes Textformat entfernen",
@@ -976,6 +983,9 @@
     "writedeletelabel": "Schriftliche Löschbestätigung.",
     "placeholder": "{{token}}"
   },
+  "translation": {
+    "comingSoon": "Wir arbeiten an einer deutschen Übersetzung"
+  },
   "translationnotfound": "Übersetzung nicht gefunden",
   "toast": {
     "title": {
@@ -1035,8 +1045,9 @@
   "location": {
     "suggestion": {
       "fieldName": {
-        "name": "Kartenpunktvorschlage(r): Name",
-        "email": "Kartenpunktvorschlage(r): Emailadresse"
+        "name": "Kartenpunktvorschlagende(r): Name",
+        "email": "Kartenpunktvorschlagende(r): Emailadresse",
+        "comments": "Kartenpunktvorschlagende(r): Anmerkungen"
       }
     }
   },

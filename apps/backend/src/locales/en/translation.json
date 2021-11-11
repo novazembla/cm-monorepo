@@ -865,6 +865,12 @@
     "contactInfo": {
       "label": "Contact information at bottom of admin tool"
     },
+    "suggestionsIntro": {
+      "label": "Intro on the suggestion page"
+    },
+    "suggestionsTandCInfo": {
+      "label": "Short text above the consent tick box on the suggestion page."
+    },
     "centerOfGravity": {
       "label": "Center of map (geo referencing)"
     }
@@ -873,6 +879,7 @@
     "button": {
       "save": "Save",
       "cancel": "Cancel",
+      "openInNewTabl": "Open link in new tab",
       "unitalic": "Remove italic text format",
       "italic": "Format text italic",
       "unbold": "Remove bold text format",
@@ -976,6 +983,9 @@
     "writedeletelabel": "Written delete confirmation.",
     "placeholder": "{{token}}"
   },
+  "translation": {
+    "comingSoon": "Please bear with us. We are working on the English translation."
+  },
   "translationnotfound": "Trans. not found",
   "toast": {
     "title": {
@@ -1036,7 +1046,8 @@
     "suggestion": {
       "fieldName": {
         "name": "Suggester's name",
-        "email": "Suggester's email address"
+        "email": "Suggester's email address",
+        "comments": "Suggester's comments and notes"
       }
     }
   },
