@@ -1,12 +1,9 @@
 import { Location } from "@prisma/client";
 import { daoUserQueryFirst, daoLocationCreate } from "../dao";
 import httpStatus from "http-status";
-import { ApiError, slugify } from "../utils";
+import { ApiError } from "../utils";
 import { logger } from "./serviceLogging";
 import { PublishStatus } from "@culturemap/core";
-import { customAlphabet } from "nanoid";
-
-const nanoid = customAlphabet("1234567890abcdef", 12);
 
 export const locationSuggestionCreate = async (
   data: any
@@ -25,10 +22,6 @@ export const locationSuggestionCreate = async (
 
   return daoLocationCreate({
     ...data,
-    slug: {
-      de: `${slugify(data?.title)}-${nanoid()}`,
-      en: `${slugify(data?.title)}-${nanoid()}`,
-    },
     status: PublishStatus.SUGGESTION,
     owner: {
       connect: {

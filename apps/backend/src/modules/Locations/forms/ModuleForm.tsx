@@ -1,4 +1,4 @@
-import { Divider, chakra, Alert, AlertIcon } from "@chakra-ui/react";
+import { Divider, chakra, Alert, AlertIcon, Box } from "@chakra-ui/react";
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import {
@@ -640,22 +640,42 @@ export const ModuleForm = ({
             }}
           />
         </FieldRow>
-        {data?.location?.meta?.suggestionSubmittersName && (
+        {data?.location?.meta?.suggestionSubmittersName.trim() && (
           <FieldRow>
-            {t("location.suggestion.fieldName.name", "Suggester's name")}
-            <br />
-            <b>{data?.location?.meta?.suggestionSubmittersName}</b>
+            <Box>
+              {t("location.suggestion.fieldName.name", "Suggester's name")}
+              <br />
+              <b>{data?.location?.meta?.suggestionSubmittersName}</b>
+            </Box>
           </FieldRow>
         )}
-        {data?.location?.meta?.suggestionSubmittersEmail && (
+        {data?.location?.meta?.suggestionSubmittersEmail.trim() && (
           <FieldRow>
-            {t("location.suggestion.fieldName.email", "Suggester's email address")}
-            <br />
-            <a
-              href={`mailto:${data?.location?.meta?.suggestionSubmittersEmail}`}
-            >
-              {data?.location?.meta?.suggestionSubmittersEmail}
-            </a>
+            <Box>
+              {t(
+                "location.suggestion.fieldName.email",
+                "Suggester's email address"
+              )}
+              <br />
+              <a
+                href={`mailto:${data?.location?.meta?.suggestionSubmittersEmail}`}
+              >
+                {data?.location?.meta?.suggestionSubmittersEmail}
+              </a>
+            </Box>
+          </FieldRow>
+        )}
+        {data?.location?.meta?.suggestionComments.trim() && (
+          <FieldRow>
+            <Box>
+              {t(
+                "location.suggestion.fieldName.comments",
+                "Suggester's comments and notes"
+              )}
+              <br />
+             {data?.location?.meta?.suggestionComments}
+              
+            </Box>
           </FieldRow>
         )}
       </chakra.fieldset>

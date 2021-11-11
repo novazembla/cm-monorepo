@@ -97,6 +97,7 @@ export interface NexusGenInputs {
     heroImage?: NexusGenScalars['JSON'] | null; // JSON
     meta: NexusGenScalars['JSON']; // JSON!
     offers?: NexusGenScalars['JSON'] | null; // JSON
+    slug: NexusGenScalars['JSON']; // JSON!
     socialMedia?: NexusGenScalars['JSON'] | null; // JSON
     terms?: NexusGenScalars['JSON'] | null; // JSON
     title: NexusGenScalars['JSON']; // JSON!

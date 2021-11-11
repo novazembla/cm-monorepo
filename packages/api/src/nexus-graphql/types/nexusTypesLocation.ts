@@ -522,6 +522,7 @@ export const LocationSuggestionInput = inputObjectType({
   name: "LocationSuggestionInput",
   definition(t) {
     t.nonNull.json("title");
+    t.nonNull.json("slug");
     t.nonNull.json("description");
     t.nonNull.json("meta");
     t.nonNull.json("address");

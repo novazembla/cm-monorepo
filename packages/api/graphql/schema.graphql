@@ -290,6 +290,7 @@ input LocationSuggestionInput {
   heroImage: JSON
   meta: JSON!
   offers: JSON
+  slug: JSON!
   socialMedia: JSON
   terms: JSON
   title: JSON!

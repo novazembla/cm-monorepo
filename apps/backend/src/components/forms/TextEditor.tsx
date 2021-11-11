@@ -44,6 +44,9 @@ import {
   RiListOrdered,
   RiListUnordered,
 } from "@hacknug/react-icons/ri";
+
+import { VscMultipleWindows } from "react-icons/vsc";
+
 import { useTranslation } from "react-i18next";
 
 // import Blockquote, { BlockquoteOptions } from "@tiptap/extension-blockquote";
@@ -113,6 +116,8 @@ const EditorMenuBar = ({
 }) => {
   const [showLinkEditScreen, setShowLinkEditScreen] = useState(false);
   const [linkValue, setLinkValue] = useState("");
+  const [newTabActive, setNewTabActive] = useState(false);
+
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const { t } = useTranslation();
@@ -127,6 +132,7 @@ const EditorMenuBar = ({
 
   const save = t("editor.button.save", "Save");
   const cancel = t("editor.button.cancel", "Cancel");
+  const newTab = t("editor.button.openInNewTabl", "Open link in new tab");
   const linkFieldId = `${name}_link_url`;
 
   const onLinkFormSubmit = (event?: FormEvent) => {
@@ -139,11 +145,15 @@ const EditorMenuBar = ({
         .chain()
         .focus()
         .extendMarkRange("link")
-        .setLink({ href: linkValue, target: "_self" })
+        .setLink({
+          href: linkValue,
+          target: newTabActive ? "_blank" : "_self",
+        })
         .run();
     }
 
     setShowLinkEditScreen(false);
+    setNewTabActive(false);
     return false;
   };
 
@@ -174,7 +184,12 @@ const EditorMenuBar = ({
               }}
             />
           </FormControl>
-
+          <EditorMenuBarButton
+            icon={<VscMultipleWindows />}
+            label={newTab}
+            onClick={() => setNewTabActive(!newTabActive)}
+            isActive={newTabActive}
+          />
           <EditorMenuBarButton
             icon={<RiCloseFill />}
             label={cancel}
@@ -282,6 +297,10 @@ const EditorMenuBar = ({
             onClick={(event) => {
               setLinkValue(editor.getAttributes("link")?.href ?? "");
 
+              setNewTabActive(
+                editor.getAttributes("link")?.target === "_blank"
+              );
+
               setShowLinkEditScreen(true);
             }}
             isActive={editor.isActive("link")}
@@ -335,7 +354,8 @@ export const TextEditor = ({
       linkOnPaste: true,
       HTMLAttributes: {
         target: "",
-      }
+        rel: "",
+      },
     })
   );
   extensions.push(HardBreak);
