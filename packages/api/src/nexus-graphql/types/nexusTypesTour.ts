@@ -206,25 +206,25 @@ export const TourQueries = extendType({
                 meta: true,
                 cropPosition: true,
                 ...daoSharedGetTranslatedSelectColumns(["alt", "credits"]),
-              },
+              },            
             },
           };
 
-          // TODO: get this where running
-          where = {
-            ...where,
-            heroImage: {
-              status: {
-                not: {
-                  in: [
-                    ImageStatus.ERROR,
-                    ImageStatus.DELETED,
-                    ImageStatus.TRASHED,
-                  ],
-                },
-              },
-            },
-          };
+          // // TODO: get this where running
+          // where = {
+          //   ...where,
+          //   heroImage: {
+          //     status: {
+          //       not: {
+          //         in: [
+          //           ImageStatus.ERROR,
+          //           ImageStatus.DELETED,
+          //           ImageStatus.TRASHED,
+          //         ],
+          //       },
+          //     },
+          //   },
+          //};
         }
 
         if (
@@ -311,6 +311,15 @@ export const TourQueries = extendType({
                   "description",
                 ]),
                 heroImage: {
+                  select: {
+                    id: true,
+                    status: true,
+                    meta: true,
+                    cropPosition: true,
+                    ...daoSharedGetTranslatedSelectColumns(["alt", "credits"]),
+                  },
+                },
+                images: {
                   select: {
                     id: true,
                     status: true,
