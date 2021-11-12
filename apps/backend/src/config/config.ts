@@ -26,6 +26,9 @@ export type AppConfigSettings = {
 
 export type AppConfig = Complete<AppConfigSettings>;
 // initial state
+
+console.log("REACT_APP_API_URL", process.env.REACT_APP_API_URL);
+
 const configDefault: AppConfig = {
   appName: "CultureMap",
   apiUrl: `${process.env.REACT_APP_API_URL}`,
