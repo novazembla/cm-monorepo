@@ -640,7 +640,7 @@ export const ModuleForm = ({
             }}
           />
         </FieldRow>
-        {data?.location?.meta?.suggestionSubmittersName.trim() && (
+        {data?.location?.meta?.suggestionSubmittersName && (
           <FieldRow>
             <Box>
               {t("location.suggestion.fieldName.name", "Suggester's name")}
@@ -649,7 +649,7 @@ export const ModuleForm = ({
             </Box>
           </FieldRow>
         )}
-        {data?.location?.meta?.suggestionSubmittersEmail.trim() && (
+        {data?.location?.meta?.suggestionSubmittersEmail && (
           <FieldRow>
             <Box>
               {t(
@@ -665,7 +665,7 @@ export const ModuleForm = ({
             </Box>
           </FieldRow>
         )}
-        {data?.location?.meta?.suggestionComments.trim() && (
+        {data?.location?.meta?.suggestionComments && (
           <FieldRow>
             <Box>
               {t(
