@@ -1047,8 +1047,12 @@
       "fieldName": {
         "name": "Suggester's name",
         "email": "Suggester's email address",
-        "comments": "Suggester's comments and notes"
-      }
+        "comments": "Suggester's comments and notes",
+        "suggestionTandC": "Suggester accepted T&C",
+        "suggestionIsOwner": "Suggester confirms to be legally responsible"
+      },
+      "yes": "Yes",
+      "no": "No"
     }
   },
   "page": {

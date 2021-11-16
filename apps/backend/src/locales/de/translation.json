@@ -1047,8 +1047,12 @@
       "fieldName": {
         "name": "Kartenpunktvorschlagende(r): Name",
         "email": "Kartenpunktvorschlagende(r): Emailadresse",
-        "comments": "Kartenpunktvorschlagende(r): Anmerkungen"
-      }
+        "comments": "Kartenpunktvorschlagende(r): Anmerkungen",
+        "suggestionTandC": "Kartenpunktvorschlagende(r): Zustimmung Datenschutzerklärung",
+        "suggestionIsOwner": "Kartenpunktvorschlagende(r): Erklärt legal verantwortlich zu sein"
+      },
+      "yes": "Ja",
+      "no": "Nein"
     }
   },
   "page": {

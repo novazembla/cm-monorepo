@@ -678,6 +678,31 @@ export const ModuleForm = ({
             </Box>
           </FieldRow>
         )}
+        
+        <FieldRow>
+          <Box>
+            {t(
+              "location.suggestion.fieldName.suggestionTandC",
+              "Suggester accepted T&C"
+            )}
+            <br />
+            <b>{data?.location?.meta?.suggestionTandC ? t("location.suggestion.yes", "Yes") : t("location.suggestion.no", "No")}</b>
+            
+          </Box>
+        </FieldRow>
+
+        <FieldRow>
+          <Box>
+            {t(
+              "location.suggestion.fieldName.suggestionIsOwner",
+              "Suggester confirms to be legally responsible"
+            )}
+            <br />
+            <b>{data?.location?.meta?.suggestionIsOwner ? t("location.suggestion.yes", "Yes") : t("location.suggestion.no", "No")}</b>
+            
+          </Box>
+        </FieldRow>
+        
       </chakra.fieldset>
     </>
   );
