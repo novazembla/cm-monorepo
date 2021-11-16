@@ -104,6 +104,58 @@ const doChores = async () => {
       `[WORKER:dbHousekeeping]: Removed ${images.length} image(s) and their files`
     );
 
+    const staleImages = await prisma.image.findMany({
+      where: {
+        type: "suggestion",
+        updatedAt: {
+          lt: new Date(new Date().getTime() - 1000 * 60 * 60 * 24),
+        },
+      },
+      take: 10,
+      select: {
+        id: true,
+        meta: true,
+      },
+    });
+
+    if (staleImages && staleImages.length > 0) {
+      await Promise.all(
+        staleImages.map(async (image) => {
+          if (image?.meta) {
+            const { meta } = image as any;
+            try {
+              const uploadPath = `${apiConfig.baseDir}/${apiConfig.publicDir}${meta.uploadFolder}/`;
+
+              if (meta?.availableSizes) {
+                Object.keys(meta.availableSizes).forEach((size) => {
+                  const fileName = meta.availableSizes[size].url
+                    .split("/")
+                    .pop();
+                  unlinkSync(`${uploadPath}${fileName}`);
+                });
+              } else if (meta?.originalFilePath) {
+                unlinkSync(meta?.originalFilePath);
+              }
+
+              await prisma.image.delete({
+                where: {
+                  id: image.id,
+                },
+              });
+            } catch (err: any) {
+              postMessage(
+                `[WORKER:dbHousekeeping]: image cleanup error - ${err.message}`
+              );
+            }
+          }
+        })
+      );
+    }
+
+    postMessage(
+      `[WORKER:dbHousekeeping]: Removed ${images.length} stale suggestion image(s) and their files`
+    );
+
     const files = await prisma.file.findMany({
       where: {
         status: FileStatus.DELETED,

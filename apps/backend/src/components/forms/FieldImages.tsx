@@ -151,7 +151,7 @@ export const FieldImages = ({
                               showPlaceholder: true,
                               sizes:
                                 settings?.sizes ??
-                                "(min-width: 45em) 20v, 95vw",
+                                "(min-width: 45em) 20vw, 95vw",
                             },
                           }}
                         />

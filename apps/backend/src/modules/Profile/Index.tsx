@@ -71,7 +71,7 @@ const Index = () => {
                 forceAspectRatioPB={133.33}
                 showPlaceholder
                 alt={`${firstName} ${lastName}`}
-                sizes="(min-width: 45em) 20v, 95vw"
+                sizes="(min-width: 45em) 20vw, 95vw"
                 placeholder={t(
                   "module.profile.image.placeholder",
                   "No profile picture uploaded"

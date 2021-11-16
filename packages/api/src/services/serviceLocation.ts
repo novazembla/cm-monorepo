@@ -1,5 +1,5 @@
 import { Location } from "@prisma/client";
-import { daoUserQueryFirst, daoLocationCreate } from "../dao";
+import { daoUserQueryFirst, daoLocationCreate, daoImageUpdate } from "../dao";
 import httpStatus from "http-status";
 import { ApiError } from "../utils";
 import { logger } from "./serviceLogging";
@@ -42,8 +42,15 @@ export const locationSuggestionCreate = async (
     geoCodingInfo: geoCodeCandidates,
   };
 
-  return daoLocationCreate({
+  const location = await daoLocationCreate({
     ...data,
+    heroImage: data?.heroImage?.connect?.id
+      ? {
+          connect: {
+            id: data?.heroImage?.connect?.id,
+          },
+        }
+      : undefined,
     status: PublishStatus.SUGGESTION,
     owner: {
       connect: {
@@ -51,6 +58,14 @@ export const locationSuggestionCreate = async (
       },
     },
   });
+
+  if (location?.id && data?.heroImage?.connect?.id) {
+    await daoImageUpdate(data?.heroImage?.connect?.id, {
+      ...data?.heroImage?.update,
+      type: "image",
+    });
+  }
+  return location;
 };
 const defaults = {
   locationSuggestionCreate,

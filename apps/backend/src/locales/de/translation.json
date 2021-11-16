@@ -1049,7 +1049,8 @@
         "email": "Kartenpunktvorschlagende(r): Emailadresse",
         "comments": "Kartenpunktvorschlagende(r): Anmerkungen",
         "suggestionTandC": "Kartenpunktvorschlagende(r): Zustimmung Datenschutzerklärung",
-        "suggestionIsOwner": "Kartenpunktvorschlagende(r): Erklärt legal verantwortlich zu sein"
+        "suggestionIsOwner": "Kartenpunktvorschlagende(r): Erklärt legal verantwortlich zu sein",
+        "suggestionImageRightsConfirmation": "Kartenpunktvorschlagende(r): Bestätigt, dass das Bild veröffentlicht werden darf."
       },
       "yes": "Ja",
       "no": "Nein"

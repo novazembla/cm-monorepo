@@ -7,7 +7,11 @@ import { nanoid } from "nanoid";
 import type { ApiImageMetaInformation } from "@culturemap/core";
 
 import { logger } from "../services/serviceLogging";
-import { imageCreate, suggestionImageCreate, imageGetUploadInfo } from "../services/serviceImage";
+import {
+  imageCreate,
+  suggestionImageCreate,
+  imageGetUploadInfo,
+} from "../services/serviceImage";
 
 import { getApiConfig } from "../config";
 import { ApiError } from "../utils";
@@ -216,10 +220,7 @@ export const postSuggestionImage = async (
           "normal"
         );
 
-        const image = await suggestionImageCreate(
-          fileNanoId,
-          metainfo
-        );
+        const image = await suggestionImageCreate(fileNanoId, metainfo);
 
         res.json(image);
       } else {
@@ -227,7 +228,7 @@ export const postSuggestionImage = async (
           httpStatus.BAD_REQUEST,
           "Suggestion image upload failed #1"
         );
-      }      
+      }
     } catch (err) {
       logger.error(err);
       throw new ApiError(

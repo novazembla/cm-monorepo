@@ -673,36 +673,62 @@ export const ModuleForm = ({
                 "Suggester's comments and notes"
               )}
               <br />
-             {data?.location?.meta?.suggestionComments}
-              
+              {data?.location?.meta?.suggestionComments}
             </Box>
           </FieldRow>
         )}
-        
-        {typeof data?.location?.meta?.suggestionTandC !== "undefined" && <FieldRow>
-          <Box>
-            {t(
-              "location.suggestion.fieldName.suggestionTandC",
-              "Suggester accepted T&C"
-            )}
-            <br />
-            <b>{data?.location?.meta?.suggestionTandC ? t("location.suggestion.yes", "Yes") : t("location.suggestion.no", "No")}</b>
-            
-          </Box>
-        </FieldRow>}
 
-        {typeof data?.location?.meta?.suggestionIsOwner !== "undefined" && <FieldRow>
-          <Box>
-            {t(
-              "location.suggestion.fieldName.suggestionIsOwner",
-              "Suggester confirms to be legally responsible"
-            )}
-            <br />
-            <b>{data?.location?.meta?.suggestionIsOwner ? t("location.suggestion.yes", "Yes") : t("location.suggestion.no", "No")}</b>
-            
-          </Box>
-        </FieldRow>}
-        
+        {typeof data?.location?.meta?.suggestionTandC !== "undefined" && (
+          <FieldRow>
+            <Box>
+              {t(
+                "location.suggestion.fieldName.suggestionTandC",
+                "Suggester accepted T&C"
+              )}
+              <br />
+              <b>
+                {data?.location?.meta?.suggestionTandC
+                  ? t("location.suggestion.yes", "Yes")
+                  : t("location.suggestion.no", "No")}
+              </b>
+            </Box>
+          </FieldRow>
+        )}
+
+        {typeof data?.location?.meta?.suggestionIsOwner !== "undefined" && (
+          <FieldRow>
+            <Box>
+              {t(
+                "location.suggestion.fieldName.suggestionIsOwner",
+                "Suggester confirms to be legally responsible"
+              )}
+              <br />
+              <b>
+                {data?.location?.meta?.suggestionIsOwner
+                  ? t("location.suggestion.yes", "Yes")
+                  : t("location.suggestion.no", "No")}
+              </b>
+            </Box>
+          </FieldRow>
+        )}
+
+        {typeof data?.location?.meta?.suggestionImageRightsConfirmation !==
+          "undefined" && (
+          <FieldRow>
+            <Box>
+              {t(
+                "location.suggestion.fieldName.suggestionImageRightsConfirmation",
+                "Suggester confirms that the image can be published on the website"
+              )}
+              <br />
+              <b>
+                {data?.location?.meta?.suggestionImageRightsConfirmation
+                  ? t("location.suggestion.yes", "Yes")
+                  : t("location.suggestion.no", "No")}
+              </b>
+            </Box>
+          </FieldRow>
+        )}
       </chakra.fieldset>
     </>
   );

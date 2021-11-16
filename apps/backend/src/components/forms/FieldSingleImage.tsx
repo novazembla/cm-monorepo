@@ -137,7 +137,7 @@ export const FieldSingleImage = ({
                   alt: label,
                   forceAspectRatioPB: settings?.aspectRatio ?? 75,
                   showPlaceholder: true,
-                  sizes: settings?.sizes ?? "(min-width: 45em) 20v, 95vw",
+                  sizes: settings?.sizes ?? "(min-width: 45em) 20vw, 95vw",
                 },
               }}
             />

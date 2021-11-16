@@ -62,7 +62,7 @@ export const UpdateForm = ({
                 alt: `${firstName} ${lastName}`,
                 forceAspectRatioPB: 133.33,
                 showPlaceholder: true,
-                sizes: "(min-width: 45em) 20v, 95vw",
+                sizes: "(min-width: 45em) 20vw, 95vw",
               },
             }}
           />

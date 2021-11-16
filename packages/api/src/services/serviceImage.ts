@@ -42,30 +42,6 @@ export const imageGetUploadInfo = async (): Promise<{
   return { path, nanoid: nanoid(), baseUrl, uploadFolder };
 };
 
-export const suggestionImageCreate = async (
-  imageNanoId: string,
-  meta: ApiImageMetaInformation
-): Promise<Image> => {
-  const imageOwner = await daoUserQueryFirst({
-    ownsSubmittedSuggestions: true,
-  });
-
-  if (!imageOwner) {
-    logger.error("suggestionImageCreate suggestion owner not found");
-    throw new ApiError(
-      httpStatus.INTERNAL_SERVER_ERROR,
-      "New suggested image could not be created #1"
-    );
-  }
-
-  return await imageCreate(
-    imageOwner.id,
-    imageNanoId,
-    meta,
-    "suggestion"
-  )
-};
-
 export const imageCreate = async (
   ownerId: number,
   imageNanoId: string,
@@ -102,6 +78,31 @@ export const imageCreate = async (
       "New image could not be created"
     );
 
+  return image;
+};
+
+export const suggestionImageCreate = async (
+  imageNanoId: string,
+  meta: ApiImageMetaInformation
+): Promise<Image> => {
+  const imageOwner = await daoUserQueryFirst({
+    ownsSubmittedSuggestions: true,
+  });
+
+  if (!imageOwner) {
+    logger.error("suggestionImageCreate suggestion owner not found");
+    throw new ApiError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      "New suggested image could not be created #1"
+    );
+  }
+
+  const image = await imageCreate(
+    imageOwner.id,
+    imageNanoId,
+    meta,
+    "suggestion"
+  );
   return image;
 };
 

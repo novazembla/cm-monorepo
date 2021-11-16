@@ -25,6 +25,7 @@ import {
   postFileUpload,
   postDataImportFile,
   postDataImportFileUpload,
+  postSuggestionImage,
   getGeoJson,
 } from "./routes";
 
@@ -46,6 +47,11 @@ export const initializeExpressApp = () => {
 
   app.post("/profileImage", postImageUpload.single("image"), postProfileImage);
   app.post("/image", postImageUpload.single("image"), postImage);
+  app.post(
+    "/suggestionImage",
+    postImageUpload.single("image"),
+    postSuggestionImage
+  );
   app.post("/file", postFileUpload.single("file"), postFile);
   app.post(
     "/import",
