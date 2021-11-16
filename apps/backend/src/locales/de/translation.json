@@ -109,42 +109,42 @@
       "defined": "Dieses Feld muss gesetzt werden"
     },
     "string": {
-      "length": "{{path}} muss exakt {{length}} Zeichen lang sein",
-      "min": "{{path}} muss mindestens {{min}} Zeichen lang sein",
-      "max": "{{path}} darf maximal {{max}} Zeichen lang sein",
-      "matches": "{{path}} muss mit folgendem übereinstimmen: \"{{regex}}\"",
-      "email": "{{path}} muss eine gültige E-Mail-Adresse sein",
-      "url": "{{path}} muss eine gültige URL sein",
-      "uuid": "{{path}} muss eine gültige UUID sein",
-      "trim": "{{path}} darf kein Leerzeichen am Anfang oder Ende haben",
-      "lowercase": "{{path}} muss ein String in Kleinbuchstaben sein",
-      "uppercase": "{{path}} muss ein String in Grossbuchstaben sein"
+      "length": "Dieses Feld muss exakt {{length}} Zeichen lang sein",
+      "min": "Dieses Feld muss mindestens {{min}} Zeichen lang sein",
+      "max": "Dieses Feld darf maximal {{max}} Zeichen lang sein",
+      "matches": "Dieses Feld muss mit folgendem übereinstimmen: \"{{regex}}\"",
+      "email": "Dieses Feld muss eine gültige E-Mail-Adresse sein",
+      "url": "Dieses Feld muss eine gültige URL sein",
+      "uuid": "Dieses Feld muss eine gültige UUID sein",
+      "trim": "Dieses Feld darf kein Leerzeichen am Anfang oder Ende haben",
+      "lowercase": "Dieses Feld muss ein String in Kleinbuchstaben sein",
+      "uppercase": "Dieses Feld muss ein String in Grossbuchstaben sein"
     },
     "number": {
-      "min": "{{path}} muss größer oder gleich {{min}} sein",
-      "max": "{{path}} muss kleiner oder gleich {{max}} sein",
-      "lessThan": "{{path}} muss kleiner sein als {{less}}",
-      "moreThan": "{{path}} muss grösser sein als {{more}}",
-      "positive": "{{path}} muss eine positive Zahl sein",
-      "negative": "{{path}} muss eine negative Zahl sein",
-      "integer": "{{path}} muss eine ganze Zahl sein",
+      "min": "Dieses Feld muss größer oder gleich {{min}} sein",
+      "max": "Dieses Feld muss kleiner oder gleich {{max}} sein",
+      "lessThan": "Dieses Feld muss kleiner sein als {{less}}",
+      "moreThan": "Dieses Feld muss grösser sein als {{more}}",
+      "positive": "Dieses Feld muss eine positive Zahl sein",
+      "negative": "Dieses Feld muss eine negative Zahl sein",
+      "integer": "Dieses Feld muss eine ganze Zahl sein",
       "nolatitude": "Längengrade sind Zahlen zwischen -90.00 und 90.00",
       "nolongitude": "Breitengrade sind Zahlen zwischen -180.00 und 180.00"
     },
     "date": {
-      "min": "{{path}} Feld muss später sein als {{min}}",
-      "max": "{{path}} Feld muss früher sein als {{max}}"
+      "min": "Dieses Feld muss später sein als {{min}}",
+      "max": "Dieses Feld muss früher sein als {{max}}"
     },
     "boolean": {
-      "isValue": "{{path}} Feld muss {{value}} sein"
+      "isValue": "Dieses Feld muss {{value}} sein"
     },
     "object": {
-      "noUnknown": "{{path}} Feld hat nicht spezifizierte Schlüssel: {{unknown}}"
+      "noUnknown": "Dieses Feld hat nicht spezifizierte Schlüssel: {{unknown}}"
     },
     "array": {
-      "min": "{{path}} Feld muss mindestens {{min}} Elemente enthalten",
-      "max": "{{path}} Feld muss weniger oder gleich {{max}} Elemente enthalten",
-      "length": "{{path}} muss {{length}} Elemente haben",
+      "min": "Dieses Feld muss mindestens {{min}} Elemente enthalten",
+      "max": "Dieses Feld muss weniger oder gleich {{max}} Elemente enthalten",
+      "length": "Dieses muss {{length}} Elemente haben",
       "minOneItem": "Bitte wähle mindestens ein Element aus"
     },
     "slug": {
