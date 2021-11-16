@@ -679,7 +679,7 @@ export const ModuleForm = ({
           </FieldRow>
         )}
         
-        <FieldRow>
+        {typeof data?.location?.meta?.suggestionTandC !== "undefined" && <FieldRow>
           <Box>
             {t(
               "location.suggestion.fieldName.suggestionTandC",
@@ -689,9 +689,9 @@ export const ModuleForm = ({
             <b>{data?.location?.meta?.suggestionTandC ? t("location.suggestion.yes", "Yes") : t("location.suggestion.no", "No")}</b>
             
           </Box>
-        </FieldRow>
+        </FieldRow>}
 
-        <FieldRow>
+        {typeof data?.location?.meta?.suggestionIsOwner !== "undefined" && <FieldRow>
           <Box>
             {t(
               "location.suggestion.fieldName.suggestionIsOwner",
@@ -701,7 +701,7 @@ export const ModuleForm = ({
             <b>{data?.location?.meta?.suggestionIsOwner ? t("location.suggestion.yes", "Yes") : t("location.suggestion.no", "No")}</b>
             
           </Box>
-        </FieldRow>
+        </FieldRow>}
         
       </chakra.fieldset>
     </>
