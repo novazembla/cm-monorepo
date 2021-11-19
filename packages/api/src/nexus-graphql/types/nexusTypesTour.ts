@@ -206,7 +206,7 @@ export const TourQueries = extendType({
                 meta: true,
                 cropPosition: true,
                 ...daoSharedGetTranslatedSelectColumns(["alt", "credits"]),
-              },            
+              },
             },
           };
 
@@ -352,6 +352,18 @@ export const TourQueries = extendType({
                         ...daoSharedGetTranslatedSelectColumns([
                           "name",
                           "slug",
+                        ]),
+                      },
+                    },
+                    heroImage: {
+                      select: {
+                        id: true,
+                        status: true,
+                        meta: true,
+                        cropPosition: true,
+                        ...daoSharedGetTranslatedSelectColumns([
+                          "alt",
+                          "credits",
                         ]),
                       },
                     },

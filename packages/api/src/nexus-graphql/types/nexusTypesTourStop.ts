@@ -163,28 +163,6 @@ export const TourStopQueries = extendType({
               },
             },
           };
-          // TODO: fix that
-          // where = {
-          //   ...where,
-          //   OR: [
-          //     {
-          //       heroImage: {
-          //         status: {
-          //           not: {
-          //             in: [
-          //               ImageStatus.ERROR,
-          //               ImageStatus.DELETED,
-          //               ImageStatus.TRASHED,
-          //             ],
-          //           },
-          //         },
-          //       },
-          //     },
-          //     {
-          //       heroImage: null,
-          //     },
-          //   ],
-          // };
         }
 
         if ((pRI?.fieldsByTypeName?.TourStop as any)?.images) {

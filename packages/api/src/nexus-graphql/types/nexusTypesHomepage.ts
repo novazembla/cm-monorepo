@@ -123,6 +123,7 @@ export const HomepageQuery = extendType({
                     id: true,
                     status: true,
                     meta: true,
+                    ...daoSharedGetTranslatedSelectColumns(["credits", "alt"]),
                     cropPosition: true,
                   },
                 },
@@ -190,7 +191,19 @@ export const HomepageQuery = extendType({
                       heroImage:
                         loc?.heroImage?.id &&
                         loc?.heroImage?.status === ImageStatus.READY
-                          ? loc?.heroImage
+                          ? {
+                              id: loc?.heroImage.id,
+                              meta: loc?.heroImage.meta,
+                              status: loc?.heroImage.status,
+                              alt: daoSharedMapTranslatedColumnsInRowToJson(
+                                loc?.heroImage,
+                                "alt"
+                              ),
+                              credits: daoSharedMapTranslatedColumnsInRowToJson(
+                                loc?.heroImage,
+                                "credits"
+                              ),
+                            }
                           : undefined,
                     },
                   };
@@ -233,6 +246,7 @@ export const HomepageQuery = extendType({
                     id: true,
                     status: true,
                     meta: true,
+                    ...daoSharedGetTranslatedSelectColumns(["credits", "alt"]),
                     cropPosition: true,
                   },
                 },
@@ -377,7 +391,19 @@ export const HomepageQuery = extendType({
                       heroImage:
                         item?.heroImage?.id &&
                         item?.heroImage?.status === ImageStatus.READY
-                          ? item?.heroImage
+                          ? {
+                              id: item?.heroImage.id,
+                              meta: item?.heroImage.meta,
+                              status: item?.heroImage.status,
+                              alt: daoSharedMapTranslatedColumnsInRowToJson(
+                                item?.heroImage,
+                                "alt"
+                              ),
+                              credits: daoSharedMapTranslatedColumnsInRowToJson(
+                                item?.heroImage,
+                                "credits"
+                              ),
+                            }
                           : undefined,
                     },
                   };
@@ -421,6 +447,7 @@ export const HomepageQuery = extendType({
                     id: true,
                     status: true,
                     meta: true,
+                    ...daoSharedGetTranslatedSelectColumns(["credits", "alt"]),
                     cropPosition: true,
                   },
                 },
@@ -557,7 +584,19 @@ export const HomepageQuery = extendType({
                       heroImage:
                         item?.heroImage?.id &&
                         item?.heroImage?.status === ImageStatus.READY
-                          ? item?.heroImage
+                          ? {
+                              id: item?.heroImage.id,
+                              meta: item?.heroImage.meta,
+                              status: item?.heroImage.status,
+                              alt: daoSharedMapTranslatedColumnsInRowToJson(
+                                item?.heroImage,
+                                "alt"
+                              ),
+                              credits: daoSharedMapTranslatedColumnsInRowToJson(
+                                item?.heroImage,
+                                "credits"
+                              ),
+                            }
                           : undefined,
                     },
                   };
