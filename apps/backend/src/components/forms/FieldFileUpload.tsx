@@ -291,9 +291,9 @@ export const FieldFileUploader = ({
       ...baseStyle,
       ...(isDragActive ? { activeStyle } : {}),
       ...(isDragAccept || isUploading ? acceptStyle : {}),
-      ...(isDragReject || showFileDropError ? rejectStyle : {}),
+      ...(showFileDropError ? rejectStyle : {}),
     }),
-    [isDragActive, isDragReject, isDragAccept, isUploading, showFileDropError]
+    [isDragActive, isDragAccept, isUploading, showFileDropError]
   );
 
   const [deleteButtonOnClick, DeleteAlertDialog, isDeleteError] =
