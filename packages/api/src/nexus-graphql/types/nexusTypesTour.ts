@@ -1,6 +1,6 @@
 /// <reference path="../../types/nexus-typegen.ts" />
 import { parseResolveInfo } from "graphql-parse-resolve-info";
-import { PublishStatus, ImageStatus } from "@culturemap/core";
+import { PublishStatus } from "@culturemap/core";
 import { Prisma } from ".prisma/client";
 
 import dedent from "dedent";

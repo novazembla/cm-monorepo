@@ -251,7 +251,7 @@ export const ModuleImportUpdateForm = ({
             }}
             settings={{
               file,
-              accept: "text/csv",
+              accept: ".csv, text/csv, text/plain",
               placeholder: t(
                 "module.locations.forms.location.field.placeholder.csvfile",
                 "Upload CSV"
