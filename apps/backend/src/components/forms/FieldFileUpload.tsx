@@ -180,7 +180,7 @@ export const FieldFileUploader = ({
     getInputProps,
     isDragActive,
     isDragAccept,
-    isDragReject,
+    // isDragReject,
   } = useDropzone({
     maxSize: settings?.maxFileSize ?? 1024 * 1024 * 2,
     minSize: settings?.minFileSize ?? undefined,
