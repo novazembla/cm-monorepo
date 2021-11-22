@@ -393,7 +393,7 @@ export const FieldFileUploader = ({
     <>
       <FormControl
         id={id}
-        isInvalid={flattenedErrors[name]?.message || isDragReject}
+        isInvalid={flattenedErrors[name]?.message}
         {...{ isRequired, isDisabled }}
       >
         <FormLabel htmlFor={id} mb="0.5">

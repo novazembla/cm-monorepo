@@ -172,7 +172,7 @@ export const FieldImageUploader = ({
     getInputProps,
     isDragActive,
     isDragAccept,
-    isDragReject,
+    // isDragReject,
   } = useDropzone({
     maxSize: settings?.maxFileSize ?? 1024 * 1024 * 2,
     minSize: settings?.minFileSize ?? undefined,
@@ -272,9 +272,9 @@ export const FieldImageUploader = ({
       ...baseStyle,
       ...(isDragActive ? { activeStyle } : {}),
       ...(isDragAccept || isUploading ? acceptStyle : {}),
-      ...(isDragReject || showFileDropError ? rejectStyle : {}),
+      ...(showFileDropError ? rejectStyle : {}),
     }),
-    [isDragActive, isDragReject, isDragAccept, isUploading, showFileDropError]
+    [isDragActive, isDragAccept, isUploading, showFileDropError]
   );
 
   const [deleteButtonOnClick, DeleteAlertDialog, isDeleteError] =
@@ -373,7 +373,7 @@ export const FieldImageUploader = ({
     <>
       <FormControl
         id={id}
-        isInvalid={flattenedErrors[name]?.message || isDragReject}
+        isInvalid={flattenedErrors[name]?.message}
         {...{ isRequired, isDisabled }}
       >
         <FormLabel htmlFor={id} mb="0.5">
