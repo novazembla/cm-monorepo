@@ -27,8 +27,6 @@ export type AppConfigSettings = {
 export type AppConfig = Complete<AppConfigSettings>;
 // initial state
 
-console.log("REACT_APP_API_URL", process.env.REACT_APP_API_URL);
-
 const configDefault: AppConfig = {
   appName: "CultureMap",
   apiUrl: `${process.env.REACT_APP_API_URL}`,
@@ -53,8 +51,8 @@ const configDefault: AppConfig = {
       lng: 13.813182,
     },
   ],
-  mapStyleUrl:
-    "https://www.vincentvanuffelen.com/lichtenberg/osm_liberty_culturemap.json",
+  mapStyleUrl: `${process.env.REACT_APP_MAP_JSON}`
+,
 };
 
 export let config: AppConfig;
