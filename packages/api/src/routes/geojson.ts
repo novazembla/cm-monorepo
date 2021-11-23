@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status";
-// import path from "path";
+import NodeCache from "node-cache";
 
 import { logger } from "../services/serviceLogging";
 
@@ -14,6 +14,10 @@ import {
 } from "../dao";
 import { getApiConfig } from "../config";
 
+// as the creation of the GEOJSON containing all for 10 minutes
+const geoJSONCache = new NodeCache({ stdTTL: 600 });
+const GEOJSON_CACHE_KEY = "geojson";
+
 export const getGeoJson = async (
   req: Request,
   res: Response,
@@ -22,6 +26,7 @@ export const getGeoJson = async (
   const config = getApiConfig();
   try {
     try {
+      let isDrillDown = false;
       let where: any = [
         {
           status: PublishStatus.PUBLISHED,
@@ -41,6 +46,7 @@ export const getGeoJson = async (
         terms = terms.map((t: string) => parseInt(t.trim()));
 
         if (typeof s === "string" && s.trim() !== "") {
+          isDrillDown = true;
           subWhere.push({
             fullText: {
               contains: typeof s === "string" ? s.trim() : s,
@@ -75,6 +81,7 @@ export const getGeoJson = async (
         }
 
         if (subWhere?.length) {
+          isDrillDown = true;
           if (and) {
             where = [...where, ...subWhere];
           } else {
@@ -87,84 +94,90 @@ export const getGeoJson = async (
         // nothing to be done ...
       }
 
-      const locations = await daoLocationSelectQuery(
-        {
-          AND: where,
-        },
-        {
-          id: true,
-          lat: true,
-          lng: true,
-          ...daoSharedGetTranslatedSelectColumns([
-            "title",
-            "slug",
-            "description",
-          ]),
-          terms: {
-            select: {
-              id: true,
-              color: true,
-              colorDark: true,
-            },
-            take: 1,
+      if (!isDrillDown && geoJSONCache.has(GEOJSON_CACHE_KEY)) {
+        res.json(geoJSONCache.get(GEOJSON_CACHE_KEY));
+      } else {
+        const locations = await daoLocationSelectQuery(
+          {
+            AND: where,
           },
-          primaryTerms: {
-            select: {
-              id: true,
-              color: true,
-              colorDark: true,
+          {
+            id: true,
+            lat: true,
+            lng: true,
+            ...daoSharedGetTranslatedSelectColumns(["title", "slug"]),
+            terms: {
+              select: {
+                id: true,
+                color: true,
+                colorDark: true,
+              },
+              take: 1,
             },
-            take: 1,
+            primaryTerms: {
+              select: {
+                id: true,
+                color: true,
+                colorDark: true,
+              },
+              take: 1,
+            },
           },
-        },
-        {
-          id: "asc",
-        }
-      );
+          {
+            id: "asc",
+          }
+        );
 
-      res.json({
-        type: "FeatureCollection",
-        features:
-          locations?.length > 0
-            ? locations.map((loc: any) => {
-                let color = null;
-                let termId = null;
+        const geoJson = {
+          type: "FeatureCollection",
+          features:
+            locations?.length > 0
+              ? locations.map((loc: any) => {
+                  let color = null;
+                  let termId = null;
 
-                // TODO: this should serve a cached file ...
+                  // TODO: this should serve a cached file ...
 
-                // TODO: this should also take multiple primary terms into account ...
-                if (loc?.primaryTerms?.length > 0) {
-                  termId = loc?.primaryTerms[0].id;
-                  color = loc?.primaryTerms[0].color.trim()
-                    ? loc?.primaryTerms[0].color.trim()
-                    : config.defaultPinColor;
-                } else if (loc?.terms?.length > 0) {
-                  termId = loc?.terms[0].id;
-                  color = loc?.terms[0].color.trim()
-                    ? loc?.terms[0].color.trim()
-                    : config.defaultPinColor;
-                }
+                  // TODO: this should also take multiple primary terms into account ...
+                  if (loc?.primaryTerms?.length > 0) {
+                    termId = loc?.primaryTerms[0].id;
+                    color = loc?.primaryTerms[0].color.trim()
+                      ? loc?.primaryTerms[0].color.trim()
+                      : config.defaultPinColor;
+                  } else if (loc?.terms?.length > 0) {
+                    termId = loc?.terms[0].id;
+                    color = loc?.terms[0].color.trim()
+                      ? loc?.terms[0].color.trim()
+                      : config.defaultPinColor;
+                  }
 
-                return {
-                  type: "Feature",
-                  geometry: {
-                    coordinates: [loc?.lng ?? 0.0, loc?.lat ?? 0.0],
-                    type: "Point",
-                  },
-                  properties: {
-                    id: `loc-${loc?.id}`,
-                    color: color ?? config.defaultPinColor,
-                    primaryTermId: termId,
-                    slug: daoSharedMapTranslatedColumnsInRowToJson(loc, "slug"),
-                    title: daoSharedMapTranslatedColumnsInRowToJson(
-                      loc,
-                      "title"
-                    ),
-                  },
-                };
-              })
-            : [],
-      });
+                  return {
+                    type: "Feature",
+                    geometry: {
+                      coordinates: [loc?.lng ?? 0.0, loc?.lat ?? 0.0],
+                      type: "Point",
+                    },
+                    properties: {
+                      id: `loc-${loc?.id}`,
+                      color: color ?? config.defaultPinColor,
+                      primaryTermId: termId,
+                      slug: daoSharedMapTranslatedColumnsInRowToJson(
+                        loc,
+                        "slug"
+                      ),
+                      title: daoSharedMapTranslatedColumnsInRowToJson(
+                        loc,
+                        "title"
+                      ),
+                    },
+                  };
+                })
+              : [],
+        };
+
+        geoJSONCache.set(GEOJSON_CACHE_KEY, geoJson);
+        res.json(geoJson);
+      }
     } catch (err) {
       logger.error(err);
       throw new ApiError(

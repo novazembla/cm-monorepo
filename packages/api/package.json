@@ -64,6 +64,7 @@
     "morgan": "^1.10.0",
     "multer": "^1.4.3",
     "nanoid": "^3.1.23",
+    "node-cache": "^5.1.2",
     "nodemailer": "^6.6.3",
     "object-hash": "^2.2.0",
     "p-map": "^5.1.0",
