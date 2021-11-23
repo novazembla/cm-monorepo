@@ -73,16 +73,21 @@ const doChores = async () => {
             const { meta } = image as any;
             try {
               const uploadPath = `${apiConfig.baseDir}/${apiConfig.publicDir}${meta.uploadFolder}/`;
-
-              if (meta?.availableSizes) {
-                Object.keys(meta.availableSizes).forEach((size) => {
-                  const fileName = meta.availableSizes[size].url
-                    .split("/")
-                    .pop();
-                  unlinkSync(`${uploadPath}${fileName}`);
-                });
-              } else if (meta?.originalFilePath) {
-                unlinkSync(meta?.originalFilePath);
+              try {
+                if (meta?.availableSizes) {
+                  Object.keys(meta.availableSizes).forEach((size) => {
+                    const fileName = meta.availableSizes[size].url
+                      .split("/")
+                      .pop();
+                    unlinkSync(`${uploadPath}${fileName}`);
+                  });
+                } else if (meta?.originalFilePath) {
+                  unlinkSync(meta?.originalFilePath);
+                }
+              } catch (err: any) {
+                postMessage(
+                  `[WORKER:dbHousekeeping]: image delete error - ${err.message}`
+                );
               }
 
               await prisma.image.delete({
@@ -126,15 +131,21 @@ const doChores = async () => {
             try {
               const uploadPath = `${apiConfig.baseDir}/${apiConfig.publicDir}${meta.uploadFolder}/`;
 
-              if (meta?.availableSizes) {
-                Object.keys(meta.availableSizes).forEach((size) => {
-                  const fileName = meta.availableSizes[size].url
-                    .split("/")
-                    .pop();
-                  unlinkSync(`${uploadPath}${fileName}`);
-                });
-              } else if (meta?.originalFilePath) {
-                unlinkSync(meta?.originalFilePath);
+              try {
+                if (meta?.availableSizes) {
+                  Object.keys(meta.availableSizes).forEach((size) => {
+                    const fileName = meta.availableSizes[size].url
+                      .split("/")
+                      .pop();
+                    unlinkSync(`${uploadPath}${fileName}`);
+                  });
+                } else if (meta?.originalFilePath) {
+                  unlinkSync(meta?.originalFilePath);
+                }
+              } catch (err: any) {
+                postMessage(
+                  `[WORKER:dbHousekeeping]: image file delete error - ${err.message}`
+                );
               }
 
               await prisma.image.delete({
@@ -173,9 +184,14 @@ const doChores = async () => {
           if (file?.meta) {
             const meta = file?.meta as any;
             try {
-              if (meta?.originalFilePath)
-                unlinkSync(`${meta.originalFilePath}`);
-
+              try {
+                if (meta?.originalFilePath)
+                  unlinkSync(`${meta.originalFilePath}`);
+              } catch (err: any) {
+                postMessage(
+                  `[WORKER:dbHousekeeping]: file delete error - ${err.message}`
+                );
+              }
               await prisma.file.delete({
                 where: {
                   id: file.id,

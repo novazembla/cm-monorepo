@@ -140,7 +140,7 @@ You can also run api and backend dev at the same time
 foo@bar:~$ npm run dev 
 ```
 
-# The following packages are currently locked to a certain version as compile error make an update impossible
+# The following packages are currently locked to a certain version as compile errors make an update impossible
 
 - @chakra-ui/react                    1.6.9 cm-monorepo
 - @typescript-eslint/eslint-plugin   4.29.3 cm-monorepo
