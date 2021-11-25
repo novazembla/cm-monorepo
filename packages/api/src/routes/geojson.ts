@@ -15,8 +15,12 @@ import {
 import { getApiConfig } from "../config";
 
 // as the creation of the GEOJSON containing all for 10 minutes
-const geoJSONCache = new NodeCache({ stdTTL: 600, useClones: false });
 const GEOJSON_CACHE_KEY = "geojson";
+const GEOJSON_CACHE_EXPIRATION = 600;
+const geoJSONCache = new NodeCache({
+  stdTTL: GEOJSON_CACHE_EXPIRATION,
+  useClones: false,
+});
 
 export const getGeoJson = async (
   req: Request,
@@ -93,6 +97,8 @@ export const getGeoJson = async (
       } catch (err) {
         // nothing to be done ...
       }
+
+      res.set("Cache-control", `public, max-age=${GEOJSON_CACHE_EXPIRATION}`);
 
       if (!isDrillDown && geoJSONCache.has(GEOJSON_CACHE_KEY)) {
         res.json(geoJSONCache.get(GEOJSON_CACHE_KEY));
