@@ -200,11 +200,9 @@ const locationToArray = (location: any, lang: string) => {
 };
 
 const getTranslatedHeader = (key: string, lang: string) => {
-  try {
-    return dataImportHeadersLocation[key][lang];
-  } finally {
-    return key;
-  }
+  return dataImportHeadersLocation?.[key]?.[lang]
+    ? `${dataImportHeadersLocation[key][lang]}`
+    : key;
 };
 
 const doChores = async () => {
