@@ -155,6 +155,19 @@ const processDataImportedRow = async (
 
     if (titleEn === "" && titleDe !== "") titleEn = titleDe;
 
+    if (!titleDe) {
+      warnings.push(
+        lang === "de"
+          ? `Üebrspringe leere Zeile ${
+              row["###" as any] ? `#${row["###" as any]}` : ""
+            }`
+          : `Skipping empty row ${
+              row["###" as any] ? `#${row["###" as any]}` : ""
+            }`
+      );
+      return;
+    }
+
     const locationHash = hash({
       titleDe,
       titleEn,
