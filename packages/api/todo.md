@@ -5,7 +5,6 @@ TODO: DB/Psql
 - full text search: https://www.postgresql.org/docs/12/textsearch-tables.html, https://github.com/prisma/prisma/issues/1684
 TODO: fullText index creation
 
-
 TODO: Maybe switch from Bcrypt to Argon2 (if the hosting platform does support it)
 
 TODO:
@@ -17,10 +16,8 @@ TODO:
 TODO: 
 - Single file upload component
 
-
 TODO: 
 - Multilang emails 
-
 
 TODO: 
 Location visibility (from until )

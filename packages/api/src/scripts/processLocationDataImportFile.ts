@@ -55,6 +55,12 @@ let lang = "en";
 const trimString = (str: string, length: number) =>
   str.length > length ? str.substring(0, length - 3) + "..." : str;
 
+const getTranslatedHeader = (key: string, language: string) => {
+  return dataImportHeadersLocation?.[key]?.[language]
+    ? `${dataImportHeadersLocation[key][language]}`
+    : key;
+};
+
 const mapKeyToHeader = (mapping: any[], key: string) => {
   const match = mapping.find((m) => m.match === key);
   if (!match || !match.headerKey || !headers.includes(match.headerKey))
@@ -62,7 +68,12 @@ const mapKeyToHeader = (mapping: any[], key: string) => {
 
   return match.headerKey;
 };
-const getTermsOfRow = (mapping: any[], row: any[], primaryTermKey?: string) => {
+const getTermsOfRow = (
+  mapping: any[],
+  row: any[],
+  logWarnings: boolean,
+  primaryTermKey?: string
+) => {
   const keys = [
     "tax-agency-type-1",
     "tax-agency-type-2",
@@ -102,6 +113,17 @@ const getTermsOfRow = (mapping: any[], row: any[], primaryTermKey?: string) => {
         acc.push({
           id: term.id,
         });
+      } else {
+        if (logWarnings)
+          warnings.push(
+            lang === "de"
+              ? `Unbekannter Begriff: "${row[headerKey]}" in Zeile #${
+                  row["###" as any]
+                } Spalte "${getTranslatedHeader(key, lang)}"`
+              : `Unknown term: "${row[headerKey]}" in row #${
+                  row["###" as any]
+                } column "${getTranslatedHeader(key, lang)}"`
+          );
       }
     }
 
@@ -150,8 +172,8 @@ const processDataImportedRow = async (
       "eventLocationId"
     );
 
-    const primaryTerm = getTermsOfRow(mapping, row, "tax-type-1");
-    let terms = getTermsOfRow(mapping, row);
+    const primaryTerm = getTermsOfRow(mapping, row, false, "tax-type-1");
+    let terms = getTermsOfRow(mapping, row, true);
 
     const sharedData = {
       title_de: titleDe,
