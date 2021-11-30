@@ -41,6 +41,7 @@ import {
   RiCheckFill,
   RiCloseFill,
   RiH2,
+  RiH3,
   RiListOrdered,
   RiListUnordered,
 } from "@hacknug/react-icons/ri";
@@ -207,18 +208,32 @@ const EditorMenuBar = ({
       {!showLinkEditScreen && (
         <HStack className="menu-bar" spacing="1" h="48px">
           {type === "full" && (
-            <EditorMenuBarButton
-              icon={<RiH2 />}
-              label={
-                editor.isActive("italic")
-                  ? t("editor.button.unitalic", "Remove italic text format")
-                  : t("editor.button.italic", "Format text italic")
-              }
-              onClick={() =>
-                editor.chain().focus().toggleHeading({ level: 2 }).run()
-              }
-              isActive={editor.isActive("heading", { level: 2 })}
-            />
+            <>
+              <EditorMenuBarButton
+                icon={<RiH2 />}
+                label={
+                  editor.isActive("heading", { level: 2 })
+                    ? t("editor.button.removeH2", "Remove H3 format")
+                    : t("editor.button.addH2", "Format as H2")
+                }
+                onClick={() =>
+                  editor.chain().focus().toggleHeading({ level: 2 }).run()
+                }
+                isActive={editor.isActive("heading", { level: 2 })}
+              />
+              <EditorMenuBarButton
+                icon={<RiH3 />}
+                label={
+                  editor.isActive("heading", { level: 3 })
+                    ? t("editor.button.removeH3", "Remove H3 format")
+                    : t("editor.button.addH3", "Format as H3")
+                }
+                onClick={() =>
+                  editor.chain().focus().toggleHeading({ level: 3 }).run()
+                }
+                isActive={editor.isActive("heading", { level: 3 })}
+              />
+            </>
           )}
 
           <EditorMenuBarButton
