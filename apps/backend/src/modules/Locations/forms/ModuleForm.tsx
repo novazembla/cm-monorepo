@@ -414,7 +414,7 @@ export const ModuleForm = ({
         )}
         isRequired={false}
         settings={{
-          defaultRequired: true,
+          defaultRequired: false,
           defaultValues: data?.location?.description,
           maxLength: 1000,
           placeholder: t(
