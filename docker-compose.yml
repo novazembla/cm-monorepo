@@ -1,4 +1,3 @@
-# For more information: https://TODO:
 version: '3'
 services:
   postgres:

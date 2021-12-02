@@ -156,7 +156,6 @@ const PasswordReset = () => {
                 <Flex justify="space-between" alignItems="center" w="100%">
                   <Link as={RouterLink}  to="/login">
                     {t("page.passwordreset.back_to_login", "Back to login")}
-                    {/* (TODO: TABINDEX?) */}
                   </Link>
                   <Button
                     isLoading={isSubmitting}

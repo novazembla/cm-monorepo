@@ -14,7 +14,6 @@ const config = getAppConfig();
 
 let refreshTimeoutId: ReturnType<typeof setTimeout>;
 
-// TODO: xxx is the autorefresh really needed? Or is it good enough to rely on the refresh by use of the API?
 const refreshToken = async () => {
   if (client && canRefresh() && getRefreshCookie()) {
     setAllowRefresh(false);
@@ -29,7 +28,6 @@ const refreshToken = async () => {
           scope: config.scope,
         },
       })
-      // TODO: is there a way to get a typed query here?
       .then(({ data }: any) => {
         if (
           data?.authRefresh?.tokens?.access &&

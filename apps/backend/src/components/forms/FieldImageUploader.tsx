@@ -174,7 +174,7 @@ export const FieldImageUploader = ({
     isDragAccept,
     // isDragReject,
   } = useDropzone({
-    maxSize: settings?.maxFileSize ?? 1024 * 1024 * 2,
+    maxSize: settings?.maxFileSize ?? 1024 * 1024 * 12,
     minSize: settings?.minFileSize ?? undefined,
     disabled: isDisabled,
     multiple: false,

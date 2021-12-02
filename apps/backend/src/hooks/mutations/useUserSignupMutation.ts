@@ -11,8 +11,6 @@ export const useUserSignupMutation = () => {
 
   const [mutation, mutationResults] = useMutation(userSignupMutationGQL, {
     onCompleted: (data) => {
-      // TODO: xxx find out if data sanity check is needed?
-
       if (
         data?.userSignup?.tokens?.access &&
         data?.userSignup?.tokens?.preview &&
@@ -35,8 +33,6 @@ export const useUserSignupMutation = () => {
     },
   });
 
-  // full login function
-  // data should probably not be "Any" TODO:
   const execute = (data: any) => {
     if (appUser) throw Error("You're already logged in");
 

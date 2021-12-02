@@ -2,8 +2,6 @@
 TODO: Solve the need for a custom config file the the admin tool... Maybe load more settings from the api? 
 
 TODO: Change to use apollo cache: https://www.apollographql.com/blog/apollo-client/caching/when-to-use-refetch-queries/
-TODO: Study: https://github.com/sindresorhus/type-fest
-
 
 TODO: UserProfile
 - User should be able to self delete if registration is switched on 
@@ -27,12 +25,6 @@ TODO: CSS
 - Select options ugly in FF
 - Expose scroll bar width as a variable 
 
-TODO: TextEditor
-- Position bubble position nicer 
-- OnTouch should clear red invalid frame of the editor
-
-TODO: Form Validation, should show char count in html too long exception 
-
 TODO: Events
 - Optimize Event Date Table on Mobile CSS
 - Validation of event dates, begin needs to be < than end
@@ -44,20 +36,6 @@ monitor if you can switch back to the original one in a few month https://github
 
 Installation
 Important to mention to clone src/config/appconfig.example.ts to src/config/appconfig.ts and to fill in the required settings .. 
-
-Does the server need compression? 
-
-
-PM2 Integration 
-
-JWT 
-https://kettan007.medium.com/json-web-token-jwt-in-node-js-implementing-using-refresh-token-90e24e046cf8
-
-
-APP
-- Loading Screen 
-- Transition on page change (at least animate somethign)
-
 
 Search MySQL does a loow since a few versions a smart search mode for text
 https://dev.mysql.com/doc/refman/5.7/en/fulltext-natural-language.html

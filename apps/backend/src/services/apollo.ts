@@ -29,9 +29,6 @@ const authLink = new ApolloLink((operation, forward) => {
         authorization: `Bearer ${accessToken.token}`,
       },
     }));
-  } else {
-    // TODO: remove
-    console.log("Apollo, no access Token");
   }
 
   // Call the next link in the middleware chain.
@@ -61,12 +58,8 @@ const retryWithRefreshTokenLink = onError(
             extensions?.code === "UNAUTHENTICATED"
           ) {
             const observable = new Observable((observer) => {
-              // TODO: this if condition is maybe not needed, as the server
-              // already indicated that the refreshCookie is present
               if (
-                client // &&
-                // user.canRefresh() &&
-                // authentication.getRefreshCookie()
+                client
               ) {
                 user.setAllowRefresh(false);
                 user.setRefreshing(true);
@@ -77,7 +70,7 @@ const retryWithRefreshTokenLink = onError(
                     variables: {
                       scope: config.scope,
                     },
-                  }) // TODO: is there a way to get a typed query here?
+                  }) 
                   .then(({ data }: any) => {
                     if (
                       data?.authRefresh?.tokens?.access &&
@@ -154,7 +147,6 @@ const retryWithRefreshTokenLink = onError(
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {
-    // TODO: remove?
     graphQLErrors.forEach((err) =>
       console.log(
         err,
@@ -201,17 +193,8 @@ const createApolloClient = (settings: AppConfig) => {
         credentials: "include", // Additional fetch() options like `credentials` or `headers`
       }),
     ]),
-    // TODO: find generic ways to manage the chache ...
-    // HOW TO ENSURE deletion/updates are reflected in the cache ...
-    // how will the cache expire?
     cache: new InMemoryCache({
-      // typePolicies: {
-      //   Query: {
-      //     fields: {
-      //       allPosts: concatPagination(), // TODO: adjust to useful results ..., not working ... https://github.com/apollographql/apollo-client/issues/6679
-      //     },
-      //   },
-      // },¸
+      // TODO: add caching info ... 
     }),
     defaultOptions: {
       watchQuery: {

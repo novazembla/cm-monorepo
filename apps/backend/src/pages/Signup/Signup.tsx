@@ -56,7 +56,7 @@ const Signup = () => {
   const onSubmit = async (
     data: yup.InferType<typeof UserSignupValidationSchema>
   ) => {
-    setHasFormError(false); // TODO: how to have this clear set on form change, also how to set the form fields to not valid to make them red...
+    setHasFormError(false);
     setIsFormEmailError(false);
     try {
       const { errors } = await firstMutation(data);
@@ -164,7 +164,6 @@ const Signup = () => {
                     }}
                   />
                 </FieldRow>
-                {/* TODO: needs password confirmation */}
                 <FieldRow>
                   <FieldInput
                     name="password"
@@ -231,7 +230,6 @@ const Signup = () => {
                   <Flex justify="space-between" alignItems="center" w="100%">
                     <Link as={RouterLink} to="/login">
                       {t("page.signup.back_to_login", "Back to login")}
-                      {/* (TODO: TABINDEX?) */}
                     </Link>
                     <Button
                       isLoading={isSubmitting}

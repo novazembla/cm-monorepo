@@ -54,8 +54,6 @@ export const eventGetTaxonomies = gql`
   }
 `;
 
-// TAX NOT REQUIRED EVEN THOUGH IT IS REQUIRED, why? TODO:
-
 const Create = () => {
   const config = useConfig();
   const router = useRouter();

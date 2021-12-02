@@ -19,19 +19,19 @@ export type FieldRadioOrCheckboxGroupOption = {
 export const FieldRadioOrCheckboxGroup = ({
   id,
   label,
+  type,
   name,
-  type, // TODO: allow for radio boxes ...
   options,
   defaultValues,
   isRequired,
   isDisabled,
 }: {
   id: string;
+  type: string;
   isRequired?: boolean;
   isDisabled?: boolean;
   label: string | React.ReactNode;
   name: string;
-  type: string;
   options: FieldRadioOrCheckboxGroupOption[];
   defaultValues?: any[];
 }) => {

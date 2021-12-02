@@ -127,7 +127,7 @@ export const FieldSingleImage = ({
               setActiveUploadCounter={setActiveUploadCounter}
               settings={{
                 minFileSize: settings?.minFileSize ?? 1024 * 1024 * 0.0977,
-                maxFileSize: settings?.maxFileSize ?? 1024 * 1024 * 3,
+                maxFileSize: settings?.maxFileSize ?? 1024 * 1024 * 12,
                 aspectRatioPB: settings?.aspectRatio ?? 75, // % bottom padding
 
                 image: {

@@ -143,7 +143,6 @@ const Login = () => {
                       "page.login.forgot_your_password",
                       "Forgot your password?"
                     )}
-                    {/* (TODO: TABINDEX?) */}
                   </Link>
                   <Button
                     isLoading={isSubmitting}

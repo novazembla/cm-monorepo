@@ -52,7 +52,7 @@ export const UpdateForm = ({
             deleteButtonGQL={userProfileImageDeleteMutationGQL}
             settings={{
               minFileSize: 1024 * 1024 * 0.05,
-              maxFileSize: 1024 * 1024 * 2,
+              maxFileSize: 1024 * 1024 * 12,
               aspectRatioPB: 133.33, // % bottom padding
 
               image: {

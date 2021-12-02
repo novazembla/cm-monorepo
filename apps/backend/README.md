@@ -16,16 +16,6 @@ https://create-react-app.dev/docs/advanced-configuration/
 ## Craco
 As we are using Tailwind CSS for the app we needed to overwrite built in postcss/webpack configs. To be able to do that we've chosen https://github.com/gsoft-inc/craco
 
-
-
-
-
-TODO: TailWind PostCSS 8.0 CRA Problem
-
-
-
-
-
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

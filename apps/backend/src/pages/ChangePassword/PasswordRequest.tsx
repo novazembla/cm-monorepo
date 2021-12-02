@@ -121,7 +121,6 @@ const PasswordRequest = () => {
                 <Flex justify="space-between" alignItems="center" w="100%">
                   <Link as={RouterLink} to="/login">
                     {t("page.passwordrequest.back_to_login", "Back to login")}
-                    {/* (TODO: TABINDEX?) */}
                   </Link>
                   <Button
                     isLoading={isSubmitting}
