@@ -23,7 +23,7 @@ type useDeleteByIdButtonOptions = {
 
 export const useDeleteByIdButton = (
   deleteMutationGQL: DocumentNode,
-  refetch: () => void,
+  refetch: (id?: number) => void,
   options?: useDeleteByIdButtonOptions
 ) => {
   const { requireTextualConfirmation = false, title, message } = options ?? {};
@@ -78,7 +78,7 @@ export const useDeleteByIdButton = (
             onDelete: undefined,
           });
 
-          refetch.call(null);
+          refetch.call(null, dZAD.id);
 
           setIsDeleteError(false);
           successfullyDeletedToast();

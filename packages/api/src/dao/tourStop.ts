@@ -1,7 +1,8 @@
+import httpStatus from "http-status";
 import { TourStop, Prisma } from "@prisma/client";
 import { filteredOutputByBlacklist } from "@culturemap/core";
 
-import { filteredOutputByBlacklistOrNotFound } from "../utils";
+import { ApiError, filteredOutputByBlacklistOrNotFound } from "../utils";
 import { getApiConfig } from "../config";
 import { getPrismaClient } from "../db/client";
 import {
@@ -206,11 +207,45 @@ export const daoTourStopUpdate = async (
 };
 
 export const daoTourStopDelete = async (id: number): Promise<TourStop> => {
-  const tourStop: TourStop = await prisma.tourStop.delete({
+  let tourStopInDb = await prisma.tourStop.findFirst({
+    where: { id },
+    select: { tour: true },
+  });
+
+  if (!tourStopInDb)
+    throw new ApiError(httpStatus.BAD_REQUEST, `Tour stop not found`);
+
+  const tourStop = await prisma.tourStop.delete({
     where: {
       id,
     },
+    select: {
+      tour: true,
+    },
   });
+
+  const tourStops = await prisma.tourStop.findMany({
+    where: {
+      tour: {
+        id: tourStopInDb?.tour?.id,
+      },
+    },
+  });
+
+  if (tourStops) {
+    await prisma.$transaction(
+      tourStops.map((tS: any, index: number) => {
+        return prisma.tourStop.update({
+          data: {
+            number: index + 1,
+          },
+          where: {
+            id: tS.id,
+          },
+        });
+      })
+    );
+  }
 
   return filteredOutputByBlacklistOrNotFound(
     tourStop,

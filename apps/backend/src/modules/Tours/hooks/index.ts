@@ -4,6 +4,7 @@ import {
   tourCreateMutationGQL,
   tourStopCreateMutationGQL,
   tourReorderTourStopsMutationGQL,
+  tourStopDeleteMutationGQL,
 } from "@culturemap/core";
 import { useMutation } from "@apollo/client";
 
@@ -82,6 +83,20 @@ export const useTourStopUpdateMutation = () => {
       variables: {
         id,
         data,
+      },
+    });
+  };
+  return [execute, mutationResults] as const;
+};
+
+
+export const useTourStopDeleteMutation = () => {
+  const [mutation, mutationResults] = useMutation(tourStopDeleteMutationGQL);
+
+  const execute = (id: number) => {
+    return mutation({
+      variables: {
+        id
       },
     });
   };

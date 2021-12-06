@@ -3,6 +3,7 @@ import type * as yup from "yup";
 import { useTranslation } from "react-i18next";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { tourStopDeleteMutationGQL } from "@culturemap/core";
 
 import {
   TextErrorMessage,
@@ -14,6 +15,7 @@ import { ModuleTourSchemaUpdate, TourStopListing } from "./forms";
 import {
   useTourUpdateMutation,
   useTourReorderTourStopsMutation,
+  useTourStopDeleteMutation,
 } from "./hooks";
 import {
   useAuthentication,
@@ -21,6 +23,7 @@ import {
   useSuccessfullySavedToast,
   useRouter,
   useModules,
+  useDeleteByIdButton,
 } from "~/hooks";
 
 import { Divider } from "@chakra-ui/react";
@@ -111,10 +114,22 @@ const Update = () => {
 
   const [firstMutation, firstMutationResults] = useTourUpdateMutation();
   const [reorderMutation] = useTourReorderTourStopsMutation();
+  const [tourStopDeleteMutation] = useTourStopDeleteMutation();
 
   const [hasFormError, setHasFormError] = useState(false);
 
   const disableForm = firstMutationResults.loading;
+
+  const [tourStopDeleteButtonOnClick, DeleteAlertDialog, isDeleteError] =
+    useDeleteByIdButton(
+      tourStopDeleteMutationGQL,
+      (id: number | undefined) => {
+        setTourStops(tourStops.filter((ts: any) => ts.id !== id));;
+      },
+      {
+        requireTextualConfirmation: false,
+      }
+    );
 
   const formMethods = useForm<any>({
     mode: "onTouched",
@@ -310,7 +325,7 @@ const Update = () => {
           <fieldset disabled={disableForm}>
             <ModuleSubNav breadcrumb={breadcrumb} buttonList={buttonList} />
             <ModulePage isLoading={loading} isError={!!error}>
-              {hasFormError && (
+              {(hasFormError || isDeleteError) && (
                 <>
                   <TextErrorMessage error="general.writeerror.desc" />
                   <Divider />
@@ -351,6 +366,7 @@ const Update = () => {
                     console.log(err);
                   }
                 }}
+                onStopDelete={tourStopDeleteButtonOnClick}
               />
               <TourPathEditor
                 tourStops={tourStops.map((stop) => ({
@@ -365,6 +381,7 @@ const Update = () => {
           </fieldset>
         </form>
       </FormProvider>
+      {DeleteAlertDialog}
     </>
   );
 };

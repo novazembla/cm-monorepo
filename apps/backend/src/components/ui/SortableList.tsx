@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { Box } from "@chakra-ui/react";
 
@@ -41,44 +41,56 @@ export const SortableList = ({
       try {
         setIsUpdating(true);
         await onSortUpdate.call(null, orderedItems);
-
-      } catch(err: any) {}
-      finally {
+      } catch (err: any) {
+      } finally {
         setIsUpdating(false);
       }
     }
   };
 
+  useEffect(() => {
+    setStoredItems({ items });
+  }, [items]);
+
   return (
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="droppable">
-          {(provided, doppableSnapshot) => (
-            <Box {...provided.droppableProps} ref={provided.innerRef}>
-              {storedItems.items.map((item, index) => (
-                <Draggable key={item.id} draggableId={item.id} index={index} isDragDisabled={isUpdating}>
-                  {(provided, snapshot) => (
-                    <Box
-                      key={item.id}
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      opacity={
-                        !snapshot.isDragging && doppableSnapshot.isDraggingOver
-                          ? 0.6
-                          : 1
-                      }
-                      className={snapshot.isDragging ? "is-dragged" : ""}
-                      borderBottom={snapshot.isDragging? "1px solid #888" : "1px solid white"}
-                    >
-                      {typeof item.content === "function" ? item.content.call(null, {index}) : item.content}
-                    </Box>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </Box>
-          )}
-        </Droppable>
-      </DragDropContext>
+    <DragDropContext onDragEnd={onDragEnd}>
+      <Droppable droppableId="droppable">
+        {(provided, doppableSnapshot) => (
+          <Box {...provided.droppableProps} ref={provided.innerRef}>
+            {storedItems.items.map((item, index) => (
+              <Draggable
+                key={item.id}
+                draggableId={item.id}
+                index={index}
+                isDragDisabled={isUpdating}
+              >
+                {(provided, snapshot) => (
+                  <Box
+                    key={item.id}
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                    opacity={
+                      !snapshot.isDragging && doppableSnapshot.isDraggingOver
+                        ? 0.6
+                        : 1
+                    }
+                    className={snapshot.isDragging ? "is-dragged" : ""}
+                    borderBottom={
+                      snapshot.isDragging ? "1px solid #888" : "1px solid white"
+                    }
+                  >
+                    {typeof item.content === "function"
+                      ? item.content.call(null, { index })
+                      : item.content}
+                  </Box>
+                )}
+              </Draggable>
+            ))}
+            {provided.placeholder}
+          </Box>
+        )}
+      </Droppable>
+    </DragDropContext>
   );
 };

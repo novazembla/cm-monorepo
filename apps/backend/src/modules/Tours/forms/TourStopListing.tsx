@@ -25,9 +25,11 @@ import { GrDrag } from "react-icons/gr";
 export const TourStopListing = ({
   tourStops,
   onSortUpdate,
+  onStopDelete,
 }: {
   tourStops: any[];
   onSortUpdate: (items: any) => void;
+  onStopDelete: (id: number) => void;
 }) => {
   const { t } = useTranslation();
   const router = useRouter();
@@ -55,7 +57,7 @@ export const TourStopListing = ({
                 {index + 1}
               </chakra.span>
               <chakra.span pl="0" flexGrow={10}>
-                <MultiLangValue json={stop.title} /> {stop.id}
+                <MultiLangValue json={stop.title} />
               </chakra.span>
               <Box w="150px" px="0">
                 <Flex justifyContent="center">
@@ -69,7 +71,9 @@ export const TourStopListing = ({
                       colorScheme="red"
                       variant="outline"
                       icon={<HiOutlineTrash />}
-                      onClick={() => {}}
+                      onClick={() => {
+                        onStopDelete(stop.id);
+                      }}
                     />
 
                     <IconButton
@@ -95,6 +99,7 @@ export const TourStopListing = ({
       })
     : [];
 
+    
   stops = stops.sort((a: any, b: any) => {
     if (a.currentNumber > b.currentNumber) return 1;
     if (a.currentNumber < b.currentNumber) return -1;
