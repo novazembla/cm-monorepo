@@ -435,7 +435,7 @@ export const ModuleForm = ({
         isRequired={false}
         settings={{
           defaultValues: data?.location?.offers,
-          maxLength: 500,
+          maxLength: 600,
           placeholder: t(
             "module.locations.forms.location.field.placeholder.offers",
             "Location offers"
@@ -454,7 +454,7 @@ export const ModuleForm = ({
         settings={{
           defaultRequired: false,
           defaultValues: data?.location?.accessibilityInformation,
-          maxLength: 500,
+          maxLength: 600,
           placeholder: t(
             "module.locations.forms.location.field.placeholder.accessibilityInformation",
             "Location accessibilityInformation"

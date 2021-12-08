@@ -13,8 +13,8 @@ export const ModuleLocationCreateSchema = object().shape({
         .required(),
 
       [`description_${lang}`]: string().html({ max: 1000 }),
-      [`offers_${lang}`]: string().html({ max: 500 }),
-      [`accessibilityInformation_${lang}`]: string().html({ max: 500 }),
+      [`offers_${lang}`]: string().html({ max: 600 }),
+      [`accessibilityInformation_${lang}`]: string().html({ max: 600 }),
     }),
     {
       lat: number().required().latitude(),
