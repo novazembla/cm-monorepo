@@ -68,6 +68,7 @@ const mapKeyToHeader = (mapping: any[], key: string) => {
 
   return match.headerKey;
 };
+
 const getTermsOfRow = (
   mapping: any[],
   row: any[],
@@ -141,6 +142,16 @@ const getRowValueOrEmptyString = (mapping: any[], row: any[], key: string) => {
   return "";
 };
 
+const keyExistsInRow = (mapping: any[], row: any[], key: string) => {
+  try {
+    const headerKey = mapKeyToHeader(mapping, key);
+
+    return headerKey && row[headerKey];
+  } catch (err) {}
+
+  return false;
+};
+
 const processDataImportedRow = async (
   prisma: Prisma.PrismaClient,
   mapping: any[],
@@ -188,51 +199,118 @@ const processDataImportedRow = async (
     const primaryTerm = getTermsOfRow(mapping, row, false, "tax-type-1");
     let terms = getTermsOfRow(mapping, row, true);
 
+    const getShareDataValue = (
+      key: string,
+      valueInDb: any,
+      asHtml?: boolean
+    ) => {
+      if (keyExistsInRow(mapping, row, key)) {
+        logger.info(`key exitst, ${key}`);
+        if (asHtml) {
+          logger.info(
+            `html, ${convertToHtml(
+              getRowValueOrEmptyString(mapping, row, key)
+            )}`
+          );
+          return convertToHtml(getRowValueOrEmptyString(mapping, row, key));
+        } else {
+          logger.info(`non ${getRowValueOrEmptyString(mapping, row, key)}`);
+          return getRowValueOrEmptyString(mapping, row, key);
+        }
+      } else {
+        logger.info(`fallback, ${valueInDb}, ${""}`);
+        return valueInDb ?? "";
+      }
+    };
+
     const sharedData = {
       title_de: titleDe,
       title_en: titleEn,
       slug_de: `${slugify(titleDe)}-de-${nanoid()}`,
       slug_en: `${slugify(titleEn)}-en-${nanoid()}`,
-      agency: getRowValueOrEmptyString(mapping, row, "agency"),
+      agency: getShareDataValue("agency", locationInDb?.agency),
       eventLocationId: evntLocationId ? parseInt(evntLocationId) : undefined,
       address: {
-        co: getRowValueOrEmptyString(mapping, row, "co"),
-        street1: getRowValueOrEmptyString(mapping, row, "street1"),
-        street2: getRowValueOrEmptyString(mapping, row, "street2"),
-        houseNumber: getRowValueOrEmptyString(mapping, row, "houseNumber"),
-        city: getRowValueOrEmptyString(mapping, row, "city"),
-        postCode: getRowValueOrEmptyString(mapping, row, "postCode"),
+        co: getShareDataValue("co", (locationInDb as any)?.address?.co),
+        street1: getShareDataValue(
+          "street1",
+          (locationInDb as any)?.address?.street1
+        ),
+        street2: getShareDataValue(
+          "street2",
+          (locationInDb as any)?.address?.street2
+        ),
+        houseNumber: getShareDataValue(
+          "houseNumber",
+          (locationInDb as any)?.address?.houseNumber
+        ),
+        city: getShareDataValue("city", (locationInDb as any)?.address?.city),
+        postCode: getShareDataValue(
+          "postCode",
+          (locationInDb as any)?.address?.postCode
+        ),
       },
       contactInfo: {
-        email1: getRowValueOrEmptyString(mapping, row, "email1"),
-        email2: getRowValueOrEmptyString(mapping, row, "email2"),
-        phone1: getRowValueOrEmptyString(mapping, row, "phone1"),
-        phone2: getRowValueOrEmptyString(mapping, row, "phone2"),
+        email1: getShareDataValue(
+          "email1",
+          (locationInDb as any)?.contactInfo?.email1
+        ),
+        email2: getShareDataValue(
+          "email2",
+          (locationInDb as any)?.contactInfo?.email2
+        ),
+        phone1: getShareDataValue(
+          "phone1",
+          (locationInDb as any)?.contactInfo?.phone1
+        ),
+        phone2: getShareDataValue(
+          "phone2",
+          (locationInDb as any)?.contactInfo?.phone2
+        ),
       },
       socialMedia: {
-        facebook: getRowValueOrEmptyString(mapping, row, "facebook"),
-        twitter: getRowValueOrEmptyString(mapping, row, "twitter"),
-        instagram: getRowValueOrEmptyString(mapping, row, "instagram"),
-        youtube: getRowValueOrEmptyString(mapping, row, "youtube"),
-        website: getRowValueOrEmptyString(mapping, row, "website"),
+        facebook: getShareDataValue(
+          "facebook",
+          (locationInDb as any)?.socialMedia.facebook
+        ),
+        twitter: getShareDataValue(
+          "twitter",
+          (locationInDb as any)?.socialMedia.twitter
+        ),
+        instagram: getShareDataValue(
+          "instagram",
+          (locationInDb as any)?.socialMedia.instagram
+        ),
+        youtube: getShareDataValue(
+          "youtube",
+          (locationInDb as any)?.socialMedia.youtube
+        ),
+        website: getShareDataValue(
+          "website",
+          (locationInDb as any)?.socialMedia.website
+        ),
       },
-      description_de: convertToHtml(
-        getRowValueOrEmptyString(mapping, row, "description-de")
+      description_de: getShareDataValue(
+        "description-de",
+        locationInDb?.description_de,
+        true
       ),
-      description_en: convertToHtml(
-        getRowValueOrEmptyString(mapping, row, "description-en")
+      description_en: getShareDataValue(
+        "description-en",
+        locationInDb?.description_en,
+        true
       ),
-      offers_de: convertToHtml(
-        getRowValueOrEmptyString(mapping, row, "offers-de")
+      offers_de: getShareDataValue("offers-de", locationInDb?.offers_de, true),
+      offers_en: getShareDataValue("offers-en", locationInDb?.offers_en, true),
+      accessibilityInformation_de: getShareDataValue(
+        "accessibility-de",
+        locationInDb?.accessibilityInformation_de,
+        true
       ),
-      offers_en: convertToHtml(
-        getRowValueOrEmptyString(mapping, row, "offers-en")
-      ),
-      accessibilityInformation_de: convertToHtml(
-        getRowValueOrEmptyString(mapping, row, "accessibility-de")
-      ),
-      accessibilityInformation_en: convertToHtml(
-        getRowValueOrEmptyString(mapping, row, "accessibility-en")
+      accessibilityInformation_en: getShareDataValue(
+        "accessibility-en",
+        locationInDb?.accessibilityInformation_en,
+        true
       ),
       importedLocationHash: locationHash,
     };
