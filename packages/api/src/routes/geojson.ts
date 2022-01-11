@@ -15,7 +15,7 @@ import {
 import { getApiConfig } from "../config";
 
 // as the creation of the GEOJSON containing all for 10 minutes
-const GEOJSON_CACHE_KEY = "geojson";
+const GEOJSON_CACHE_KEY = "geojson-cache";
 const GEOJSON_CACHE_EXPIRATION = 600;
 const geoJSONCache = new NodeCache({
   stdTTL: GEOJSON_CACHE_EXPIRATION,
