@@ -94,100 +94,96 @@ export const getGeoJson = async (
             });
           }
         }
-
-        logger.info(subWhere);
       } catch (err) {
         // nothing to be done ...
       }
 
       res.set("Cache-control", `public, max-age=${GEOJSON_CACHE_EXPIRATION}`);
 
-      // if (!isDrillDown && geoJSONCache.has(GEOJSON_CACHE_KEY)) {
-      //   res.json(geoJSONCache.get(GEOJSON_CACHE_KEY));
-      // } else {
-
-      const locations = await daoLocationSelectQuery(
-        {
-          AND: where,
-        },
-        {
-          id: true,
-          lat: true,
-          lng: true,
-          ...daoSharedGetTranslatedSelectColumns(["title", "slug"]),
-          terms: {
-            select: {
-              id: true,
-              color: true,
-              colorDark: true,
-            },
-            take: 1,
+      if (!isDrillDown && geoJSONCache.has(GEOJSON_CACHE_KEY)) {
+        res.json(geoJSONCache.get(GEOJSON_CACHE_KEY));
+      } else {
+        const locations = await daoLocationSelectQuery(
+          {
+            AND: where,
           },
-          primaryTerms: {
-            select: {
-              id: true,
-              color: true,
-              colorDark: true,
+          {
+            id: true,
+            lat: true,
+            lng: true,
+            ...daoSharedGetTranslatedSelectColumns(["title", "slug"]),
+            terms: {
+              select: {
+                id: true,
+                color: true,
+                colorDark: true,
+              },
+              take: 1,
             },
-            take: 1,
+            primaryTerms: {
+              select: {
+                id: true,
+                color: true,
+                colorDark: true,
+              },
+              take: 1,
+            },
           },
-        },
-        {
-          id: "asc",
-        }
-      );
+          {
+            id: "asc",
+          }
+        );
 
-      logger.info(where);
-      logger.info(isDrillDown);
-      logger.info(locations?.length ?? "no-locations-found");
+        const geoJson = {
+          type: "FeatureCollection",
+          features:
+            locations?.length > 0
+              ? locations.map((loc: any) => {
+                  let color = null;
+                  let termId = null;
 
-      const geoJson = {
-        type: "FeatureCollection",
-        features:
-          locations?.length > 0
-            ? locations.map((loc: any) => {
-                let color = null;
-                let termId = null;
+                  // TODO: this should serve a cached file ...
 
-                // TODO: this should serve a cached file ...
+                  // TODO: this should also take multiple primary terms into account ...
+                  if (loc?.primaryTerms?.length > 0) {
+                    termId = loc?.primaryTerms[0].id;
+                    color = loc?.primaryTerms[0].color.trim()
+                      ? loc?.primaryTerms[0].color.trim()
+                      : config.defaultPinColor;
+                  } else if (loc?.terms?.length > 0) {
+                    termId = loc?.terms[0].id;
+                    color = loc?.terms[0].color.trim()
+                      ? loc?.terms[0].color.trim()
+                      : config.defaultPinColor;
+                  }
 
-                // TODO: this should also take multiple primary terms into account ...
-                if (loc?.primaryTerms?.length > 0) {
-                  termId = loc?.primaryTerms[0].id;
-                  color = loc?.primaryTerms[0].color.trim()
-                    ? loc?.primaryTerms[0].color.trim()
-                    : config.defaultPinColor;
-                } else if (loc?.terms?.length > 0) {
-                  termId = loc?.terms[0].id;
-                  color = loc?.terms[0].color.trim()
-                    ? loc?.terms[0].color.trim()
-                    : config.defaultPinColor;
-                }
+                  return {
+                    type: "Feature",
+                    geometry: {
+                      coordinates: [loc?.lng ?? 0.0, loc?.lat ?? 0.0],
+                      type: "Point",
+                    },
+                    properties: {
+                      id: `loc-${loc?.id}`,
+                      color: color ?? config.defaultPinColor,
+                      primaryTermId: termId,
+                      slug: daoSharedMapTranslatedColumnsInRowToJson(
+                        loc,
+                        "slug"
+                      ),
+                      title: daoSharedMapTranslatedColumnsInRowToJson(
+                        loc,
+                        "title"
+                      ),
+                    },
+                  };
+                })
+              : [],
+        };
 
-                return {
-                  type: "Feature",
-                  geometry: {
-                    coordinates: [loc?.lng ?? 0.0, loc?.lat ?? 0.0],
-                    type: "Point",
-                  },
-                  properties: {
-                    id: `loc-${loc?.id}`,
-                    color: color ?? config.defaultPinColor,
-                    primaryTermId: termId,
-                    slug: daoSharedMapTranslatedColumnsInRowToJson(loc, "slug"),
-                    title: daoSharedMapTranslatedColumnsInRowToJson(
-                      loc,
-                      "title"
-                    ),
-                  },
-                };
-              })
-            : [],
-      };
-
-      geoJSONCache.set(GEOJSON_CACHE_KEY, geoJson);
-      res.json(geoJson);
-      // }
+        geoJSONCache.set(GEOJSON_CACHE_KEY, geoJson);
+        res.json(geoJson);
+      }
     } catch (err) {
       logger.error(err);
       throw new ApiError(
