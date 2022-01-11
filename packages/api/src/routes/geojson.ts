@@ -170,7 +170,8 @@ export const getGeoJson = async (
             },
           ])
         );
-
+        logger.error(`Found ${locations?.length ?? 0} locations`);
+        
         const geoJson = {
           type: "FeatureCollection",
           features:
