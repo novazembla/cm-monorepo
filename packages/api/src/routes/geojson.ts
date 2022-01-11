@@ -184,7 +184,7 @@ export const getGeoJson = async (
               : [],
         };
 
-        geoJSONCache.set(GEOJSON_CACHE_KEY, geoJson);
+        if (!isDrillDown) geoJSONCache.set(GEOJSON_CACHE_KEY, geoJson);
         res.json(geoJson);
       }
     } catch (err) {
