@@ -37,6 +37,8 @@ export const getGeoJson = async (
         },
       ];
 
+      logger.error(JSON.stringify(where));
+
       try {
         const and = req?.query?.and === "1" ? true : false;
         const s = req?.query?.s ?? "";
@@ -102,7 +104,9 @@ export const getGeoJson = async (
 
       if (!isDrillDown && geoJSONCache.has(GEOJSON_CACHE_KEY)) {
         res.json(geoJSONCache.get(GEOJSON_CACHE_KEY));
+        logger.error("1");
       } else {
+        logger.error("2");
         const locations = await daoLocationSelectQuery(
           {
             AND: where,
@@ -132,6 +136,39 @@ export const getGeoJson = async (
           {
             id: "asc",
           }
+        );
+
+        logger.error(
+          JSON.stringify([
+            {
+              AND: where,
+            },
+            {
+              id: true,
+              lat: true,
+              lng: true,
+              ...daoSharedGetTranslatedSelectColumns(["title", "slug"]),
+              terms: {
+                select: {
+                  id: true,
+                  color: true,
+                  colorDark: true,
+                },
+                take: 1,
+              },
+              primaryTerms: {
+                select: {
+                  id: true,
+                  color: true,
+                  colorDark: true,
+                },
+                take: 1,
+              },
+            },
+            {
+              id: "asc",
+            },
+          ])
         );
 
         const geoJson = {
@@ -180,7 +217,7 @@ export const getGeoJson = async (
                 })
               : [],
         };
-
+        logger.error(`Created ${geoJson?.features?.length ?? 0} geo json features`);
         geoJSONCache.set(GEOJSON_CACHE_KEY, geoJson);
         res.json(geoJson);
       }
