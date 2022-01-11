@@ -4,11 +4,12 @@ import NodeCache from "node-cache";
 
 import { logger } from "../services/serviceLogging";
 
+import { getPrismaClient } from "../db/client";
+
 import { ApiError } from "../utils";
 import { PublishStatus } from "@culturemap/core";
 
 import {
-  daoLocationSelectQuery,
   daoSharedGetTranslatedSelectColumns,
   daoSharedMapTranslatedColumnsInRowToJson,
 } from "../dao";
@@ -28,6 +29,8 @@ export const getGeoJson = async (
   next: NextFunction
 ) => {
   const config = getApiConfig();
+  const prisma = getPrismaClient();
+
   try {
     try {
       let isDrillDown = false;
@@ -36,8 +39,6 @@ export const getGeoJson = async (
           status: PublishStatus.PUBLISHED,
         },
       ];
-
-      logger.error(JSON.stringify(where));
 
       try {
         const and = req?.query?.and === "1" ? true : false;
@@ -104,14 +105,12 @@ export const getGeoJson = async (
 
       if (!isDrillDown && geoJSONCache.has(GEOJSON_CACHE_KEY)) {
         res.json(geoJSONCache.get(GEOJSON_CACHE_KEY));
-        logger.error("1");
       } else {
-        logger.error("2");
-        const locations = await daoLocationSelectQuery(
-          {
+        const locations = await prisma.location.findMany({
+          where: {
             AND: where,
           },
-          {
+          select: {
             id: true,
             lat: true,
             lng: true,
@@ -133,45 +132,13 @@ export const getGeoJson = async (
               take: 1,
             },
           },
-          {
-            id: "asc",
-          }
-        );
-
-        logger.error(
-          JSON.stringify([
-            {
-              AND: where,
-            },
-            {
-              id: true,
-              lat: true,
-              lng: true,
-              ...daoSharedGetTranslatedSelectColumns(["title", "slug"]),
-              terms: {
-                select: {
-                  id: true,
-                  color: true,
-                  colorDark: true,
-                },
-                take: 1,
-              },
-              primaryTerms: {
-                select: {
-                  id: true,
-                  color: true,
-                  colorDark: true,
-                },
-                take: 1,
-              },
-            },
+          orderBy: [
             {
               id: "asc",
             },
-          ])
-        );
-        logger.error(`Found ${locations?.length ?? 0} locations`);
-        
+          ],
+        });
+
         const geoJson = {
           type: "FeatureCollection",
           features:
@@ -179,8 +146,6 @@ export const getGeoJson = async (
               ? locations.map((loc: any) => {
                   let color = null;
                   let termId = null;
-
-                  // TODO: this should serve a cached file ...
 
                   // TODO: this should also take multiple primary terms into account ...
                   if (loc?.primaryTerms?.length > 0) {
@@ -218,7 +183,7 @@ export const getGeoJson = async (
                 })
               : [],
         };
-        logger.error(`Created ${geoJson?.features?.length ?? 0} geo json features`);
+
         geoJSONCache.set(GEOJSON_CACHE_KEY, geoJson);
         res.json(geoJson);
       }
