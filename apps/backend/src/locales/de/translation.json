@@ -85,7 +85,7 @@
   "image": {
     "cropPosition": {
       "select": {
-        "label": "Postion des Bildausschnitts",
+        "label": "Position des Bildausschnitts",
         "placeholder": "Bitte wählen Sie die Position des Bildausschnitts"
       },
       "center": "Zentriert",
