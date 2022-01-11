@@ -4,11 +4,12 @@ import { useFormContext, Controller } from "react-hook-form";
 import {
   FormControl,
   FormLabel,
-  Select,
   VisuallyHidden,
 } from "@chakra-ui/react";
+import Select from "react-select";
 
 import { FieldErrorMessage, flattenErrors } from ".";
+import { reactSelectTheme } from "~/theme";
 
 export interface FieldSelectSettings {
   onChange?: ChangeEventHandler;
@@ -48,6 +49,8 @@ export const FieldSelect = ({
   const {
     formState: { errors },
     control,
+    setValue,
+    register,
   } = useFormContext();
 
   let fieldProps: FieldSelectSettings = {
@@ -82,38 +85,34 @@ export const FieldSelect = ({
       )}
 
       <Controller
+        name={`${name}_select`}
         control={control}
-        name={name}
-        render={({
-          field: { onChange, onBlur, value, name, ref },
-          fieldState: { invalid, isTouched, isDirty, error },
-          formState,
-        }) => {
-          return (
-            <Select
-              onBlur={onBlur}
-              onChange={(event: ChangeEvent) => {
-                onChange(event);
-                settings?.onChange && settings?.onChange.call(null, event);
-              }}
-              {...fieldProps}
-              size="md"
-              ref={ref}
-              defaultValue={settings?.defaultValue}
-            >
-              {options &&
-                options.map((option, i) => (
-                  <option
-                    key={`${id}-o-${i}`}
-                    value={option.value}
-                    disabled={option.disabled}
-                  >
-                    {option.label}
-                  </option>
-                ))}
-            </Select>
-          );
-        }}
+        render={({ field }) => (
+          <Select
+            styles={{
+              control: (styles: any, state: any) => ({
+                ...styles,
+                borderColor:  "var(--chakra-colors-gray-400)",
+              }),
+            }}
+            defaultValue={options.find(
+              (v) => v.value === settings?.defaultValue
+            )}
+            {...field}
+            {...fieldProps}
+            options={options}
+            onChange={(value: any) => {
+              setValue(name, value.value);
+            }}
+            theme={reactSelectTheme}
+          />
+        )}
+      />
+
+      <input
+        type="hidden"
+        defaultValue={settings?.defaultValue}
+        {...register(name)}
       />
 
       <FieldErrorMessage error={flattenedErrors[name]?.message} />

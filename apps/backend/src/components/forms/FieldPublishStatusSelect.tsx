@@ -2,10 +2,13 @@ import { useFormContext, Controller } from "react-hook-form";
 import { PublishStatus, PermissionNames } from "@culturemap/core";
 import { useTranslation } from "react-i18next";
 
-import { FormControl, FormLabel, Select } from "@chakra-ui/react";
+import { FormControl, FormLabel } from "@chakra-ui/react";
+
+import Select from "react-select";
 
 import { FieldErrorMessage, flattenErrors } from ".";
 import { useAuthentication } from "~/hooks";
+import { reactSelectTheme } from "~/theme";
 
 export const FieldPublishStatusSelect = ({
   status,
@@ -27,6 +30,8 @@ export const FieldPublishStatusSelect = ({
   const {
     formState: { errors },
     control,
+    register,
+    setValue,
   } = useFormContext();
 
   const options = [
@@ -74,48 +79,40 @@ export const FieldPublishStatusSelect = ({
 
   const flattenedErrors = flattenErrors(errors);
 
+  const defaultStatus =
+    status === PublishStatus.AUTODRAFT ? PublishStatus.DRAFT : status;
   return (
     <FormControl id={id} isInvalid={flattenedErrors[name]?.message} isRequired>
       <FormLabel htmlFor={id} mb="0.5">
         {label}
       </FormLabel>
-
       <Controller
+        name={`${name}_select`}
         control={control}
-        name={name}
-        render={({
-          field: { onChange, onBlur, value, name, ref },
-          fieldState: { invalid, isTouched, isDirty, error },
-          formState,
-        }) => (
+        render={({ field }) => (
           <Select
-            onBlur={onBlur}
-            onChange={onChange}
-            isRequired
-            defaultValue={
-              status === PublishStatus.AUTODRAFT ? PublishStatus.DRAFT : status
-            }
-            valid={!flattenedErrors[name]?.message ? "valid" : undefined}
+            styles={{
+              control: (styles: any, state: any) => ({
+                ...styles,
+                borderColor: "var(--chakra-colors-gray-400)",
+              }),
+            }}
+            defaultValue={options.find((v) => v.value === defaultStatus)}
+            {...field}
             placeholder={t(
               "PublishStatus.select.placeholder",
               "Please choose a publish status"
             )}
-            size="md"
-            ref={ref}
-          >
-            {options &&
-              options.map((option, i) => (
-                <option
-                  key={`${id}-o-${i}`}
-                  value={option.value}
-                  disabled={option.disabled}
-                >
-                  {option.label}
-                </option>
-              ))}
-          </Select>
+            options={options}
+            onChange={(value: any) => {
+              setValue(name, value.value);
+            }}
+            theme={reactSelectTheme}
+          />
         )}
       />
+
+      <input type="hidden" defaultValue={defaultStatus} {...register(name)} />
 
       <FieldErrorMessage error={flattenedErrors[name]?.message} />
     </FormControl>

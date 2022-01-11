@@ -170,7 +170,9 @@ code {
   color: var(--chakra-colors-gray-400);
   pointer-events: none;
   height: 0;
+
 }
+
 
 /* Placeholder (on every new line) */
 .ProseMirror p.is-empty::before {

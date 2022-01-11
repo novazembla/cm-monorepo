@@ -289,6 +289,7 @@ const Update = () => {
   ) => {
     setHasFormError(false);
     setIsNavigatingAway(false);
+
     try {
       if (appUser) {
         const heroImage =

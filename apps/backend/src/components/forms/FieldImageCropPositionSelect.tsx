@@ -2,9 +2,11 @@ import { useFormContext, Controller } from "react-hook-form";
 import { ImageCropPosition } from "@culturemap/core";
 import { useTranslation } from "react-i18next";
 
-import { FormControl, FormLabel, Select } from "@chakra-ui/react";
-
+import { FormControl, FormLabel } from "@chakra-ui/react";
+import Select from "react-select";
 import { FieldErrorMessage, flattenErrors } from ".";
+
+import { reactSelectTheme } from "~/theme";
 
 export const FieldImageCropPositionSelect = ({
   cropPosition,
@@ -22,6 +24,8 @@ export const FieldImageCropPositionSelect = ({
   const {
     formState: { errors },
     control,
+    setValue,
+    register,
   } = useFormContext();
 
   const options = [
@@ -56,6 +60,39 @@ export const FieldImageCropPositionSelect = ({
       </FormLabel>
 
       <Controller
+        name={`${name}_select`}
+        control={control}
+        render={({ field }) => (
+          <Select
+            styles={{
+              control: (styles: any, state: any) => ({
+                ...styles,
+                borderColor: "var(--chakra-colors-gray-400)",
+              }),
+            }}
+            defaultValue={options.find((v) => v.value === cropPosition ?? 0)}
+            {...field}
+            options={options}
+            onChange={(value: any) => {
+              setValue(name, value.value);
+            }}
+            placeholder={t(
+              "image.cropPosition.select.placeholder",
+              "Please choose a crop position"
+            )}
+            theme={reactSelectTheme}
+          />
+        )}
+      />
+
+      <input
+        type="hidden"
+        defaultValue={cropPosition ?? 0}
+        {...register(name)}
+      />
+
+      {/* 
+      <Controller
         control={control}
         name={name}
         render={({ field: { onChange, onBlur, value, name, ref } }) => (
@@ -65,10 +102,7 @@ export const FieldImageCropPositionSelect = ({
             isRequired
             defaultValue={cropPosition ?? 0}
             valid={!flattenedErrors[name]?.message ? "valid" : undefined}
-            placeholder={t(
-              "image.cropPosition.select.placeholder",
-              "Please choose a crop position"
-            )}
+            
             size="md"
             ref={ref}
           >
@@ -80,7 +114,7 @@ export const FieldImageCropPositionSelect = ({
               ))}
           </Select>
         )}
-      />
+      /> */}
 
       <FieldErrorMessage error={flattenedErrors[name]?.message} />
     </FormControl>
