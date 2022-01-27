@@ -201,7 +201,7 @@ const Update = () => {
               ];
               await Promise.all(urls.map((url: string) => {
                 return fetch(url, {
-                  method: "HEAD"
+                  method: "GET"
                 });
               }));
             } catch (err: any) {
