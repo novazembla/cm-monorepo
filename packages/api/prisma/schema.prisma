@@ -238,10 +238,10 @@ model Term {
   taxonomyId Int
   taxonomy   Taxonomy @relation(fields: [taxonomyId], references: [id], onDelete: Cascade)
 
-  locations Location[] @relation(name: "locationTerms", onDelete: Cascade)
+  locations Location[] @relation(name: "locationTerms")
 
-  primaryTermsLocations  Location[] @relation(name: "locationPrimaryTerms", onDelete: Cascade)
-  primaryTermsEvents  Event[] @relation(name: "eventPrimaryTerms", onDelete: Cascade)
+  primaryTermsLocations  Location[] @relation(name: "locationPrimaryTerms")
+  primaryTermsEvents  Event[] @relation(name: "eventPrimaryTerms")
 
   events Event[]
 
