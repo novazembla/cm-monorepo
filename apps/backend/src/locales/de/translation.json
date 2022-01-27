@@ -52,7 +52,7 @@
       },
       "placeholder": {
         "locationPickerSearch": "Bitte geben Sie eine Adresse ein, um zu suchen",
-        "locationsearch": "Bitte geben Sie die Adresse ein"
+        "locationsearch": "Bitte geben Sie einen Kartenpunkttitel zur Suche ein"
       }
     },
     "heroImage": {
