@@ -103,7 +103,7 @@
     "dotenv": "^10.0.0",
     "from": "^0.1.7",
     "lodash.debounce": "^4.0.8",
-    "prisma": "^3.4.1"
+    "prisma": "^3.8.1"
   },
   "prisma": {
     "schema": "./packages/api/prisma/schema.prisma"
