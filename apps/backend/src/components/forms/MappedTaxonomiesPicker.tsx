@@ -51,7 +51,7 @@ export const MappedTaxonomiesPicker = ({ ...props }: { props: any }) => {
           <Box w="25%" minW="200px">
             <b>{t(`settings.taxMapping.options.label.${o}`)}</b>
           </Box>
-          <Box>
+          <Box w="75%" maxW="400px">
             <FieldSelect
               isRequired={true}
               name={o}
