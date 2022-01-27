@@ -373,12 +373,17 @@ export const TourQueries = extendType({
                       },
                     },
                   },
-                  where: {
-                    status: !apiUserCan(ctx, "tourReadOwn")
-                      ? PublishStatus.PUBLISHED
-                      : undefined,
-                  },
                 },
+              },
+              // THIS FILTERS ALL unpublished locations for not authenticated users
+              where: {
+                ...(!apiUserCan(ctx, "locationReadOwn")
+                  ? {
+                      location: {
+                        status: PublishStatus.PUBLISHED,
+                      },
+                    }
+                  : {}),
               },
               orderBy: {
                 number: "asc",
@@ -423,6 +428,18 @@ export const TourQueries = extendType({
                 cropPosition: true,
                 ...daoSharedGetTranslatedSelectColumns(["alt", "credits"]),
               },
+              // TODO: this does not work properly as we're using an include
+              // where: {
+              //   status: {
+              //     not: {
+              //       in: [
+              //         ImageStatus.ERROR,
+              //         ImageStatus.DELETED,
+              //         ImageStatus.TRASHED,
+              //       ],
+              //     },
+              //   },
+              // },
             },
           };
           // where = {
