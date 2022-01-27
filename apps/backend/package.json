@@ -39,7 +39,7 @@
     "@tiptap/extension-placeholder": "^2.0.0-beta.27",
     "@tiptap/extension-text": "^2.0.0-beta.13",
     "@tiptap/react": "^2.0.0-beta.72",
-    "axios": "^0.24.0",
+    "axios": "^0.25.0",
     "downshift": "^6.1.7",
     "framer-motion": "^5.2.1",
     "geojson-length": "^0.1.1",
