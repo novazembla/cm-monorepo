@@ -373,6 +373,11 @@ export const TourQueries = extendType({
                       },
                     },
                   },
+                  where: {
+                    status: !apiUserCan(ctx, "tourReadOwn")
+                      ? PublishStatus.PUBLISHED
+                      : undefined,
+                  },
                 },
               },
               orderBy: {
@@ -381,6 +386,7 @@ export const TourQueries = extendType({
             },
           };
           // TODO: get this where running
+          // TODO: Filter data
           // where = {
           //   ...where,
           //   OR: [
