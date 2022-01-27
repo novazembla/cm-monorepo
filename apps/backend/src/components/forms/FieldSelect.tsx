@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler, ChangeEvent } from "react";
+import React, { ChangeEventHandler } from "react";
 import { useFormContext, Controller } from "react-hook-form";
 
 import {
