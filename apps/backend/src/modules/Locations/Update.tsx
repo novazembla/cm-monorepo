@@ -292,6 +292,9 @@ const Update = () => {
 
     try {
       if (appUser) {
+        const pullAfterUpdate =
+          data.status === PublishStatus.PUBLISHED ||
+          newData.status === PublishStatus.PUBLISHED;
         const heroImage =
           newData.heroImage &&
           !isNaN(newData.heroImage) &&
@@ -401,6 +404,27 @@ const Update = () => {
 
         if (!errors) {
           successToast();
+          if (pullAfterUpdate) {
+            try {
+              const urls = [
+                `${config.frontendUrl}/ort/${newData.slug_de}`,
+                `${config.frontendUrl}/en/location/${newData.slug_en}`,
+                `${config.frontendUrl}/location/${newData.slug_en}`,
+                `${config.frontendUrl}/en/ort/${newData.slug_de}`,
+                `${config.frontendUrl}/karte`,
+                `${config.frontendUrl}/map`,
+                `${config.frontendUrl}`,
+                `${config.frontendUrl}/en`,
+              ];
+              await Promise.all(urls.map((url: string) => {
+                return fetch(url, {
+                  method: "HEAD"
+                });
+              }));
+            } catch (err: any) {
+              console.error(err);
+            }
+          }
           reset(
             {},
             {
@@ -449,7 +473,6 @@ const Update = () => {
       isDisabled:
         !!error ||
         [
-          PublishStatus.PUBLISHED,
           PublishStatus.TRASHED,
           PublishStatus.DELETED,
         ].includes(parseInt(watch("status") ?? "0")),

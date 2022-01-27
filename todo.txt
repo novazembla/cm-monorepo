@@ -1,0 +1,17 @@
+Pre Release
+- Fulltext search + needed indexes
+  https://github.com/prisma/prisma/releases/tag/3.5.0
+  https://www.prisma.io/docs/concepts/components/prisma-client/filtering-and-sorting#sort-by-relevance-postgresql
+  
+- Clear TODO:
+- Remove non production ready console logs ... 
+
+- Improve/Test Autopull frontend on update of published location/event/page/tour ... 
+
+- Multilang emails
+
+- Kartenpunktvorschlags info email
+
+
+Bugs
+- Wird ein Foto im kartenpunkt oder Tour gelöscht und durch ein anderes ersetzt, erscheint nach dem speichern und dem Hochladen des neuen Bildes immer noch das alte Motiv

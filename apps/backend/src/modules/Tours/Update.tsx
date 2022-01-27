@@ -177,6 +177,10 @@ const Update = () => {
     setIsNavigatingAway(false);
     try {
       if (appUser) {
+        const pullAfterUpdate =
+          data.status === PublishStatus.PUBLISHED ||
+          newData.status === PublishStatus.PUBLISHED;
+
         const heroImage =
           newData.heroImage &&
           !isNaN(newData.heroImage) &&
@@ -258,6 +262,27 @@ const Update = () => {
               keepValues: true,
             }
           );
+          if (pullAfterUpdate) {
+            try {
+              const urls = [
+                `${config.frontendUrl}/tour/${newData.slug_de}`,
+                `${config.frontendUrl}/en/tour/${newData.slug_en}`,
+                `${config.frontendUrl}/en/tour/${newData.slug_de}`,
+                `${config.frontendUrl}/tour/${newData.slug_en}`,
+                `${config.frontendUrl}/touren`,
+                `${config.frontendUrl}/tours`,
+                `${config.frontendUrl}`,
+                `${config.frontendUrl}/en`,
+              ];
+              await Promise.all(urls.map((url: string) => {
+                return fetch(url, {
+                  method: "HEAD"
+                });
+              }));
+            } catch (err: any) {
+              console.error(err);
+            }
+          }
         } else {
           let slugError = multiLangSlugUniqueError(errors, setError);
 

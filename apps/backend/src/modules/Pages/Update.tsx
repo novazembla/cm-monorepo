@@ -134,6 +134,11 @@ const Update = () => {
   ) => {
     setHasFormError(false);
     setIsNavigatingAway(false);
+    
+    const pullAfterUpdate =
+          data.status === PublishStatus.PUBLISHED ||
+          newData.status === PublishStatus.PUBLISHED;
+
     const heroImage =
       newData.heroImage && !isNaN(newData.heroImage) && newData.heroImage > 0
         ? {
@@ -186,6 +191,23 @@ const Update = () => {
               keepValues: true,
             }
           );
+          if (pullAfterUpdate) {
+            try {
+              const urls = [
+                `${config.frontendUrl}/seite/${newData.slug_de}`,
+                `${config.frontendUrl}/en/page/${newData.slug_en}`,
+                `${config.frontendUrl}/en/seite/${newData.slug_de}`,
+                `${config.frontendUrl}/page/${newData.slug_en}`,
+              ];
+              await Promise.all(urls.map((url: string) => {
+                return fetch(url, {
+                  method: "HEAD"
+                });
+              }));
+            } catch (err: any) {
+              console.error(err);
+            }
+          }
         } else {
           let slugError = multiLangSlugUniqueError(errors, setError);
 

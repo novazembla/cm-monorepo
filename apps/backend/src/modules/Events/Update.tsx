@@ -264,6 +264,10 @@ const Update = () => {
     setIsNavigatingAway(false);
     try {
       if (appUser) {
+        const pullAfterUpdate =
+          data.status === PublishStatus.PUBLISHED ||
+          newData.status === PublishStatus.PUBLISHED;
+
         const heroImage =
           newData.heroImage &&
           !isNaN(newData.heroImage) &&
@@ -354,6 +358,27 @@ const Update = () => {
               keepValues: true,
             }
           );
+          if (pullAfterUpdate) {
+            try {
+              const urls = [
+                `${config.frontendUrl}/veranstaltung/${newData.slug_de}`,
+                `${config.frontendUrl}/en/event/${newData.slug_en}`,
+                `${config.frontendUrl}/en/veranstaltung/${newData.slug_de}`,
+                `${config.frontendUrl}/event/${newData.slug_en}`,
+                `${config.frontendUrl}/veranstaltungen`,
+                `${config.frontendUrl}/events`,
+                `${config.frontendUrl}`,
+                `${config.frontendUrl}/en`,
+              ];
+              await Promise.all(urls.map((url: string) => {
+                return fetch(url, {
+                  method: "HEAD"
+                });
+              }));
+            } catch (err: any) {
+              console.error(err);
+            }
+          }
         } else {
           let slugError = multiLangSlugUniqueError(errors, setError);
 
