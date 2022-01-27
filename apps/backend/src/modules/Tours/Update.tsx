@@ -297,7 +297,6 @@ const Update = () => {
       isDisabled:
         !!error ||
         [
-          PublishStatus.PUBLISHED,
           PublishStatus.TRASHED,
           PublishStatus.DELETED,
         ].includes(parseInt(watch("status") ?? "0")),
