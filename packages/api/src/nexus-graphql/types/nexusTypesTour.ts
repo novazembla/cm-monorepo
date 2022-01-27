@@ -331,7 +331,12 @@ export const TourQueries = extendType({
                 location: {
                   select: {
                     id: true,
-                    ...daoSharedGetTranslatedSelectColumns(["title", "slug"]),
+                    status: true,
+                    ...daoSharedGetTranslatedSelectColumns([
+                      "title",
+                      "slug",
+                      "descpiption",
+                    ]),
                     lat: true,
                     lng: true,
                     terms: {
