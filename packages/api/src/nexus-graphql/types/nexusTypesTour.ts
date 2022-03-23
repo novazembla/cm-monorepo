@@ -86,8 +86,12 @@ export const Tour = objectType({
     t.int("orderNumber");
     t.int("tourStopCount", {
       resolve(...[parent, , ctx]) {
-        if (apiUserCan(ctx, "tourReadOwn"))
-          return (parent as any)?._count?.tourStops ?? 0;
+        if (apiUserCan(ctx, "tourReadOwn")) {
+          if ((parent as any)?._count?.tourStops)
+            return (parent as any)?._count?.tourStops;
+
+          return (parent as any)?.tourStops?.length ?? 0;
+        }
 
         if (
           !Array.isArray((parent as any)?.tourStops) ||
