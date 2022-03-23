@@ -328,28 +328,28 @@ async function main() {
 
     testTaxonomy = await prisma.taxonomy.findFirst({
       where: {
-        slug_de: "zielgruppe",
+        slug_de: "angebote-fuer",
       },
     });
 
     taxMapping.targetAudience = testTaxonomy?.id ?? "";
 
     if (!testTaxonomy) {
-      console.log("create new tax: Zielgruppe");
+      console.log("create new tax: Angebote für");
 
       const taxTarget = await prisma.taxonomy.create({
         data: {
-          name_de: "Zielgruppe",
+          name_de: "Angebote für",
           name_en: "Target Audience",
           multiTerm: true,
-          slug_de: "zielgruppe",
+          slug_de: "angebote-fuer",
           slug_en: "target-audience",
           modules: {
             connect: {
               key: "location",
             },
           },
-          fullText: "Zielgruppe zielgruppe Target Audience target-audience",
+          fullText: "Angebote für angebote-fuer Target Audience target-audience",
           terms: {
             createMany: {
               data: targetAudience.map((term) => ({

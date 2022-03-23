@@ -468,23 +468,23 @@
 //       where: {
 //         slug: {
 //           path: ["de"],
-//           string_contains: "zielgruppe",
+//           string_contains: "angebote-fuer",
 //         },
 //       },
 //     });
 
 //     if (!testTaxonomy) {
-//       console.log("create new tax: Zielgruppe");
+//       console.log("create new tax: Angebote für");
 
 //       await prisma.taxonomy.create({
 //         data: {
 //           name: {
-//             de: "Zielgruppe",
+//             de: "Angebote für",
 //             en: "Target Audience",
 //           },
 //           multiTerm: true,
 //           slug: {
-//             de: "zielgruppe",
+//             de: "angebote-fuer",
 //             en: "target-audience",
 //           },
 //           modules: {
@@ -492,7 +492,7 @@
 //               key: "location",
 //             },
 //           },
-//           fullText: "Zielgruppe zielgruppe Target Audience target-audience",
+//           fullText: "Angebote für angebote-fuer Target Audience target-audience",
 //           terms: {
 //             createMany: {
 //               data: targetAudience.map((term) => ({
@@ -637,7 +637,7 @@
 //       where: {
 //         slug: {
 //           path: ["de"],
-//           string_contains: "zielgruppe",
+//           string_contains: "angebote-fuer",
 //         },
 //       },
 //     });

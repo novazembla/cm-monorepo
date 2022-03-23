@@ -278,7 +278,7 @@ async function main() {
       where: {
         slug: {
           path: ["de"],
-          string_contains: "zielgruppe",
+          string_contains: "angebote-fuer",
         },
       },
     });

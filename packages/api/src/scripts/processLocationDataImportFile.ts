@@ -727,8 +727,8 @@ const doChores = async () => {
           } else {
             throw Error(
               lang === "de"
-                ? "Konnte die Begriffe der Taxonomie 'Zielgruppe' - Slug 'zielgruppe' nicht finden"
-                : "Could not retrieve terms for 'Zielgruppe' - Slug 'zielgruppe'"
+                ? "Konnte die Begriffe der Taxonomie 'Angebote für' - Slug 'angebote-fuer' nicht finden"
+                : "Could not retrieve terms for 'Angebote für' - Slug 'angebote-fuer'"
             );
           }
         }
