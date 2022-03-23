@@ -85,12 +85,45 @@ export const Tour = objectType({
     t.date("updatedAt");
     t.int("orderNumber");
     t.int("tourStopCount", {
-      resolve(...[parent]) {
-        return (parent as any)?._count?.tourStops ?? 0;
+      resolve(...[parent, , ctx]) {
+        if (apiUserCan(ctx, "tourReadOwn"))
+          return (parent as any)?._count?.tourStops ?? 0;
+
+        if (
+          !Array.isArray((parent as any)?.tourStops) ||
+          !(parent as any)?.tourStops?.length
+        )
+          return 0;
+
+        return (parent as any)?.tourStops.reduce((count: number, stop: any) => {
+          if (stop?.location?.status === PublishStatus.PUBLISHED)
+            return ++count;
+          return count;
+        }, 0);
       },
     });
     t.field("tourStops", {
       type: list("TourStop"),
+      resolve(...[parent, , ctx]) {
+        if (apiUserCan(ctx, "tourReadOwn")) return (parent as any)?.tourStops;
+
+        if (
+          !Array.isArray((parent as any)?.tourStops) ||
+          !(parent as any)?.tourStops?.length
+        )
+          return [];
+
+        const stops = (parent as any)?.tourStops.filter(
+          (stop: any) => stop?.location?.status === PublishStatus.PUBLISHED
+        );
+
+        return stops.map((stop: any, index: number) => {
+          return {
+            ...stop,
+            number: index + 1,
+          };
+        });
+      },
     });
 
     t.list.field("modules", {
@@ -135,7 +168,7 @@ export const TourQueries = extendType({
         }),
       },
 
-      authorize: (...[, , ctx]) => authorizeApiUser(ctx, "tourReadOwn", true),
+      // authorize: (...[, , ctx]) => authorizeApiUser(ctx, "tourReadOwn", true),
 
       // resolve(root, args, ctx, info)
       async resolve(...[, args, ctx, info]) {
@@ -183,7 +216,7 @@ export const TourQueries = extendType({
         if (
           (pRI?.fieldsByTypeName?.TourQueryResult as any)?.tours
             ?.fieldsByTypeName?.Tour?.tourStopCount
-        )
+        ) {
           include = {
             ...include,
             _count: {
@@ -192,6 +225,7 @@ export const TourQueries = extendType({
               },
             },
           };
+        }
 
         if (
           (pRI?.fieldsByTypeName?.TourQueryResult as any)?.tours
@@ -230,7 +264,7 @@ export const TourQueries = extendType({
         if (
           (pRI?.fieldsByTypeName?.TourQueryResult as any)?.tours
             ?.fieldsByTypeName?.Tour?.tourStops
-        )
+        ) {
           include = {
             ...include,
             tourStops: {
@@ -254,6 +288,7 @@ export const TourQueries = extendType({
                 },
                 location: {
                   select: {
+                    status: true,
                     id: true,
                     ...daoSharedGetTranslatedSelectColumns(["title", "slug"]),
                     lat: true,
@@ -263,6 +298,7 @@ export const TourQueries = extendType({
               },
             },
           };
+        }
 
         if ((pRI?.fieldsByTypeName?.TourQueryResult as any)?.tours)
           tours = await daoTourQuery(

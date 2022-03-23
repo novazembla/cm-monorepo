@@ -37,6 +37,46 @@ export const daoTourStopReorder = async (
   return promises.length;
 };
 
+export const daoTourStopForceReorder = async (
+  tourStopId: number
+): Promise<number> => {
+  let tourStopInDb = await prisma.tourStop.findFirst({
+    where: { id: tourStopId },
+    select: { tour: true },
+  });
+
+  if (!tourStopInDb?.tour?.id) return 0;
+
+  const tourStops = await prisma.tourStop.findMany({
+    where: {
+      tour: {
+        id: tourStopInDb?.tour?.id,
+      },
+    },
+    orderBy: {
+      number: "asc",
+    },
+  });
+
+  if (tourStops) {
+    const promises = await prisma.$transaction(
+      tourStops.map((tS: any, index: number) => {
+        return prisma.tourStop.update({
+          data: {
+            number: index + 1,
+          },
+          where: {
+            id: tS.id,
+          },
+        });
+      })
+    );
+    return promises?.length;
+  }
+
+  return 0;
+};
+
 export const daoTourStopsQuery = async (
   tourId: number,
   where: Prisma.TourStopWhereInput,
@@ -171,6 +211,8 @@ export const daoTourStopCreate = async (
     });
   }
 
+  await daoTourStopForceReorder(tourStop.id);
+
   return filteredOutputByBlacklistOrNotFound(
     tourStop,
     apiConfig.db.privateJSONDataKeys.tour
@@ -200,6 +242,8 @@ export const daoTourStopUpdate = async (
     },
   });
 
+  await daoTourStopForceReorder(id);
+
   return filteredOutputByBlacklistOrNotFound(
     tourStop,
     apiConfig.db.privateJSONDataKeys.tour
@@ -224,28 +268,7 @@ export const daoTourStopDelete = async (id: number): Promise<TourStop> => {
     },
   });
 
-  const tourStops = await prisma.tourStop.findMany({
-    where: {
-      tour: {
-        id: tourStopInDb?.tour?.id,
-      },
-    },
-  });
-
-  if (tourStops) {
-    await prisma.$transaction(
-      tourStops.map((tS: any, index: number) => {
-        return prisma.tourStop.update({
-          data: {
-            number: index + 1,
-          },
-          where: {
-            id: tS.id,
-          },
-        });
-      })
-    );
-  }
+  await daoTourStopForceReorder(id);
 
   return filteredOutputByBlacklistOrNotFound(
     tourStop,

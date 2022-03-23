@@ -508,7 +508,6 @@ export interface NexusGenObjects {
     ownerId: number; // Int!
     path: NexusGenScalars['JSON']; // JSON!
     status: number; // Int!
-    tourStops?: Array<NexusGenRootTypes['TourStop'] | null> | null; // [TourStop]
     updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
   }
   TourQueryResult: { // root type
