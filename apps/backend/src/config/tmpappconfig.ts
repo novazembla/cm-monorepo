@@ -14,6 +14,7 @@ export const appConfig: AppConfigSettings = {
   enableProfilePicture: false,
   defaultPageSize: 30,
   defaultLanguage: "de",
+  defaultCity: "Berlin",
   activeLanguages: ["de", "en"],
   settings: {}, // TODO: what else is needed?
 };

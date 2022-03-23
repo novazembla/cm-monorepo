@@ -124,6 +124,9 @@ const Create = () => {
 
   const formMethods = useForm<any>({
     mode: "onTouched",
+    defaultValues: {
+      city: config.defaultCity,
+    },
     resolver: yupResolver(extendedValidationSchema as any),
   });
 

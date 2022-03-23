@@ -17,6 +17,7 @@ export type AppConfigSettings = {
   enableOpenRegistration?: boolean;
   enableProfilePicture?: boolean;
   settings?: AppSettingsFieldDefinitions;
+  defaultCity?: string | undefined;
   defaultPageSize?: number;
   activeLanguages: string[];
   defaultLanguage?: string;
@@ -39,6 +40,7 @@ const configDefault: AppConfig = {
   defaultPageSize: 50,
   activeLanguages,
   defaultLanguage,
+  defaultCity: "",
   settings: {},
   // mapOuteBouds [ East/South, North/West ] corners
   mapOuterBounds: [
