@@ -70,7 +70,7 @@ export const FieldImageCropPositionSelect = ({
                 borderColor: "var(--chakra-colors-gray-400)",
               }),
             }}
-            defaultValue={options.find((v) => v.value === cropPosition ?? 0)}
+            defaultValue={options.find((v) => v.value === cropPosition) ?? ImageCropPosition.CENTER}
             {...field}
             options={options}
             onChange={(value: any) => {
@@ -87,7 +87,7 @@ export const FieldImageCropPositionSelect = ({
 
       <input
         type="hidden"
-        defaultValue={cropPosition ?? 0}
+        defaultValue={(options.find((v) => v.value === cropPosition) ?? ImageCropPosition.CENTER) as number}
         {...register(name)}
       />
 
