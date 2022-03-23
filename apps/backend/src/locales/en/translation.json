@@ -862,6 +862,9 @@
     "error": {
       "label": "No label translation key has been defined"
     },
+    "contactEmail": {
+      "label": "Contact email address (receives location suggestion notifications)"
+    },
     "contactInfo": {
       "label": "Contact information at bottom of admin tool"
     },
@@ -880,10 +883,14 @@
       "save": "Save",
       "cancel": "Cancel",
       "openInNewTabl": "Open link in new tab",
-      "unitalic": "Remove italic text format",
-      "italic": "Format text italic",
+      "removeH2": "Remove H3 format",
+      "addH2": "Format as H2",
+      "removeH3": "Remove H3 format",
+      "addH3": "Format as H3",
       "unbold": "Remove bold text format",
       "bold": "Format text bold",
+      "unitalic": "Remove italic text format",
+      "italic": "Format text italic",
       "orderList": "Toggle ordered list",
       "bulletList": "Toggle bullet list",
       "addNewLine": "Add a new line",

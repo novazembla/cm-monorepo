@@ -862,6 +862,9 @@
     "error": {
       "label": "Es wurde kein Übersetzungsschlüssel definiert"
     },
+    "contactEmail": {
+      "label": "Kontakt Email Adresse (erhält Kartenpunktvorschlagnotifikationen)"
+    },
     "contactInfo": {
       "label": "Kontaktinformation für technische Fragen"
     },
@@ -880,10 +883,14 @@
       "save": "Speichern",
       "cancel": "Abbrechen",
       "openInNewTabl": "Link in neuem Tab öffnen",
-      "unitalic": "Kursivgedrucktes Textformat entfernen",
-      "italic": "Text kursiv formatieren",
+      "removeH2": "Remove H3 format",
+      "addH2": "Format as H2",
+      "removeH3": "Remove H3 format",
+      "addH3": "Format as H3",
       "unbold": "Fettgedrucktes Textformat entfernen",
       "bold": "Text fett formatieren",
+      "unitalic": "Kursivgedrucktes Textformat entfernen",
+      "italic": "Text kursiv formatieren",
       "orderList": "Nummerierte Auflistung an- oder ausschalten",
       "bulletList": "Auflistung an- oder ausschalten",
       "addNewLine": "Neue Zeile einfügen",

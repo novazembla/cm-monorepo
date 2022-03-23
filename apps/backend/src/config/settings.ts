@@ -27,6 +27,7 @@ export type AppSettingField = {
 };
 
 export type AppSettingsDefaultFieldKeys =
+  | "contactEmail"
   | "contactInfo"
   | "suggestionsIntro"
   | "suggestionsTandCInfo"
@@ -46,6 +47,16 @@ export type AppSettings = PartialRecord<AppSettingsFieldKeys, AppSetting>;
 
 // t("settings.error.label", "No label translation key has been defined")
 export const settingFields: AppSettingsFieldDefinitions = {
+  contactEmail: {
+    defaultValue: "",
+    type: "text",
+    // t("settings.contactEmail.label", "Contact email address (receives location suggestion notifications)")
+    label: "settings.contactEmail.label",
+    validationSchema: object().shape({
+      contactEmail: string(),
+    }),
+    required: true,
+  },
   contactInfo: {
     defaultValue: "",
     type: "texteditor",
