@@ -14,8 +14,7 @@ import {
 import { ModuleTourSchemaUpdate, TourStopListing } from "./forms";
 import {
   useTourUpdateMutation,
-  useTourReorderTourStopsMutation,
-  useTourStopDeleteMutation,
+  useTourReorderTourStopsMutation,  
 } from "./hooks";
 import {
   useAuthentication,
@@ -114,8 +113,7 @@ const Update = () => {
 
   const [firstMutation, firstMutationResults] = useTourUpdateMutation();
   const [reorderMutation] = useTourReorderTourStopsMutation();
-  const [tourStopDeleteMutation] = useTourStopDeleteMutation();
-
+  
   const [hasFormError, setHasFormError] = useState(false);
 
   const disableForm = firstMutationResults.loading;
