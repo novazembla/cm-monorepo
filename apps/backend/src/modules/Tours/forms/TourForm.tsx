@@ -14,6 +14,7 @@ import {
 } from "~/components/forms";
 import { useAuthentication } from "~/hooks";
 import { yupIsFieldRequired } from "~/validation";
+import FieldMultiLangTextarea from "~/components/forms/FieldMultiLangTextarea";
 
 export const TourForm = ({
   data,
@@ -229,7 +230,7 @@ export const TourForm = ({
             {t("module.locations.forms.fieldSet.label.seo", "SEO")}
           </chakra.span>
         </legend>
-        <FieldMultiLangTextEditor
+        <FieldMultiLangTextarea
           name="metaDesc"
           id="metaDesc"
           type="basic"

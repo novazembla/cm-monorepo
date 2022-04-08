@@ -176,6 +176,7 @@ export const chakraTheme = extendTheme(
 
   defaultPropsForFormComponentents([
     "Input",
+    "Textarea",
     "Select",
     "Button",
     "NumberInput",
@@ -192,11 +193,11 @@ export const chakraTheme = extendTheme(
   }),
   withDefaultVariant({
     variant: "outline",
-    components: ["Input", "NumberInput", "PinInput"],
+    components: ["Input", "Textarea", "NumberInput", "PinInput"],
   }),
   withDefaultSize({
     size: "md",
-    components: ["Input", "NumberInput", "PinInput", "Button", "Select"],
+    components: ["Input", "Textarea", "NumberInput", "PinInput", "Button", "Select"],
   }),
   {
     reactDatepicker: {

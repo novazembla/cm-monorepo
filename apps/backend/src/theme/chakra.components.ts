@@ -100,5 +100,24 @@ export const components = {
         }
       }
     }
+  },
+  Textarea: {
+    variants: {
+      outline: {
+        field: {
+          bg: "#fff",
+          borderColor: "gray.400",
+          _hover: {
+            borderColor: "gray.500",
+          },
+          _focus: {
+            borderColor: "gray.500",
+          },
+          _autofill: {
+            bg: "wine.300",
+          },
+        },
+      },
+    },
   }
 };

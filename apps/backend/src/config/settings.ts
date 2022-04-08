@@ -112,7 +112,7 @@ export const settingFields: AppSettingsFieldDefinitions = {
   },
   suggestionsMetaDesc: {
     defaultValue: "",
-    type: "multilangtexteditor",
+    type: "multilangtextarea",
     // t("settings.suggestionsMetaDesc.label", "Suggestion page meta description.")
     label: "settings.suggestionsMetaDesc.label",
     validationSchema: object().shape({

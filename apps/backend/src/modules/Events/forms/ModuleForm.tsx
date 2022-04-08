@@ -43,6 +43,7 @@ import { MdPlusOne } from "react-icons/md";
 
 import { useAuthentication } from "~/hooks";
 import { getMultilangValue } from "~/utils";
+import FieldMultiLangTextarea from "~/components/forms/FieldMultiLangTextarea";
 
 const isValidDate = (d: any) => {
   if (Object.prototype.toString.call(d) === "[object Date]") {
@@ -340,7 +341,7 @@ export const ModuleForm = ({
             {t("module.locations.forms.fieldSet.label.seo", "SEO")}
           </chakra.span>
         </legend>
-        <FieldMultiLangTextEditor
+        <FieldMultiLangTextarea
           name="metaDesc"
           id="metaDesc"
           type="basic"

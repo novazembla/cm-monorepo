@@ -14,6 +14,7 @@ import {
   FieldModuleTaxonomies,
   FieldInput,
 } from "~/components/forms";
+import FieldMultiLangTextarea from "~/components/forms/FieldMultiLangTextarea";
 import { useAuthentication } from "~/hooks";
 
 import { yupIsFieldRequired } from "~/validation";
@@ -746,7 +747,7 @@ export const ModuleForm = ({
             )}
           </chakra.span>
         </legend>
-        <FieldMultiLangTextEditor
+        <FieldMultiLangTextarea
           name="metaDesc"
           id="metaDesc"
           type="basic"

@@ -11,6 +11,7 @@ import {
   FieldSingleSelectAutocomplete,
 } from "~/components/forms";
 import { getMultilangValue } from "~/utils";
+import FieldMultiLangTextarea from "~/components/forms/FieldMultiLangTextarea";
 
 export const TourStopForm = ({
   data,
@@ -178,7 +179,7 @@ export const TourStopForm = ({
             {t("module.locations.forms.fieldSet.label.seo", "SEO")}
           </chakra.span>
         </legend>
-        <FieldMultiLangTextEditor
+        <FieldMultiLangTextarea
           name="metaDesc"
           id="metaDesc"
           type="basic"

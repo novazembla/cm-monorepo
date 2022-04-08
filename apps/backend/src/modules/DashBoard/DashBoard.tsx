@@ -58,6 +58,7 @@ import { multiLangRHFormDataToJson } from "~/utils";
 
 import { ModuleDashboardSchema } from "./forms";
 import { multiLangFields } from "./moduleConfig";
+import FieldMultiLangTextarea from "~/components/forms/FieldMultiLangTextarea";
 
 const getJsonValue = (settings: any[], key: string) => {
   if (!settings || !Array.isArray(settings) || settings.length === 0)
@@ -568,7 +569,7 @@ const Update = () => {
                     {t("module.locations.forms.fieldSet.label.seo", "SEO")}
                   </chakra.span>
                 </legend>
-                <FieldMultiLangTextEditor
+                <FieldMultiLangTextarea
                   name="metaDesc"
                   id="metaDesc"
                   type="basic"

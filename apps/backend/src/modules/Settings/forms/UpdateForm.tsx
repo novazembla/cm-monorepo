@@ -15,6 +15,7 @@ import {
 
 import { findSettingDbValueByKey } from "../moduleConfig";
 import { useTranslation } from "react-i18next";
+import FieldMultiLangTextarea from "~/components/forms/FieldMultiLangTextarea";
 
 export const UpdateForm = ({ data, errors }: { data?: any; errors?: any }) => {
   const { t } = useTranslation();
@@ -82,7 +83,22 @@ export const UpdateForm = ({ data, errors }: { data?: any; errors?: any }) => {
                 />
               </FieldRow>
             );
-
+          if (fieldDefinition.type === "multilangtextarea")
+            return (
+              <FieldRow key={i}>
+                <FieldMultiLangTextarea
+                  type="basic"
+                  name={settingKey}
+                  id={settingKey}
+                  label={t(fieldDefinition.label)}
+                  isRequired={fieldDefinition.required}
+                  settings={{
+                    defaultRequired: fieldDefinition.required,
+                    defaultValues: value,
+                  }}
+                />
+              </FieldRow>
+            );
           return (
             <FieldRow key={i}>
               <FieldInput
