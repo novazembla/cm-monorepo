@@ -8,10 +8,5 @@ Pre Release
 
 - Improve/Test Autopull frontend on update of published location/event/page/tour ... 
 
-- Multilang emails
-
-- Kartenpunktvorschlags info email
-
-
 Bugs
 - Wird ein Foto im kartenpunkt oder Tour gelöscht und durch ein anderes ersetzt, erscheint nach dem speichern und dem Hochladen des neuen Bildes immer noch das alte Motiv

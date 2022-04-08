@@ -378,6 +378,162 @@
         }
       }
     },
+    "locations": {
+      "forms": {
+        "fieldSet": {
+          "label": {
+            "seo": "SEO"
+          }
+        },
+        "location": {
+          "field": {
+            "label": {
+              "metaDesc": "Meta Description",
+              "title": "Title",
+              "slug": "Slug",
+              "description": "Description",
+              "offers": "Offers",
+              "accessibilityInformation": "Accessibility Information"
+            },
+            "placeholder": {
+              "csvfile": "Upload CSV",
+              "title": "Location title",
+              "slug": "Slug / URL part",
+              "description": "Location description",
+              "offers": "Location offers",
+              "accessibilityInformation": "Location accessibilityInformation"
+            }
+          },
+          "geoloaction": "Location on map"
+        },
+        "import": {
+          "errors": "Errors",
+          "log": "Log",
+          "field": {
+            "label": {
+              "title": "Title",
+              "csv": "CSV File"
+            },
+            "placeholder": {
+              "title": "Import title"
+            }
+          },
+          "select": "Select target column",
+          "nofile": "This is the log of an automated import without an uploaded file",
+          "mapping": {
+            "title": "CSV column(s) to database columns mapping",
+            "columCSV": "Header in CSV",
+            "firstRow": "Example (1st row in CSV)",
+            "columnInDb": "Column in DB"
+          },
+          "warnings": "Warnings"
+        },
+        "field": {
+          "label": {
+            "address": "Address",
+            "street1": "Street (1)",
+            "houseNumber": "House Number",
+            "street2": "Street (2)",
+            "co": "C/O",
+            "postCode": "Post Code",
+            "city": "City",
+            "contactInformation": "Contact Information",
+            "email1": "Email address (1)",
+            "email2": "Email address (2)",
+            "phone1": "Phone number (1)",
+            "phone2": "Phone number (2)",
+            "socialMedia": "Website/Social Media",
+            "website": "Website",
+            "facebook": "Facebook page",
+            "instagram": "Instagram",
+            "twitter": "Twitter",
+            "youtube": "YouTube",
+            "additionalInformation": "Additional Information",
+            "agency": "Agency",
+            "eventLocationId": "berlin.de Event Location ID"
+          }
+        }
+      },
+      "menuitem": {
+        "dataExports": "Exports",
+        "imports": "Imports",
+        "createimport": "Add new import",
+        "exports": "Exports",
+        "createlocation": "Add new location"
+      },
+      "exports": {
+        "button": {
+          "view": "View import"
+        }
+      },
+      "import": {
+        "button": {
+          "delete": "Delete import",
+          "create": "New import",
+          "edit": "Edit import"
+        }
+      },
+      "breadcrumb": {
+        "exportdetail": "Export detail"
+      },
+      "export": {
+        "exportIsProcessing": "Your export is being processed on the server.",
+        "exportProcessed": "Your export has been processed.",
+        "field": {
+          "label": {
+            "exportName": "Export Name"
+          },
+          "placeholder": {
+            "title": "Short name to find your export in the export listing"
+          }
+        },
+        "create": {
+          "label": "Export"
+        },
+        "introduction": "Export all {{num}} items as .xlsx file",
+        "button": {
+          "label": {
+            "scheduleExport": "Schedule export"
+          }
+        }
+      },
+      "imports": {
+        "title": "Imports",
+        "menu": {
+          "title": "Imports"
+        },
+        "updatepage": {
+          "title": "Update import"
+        },
+        "requiredMissing": "The following required columns are not assigned: ",
+        "assignColumnsToTriggerImport": "To be able to schedule the import you need to assign all (required) columns",
+        "importIsProcessing": "Your import is being processed on the server."
+      },
+      "title": "Locations",
+      "button": {
+        "create": "Add new location",
+        "edit": "Edit location",
+        "delete": "Delete location"
+      },
+      "location": {
+        "title": {
+          "updatepage": "Update location"
+        }
+      },
+      "associatedevents": {
+        "title": "Associated events"
+      },
+      "events": {
+        "title": "Title"
+      },
+      "fields": {
+        "label": {
+          "actions": "Actions",
+          "viewevent": "View event"
+        }
+      },
+      "noasscoiatedevents": "No associated events"
+    },
     "events": {
       "title": "Events",
       "menuitem": {
@@ -450,156 +606,6 @@
           "updatepage": "Update event"
         }
       }
-    },
-    "locations": {
-      "menuitem": {
-        "dataExports": "Exports",
-        "imports": "Imports",
-        "createimport": "Add new import",
-        "exports": "Exports",
-        "createlocation": "Add new location"
-      },
-      "exports": {
-        "button": {
-          "view": "View import"
-        }
-      },
-      "import": {
-        "button": {
-          "delete": "Delete import",
-          "create": "New import",
-          "edit": "Edit import"
-        }
-      },
-      "breadcrumb": {
-        "exportdetail": "Export detail"
-      },
-      "export": {
-        "exportIsProcessing": "Your export is being processed on the server.",
-        "exportProcessed": "Your export has been processed.",
-        "field": {
-          "label": {
-            "exportName": "Export Name"
-          },
-          "placeholder": {
-            "title": "Short name to find your export in the export listing"
-          }
-        },
-        "create": {
-          "label": "Export"
-        },
-        "introduction": "Export all {{num}} items as .xlsx file",
-        "button": {
-          "label": {
-            "scheduleExport": "Schedule export"
-          }
-        }
-      },
-      "forms": {
-        "import": {
-          "errors": "Errors",
-          "log": "Log",
-          "field": {
-            "label": {
-              "title": "Title",
-              "csv": "CSV File"
-            },
-            "placeholder": {
-              "title": "Import title"
-            }
-          },
-          "select": "Select target column",
-          "nofile": "This is the log of an automated import without an uploaded file",
-          "mapping": {
-            "title": "CSV column(s) to database columns mapping",
-            "columCSV": "Header in CSV",
-            "firstRow": "Example (1st row in CSV)",
-            "columnInDb": "Column in DB"
-          },
-          "warnings": "Warnings"
-        },
-        "location": {
-          "field": {
-            "placeholder": {
-              "csvfile": "Upload CSV",
-              "title": "Location title",
-              "slug": "Slug / URL part",
-              "description": "Location description",
-              "offers": "Location offers",
-              "accessibilityInformation": "Location accessibilityInformation"
-            },
-            "label": {
-              "title": "Title",
-              "slug": "Slug",
-              "description": "Description",
-              "offers": "Offers",
-              "accessibilityInformation": "Accessibility Information"
-            }
-          },
-          "geoloaction": "Location on map"
-        },
-        "field": {
-          "label": {
-            "address": "Address",
-            "street1": "Street (1)",
-            "houseNumber": "House Number",
-            "street2": "Street (2)",
-            "co": "C/O",
-            "postCode": "Post Code",
-            "city": "City",
-            "contactInformation": "Contact Information",
-            "email1": "Email address (1)",
-            "email2": "Email address (2)",
-            "phone1": "Phone number (1)",
-            "phone2": "Phone number (2)",
-            "socialMedia": "Website/Social Media",
-            "website": "Website",
-            "facebook": "Facebook page",
-            "instagram": "Instagram",
-            "twitter": "Twitter",
-            "youtube": "YouTube",
-            "additionalInformation": "Additional Information",
-            "agency": "Agency",
-            "eventLocationId": "berlin.de Event Location ID"
-          }
-        }
-      },
-      "imports": {
-        "title": "Imports",
-        "menu": {
-          "title": "Imports"
-        },
-        "updatepage": {
-          "title": "Update import"
-        },
-        "requiredMissing": "The following required columns are not assigned: ",
-        "assignColumnsToTriggerImport": "To be able to schedule the import you need to assign all (required) columns",
-        "importIsProcessing": "Your import is being processed on the server."
-      },
-      "title": "Locations",
-      "button": {
-        "create": "Add new location",
-        "edit": "Edit location",
-        "delete": "Delete location"
-      },
-      "location": {
-        "title": {
-          "updatepage": "Update location"
-        }
-      },
-      "associatedevents": {
-        "title": "Associated events"
-      },
-      "events": {
-        "title": "Title"
-      },
-      "fields": {
-        "label": {
-          "actions": "Actions",
-          "viewevent": "View event"
-        }
-      },
-      "noasscoiatedevents": "No associated events"
     },
     "imports": {
       "forms": {
@@ -869,10 +875,13 @@
       "label": "Contact information at bottom of admin tool"
     },
     "suggestionsIntro": {
-      "label": "Intro on the suggestion page"
+      "label": "Suggestion page: Intro"
     },
     "suggestionsTandCInfo": {
-      "label": "Short text above the consent tick box on the suggestion page."
+      "label": "Suggestion page: T&C Intro"
+    },
+    "suggestionsMetaDesc": {
+      "label": "Suggestion page: SEO meta description."
     },
     "centerOfGravity": {
       "label": "Center of map (geo referencing)"

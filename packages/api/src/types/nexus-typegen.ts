@@ -78,6 +78,7 @@ export interface NexusGenInputs {
     isFree: boolean; // Boolean!
     isImported: boolean; // Boolean!
     locations?: NexusGenScalars['JSON'] | null; // JSON
+    metaDesc?: NexusGenScalars['JSON'] | null; // JSON
     organiser: string; // String!
     owner: NexusGenScalars['JSON']; // JSON!
     primaryTerms?: NexusGenScalars['JSON'] | null; // JSON
@@ -114,6 +115,7 @@ export interface NexusGenInputs {
     images?: NexusGenScalars['JSON'] | null; // JSON
     lat?: number | null; // Float
     lng?: number | null; // Float
+    metaDesc?: NexusGenScalars['JSON'] | null; // JSON
     offers?: NexusGenScalars['JSON'] | null; // JSON
     owner: NexusGenScalars['JSON']; // JSON!
     primaryTerms?: NexusGenScalars['JSON'] | null; // JSON
@@ -127,6 +129,7 @@ export interface NexusGenInputs {
     content: NexusGenScalars['JSON']; // JSON!
     heroImage?: NexusGenScalars['JSON'] | null; // JSON
     intro: NexusGenScalars['JSON']; // JSON!
+    metaDesc?: NexusGenScalars['JSON'] | null; // JSON
     owner: NexusGenScalars['JSON']; // JSON!
     slug: NexusGenScalars['JSON']; // JSON!
     status: number; // Int!
@@ -162,6 +165,7 @@ export interface NexusGenInputs {
     description: NexusGenScalars['JSON']; // JSON!
     images?: NexusGenScalars['JSON'] | null; // JSON
     locationId: number; // Int!
+    metaDesc?: NexusGenScalars['JSON'] | null; // JSON
     teaser: NexusGenScalars['JSON']; // JSON!
     title: NexusGenScalars['JSON']; // JSON!
     tourId: number; // Int!
@@ -175,6 +179,7 @@ export interface NexusGenInputs {
     heroImage?: NexusGenScalars['JSON'] | null; // JSON
     images?: NexusGenScalars['JSON'] | null; // JSON
     locationId: number; // Int!
+    metaDesc?: NexusGenScalars['JSON'] | null; // JSON
     teaser: NexusGenScalars['JSON']; // JSON!
     title: NexusGenScalars['JSON']; // JSON!
     tourId?: number | null; // Int
@@ -184,6 +189,7 @@ export interface NexusGenInputs {
     distance: NexusGenScalars['JSON']; // JSON!
     duration: NexusGenScalars['JSON']; // JSON!
     heroImage?: NexusGenScalars['JSON'] | null; // JSON
+    metaDesc?: NexusGenScalars['JSON'] | null; // JSON
     orderNumber: number; // Int!
     owner: NexusGenScalars['JSON']; // JSON!
     path: NexusGenScalars['JSON']; // JSON!
@@ -636,6 +642,7 @@ export interface NexusGenFieldTypes {
     lastEventDate: NexusGenScalars['DateTime'] | null; // DateTime
     locations: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
     meta: NexusGenScalars['JSON'] | null; // JSON
+    metaDesc: NexusGenScalars['JSON'] | null; // JSON
     organiser: string | null; // String
     ownerId: number; // Int!
     primaryTerms: Array<NexusGenRootTypes['Term'] | null> | null; // [Term]
@@ -728,6 +735,7 @@ export interface NexusGenFieldTypes {
     lat: number | null; // Float
     lng: number | null; // Float
     meta: NexusGenScalars['JSON'] | null; // JSON
+    metaDesc: NexusGenScalars['JSON'] | null; // JSON
     offers: NexusGenScalars['JSON'] | null; // JSON
     ownerId: number; // Int!
     primaryTerms: Array<NexusGenRootTypes['Term'] | null> | null; // [Term]
@@ -810,6 +818,7 @@ export interface NexusGenFieldTypes {
     heroImage: NexusGenRootTypes['Image'] | null; // Image
     id: number; // Int!
     intro: NexusGenScalars['JSON'] | null; // JSON
+    metaDesc: NexusGenScalars['JSON'] | null; // JSON
     ownerId: number; // Int!
     slug: NexusGenScalars['JSON'] | null; // JSON
     status: number; // Int!
@@ -931,6 +940,7 @@ export interface NexusGenFieldTypes {
     duration: NexusGenScalars['JSON'] | null; // JSON
     heroImage: NexusGenRootTypes['Image'] | null; // Image
     id: number; // Int!
+    metaDesc: NexusGenScalars['JSON'] | null; // JSON
     modules: Array<NexusGenRootTypes['Module'] | null> | null; // [Module]
     orderNumber: number | null; // Int
     ownerId: number; // Int!
@@ -955,6 +965,7 @@ export interface NexusGenFieldTypes {
     images: Array<NexusGenRootTypes['Image'] | null> | null; // [Image]
     location: NexusGenRootTypes['Location'] | null; // Location
     locationId: number | null; // Int
+    metaDesc: NexusGenScalars['JSON'] | null; // JSON
     number: number | null; // Int
     teaser: NexusGenScalars['JSON'] | null; // JSON
     title: NexusGenScalars['JSON'] | null; // JSON
@@ -1069,6 +1080,7 @@ export interface NexusGenFieldTypeNames {
     lastEventDate: 'DateTime'
     locations: 'Location'
     meta: 'JSON'
+    metaDesc: 'JSON'
     organiser: 'String'
     ownerId: 'Int'
     primaryTerms: 'Term'
@@ -1161,6 +1173,7 @@ export interface NexusGenFieldTypeNames {
     lat: 'Float'
     lng: 'Float'
     meta: 'JSON'
+    metaDesc: 'JSON'
     offers: 'JSON'
     ownerId: 'Int'
     primaryTerms: 'Term'
@@ -1243,6 +1256,7 @@ export interface NexusGenFieldTypeNames {
     heroImage: 'Image'
     id: 'Int'
     intro: 'JSON'
+    metaDesc: 'JSON'
     ownerId: 'Int'
     slug: 'JSON'
     status: 'Int'
@@ -1364,6 +1378,7 @@ export interface NexusGenFieldTypeNames {
     duration: 'JSON'
     heroImage: 'Image'
     id: 'Int'
+    metaDesc: 'JSON'
     modules: 'Module'
     orderNumber: 'Int'
     ownerId: 'Int'
@@ -1388,6 +1403,7 @@ export interface NexusGenFieldTypeNames {
     images: 'Image'
     location: 'Location'
     locationId: 'Int'
+    metaDesc: 'JSON'
     number: 'Int'
     teaser: 'JSON'
     title: 'JSON'

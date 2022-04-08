@@ -1,4 +1,4 @@
-import { Box, Divider, Alert, AlertIcon } from "@chakra-ui/react";
+import { Box, Divider, Alert, AlertIcon, chakra } from "@chakra-ui/react";
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import {
@@ -31,7 +31,6 @@ export const PageForm = ({
 
   let updateActions;
 
-  
   if (action === "update") {
     if (data?.adminUsers) {
       updateActions = (
@@ -49,15 +48,11 @@ export const PageForm = ({
               <FieldSelect
                 name="ownerId"
                 id="ownerId"
-                label={t(
-                  "module.forms.field.label.author",
-                  "Author"
-                )}
+                label={t("module.forms.field.label.author", "Author")}
                 isDisabled={
                   !(
                     appUser &&
-                    (appUser.has("editor") ||
-                      data.page.ownerId === appUser.id)
+                    (appUser.has("editor") || data.page.ownerId === appUser.id)
                   )
                 }
                 isRequired={true}
@@ -91,9 +86,9 @@ export const PageForm = ({
             connectWith={{
               heroImagePages: {
                 connect: {
-                  id: data?.page?.id,            
-                }
-              }
+                  id: data?.page?.id,
+                },
+              },
             }}
           />
         </>
@@ -106,13 +101,17 @@ export const PageForm = ({
   }
   return (
     <Box w="100%">
-      {action === "create" && <>
-      
-      <Alert borderRadius="lg">
-      <AlertIcon />
-  {t("form.info.pleasesafedraft", "Please save a draft to unlock further functionality")}
-      </Alert>
-    </>}
+      {action === "create" && (
+        <>
+          <Alert borderRadius="lg">
+            <AlertIcon />
+            {t(
+              "form.info.pleasesafedraft",
+              "Please save a draft to unlock further functionality"
+            )}
+          </Alert>
+        </>
+      )}
 
       <FieldMultiLangInput
         name="title"
@@ -176,6 +175,37 @@ export const PageForm = ({
           ),
         }}
       />
+
+      <Divider mt="10" />
+
+      <chakra.fieldset
+        border="1px solid"
+        borderColor="gray.400"
+        p="4"
+        borderRadius="md"
+        w="100%"
+      >
+        <legend>
+          <chakra.span px="2">
+            {t("module.locations.forms.fieldSet.label.seo", "SEO")}
+          </chakra.span>
+        </legend>
+        <FieldMultiLangTextEditor
+          name="metaDesc"
+          id="metaDesc"
+          type="basic"
+          label={t(
+            "module.locations.forms.location.field.label.metaDesc",
+            "Meta Description"
+          )}
+          isRequired={false}
+          settings={{
+            defaultRequired: false,
+            defaultValues: data?.page?.metaDesc,
+            maxLength: 350,
+          }}
+        />
+      </chakra.fieldset>
     </Box>
   );
 };

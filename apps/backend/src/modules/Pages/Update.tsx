@@ -50,6 +50,7 @@ export const pageAndContentAuthorsQueryGQL = gql`
       slug
       intro
       content
+      metaDesc
       status
       ownerId
 

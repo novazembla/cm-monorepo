@@ -74,12 +74,12 @@ const Setting = ({
 
   return (
     <Stat mb="4">
-      <StatLabel fontSize="md">
+      <StatLabel fontSize="lg" fontWeight="bold">
         {settingsFieldDefinitions[setting]?.label
           ? t(`${settingsFieldDefinitions[setting]?.label}`)
           : t("settings.error.label")}
       </StatLabel>
-      <StatNumber mt="-1">{print}</StatNumber>
+      <StatNumber mt="-1" fontSize="md" fontWeight="normal">{print}</StatNumber>
     </Stat>
   );
 };

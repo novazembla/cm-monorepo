@@ -66,6 +66,11 @@ export const Tour = objectType({
         daoSharedMapTranslatedColumnsInRowToJson(p, "description"),
     });
 
+    t.json("metaDesc", {
+      resolve: (...[p]) =>
+        daoSharedMapTranslatedColumnsInRowToJson(p, "metaDesc"),
+    });
+
     t.json("duration", {
       resolve: (...[p]) =>
         daoSharedMapTranslatedColumnsInRowToJson(p, "duration"),
@@ -561,6 +566,7 @@ export const TourUpsertInput = inputObjectType({
     t.nonNull.json("teaser");
     t.nonNull.json("description");
     t.nonNull.json("path");
+    t.json("metaDesc");
     t.json("heroImage");
     t.nonNull.json("owner");
     t.nonNull.int("status");

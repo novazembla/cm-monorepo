@@ -59,6 +59,7 @@ export const tourAndContentAuthorsQueryGQL = gql`
       duration
       teaser
       description
+      metaDesc
       ownerId
       status
       path

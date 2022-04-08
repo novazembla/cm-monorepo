@@ -25,6 +25,7 @@ export const daoTourFullTextKeys = [
   "distance",
   "teaser",
   "description",
+  "metaDesc",
 ];
 
 export const daoTourTranslatedColumns = [
@@ -34,6 +35,7 @@ export const daoTourTranslatedColumns = [
   "distance",
   "teaser",
   "description",
+  "metaDesc",
 ];
 
 export const daoTourCheckSlugUnique = async (

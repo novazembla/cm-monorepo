@@ -120,6 +120,7 @@ type Event {
   lastEventDate: DateTime
   locations: [Location]
   meta: JSON
+  metaDesc: JSON
   organiser: String
   ownerId: Int!
   primaryTerms: [Term]
@@ -153,6 +154,7 @@ input EventUpsertInput {
   isFree: Boolean!
   isImported: Boolean!
   locations: JSON
+  metaDesc: JSON
   organiser: String!
   owner: JSON!
   primaryTerms: JSON
@@ -257,6 +259,7 @@ type Location {
   lat: Float
   lng: Float
   meta: JSON
+  metaDesc: JSON
   offers: JSON
   ownerId: Int!
   primaryTerms: [Term]
@@ -308,6 +311,7 @@ input LocationUpsertInput {
   images: JSON
   lat: Float
   lng: Float
+  metaDesc: JSON
   offers: JSON
   owner: JSON!
   primaryTerms: JSON
@@ -381,6 +385,7 @@ type Page {
   heroImage: Image
   id: Int!
   intro: JSON
+  metaDesc: JSON
   ownerId: Int!
   slug: JSON
   status: Int!
@@ -398,6 +403,7 @@ input PageUpsertInput {
   content: JSON!
   heroImage: JSON
   intro: JSON!
+  metaDesc: JSON
   owner: JSON!
   slug: JSON!
   status: Int!
@@ -556,6 +562,7 @@ type Tour {
   duration: JSON
   heroImage: Image
   id: Int!
+  metaDesc: JSON
   modules: [Module]
   orderNumber: Int
   ownerId: Int!
@@ -583,6 +590,7 @@ type TourStop {
   images: [Image]
   location: Location
   locationId: Int
+  metaDesc: JSON
   number: Int
   teaser: JSON
   title: JSON
@@ -595,6 +603,7 @@ input TourStopCreateInput {
   description: JSON!
   images: JSON
   locationId: Int!
+  metaDesc: JSON
   teaser: JSON!
   title: JSON!
   tourId: Int!
@@ -616,6 +625,7 @@ input TourStopUpdateInput {
   heroImage: JSON
   images: JSON
   locationId: Int!
+  metaDesc: JSON
   teaser: JSON!
   title: JSON!
   tourId: Int
@@ -626,6 +636,7 @@ input TourUpsertInput {
   distance: JSON!
   duration: JSON!
   heroImage: JSON
+  metaDesc: JSON
   orderNumber: Int!
   owner: JSON!
   path: JSON!

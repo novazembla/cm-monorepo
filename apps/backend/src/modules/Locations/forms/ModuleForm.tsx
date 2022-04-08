@@ -730,6 +730,38 @@ export const ModuleForm = ({
           </FieldRow>
         )}
       </chakra.fieldset>
+      <Divider mt="10" />
+      <chakra.fieldset
+        border="1px solid"
+        borderColor="gray.400"
+        p="4"
+        borderRadius="md"
+        w="100%"
+      >
+        <legend>
+          <chakra.span px="2">
+            {t(
+              "module.locations.forms.fieldSet.label.seo",
+              "SEO"
+            )}
+          </chakra.span>
+        </legend>
+        <FieldMultiLangTextEditor
+          name="metaDesc"
+          id="metaDesc"
+          type="basic"
+          label={t(
+            "module.locations.forms.location.field.label.metaDesc",
+            "Meta Description"
+          )}
+          isRequired={false}
+          settings={{
+            defaultRequired: false,
+            defaultValues: data?.location?.metaDesc,
+            maxLength: 350,
+          }}
+        />
+      </chakra.fieldset>
     </>
   );
 };

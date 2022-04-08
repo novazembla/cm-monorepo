@@ -73,7 +73,10 @@ model Location {
   geoCodingInfo            Json? @default("{}")
   socialMedia              Json? @default("{}")
   meta              Json? @default("{}")
-
+  
+  metaDesc_en  String @default("")
+  metaDesc_de  String @default("")
+  
   visibleFrom     DateTime?
   visibleFromTime DateTime?
 
@@ -118,15 +121,19 @@ model Event {
   title_de        String @default("")
   slug_de         String @default("")
   description_de  String @default("")
+  metaDesc_de  String @default("")
 
   title_en        String @default("")
   slug_en         String @default("")
   description_en  String @default("")
+  metaDesc_en  String @default("")
+
   address         String @default("")
   organiser       String @default("")
 
   meta        Json? @default("{}")
 
+  
   isFree     Boolean    @default(false)
   isImported Boolean    @default(false)
   locations  Location[]
@@ -265,6 +272,7 @@ model Tour {
   distance_de    String @default("") 
   teaser_de      String @default("") 
   description_de String @default("") 
+  metaDesc_de  String @default("")
 
   title_en       String @default("") 
   slug_en        String @default("") 
@@ -272,7 +280,8 @@ model Tour {
   distance_en    String @default("") 
   teaser_en      String @default("") 
   description_en String @default("") 
-
+  metaDesc_en  String @default("")
+  
   path        Json
 
   heroImageId Int?
@@ -299,11 +308,13 @@ model TourStop {
   title_de       String @default("") 
   teaser_de        String @default("") 
   description_de String @default("") 
+  metaDesc_de  String @default("")
 
   title_en       String @default("") 
   teaser_en        String @default("") 
   description_en String @default("") 
-
+  metaDesc_en  String @default("")
+  
 
   number Int? @default(1)
   images Image[]
@@ -337,11 +348,13 @@ model Page {
   slug_de        String @default("") 
   intro_de    String @default("") 
   content_de    String @default("") 
+  metaDesc_de  String @default("")
   
   title_en       String @default("") 
   slug_en        String @default("") 
   intro_en    String @default("") 
   content_en    String @default("") 
+  metaDesc_en  String @default("")
   
   heroImageId Int?
   heroImage   Image? @relation(fields: [heroImageId], references: [id], name: "pageHeroImage", onDelete: Cascade)
@@ -357,8 +370,6 @@ model Page {
 
   @@index([ownerId], name: "indexPageOwnerId")
 }
-
-
 
 // TODO: add a retry mechanism
 model Image {

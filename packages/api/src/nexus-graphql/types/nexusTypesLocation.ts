@@ -57,6 +57,12 @@ export const Location = objectType({
       resolve: (...[p]) =>
         daoSharedMapTranslatedColumnsInRowToJson(p, "description"),
     });
+
+    t.json("metaDesc", {
+      resolve: (...[p]) =>
+        daoSharedMapTranslatedColumnsInRowToJson(p, "metaDesc"),
+    });
+
     t.json("offers", {
       resolve: (...[p]) =>
         daoSharedMapTranslatedColumnsInRowToJson(p, "offers"),
@@ -499,6 +505,7 @@ export const LocationUpsertInput = inputObjectType({
     t.nonNull.json("title");
     t.nonNull.json("slug");
     t.nonNull.int("status");
+    t.json("metaDesc");
     t.json("description");
     t.json("address");
     t.json("geoCodingInfo");

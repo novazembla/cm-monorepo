@@ -16,9 +16,19 @@ import {
 const prisma = getPrismaClient();
 const apiConfig = getApiConfig();
 
-export const daoEventFullTextKeys = ["title", "slug", "description"];
+export const daoEventFullTextKeys = [
+  "title",
+  "slug",
+  "description",
+  "metaDesc",
+];
 
-export const daoEventTranslatedColumns = ["title", "slug", "description"];
+export const daoEventTranslatedColumns = [
+  "title",
+  "slug",
+  "description",
+  "metaDesc",
+];
 
 export const daoEventCheckSlugUnique = async (
   slug: Record<string, string>,

@@ -156,6 +156,18 @@ const Update = () => {
             ),
           };
 
+        if (setting.key === "metaDesc" && setting?.value?.json)
+          return {
+            ...acc,
+            ...Object.keys(setting?.value?.json).reduce(
+              (accMs, lang) => ({
+                ...accMs,
+                [`metaDesc_${lang}`]: setting.value.json[lang],
+              }),
+              {}
+            ),
+          };
+
         if (setting.key === "missionStatementPage" && setting?.value?.json)
           return {
             ...acc,
@@ -185,6 +197,11 @@ const Update = () => {
             key: "missionStatement",
             scope: "homepage",
             value: multiLangNewData?.missionStatement ?? {},
+          },
+          {
+            key: "metaDesc",
+            scope: "homepage",
+            value: multiLangNewData?.metaDesc ?? {},
           },
           {
             key: "missionStatementPage",
@@ -536,6 +553,37 @@ const Update = () => {
                   }}
                 />
               </FieldRow>
+
+              <Divider mt="10" />
+
+              <chakra.fieldset
+                border="1px solid"
+                borderColor="gray.400"
+                p="4"
+                borderRadius="md"
+                w="100%"
+              >
+                <legend>
+                  <chakra.span px="2">
+                    {t("module.locations.forms.fieldSet.label.seo", "SEO")}
+                  </chakra.span>
+                </legend>
+                <FieldMultiLangTextEditor
+                  name="metaDesc"
+                  id="metaDesc"
+                  type="basic"
+                  label={t(
+                    "module.locations.forms.location.field.label.metaDesc",
+                    "Meta Description"
+                  )}
+                  isRequired={false}
+                  settings={{
+                    defaultRequired: false,
+                    defaultValues: getJsonValue(data?.settings, "metaDesc"),
+                    maxLength: 350,
+                  }}
+                />
+              </chakra.fieldset>
             </ModulePage>
           </fieldset>
         </form>

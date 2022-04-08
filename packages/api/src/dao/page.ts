@@ -27,9 +27,21 @@ export const daoPageCheckSlugUnique = async (
   );
 };
 
-export const daoPageFullTextKeys = ["title", "slug", "intro", "content"];
+export const daoPageFullTextKeys = [
+  "title",
+  "slug",
+  "intro",
+  "content",
+  "metaDesc",
+];
 
-export const daoPageTranslatedColumns = ["title", "slug", "intro", "content"];
+export const daoPageTranslatedColumns = [
+  "title",
+  "slug",
+  "intro",
+  "content",
+  "metaDesc",
+];
 
 export const daoPageQuery = async (
   where: Prisma.PageWhereInput,

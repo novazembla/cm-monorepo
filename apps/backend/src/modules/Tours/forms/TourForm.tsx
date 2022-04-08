@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 
-import { Divider, Alert, AlertIcon } from "@chakra-ui/react";
+import { Divider, Alert, AlertIcon, chakra } from "@chakra-ui/react";
 import {
   FieldMultiLangInput,
   FieldSelect,
@@ -43,11 +43,7 @@ export const TourForm = ({
           </Alert>
         </>
       )}
-      <FieldHidden 
-        id="path"
-        name="path"
-        defaultValue="{}"
-      />
+      <FieldHidden id="path" name="path" defaultValue="{}" />
       <FieldMultiLangInput
         name="title"
         id="title"
@@ -77,19 +73,19 @@ export const TourForm = ({
         }}
       />
       <FieldRow>
-      <FieldInput
-              id="orderNumber"
-              type="text"
-              name="orderNumber"
-              label={t(
-                "module.tours.forms.field.label.orderNumber",
-                "Order number"
-              )}
-              isRequired={yupIsFieldRequired("orderNumber", validationSchema)}
-              settings={{
-                placeholder: "1",
-              }}
-            />
+        <FieldInput
+          id="orderNumber"
+          type="text"
+          name="orderNumber"
+          label={t(
+            "module.tours.forms.field.label.orderNumber",
+            "Order number"
+          )}
+          isRequired={yupIsFieldRequired("orderNumber", validationSchema)}
+          settings={{
+            placeholder: "1",
+          }}
+        />
       </FieldRow>
       {action === "update" && (
         <>
@@ -106,15 +102,11 @@ export const TourForm = ({
               <FieldSelect
                 name="ownerId"
                 id="ownerId"
-                label={t(
-                  "module.forms.field.label.author",
-                  "Author"
-                )}
+                label={t("module.forms.field.label.author", "Author")}
                 isDisabled={
                   !(
                     appUser &&
-                    (appUser.has("editor") ||
-                      data.ownerId === appUser.id)
+                    (appUser.has("editor") || data.ownerId === appUser.id)
                   )
                 }
                 isRequired={true}
@@ -223,6 +215,36 @@ export const TourForm = ({
           ),
         }}
       />
+      <Divider mt="10" />
+
+      <chakra.fieldset
+        border="1px solid"
+        borderColor="gray.400"
+        p="4"
+        borderRadius="md"
+        w="100%"
+      >
+        <legend>
+          <chakra.span px="2">
+            {t("module.locations.forms.fieldSet.label.seo", "SEO")}
+          </chakra.span>
+        </legend>
+        <FieldMultiLangTextEditor
+          name="metaDesc"
+          id="metaDesc"
+          type="basic"
+          label={t(
+            "module.locations.forms.location.field.label.metaDesc",
+            "Meta Description"
+          )}
+          isRequired={false}
+          settings={{
+            defaultRequired: false,
+            defaultValues: data?.tour?.metaDesc,
+            maxLength: 350,
+          }}
+        />
+      </chakra.fieldset>
     </>
   );
 };

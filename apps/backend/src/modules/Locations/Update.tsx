@@ -72,6 +72,7 @@ export const locationAndContentAuthorsQueryGQL = gql`
       title
       slug
       description
+      metaDesc
       address
       contactInfo
       accessibilityInformation

@@ -14,6 +14,7 @@ import {
   Flex,
   Alert,
   AlertIcon,
+  chakra,
 } from "@chakra-ui/react";
 import { useFormContext, useFieldArray, Controller } from "react-hook-form";
 import { DateSingleInput } from "@datepicker-react/styled";
@@ -308,7 +309,7 @@ export const ModuleForm = ({
             name="address"
             label={t("module.events.forms.field.address", "Address")}
             settings={{
-              defaultValue: data?.event?.address
+              defaultValue: data?.event?.address,
             }}
           />
         </FieldRow>
@@ -319,11 +320,42 @@ export const ModuleForm = ({
             name="organiser"
             label={t("module.events.forms.field.organiser", "Organiser")}
             settings={{
-              defaultValue: data?.event?.organiser
+              defaultValue: data?.event?.organiser,
             }}
           />
         </FieldRow>
       </TwoColFieldRow>
+
+      <Divider mt="10" />
+
+      <chakra.fieldset
+        border="1px solid"
+        borderColor="gray.400"
+        p="4"
+        borderRadius="md"
+        w="100%"
+      >
+        <legend>
+          <chakra.span px="2">
+            {t("module.locations.forms.fieldSet.label.seo", "SEO")}
+          </chakra.span>
+        </legend>
+        <FieldMultiLangTextEditor
+          name="metaDesc"
+          id="metaDesc"
+          type="basic"
+          label={t(
+            "module.locations.forms.location.field.label.metaDesc",
+            "Meta Description"
+          )}
+          isRequired={false}
+          settings={{
+            defaultRequired: false,
+            defaultValues: data?.event?.metaDesc,
+            maxLength: 350,
+          }}
+        />
+      </chakra.fieldset>
       <Divider mt="10" />
 
       <Box>

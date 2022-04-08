@@ -378,6 +378,162 @@
         }
       }
     },
+    "locations": {
+      "forms": {
+        "fieldSet": {
+          "label": {
+            "seo": "SEO"
+          }
+        },
+        "location": {
+          "field": {
+            "label": {
+              "metaDesc": "Meta Beschreibung",
+              "title": "Titel",
+              "slug": "Slug",
+              "description": "Beschreibung",
+              "offers": "Angebote",
+              "accessibilityInformation": "Informationen zur Barrierefreiheit"
+            },
+            "placeholder": {
+              "csvfile": "CSV Datei hochladen",
+              "title": "Titel des Kartenpunktes",
+              "slug": "Slug / URL Zusatz",
+              "description": "Beschreibung des Kartenpunktes",
+              "offers": "Angebote des Kartenpunktes",
+              "accessibilityInformation": "Informationen zur Barrierefreiheit"
+            }
+          },
+          "geoloaction": "Lage des Kartenpunkts auf der Karte"
+        },
+        "import": {
+          "errors": "Fehlermeldungen",
+          "log": "Log",
+          "field": {
+            "label": {
+              "title": "Titel",
+              "csv": "CSV Datei"
+            },
+            "placeholder": {
+              "title": "Importiere den Titel"
+            }
+          },
+          "select": "Zielspalte auswählen",
+          "nofile": "Dieses ist der Importbericht eines dateilosen automatisierten Importes",
+          "mapping": {
+            "title": "Zuordnung von CSV-Spalte(n) zu Datenbankspalten",
+            "columCSV": "Kopfzeile in CSV",
+            "firstRow": "Beispiel (1. Zeile in CSV)",
+            "columnInDb": "Spalte in DB"
+          },
+          "warnings": "Warnungen"
+        },
+        "field": {
+          "label": {
+            "address": "Adresse",
+            "street1": "Straße (1)",
+            "houseNumber": "Hausnummer",
+            "street2": "Straße (2)",
+            "co": "C/O",
+            "postCode": "Postleitzahl",
+            "city": "Stadt",
+            "contactInformation": "Kontaktinformation",
+            "email1": "Email Adresse (1)",
+            "email2": "Email Adresse (2)",
+            "phone1": "Telefonnummer (1)",
+            "phone2": "Telefonnummer (2)",
+            "socialMedia": "Website/Social Media",
+            "website": "Website",
+            "facebook": "Facebook",
+            "instagram": "Instagram",
+            "twitter": "Twitter",
+            "youtube": "YouTube",
+            "additionalInformation": "Zusätzliche Informationen",
+            "agency": "Träger",
+            "eventLocationId": "ID des korrespondierenden Veranstaltungsortes auf berlin.de"
+          }
+        }
+      },
+      "menuitem": {
+        "dataExports": "Export",
+        "imports": "Importe",
+        "createimport": "Neuen Import hinzufügen",
+        "exports": "Exporte",
+        "createlocation": "Neuen Kartenpunkt hinzufügen"
+      },
+      "exports": {
+        "button": {
+          "view": "Import ansehen"
+        }
+      },
+      "import": {
+        "button": {
+          "delete": "Import löschen",
+          "create": "Neuer Import",
+          "edit": "Import bearbeiten"
+        }
+      },
+      "breadcrumb": {
+        "exportdetail": "Exportdetail"
+      },
+      "export": {
+        "exportIsProcessing": "Ihr Export wird auf dem Server bearbeited.",
+        "exportProcessed": "Ihr Export wurde vollständig durchgeführt.",
+        "field": {
+          "label": {
+            "exportName": "Exportname"
+          },
+          "placeholder": {
+            "title": "Kurzer Titel um den Export in der Exportliste wiedererkennen zu können"
+          }
+        },
+        "create": {
+          "label": "Exportieren"
+        },
+        "introduction": "Exportiere alle {{num}} Einträge als .xlsx Datei",
+        "button": {
+          "label": {
+            "scheduleExport": "Export durchführen"
+          }
+        }
+      },
+      "imports": {
+        "title": "Imports",
+        "menu": {
+          "title": "Importe"
+        },
+        "updatepage": {
+          "title": "Import bearbeiten"
+        },
+        "requiredMissing": "Die folgenden erforderlichen Spalten sind nicht zugewiesen: ",
+        "assignColumnsToTriggerImport": "Um den Import planen zu können, müssen Sie alle (erforderlichen) Spalten zuweisen",
+        "importIsProcessing": "Ihr Import wird auf dem Server verarbeitet."
+      },
+      "title": "Kartenpunkte",
+      "button": {
+        "create": "Kartenpunkt hinzufügen",
+        "edit": "Kartenpunkt bearbeiten",
+        "delete": "Kartenpunkt löschen"
+      },
+      "location": {
+        "title": {
+          "updatepage": "Kartenpunkt aktualisieren"
+        }
+      },
+      "associatedevents": {
+        "title": "Zugehörige Veranstaltungen"
+      },
+      "events": {
+        "title": "Titel"
+      },
+      "fields": {
+        "label": {
+          "actions": "Aktionen",
+          "viewevent": "Veranstaltung ansehen"
+        }
+      },
+      "noasscoiatedevents": "Keine zugehörigen Veranstaltungen"
+    },
     "events": {
       "title": "Veranstaltungen",
       "menuitem": {
@@ -450,156 +606,6 @@
           "updatepage": "Veranstaltung aktualisieren"
         }
       }
-    },
-    "locations": {
-      "menuitem": {
-        "dataExports": "Export",
-        "imports": "Importe",
-        "createimport": "Neuen Import hinzufügen",
-        "exports": "Exporte",
-        "createlocation": "Neuen Kartenpunkt hinzufügen"
-      },
-      "exports": {
-        "button": {
-          "view": "Import ansehen"
-        }
-      },
-      "import": {
-        "button": {
-          "delete": "Import löschen",
-          "create": "Neuer Import",
-          "edit": "Import bearbeiten"
-        }
-      },
-      "breadcrumb": {
-        "exportdetail": "Exportdetail"
-      },
-      "export": {
-        "exportIsProcessing": "Ihr Export wird auf dem Server bearbeited.",
-        "exportProcessed": "Ihr Export wurde vollständig durchgeführt.",
-        "field": {
-          "label": {
-            "exportName": "Exportname"
-          },
-          "placeholder": {
-            "title": "Kurzer Titel um den Export in der Exportliste wiedererkennen zu können"
-          }
-        },
-        "create": {
-          "label": "Exportieren"
-        },
-        "introduction": "Exportiere alle {{num}} Einträge als .xlsx Datei",
-        "button": {
-          "label": {
-            "scheduleExport": "Export durchführen"
-          }
-        }
-      },
-      "forms": {
-        "import": {
-          "errors": "Fehlermeldungen",
-          "log": "Log",
-          "field": {
-            "label": {
-              "title": "Titel",
-              "csv": "CSV Datei"
-            },
-            "placeholder": {
-              "title": "Importiere den Titel"
-            }
-          },
-          "select": "Zielspalte auswählen",
-          "nofile": "Dieses ist der Importbericht eines dateilosen automatisierten Importes",
-          "mapping": {
-            "title": "Zuordnung von CSV-Spalte(n) zu Datenbankspalten",
-            "columCSV": "Kopfzeile in CSV",
-            "firstRow": "Beispiel (1. Zeile in CSV)",
-            "columnInDb": "Spalte in DB"
-          },
-          "warnings": "Warnungen"
-        },
-        "location": {
-          "field": {
-            "placeholder": {
-              "csvfile": "CSV Datei hochladen",
-              "title": "Titel des Kartenpunktes",
-              "slug": "Slug / URL Zusatz",
-              "description": "Beschreibung des Kartenpunktes",
-              "offers": "Angebote des Kartenpunktes",
-              "accessibilityInformation": "Informationen zur Barrierefreiheit"
-            },
-            "label": {
-              "title": "Titel",
-              "slug": "Slug",
-              "description": "Beschreibung",
-              "offers": "Angebote",
-              "accessibilityInformation": "Informationen zur Barrierefreiheit"
-            }
-          },
-          "geoloaction": "Lage des Kartenpunkts auf der Karte"
-        },
-        "field": {
-          "label": {
-            "address": "Adresse",
-            "street1": "Straße (1)",
-            "houseNumber": "Hausnummer",
-            "street2": "Straße (2)",
-            "co": "C/O",
-            "postCode": "Postleitzahl",
-            "city": "Stadt",
-            "contactInformation": "Kontaktinformation",
-            "email1": "Email Adresse (1)",
-            "email2": "Email Adresse (2)",
-            "phone1": "Telefonnummer (1)",
-            "phone2": "Telefonnummer (2)",
-            "socialMedia": "Website/Social Media",
-            "website": "Website",
-            "facebook": "Facebook",
-            "instagram": "Instagram",
-            "twitter": "Twitter",
-            "youtube": "YouTube",
-            "additionalInformation": "Zusätzliche Informationen",
-            "agency": "Träger",
-            "eventLocationId": "ID des korrespondierenden Veranstaltungsortes auf berlin.de"
-          }
-        }
-      },
-      "imports": {
-        "title": "Imports",
-        "menu": {
-          "title": "Importe"
-        },
-        "updatepage": {
-          "title": "Import bearbeiten"
-        },
-        "requiredMissing": "Die folgenden erforderlichen Spalten sind nicht zugewiesen: ",
-        "assignColumnsToTriggerImport": "Um den Import planen zu können, müssen Sie alle (erforderlichen) Spalten zuweisen",
-        "importIsProcessing": "Ihr Import wird auf dem Server verarbeitet."
-      },
-      "title": "Kartenpunkte",
-      "button": {
-        "create": "Kartenpunkt hinzufügen",
-        "edit": "Kartenpunkt bearbeiten",
-        "delete": "Kartenpunkt löschen"
-      },
-      "location": {
-        "title": {
-          "updatepage": "Kartenpunkt aktualisieren"
-        }
-      },
-      "associatedevents": {
-        "title": "Zugehörige Veranstaltungen"
-      },
-      "events": {
-        "title": "Titel"
-      },
-      "fields": {
-        "label": {
-          "actions": "Aktionen",
-          "viewevent": "Veranstaltung ansehen"
-        }
-      },
-      "noasscoiatedevents": "Keine zugehörigen Veranstaltungen"
     },
     "imports": {
       "forms": {
@@ -872,7 +878,10 @@
       "label": "Kartenpunktvorschlag: Einleitung"
     },
     "suggestionsTandCInfo": {
-      "label": "Kartenpunktvorschlag: Kurzer text über Einverständniserklärung"
+      "label": "Kartenpunktvorschlag: Kurzer Text über Einverständniserklärung"
+    },
+    "suggestionsMetaDesc": {
+      "label": "Kartenpunktvorschlag: SEO Meta Beschreibung"
     },
     "centerOfGravity": {
       "label": "Kartenmitte (Georeferenzierung)"

@@ -54,6 +54,7 @@ export const eventAndContentAuthorsQueryGQL = gql`
       title
       slug
       description
+      metaDesc
       status
       address
       organiser
@@ -128,7 +129,7 @@ const Update = () => {
       id: parseInt(router.query.id, 10),
     },
   });
-
+  
   const [firstMutation, firstMutationResults] = useEventUpdateMutation();
   const [hasFormError, setHasFormError] = useState(false);
 

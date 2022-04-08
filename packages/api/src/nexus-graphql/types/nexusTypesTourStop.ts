@@ -55,6 +55,10 @@ export const TourStop = objectType({
       resolve: (...[p]) =>
         daoSharedMapTranslatedColumnsInRowToJson(p, "description"),
     });
+    t.json("metaDesc", {
+      resolve: (...[p]) =>
+        daoSharedMapTranslatedColumnsInRowToJson(p, "metaDesc"),
+    });
 
     t.field("heroImage", {
       type: "Image",
@@ -195,6 +199,7 @@ export const TourStopCreateInput = inputObjectType({
     t.nonNull.int("tourId");
     t.nonNull.json("teaser");
     t.nonNull.json("description");
+    t.json("metaDesc");
     t.nonNull.int("locationId");
     t.json("images");
   },
@@ -208,6 +213,7 @@ export const TourStopUpdateInput = inputObjectType({
     t.nonNull.json("teaser");
     t.nonNull.json("description");
     t.nonNull.int("locationId");
+    t.json("metaDesc");
     t.json("heroImage");
     t.json("images");
   },
@@ -261,7 +267,7 @@ export const TourStopMutations = extendType({
         };
 
         const tourStop = await daoTourStopCreate({
-          ...pick(args.data, ["title", "teaser", "description"]),
+          ...pick(args.data, ["title", "teaser", "description", "metaDesc"]),
           ...connect,
         });
 
@@ -311,6 +317,7 @@ export const TourStopMutations = extendType({
             "title",
             "teaser",
             "description",
+            "metaDesc",
             "heroImage",
             "images",
           ]),

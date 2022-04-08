@@ -18,6 +18,7 @@ export const daoLocationFullTextKeys = [
   "title",
   "slug",
   "description",
+  "metaDesc",
   "offers",
   "accessibilityInformation",
 ];
@@ -26,6 +27,7 @@ export const daoLocationTranslatedColumns = [
   "title",
   "slug",
   "description",
+  "metaDesc",
   "offers",
   "accessibilityInformation",
 ];

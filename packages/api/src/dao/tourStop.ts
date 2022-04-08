@@ -13,9 +13,19 @@ import {
 const prisma = getPrismaClient();
 const apiConfig = getApiConfig();
 
-export const daoTourStopFullTextKeys = ["title", "description", "teaser"];
+export const daoTourStopFullTextKeys = [
+  "title",
+  "description",
+  "metaDesc",
+  "teaser",
+];
 
-export const daoTourStopTranslatedColumns = ["title", "description", "teaser"];
+export const daoTourStopTranslatedColumns = [
+  "title",
+  "description",
+  "metaDesc",
+  "teaser",
+];
 
 export const daoTourStopReorder = async (
   id: number,
@@ -227,6 +237,8 @@ export const daoTourStopUpdate = async (
     data,
     daoTourStopTranslatedColumns
   );
+
+  console.log(data, dbData, daoTourStopTranslatedColumns);
 
   const tourStop: TourStop = await prisma.tourStop.update({
     data: {

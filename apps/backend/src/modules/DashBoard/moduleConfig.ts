@@ -1,2 +1,2 @@
 export const moduleRootPath = "/homepage";
-export const multiLangFields = ["missionStatement"];
+export const multiLangFields = ["missionStatement", "metaDesc"]; // xxx123

@@ -68,6 +68,11 @@ export const Event = objectType({
         daoSharedMapTranslatedColumnsInRowToJson(p, "description"),
     });
 
+    t.json("metaDesc", {
+      resolve: (...[p]) =>
+        daoSharedMapTranslatedColumnsInRowToJson(p, "metaDesc"),
+    });
+
     t.nonNull.int("ownerId");
     t.nonNull.int("status");
 
@@ -432,6 +437,7 @@ export const EventUpsertInput = inputObjectType({
     t.nonNull.string("address");
     t.nonNull.string("organiser");
     t.json("description");
+    t.json("metaDesc");
     t.nonNull.json("owner");
     t.json("terms");
     t.json("primaryTerms");

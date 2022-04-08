@@ -52,6 +52,7 @@ export const eventGQL = gql`
       slug
       status
       description
+      metaDesc
       isFree
       isImported
       meta

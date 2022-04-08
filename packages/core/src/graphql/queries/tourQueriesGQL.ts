@@ -43,6 +43,7 @@ export const tourQueryGQL = gql`
       duration
       teaser
       description
+      metaDesc
       orderNumber
       ownerId
       heroImage {
@@ -102,6 +103,7 @@ export const tourStopReadQueryGQL = gql`
       number
       teaser
       description
+      metaDesc
       locationId
       createdAt
       updatedAt

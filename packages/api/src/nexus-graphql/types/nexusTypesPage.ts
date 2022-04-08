@@ -57,6 +57,11 @@ export const Page = objectType({
         daoSharedMapTranslatedColumnsInRowToJson(p, "content"),
     });
 
+    t.json("metaDesc", {
+      resolve: (...[p]) =>
+        daoSharedMapTranslatedColumnsInRowToJson(p, "metaDesc"),
+    });
+
     t.string("fullText");
     t.nonNull.int("ownerId");
     t.nonNull.int("status");
@@ -272,6 +277,7 @@ export const PageCreateInput = inputObjectType({
     t.json("heroImage");
     t.nonNull.json("intro");
     t.nonNull.json("content");
+    t.json("metaDesc");
     t.nonNull.json("owner");
     t.nonNull.int("status");
   },
