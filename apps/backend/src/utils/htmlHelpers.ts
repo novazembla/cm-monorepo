@@ -42,7 +42,7 @@ export const isEmptyHtml = (html: string, fast?: boolean) => {
       const dom = new DOMParser().parseFromString(html ?? "", "text/html");
       return (dom?.body?.textContent ?? "").trim().length === 0;
     } else {
-      return html.replace(/(<([^>]+)>)/gi, "").trim().length === 0;
+      return (html ?? "").replace(/(<([^>]+)>)/gi, "").trim().length === 0;
     }
   } catch (err) {}
   return true;

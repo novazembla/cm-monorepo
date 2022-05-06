@@ -200,7 +200,7 @@ const registerEventCategoies = async (
     const checkTerm = async (key: string) => {
       try {
         const category = categories[key];
-        const termDE = category.DE.trim();
+        const termDE = category?.DE ? category.DE.trim() : "";
 
         if (termDE !== "") {
           let term: any = await prisma.term.findFirst({
@@ -210,7 +210,7 @@ const registerEventCategoies = async (
           });
 
           if (!term && taxonomy) {
-            let termEN = category.EN.trim();
+            let termEN = category?.EN ? category.EN.trim() : "";
             if (termEN === "") {
               termEN = termDE;
               warnings.push(
@@ -345,6 +345,7 @@ const doChores = async () => {
                 });
 
                 const locationId =
+                  event?.event_veranstaltungsort_id &&
                   event.event_veranstaltungsort_id.trim() !== ""
                     ? parseInt(event.event_veranstaltungsort_id.trim())
                     : 0;

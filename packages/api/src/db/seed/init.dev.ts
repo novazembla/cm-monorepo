@@ -112,7 +112,7 @@ const rndBetween = (min: number, max: number) =>
 //   );
 
 const slugify = (text: string) => {
-  return text
+  return (text ?? "")
     .toString()
     .toLowerCase()
     .replace(/\s+/g, "-") // Replace spaces with -
@@ -217,7 +217,6 @@ const upsertUser = async (
 };
 
 async function main() {
-  
   // eslint-disable-next-line no-console
 
   await Promise.all(
@@ -349,7 +348,8 @@ async function main() {
               key: "location",
             },
           },
-          fullText: "Angebote für angebote-fuer Target Audience target-audience",
+          fullText:
+            "Angebote für angebote-fuer Target Audience target-audience",
           terms: {
             createMany: {
               data: targetAudience.map((term) => ({
