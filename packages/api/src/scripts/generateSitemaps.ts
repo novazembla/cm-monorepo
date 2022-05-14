@@ -381,9 +381,12 @@ const doChores = async () => {
         )
         .join()}
       </sitemapindex>`;
-      
+
     console.log("Sitemap(s): writing sitemaps_index.xml");
-    fs.writeFileSync(`${folder}/sitemap_index.xml`, sitemapIndexXml);
+    fs.writeFileSync(
+      `${folder}/sitemap_index.xml`,
+      sitemapIndexXml.trim().replace(/\n/g, "")
+    );
     console.log("Sitemap(s): generated");
   } catch (err: any) {
     console.error(err);
