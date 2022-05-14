@@ -53,8 +53,7 @@ export const startApi = async () => {
         jobs: [
           {
             name: "dbHouseKeeping",
-            // TODO: make better, how to detect
-            interval: process.env.NODE_ENV === "production" ? "1m" : "1m",
+            interval: process.env.NODE_ENV === "production" ? "1m" : "10m",
           },
           {
             name: "dbConvertImages",
@@ -63,6 +62,10 @@ export const startApi = async () => {
           {
             name: "importCalendar",
             cron: "0 6 * * *",
+          },
+          {
+            name: "generateSitemaps",
+            cron: "0 10,14,18,22 * * *",
           },
           {
             name: "dbClearItems",
