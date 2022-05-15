@@ -30,7 +30,9 @@ const doChores = async () => {
   const prisma = new PrismaClient({
     datasources: {
       db: {
-        url: `${apiConfig.db.url}${apiConfig.db.url.indexOf("?") > -1 ? "&":"?"}connection_limit=1`,
+        url: `${apiConfig.db.url}${
+          apiConfig.db.url.indexOf("?") > -1 ? "&" : "?"
+        }connection_limit=1`,
       },
     },
   });

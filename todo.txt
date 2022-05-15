@@ -10,3 +10,6 @@ Pre Release
 
 Bugs
 - Wird ein Foto im kartenpunkt oder Tour gelöscht und durch ein anderes ersetzt, erscheint nach dem speichern und dem Hochladen des neuen Bildes immer noch das alte Motiv
+
+Sitemap
+- Confirm cron job does work. 

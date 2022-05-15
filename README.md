@@ -56,20 +56,12 @@ The PREVIEW_SECRET is shared between between backend and front end and needs to 
 
 
 ## Production
-You can choose to build the backend (in the folder `./apps/backend/dist` or *deploy* which means that the app will be build into `./apps/backend/build` but then moved into `./apps/backend/live` to reduce potential downtime of the server. 
-
 *Build*
 ```console
-foo@bar:~$ npm run build:backend <-- if your environment variables are stored in memory
-foo@bar:~$ npm run build:backend-read-env <-- if your environment variables should be read from the .env file on build time
+foo@bar:~$ npm run app:build:backend <-- if your environment variables are stored in memory
+foo@bar:~$ npm run app:build:backend-read-env <-- if your environment variables should be read from the .env file on build time
 ```
 
-*Deploy*
-```console
-foo@bar:~$ npm run app:backend:deploy <-- if your environment variables are stored in memory
-foo@bar:~$ npm run app:backend:deploy-read-env <-- if your environment variables should be read from the .env file on build time
-foo@bar:~$ ... restart your server (if)
-```
 
 ## Development
 ```console
@@ -116,17 +108,9 @@ JWT_RESET_PASSWORD_EXPIRATION_MINUTES=30
 JWT_VERIFY_EMAIL_EXPIRATION_DAYS=2
 ```
 ## Production
-You can choose to build the API (in the folder `./apps/api/dist` or *deploy* which means that the app will be build into `./apps/api/dist` but then moved into `./apps/api/live` to reduce potential downtime of the server. 
-
 *Build*
 ```console
-foo@bar:~$ npm run build:api
-```
-
-*Deploy*
-```console
-foo@bar:~$ npm run deploy:api
-foo@bar:~$ ... restart your server
+foo@bar:~$ npm run app:api:build
 ```
 
 ## Development

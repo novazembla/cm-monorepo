@@ -12,19 +12,16 @@ const postMessage = (msg: string) => {
 const doChores = async () => {
   try {
     const apiConfig = getApiConfig();
-    const buildFolder = process.env.NODE_ENV !== "production" ? "dist" : "live";
 
     spawn(
       "node",
-      [
-        `${apiConfig.packageBaseDir}/${buildFolder}/scripts/import.berlin.de.calendar.js`,
-      ],
+      [`${apiConfig.packageBaseDir}/dist/scripts/import.berlin.de.calendar.js`],
       {
         detached: true,
       }
     );
     postMessage(
-      `[WORKER:importCalendar]: Triggered calendar import script: ${apiConfig.packageBaseDir}/${buildFolder}/scripts/import.berlin.de.calendar.js`
+      `[WORKER:importCalendar]: Triggered calendar import script: ${apiConfig.packageBaseDir}/dist/scripts/import.berlin.de.calendar.js`
     );
   } catch (Err: any) {
     postMessage(

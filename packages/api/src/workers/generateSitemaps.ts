@@ -12,19 +12,16 @@ const postMessage = (msg: string) => {
 const doChores = async () => {
   try {
     const apiConfig = getApiConfig();
-    const buildFolder = process.env.NODE_ENV !== "production" ? "dist" : "live";
 
     spawn(
       "node",
-      [
-        `${apiConfig.packageBaseDir}/${buildFolder}/scripts/generateSitemaps.js`,
-      ],
+      [`${apiConfig.packageBaseDir}/dist/scripts/generateSitemaps.js`],
       {
         detached: true,
       }
     );
     postMessage(
-      `[WORKER:importCalendar]: Triggered sitemap generation script: ${apiConfig.packageBaseDir}/${buildFolder}/scripts/generateSitemaps.js`
+      `[WORKER:importCalendar]: Triggered sitemap generation script: ${apiConfig.packageBaseDir}/dist/scripts/generateSitemaps.js`
     );
   } catch (Err: any) {
     postMessage(
