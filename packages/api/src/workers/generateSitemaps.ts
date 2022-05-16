@@ -21,11 +21,11 @@ const doChores = async () => {
       }
     );
     postMessage(
-      `[WORKER:importCalendar]: Triggered sitemap generation script: ${apiConfig.packageBaseDir}/dist/scripts/generateSitemaps.js`
+      `[WORKER:generateSitemaps]: Triggered sitemap generation script: ${apiConfig.packageBaseDir}/dist/scripts/generateSitemaps.js`
     );
   } catch (Err: any) {
     postMessage(
-      `[WORKER:importCalendar]: Failed to run worker. ${Err.name} ${Err.message}`
+      `[WORKER:generateSitemaps]: Failed to run worker. ${Err.name} ${Err.message}`
     );
   }
 };
