@@ -42,6 +42,7 @@ export const FrontendSettings = objectType({
   name: "FrontendSettings",
   definition(t) {
     t.json("suggestionsIntro");
+    t.json("suggestionsMetaDesc");
     t.json("suggestionsTandCInfo");
     t.json("centerOfGravity");
     t.json("taxMapping");
@@ -134,6 +135,7 @@ export const SettingsQuery = extendType({
           centerOfGravity: settings?.centerOfGravity,
           taxMapping: settings?.taxMapping,
           suggestionsIntro: settings?.suggestionsIntro,
+          suggestionsMetaDesc: settings?.suggestionsMetaDesc,
           suggestionsTandCInfo: settings?.suggestionsTandCInfo,
           taxonomies: taxonomies?.length
             ? taxonomies.map((tax: any) => ({
