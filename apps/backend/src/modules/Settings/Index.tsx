@@ -36,6 +36,8 @@ const Setting = ({
 
   let print;
 
+  console.log(settingsFieldDefinitions[setting]);
+  
   if (settingsFieldDefinitions[setting]?.printComponent) {
     let props = value;
     if (typeof value !== "object") props = { value };
@@ -46,7 +48,7 @@ const Setting = ({
     );
   } else {
     if (
-      ["multilangtexteditor", "texteditor"].includes(
+      ["multilangtexteditor", "multilangtextarea", "texteditor"].includes(
         settingsFieldDefinitions[setting]?.type ?? ""
       )
     ) {
