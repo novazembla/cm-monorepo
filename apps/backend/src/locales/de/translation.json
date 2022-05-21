@@ -883,6 +883,9 @@
     "suggestionsMetaDesc": {
       "label": "Kartenpunktvorschlag: SEO Meta Beschreibung"
     },
+    "defaultMetaDesc": {
+      "label": "Meta Beschreibung für Listen (Veranstaltungen/Karte) und anderen Spezialseiten"
+    },
     "centerOfGravity": {
       "label": "Kartenmitte (Georeferenzierung)"
     }

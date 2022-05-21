@@ -32,6 +32,7 @@ export type AppSettingsDefaultFieldKeys =
   | "suggestionsIntro"
   | "suggestionsTandCInfo"
   | "suggestionsMetaDesc"
+  | "defaultMetaDesc"
   | "taxMapping"
   | "centerOfGravity";
 
@@ -126,6 +127,27 @@ export const settingFields: AppSettingsFieldDefinitions = {
           ...acc,
 
           [lang]: newData[`suggestionsMetaDesc_${lang}`],
+        }),
+        {}
+      );
+    },
+  },
+  defaultMetaDesc: {
+    defaultValue: "",
+    type: "multilangtexteditor",
+    // t("settings.defaultMetaDesc.label", "Fallback Meta Description")
+    label: "settings.defaultMetaDesc.label",
+    validationSchema: object().shape({
+      suggestionsIntro: string(),
+    }),
+    required: true,
+    getUpdateValue: (fieldDefs: AppSettingField, newData: any) => {
+      const config = getAppConfig();
+      return config.activeLanguages.reduce(
+        (acc: any, lang: any) => ({
+          ...acc,
+
+          [lang]: newData[`defaultMetaDesc_${lang}`],
         }),
         {}
       );

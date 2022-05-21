@@ -883,6 +883,9 @@
     "suggestionsMetaDesc": {
       "label": "Suggestion page: SEO meta description."
     },
+    "defaultMetaDesc": {
+      "label": "Fallback Meta Description"
+    },
     "centerOfGravity": {
       "label": "Center of map (geo referencing)"
     }
