@@ -352,8 +352,10 @@ export interface NexusGenObjects {
   }
   FrontendSettings: { // root type
     centerOfGravity?: NexusGenScalars['JSON'] | null; // JSON
+    defaultMetaDesc?: NexusGenScalars['JSON'] | null; // JSON
     mapJsonUrl?: string | null; // String
     suggestionsIntro?: NexusGenScalars['JSON'] | null; // JSON
+    suggestionsMetaDesc?: NexusGenScalars['JSON'] | null; // JSON
     suggestionsTandCInfo?: NexusGenScalars['JSON'] | null; // JSON
     taxMapping?: NexusGenScalars['JSON'] | null; // JSON
     taxonomies?: Array<NexusGenRootTypes['Taxonomy'] | null> | null; // [Taxonomy]
@@ -368,6 +370,7 @@ export interface NexusGenObjects {
   }
   Homepage: { // root type
     highlights?: NexusGenScalars['JSON'] | null; // JSON
+    metaDesc?: NexusGenScalars['JSON'] | null; // JSON
     missionStatement?: NexusGenScalars['JSON'] | null; // JSON
     missionStatementPage?: NexusGenScalars['JSON'] | null; // JSON
   }
@@ -678,8 +681,10 @@ export interface NexusGenFieldTypes {
   }
   FrontendSettings: { // field return type
     centerOfGravity: NexusGenScalars['JSON'] | null; // JSON
+    defaultMetaDesc: NexusGenScalars['JSON'] | null; // JSON
     mapJsonUrl: string | null; // String
     suggestionsIntro: NexusGenScalars['JSON'] | null; // JSON
+    suggestionsMetaDesc: NexusGenScalars['JSON'] | null; // JSON
     suggestionsTandCInfo: NexusGenScalars['JSON'] | null; // JSON
     taxMapping: NexusGenScalars['JSON'] | null; // JSON
     taxonomies: Array<NexusGenRootTypes['Taxonomy'] | null> | null; // [Taxonomy]
@@ -694,6 +699,7 @@ export interface NexusGenFieldTypes {
   }
   Homepage: { // field return type
     highlights: NexusGenScalars['JSON'] | null; // JSON
+    metaDesc: NexusGenScalars['JSON'] | null; // JSON
     missionStatement: NexusGenScalars['JSON'] | null; // JSON
     missionStatementPage: NexusGenScalars['JSON'] | null; // JSON
   }
@@ -1116,8 +1122,10 @@ export interface NexusGenFieldTypeNames {
   }
   FrontendSettings: { // field return type name
     centerOfGravity: 'JSON'
+    defaultMetaDesc: 'JSON'
     mapJsonUrl: 'String'
     suggestionsIntro: 'JSON'
+    suggestionsMetaDesc: 'JSON'
     suggestionsTandCInfo: 'JSON'
     taxMapping: 'JSON'
     taxonomies: 'Taxonomy'
@@ -1132,6 +1140,7 @@ export interface NexusGenFieldTypeNames {
   }
   Homepage: { // field return type name
     highlights: 'JSON'
+    metaDesc: 'JSON'
     missionStatement: 'JSON'
     missionStatementPage: 'JSON'
   }

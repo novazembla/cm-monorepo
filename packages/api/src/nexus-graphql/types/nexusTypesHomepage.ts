@@ -645,7 +645,7 @@ export const HomepageQuery = extendType({
 
         let metaDesc: any;
         if (settingsHomepage?.metaDesc) {
-          missionStatement = Object.keys(settingsHomepage?.metaDesc).reduce(
+          metaDesc = Object.keys(settingsHomepage?.metaDesc).reduce(
             (accMS: any, lang: any) => ({
               ...accMS,
               [lang]: htmlToText(settingsHomepage?.metaDesc[lang]),

@@ -179,8 +179,10 @@ type File {
 
 type FrontendSettings {
   centerOfGravity: JSON
+  defaultMetaDesc: JSON
   mapJsonUrl: String
   suggestionsIntro: JSON
+  suggestionsMetaDesc: JSON
   suggestionsTandCInfo: JSON
   taxMapping: JSON
   taxonomies: [Taxonomy]
@@ -198,6 +200,7 @@ type GeoPoint {
 
 type Homepage {
   highlights: JSON
+  metaDesc: JSON
   missionStatement: JSON
   missionStatementPage: JSON
 }
