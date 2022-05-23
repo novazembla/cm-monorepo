@@ -21,6 +21,7 @@ export const Homepage = objectType({
     t.json("highlights");
     t.json("missionStatementPage");
     t.json("missionStatement");
+    t.json("metaDesc");
   },
 });
 
@@ -642,10 +643,22 @@ export const HomepageQuery = extendType({
           );
         }
 
+        let metaDesc: any;
+        if (settingsHomepage?.metaDesc) {
+          missionStatement = Object.keys(settingsHomepage?.metaDesc).reduce(
+            (accMS: any, lang: any) => ({
+              ...accMS,
+              [lang]: htmlToText(settingsHomepage?.metaDesc[lang]),
+            }),
+            {}
+          );
+        }
+
         return {
           highlights,
           missionStatementPage,
           missionStatement,
+          metaDesc,
         };
       },
     });
