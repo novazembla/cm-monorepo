@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 // !!!! ALWAY REMEMBER TO CLOSE YOU DB CONNECTION !!!
 import Prisma from "@prisma/client";
 import { PublishStatus } from "@culturemap/core";
