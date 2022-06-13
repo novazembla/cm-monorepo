@@ -83,15 +83,22 @@ const doChores = async () => {
           const filename = `sitemap_pages_${currentFileIndex}.xml`;
           const fullpath = `${folder}/${filename}`;
 
-          const tree = sitemap(
-            items.map((item) => ({
+          const tree = sitemap([
+            {
+              url: `${apiConfig.baseUrl.frontend}`,
+              lang: "de",
+              alternate: {
+                en: `${apiConfig.baseUrl.frontend}/en`,
+              },
+            },
+            ...items.map((item) => ({
               url: `${apiConfig.baseUrl.frontend}/seite/${item.slug_de}`,
               lang: "de",
               alternate: {
                 en: `${apiConfig.baseUrl.frontend}/en/page/${item.slug_en}`,
               },
-            }))
-          );
+            })),
+          ]);
 
           fs.writeFileSync(fullpath, toXml(tree));
 
