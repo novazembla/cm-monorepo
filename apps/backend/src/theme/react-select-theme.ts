@@ -1,5 +1,4 @@
 export const reactSelectTheme = (theme: any) => {
-  // console.log(theme);
   return {
     ...theme,
     borderRadius: 4,

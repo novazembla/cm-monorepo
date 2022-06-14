@@ -26,32 +26,32 @@ const doChores = async () => {
 
     // console.log(centerOfGravity);
 
-    console.log(
-      await prisma.event.findMany({
-        where: {
-          lastEventDate: {
-            gt: new Date(new Date().setHours(0, 0, 0, 0)).toISOString(),
-          },
-        },
-        orderBy: [
-          {
-            firstEventDate: "asc",
-          },
-          {
-            title_de: "asc",
-          },
-        ],
-        select: {
-          dates: {
-            select: {
-              date: true,
-              begin: true,
-              end: true,
-            },
-          },
-        },
-      })
-    );
+    // console.log(
+    //   await prisma.event.findMany({
+    //     where: {
+    //       lastEventDate: {
+    //         gt: new Date(new Date().setHours(0, 0, 0, 0)).toISOString(),
+    //       },
+    //     },
+    //     orderBy: [
+    //       {
+    //         firstEventDate: "asc",
+    //       },
+    //       {
+    //         title_de: "asc",
+    //       },
+    //     ],
+    //     select: {
+    //       dates: {
+    //         select: {
+    //           date: true,
+    //           begin: true,
+    //           end: true,
+    //         },
+    //       },
+    //     },
+    //   })
+    // );
 
     // console.log(await prisma.location.findMany());
 

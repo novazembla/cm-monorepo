@@ -223,5 +223,7 @@ export const chakraTheme = extendTheme(
   }
 );
 
-console.log(chakraTheme);
+if (typeof window !== "undefined" && process.env.NODE_ENV === "development")
+  console.log(chakraTheme);
+
 export default chakraTheme;

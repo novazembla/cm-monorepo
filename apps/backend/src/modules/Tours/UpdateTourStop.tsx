@@ -140,20 +140,7 @@ const UpdateTourStop = () => {
                 },
               }
             : undefined;
-              console.log({
-                ...filteredOutputByWhitelist(
-                  multiLangRHFormDataToJson(
-                    newData,
-                    multiLangFieldsTourStop,
-                    config.activeLanguages
-                  ),
-                  [],
-                  multiLangFieldsTourStop
-                ),
-                ...heroImage,
-                ...fieldImagesRFHFormDataToData(newData),
-                locationId: newData.locationId,
-              })
+
         const { errors } = await firstMutation(
           parseInt(router.query.tourStopId, 10),
           {

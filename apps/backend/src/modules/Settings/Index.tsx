@@ -35,8 +35,6 @@ const Setting = ({
   let value = valueInDb ?? settingsFieldDefinitions[setting]?.defaultValue;
 
   let print;
-
-  console.log(settingsFieldDefinitions[setting]);
   
   if (settingsFieldDefinitions[setting]?.printComponent) {
     let props = value;
