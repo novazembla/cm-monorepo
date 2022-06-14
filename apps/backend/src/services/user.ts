@@ -18,8 +18,7 @@ const refreshToken = async () => {
   if (client && canRefresh() && getRefreshCookie()) {
     setAllowRefresh(false);
     setRefreshing(true);
-    console.log("user.refreshToken()");
-
+    
     client
       .mutate({
         fetchPolicy: "no-cache",
@@ -55,7 +54,6 @@ const refreshToken = async () => {
         }
       })
       .catch((error) => {
-        console.log("logout() refreshToken()");
         console.log(error);
         logout();
       });

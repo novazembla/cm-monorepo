@@ -86,9 +86,6 @@ export const setPreviewToken = (token: Token): void => {
 };
 
 export const setRefreshCookie = (token: Token) => {
-  console.log(
-    `Create refresh token ${token.expires} ${new Date(token.expires)}`
-  );
   cookies.set(HAS_REFRESH_COOKIE_NAME, token.expires, {
     ...options,
     ...{ expires: new Date(token.expires) },

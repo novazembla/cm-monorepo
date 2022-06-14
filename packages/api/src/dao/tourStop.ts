@@ -238,8 +238,6 @@ export const daoTourStopUpdate = async (
     daoTourStopTranslatedColumns
   );
 
-  console.log(data, dbData, daoTourStopTranslatedColumns);
-
   const tourStop: TourStop = await prisma.tourStop.update({
     data: {
       ...dbData,

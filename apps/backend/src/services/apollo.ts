@@ -45,9 +45,6 @@ const retryWithRefreshTokenLink = onError(
           if (message === "Access Denied" && extensions?.code === "FORBIDDEN") {
             const observableForbidden = new Observable((observer) => {
               new Promise(async (resolve) => {
-                console.log(
-                  "logout() ApolloClient.retryWithRefreshTokenLink: FORBIDDEN"
-                );
                 await user.logout();
                 observer.error(new Error("Access Denied - FORBIDDEN "));
               });
@@ -121,9 +118,6 @@ const retryWithRefreshTokenLink = onError(
                     forward(operation).subscribe(subscriber);
                   })
                   .catch(async (error) => {
-                    console.log(
-                      "logout() ApolloClient.retryWithRefreshTokenLink: refresh error"
-                    );
                     await user.logout();
 
                     observer.error(error);
