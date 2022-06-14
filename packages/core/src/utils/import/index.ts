@@ -11,6 +11,24 @@ export const dataImportRequiredHeadersLocation: DataImportRequiredHeaders = {
   city: ["city"],
 };
 
+export const dataImportTaxonomyKeys = [
+  "tax-agency-type-1",
+  "tax-agency-type-2",
+  "tax-type-1",
+  "tax-type-2",
+  "tax-type-3",
+  "tax-type-4",
+  "tax-type-5",
+  "tax-audience-1",
+  "tax-audience-2",
+  "tax-audience-3",
+  "tax-audience-4",
+  "tax-audience-5",
+  "tax-audience-6",
+  "tax-audience-7",
+  "tax-audience-8",
+];
+
 export const dataImportHeadersLocation: DataImportHeaders = {
   "title-de": { en: "Title (DE)", de: "Name der Einrichtung (DE)" },
   "title-en": { en: "Title (EN)", de: "Name der Einrichtung (EN)" },
@@ -26,6 +44,10 @@ export const dataImportHeadersLocation: DataImportHeaders = {
   "tax-audience-2": { en: "Audience (2)", de: "Angebote für (2)" },
   "tax-audience-3": { en: "Audience (3)", de: "Angebote für (3)" },
   "tax-audience-4": { en: "Audience (4)", de: "Angebote für (4)" },
+  "tax-audience-5": { en: "Audience (5)", de: "Angebote für (5)" },
+  "tax-audience-6": { en: "Audience (6)", de: "Angebote für (6)" },
+  "tax-audience-7": { en: "Audience (7)", de: "Angebote für (7)" },
+  "tax-audience-8": { en: "Audience (8)", de: "Angebote für (8)" },
   co: { en: "C/O", de: "C/O" },
   street1: { en: "Street (1)", de: "Straße (1)" },
   street2: { en: "Street (2)", de: "Straße (2)" },

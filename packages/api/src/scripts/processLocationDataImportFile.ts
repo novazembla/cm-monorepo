@@ -17,6 +17,7 @@ import { getApiConfig } from "../config";
 import {
   DataImportStatus,
   dataImportHeadersLocation,
+  dataImportTaxonomyKeys,
   dataImportRequiredHeadersLocation,
   PublishStatus,
 } from "@culturemap/core";
@@ -75,21 +76,7 @@ const getTermsOfRow = (
   logWarnings: boolean,
   primaryTermKey?: string
 ) => {
-  const keys = [
-    "tax-agency-type-1",
-    "tax-agency-type-2",
-    "tax-type-1",
-    "tax-type-2",
-    "tax-type-3",
-    "tax-type-4",
-    "tax-type-5",
-    "tax-audience-1",
-    "tax-audience-2",
-    "tax-audience-3",
-    "tax-audience-4",
-  ];
-
-  return keys.reduce((acc, key) => {
+  return dataImportTaxonomyKeys.reduce((acc, key) => {
     if (primaryTermKey && primaryTermKey !== key) return acc;
 
     const headerKey = mapKeyToHeader(mapping, key);

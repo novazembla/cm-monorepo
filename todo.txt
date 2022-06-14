@@ -1,10 +1,4 @@
-Pre Release
-- Fulltext search + needed indexes
-  https://github.com/prisma/prisma/releases/tag/3.5.0
-  https://www.prisma.io/docs/concepts/components/prisma-client/filtering-and-sorting#sort-by-relevance-postgresql
-  
 - Clear TODO:
-- Remove non production ready console logs ... 
 
 - Improve/Test Autopull frontend on update of published location/event/page/tour ... 
 
@@ -13,3 +7,16 @@ Bugs
 
 Sitemap
 - Confirm cron job does work. 
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++ V2 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+- Fulltext search + needed indexes
+  https://github.com/prisma/prisma/releases/tag/3.5.0
+  https://www.prisma.io/docs/concepts/components/prisma-client/filtering-and-sorting#sort-by-relevance-postgresql
+  
+- Import
+  - Add "ignore column functionality"
+  - Allow to select ID column from Export and use this one to identify the record to be updated.
+  - Allow to use lat and lng columns
+  - If ID, lat, lng are used the import could use the current publication status and not revert to imported. 
