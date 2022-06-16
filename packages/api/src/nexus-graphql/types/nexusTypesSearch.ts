@@ -98,20 +98,24 @@ export const SearchQueries = extendType({
         const query =
           parsedQuery.length === 1
             ? {
-                contains: parsedQuery[0],
-                mode: "insensitive" as any,
+                fullText: {
+                  contains: parsedQuery[0],
+                  mode: "insensitive" as any,
+                },
               }
             : {
                 OR: parsedQuery.map((contains) => ({
-                  contains,
-                  mode: "insensitive" as any,
+                  fullText: {
+                    contains,
+                    mode: "insensitive" as any,
+                  },
                 })),
               };
 
         const locations = await daoLocationSelectQuery(
           {
             status: PublishStatus.PUBLISHED,
-            fullText: query,
+            ...query,
           },
           {
             id: true,
@@ -200,10 +204,10 @@ export const SearchQueries = extendType({
         const events = await daoEventSelectQuery(
           {
             status: PublishStatus.PUBLISHED,
-            fullText: query,
             lastEventDate: {
               gt: new Date(new Date().setHours(0, 0, 0, 0)),
             },
+            ...query,
           },
           {
             id: true,
@@ -292,7 +296,7 @@ export const SearchQueries = extendType({
         const pages = await daoPageSelectQuery(
           {
             status: PublishStatus.PUBLISHED,
-            fullText: query,
+            ...query,
           },
           {
             id: true,
@@ -343,7 +347,7 @@ export const SearchQueries = extendType({
         const tours = await daoTourSelectQuery(
           {
             status: PublishStatus.PUBLISHED,
-            fullText: query,
+            ...query,
           },
           {
             id: true,
