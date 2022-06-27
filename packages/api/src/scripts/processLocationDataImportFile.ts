@@ -9,7 +9,6 @@ import Prisma from "@prisma/client";
 import isEmail from "is-email";
 import isUrl from "is-url";
 import minimist from "minimist";
-import hash from "object-hash";
 import { customAlphabet } from "nanoid";
 import pMap from "p-map";
 
@@ -73,6 +72,7 @@ const mapKeyToHeader = (mapping: any[], key: string) => {
 const getTermsOfRow = (
   mapping: any[],
   row: any[],
+  rowIndex: number,
   logWarnings: boolean,
   primaryTermKey?: string
 ) => {
@@ -106,10 +106,10 @@ const getTermsOfRow = (
           warnings.push(
             lang === "de"
               ? `Unbekannter Begriff: "${row[headerKey]}" in Zeile #${
-                  row["###" as any]
+                  row["###" as any] ?? rowIndex
                 } Spalte "${getTranslatedHeader(key, lang)}"`
               : `Unknown term: "${row[headerKey]}" in row #${
-                  row["###" as any]
+                  row["###" as any] ?? rowIndex
                 } column "${getTranslatedHeader(key, lang)}"`
           );
       }
@@ -143,6 +143,7 @@ const processDataImportedRow = async (
   prisma: Prisma.PrismaClient,
   mapping: any[],
   row: any[],
+  rowIndex: number,
   ownerId: number
 ) => {
   try {
@@ -157,10 +158,10 @@ const processDataImportedRow = async (
       warnings.push(
         lang === "de"
           ? `Üebrspringe leere Zeile ${
-              row["###" as any] ? `#${row["###" as any]}` : ""
+              row["###" as any] ? `#${row["###" as any]}` : rowIndex
             }`
           : `Skipping empty row ${
-              row["###" as any] ? `#${row["###" as any]}` : ""
+              row["###" as any] ? `#${row["###" as any]}` : rowIndex
             }`
       );
       return;
@@ -179,8 +180,14 @@ const processDataImportedRow = async (
       "eventLocationId"
     );
 
-    const primaryTerm = getTermsOfRow(mapping, row, false, "tax-type-1");
-    let terms = getTermsOfRow(mapping, row, true);
+    const primaryTerm = getTermsOfRow(
+      mapping,
+      row,
+      rowIndex,
+      false,
+      "tax-type-1"
+    );
+    let terms = getTermsOfRow(mapping, row, rowIndex, true);
 
     const getShareDataValue = (
       key: string,
@@ -388,10 +395,10 @@ const processDataImportedRow = async (
         warnings.push(
           lang === "de"
             ? `Geocoding: Kartenpunkt ID: (${locationInDb?.id}) - Zeile #${
-                row["###" as any]
+                row["###" as any] ?? rowIndex
               } die Addresse hat sich geändert bitte überprüfen Sie das Resultat`
             : `Geocoding: location ID: (${locationInDb?.id}) - row #${
-                row["###" as any]
+                row["###" as any] ?? rowIndex
               } address change please check geo coding result`
         );
       }
@@ -497,10 +504,10 @@ const processDataImportedRow = async (
           warnings.push(
             lang === "de"
               ? `Geocoding: Kartenpunkt ID: (${locationInDb?.id}) - Zeile #${
-                  row["###" as any]
+                  row["###" as any] ?? rowIndex
                 } konnte Adresse nicht auflösen`
               : `Geocoding: Location ID: (${locationInDb?.id}) - row #${
-                  row["###" as any]
+                  row["###" as any] ?? rowIndex
                 } could not find location on map`
           );
         }
@@ -523,10 +530,10 @@ const processDataImportedRow = async (
           ? `Falsche Email Addresse: Kartenpunkt ID: (${
               locationInDb?.id
             }) - Zeile #${
-              row["###" as any]
+              row["###" as any] ?? rowIndex
             } Email Addresse (1) ist nicht korrekt`
           : `Invalid email: location ID: (${locationInDb?.id}) - row #${
-              row["###" as any]
+              row["###" as any] ?? rowIndex
             } Email (1) is not valid email address`
       );
     if (
@@ -538,10 +545,10 @@ const processDataImportedRow = async (
           ? `Falsche Email Addresse: Kartenpunkt ID: (${
               locationInDb?.id
             }) - Zeile #${
-              row["###" as any]
+              row["###" as any] ?? rowIndex
             } Email Addresse (2) ist nicht korrekt`
           : `Invalid email: location ID: (${locationInDb?.id}) - row #${
-              row["###" as any]
+              row["###" as any] ?? rowIndex
             } Email (2) is not valid email address`
       );
 
@@ -552,10 +559,10 @@ const processDataImportedRow = async (
         warnings.push(
           lang === "de"
             ? `Falsche URL: Kartenpunkt ID: (${locationInDb?.id}) - Zeile #${
-                row["###" as any]
+                row["###" as any] ?? rowIndex
               } "${key}" ist keine URL`
             : `Invalid URL: location ID: (${locationInDb?.id}) - row #${
-                row["###" as any]
+                row["###" as any] ?? rowIndex
               } "${key}" is not valid url`
         );
     });
@@ -875,12 +882,13 @@ const doChores = async () => {
             });
         });
 
-        const processPMappedRow = async (row: any[]) => {
+        const processPMappedRow = async (row: any[], index: number) => {
           try {
             await processDataImportedRow(
               prisma,
               mapping as any[],
               row,
+              index + 1,
               importInDb?.owner?.id
             );
             await prisma.dataImport.update({
