@@ -166,14 +166,10 @@ const processDataImportedRow = async (
       return;
     }
 
-    const locationHash = hash({
-      titleDe,
-      titleEn,
-    });
-
     let locationInDb = await prisma.location.findFirst({
       where: {
-        importedLocationHash: locationHash,
+        title_de: titleDe,
+        title_en: titleEn,
       },
     });
 
@@ -299,7 +295,7 @@ const processDataImportedRow = async (
         locationInDb?.accessibilityInformation_en,
         true
       ),
-      importedLocationHash: locationHash,
+      importedLocationHash: "",
     };
 
     const socialMediaKeys = [
