@@ -22,6 +22,7 @@
     "app:api:watch:babel": "npx babel ./apps/api/src --watch --out-dir ./apps/api/build --extensions .ts",
     "app:api:watch:node": "env-cmd -f ./.env nodemon --watch ./apps/api/build --watch ./packages/api/dist --watch ./packages/core/dist ./apps/api/build/index.js",
     "app:api:lint": "eslint ./apps/api/src --ext .js,.ts",
+    "app:api:import:dev:events": "env-cmd -f ./.env node --loader ts-node/esm --experimental-specifier-resolution=node ./packages/api/src/scripts/import.berlin.de.calendar.ts",
     "app:backend:build": "NODE_ENV=production npm run build -w backend",
     "app:backend:build-read-env": "NODE_ENV=production REACT_APP_API_URL=$(grep '^BASE_URL_API' .env | cut -d '=' -f2) REACT_APP_FRONTEND_URL=$(grep '^BASE_URL_FRONTEND' .env | cut -d '=' -f2) REACT_APP_PREVIEW_SECRET=$(grep '^APP_PREVIEW_SECRET' .env | cut -d '=' -f2) REACT_APP_MAP_JSON=$(grep '^APP_MAP_JSON' .env | cut -d '=' -f2) npm run build -w backend",
     "app:backend:dev:build": "REACT_APP_API_URL=$(grep '^BASE_URL_API' .env | cut -d '=' -f2) REACT_APP_FRONTEND_URL=$(grep '^BASE_URL_FRONTEND' .env | cut -d '=' -f2) REACT_APP_PREVIEW_SECRET=$(grep '^APP_PREVIEW_SECRET' .env | cut -d '=' -f2) REACT_APP_MAP_JSON=$(grep '^APP_MAP_JSON' .env | cut -d '=' -f2) SKIP_PREFLIGHT_CHECK=true npm run build -w backend",
