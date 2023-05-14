@@ -1,6 +1,16 @@
+# Developing the Berlin.de Calendar Import
+The import function is implemented using the following two files
+```shell
+./packages/api/src/scripts/import.berlin.de.calendar.ts
+./packages/api/src/workers/importCalendar.ts
+```
 
+The first is the implementation. To test it locally you will have to
 
-#Installation
+1. Run the backend in dev mode `npm run dev:backend`
+2. Run `npm run app:api:import:dev:events` to trigger the importer manually
+
+# Installation
 
 Don't forget to run the following commands 
 
