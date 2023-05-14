@@ -297,22 +297,23 @@ const doChores = async () => {
             }
 
             let today = getTodayInCurrentTZ();
-            const count = Object.keys(response?.data?.events).reduce(
-              (cnt: any, key: string) => {
-                const event: any = response?.data?.events[key];
-                let dates = [];
-                if (isObject(event?.termine)) {
-                  dates = Object.keys(event?.termine).map(
-                    (tkey: string) => event?.termine[tkey]
-                  );
-                }
-
+            const count = Object.values(response?.data?.events ?? {}).reduce(
+              (
+                cnt: {
+                  events: number;
+                  datesAll: number;
+                  datesCurrent: number;
+                },
+                event: any
+              ) => {
+                const dates = Object.values(event?.termine ?? {});
                 return {
                   events: cnt.events + 1,
                   datesAll: cnt.datesAll + dates.length,
                   datesCurrent:
                     cnt.datesCurrent +
-                    dates.filter((dF) => new Date(dF.tag_von) >= today).length,
+                    dates.filter((dF: any) => new Date(dF.tag_von) >= today)
+                      .length,
                 };
               },
               {
@@ -328,9 +329,8 @@ const doChores = async () => {
             log.push(`Beginne den import dieser ....`);
             await saveDataImportLog(prisma, DataImportStatus.PROCESSING);
 
-            const processEvent = async (key: string) => {
+            const processEvent = async (event: any) => {
               try {
-                const event: any = response?.data?.events[key];
                 const eventHash = hash({
                   id: event.event_id,
                 });
@@ -344,58 +344,41 @@ const doChores = async () => {
                   },
                 });
 
-                const locationId =
-                  event?.event_veranstaltungsort_id &&
-                  event.event_veranstaltungsort_id.trim() !== ""
-                    ? parseInt(event.event_veranstaltungsort_id.trim())
-                    : 0;
-
                 const location = await findLocationByEventLocationId(
                   prisma,
-                  locationId,
+                  event?.event_veranstaltungsort_id ?? 0,
                   response?.data?.veranstaltungsorte[
                     event.event_veranstaltungsort_id
                   ]?.name
                 );
 
-                let dates = [];
                 today = getTodayInCurrentTZ();
-
-                if (isObject(event?.termine)) {
-                  dates = Object.keys(event?.termine).map(
-                    (tkey: string) => event?.termine[tkey]
-                  );
-                  dates = dates.filter((dF) => new Date(dF.tag_von) >= today);
-                }
+                const dates = Object.values(event?.termine ?? {}).filter(
+                  (dF: any) => new Date(dF.tag_von) >= today
+                );
 
                 let mappedIds = [];
-                let terms = {};
-                if (
-                  event.kategorie_ids &&
-                  Object.keys(event.kategorie_ids).length > 0
-                ) {
+
+                if (Object.keys(event?.kategorie_ids ?? {}).length) {
                   mappedIds = Object.keys(event.kategorie_ids).reduce(
-                    (agg, kKey) => {
+                    (agg: any[], kKey: string) => {
                       if (eventCategories[kKey])
                         agg.push(eventCategories[kKey]);
                       return agg;
                     },
-                    [] as any
+                    []
                   );
                 }
 
-                let veranstalter =
-                  response?.data?.veranstalter && event?.event_veranstalter_id
-                    ? response?.data?.veranstalter[event?.event_veranstalter_id]
-                    : null;
+                const veranstalter =
+                  response?.data?.veranstalter?.[
+                    event?.event_veranstalter_id
+                  ] ?? null;
 
                 const veranstaltungsort =
-                  response?.data?.veranstaltungsorte &&
-                  event?.event_veranstaltungsort_id
-                    ? response?.data?.veranstaltungsorte[
-                        event?.event_veranstaltungsort_id
-                      ]
-                    : null;
+                  response?.data?.veranstaltungsorte?.[
+                    event?.event_veranstaltungsort_id
+                  ] ?? null;
 
                 const sharedData = {
                   description_de: convertToHtml(event.event_beschreibung_de),
@@ -442,6 +425,7 @@ const doChores = async () => {
 
                 const datesForDb = prepareDatesForDb(dates);
 
+                let terms = {};
                 if (!eventInDb) {
                   if (dates.length > 0) {
                     if (mappedIds.length > 0) {
@@ -606,7 +590,7 @@ const doChores = async () => {
               await saveDataImportLog(prisma, DataImportStatus.PROCESSING);
             };
 
-            await pMap(Object.keys(response?.data?.events), processEvent, {
+            await pMap(Object.values(response?.data?.events), processEvent, {
               concurrency: 1,
             });
 
@@ -620,10 +604,11 @@ const doChores = async () => {
                 isImported: true,
                 importedEventHash: {
                   not: {
-                    in: Object.keys(response?.data?.events).map((eKey) =>
-                      hash({
-                        id: response.data.events[eKey].event_id,
-                      })
+                    in: Object.values(response?.data?.events ?? {}).map(
+                      (event: any) =>
+                        hash({
+                          id: event.event_id,
+                        })
                     ),
                   },
                 },
