@@ -13,5 +13,8 @@ export default defineConfig({
     port: 4001
   },
   base: '/',
+  build: {
+    outDir: "build",
+  },
   plugins: [react()]
 })
