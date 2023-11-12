@@ -84,7 +84,7 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-security": "^1.4.0",
     "husky": "^7.0.0",
-    "lerna": "^4.0.0",
+    "lerna": "^7.4.2",
     "lint-staged": "^11.0.0",
     "nodemon": "^2.0.9",
     "prettier": "^2.3.2",
@@ -99,12 +99,17 @@
   ],
   "dependencies": {
     "@chakra-ui/react": "^1.6.9",
+    "@craco/craco": "^5.9.0",
     "@types/estree": "^0.0.50",
     "@types/lodash.debounce": "^4.0.6",
+    "autoprefixer": "10.4.16",
+    "axios": "1.6.1",
     "dotenv": "^10.0.0",
     "from": "^0.1.7",
+    "i18next-parser": "8.9.0",
     "lodash.debounce": "^4.0.8",
-    "prisma": "^3.8.1"
+    "prisma": "^3.8.1",
+    "react-scripts": "^5.0.1"
   },
   "prisma": {
     "schema": "./packages/api/prisma/schema.prisma"
