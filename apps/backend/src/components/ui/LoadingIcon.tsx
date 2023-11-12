@@ -20,7 +20,7 @@ export const LoadingIcon = ({ size = 90, type = "full" }: { size?: number, type:
       transform: "translateY(-50%)",
     }
   return (<Flex w="100%" height={h} minH={h} justify="center" alignItems="center" {...inlineProps}>
-      <BounceLoader color={wine400} {...size} />
+      <BounceLoader color={wine400} size={size} />
   </Flex>)
   
   ;

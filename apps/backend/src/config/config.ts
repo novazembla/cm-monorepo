@@ -53,22 +53,12 @@ const configDefault: AppConfig = {
       lng: 13.813182,
     },
   ],
-  mapStyleUrl: `${import.meta.env.VITE_MAP_JSON}`
-,
+  mapStyleUrl: `${import.meta.env.VITE_MAP_JSON}`,
 };
 
-export let config: AppConfig;
-
-try {
-  config = merge(configDefault, appConfig, {
-    isMergeableObject: isPlainObject,
-  });
-} catch (Err) {
-  // eslint-disable-next-line no-console
-  console.error(
-    "Please make sure to hava a culturemap.js file in the config folder"
-  );
-}
+export const config: AppConfig = merge(configDefault, appConfig, {
+  isMergeableObject: isPlainObject,
+});
 
 export const getAppConfig = (): AppConfig => config;
 

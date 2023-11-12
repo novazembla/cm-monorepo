@@ -1,7 +1,8 @@
+Backend
+- Change of status does save but after the save the select field resets to the old state. 
+
 TODO:
 + Adjust ENV Vars in live machine from REACT_APP_*  to VITE_* 
-+ Build folder differs between CRA and VITE 
-
 
 Sitemap
 - Confirm cron job does work. 
