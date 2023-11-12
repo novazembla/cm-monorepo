@@ -77,7 +77,6 @@ const ScrollToTop = () => {
 
 const App = () => {
   const config = getAppConfig();
-  console.log("app");
   
   return (
     <AppProviders>
