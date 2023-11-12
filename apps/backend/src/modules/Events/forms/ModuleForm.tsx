@@ -293,7 +293,7 @@ export const ModuleForm = ({
         settings={{
           defaultRequired: true,
           defaultValues: data?.event?.description,
-          maxLength: 1000,
+          maxLength: 2000,
           placeholder: t(
             "module.events.forms.event.field.placeholder.description",
             "Event description"
