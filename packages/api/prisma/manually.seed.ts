@@ -618,174 +618,174 @@ async function main() {
   }
 
   if (contributor && editor && administrator) {
-    const taxEvntCategories = await prisma.taxonomy.findFirst({
-      where: {
-        slug_de: {
-          contains: "veranstaltungsarten",
-        },
-      },
-    });
-    const taxTypeOfInstitution = await prisma.taxonomy.findFirst({
-      where: {
-        slug_de: {
-          contains: "einrichtungsart",
-        },
-      },
-    });
-    const taxTargetAudience = await prisma.taxonomy.findFirst({
-      where: {
-        slug_de: {
-          contains: "angebote-fuer",
-        },
-      },
-    });
-    const taxType = await prisma.taxonomy.findFirst({
-      where: {
-        slug_de: {
-          contains: "traegerart",
-        },
-      },
-    });
+    // const taxEvntCategories = await prisma.taxonomy.findFirst({
+    //   where: {
+    //     slug_de: {
+    //       contains: "veranstaltungsarten",
+    //     },
+    //   },
+    // });
+    // const taxTypeOfInstitution = await prisma.taxonomy.findFirst({
+    //   where: {
+    //     slug_de: {
+    //       contains: "einrichtungsart",
+    //     },
+    //   },
+    // });
+    // const taxTargetAudience = await prisma.taxonomy.findFirst({
+    //   where: {
+    //     slug_de: {
+    //       contains: "angebote-fuer",
+    //     },
+    //   },
+    // });
+    // const taxType = await prisma.taxonomy.findFirst({
+    //   where: {
+    //     slug_de: {
+    //       contains: "traegerart",
+    //     },
+    //   },
+    // });
 
-    if (taxTypeOfInstitution && taxTargetAudience && taxType) {
-      const typeOfInstitutionTerms = await prisma.term.findMany({
-        where: {
-          taxonomyId: taxTypeOfInstitution.id,
-        },
-      });
-      const audienceTerms = await prisma.term.findMany({
-        where: {
-          taxonomyId: taxTargetAudience.id,
-        },
-      });
+    // if (taxTypeOfInstitution && taxTargetAudience && taxType) {
+    //   const typeOfInstitutionTerms = await prisma.term.findMany({
+    //     where: {
+    //       taxonomyId: taxTypeOfInstitution.id,
+    //     },
+    //   });
+    //   const audienceTerms = await prisma.term.findMany({
+    //     where: {
+    //       taxonomyId: taxTargetAudience.id,
+    //     },
+    //   });
 
-      const typeTerms = await prisma.term.findMany({
-        where: {
-          taxonomyId: taxType.id,
-        },
-      });
+    //   const typeTerms = await prisma.term.findMany({
+    //     where: {
+    //       taxonomyId: taxType.id,
+    //     },
+    //   });
 
-      if (typeOfInstitutionTerms && audienceTerms && typeTerms) {
-        await Promise.all(
-          [...Array(5).keys()].map(async (i) => {
-            const id = i + 1;
+    //   if (typeOfInstitutionTerms && audienceTerms && typeTerms) {
+    //     await Promise.all(
+    //       [...Array(5).keys()].map(async (i) => {
+    //         const id = i + 1;
 
-            const tL = await prisma.location.findFirst({
-              where: {
-                slug_en: {
-                  contains: `location-en-${id}`,
-                },
-              },
-            });
+    //         const tL = await prisma.location.findFirst({
+    //           where: {
+    //             slug_en: {
+    //               contains: `location-en-${id}`,
+    //             },
+    //           },
+    //         });
 
-            if (!tL) {
-              const name = lorem.generateWords(rndBetween(1, 4));
+    //         if (!tL) {
+    //           const name = lorem.generateWords(rndBetween(1, 4));
 
-              let ownerId;
+    //           let ownerId;
 
-              const geoCodeCandidates = await geocodingGetAddressCandidates(
-                addresses[i],
-                prisma
-              );
+    //           const geoCodeCandidates = await geocodingGetAddressCandidates(
+    //             addresses[i],
+    //             prisma
+    //           );
 
-              console.log(geoCodeCandidates);
+    //           console.log(geoCodeCandidates);
 
-              if (Math.random() > 0.2) {
-                ownerId = Math.random() > 0.3 ? editor.id : administrator.id;
-              } else {
-                ownerId = contributor.id;
-              }
+    //           if (Math.random() > 0.2) {
+    //             ownerId = Math.random() > 0.3 ? editor.id : administrator.id;
+    //           } else {
+    //             ownerId = contributor.id;
+    //           }
 
-              console.log(`Create location: L(${id}) EN ${name}`);
+    //           console.log(`Create location: L(${id}) EN ${name}`);
 
-              try {
-                const keywordSelection = getRandomElements(
-                  keywords,
-                  rndBetween(2, 5)
-                ).join(" ");
+    //           try {
+    //             const keywordSelection = getRandomElements(
+    //               keywords,
+    //               rndBetween(2, 5)
+    //             ).join(" ");
 
-                const data = {
-                  status: Math.random() > 0.3 ? 4 : rndBetween(1, 5),
-                  title: {
-                    en: `L(${id}) EN ${name}`,
-                    de: `L(${id}) DE ${name}`,
-                  },
-                  slug: {
-                    en: `location-en-${id}`,
-                    de: `location-de-${id}`,
-                  },
-                  description: {
-                    en: `Description EN: ${keywordSelection} ${lorem.generateWords(
-                      rndBetween(15, 50)
-                    )}`,
-                    de: `Beschreibung DE: ${lorem.generateWords(
-                      rndBetween(15, 50)
-                    )}`,
-                  },
-                  address: addresses[i] as any,
-                  offers: {
-                    en: `Offering EN: ${lorem.generateWords(
-                      rndBetween(15, 50)
-                    )}`,
-                    de: `Angebot DE: ${lorem.generateWords(
-                      rndBetween(15, 50)
-                    )}`,
-                  },
-                  geoCodingInfo: geoCodeCandidates,
-                  contactInfo: {
-                    en: `Contact EN: ${lorem.generateWords(rndBetween(5, 15))}`,
-                    de: `Kontaktinformation DE: ${lorem.generateWords(
-                      rndBetween(5, 15)
-                    )}`,
-                  },
+    //             const data = {
+    //               status: Math.random() > 0.3 ? 4 : rndBetween(1, 5),
+    //               title: {
+    //                 en: `L(${id}) EN ${name}`,
+    //                 de: `L(${id}) DE ${name}`,
+    //               },
+    //               slug: {
+    //                 en: `location-en-${id}`,
+    //                 de: `location-de-${id}`,
+    //               },
+    //               description: {
+    //                 en: `Description EN: ${keywordSelection} ${lorem.generateWords(
+    //                   rndBetween(15, 50)
+    //                 )}`,
+    //                 de: `Beschreibung DE: ${lorem.generateWords(
+    //                   rndBetween(15, 50)
+    //                 )}`,
+    //               },
+    //               address: addresses[i] as any,
+    //               offers: {
+    //                 en: `Offering EN: ${lorem.generateWords(
+    //                   rndBetween(15, 50)
+    //                 )}`,
+    //                 de: `Angebot DE: ${lorem.generateWords(
+    //                   rndBetween(15, 50)
+    //                 )}`,
+    //               },
+    //               geoCodingInfo: geoCodeCandidates,
+    //               contactInfo: {
+    //                 en: `Contact EN: ${lorem.generateWords(rndBetween(5, 15))}`,
+    //                 de: `Kontaktinformation DE: ${lorem.generateWords(
+    //                   rndBetween(5, 15)
+    //                 )}`,
+    //               },
 
-                  lat: lat[Math.floor(Math.random() * lat.length)],
-                  lng: lng[Math.floor(Math.random() * lng.length)],
+    //               lat: lat[Math.floor(Math.random() * lat.length)],
+    //               lng: lng[Math.floor(Math.random() * lng.length)],
 
-                  terms: {
-                    connect: [
-                      ...getRandomElements(
-                        typeOfInstitutionTerms,
-                        rndBetween(1, 3)
-                      ).map((term) => ({ id: term.id })),
-                      ...getRandomElements(audienceTerms, rndBetween(1, 2)).map(
-                        (term) => ({ id: term.id })
-                      ),
-                      ...getRandomElements(typeTerms, rndBetween(1, 1)).map(
-                        (term) => ({ id: term.id })
-                      ),
-                    ],
-                  },
+    //               terms: {
+    //                 connect: [
+    //                   ...getRandomElements(
+    //                     typeOfInstitutionTerms,
+    //                     rndBetween(1, 3)
+    //                   ).map((term) => ({ id: term.id })),
+    //                   ...getRandomElements(audienceTerms, rndBetween(1, 2)).map(
+    //                     (term) => ({ id: term.id })
+    //                   ),
+    //                   ...getRandomElements(typeTerms, rndBetween(1, 1)).map(
+    //                     (term) => ({ id: term.id })
+    //                   ),
+    //                 ],
+    //               },
 
-                  owner: {
-                    connect: {
-                      id: ownerId,
-                    },
-                  },
-                };
-                await prisma.location.create({
-                  data: {
-                    ...data,
-                    fullText: daoSharedGenerateFullText(data, [
-                      "title",
-                      "slug",
-                      "description",
-                      "address",
-                      "contactInfo",
-                      "offers",
-                    ]),
-                  },
-                });
-              } catch (err) {
-                console.log(err);
-              }
-            }
+    //               owner: {
+    //                 connect: {
+    //                   id: ownerId,
+    //                 },
+    //               },
+    //             };
+    //             await prisma.location.create({
+    //               data: {
+    //                 ...data,
+    //                 fullText: daoSharedGenerateFullText(data, [
+    //                   "title",
+    //                   "slug",
+    //                   "description",
+    //                   "address",
+    //                   "contactInfo",
+    //                   "offers",
+    //                 ]),
+    //               },
+    //             });
+    //           } catch (err) {
+    //             console.log(err);
+    //           }
+    //         }
 
-            await awaitTimeout(apiConfig.geoCodingThrottle);
-          })
-        );
-      }
-    }
+    //         await awaitTimeout(apiConfig.geoCodingThrottle);
+    //       })
+    //     );
+    //   }
+    // }
 
     // TODO: reactivate
     // if (taxEvntCategories && 2==1) {
