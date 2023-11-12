@@ -4,12 +4,11 @@ import { Box, Heading } from "@chakra-ui/react";
 
 import "./tourPathEditor.scss";
 
-import { LeafletMapGeoman } from "../utils";
+import { geoJSONLineLength, LeafletMapGeoman } from "../utils";
 import { useConfig } from "~/hooks";
 import { useTranslation } from "react-i18next";
 import { useFormContext } from "react-hook-form";
-// @ts-ignore
-import geoJSONLineLength from "geojson-length";
+
 
 export const TourPathEditor = ({
   tourStops,

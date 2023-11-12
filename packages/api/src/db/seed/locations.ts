@@ -268,25 +268,22 @@ async function main() {
   if (contributor && editor && administrator) {
     const taxTypeOfInstitution = await prisma.taxonomy.findFirst({
       where: {
-        slug: {
-          path: ["de"],
-          string_contains: "einrichtungsart",
+        slug_de: {
+          contains: "einrichtungsart",
         },
       },
     });
     const taxTargetAudience = await prisma.taxonomy.findFirst({
       where: {
-        slug: {
-          path: ["de"],
-          string_contains: "angebote-fuer",
+        slug_de: {
+          contains: "angebote-fuer",
         },
       },
     });
     const taxType = await prisma.taxonomy.findFirst({
       where: {
-        slug: {
-          path: ["de"],
-          string_contains: "traegerart",
+        slug_de: {
+          contains: "traegerart",
         },
       },
     });

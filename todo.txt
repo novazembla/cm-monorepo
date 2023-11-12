@@ -1,9 +1,7 @@
-- Clear TODO:
+TODO:
++ Adjust ENV Vars in live machine from REACT_APP_*  to VITE_* 
++ Build folder differs between CRA and VITE 
 
-- Improve/Test Autopull frontend on update of published location/event/page/tour ... 
-
-Bugs
-- Wird ein Foto im kartenpunkt oder Tour gelöscht und durch ein anderes ersetzt, erscheint nach dem speichern und dem Hochladen des neuen Bildes immer noch das alte Motiv
 
 Sitemap
 - Confirm cron job does work. 

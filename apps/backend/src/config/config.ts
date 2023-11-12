@@ -30,10 +30,10 @@ export type AppConfig = Complete<AppConfigSettings>;
 
 const configDefault: AppConfig = {
   appName: "CultureMap",
-  apiUrl: `${process.env.REACT_APP_API_URL}`,
-  frontendPreviewSecret: `${process.env.REACT_APP_PREVIEW_SECRET}`,
-  frontendUrl: `${process.env.REACT_APP_FRONTEND_URL}`,
-  apiGraphQLUrl: `${process.env.REACT_APP_API_URL}/graphql`,
+  apiUrl: `${import.meta.env.VITE_API_URL}`,
+  frontendPreviewSecret: `${import.meta.env.VITE_PREVIEW_SECRET}`,
+  frontendUrl: `${import.meta.env.VITE_FRONTEND_URL}`,
+  apiGraphQLUrl: `${import.meta.env.VITE_API_URL}/graphql`,
   scope: "backend",
   enableOpenRegistration: true,
   enableProfilePicture: true,
@@ -53,7 +53,7 @@ const configDefault: AppConfig = {
       lng: 13.813182,
     },
   ],
-  mapStyleUrl: `${process.env.REACT_APP_MAP_JSON}`
+  mapStyleUrl: `${import.meta.env.VITE_MAP_JSON}`
 ,
 };
 

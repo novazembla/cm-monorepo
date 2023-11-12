@@ -156,6 +156,24 @@ const pages = [
   ["Datenschutz", "Privacy information"],
 ];
 
+const accessibility = [
+  ["Rollstuhlgerecht", "Wheelchair accessible"],
+  ["WC Rollstuhlgerecht", "WC wheelchair accessible"],
+  ["WC für Rollstuhl geeignet", "WC suitable for wheelchair"],
+  [
+    "WC für Rollstuhl bedingt geeignet",
+    "WC conditionally wheelchair accessible",
+  ],
+  ["Aufzug rollstuhlgerecht", "Elevator wheelchair accessible"],
+  ["Rollstuhl geeignet", "Wheelchair suitable"],
+  ["Nicht rollstuhlgeeignet", "Not suitable for wheelchair"],
+  ["Fahrradabstellplatz", "Bicycle parking"],
+  [
+    "Ausgewiesener Behindertenparkplatz",
+    "Designated handicapped parking space",
+  ],
+];
+
 const keywords = [
   "Kunst",
   "Architektur",
@@ -387,9 +405,8 @@ async function main() {
   if (administrator) {
     let testTaxonomy = await prisma.taxonomy.findFirst({
       where: {
-        slug: {
-          path: ["de"],
-          string_contains: "einrichtungsart",
+        slug_de: {
+          contains: "einrichtungsart",
         },
       },
     });
@@ -399,15 +416,11 @@ async function main() {
 
       await prisma.taxonomy.create({
         data: {
-          name: {
-            de: "Einrichtungsart",
-            en: "Type of Institution",
-          },
+          name_de: "Einrichtungsart",
+          name_en: "Type of Institution",
           multiTerm: true,
-          slug: {
-            de: "einrichtungsart",
-            en: "type",
-          },
+          slug_de: "einrichtungsart",
+          slug_en: "type",
           modules: {
             connect: {
               key: "location",
@@ -417,14 +430,10 @@ async function main() {
           terms: {
             createMany: {
               data: categories.map((term) => ({
-                name: {
-                  de: term[0],
-                  en: term[1],
-                },
-                slug: {
-                  de: slugify(term[0]),
-                  en: slugify(term[1]),
-                },
+                name_de: term[0],
+                name_en: term[1],
+                slug_de: slugify(term[0]),
+                slug_en: slugify(term[1]),
                 fullText: `${term[0]} ${term[1]} ${slugify(term[0])} ${slugify(
                   term[1]
                 )}`,
@@ -437,9 +446,8 @@ async function main() {
 
     testTaxonomy = await prisma.taxonomy.findFirst({
       where: {
-        slug: {
-          path: ["de"],
-          string_contains: "angebote-fuer",
+        slug_de: {
+          contains: "angebote-fuer",
         },
       },
     });
@@ -449,32 +457,25 @@ async function main() {
 
       await prisma.taxonomy.create({
         data: {
-          name: {
-            de: "Angebote für",
-            en: "Target Audience",
-          },
+          name_de: "Angebote für",
+          name_en: "Target Audience",
           multiTerm: true,
-          slug: {
-            de: "angebote-fuer",
-            en: "target-audience",
-          },
+          slug_de: "angebote-fuer",
+          slug_en: "target-audience",
           modules: {
             connect: {
               key: "location",
             },
           },
-          fullText: "Angebote für angebote-fuer Target Audience target-audience",
+          fullText:
+            "Angebote für angebote-fuer Target Audience target-audience",
           terms: {
             createMany: {
               data: targetAudience.map((term) => ({
-                name: {
-                  de: term[0],
-                  en: term[1],
-                },
-                slug: {
-                  de: slugify(term[0]),
-                  en: slugify(term[1]),
-                },
+                name_de: term[0],
+                name_en: term[1],
+                slug_de: slugify(term[0]),
+                slug_en: slugify(term[1]),
                 fullText: `${term[0]} ${term[1]} ${slugify(term[0])} ${slugify(
                   term[1]
                 )}`,
@@ -487,9 +488,8 @@ async function main() {
 
     testTaxonomy = await prisma.taxonomy.findFirst({
       where: {
-        slug: {
-          path: ["de"],
-          string_contains: "traegerart",
+        slug_de: {
+          contains: "traegerart",
         },
       },
     });
@@ -499,15 +499,11 @@ async function main() {
 
       await prisma.taxonomy.create({
         data: {
-          name: {
-            de: "Trägerart",
-            en: "Type of Institution",
-          },
+          name_de: "Trägerart",
+          name_en: "Type of Institution",
           multiTerm: true,
-          slug: {
-            de: "traegerart",
-            en: "type",
-          },
+          slug_de: "traegerart",
+          slug_en: "type",
           modules: {
             connect: {
               key: "location",
@@ -517,14 +513,10 @@ async function main() {
           terms: {
             createMany: {
               data: institutionType.map((term) => ({
-                name: {
-                  de: term[0],
-                  en: term[1],
-                },
-                slug: {
-                  de: slugify(term[0]),
-                  en: slugify(term[1]),
-                },
+                name_de: term[0],
+                name_en: term[1],
+                slug_de: slugify(term[0]),
+                slug_en: slugify(term[1]),
                 fullText: `${term[0]} ${term[1]} ${slugify(term[0])} ${slugify(
                   term[1]
                 )}`,
@@ -537,9 +529,8 @@ async function main() {
 
     const eventTaxonomy = await prisma.taxonomy.findFirst({
       where: {
-        slug: {
-          path: ["de"],
-          string_contains: "veranstaltungsart",
+        slug_de: {
+          contains: "veranstaltungsart",
         },
       },
     });
@@ -549,15 +540,11 @@ async function main() {
 
       await prisma.taxonomy.create({
         data: {
-          name: {
-            de: "Veranstaltungsart",
-            en: "Event Categories",
-          },
+          name_de: "Veranstaltungsart",
+          name_en: "Event Categories",
           multiTerm: true,
-          slug: {
-            de: "veranstaltungsart",
-            en: "event-categories",
-          },
+          slug_de: "veranstaltungsart",
+          slug_en: "event-categories",
           modules: {
             connect: {
               key: "event",
@@ -568,14 +555,57 @@ async function main() {
           terms: {
             createMany: {
               data: eventCategories.map((term) => ({
-                name: {
-                  de: term[0],
-                  en: term[1],
-                },
-                slug: {
-                  de: slugify(term[0]),
-                  en: slugify(term[1]),
-                },
+                name_de: term[0],
+                name_en: term[1],
+                slug_de: slugify(term[0]),
+                slug_en: slugify(term[1]),
+                fullText: `${term[0]} ${term[1]} ${slugify(term[0])} ${slugify(
+                  term[1]
+                )}`,
+              })),
+            },
+          },
+        },
+      });
+    }
+
+    const accessibilityTaxonomy = await prisma.taxonomy.findFirst({
+      where: {
+        slug_de: {
+          contains: "barrierefreiheit",
+        },
+      },
+    });
+
+    if (!accessibilityTaxonomy) {
+      console.log("create new accessibility taxonomy");
+
+      await prisma.taxonomy.create({
+        data: {
+          name_de: "Barrierefreiheit",
+          name_en: "Accessibility Information",
+          multiTerm: true,
+          slug_de: "barrierefreiheit",
+          slug_en: "accessibility-information",
+          modules: {
+            connect: [
+              {
+                key: "event",
+              },
+              {
+                key: "location",
+              },
+            ],
+          },
+          fullText:
+            "Barrierefreiheit barrierefreiheit Accessibility Information accessibility-information",
+          terms: {
+            createMany: {
+              data: accessibility.map((term) => ({
+                name_de: term[0],
+                name_en: term[1],
+                slug_de: slugify(term[0]),
+                slug_en: slugify(term[1]),
                 fullText: `${term[0]} ${term[1]} ${slugify(term[0])} ${slugify(
                   term[1]
                 )}`,
@@ -590,33 +620,29 @@ async function main() {
   if (contributor && editor && administrator) {
     const taxEvntCategories = await prisma.taxonomy.findFirst({
       where: {
-        slug: {
-          path: ["de"],
-          string_contains: "veranstaltungsarten",
+        slug_de: {
+          contains: "veranstaltungsarten",
         },
       },
     });
     const taxTypeOfInstitution = await prisma.taxonomy.findFirst({
       where: {
-        slug: {
-          path: ["de"],
-          string_contains: "einrichtungsart",
+        slug_de: {
+          contains: "einrichtungsart",
         },
       },
     });
     const taxTargetAudience = await prisma.taxonomy.findFirst({
       where: {
-        slug: {
-          path: ["de"],
-          string_contains: "angebote-fuer",
+        slug_de: {
+          contains: "angebote-fuer",
         },
       },
     });
     const taxType = await prisma.taxonomy.findFirst({
       where: {
-        slug: {
-          path: ["de"],
-          string_contains: "traegerart",
+        slug_de: {
+          contains: "traegerart",
         },
       },
     });
@@ -646,9 +672,8 @@ async function main() {
 
             const tL = await prisma.location.findFirst({
               where: {
-                slug: {
-                  path: ["en"],
-                  string_contains: `location-en-${id}`,
+                slug_en: {
+                  contains: `location-en-${id}`,
                 },
               },
             });

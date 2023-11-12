@@ -6,6 +6,7 @@ import React, {
   ChangeEventHandler,
   useRef,
 } from "react";
+import "regenerator-runtime"
 import type { AuthenticatedAppUser } from "@culturemap/core";
 import { PublishStatus } from "@culturemap/core";
 import { Link as RouterLink } from "react-router-dom";

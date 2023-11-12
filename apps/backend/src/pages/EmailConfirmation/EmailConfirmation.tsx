@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 
 import { LoadingIcon } from "~/components/ui";
 
-import { decode } from "jsonwebtoken";
+import { decodeJwt, JWTPayload} from "jose";
 
 import {
   useAuthVerifyEmailMutation,
@@ -19,6 +19,15 @@ import {
   AuthenticationPage,
   AuthenticationFormContainer,
 } from "~/components/ui";
+import { AuthenticatedApiUserData } from "@culturemap/core";
+
+export interface TokenPayload extends JWTPayload {
+  exp: number;
+  iat: number;
+  type: string;
+  user?: AuthenticatedApiUserData;
+}
+
 
 const EmailConfirmation = () => {
   const router = useRouter();
@@ -45,14 +54,14 @@ const EmailConfirmation = () => {
   useEffect(() => {
     const confirmToken = async () => {
       try {
-        const payload = decode(token, { json: true });
+        const payload = decodeJwt<TokenPayload>(token);
 
         if (!payload || 
             (payload.exp && payload.exp * 1000 < Date.now()) ||
             (!payload?.user?.id))
           throw Error("Incorrect token provided");
 
-        if (decode(token)) {
+        if (decodeJwt(token)) {
           const { errors } = await verificationMutation(token);
           if (!errors) {
             setIsTokenConfirmed(true);

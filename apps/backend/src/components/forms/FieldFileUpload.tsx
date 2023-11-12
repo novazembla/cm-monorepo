@@ -237,8 +237,8 @@ export const FieldFileUploader = ({
                 if (getCancelToken())
                   setProgressInfo({
                     loaded: ev.loaded,
-                    total: ev.total,
-                    percent: Math.round((ev.loaded / ev.total) * 100),
+                    total: ev.total ?? 0,
+                    percent: ev.total ? Math.round((ev.loaded / ev.total) * 100) : 0,
                   });
               },
             })

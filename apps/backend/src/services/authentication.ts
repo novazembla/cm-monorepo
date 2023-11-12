@@ -1,7 +1,6 @@
 import Cookies, { CookieSetOptions } from "universal-cookie";
 import type { AuthenticatedAppUserData } from "@culturemap/core";
-
-import { decode, JwtPayload } from "jsonwebtoken";
+import {type JWTPayload, decodeJwt} from 'jose'
 
 export const HAS_REFRESH_COOKIE_NAME = "authRefresh";
 
@@ -10,7 +9,7 @@ export interface Token {
   expires: string;
 }
 
-export interface TokenPayload extends JwtPayload {
+export interface TokenPayload extends JWTPayload {
   exp: number;
   iat: number;
   type: string;
@@ -24,7 +23,7 @@ const cookies = new Cookies();
 
 const options: CookieSetOptions = {
   sameSite: "lax",
-  secure: process.env.NODE_ENV === "production",
+  secure: import.meta.env.PROD,
   path: "/",
   expires: new Date("1970-01-01"),
 };
@@ -41,7 +40,8 @@ export const getTokenPayload = (token: Token): TokenPayload | null => {
 
   try {
     if (new Date(token.expires).getTime() > Date.now()) {
-      const payload = decode(token.token, { json: true });
+ 
+      const payload = decodeJwt<TokenPayload>(token.token);
 
       if (!payload) return null;
 
