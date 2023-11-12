@@ -883,6 +883,9 @@
     "suggestionsMetaDesc": {
       "label": "Kartenpunktvorschlag: SEO Meta Beschreibung"
     },
+    "quickSearchInfo": {
+      "label": "Kurzinformation in Schnellsuchresultat"
+    },
     "defaultMetaDesc": {
       "label": "Meta Beschreibung für Listen (Veranstaltungen/Karte) und anderen Spezialseiten"
     },

@@ -32,6 +32,7 @@ export type AppSettingsDefaultFieldKeys =
   | "suggestionsIntro"
   | "suggestionsTandCInfo"
   | "suggestionsMetaDesc"
+  | "quickSearchInfo"
   | "defaultMetaDesc"
   | "taxMapping"
   | "centerOfGravity";
@@ -127,6 +128,27 @@ export const settingFields: AppSettingsFieldDefinitions = {
           ...acc,
 
           [lang]: newData[`suggestionsMetaDesc_${lang}`],
+        }),
+        {}
+      );
+    },
+  },
+  quickSearchInfo: {
+    defaultValue: "",
+    type: "multilangtexteditor",
+    // t("settings.quickSearchInfo.label", "Short information above quick search")
+    label: "settings.quickSearchInfo.label",
+    validationSchema: object().shape({
+      quickSearchInfo: string(),
+    }),
+    required: true,
+    getUpdateValue: (fieldDefs: AppSettingField, newData: any) => {
+      const config = getAppConfig();
+      return config.activeLanguages.reduce(
+        (acc: any, lang: any) => ({
+          ...acc,
+
+          [lang]: newData[`quickSearchInfo_${lang}`],
         }),
         {}
       );

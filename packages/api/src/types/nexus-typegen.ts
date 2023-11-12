@@ -354,6 +354,7 @@ export interface NexusGenObjects {
     centerOfGravity?: NexusGenScalars['JSON'] | null; // JSON
     defaultMetaDesc?: NexusGenScalars['JSON'] | null; // JSON
     mapJsonUrl?: string | null; // String
+    quickSearchInfo?: NexusGenScalars['JSON'] | null; // JSON
     suggestionsIntro?: NexusGenScalars['JSON'] | null; // JSON
     suggestionsMetaDesc?: NexusGenScalars['JSON'] | null; // JSON
     suggestionsTandCInfo?: NexusGenScalars['JSON'] | null; // JSON
@@ -683,6 +684,7 @@ export interface NexusGenFieldTypes {
     centerOfGravity: NexusGenScalars['JSON'] | null; // JSON
     defaultMetaDesc: NexusGenScalars['JSON'] | null; // JSON
     mapJsonUrl: string | null; // String
+    quickSearchInfo: NexusGenScalars['JSON'] | null; // JSON
     suggestionsIntro: NexusGenScalars['JSON'] | null; // JSON
     suggestionsMetaDesc: NexusGenScalars['JSON'] | null; // JSON
     suggestionsTandCInfo: NexusGenScalars['JSON'] | null; // JSON
@@ -1124,6 +1126,7 @@ export interface NexusGenFieldTypeNames {
     centerOfGravity: 'JSON'
     defaultMetaDesc: 'JSON'
     mapJsonUrl: 'String'
+    quickSearchInfo: 'JSON'
     suggestionsIntro: 'JSON'
     suggestionsMetaDesc: 'JSON'
     suggestionsTandCInfo: 'JSON'

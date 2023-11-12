@@ -883,6 +883,9 @@
     "suggestionsMetaDesc": {
       "label": "Suggestion page: SEO meta description."
     },
+    "quickSearchInfo": {
+      "label": "Short information above quick search"
+    },
     "defaultMetaDesc": {
       "label": "Fallback Meta Description"
     },

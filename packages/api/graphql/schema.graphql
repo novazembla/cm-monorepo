@@ -181,6 +181,7 @@ type FrontendSettings {
   centerOfGravity: JSON
   defaultMetaDesc: JSON
   mapJsonUrl: String
+  quickSearchInfo: JSON
   suggestionsIntro: JSON
   suggestionsMetaDesc: JSON
   suggestionsTandCInfo: JSON
