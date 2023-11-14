@@ -10,11 +10,13 @@ import { getMultilangValue } from "~/utils";
 // t("settings.taxMapping.options.label.typeOfOrganisation", "Type of Organisation")
 // t("settings.taxMapping.options.label.targetAudience", "Target Audience")
 // t("settings.taxMapping.options.label.eventType", "Event type")
+// t("settings.taxMapping.options.label.accessibility", "Accessibility Information Type")
 const options = [
   "typeOfInstitution",
   "typeOfOrganisation",
   "targetAudience",
   "eventType",
+  "accessibility",
 ];
 
 export const MappedTaxonomiesPicker = ({ ...props }: { props: any }) => {

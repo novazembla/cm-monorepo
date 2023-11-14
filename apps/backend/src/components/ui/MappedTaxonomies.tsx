@@ -11,6 +11,7 @@ const options = [
   "typeOfOrganisation",
   "targetAudience",
   "eventType",
+  "accessibility",
 ];
 
 export const MappedTaxonomies = ({ ...props }: { props: any }) => {

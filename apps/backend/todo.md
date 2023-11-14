@@ -44,7 +44,7 @@ Magic Links Authentication
 https://medium.com/@aleksandrasays/sending-magic-links-with-nodejs-765a8686996
 
 
-Accessiblity
+Accessibility
 Install and use https://web.dev/accessibility-auditing-react/ AXE in Testing ...
 
 WYSIWYG

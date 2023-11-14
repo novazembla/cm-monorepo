@@ -862,7 +862,8 @@
           "typeOfInstitution": "Type of Institution",
           "typeOfOrganisation": "Type of Organisation",
           "targetAudience": "Target Audience",
-          "eventType": "Event type"
+          "eventType": "Event type",
+          "accessibility": "Accessibility Information Type"
         }
       },
       "taxonmies": {

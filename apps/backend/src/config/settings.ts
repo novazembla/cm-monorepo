@@ -223,6 +223,7 @@ export const settingFields: AppSettingsFieldDefinitions = {
       typeOfOrganisation: "",
       eventType: "",
       targetAudience: "",
+      accessibility: "",
     },
     type: "taxMapping",
     // t("settings.taxMapping.label","Mapped taxonomies")
@@ -233,6 +234,7 @@ export const settingFields: AppSettingsFieldDefinitions = {
       typeOfOrganisation: string().required(),
       targetAudience: string().required(),
       eventType: string().required(),
+      accessibility: string().required(),
     }),
     printComponent: MappedTaxonomies,
     formComponent: MappedTaxonomiesPicker,
@@ -245,6 +247,7 @@ export const settingFields: AppSettingsFieldDefinitions = {
         targetAudience:
           value["targetAudience"] ?? fieldDefs.defaultValue.targetAudience,
         eventType: value["eventType"] ?? fieldDefs.defaultValue.eventType,
+        accessibility: value["accessibility"] ?? fieldDefs.defaultValue.accessibility,
       };
     },
     getUpdateValue: (fieldDefs: AppSettingField, newData: any) => {
@@ -253,6 +256,7 @@ export const settingFields: AppSettingsFieldDefinitions = {
         typeOfOrganisation: newData["typeOfOrganisation"],
         targetAudience: newData["targetAudience"],
         eventType: newData["eventType"],
+        accessibility: newData["accessibility"],
       };
     },
   },

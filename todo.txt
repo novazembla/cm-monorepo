@@ -1,3 +1,9 @@
+Deployment
+> Run migrations
+> Manually add accessibility terms
+> Set Icon Keys to accessibility terms
+> Set Settings (don't forget to match accessiblity taxonomy)
+
 Questions/Comments. 
 
 Schnellsuch Info 

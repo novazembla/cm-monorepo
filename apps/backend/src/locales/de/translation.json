@@ -862,7 +862,8 @@
           "typeOfInstitution": "Einrichtungsart",
           "typeOfOrganisation": "Trägerart",
           "targetAudience": "Angebote für",
-          "eventType": "Veranstaltungsart"
+          "eventType": "Veranstaltungsart",
+          "accessibility": "Barrierefreiheitinformationen"
         }
       },
       "taxonmies": {
