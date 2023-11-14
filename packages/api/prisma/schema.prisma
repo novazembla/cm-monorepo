@@ -217,6 +217,8 @@ model Taxonomy {
   name_en        String @default("")
   slug_en         String @default("")
 
+  hasIcons Boolean  @default(false)
+  hasStolperstein Boolean  @default(false)
   multiTerm Boolean  @default(false)
   hasColor  Boolean  @default(false)
   collectPrimaryTerm  Boolean  @default(false)
@@ -234,16 +236,18 @@ model Taxonomy {
 model Term {
   id   Int  @id @default(autoincrement())
   
-  name_de        String @default("")
+  name_de         String @default("")
   slug_de         String @default("")
   
-  name_en        String @default("")
-  slug_en         String @default("")
+  name_en         String  @default("")
+  slug_en         String  @default("")
 
-  color      String   @default("")
-  colorDark  String   @default("")
-  taxonomyId Int
-  taxonomy   Taxonomy @relation(fields: [taxonomyId], references: [id], onDelete: Cascade)
+  isStolperstein  Boolean  @default(false)
+  iconKey         String   @default("")
+  color           String   @default("")
+  colorDark       String   @default("")
+  taxonomyId      Int
+  taxonomy        Taxonomy @relation(fields: [taxonomyId], references: [id], onDelete: Cascade)
 
   locations Location[] @relation(name: "locationTerms")
 

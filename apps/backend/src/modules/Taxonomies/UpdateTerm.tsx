@@ -81,9 +81,13 @@ const UpdateTerm = () => {
         multiLangFields,
         config.activeLanguages
       ),
+      iconKey: data?.term?.iconKey,
+      isStolperstein: !!data?.term?.isStolperstein,
       color: data?.term?.color ?? "",
       colorDark: data?.term?.colorDark ?? "",
+      hasIcons: !!data?.term?.taxonomy.hasIcons,
       hasColor: !!data?.term?.taxonomy?.hasColor,
+      hasStolperstein: !!data?.term?.taxonomy.hasStolperstein,
       collectPrimaryTerm: !!data?.term?.taxonomy?.collectPrimaryTerm,
     });
   }, [reset, data, config.activeLanguages]);
@@ -103,6 +107,8 @@ const UpdateTerm = () => {
             [],
             multiLangFields
           ),
+          iconKey: newData.iconKey,
+          isStolperstein: !!newData.isStolperstein,
           color: newData.color,
           colorDark: newData.colorDark,
         });

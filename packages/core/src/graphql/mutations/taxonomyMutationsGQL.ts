@@ -40,6 +40,8 @@ export const termCreateMutationGQL = gql`
       id
       name
       slug
+      iconKey
+      isStolperstein
       color
       colorDark
       taxonomyId
@@ -53,6 +55,8 @@ export const termUpdateMutationGQL = gql`
       id
       name
       slug
+      iconKey
+      isStolperstein
       color
       colorDark
     }

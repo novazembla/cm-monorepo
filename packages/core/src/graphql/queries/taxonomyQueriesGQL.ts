@@ -17,6 +17,8 @@ export const taxonomiesQueryGQL = gql`
         id
         name
         slug
+        hasIcons
+        hasStolperstein
         hasColor
         isRequired
         collectPrimaryTerm
@@ -33,6 +35,8 @@ export const taxonomyQueryGQL = gql`
       id
       name
       slug
+      hasIcons
+      hasStolperstein
       hasColor
       isRequired
       collectPrimaryTerm
@@ -72,6 +76,8 @@ export const termsQueryGQL = gql`
         id
         name
         slug
+        iconKey
+        isStolperstein
         color
         colorDark
       }
@@ -86,6 +92,8 @@ export const termQueryGQL = gql`
       id
       name
       slug
+      iconKey
+      isStolperstein
       color
       colorDark
       createdAt
@@ -95,6 +103,8 @@ export const termQueryGQL = gql`
         id
         name
         slug
+        hasIcons
+        hasStolperstein
         hasColor
         createdAt
         updatedAt

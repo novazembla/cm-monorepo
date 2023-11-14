@@ -46,6 +46,7 @@ const doChores = async () => {
         terms: {
           select: {
             id: true,
+            isStolperstein: true,
             color: true,
             colorDark: true,
           },

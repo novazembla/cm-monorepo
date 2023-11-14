@@ -77,8 +77,10 @@ const CreateTerm = () => {
       if (appUser) {
         const { errors } = await firstMutation({
           taxonomyId: parseInt(router.query.taxId, 10),
+          iconKey: newData.iconKey,
+          isStolperstein: !!newData.isStolperstein,
           color: newData.color,
-          colorDark: newData.color,
+          colorDark: newData.colorDark,
           ...filteredOutputByWhitelist(
             multiLangRHFormDataToJson(
               newData,

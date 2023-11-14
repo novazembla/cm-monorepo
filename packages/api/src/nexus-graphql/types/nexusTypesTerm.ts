@@ -49,7 +49,8 @@ export const Term = objectType({
     t.json("slug", {
       resolve: (...[p]) => daoSharedMapTranslatedColumnsInRowToJson(p, "slug"),
     });
-
+    t.string("iconKey");
+    t.boolean("isStolperstein");
     t.string("color");
     t.string("colorDark");
     t.date("createdAt");
@@ -160,6 +161,8 @@ export const TermCreateInput = inputObjectType({
     t.nonNull.json("name");
     t.nonNull.json("slug");
     t.nonNull.int("taxonomyId");
+    t.nonNull.boolean("isStolperstein");
+    t.string("iconKey");
     t.string("color");
     t.string("colorDark");
   },
@@ -170,6 +173,8 @@ export const TermUpdateInput = inputObjectType({
   definition(t) {
     t.nonNull.json("name");
     t.nonNull.json("slug");
+    t.boolean("isStolperstein");
+    t.string("iconKey");
     t.string("color");
     t.string("colorDark");
   },
@@ -190,7 +195,14 @@ export const TermMutations = extendType({
 
       async resolve(...[, args]) {
         const term = await daoTermCreate({
-          ...(pick(args.data, ["name", "slug", "color", "colorDark"]) as any),
+          ...(pick(args.data, [
+            "name",
+            "slug",
+            "color",
+            "colorDark",
+            "isStolperstein",
+            "iconKey",
+          ]) as any),
           taxonomy: {
             connect: { id: args.data.taxonomyId },
           },
@@ -217,7 +229,16 @@ export const TermMutations = extendType({
       authorize: (...[, , ctx]) => authorizeApiUser(ctx, "taxUpdate"),
 
       async resolve(...[, args]) {
-        const term = await daoTermUpdate(args.id, args.data as any);
+        const term = await daoTermUpdate(args.id, {
+          ...(pick(args.data, [
+            "name",
+            "slug",
+            "color",
+            "colorDark",
+            "isStolperstein",
+            "iconKey",
+          ]) as any),
+        });
 
         if (!term)
           throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Update failed");

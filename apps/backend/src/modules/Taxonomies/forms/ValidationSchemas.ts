@@ -14,6 +14,8 @@ export const ModuleTaxonomySchema = object().shape(
         .required(),
     }),
     {
+      hasIcons: boolean(),
+      hasStolperstein: boolean(),
       hasColor: boolean(),
       collectPrimaryTerm: boolean(),
       isRequired: boolean(),
@@ -33,6 +35,14 @@ export const ModuleTermSchema = object().shape(
         .required(),
     }),
     {
+      hasIcons: boolean(),
+      iconKey: mixed().when("hasIcons", {
+        is: true,
+        // t("validation.slug.notahexcolor", "Please provide a valid HEX color (like #a8f or #f9ad9f")
+        then: string()
+          .required(),
+        otherwise: string().nullable(),
+      }),
       hasColor: boolean(),
       color: mixed().when("hasColor", {
         is: true,

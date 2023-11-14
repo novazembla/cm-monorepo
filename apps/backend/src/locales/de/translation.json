@@ -150,7 +150,7 @@
     "slug": {
       "invalidcharacters": "Bitte verwenden Sie ausschliesslich A-Z, -, und Zahlen",
       "chooselocation": "Bitte wählen Sie einen Ort",
-      "notahexcolor": "Bitte geben Sie eine gültige HEX-Farbe an (z.B. #a8f oder #f9ad9f"
+      "notahexcolor": "Bitte geben Sie eine gültige HEX-Farbe an (z.B. #a8f oder #f9ad9f)"
     },
     "page": {
       "login": {
@@ -714,6 +714,12 @@
           "modules": {
             "label": "Aktiv für folgende Module"
           },
+          "hasIcons": {
+            "label": "Icon-Schlüssel Feld anzeigen"
+          },
+          "hasStolperstein": {
+            "label": "'Ist Stolperstein' Checkbox anzeigen"
+          },
           "hasColor": {
             "label": "Farbfelder anzeigen"
           },
@@ -722,6 +728,12 @@
           },
           "isRequired": {
             "label": "Auswahl von mindestens einem Begriff ist erforderlich"
+          },
+          "isStolperstein": {
+            "label": "Begriff identifiziert Stolpersteine"
+          },
+          "iconKey": {
+            "label": "Icon Schlüssel"
           },
           "color": {
             "label": "Farbe (hell)"

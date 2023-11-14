@@ -150,7 +150,7 @@
     "slug": {
       "invalidcharacters": "You can only use A-Z, -, and numbers",
       "chooselocation": "Please choose a location",
-      "notahexcolor": "Please provide a valid HEX color (like #a8f or #f9ad9f"
+      "notahexcolor": "Please provide a valid HEX color (like #a8f or #f9ad9f)"
     },
     "page": {
       "login": {
@@ -714,6 +714,12 @@
           "modules": {
             "label": "Active for the following Modules"
           },
+          "hasIcons": {
+            "label": "Show icon key field"
+          },
+          "hasStolperstein": {
+            "label": "Show 'Is Stolperstein' term toggle"
+          },
           "hasColor": {
             "label": "Show color fields"
           },
@@ -722,6 +728,12 @@
           },
           "isRequired": {
             "label": "Selection of at least one term is required"
+          },
+          "isStolperstein": {
+            "label": "Term identifies Stolperstein"
+          },
+          "iconKey": {
+            "label": "Icon key"
           },
           "color": {
             "label": "Color (light)"

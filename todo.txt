@@ -1,3 +1,28 @@
+Questions/Comments. 
+
+Schnellsuch Info 
+
+Kommentare
++ Für die Veranstaltungen gab es auf der Veranstaltungsauflistung keine Stichwortsuche. Diese habe ich hinzugefügt. 
++ Anstatt klicken sie "hier" ist es besser die zwei Links als Buttons darzustellen. Das habe ich getan. 
+Dafür muss aber der Einleitende Text der darüber angezeigt wird angepasst werden. 
++ Bitte auch die Beschriftungen der Buttons checken lassen. 
+
+Fragen:
+Wir verstecken die Veranstaltungen für Englische NutzerInnen. Sollte 
+a) der Button für diese überhaupt sichtbar sein? (habe ihn im Moment ausgeblendet) Und ...
+b) sollte ich nicht für EN Nutzerinnen die Veranstaltungen herausfiltern? 
+
+Logofriedhof
++ Die zwei oberen Logos sind zwar ähnlich aber nicht gleich. Macht das was? 
++ Habe das Senatslogo auf https://www.berlin.de/sen/web/ verlinkt, korrekt? 
++ ... und das Visit Berlin Logo je nach gewählter Sprache auch https://www.visitberlin.de/de und https://www.visitberlin.de/en, korrekt?
+
+Kartensuch-/Versanstaltungssuchformular. 
+Es gibt jetzt einen Knopf um die Formulare zu dem Ausgangszustand zurück zu setzen. Ich habe den Knopf mit 
+"Reset all filters" und "Filter zurücksetzen" beschrieben, gut so? 
+
+
 Backend
 
 Had to do:

@@ -47,6 +47,8 @@ export const Taxonomy = objectType({
       resolve: (...[p]) => daoSharedMapTranslatedColumnsInRowToJson(p, "slug"),
     });
 
+    t.boolean("hasIcons");
+    t.boolean("hasStolperstein");
     t.boolean("hasColor");
     t.boolean("isRequired");
     t.boolean("collectPrimaryTerm");
@@ -196,6 +198,8 @@ export const TaxonomyUpsertInput = inputObjectType({
   definition(t) {
     t.nonNull.json("name");
     t.nonNull.json("slug");
+    t.nonNull.boolean("hasIcons");
+    t.nonNull.boolean("hasStolperstein");
     t.nonNull.boolean("hasColor");
     t.nonNull.boolean("isRequired");
     t.nonNull.boolean("collectPrimaryTerm");

@@ -143,6 +143,8 @@ export interface NexusGenInputs {
   TaxonomyUpsertInput: { // input type
     collectPrimaryTerm: boolean; // Boolean!
     hasColor: boolean; // Boolean!
+    hasIcons: boolean; // Boolean!
+    hasStolperstein: boolean; // Boolean!
     isRequired: boolean; // Boolean!
     modules: NexusGenScalars['JSON']; // JSON!
     name: NexusGenScalars['JSON']; // JSON!
@@ -151,6 +153,8 @@ export interface NexusGenInputs {
   TermCreateInput: { // input type
     color?: string | null; // String
     colorDark?: string | null; // String
+    iconKey?: string | null; // String
+    isStolperstein: boolean; // Boolean!
     name: NexusGenScalars['JSON']; // JSON!
     slug: NexusGenScalars['JSON']; // JSON!
     taxonomyId: number; // Int!
@@ -158,6 +162,8 @@ export interface NexusGenInputs {
   TermUpdateInput: { // input type
     color?: string | null; // String
     colorDark?: string | null; // String
+    iconKey?: string | null; // String
+    isStolperstein?: boolean | null; // Boolean
     name: NexusGenScalars['JSON']; // JSON!
     slug: NexusGenScalars['JSON']; // JSON!
   }
@@ -485,6 +491,8 @@ export interface NexusGenObjects {
     collectPrimaryTerm?: boolean | null; // Boolean
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
     hasColor?: boolean | null; // Boolean
+    hasIcons?: boolean | null; // Boolean
+    hasStolperstein?: boolean | null; // Boolean
     id: number; // Int!
     isRequired?: boolean | null; // Boolean
     modules?: Array<NexusGenRootTypes['Module'] | null> | null; // [Module]
@@ -500,7 +508,9 @@ export interface NexusGenObjects {
     color?: string | null; // String
     colorDark?: string | null; // String
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
+    iconKey?: string | null; // String
     id: number; // Int!
+    isStolperstein?: boolean | null; // Boolean
     taxonomy?: NexusGenRootTypes['Taxonomy'] | null; // Taxonomy
     taxonomyId: number; // Int!
     updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
@@ -912,6 +922,8 @@ export interface NexusGenFieldTypes {
     collectPrimaryTerm: boolean | null; // Boolean
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
     hasColor: boolean | null; // Boolean
+    hasIcons: boolean | null; // Boolean
+    hasStolperstein: boolean | null; // Boolean
     id: number; // Int!
     isRequired: boolean | null; // Boolean
     modules: Array<NexusGenRootTypes['Module'] | null> | null; // [Module]
@@ -930,7 +942,9 @@ export interface NexusGenFieldTypes {
     color: string | null; // String
     colorDark: string | null; // String
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
+    iconKey: string | null; // String
     id: number; // Int!
+    isStolperstein: boolean | null; // Boolean
     name: NexusGenScalars['JSON'] | null; // JSON
     slug: NexusGenScalars['JSON'] | null; // JSON
     taxonomy: NexusGenRootTypes['Taxonomy'] | null; // Taxonomy
@@ -1354,6 +1368,8 @@ export interface NexusGenFieldTypeNames {
     collectPrimaryTerm: 'Boolean'
     createdAt: 'DateTime'
     hasColor: 'Boolean'
+    hasIcons: 'Boolean'
+    hasStolperstein: 'Boolean'
     id: 'Int'
     isRequired: 'Boolean'
     modules: 'Module'
@@ -1372,7 +1388,9 @@ export interface NexusGenFieldTypeNames {
     color: 'String'
     colorDark: 'String'
     createdAt: 'DateTime'
+    iconKey: 'String'
     id: 'Int'
+    isStolperstein: 'Boolean'
     name: 'JSON'
     slug: 'JSON'
     taxonomy: 'Taxonomy'

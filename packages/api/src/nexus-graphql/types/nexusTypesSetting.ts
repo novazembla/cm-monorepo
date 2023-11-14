@@ -122,6 +122,8 @@ export const SettingsQuery = extendType({
             terms: {
               select: {
                 id: true,
+                iconKey: true,
+                isStolperstein: true,
                 color: true,
                 colorDark: true,
                 taxonomyId: true,

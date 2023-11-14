@@ -106,6 +106,8 @@ const Create = () => {
             [],
             multiLangFields
           ),
+          hasIcons: newData.hasIcons,
+          hasStolperstein: newData.hasStolperstein,
           hasColor: newData.hasColor,
           collectPrimaryTerm: newData.collectPrimaryTerm,
           isRequired: newData.isRequired,

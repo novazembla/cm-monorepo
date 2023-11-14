@@ -82,6 +82,28 @@ export const TaxonomyForm = ({
           </FieldRow>
           <FieldRow>
             <FieldSwitch
+              name="hasIcons"
+              label={t(
+                "module.taxonomies.forms.field.hasIcons.label",
+                "Show icon key field"
+              )}
+              defaultChecked={!!data?.hasIcons}
+              colorScheme="wine"
+            />
+          </FieldRow>
+          <FieldRow>
+            <FieldSwitch
+              name="hasStolperstein"
+              label={t(
+                "module.taxonomies.forms.field.hasStolperstein.label",
+                "Show 'Is Stolperstein' term toggle"
+              )}
+              defaultChecked={!!data?.hasStolperstein}
+              colorScheme="wine"
+            />
+          </FieldRow>
+          <FieldRow>
+            <FieldSwitch
               name="hasColor"
               label={t(
                 "module.taxonomies.forms.field.hasColor.label",
@@ -116,12 +138,51 @@ export const TaxonomyForm = ({
         </>
       )}
 
+      {type === "term" && (!!data?.taxonomy?.hasStolperstein || !!data?.hasStolperstein) && (
+        <>
+          <FieldRow>
+            <FieldSwitch
+              name="isStolperstein"
+              label={t(
+                "module.taxonomies.forms.field.isStolperstein.label",
+                "Term identifies Stolperstein"
+              )}
+              defaultChecked={!!data?.isStolperstein}
+              colorScheme="wine"
+            />
+          </FieldRow>
+        </>
+      )}
+
+      {type === "term" && (!!data?.taxonomy?.hasIcons || !!data?.hasIcons) && (
+        <>
+          <FieldRow>
+            <FieldInput
+              id="iconKey"
+              label={t(
+                "module.taxonomies.forms.field.iconKey.label",
+                "Icon key"
+              )}
+              name="iconKey"
+              type="text"
+              isRequired={yupIsFieldRequired("iconKey", validationSchema)}
+              settings={{
+                placeholder: "icon-abc",
+              }}
+            />
+          </FieldRow>
+        </>
+      )}
+
       {type === "term" && (!!data?.taxonomy?.hasColor || !!data?.hasColor) && (
         <>
           <FieldRow>
             <FieldInput
               id="color"
-              label={t("module.taxonomies.forms.field.color.label", "Color (light)")}
+              label={t(
+                "module.taxonomies.forms.field.color.label",
+                "Color (light)"
+              )}
               name="color"
               type="text"
               isRequired={yupIsFieldRequired("color", validationSchema)}
