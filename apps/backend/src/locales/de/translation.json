@@ -717,7 +717,7 @@
           "hasIcons": {
             "label": "Icon-Schlüssel Feld anzeigen"
           },
-          "hasReducedVisibility": {
+          "hasReducedVisibilityField": {
             "label": "'Reduzierte Sichtbarkeit' Checkbox anzeigen"
           },
           "hasColor": {
@@ -730,7 +730,7 @@
             "label": "Auswahl von mindestens einem Begriff ist erforderlich"
           },
           "hasReducedVisibility": {
-            "label": "Begriff hat reduzierte Sichtbarkeit"
+            "label": "Term has reduced visibility"
           },
           "iconKey": {
             "label": "Icon Schlüssel"

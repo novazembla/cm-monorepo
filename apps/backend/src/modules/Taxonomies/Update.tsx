@@ -251,7 +251,7 @@ const Update = () => {
               <TaxonomyForm
                 type="taxonomy"
                 action="update"
-                data={data?.taxonomy}
+                taxonomy={data?.taxonomy}
                 validationSchema={extendedValidationSchema}
               />
             </ModulePage>

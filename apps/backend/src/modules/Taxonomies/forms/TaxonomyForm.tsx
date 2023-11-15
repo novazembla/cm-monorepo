@@ -11,13 +11,15 @@ import { useModules } from "~/hooks";
 import { yupIsFieldRequired } from "~/validation";
 
 export const TaxonomyForm = ({
-  data,
+  taxonomy,
+  term,
   errors,
   action,
   validationSchema,
   type,
 }: {
-  data?: any;
+  taxonomy?: any;
+  term?: any;
   errors?: any;
   validationSchema: any;
   action: "create" | "update";
@@ -35,7 +37,6 @@ export const TaxonomyForm = ({
         label={t("module.taxonomies.forms.taxonomy.field.label.name", "Name")}
         isRequired={true}
         settings={{
-          defaultValues: data?.taxonomy?.name,
           placeholder: t(
             "module.taxonomies.forms.taxonomy.field.placeholder.name",
             "Taxonomy name"
@@ -49,7 +50,6 @@ export const TaxonomyForm = ({
         label={t("module.taxonomies.forms.taxonomy.field.label.slug", "Slug")}
         isRequired={true}
         settings={{
-          defaultValues: data?.taxonomy?.slug,
           placeholder: t(
             "module.taxonomies.forms.taxonomy.field.placeholder.slug",
             "Slug / URL part"
@@ -87,7 +87,7 @@ export const TaxonomyForm = ({
                 "module.taxonomies.forms.field.hasIcons.label",
                 "Show icon key field"
               )}
-              defaultChecked={!!data?.hasIcons}
+              defaultChecked={!!taxonomy?.hasIcons}
               colorScheme="wine"
             />
           </FieldRow>
@@ -95,10 +95,10 @@ export const TaxonomyForm = ({
             <FieldSwitch
               name="hasReducedVisibility"
               label={t(
-                "module.taxonomies.forms.field.hasReducedVisibility.label",
+                "module.taxonomies.forms.field.hasReducedVisibilityField.label",
                 "Show 'Has reduced Visibility' term toggle"
               )}
-              defaultChecked={!!data?.hasReducedVisibility}
+              defaultChecked={!!taxonomy?.hasReducedVisibility}
               colorScheme="wine"
             />
           </FieldRow>
@@ -109,7 +109,7 @@ export const TaxonomyForm = ({
                 "module.taxonomies.forms.field.hasColor.label",
                 "Show color fields"
               )}
-              defaultChecked={!!data?.hasColor}
+              defaultChecked={!!taxonomy?.hasColor}
               colorScheme="wine"
             />
           </FieldRow>
@@ -120,7 +120,7 @@ export const TaxonomyForm = ({
                 "module.taxonomies.forms.field.collectPrimaryTerm.label",
                 "Show primary term select element"
               )}
-              defaultChecked={!!data?.collectPrimaryTerm}
+              defaultChecked={!!taxonomy?.collectPrimaryTerm}
               colorScheme="wine"
             />
           </FieldRow>
@@ -131,14 +131,14 @@ export const TaxonomyForm = ({
                 "module.taxonomies.forms.field.isRequired.label",
                 "Selection of at least one term is required"
               )}
-              defaultChecked={!!data?.isRequired}
+              defaultChecked={!!taxonomy?.isRequired}
               colorScheme="wine"
             />
           </FieldRow>
         </>
       )}
 
-      {type === "term" && (!!data?.taxonomy?.hasReducedVisibility || !!data?.hasReducedVisibility) && (
+      {type === "term" && !!taxonomy?.hasReducedVisibility && (
         <>
           <FieldRow>
             <FieldSwitch
@@ -147,14 +147,14 @@ export const TaxonomyForm = ({
                 "module.taxonomies.forms.field.hasReducedVisibility.label",
                 "Term has reduced visibility"
               )}
-              defaultChecked={!!data?.hasReducedVisibility}
+              defaultChecked={!!term?.hasReducedVisibility}
               colorScheme="wine"
             />
           </FieldRow>
         </>
       )}
 
-      {type === "term" && (!!data?.taxonomy?.hasIcons || !!data?.hasIcons) && (
+      {type === "term" && !!taxonomy?.hasIcons && (
         <>
           <FieldRow>
             <FieldInput
@@ -174,7 +174,7 @@ export const TaxonomyForm = ({
         </>
       )}
 
-      {type === "term" && (!!data?.taxonomy?.hasColor || !!data?.hasColor) && (
+      {type === "term" && !!taxonomy?.hasColor && (
         <>
           <FieldRow>
             <FieldInput

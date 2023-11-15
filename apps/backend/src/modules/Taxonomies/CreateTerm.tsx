@@ -163,7 +163,7 @@ const CreateTerm = () => {
               <TaxonomyForm
                 type="term"
                 action="create"
-                data={data?.taxonomy}
+                taxonomy={data?.taxonomy}
                 validationSchema={ModuleTermSchema}
               />
             </ModulePage>

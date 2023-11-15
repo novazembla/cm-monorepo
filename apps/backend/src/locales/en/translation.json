@@ -717,8 +717,8 @@
           "hasIcons": {
             "label": "Show icon key field"
           },
-          "hasReducedVisibility": {
-            "label": "Show 'Reduced Visibility' term toggle"
+          "hasReducedVisibilityField": {
+            "label": "Show 'Has reduced Visibility' term toggle"
           },
           "hasColor": {
             "label": "Show color fields"

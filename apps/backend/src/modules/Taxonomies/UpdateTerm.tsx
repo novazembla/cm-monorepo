@@ -87,7 +87,7 @@ const UpdateTerm = () => {
       colorDark: data?.term?.colorDark ?? "",
       hasIcons: !!data?.term?.taxonomy.hasIcons,
       hasColor: !!data?.term?.taxonomy?.hasColor,
-      hasReducedVisibility: !!data?.term?.taxonomy.hasReducedVisibility,
+      hasReducedVisibilityField: !!data?.term?.taxonomy.hasReducedVisibility,
       collectPrimaryTerm: !!data?.term?.taxonomy?.collectPrimaryTerm,
     });
   }, [reset, data, config.activeLanguages]);
@@ -190,7 +190,8 @@ const UpdateTerm = () => {
               <TaxonomyForm
                 type="term"
                 action="update"
-                data={data?.term}
+                term={data?.term}
+                taxonomy={data?.term?.taxonomy}
                 validationSchema={ModuleTermSchema}
               />
             </ModulePage>
