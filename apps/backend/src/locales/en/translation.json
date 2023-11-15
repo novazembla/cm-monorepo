@@ -717,8 +717,8 @@
           "hasIcons": {
             "label": "Show icon key field"
           },
-          "hasStolperstein": {
-            "label": "Show 'Is Stolperstein' term toggle"
+          "hasReducedVisibility": {
+            "label": "Show 'Reduced Visibility' term toggle"
           },
           "hasColor": {
             "label": "Show color fields"
@@ -729,8 +729,8 @@
           "isRequired": {
             "label": "Selection of at least one term is required"
           },
-          "isStolperstein": {
-            "label": "Term identifies Stolperstein"
+          "hasReducedVisibility": {
+            "label": "Term has reduced Visibility"
           },
           "iconKey": {
             "label": "Icon key"

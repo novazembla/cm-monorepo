@@ -218,7 +218,7 @@ model Taxonomy {
   slug_en         String @default("")
 
   hasIcons Boolean  @default(false)
-  hasStolperstein Boolean  @default(false)
+  hasReducedVisibility Boolean  @default(false)
   multiTerm Boolean  @default(false)
   hasColor  Boolean  @default(false)
   collectPrimaryTerm  Boolean  @default(false)
@@ -242,7 +242,7 @@ model Term {
   name_en         String  @default("")
   slug_en         String  @default("")
 
-  isStolperstein  Boolean  @default(false)
+  hasReducedVisibility  Boolean  @default(false)
   iconKey         String   @default("")
   color           String   @default("")
   colorDark       String   @default("")

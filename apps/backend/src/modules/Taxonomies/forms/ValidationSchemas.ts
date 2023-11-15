@@ -15,7 +15,7 @@ export const ModuleTaxonomySchema = object().shape(
     }),
     {
       hasIcons: boolean(),
-      hasStolperstein: boolean(),
+      hasReducedVisibility: boolean(),
       hasColor: boolean(),
       collectPrimaryTerm: boolean(),
       isRequired: boolean(),

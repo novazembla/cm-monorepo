@@ -717,8 +717,8 @@
           "hasIcons": {
             "label": "Icon-Schlüssel Feld anzeigen"
           },
-          "hasStolperstein": {
-            "label": "'Ist Stolperstein' Checkbox anzeigen"
+          "hasReducedVisibility": {
+            "label": "'Reduzierte Sichtbarkeit' Checkbox anzeigen"
           },
           "hasColor": {
             "label": "Farbfelder anzeigen"
@@ -729,8 +729,8 @@
           "isRequired": {
             "label": "Auswahl von mindestens einem Begriff ist erforderlich"
           },
-          "isStolperstein": {
-            "label": "Begriff identifiziert Stolpersteine"
+          "hasReducedVisibility": {
+            "label": "Begriff hat reduzierte Sichtbarkeit"
           },
           "iconKey": {
             "label": "Icon Schlüssel"

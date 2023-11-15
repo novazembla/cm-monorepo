@@ -501,7 +501,7 @@ type Taxonomy {
   createdAt: DateTime
   hasColor: Boolean
   hasIcons: Boolean
-  hasStolperstein: Boolean
+  hasReducedVisibility: Boolean
   id: Int!
   isRequired: Boolean
   modules: [Module]
@@ -522,7 +522,7 @@ input TaxonomyUpsertInput {
   collectPrimaryTerm: Boolean!
   hasColor: Boolean!
   hasIcons: Boolean!
-  hasStolperstein: Boolean!
+  hasReducedVisibility: Boolean!
   isRequired: Boolean!
   modules: JSON!
   name: JSON!
@@ -534,9 +534,9 @@ type Term {
   color: String
   colorDark: String
   createdAt: DateTime
+  hasReducedVisibility: Boolean
   iconKey: String
   id: Int!
-  isStolperstein: Boolean
   name: JSON
   slug: JSON
   taxonomy: Taxonomy
@@ -547,8 +547,8 @@ type Term {
 input TermCreateInput {
   color: String
   colorDark: String
+  hasReducedVisibility: Boolean!
   iconKey: String
-  isStolperstein: Boolean!
   name: JSON!
   slug: JSON!
   taxonomyId: Int!
@@ -563,8 +563,8 @@ type TermQueryResult {
 input TermUpdateInput {
   color: String
   colorDark: String
+  hasReducedVisibility: Boolean
   iconKey: String
-  isStolperstein: Boolean
   name: JSON!
   slug: JSON!
 }

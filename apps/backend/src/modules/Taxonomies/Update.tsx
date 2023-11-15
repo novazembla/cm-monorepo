@@ -127,7 +127,7 @@ const Update = () => {
         config.activeLanguages
       ),
       hasIcons: !!data.taxonomy.hasIcons,
-      hasStolperstein: !!data.taxonomy.hasStolperstein,
+      hasReducedVisibility: !!data.taxonomy.hasReducedVisibility,
       hasColor: !!data.taxonomy.hasColor,
       collectPrimaryTerm: !!data.taxonomy.collectPrimaryTerm,
       isRequired: !!data.taxonomy.isRequired,
@@ -164,7 +164,7 @@ const Update = () => {
             multiLangFields
           ),
           hasIcons: !!newData.hasIcons,
-          hasStolperstein: !!newData.hasStolperstein,
+          hasReducedVisibility: !!newData.hasReducedVisibility,
           hasColor: !!newData.hasColor,
           collectPrimaryTerm: !!newData.collectPrimaryTerm,
           isRequired: !!newData.isRequired,

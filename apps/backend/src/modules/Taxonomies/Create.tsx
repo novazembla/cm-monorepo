@@ -107,7 +107,7 @@ const Create = () => {
             multiLangFields
           ),
           hasIcons: newData.hasIcons,
-          hasStolperstein: newData.hasStolperstein,
+          hasReducedVisibility: newData.hasReducedVisibility,
           hasColor: newData.hasColor,
           collectPrimaryTerm: newData.collectPrimaryTerm,
           isRequired: newData.isRequired,

@@ -118,7 +118,7 @@ export const getGeoJson = async (
             terms: {
               select: {
                 id: true,
-                isStolperstein: true,
+                hasReducedVisibility: true,
                 color: true,
                 colorDark: true,
               },

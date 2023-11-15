@@ -123,7 +123,7 @@ export const SettingsQuery = extendType({
               select: {
                 id: true,
                 iconKey: true,
-                isStolperstein: true,
+                hasReducedVisibility: true,
                 color: true,
                 colorDark: true,
                 taxonomyId: true,

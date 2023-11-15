@@ -93,12 +93,12 @@ export const TaxonomyForm = ({
           </FieldRow>
           <FieldRow>
             <FieldSwitch
-              name="hasStolperstein"
+              name="hasReducedVisibility"
               label={t(
-                "module.taxonomies.forms.field.hasStolperstein.label",
-                "Show 'Is Stolperstein' term toggle"
+                "module.taxonomies.forms.field.hasReducedVisibility.label",
+                "Show 'Has reduced Visibility' term toggle"
               )}
-              defaultChecked={!!data?.hasStolperstein}
+              defaultChecked={!!data?.hasReducedVisibility}
               colorScheme="wine"
             />
           </FieldRow>
@@ -138,16 +138,16 @@ export const TaxonomyForm = ({
         </>
       )}
 
-      {type === "term" && (!!data?.taxonomy?.hasStolperstein || !!data?.hasStolperstein) && (
+      {type === "term" && (!!data?.taxonomy?.hasReducedVisibility || !!data?.hasReducedVisibility) && (
         <>
           <FieldRow>
             <FieldSwitch
-              name="isStolperstein"
+              name="hasReducedVisibility"
               label={t(
-                "module.taxonomies.forms.field.isStolperstein.label",
-                "Term identifies Stolperstein"
+                "module.taxonomies.forms.field.hasReducedVisibility.label",
+                "Term has reduced visibility"
               )}
-              defaultChecked={!!data?.isStolperstein}
+              defaultChecked={!!data?.hasReducedVisibility}
               colorScheme="wine"
             />
           </FieldRow>
