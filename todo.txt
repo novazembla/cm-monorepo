@@ -4,7 +4,11 @@ Deployment
 > Set Icon Keys to accessibility terms
 > Set Settings (don't forget to match accessiblity taxonomy)
 
-Questions/Comments. 
+Questions/Comments. 141123
+Barrierefreitheit Begriffe. Bitte die Icon Schlüssel nicht ändern, diese werden im code verwendet um die icons zu identifizieren. 
+
+
+Questions/Comments. 071123
 
 Schnellsuch Info 
 
