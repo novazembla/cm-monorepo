@@ -78,6 +78,7 @@ const CreateTerm = () => {
         const { errors } = await firstMutation({
           taxonomyId: parseInt(router.query.taxId, 10),
           iconKey: newData.iconKey,
+          berlinDeKey: newData.berlinDeKey,
           hasReducedVisibility: !!newData.hasReducedVisibility,
           color: newData.color,
           colorDark: newData.colorDark,

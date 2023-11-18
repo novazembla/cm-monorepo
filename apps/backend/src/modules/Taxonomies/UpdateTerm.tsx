@@ -82,6 +82,7 @@ const UpdateTerm = () => {
         config.activeLanguages
       ),
       iconKey: data?.term?.iconKey,
+      berlinDeKey: data?.term?.berlinDeKey,
       hasReducedVisibility: !!data?.term?.hasReducedVisibility,
       color: data?.term?.color ?? "",
       colorDark: data?.term?.colorDark ?? "",
@@ -108,6 +109,7 @@ const UpdateTerm = () => {
             multiLangFields
           ),
           iconKey: newData.iconKey,
+          berlinDeKey: newData.berlinDeKey,
           hasReducedVisibility: !!newData.hasReducedVisibility,
           color: newData.color,
           colorDark: newData.colorDark,

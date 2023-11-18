@@ -41,6 +41,7 @@ export const termCreateMutationGQL = gql`
       name
       slug
       iconKey
+      berlinDeKey
       hasReducedVisibility
       color
       colorDark
@@ -56,6 +57,7 @@ export const termUpdateMutationGQL = gql`
       name
       slug
       iconKey
+      berlinDeKey
       hasReducedVisibility
       color
       colorDark

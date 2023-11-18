@@ -77,6 +77,7 @@ export const termsQueryGQL = gql`
         name
         slug
         iconKey
+        berlinDeKey
         hasReducedVisibility
         color
         colorDark
@@ -93,6 +94,7 @@ export const termQueryGQL = gql`
       name
       slug
       iconKey
+      berlinDeKey
       hasReducedVisibility
       color
       colorDark

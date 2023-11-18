@@ -244,6 +244,7 @@ model Term {
 
   hasReducedVisibility  Boolean  @default(false)
   iconKey         String   @default("")
+  berlinDeKey         String   @default("")
   color           String   @default("")
   colorDark       String   @default("")
   taxonomyId      Int

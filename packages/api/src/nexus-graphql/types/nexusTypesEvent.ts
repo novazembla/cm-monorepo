@@ -302,6 +302,8 @@ export const EventQueries = extendType({
             terms: {
               select: {
                 id: true,
+                taxonomyId: true,
+                iconKey: true,
                 ...daoSharedGetTranslatedSelectColumns(["name", "slug"]),
               },
             },

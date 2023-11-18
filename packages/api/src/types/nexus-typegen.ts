@@ -151,6 +151,7 @@ export interface NexusGenInputs {
     slug: NexusGenScalars['JSON']; // JSON!
   }
   TermCreateInput: { // input type
+    berlinDeKey?: string | null; // String
     color?: string | null; // String
     colorDark?: string | null; // String
     hasReducedVisibility: boolean; // Boolean!
@@ -160,6 +161,7 @@ export interface NexusGenInputs {
     taxonomyId: number; // Int!
   }
   TermUpdateInput: { // input type
+    berlinDeKey?: string | null; // String
     color?: string | null; // String
     colorDark?: string | null; // String
     hasReducedVisibility?: boolean | null; // Boolean
@@ -505,6 +507,7 @@ export interface NexusGenObjects {
   }
   Term: { // root type
     _count?: NexusGenScalars['JSON'] | null; // JSON
+    berlinDeKey?: string | null; // String
     color?: string | null; // String
     colorDark?: string | null; // String
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
@@ -939,6 +942,7 @@ export interface NexusGenFieldTypes {
   }
   Term: { // field return type
     _count: NexusGenScalars['JSON'] | null; // JSON
+    berlinDeKey: string | null; // String
     color: string | null; // String
     colorDark: string | null; // String
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
@@ -1385,6 +1389,7 @@ export interface NexusGenFieldTypeNames {
   }
   Term: { // field return type name
     _count: 'JSON'
+    berlinDeKey: 'String'
     color: 'String'
     colorDark: 'String'
     createdAt: 'DateTime'

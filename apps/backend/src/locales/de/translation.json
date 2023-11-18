@@ -735,6 +735,9 @@
           "iconKey": {
             "label": "Icon Schlüssel"
           },
+          "berlinDeKey": {
+            "label": "Berlin.de Barrierefreiheit ID (numerisch)"
+          },
           "color": {
             "label": "Farbe (hell)"
           },

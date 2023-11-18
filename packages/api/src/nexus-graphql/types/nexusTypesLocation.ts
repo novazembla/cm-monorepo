@@ -356,6 +356,7 @@ export const LocationQueries = extendType({
               select: {
                 id: true,
                 ...daoSharedGetTranslatedSelectColumns(["name", "slug"]),
+                iconKey: true,
                 taxonomyId: true,
               },
             },

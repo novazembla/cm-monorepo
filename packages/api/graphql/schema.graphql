@@ -531,6 +531,7 @@ input TaxonomyUpsertInput {
 
 type Term {
   _count: JSON
+  berlinDeKey: String
   color: String
   colorDark: String
   createdAt: DateTime
@@ -545,6 +546,7 @@ type Term {
 }
 
 input TermCreateInput {
+  berlinDeKey: String
   color: String
   colorDark: String
   hasReducedVisibility: Boolean!
@@ -561,6 +563,7 @@ type TermQueryResult {
 }
 
 input TermUpdateInput {
+  berlinDeKey: String
   color: String
   colorDark: String
   hasReducedVisibility: Boolean

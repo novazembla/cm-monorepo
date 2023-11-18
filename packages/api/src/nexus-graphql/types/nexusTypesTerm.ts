@@ -50,6 +50,7 @@ export const Term = objectType({
       resolve: (...[p]) => daoSharedMapTranslatedColumnsInRowToJson(p, "slug"),
     });
     t.string("iconKey");
+    t.string("berlinDeKey");
     t.boolean("hasReducedVisibility");
     t.string("color");
     t.string("colorDark");
@@ -163,6 +164,7 @@ export const TermCreateInput = inputObjectType({
     t.nonNull.int("taxonomyId");
     t.nonNull.boolean("hasReducedVisibility");
     t.string("iconKey");
+    t.string("berlinDeKey");
     t.string("color");
     t.string("colorDark");
   },
@@ -175,6 +177,7 @@ export const TermUpdateInput = inputObjectType({
     t.nonNull.json("slug");
     t.boolean("hasReducedVisibility");
     t.string("iconKey");
+    t.string("berlinDeKey");
     t.string("color");
     t.string("colorDark");
   },
@@ -202,6 +205,7 @@ export const TermMutations = extendType({
             "colorDark",
             "hasReducedVisibility",
             "iconKey",
+            "berlinDeKey",
           ]) as any),
           taxonomy: {
             connect: { id: args.data.taxonomyId },
@@ -237,6 +241,7 @@ export const TermMutations = extendType({
             "colorDark",
             "hasReducedVisibility",
             "iconKey",
+            "berlinDeKey",
           ]) as any),
         });
 

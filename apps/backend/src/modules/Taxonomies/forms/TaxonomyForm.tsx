@@ -171,6 +171,21 @@ export const TaxonomyForm = ({
               }}
             />
           </FieldRow>
+          <FieldRow>
+            <FieldInput
+              id="berlinDeKey"
+              label={t(
+                "module.taxonomies.forms.field.berlinDeKey.label",
+                "Berlin.de Barrierefreiheit ID"
+              )}
+              name="berlinDeKey"
+              type="number"
+              isRequired={yupIsFieldRequired("berlinDeKey", validationSchema)}
+              settings={{
+                placeholder: "1",
+              }}
+            />
+          </FieldRow>
         </>
       )}
 

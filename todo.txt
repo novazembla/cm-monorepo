@@ -1,12 +1,54 @@
 Deployment
 > Run migrations
-> Manually add accessibility terms
+> Manually add accessibility terms and configure icons
 > Set Icon Keys to accessibility terms
+> Set hasReduced visility for stolpersteine
 > Set Settings (don't forget to match accessiblity taxonomy)
+
+Todo
+
+Barrierefreiheit. Die folgenden Iconschlüssel können verwendet werden (achtung das sind image dateinamen, gif/png) ist wichtig. 
+
+
+aufzug_bedingt_rollstuhlgeeignet.png
+aufzug_rollstuhlgeeignet.png
+aufzug_rollstuhlgerecht.png 
+fahrradstellplatz.png
+gebaerdensprache_36.png
+hoeranlage.png
+hoeranlage_t.png
+hoeranlage_fm.png
+hoeranlage_infrarot.png
+leichtesprache_36.png
+parken_rollstuhlgeeignet.png
+piktogramm_parkplatz.gif
+wc_bedingt_rollstuhlgeeignet.png
+wc_rollstuhlgeeignet.png
+wc_rollstuhlgerecht.png
+zugang_bedingt_rollstuhlgeeignet.png
+zugang_rollstuhlgeeignet.png
+zugang_rollstuhlgerecht.png
+zugang_rollstuhlungeeignet.png
+
+Diese Barrierefreiheit Begriffe werden in Berlin.de verwendet (die Begriffe haben ein Berlin.de Barrierefreiheit ID feld das die entsprechende ID unten angeben muss)
+
+ID: 1 - Rollstuhlgerecht (zugang_rollstuhlgerecht.png)
+ID: 2 - WC nach DIN 18024 (zugang_rollstuhlgerecht.png)
+ID: 3 - Für Rollstuhlfahrer/innen erschwert zugänglich (zugang_bedingt_rollstuhlgeeignet.png)
+ID: 4 - Fahrstuhl (aufzug_rollstuhlgeeignet.png)
+ID: 5 - Für Rollstuhlfahrer/innen nicht zugänglich (zugang_rollstuhlungeeignet.png)
+ID: 6 - Behindertenparkplatz (piktogramm_parkplatz.gif)
+ID: 7 - Höranlage indukTiv (hoeranlage_t.gif)
+ID: 8 - Höranlage Infrarot (hoeranlage_infrarot.png)
+ID: 9 - Höranlage Funk (hoeranlage_fm.png)
 
 
 Questions/Comments. 151123
+
+Stolpersteine
 - Kartenpunkte "reduced visility" vorgehen besprechen. Braucht es einen toggle vie clustern/oder nicht? 
+- Taxonomy "Einrichtungsart" jeder Begriff hat jetzt einen Toggle in dem man bestimmen kann, dass er initial ausgeblendet wird. 
+- Bei den Punkten auf der Karte wird der primärbegriff genutzt. Stolpersteine müssen also primär Stolterstein sein
 
 Questions/Comments. 141123
 Barrierefreitheit Begriffe. Bitte die Icon Schlüssel nicht ändern, diese werden im code verwendet um die icons zu identifizieren. 
@@ -59,4 +101,4 @@ Sitemap
   - Add "ignore column functionality"
   - Allow to select ID column from Export and use this one to identify the record to be updated.
   - Allow to use lat and lng columns
-  - If ID, lat, lng are used the import could use the current publication status and not revert to imported. 
+  - If ID, lat, lng are used the import could use the current publication status and not revert to imported.
