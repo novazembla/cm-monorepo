@@ -13,6 +13,7 @@ import Prisma, { DataImport } from "@prisma/client";
 import { getApiConfig } from "../config";
 
 import { slugify, convertToHtml, isObject, parseSettings } from "../utils";
+import { exit } from "process";
 
 const getTodayInCurrentTZ = () => {
   let today = new Date();
@@ -48,6 +49,7 @@ const prepareDatesForDb = (dates: any[]) => {
 
 let settings: any = {};
 let eventCategories: any = {};
+let accessibitilyTerms: any = {};
 let log: string[] = [];
 let errors: string[] = [];
 let warnings: string[] = [];
@@ -175,7 +177,7 @@ const eventUpdateBeginAndEnd = async (
   }
 };
 
-const registerEventCategoies = async (
+const registerEventCategories = async (
   prisma: Prisma.PrismaClient,
   categories: any
 ) => {
@@ -254,6 +256,75 @@ const registerEventCategoies = async (
   }
 };
 
+const registerAccessibilityTerms = async (
+  prisma: Prisma.PrismaClient,
+  terms: any
+) => {
+  const settingsInDb = await prisma.setting.findMany({
+    where: {
+      scope: "settings",
+    },
+    orderBy: {
+      key: "asc",
+    },
+  });
+
+  settings = parseSettings(settingsInDb);
+
+  let taxonomy = await prisma.taxonomy.findUnique({
+    where: {
+      id: parseInt(settings?.taxMapping?.accessibility ?? "0"),
+    },
+    select: {
+      id: true,
+      hasIcons: true,
+      terms: {
+        select: {
+          id: true,
+          name_de: true,
+          berlinDeKey: true,
+        },
+      },
+    },
+  });
+
+  if (taxonomy && taxonomy?.hasIcons && taxonomy?.terms?.length) {
+    const checkTerm = async (key: string) => {
+      try {
+        const termInTax = taxonomy?.terms.find(
+          (term: any) => term.berlinDeKey === key
+        );
+        if (termInTax) {
+          accessibitilyTerms[key] = termInTax;
+          log.push(
+            `Berlin.de Barrierefreiheit Begriff "${terms[key].name}" ID:${key} dem Bergriff "${termInTax.name_de}" zugewiesen`
+          );
+        } else {
+          warnings.push(
+            `Berlin.de Barrierefreiheit Begriff ${terms[key].name} ID:${key} konnte nicht zugewiesen werden`
+          );
+        }
+      } catch (err: any) {
+        logger.error(err);
+        errors.push(`${err.name} ${err.message}`);
+      }
+    };
+
+    await pMap(Object.keys(terms), checkTerm, {
+      concurrency: 1,
+    });
+  }
+};
+
+function mapBarrierefreiheitIDsToTermIds(ids: string[]) {
+  return ids.reduce((acc, id) => {
+    if (id in accessibitilyTerms) {
+      acc.push(accessibitilyTerms[id].id);
+    }
+    return acc;
+  }, [] as any);
+}
+
 const doChores = async () => {
   const apiConfig = getApiConfig();
 
@@ -292,7 +363,15 @@ const doChores = async () => {
             await saveDataImportLog(prisma, DataImportStatus.PROCESSING);
 
             if (isObject(response?.data?.kategorien)) {
-              await registerEventCategoies(prisma, response?.data?.kategorien);
+              await registerEventCategories(prisma, response?.data?.kategorien);
+              await saveDataImportLog(prisma, DataImportStatus.PROCESSING);
+            }
+
+            if (isObject(response?.data?.barrierefreiheit)) {
+              await registerAccessibilityTerms(
+                prisma,
+                response?.data?.barrierefreiheit
+              );
               await saveDataImportLog(prisma, DataImportStatus.PROCESSING);
             }
 
@@ -357,6 +436,16 @@ const doChores = async () => {
                   (dF: any) => new Date(dF.tag_von) >= today
                 );
 
+                const veranstalter =
+                  response?.data?.veranstalter?.[
+                    event?.event_veranstalter_id
+                  ] ?? null;
+
+                const veranstaltungsort =
+                  response?.data?.veranstaltungsorte?.[
+                    event?.event_veranstaltungsort_id
+                  ] ?? null;
+
                 let mappedIds = [];
 
                 if (Object.keys(event?.kategorie_ids ?? {}).length) {
@@ -370,16 +459,15 @@ const doChores = async () => {
                   );
                 }
 
-                const veranstalter =
-                  response?.data?.veranstalter?.[
-                    event?.event_veranstalter_id
-                  ] ?? null;
-
-                const veranstaltungsort =
-                  response?.data?.veranstaltungsorte?.[
-                    event?.event_veranstaltungsort_id
-                  ] ?? null;
-
+                const mappedBarriereFreiheitTerms =
+                  typeof veranstaltungsort?.barrierefreiheit === "object" &&
+                  Object.keys(veranstaltungsort?.barrierefreiheit)?.length
+                    ? mapBarrierefreiheitIDsToTermIds(
+                        Object.keys(veranstaltungsort?.barrierefreiheit)
+                      )
+                    : [];
+                mappedIds = [...mappedIds, ...mappedBarriereFreiheitTerms];
+                
                 const sharedData = {
                   description_de: convertToHtml(event.event_beschreibung_de),
                   description_en: convertToHtml(event.event_beschreibung_en),
@@ -426,6 +514,7 @@ const doChores = async () => {
                 const datesForDb = prepareDatesForDb(dates);
 
                 let terms = {};
+
                 if (!eventInDb) {
                   if (dates.length > 0) {
                     if (mappedIds.length > 0) {

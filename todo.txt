@@ -4,6 +4,12 @@ Deployment
 > Set Icon Keys to accessibility terms
 > Set hasReduced visility for stolpersteine
 > Set Settings (don't forget to match accessiblity taxonomy)
+> Inhalte vorschlagen Seite anlegen
+
+Backend
+
+Had to do:
++ Adjusted ENV Vars in live machine from REACT_APP_*  to VITE_* 
 
 Todo
 
@@ -80,11 +86,7 @@ Es gibt jetzt einen Knopf um die Formulare zu dem Ausgangszustand zurück zu set
 "Reset all filters" und "Filter zurücksetzen" beschrieben, gut so? 
 
 
-Backend
 
-Had to do:
-+ Adjusted ENV Vars in live machine from REACT_APP_*  to VITE_* 
-+ Backend VITE build tartet is 'dist' not build' 
 
 
 Sitemap
