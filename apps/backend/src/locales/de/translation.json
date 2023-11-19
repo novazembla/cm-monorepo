@@ -891,13 +891,16 @@
       "label": "Kontaktinformation für technische Fragen"
     },
     "suggestionsIntro": {
-      "label": "Kartenpunktvorschlag: Einleitung"
+      "label": "Kartenpunktvorschlagseite: Einleitung"
+    },
+    "suggestionsIntroEvent": {
+      "label": "Veranstaltungsvorschlagseite: Einleitung"
     },
     "suggestionsTandCInfo": {
-      "label": "Kartenpunktvorschlag: Kurzer Text über Einverständniserklärung"
+      "label": "Inhaltsvorschlagsseiten: Kurzer Text über Einverständniserklärung"
     },
     "suggestionsMetaDesc": {
-      "label": "Kartenpunktvorschlag: SEO Meta Beschreibung"
+      "label": "Inhaltsvorschlagsseiten: SEO Meta Beschreibung"
     },
     "quickSearchInfo": {
       "label": "Kurzinformation in Schnellsuchresultat"

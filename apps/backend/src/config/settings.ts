@@ -30,6 +30,7 @@ export type AppSettingsDefaultFieldKeys =
   | "contactEmail"
   | "contactInfo"
   | "suggestionsIntro"
+  | "suggestionsIntroEvent"
   | "suggestionsTandCInfo"
   | "suggestionsMetaDesc"
   | "quickSearchInfo"
@@ -73,7 +74,7 @@ export const settingFields: AppSettingsFieldDefinitions = {
   suggestionsIntro: {
     defaultValue: "",
     type: "multilangtexteditor",
-    // t("settings.suggestionsIntro.label", "Intro on the suggestion page")
+    // t("settings.suggestionsIntro.label", "Intro of the location suggestion page")
     label: "settings.suggestionsIntro.label",
     validationSchema: object().shape({
       suggestionsIntro: string(),
@@ -86,6 +87,27 @@ export const settingFields: AppSettingsFieldDefinitions = {
           ...acc,
 
           [lang]: newData[`suggestionsIntro_${lang}`],
+        }),
+        {}
+      );
+    },
+  },
+  suggestionsIntroEvent: {
+    defaultValue: "",
+    type: "multilangtexteditor",
+    // t("settings.suggestionsIntroEvent.label", "Intro of the event suggestion page")
+    label: "settings.suggestionsIntroEvent.label",
+    validationSchema: object().shape({
+      suggestionsIntro: string(),
+    }),
+    required: true,
+    getUpdateValue: (fieldDefs: AppSettingField, newData: any) => {
+      const config = getAppConfig();
+      return config.activeLanguages.reduce(
+        (acc: any, lang: any) => ({
+          ...acc,
+
+          [lang]: newData[`suggestionsIntroEvent_${lang}`],
         }),
         {}
       );

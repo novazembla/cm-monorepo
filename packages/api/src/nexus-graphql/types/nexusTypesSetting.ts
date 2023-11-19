@@ -45,6 +45,7 @@ export const FrontendSettings = objectType({
     t.json("suggestionsMetaDesc");
     t.json("suggestionsTandCInfo");
     t.json("quickSearchInfo");
+    t.json("quickSearchInfoEvent");
     t.json("defaultMetaDesc");
     t.json("centerOfGravity");
     t.json("taxMapping");
@@ -140,6 +141,7 @@ export const SettingsQuery = extendType({
           taxMapping: settings?.taxMapping,
           suggestionsIntro: settings?.suggestionsIntro,
           quickSearchInfo: settings?.quickSearchInfo,
+          quickSearchInfoEvent: settings?.quickSearchInfoEvent,
           suggestionsMetaDesc: settings?.suggestionsMetaDesc,
           defaultMetaDesc: settings?.defaultMetaDesc,
           suggestionsTandCInfo: settings?.suggestionsTandCInfo,

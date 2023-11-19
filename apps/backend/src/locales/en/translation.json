@@ -891,13 +891,16 @@
       "label": "Contact information at bottom of admin tool"
     },
     "suggestionsIntro": {
-      "label": "Suggestion page: Intro"
+      "label": "Location suggestion page: Intro"
+    },
+    "suggestionsIntroEvent": {
+      "label": "Event suggestion page: Intro"
     },
     "suggestionsTandCInfo": {
-      "label": "Suggestion page: T&C Intro"
+      "label": "Suggestion pages: T&C Intro"
     },
     "suggestionsMetaDesc": {
-      "label": "Suggestion page: SEO meta description."
+      "label": "Suggestion pages: SEO meta description."
     },
     "quickSearchInfo": {
       "label": "Short information above quick search"
