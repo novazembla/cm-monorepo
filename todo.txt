@@ -1,15 +1,11 @@
 Deployment
+> Change env vars from REACT_APP_*  to VITE_* 
 > Run migrations
 > Manually add accessibility terms and configure icons
 > Set Icon Keys to accessibility terms
-> Set hasReduced visility for stolpersteine
+> Set hasReduced visility for Einrichtungsart/Stolpersteine
 > Set Settings (don't forget to match accessiblity taxonomy)
-> Inhalte vorschlagen Seite anlegen
-
-Backend
-
-Had to do:
-+ Adjusted ENV Vars in live machine from REACT_APP_*  to VITE_* 
+> Inhalte vorschlagen Seite anlegen/kopieren
 
 Todo
 

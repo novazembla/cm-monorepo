@@ -42,10 +42,10 @@ export const FrontendSettings = objectType({
   name: "FrontendSettings",
   definition(t) {
     t.json("suggestionsIntro");
+    t.json("suggestionsIntroEvent");
     t.json("suggestionsMetaDesc");
     t.json("suggestionsTandCInfo");
     t.json("quickSearchInfo");
-    t.json("quickSearchInfoEvent");
     t.json("defaultMetaDesc");
     t.json("centerOfGravity");
     t.json("taxMapping");

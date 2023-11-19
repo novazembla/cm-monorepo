@@ -363,8 +363,8 @@ export interface NexusGenObjects {
     defaultMetaDesc?: NexusGenScalars['JSON'] | null; // JSON
     mapJsonUrl?: string | null; // String
     quickSearchInfo?: NexusGenScalars['JSON'] | null; // JSON
-    quickSearchInfoEvent?: NexusGenScalars['JSON'] | null; // JSON
     suggestionsIntro?: NexusGenScalars['JSON'] | null; // JSON
+    suggestionsIntroEvent?: NexusGenScalars['JSON'] | null; // JSON
     suggestionsMetaDesc?: NexusGenScalars['JSON'] | null; // JSON
     suggestionsTandCInfo?: NexusGenScalars['JSON'] | null; // JSON
     taxMapping?: NexusGenScalars['JSON'] | null; // JSON
@@ -699,8 +699,8 @@ export interface NexusGenFieldTypes {
     defaultMetaDesc: NexusGenScalars['JSON'] | null; // JSON
     mapJsonUrl: string | null; // String
     quickSearchInfo: NexusGenScalars['JSON'] | null; // JSON
-    quickSearchInfoEvent: NexusGenScalars['JSON'] | null; // JSON
     suggestionsIntro: NexusGenScalars['JSON'] | null; // JSON
+    suggestionsIntroEvent: NexusGenScalars['JSON'] | null; // JSON
     suggestionsMetaDesc: NexusGenScalars['JSON'] | null; // JSON
     suggestionsTandCInfo: NexusGenScalars['JSON'] | null; // JSON
     taxMapping: NexusGenScalars['JSON'] | null; // JSON
@@ -1147,8 +1147,8 @@ export interface NexusGenFieldTypeNames {
     defaultMetaDesc: 'JSON'
     mapJsonUrl: 'String'
     quickSearchInfo: 'JSON'
-    quickSearchInfoEvent: 'JSON'
     suggestionsIntro: 'JSON'
+    suggestionsIntroEvent: 'JSON'
     suggestionsMetaDesc: 'JSON'
     suggestionsTandCInfo: 'JSON'
     taxMapping: 'JSON'

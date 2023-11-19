@@ -182,8 +182,8 @@ type FrontendSettings {
   defaultMetaDesc: JSON
   mapJsonUrl: String
   quickSearchInfo: JSON
-  quickSearchInfoEvent: JSON
   suggestionsIntro: JSON
+  suggestionsIntroEvent: JSON
   suggestionsMetaDesc: JSON
   suggestionsTandCInfo: JSON
   taxMapping: JSON
