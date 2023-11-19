@@ -70,6 +70,18 @@ export interface NexusGenInputs {
     type: string; // String!
     warnings?: NexusGenScalars['JSON'] | null; // JSON
   }
+  EventSuggestionInput: { // input type
+    address: NexusGenScalars['JSON']; // JSON!
+    contactInfo?: NexusGenScalars['JSON'] | null; // JSON
+    description: NexusGenScalars['JSON']; // JSON!
+    heroImage?: NexusGenScalars['JSON'] | null; // JSON
+    meta: NexusGenScalars['JSON']; // JSON!
+    offers?: NexusGenScalars['JSON'] | null; // JSON
+    slug: NexusGenScalars['JSON']; // JSON!
+    socialMedia?: NexusGenScalars['JSON'] | null; // JSON
+    terms?: NexusGenScalars['JSON'] | null; // JSON
+    title: NexusGenScalars['JSON']; // JSON!
+  }
   EventUpsertInput: { // input type
     address: string; // String!
     dates?: NexusGenScalars['JSON'] | null; // JSON
@@ -802,6 +814,7 @@ export interface NexusGenFieldTypes {
     dataImportUpdate: NexusGenRootTypes['DataImport']; // DataImport!
     eventCreate: NexusGenRootTypes['Event']; // Event!
     eventDelete: NexusGenRootTypes['BooleanResult']; // BooleanResult!
+    eventSuggestion: NexusGenRootTypes['Location']; // Location!
     eventUpdate: NexusGenRootTypes['Event']; // Event!
     imageDelete: NexusGenRootTypes['BooleanResult']; // BooleanResult!
     imageUpdate: NexusGenRootTypes['Image']; // Image!
@@ -1250,6 +1263,7 @@ export interface NexusGenFieldTypeNames {
     dataImportUpdate: 'DataImport'
     eventCreate: 'Event'
     eventDelete: 'BooleanResult'
+    eventSuggestion: 'Location'
     eventUpdate: 'Event'
     imageDelete: 'BooleanResult'
     imageUpdate: 'Image'
@@ -1537,6 +1551,9 @@ export interface NexusGenArgTypes {
     }
     eventDelete: { // args
       id: number; // Int!
+    }
+    eventSuggestion: { // args
+      data: NexusGenInputs['EventSuggestionInput']; // EventSuggestionInput!
     }
     eventUpdate: { // args
       data: NexusGenInputs['EventUpsertInput']; // EventUpsertInput!

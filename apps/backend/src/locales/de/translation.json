@@ -306,7 +306,7 @@
               "role": "Rolle der NutzerIn",
               "ownsEventImports": "Besitzt automatisch neu importierte Events",
               "ownsContentOnDelete": "Dieser NutzerIn die Inhalte der gelöschter NutzerInnen zuweisen",
-              "ownsSubmittedSuggestions": "Dieser NutzerIn Kartenpunktvorschläge zuweisen",
+              "ownsSubmittedSuggestions": "Dieser NutzerIn Inhaltsvorschläge zuweisen",
               "userBanned": "NutzerIn sperren"
             },
             "placeholder": {

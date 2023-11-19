@@ -146,6 +146,19 @@ type EventQueryResult {
   totalCount: Int
 }
 
+input EventSuggestionInput {
+  address: JSON!
+  contactInfo: JSON
+  description: JSON!
+  heroImage: JSON
+  meta: JSON!
+  offers: JSON
+  slug: JSON!
+  socialMedia: JSON
+  terms: JSON
+  title: JSON!
+}
+
 input EventUpsertInput {
   address: String!
   dates: JSON
@@ -350,6 +363,7 @@ type Mutation {
   dataImportUpdate(data: DataImportUpsertInput!, id: Int!): DataImport!
   eventCreate(data: EventUpsertInput!): Event!
   eventDelete(id: Int!): BooleanResult!
+  eventSuggestion(data: EventSuggestionInput!): Location!
   eventUpdate(data: EventUpsertInput!, id: Int!): Event!
   imageDelete(id: Int!): BooleanResult!
   imageUpdate(data: ImageUpdateInput!, id: Int!): Image!

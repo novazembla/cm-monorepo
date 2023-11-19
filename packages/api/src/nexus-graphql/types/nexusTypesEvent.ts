@@ -33,7 +33,7 @@ import {
   daoSharedGetTranslatedSelectColumns,
 } from "../../dao";
 
-import { eventUpdate } from "../../services/serviceEvent";
+import { eventSuggestionCreate, eventUpdate } from "../../services/serviceEvent";
 
 const apiConfigOnBoot = getApiConfig();
 
@@ -449,10 +449,46 @@ export const EventUpsertInput = inputObjectType({
   },
 });
 
+export const EventSuggestionInput = inputObjectType({
+  name: "EventSuggestionInput",
+  definition(t) {
+    t.nonNull.json("title");
+    t.nonNull.json("slug");
+    t.nonNull.json("description");
+    t.nonNull.json("meta");
+    t.nonNull.json("address");
+    t.json("contactInfo");
+    t.json("socialMedia");
+    t.json("offers");
+    t.json("terms");
+    t.json("heroImage");
+  },
+});
+
 export const EventMutations = extendType({
   type: "Mutation",
 
   definition(t) {
+    t.nonNull.field("eventSuggestion", {
+      type: "Location",
+
+      args: {
+        data: nonNull("EventSuggestionInput"),
+      },
+
+      async resolve(...[, args]) {
+        const location = await eventSuggestionCreate(args.data);
+
+        if (!location)
+          throw new ApiError(
+            httpStatus.INTERNAL_SERVER_ERROR,
+            "Creation failed"
+          );
+
+        return location;
+      },
+    });
+
     t.nonNull.field("eventCreate", {
       type: "Event",
 
