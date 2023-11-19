@@ -585,8 +585,7 @@ const doChores = async () => {
                             parseInt(event.event_last_mod) * 1000
                           )
                         );
-                        skip = true;
-                        if (modified > updated) skip = false;
+                        skip = modified < updated && !process.env.CALENDAR_UPDATE_ALL;
                       }
 
                       if (
