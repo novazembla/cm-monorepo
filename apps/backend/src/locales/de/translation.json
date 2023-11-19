@@ -607,6 +607,15 @@
         }
       }
     },
+    "event": {
+      "forms": {
+        "field": {
+          "label": {
+            "additionalSuggestionInformation": "Diese Veranstaltung wurder über die Webseite mit folgenden Zusatzinformationen vorgeschlagen"
+          }
+        }
+      }
+    },
     "imports": {
       "forms": {
         "import": {
@@ -845,7 +854,7 @@
   },
   "publish": {
     "status": {
-      "suggestion": "Kartenpunktvorschlag",
+      "suggestion": "Inhaltsvorschlag",
       "imported": "Importiert",
       "importedwarning": "Importiert mit Warnung(en)",
       "draft": "Entwurf",
@@ -1064,6 +1073,24 @@
   },
   "copied": "Kopiert",
   "copy": "Kopieren",
+  "location": {
+    "suggestion": {
+      "fieldName": {
+        "website": "Event website",
+        "facebook": "Event Facebook Page",
+        "instagram": "Event Instagram Account",
+        "name": "Kartenpunktvorschlagende(r): Name",
+        "email": "Kartenpunktvorschlagende(r): Emailadresse",
+        "phone": "Suggester's phone number",
+        "comments": "Kartenpunktvorschlagende(r): Anmerkungen",
+        "suggestionTandC": "Kartenpunktvorschlagende(r): Zustimmung Datenschutzerklärung",
+        "suggestionIsOwner": "Kartenpunktvorschlagende(r): Erklärt legal verantwortlich zu sein",
+        "suggestionImageRightsConfirmation": "Kartenpunktvorschlagende(r): Bestätigt, dass das Bild veröffentlicht werden darf."
+      },
+      "yes": "Ja",
+      "no": "Nein"
+    }
+  },
   "locations": {
     "forms": {
       "field": {
@@ -1081,20 +1108,6 @@
           "eventLocationId": "berlin.de Veranstaltungsort ID"
         }
       }
-    }
-  },
-  "location": {
-    "suggestion": {
-      "fieldName": {
-        "name": "Kartenpunktvorschlagende(r): Name",
-        "email": "Kartenpunktvorschlagende(r): Emailadresse",
-        "comments": "Kartenpunktvorschlagende(r): Anmerkungen",
-        "suggestionTandC": "Kartenpunktvorschlagende(r): Zustimmung Datenschutzerklärung",
-        "suggestionIsOwner": "Kartenpunktvorschlagende(r): Erklärt legal verantwortlich zu sein",
-        "suggestionImageRightsConfirmation": "Kartenpunktvorschlagende(r): Bestätigt, dass das Bild veröffentlicht werden darf."
-      },
-      "yes": "Ja",
-      "no": "Nein"
     }
   },
   "page": {

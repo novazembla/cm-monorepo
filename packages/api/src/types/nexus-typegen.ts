@@ -71,14 +71,13 @@ export interface NexusGenInputs {
     warnings?: NexusGenScalars['JSON'] | null; // JSON
   }
   EventSuggestionInput: { // input type
-    address: NexusGenScalars['JSON']; // JSON!
-    contactInfo?: NexusGenScalars['JSON'] | null; // JSON
+    address: string; // String!
     description: NexusGenScalars['JSON']; // JSON!
     heroImage?: NexusGenScalars['JSON'] | null; // JSON
-    meta: NexusGenScalars['JSON']; // JSON!
-    offers?: NexusGenScalars['JSON'] | null; // JSON
+    isFree: boolean; // Boolean!
+    meta?: NexusGenScalars['JSON'] | null; // JSON
+    organiser: string; // String!
     slug: NexusGenScalars['JSON']; // JSON!
-    socialMedia?: NexusGenScalars['JSON'] | null; // JSON
     terms?: NexusGenScalars['JSON'] | null; // JSON
     title: NexusGenScalars['JSON']; // JSON!
   }
@@ -88,7 +87,6 @@ export interface NexusGenInputs {
     description?: NexusGenScalars['JSON'] | null; // JSON
     heroImage?: NexusGenScalars['JSON'] | null; // JSON
     isFree: boolean; // Boolean!
-    isImported: boolean; // Boolean!
     locations?: NexusGenScalars['JSON'] | null; // JSON
     metaDesc?: NexusGenScalars['JSON'] | null; // JSON
     organiser: string; // String!

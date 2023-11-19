@@ -102,7 +102,7 @@ export const Event = objectType({
 
     t.string("address");
     t.string("organiser");
-
+    
     t.date("firstEventDate");
     t.date("lastEventDate");
 
@@ -435,7 +435,6 @@ export const EventUpsertInput = inputObjectType({
     t.nonNull.json("slug");
     t.nonNull.int("status");
     t.nonNull.boolean("isFree");
-    t.nonNull.boolean("isImported");
     t.nonNull.string("address");
     t.nonNull.string("organiser");
     t.json("description");
@@ -455,13 +454,13 @@ export const EventSuggestionInput = inputObjectType({
     t.nonNull.json("title");
     t.nonNull.json("slug");
     t.nonNull.json("description");
-    t.nonNull.json("meta");
-    t.nonNull.json("address");
-    t.json("contactInfo");
-    t.json("socialMedia");
-    t.json("offers");
+    t.nonNull.string("address");
+    t.nonNull.string("organiser");
+    t.nonNull.boolean("isFree");
+    t.json("meta");
     t.json("terms");
     t.json("heroImage");
+    // t.json("dates");
   },
 });
 

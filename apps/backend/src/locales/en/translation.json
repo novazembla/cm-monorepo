@@ -607,6 +607,15 @@
         }
       }
     },
+    "event": {
+      "forms": {
+        "field": {
+          "label": {
+            "additionalSuggestionInformation": "This event has been suggested via the website with the following additional Information"
+          }
+        }
+      }
+    },
     "imports": {
       "forms": {
         "import": {
@@ -1064,6 +1073,24 @@
   },
   "copied": "Copied",
   "copy": "Copy",
+  "location": {
+    "suggestion": {
+      "fieldName": {
+        "website": "Event website",
+        "facebook": "Event Facebook Page",
+        "instagram": "Event Instagram Account",
+        "name": "Suggester's name",
+        "email": "Suggester's email address",
+        "phone": "Suggester's phone number",
+        "comments": "Suggester's comments and notes",
+        "suggestionTandC": "Suggester accepted T&C",
+        "suggestionIsOwner": "Suggester confirms to be legally responsible",
+        "suggestionImageRightsConfirmation": "Suggester confirms that the image can be published on the website"
+      },
+      "yes": "Yes",
+      "no": "No"
+    }
+  },
   "locations": {
     "forms": {
       "field": {
@@ -1081,20 +1108,6 @@
           "eventLocationId": "berlin.de Event Location ID"
         }
       }
-    }
-  },
-  "location": {
-    "suggestion": {
-      "fieldName": {
-        "name": "Suggester's name",
-        "email": "Suggester's email address",
-        "comments": "Suggester's comments and notes",
-        "suggestionTandC": "Suggester accepted T&C",
-        "suggestionIsOwner": "Suggester confirms to be legally responsible",
-        "suggestionImageRightsConfirmation": "Suggester confirms that the image can be published on the website"
-      },
-      "yes": "Yes",
-      "no": "No"
     }
   },
   "page": {

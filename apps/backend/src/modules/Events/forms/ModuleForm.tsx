@@ -243,16 +243,13 @@ export const ModuleForm = ({
           </FieldRow>
         )}
       </TwoColFieldRow>
-
       {updateActions}
-
       {data && data?.moduleTaxonomies && (
         <>
           <Divider mt="10" />
           <FieldModuleTaxonomies data={data} />
         </>
       )}
-
       <Divider mt="10" />
       <FieldRow>
         <FieldSingleSelectAutocomplete
@@ -278,9 +275,7 @@ export const ModuleForm = ({
           }}
         />
       </FieldRow>
-
       <Divider mt="10" />
-
       <FieldMultiLangTextEditor
         name="description"
         id="description"
@@ -300,7 +295,6 @@ export const ModuleForm = ({
           ),
         }}
       />
-
       <Divider mt="10" />
       <TwoColFieldRow>
         <FieldRow>
@@ -326,9 +320,7 @@ export const ModuleForm = ({
           />
         </FieldRow>
       </TwoColFieldRow>
-
       <Divider mt="10" />
-
       <chakra.fieldset
         border="1px solid"
         borderColor="gray.400"
@@ -358,7 +350,157 @@ export const ModuleForm = ({
         />
       </chakra.fieldset>
       <Divider mt="10" />
+      {data?.event?.meta?.isSuggestion && (
+        <>
+        
+          <chakra.fieldset
+            border="1px solid"
+            borderColor="gray.400"
+            p="4"
+            borderRadius="md"
+            w="100%"
+          >
+            <legend>
+              <chakra.span px="2">
+                {t(
+                  "module.event.forms.field.label.additionalSuggestionInformation",
+                  "This event has been suggested via the website with the following additional Information"
+                )}
+              </chakra.span>
+            </legend>
+            {data?.event?.meta?.website && (
+              <FieldRow>
+                <Box>
+                  {t("location.suggestion.fieldName.website", "Event website")}
+                  <br />
+                  <b>{data?.event?.meta?.website}</b>
+                </Box>
+              </FieldRow>
+            )}
+            {data?.event?.meta?.facebook && (
+              <FieldRow>
+                <Box>
+                  {t("location.suggestion.fieldName.facebook", "Event Facebook Page")}
+                  <br />
+                  <b>{data?.event?.meta?.facebook}</b>
+                </Box>
+              </FieldRow>
+            )}
+            {data?.event?.meta?.instagram && (
+              <FieldRow>
+                <Box>
+                  {t("location.suggestion.fieldName.instagram", "Event Instagram Account")}
+                  <br />
+                  <b>{data?.event?.meta?.instagram}</b>
+                </Box>
+              </FieldRow>
+            )}
 
+            {data?.event?.meta?.suggestionSubmittersName && (
+              <FieldRow>
+                <Box>
+                  {t("location.suggestion.fieldName.name", "Suggester's name")}
+                  <br />
+                  <b>{data?.event?.meta?.suggestionSubmittersName}</b>
+                </Box>
+              </FieldRow>
+            )}
+            {data?.event?.meta?.suggestionSubmittersEmail && (
+              <FieldRow>
+                <Box>
+                  {t(
+                    "location.suggestion.fieldName.email",
+                    "Suggester's email address"
+                  )}
+                  <br />
+                  <a
+                    href={`mailto:${data?.event?.meta?.suggestionSubmittersEmail}`}
+                  >
+                    {data?.event?.meta?.suggestionSubmittersEmail}
+                  </a>
+                </Box>
+              </FieldRow>
+            )}
+            {data?.event?.meta?.suggestionSubmittersPhone && (
+              <FieldRow>
+                <Box>
+                  {t(
+                    "location.suggestion.fieldName.phone",
+                    "Suggester's phone number"
+                  )}
+                  <br />
+                  <b>{data?.event?.meta?.suggestionSubmittersPhone}</b>
+                </Box>
+              </FieldRow>
+            )}
+            {data?.event?.meta?.suggestionComments && (
+              <FieldRow>
+                <Box>
+                  {t(
+                    "location.suggestion.fieldName.comments",
+                    "Suggester's comments and notes"
+                  )}
+                  <br />
+                  {data?.event?.meta?.suggestionComments}
+                </Box>
+              </FieldRow>
+            )}
+
+            {typeof data?.event?.meta?.suggestionTandC !== "undefined" && (
+              <FieldRow>
+                <Box>
+                  {t(
+                    "location.suggestion.fieldName.suggestionTandC",
+                    "Suggester accepted T&C"
+                  )}
+                  <br />
+                  <b>
+                    {data?.event?.meta?.suggestionTandC
+                      ? t("location.suggestion.yes", "Yes")
+                      : t("location.suggestion.no", "No")}
+                  </b>
+                </Box>
+              </FieldRow>
+            )}
+
+            {typeof data?.event?.meta?.suggestionIsOwner !== "undefined" && (
+              <FieldRow>
+                <Box>
+                  {t(
+                    "location.suggestion.fieldName.suggestionIsOwner",
+                    "Suggester confirms to be legally responsible"
+                  )}
+                  <br />
+                  <b>
+                    {data?.event?.meta?.suggestionIsOwner
+                      ? t("location.suggestion.yes", "Yes")
+                      : t("location.suggestion.no", "No")}
+                  </b>
+                </Box>
+              </FieldRow>
+            )}
+
+            {typeof data?.event?.meta?.suggestionImageRightsConfirmation !==
+              "undefined" && (
+              <FieldRow>
+                <Box>
+                  {t(
+                    "location.suggestion.fieldName.suggestionImageRightsConfirmation",
+                    "Suggester confirms that the image can be published on the website"
+                  )}
+                  <br />
+                  <b>
+                    {data?.event?.meta?.suggestionImageRightsConfirmation
+                      ? t("location.suggestion.yes", "Yes")
+                      : t("location.suggestion.no", "No")}
+                  </b>
+                </Box>
+              </FieldRow>
+            )}
+          </chakra.fieldset>
+          <Divider mt="10" />
+        </>
+      )}
       <Box>
         <Heading as="h2" mb="3">
           {t("module.events.forms.eventdates.heading", "Event date(s)")}

@@ -120,11 +120,17 @@ Ihr ${apiConfig.appName} Team`;
   await sendEmail(settings?.contactEmail, subject, body);
 };
 
-export const eventSuggestionCreate = async (
-  data: any
-): Promise<Event> => {
-  const prisma = getPrismaClient();
+// t.nonNull.json("title");
+//     t.nonNull.json("slug");
+//     t.nonNull.json("description");
+//     t.nonNull.string("address");
+//     t.nonNull.string("organiser");
+//     t.nonNull.boolean("isFree");
+//     t.json("meta");
+//     t.json("terms");
+//     t.json("heroImage");
 
+export const eventSuggestionCreate = async (data: any): Promise<Event> => {
   const eventOwner = await daoUserQueryFirst({
     ownsSubmittedSuggestions: true,
   });
@@ -137,23 +143,10 @@ export const eventSuggestionCreate = async (
     );
   }
 
-  const geoCodeCandidates = await geocodingGetAddressCandidates(
-    data.address,
-    prisma
-  );
-  const point = geocodingGetBestMatchingLocation(
-    geoCodeCandidates,
-    data?.address?.postCode ?? ""
-  );
-  data = {
-    ...data,
-    lat: point.lat,
-    lng: point.lng,
-    geoCodingInfo: geoCodeCandidates,
-  };
-
   const event = await daoEventCreate({
     ...data,
+    isImported: false,
+
     heroImage: data?.heroImage?.connect?.id
       ? {
           connect: {

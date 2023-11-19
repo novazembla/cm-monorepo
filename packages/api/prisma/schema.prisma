@@ -130,7 +130,7 @@ model Event {
 
   address         String @default("")
   organiser       String @default("")
-
+  
   meta        Json? @default("{}")
 
   
