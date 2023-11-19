@@ -460,7 +460,7 @@ export const EventSuggestionInput = inputObjectType({
     t.json("meta");
     t.json("terms");
     t.json("heroImage");
-    // t.json("dates");
+    t.json("dates");
   },
 });
 

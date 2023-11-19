@@ -72,6 +72,7 @@ export interface NexusGenInputs {
   }
   EventSuggestionInput: { // input type
     address: string; // String!
+    dates?: NexusGenScalars['JSON'] | null; // JSON
     description: NexusGenScalars['JSON']; // JSON!
     heroImage?: NexusGenScalars['JSON'] | null; // JSON
     isFree: boolean; // Boolean!

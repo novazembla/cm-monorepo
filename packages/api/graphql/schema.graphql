@@ -148,6 +148,7 @@ type EventQueryResult {
 
 input EventSuggestionInput {
   address: String!
+  dates: JSON
   description: JSON!
   heroImage: JSON
   isFree: Boolean!
