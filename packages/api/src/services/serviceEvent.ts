@@ -101,7 +101,7 @@ export const sendEmailSuggestionConfirmation = async (id: number | string) => {
     subject = `${apiConfig.email.subjectPrefix} New event suggestion`;
     body = `Dear user,
 
-Someone has posted a new location suggestion. Please review it using the following link: ${url}
+Someone has posted a new event suggestion. Please review it using the following link: ${url}
 
 Thank you your, 
 ${apiConfig.appName} team`;
@@ -111,7 +111,7 @@ ${apiConfig.appName} team`;
     subject = `${apiConfig.email.subjectPrefix} Neuer Veranstaltungsvorschlag`;
     body = `Liebe NutzerIn,
 
-Soeben wurde ein neuer Kartenpunktvorschlag abgesendet. Bitte Prüfen Sie diesen über den folgenden Link: ${url}
+Soeben wurde ein neuer Veranstaltungsvorschlag abgesendet. Bitte Prüfen Sie diesen über den folgenden Link: ${url}
 
 Vielen Dank, 
 Ihr ${apiConfig.appName} Team`;
