@@ -8,6 +8,8 @@ Deployment
 > Inhalte vorschlagen Seite anlegen/kopieren
 
 Todo
+> Test DatePicker thoroughly
+
 
 Barrierefreiheit. Die folgenden Iconschlüssel können verwendet werden (achtung das sind image dateinamen, gif/png) ist wichtig. 
 
