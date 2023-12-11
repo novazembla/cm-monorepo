@@ -435,6 +435,7 @@ export const EventUpsertInput = inputObjectType({
     t.nonNull.json("slug");
     t.nonNull.int("status");
     t.nonNull.boolean("isFree");
+    t.boolean("isImported");
     t.nonNull.string("address");
     t.nonNull.string("organiser");
     t.json("description");
