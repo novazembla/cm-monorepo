@@ -88,6 +88,7 @@ export interface NexusGenInputs {
     description?: NexusGenScalars['JSON'] | null; // JSON
     heroImage?: NexusGenScalars['JSON'] | null; // JSON
     isFree: boolean; // Boolean!
+    isImported?: boolean | null; // Boolean
     locations?: NexusGenScalars['JSON'] | null; // JSON
     metaDesc?: NexusGenScalars['JSON'] | null; // JSON
     organiser: string; // String!

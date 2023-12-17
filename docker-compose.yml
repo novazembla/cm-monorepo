@@ -2,7 +2,7 @@ version: '3'
 services:
   postgres:
     container_name: 'CultureMap_DB'
-    image: postgres:13
+    image: postgres:13.13-alpine
     restart: unless-stopped
     ports:
       - "${DB_PORT:-5432}:5432"
@@ -21,12 +21,19 @@ services:
       retries: 5
 
   mailhog:
-    container_name: 'CultureMap_MailHog'
-    image: 'mailhog/mailhog:latest'
+    container_name: 'CultureMap_MailPit'
+    image: axllent/mailpit
     restart: unless-stopped
+    volumes:
+      - ./data:/data
     ports:
-      - '${FORWARD_MAILHOG_PORT:-1025}:1025'
-      - '${FORWARD_MAILHOG_DASHBOARD_PORT:-4004}:8025'
+      - 8025:8025
+      - 1025:1025
+    environment:
+      MP_MAX_MESSAGES: 5000
+      MP_DATA_FILE: /data/mailpit.db
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
     networks:
       - culturemap
 
