@@ -14,8 +14,8 @@ export const ModuleEventCreateSchema = object().shape(
         .required(),
       [`description_${lang}`]:
         lang === defaultLanguage
-          ? string().nonEmptyHtml({ max: 1000 }).required()
-          : string().html({ max: 1000 }),
+          ? string().nonEmptyHtml({ max: 2000 }).required()
+          : string().html({ max: 2000 }),
       [`descriptionLocation_${lang}`]: string().html({ max: 500 }),
     }),
     {

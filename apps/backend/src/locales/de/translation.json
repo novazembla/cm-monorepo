@@ -109,9 +109,9 @@
       "defined": "Dieses Feld muss gesetzt werden"
     },
     "string": {
-      "length": "Dieses Feld muss exakt {{length}} Zeichen lang sein",
-      "min": "Dieses Feld muss mindestens {{min}} Zeichen lang sein",
-      "max": "Dieses Feld darf maximal {{max}} Zeichen lang sein",
+      "length": "Der Text in entspricht nicht der Längenbeschränkung",
+      "min": "Der Text in diesem Feld ist zu kurz",
+      "max": "Der Text in diesem Feld ist zu lang",
       "matches": "Dieses Feld muss mit folgendem übereinstimmen: \"{{regex}}\"",
       "email": "Dieses Feld muss eine gültige E-Mail-Adresse sein",
       "url": "Dieses Feld muss eine gültige URL sein",

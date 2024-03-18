@@ -97,7 +97,7 @@ addMethod(
               min,
             },
           });
-        
+      
         if (typeof max !== "undefined" && max < length)
           return createError({
             path,

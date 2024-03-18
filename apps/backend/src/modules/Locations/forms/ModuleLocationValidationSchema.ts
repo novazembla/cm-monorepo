@@ -12,7 +12,7 @@ export const ModuleLocationCreateSchema = object().shape({
         .matches(/^[a-z\-\d]+$/, "validation.slug.invalidcharacters")
         .required(),
 
-      [`description_${lang}`]: string().html({ max: 1000 }),
+      [`description_${lang}`]: string().html({ max: 2000 }),
       [`offers_${lang}`]: string().html({ max: 600 }),
       [`accessibilityInformation_${lang}`]: string().html({ max: 600 }),
     }),
