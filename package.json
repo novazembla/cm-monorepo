@@ -111,7 +111,7 @@
     "from": "^0.1.7",
     "i18next-parser": "8.9.0",
     "lodash.debounce": "^4.0.8",
-    "prisma": "^3.8.1"
+    "prisma": "^3.13.0"
   },
   "prisma": {
     "schema": "./packages/api/prisma/schema.prisma"
