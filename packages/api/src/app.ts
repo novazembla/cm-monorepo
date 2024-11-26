@@ -30,14 +30,26 @@ import {
 } from "./routes";
 
 process.on('uncaughtException', function (exception) {
-  console.error(exception); // to see your exception details in the console
+  if (process.stderr) {
+    // Node.js maps `process.stderr` to `console._stderr`.
+    process.stderr.write(exception.message);
+  } else {
+    // console.error adds a newline
+    console.error(exception);
+  }
   // if you are on production, maybe you can send the exception details to your
   // email as well ?
 });
 
 process.on('unhandledRejection', (reason, p) => { 
-    console.error("Unhandled Rejection at: Promise ", p, " reason: ", reason);
-    // application specific logging, throwing an error, or other logic here
+  const message = `"Unhandled Rejection at: Promise ${p} reason: ${reason}`;
+  if (process.stderr) {
+    // Node.js maps `process.stderr` to `console._stderr`.
+    process.stderr.write(message);
+  } else {
+    // console.error adds a newline
+    console.error(message);
+  }
 });
 
 export const app: Application = express();
