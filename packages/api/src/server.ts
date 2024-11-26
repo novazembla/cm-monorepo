@@ -22,6 +22,7 @@ export const initializeApolloServer = (
   customSchema?: GraphQLSchema | undefined
 ) => {
   server = new ApolloServer({
+    cache: "bounded",
     schema: customSchema || schema,
     context,
     formatError: (err) => {
