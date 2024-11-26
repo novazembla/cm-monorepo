@@ -52,6 +52,22 @@ process.on('unhandledRejection', (reason, p) => {
   }
 });
 
+process.on('exit', code => {
+  // Only synchronous calls
+  console.log(`Process exited with code: ${code}`)
+});
+
+process.on('SIGTERM', signal => {
+  console.log(`Process ${process.pid} received a SIGTERM signal`)
+  process.exit(0)
+});
+
+process.on('SIGINT', signal => {
+  console.log(`Process ${process.pid} has been interrupted`)
+  process.exit(0)
+});
+
+
 export const app: Application = express();
 
 export const initializeExpressApp = () => {
