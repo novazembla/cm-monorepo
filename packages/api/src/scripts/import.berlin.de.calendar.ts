@@ -13,7 +13,6 @@ import Prisma, { DataImport } from "@prisma/client";
 import { getApiConfig } from "../config";
 
 import { slugify, convertToHtml, isObject, parseSettings } from "../utils";
-import { exit } from "process";
 
 const getTodayInCurrentTZ = () => {
   let today = new Date();

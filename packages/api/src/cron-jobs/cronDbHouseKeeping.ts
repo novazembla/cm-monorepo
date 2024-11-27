@@ -21,7 +21,7 @@ function sleep(ms:number) {
 export async function cronDbHouseKeeping() {
   logger.info("[CRON:cronDbHouseKeeping]: starting cron job 1");
   
-  await sleep(30000);
+  // await sleep(30000);
   
   logger.info("[CRON:cronDbHouseKeeping]: starting cron job 2");
   

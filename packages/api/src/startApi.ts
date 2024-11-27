@@ -11,7 +11,7 @@ import { app, addTerminatingErrorHandlingToApp } from "./app";
 import { getApiConfig } from "./config";
 import { logger } from "./services/serviceLogging";
 import { getPrismaClient } from "./db/client";
-import { cronDbClearItems, cronDbHouseKeeping, cronGenerateSitemaps, cronImportCalendar } from "./cron-jobs";
+import { cronDbClearItems, cronDbHouseKeeping, cronDbImageResize, cronGenerateSitemaps, cronImportCalendar } from "./cron-jobs";
 
 export const startApi = async () => {
   const apiConfig = getApiConfig();
@@ -73,8 +73,15 @@ export const startApi = async () => {
         true, // start
       );
 
+      const cronJobDbImageResize = new CronJob(
+        process.env.NODE_ENV === "production" ? '*/1 * * * *' : '*/2 * * * *', // cronTime
+        cronDbImageResize, // onTick
+        null, // onComplete
+        true, // start
+      );
+
       const cronJobDbHouseKeeping = new CronJob(
-        process.env.NODE_ENV === "production" ? '1 * * * *' : '2 * * * *', // cronTime
+        process.env.NODE_ENV === "production" ? '*/1 * * * *' : '*/2 * * * *', // cronTime
         cronDbHouseKeeping, // onTick
         null, // onComplete
         true, // start
@@ -88,7 +95,7 @@ export const startApi = async () => {
       );
 
       const cronJobDbClearItems = new CronJob(
-        '* 4 * * * *', // cronTime
+        '0 4 * * *', // cronTime
         cronDbClearItems, // onTick
         null, // onComplete
         true, // start
@@ -99,6 +106,7 @@ export const startApi = async () => {
         customHandlers: [
           () => {
             cronJobDbClearItems.stop();
+            cronJobDbImageResize.stop();
             cronJobDbHouseKeeping.stop();
             cronJobGenerateSitemaps.stop();
             cronJobImportCalendar.stop();
