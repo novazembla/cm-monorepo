@@ -112,7 +112,7 @@ const doChores = async () => {
   } finally {
     if (prisma) {
       await prisma.$disconnect();
-      console.log("Prisma client disconnected");
+      postMessage("Prisma client disconnected");
     }
   }
 };
