@@ -78,12 +78,12 @@ export const startApi = async () => {
       const graceful = new Graceful({
         logger,
         customHandlers: [
-          () => {
-            if (bree) {
-              bree.stop();
-              logger.info("Stopped Bree");
-            }
-          },
+          // () => {
+          //   if (bree) {
+          //     bree.stop();
+          //     logger.info("Stopped Bree");
+          //   }
+          // },
           () => {
             if (expressServer) {
               expressServer.close();
