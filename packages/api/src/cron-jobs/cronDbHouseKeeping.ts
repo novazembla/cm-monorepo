@@ -1,11 +1,6 @@
-import { parentPort } from "worker_threads";
 import { unlinkSync } from "fs";
 import { spawn } from "child_process";
 
-// !!!! ALWAY REMEMBER TO CLOSE YOU DB CONNECTION !!!
-import Prisma from "@prisma/client";
-
-import { getApiConfig } from "../config";
 import {
   ImageStatus,
   FileStatus,
@@ -13,38 +8,26 @@ import {
   DataExportStatus,
 } from "@culturemap/core";
 
-// https://github.com/breejs/bree#long-running-jobs
-// Or use https://threads.js.org/usage for a queing experience .. .
-// if (parentPort)
-//   parentPort.once("message", (message) => {
-//     //
-//     // we could make it `Number.MAX_VALUE` here to speed cancellation up
-//     // <https://github.com/sindresorhus/p-map/issues/28>
-//     //
-//     if (message === "cancel") isCancelled = true;
-//   });
+import { getApiConfig } from "../config";
+import { logger } from "../services/serviceLogging";
+import { getPrismaClient } from "../db/client";
 
-const postMessage = (msg: string) => {
-  if (parentPort) parentPort.postMessage(msg);
-  // eslint-disable-next-line no-console
-  else console.log(msg);
-};
+const prisma = getPrismaClient();
 
-const doChores = async () => {
-  const apiConfig = getApiConfig();
+function sleep(ms:number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
-  const { PrismaClient } = Prisma;
-  const prisma = new PrismaClient({
-    datasources: {
-      db: {
-        url: `${apiConfig.db.url}${
-          apiConfig.db.url.indexOf("?") > -1 ? "&" : "?"
-        }connection_limit=1`,
-      },
-    },
-  });
-
+export async function cronDbHouseKeeping() {
+  logger.info("[CRON:cronDbHouseKeeping]: starting cron job 1");
+  
+  await sleep(30000);
+  
+  logger.info("[CRON:cronDbHouseKeeping]: starting cron job 2");
+  
   try {
+    const apiConfig = getApiConfig();
+
     const { count } = await prisma.token.deleteMany({
       where: {
         expires: {
@@ -53,7 +36,7 @@ const doChores = async () => {
       },
     });
 
-    postMessage(`[WORKER:dbHousekeeping]: Deleted ${count} expired token`);
+    logger.info(`[CRON:dbHousekeeping]: Deleted ${count} expired token`);
 
     const images = await prisma.image.findMany({
       where: {
@@ -85,8 +68,8 @@ const doChores = async () => {
                   unlinkSync(meta?.originalFilePath);
                 }
               } catch (err: any) {
-                postMessage(
-                  `[WORKER:dbHousekeeping]: image delete error - ${err.message}`
+                logger.error(
+                  `[CRON:dbHousekeeping]: image delete error - ${err.message}`
                 );
               }
 
@@ -96,8 +79,8 @@ const doChores = async () => {
                 },
               });
             } catch (err: any) {
-              postMessage(
-                `[WORKER:dbHousekeeping]: image cleanup error - ${err.message}`
+              logger.error(
+                `[CRON:dbHousekeeping]: image cleanup error - ${err.message}`
               );
             }
           }
@@ -105,8 +88,8 @@ const doChores = async () => {
       );
     }
 
-    postMessage(
-      `[WORKER:dbHousekeeping]: Removed ${images.length} image(s) and their files`
+    logger.info(
+      `[CRON:dbHousekeeping]: Removed ${images.length} image(s) and their files`
     );
 
     const staleImages = await prisma.image.findMany({
@@ -143,8 +126,8 @@ const doChores = async () => {
                   unlinkSync(meta?.originalFilePath);
                 }
               } catch (err: any) {
-                postMessage(
-                  `[WORKER:dbHousekeeping]: image file delete error - ${err.message}`
+                logger.error(
+                  `[CRON:dbHousekeeping]: image file delete error - ${err.message}`
                 );
               }
 
@@ -154,8 +137,8 @@ const doChores = async () => {
                 },
               });
             } catch (err: any) {
-              postMessage(
-                `[WORKER:dbHousekeeping]: image cleanup error - ${err.message}`
+              logger.error(
+                `[CRON:dbHousekeeping]: image cleanup error - ${err.message}`
               );
             }
           }
@@ -163,8 +146,8 @@ const doChores = async () => {
       );
     }
 
-    postMessage(
-      `[WORKER:dbHousekeeping]: Removed ${images.length} stale suggestion image(s) and their files`
+    logger.info(
+      `[CRON:dbHousekeeping]: Removed ${images.length} stale suggestion image(s) and their files`
     );
 
     const files = await prisma.file.findMany({
@@ -188,8 +171,8 @@ const doChores = async () => {
                 if (meta?.originalFilePath)
                   unlinkSync(`${meta.originalFilePath}`);
               } catch (err: any) {
-                postMessage(
-                  `[WORKER:dbHousekeeping]: file delete error - ${err.message}`
+                logger.error(
+                  `[CRON:dbHousekeeping]: file delete error - ${err.message}`
                 );
               }
               await prisma.file.delete({
@@ -198,15 +181,15 @@ const doChores = async () => {
                 },
               });
             } catch (err: any) {
-              postMessage(
-                `[WORKER:dbHousekeeping]: file cleanup error - ${err.message}`
+              logger.error(
+                `[CRON:dbHousekeeping]: file cleanup error - ${err.message}`
               );
             }
           }
         })
       );
     }
-    postMessage(`[WORKER:dbHousekeeping]: Removed ${files.length} file(s)`);
+    logger.info(`[CRON:dbHousekeeping]: Removed ${files.length} file(s)`);
 
     const importsToDelete = await prisma.dataImport.findMany({
       where: {
@@ -238,8 +221,8 @@ const doChores = async () => {
             },
           },
         });
-        postMessage(
-          `[WORKER:dbHousekeeping]: Set ${fileIds.length} import files to be deleted`
+        logger.info(
+          `[CRON:dbHousekeeping]: Set ${fileIds.length} import files to be deleted`
         );
       }
 
@@ -251,8 +234,8 @@ const doChores = async () => {
         },
       });
 
-      postMessage(
-        `[WORKER:dbHousekeeping]: Deleted ${importCleanup.count} expired import(s)`
+      logger.info(
+        `[CRON:dbHousekeeping]: Deleted ${importCleanup.count} expired import(s)`
       );
     }
 
@@ -293,8 +276,8 @@ const doChores = async () => {
           );
         }
 
-        postMessage(
-          `[WORKER:dbHousekeeping]: Triggered import script for import: ${scheduledDataImport.id}`
+        logger.info(
+          `[CRON:dbHousekeeping]: Triggered import script for import: ${scheduledDataImport.id}`
         );
       } catch (err) {
         await prisma.dataImport.update({
@@ -306,8 +289,8 @@ const doChores = async () => {
             id: scheduledDataImport.id,
           },
         });
-        postMessage(
-          `[WORKER:dbHousekeeping]: could not trigger script for import: ${scheduledDataImport.id}`
+        logger.error(
+          `[CRON:dbHousekeeping]: could not trigger script for import: ${scheduledDataImport.id}`
         );
       }
     }
@@ -342,8 +325,8 @@ const doChores = async () => {
             },
           },
         });
-        postMessage(
-          `[WORKER:dbHousekeeping]: Scheduled ${fileIds.length} uploaded dataExport files to be deleted`
+        logger.info(
+          `[CRON:dbHousekeeping]: Scheduled ${fileIds.length} uploaded dataExport files to be deleted`
         );
       }
 
@@ -355,8 +338,8 @@ const doChores = async () => {
         },
       });
 
-      postMessage(
-        `[WORKER:dbHousekeeping]: Deleted ${dataExportCleanup.count} expired dataExport(s)`
+      logger.info(
+        `[CRON:dbHousekeeping]: Deleted ${dataExportCleanup.count} expired dataExport(s)`
       );
     }
 
@@ -395,12 +378,12 @@ const doChores = async () => {
               detached: true,
             }
           );
-          postMessage(
-            `[WORKER:dbHousekeeping]: Triggered dataExport script for dataExport: ${scheduledDataExport.id}`
+          logger.info(
+            `[CRON:dbHousekeeping]: Triggered dataExport script for dataExport: ${scheduledDataExport.id}`
           );
         } else {
-          postMessage(
-            `[WORKER:dbHousekeeping]: Could not find export script for ID: ${scheduledDataExport.id} Type:  ${scheduledDataExport.type}`
+          logger.info(
+            `[CRON:dbHousekeeping]: Could not find export script for ID: ${scheduledDataExport.id} Type:  ${scheduledDataExport.type}`
           );
         }
       } catch (err) {
@@ -413,29 +396,15 @@ const doChores = async () => {
             id: scheduledDataExport.id,
           },
         });
-        postMessage(
-          `[WORKER:dbHousekeeping]: could not trigger script for dataExport: ${scheduledDataExport.id}`
+        logger.error(
+          `[CRON:dbHousekeeping]: could not trigger script for dataExport: ${scheduledDataExport.id}`
         );
       }
     }
+    logger.info("[CRON:dbHousekeeping]: ran cron job");
   } catch (Err: any) {
-    postMessage(
-      `[WORKER:dbHousekeeping]: Failed to run worker. ${Err.name} ${Err.message}`
+    logger.error(
+      `[CRON:dbHousekeeping]: Failed to run cron job. ${Err.name} ${Err.message}`
     );
-  } finally {
-    if (prisma) {
-      await prisma.$disconnect();
-      postMessage("Prisma client disconnected");
-    }
   }
 };
-
-doChores()
-  .then(async () => {
-    if (parentPort) postMessage("done");
-    else process.exit(0);
-  })
-  .catch((Err) => {
-    postMessage(JSON.stringify(Err));
-    process.exit(1);
-  });
