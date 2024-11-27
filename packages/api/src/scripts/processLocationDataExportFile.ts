@@ -604,7 +604,6 @@ const doChores = async () => {
           id: exportInDb.id,
         },
       });
-      await prisma.$disconnect();
     } else {
       throw Error(
         exportInDb?.lang === "de"
@@ -613,28 +612,36 @@ const doChores = async () => {
       );
     }
   } catch (err: any) {
-    const exportInDb = await prisma.dataExport.findUnique({
-      where: {
-        id: args.exportId,
-      },
-    });
+    if (prisma) {
 
-    if (exportInDb) {
-      errors.push(`${err.name} - ${err.message}`);
-      await prisma.dataExport.update({
-        data: {
-          status: DataExportStatus.ERROR,
-          log,
-          errors,
-        },
+    
+      const exportInDb = await prisma.dataExport.findUnique({
         where: {
-          id: exportInDb.id,
+          id: args.exportId,
         },
       });
+
+      if (exportInDb) {
+        errors.push(`${err.name} - ${err.message}`);
+        await prisma.dataExport.update({
+          data: {
+            status: DataExportStatus.ERROR,
+            log,
+            errors,
+          },
+          where: {
+            id: exportInDb.id,
+          },
+        });
+      }
     }
-    if (prisma) await prisma.$disconnect();
     logger.error(err);
     throw Error("script terminated early on error");
+  } finally {
+    if (prisma) {
+      await prisma.$disconnect();
+      console.log("Prisma client disconnected");
+    }
   }
 };
 

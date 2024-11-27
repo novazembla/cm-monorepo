@@ -93,8 +93,6 @@ const doChores = async () => {
       `[WORKER:dbClearItems]: Purged ${countLocationsCleared.count} locations that have been trashed 90 days ago`
     );
 
-    await prisma.$disconnect();
-
     const countToursCleared = await prisma.tour.deleteMany({
       where: {
         status: PublishStatus.TRASHED,
@@ -107,14 +105,15 @@ const doChores = async () => {
     postMessage(
       `[WORKER:dbClearItems]: Purged ${countToursCleared.count} tours that have been trashed 90 days ago`
     );
-
-    await prisma.$disconnect();
   } catch (Err: any) {
     postMessage(
       `[WORKER:dbClearItems]: Failed to run worker. ${Err.name} ${Err.message}`
     );
   } finally {
-    if (prisma) await prisma.$disconnect();
+    if (prisma) {
+      await prisma.$disconnect();
+      console.log("Prisma client disconnected");
+    }
   }
 };
 

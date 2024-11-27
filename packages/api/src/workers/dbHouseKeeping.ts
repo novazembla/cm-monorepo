@@ -418,13 +418,15 @@ const doChores = async () => {
         );
       }
     }
-    await prisma.$disconnect();
   } catch (Err: any) {
     postMessage(
       `[WORKER:dbHousekeeping]: Failed to run worker. ${Err.name} ${Err.message}`
     );
   } finally {
-    if (prisma) await prisma.$disconnect();
+    if (prisma) {
+      await prisma.$disconnect();
+      console.log("Prisma client disconnected");
+    }
   }
 };
 

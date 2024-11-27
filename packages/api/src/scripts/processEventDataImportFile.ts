@@ -700,31 +700,37 @@ const doChores = async () => {
         id: importInDb.id,
       },
     });
-    await prisma.$disconnect();
   } catch (err: any) {
-    const importInDb = await prisma.dataImport.findUnique({
-      where: {
-        id: args.importId,
-      },
-    });
-
-    if (importInDb) {
-      errors.push(`${err.name} - ${err.message}`);
-      await prisma.dataImport.update({
-        data: {
-          status: DataImportStatus.ERROR,
-          log,
-          warnings,
-          errors,
-        },
+    if (prisma) {
+      const importInDb = await prisma.dataImport.findUnique({
         where: {
-          id: importInDb.id,
+          id: args.importId,
         },
       });
+
+      if (importInDb) {
+        errors.push(`${err.name} - ${err.message}`);
+        await prisma.dataImport.update({
+          data: {
+            status: DataImportStatus.ERROR,
+            log,
+            warnings,
+            errors,
+          },
+          where: {
+            id: importInDb.id,
+          },
+        });
+      }
     }
-    if (prisma) await prisma.$disconnect();
+
     logger.error(err);
     throw Error("script terminated early on error");
+  } finally {
+    if (prisma) {
+      await prisma.$disconnect();
+      console.log("Prisma client disconnected");
+    }
   }
 };
 

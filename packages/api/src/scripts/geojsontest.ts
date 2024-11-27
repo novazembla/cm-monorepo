@@ -114,7 +114,10 @@ const doChores = async () => {
   } catch (err: any) {
     console.error(err);
   } finally {
-    if (prisma) await prisma.$disconnect();
+    if (prisma) {
+      await prisma.$disconnect();
+      console.log("Prisma client disconnected");
+    }
   }
 };
 

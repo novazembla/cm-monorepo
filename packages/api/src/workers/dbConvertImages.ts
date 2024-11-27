@@ -231,7 +231,10 @@ const doChores = async () => {
       `[WORKER:DbConvertImages]: Failed to run worker. ${Err.name} ${Err.message}`
     );
   } finally {
-    if (prisma) await prisma.$disconnect();
+    if (prisma) {
+      await prisma.$disconnect();
+      console.log("Prisma client disconnected");
+    }
   }
 };
 

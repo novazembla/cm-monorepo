@@ -728,15 +728,16 @@ const doChores = async () => {
       errors.push(`import.berlin.de: ${err.name} ${err.message}`);
       logger.debug(JSON.stringify(err));
       await saveDataImportLog(prisma, DataImportStatus.ERROR);
-    } finally {
-      if (prisma) await prisma.$disconnect();
-    }
+    }    
   } catch (err: any) {
     logger.error(`import.berlin.de: ${err.name} ${err.message}`);
     errors.push(`import.berlin.de: ${err.name} ${err.message}`);
     logger.debug(JSON.stringify(err));
   } finally {
-    if (prisma) await prisma.$disconnect();
+    if (prisma) {
+      await prisma.$disconnect();
+      console.log("Prisma client disconnected");
+    }
   }
 };
 

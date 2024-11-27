@@ -8,7 +8,7 @@ const { PrismaClient } = Prisma;
 
 const doChores = async () => {
   const apiConfig = getApiConfig();
-  let prisma: Prisma.PrismaClient;
+  let prisma: Prisma.PrismaClient | null = null;
 
   try {
     prisma = new PrismaClient({
@@ -59,7 +59,10 @@ const doChores = async () => {
   } catch (err: any) {
     console.error(err);
   } finally {
-    if (prisma) await prisma.$disconnect();
+    if (prisma) {
+      await prisma.$disconnect();
+      console.log("Prisma client disconnected");
+    }
   }
 };
 
