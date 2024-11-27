@@ -53,25 +53,26 @@ export const startApi = async () => {
         root: join(apiConfig.packageBaseDir, "dist", "workers"),
         jobs: [
           {
-            name: "dbHouseKeeping",
-            interval: process.env.NODE_ENV === "production" ? "1m" : "2m",
-          },
-          {
             name: "dbConvertImages",
             interval: process.env.NODE_ENV === "production" ? "37s" : "76s",
-          },
-          {
-            name: "importCalendar",
-            cron: "0 6 * * *",
-          },
-          {
-            name: "generateSitemaps",
-            cron: "15 6,10,14,18,22 * * *",
-          },
-          {
-            name: "dbClearItems",
-            cron: "0 4 * * *",
-          },
+          }
+          // ,
+          // {
+          //   name: "dbHouseKeeping",
+          //   interval: process.env.NODE_ENV === "production" ? "1m" : "2m",
+          // },
+          // {
+          //   name: "importCalendar",
+          //   cron: "0 6 * * *",
+          // },
+          // {
+          //   name: "generateSitemaps",
+          //   cron: "15 6,10,14,18,22 * * *",
+          // },
+          // {
+          //   name: "dbClearItems",
+          //   cron: "0 4 * * *",
+          // },
         ],
       });
       await bree.start();
