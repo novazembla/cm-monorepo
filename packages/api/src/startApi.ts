@@ -66,7 +66,7 @@ export const startApi = async () => {
           },
           {
             name: "generateSitemaps",
-            cron: "0 6,10,14,18,22 30 * *",
+            cron: "15 6,10,14,18,22 * * *",
           },
           {
             name: "dbClearItems",
