@@ -104,12 +104,12 @@ export const startApi = async () => {
             cronJobImportCalendar.stop();
             logger.info("Stopped cron jobs");
           },
-          () => {
-            if (bree) {
-              bree.stop();
-              logger.info("Stopped Bree");
-            }
-          },
+          // () => {
+          //   if (bree) {
+          //     bree.stop();
+          //     logger.info("Stopped Bree");
+          //   }
+          // },
           () => {
             if (expressServer) {
               expressServer.close();
