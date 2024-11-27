@@ -16,12 +16,12 @@ export async function cronDbImageResize() {
       }
     );
     logger.info(
-      `[CRON:generateSitemaps]: Triggered image resize script: ${apiConfig.packageBaseDir}/dist/scripts/dbConvertImages.js`
+      `[CRON:cronDbImageResize]: Triggered image resize script: ${apiConfig.packageBaseDir}/dist/scripts/dbConvertImages.js`
     );
-    logger.info("[CRON:generateSitemaps]: ran cron job");
+    logger.info("[CRON:cronDbImageResize]: ran cron job");
   } catch (Err: any) {
     logger.error(
-      `[CRON:generateSitemaps]: Failed to run cron job. ${Err.name} ${Err.message}`
+      `[CRON:cronDbImageResize]: Failed to run cron job. ${Err.name} ${Err.message}`
     );
   }
 };
