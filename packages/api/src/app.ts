@@ -28,46 +28,6 @@ import {
   postSuggestionImage,
   getGeoJson,
 } from "./routes";
-
-process.on('uncaughtException', function (exception) {
-  if (process.stderr) {
-    // Node.js maps `process.stderr` to `console._stderr`.
-    process.stderr.write(exception.message);
-  } else {
-    // console.error adds a newline
-    console.error(exception);
-  }
-  // if you are on production, maybe you can send the exception details to your
-  // email as well ?
-});
-
-process.on('unhandledRejection', (reason, p) => { 
-  const message = `"Unhandled Rejection at: Promise ${p} reason: ${reason}`;
-  if (process.stderr) {
-    // Node.js maps `process.stderr` to `console._stderr`.
-    process.stderr.write(message);
-  } else {
-    // console.error adds a newline
-    console.error(message);
-  }
-});
-
-process.on('exit', code => {
-  // Only synchronous calls
-  console.log(`Process exited with code: ${code}`)
-});
-
-process.on('SIGTERM', signal => {
-  console.log(`Process ${process.pid} received a SIGTERM signal`)
-  process.exit(0)
-});
-
-process.on('SIGINT', signal => {
-  console.log(`Process ${process.pid} has been interrupted`)
-  process.exit(0)
-});
-
-
 export const app: Application = express();
 
 export const initializeExpressApp = () => {

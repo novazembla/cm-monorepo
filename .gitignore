@@ -9,6 +9,9 @@
 .vite
 dist
 
+apps-api.err
+apps-api.log
+
 # Icon must end with two \r
 Icon
 

@@ -74,9 +74,32 @@ const start = async () => {
   await startApi();
 };
 
-start();
-
-process.on("unhandledRejection", (reason: any) => {
-  // eslint-disable-next-line no-console
-  console.error("Error: Unhandled Rejection at:", reason.stack || reason);
+process.on('uncaughtException', function (exception) {
+  if (process.stderr) {
+    process.stderr.write(exception.message);
+  } else {
+    console.error(exception);
+  }
 });
+
+process.on('unhandledRejection', (reason, p) => {
+  var message = "\"Unhandled Rejection at: Promise ".concat(p as any, " reason: ").concat(reason as any);
+  if (process.stderr) {
+    process.stderr.write(message);
+  } else {
+    console.error(message);
+  }
+});
+process.on('exit', code => {
+  console.log("Process exited with code: ".concat(code as any));
+});
+process.on('SIGTERM', signal => {
+  console.log("Process ".concat(process.pid as any, " received a SIGTERM signal"));
+  process.exit(0);
+});
+process.on('SIGINT', signal => {
+  console.log("Process ".concat(process.pid as any, " has been interrupted"));
+  process.exit(0);
+});
+
+start();
