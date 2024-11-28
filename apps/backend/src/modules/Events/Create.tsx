@@ -160,7 +160,7 @@ const Create = () => {
 
     try {
       if (appUser) {
-        const mutationResults = await firstMutation({
+        const postData = {
           owner: {
             connect: {
               id: appUser.id,
@@ -197,7 +197,11 @@ const Create = () => {
             [],
             multiLangFields
           ),
-        });
+        };
+        
+        postData.slug.en = `${postData.slug.de}-en`;
+
+        const mutationResults = await firstMutation(postData);
 
         if (!mutationResults.errors) {
           successToast();

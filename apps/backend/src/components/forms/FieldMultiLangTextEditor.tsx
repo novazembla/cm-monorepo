@@ -34,6 +34,7 @@ export const FieldMultiLangTextEditor = ({
   isRequired,
   isDisabled,
   size = "small",
+  activeLanguages,
 }: {
   settings?: FieldMultiLangTextEditorSettings;
   id: string;
@@ -43,13 +44,14 @@ export const FieldMultiLangTextEditor = ({
   label: string;
   name: string;
   type: TextEditorTypes;
+  activeLanguages?: string[];
 }) => {
   const config = useConfig();
 
   return (
     <TwoColFieldRow type="multilang">
-      {config.activeLanguages &&
-        config.activeLanguages.map((lang) => {
+      {(activeLanguages ?? config.activeLanguages) &&
+        (activeLanguages ?? config.activeLanguages).map((lang: any) => {
           const field_id = `${id ? id : name}_${lang}`;
           const field_name = `${name}_${lang}`;
           const field_required =

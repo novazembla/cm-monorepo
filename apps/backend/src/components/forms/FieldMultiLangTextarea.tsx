@@ -40,7 +40,8 @@ export const FieldMultiLangTextarea = ({
   name,
   type,
   isRequired,
-  isDisabled
+  isDisabled,
+  activeLanguages,
 }: {
   settings?: FieldMultiLangTextareaSettings;
   id: string;
@@ -50,6 +51,7 @@ export const FieldMultiLangTextarea = ({
   label: string;
   name: string;
   type: string;
+  activeLanguages?: string[];
 }) => {
   const config = useConfig();
 
@@ -81,8 +83,8 @@ export const FieldMultiLangTextarea = ({
   
   return (
     <TwoColFieldRow type="multilang">
-      {config.activeLanguages &&
-        config.activeLanguages.map((lang) => {
+      {(activeLanguages ?? config.activeLanguages) &&
+        (activeLanguages ?? config.activeLanguages).map((lang: any) => {
           const field_id = `${id}_${lang}`;
           const field_name = `${name}_${lang}`;
           const field_required =
