@@ -172,15 +172,13 @@ export const ModuleForm = ({
   return (
     <>
       {action === "create" && (
-        <>
-          <Alert borderRadius="lg">
-            <AlertIcon />
-            {t(
-              "form.info.pleasesafedraft",
-              "Please save a draft to unlock further functionality"
-            )}
-          </Alert>
-        </>
+        <Alert borderRadius="lg">
+          <AlertIcon />
+          {t(
+            "form.info.pleasesafedraft",
+            "Please save a draft to unlock further functionality"
+          )}
+        </Alert> 
       )}
       <FieldMultiLangInput
         name="title"
@@ -288,7 +286,6 @@ export const ModuleForm = ({
         settings={{
           defaultRequired: true,
           defaultValues: data?.event?.description,
-          maxLength: 2000,
           placeholder: t(
             "module.events.forms.event.field.placeholder.description",
             "Event description"
