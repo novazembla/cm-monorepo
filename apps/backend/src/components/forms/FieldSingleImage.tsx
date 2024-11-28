@@ -41,6 +41,7 @@ export const FieldSingleImage = ({
   connectWith,
   setActiveUploadCounter,
   doNotCollectCropPosition,
+  activeLanguages,
 }: {
   settings: FieldSingleImageSettings;
   id: string;
@@ -52,6 +53,7 @@ export const FieldSingleImage = ({
   currentImage: Record<string, any>;
   connectWith?: any;
   setActiveUploadCounter?: Function;
+  activeLanguages?: string[];
 }) => {
   const { t } = useTranslation();
   const config = useConfig();
@@ -156,6 +158,7 @@ export const FieldSingleImage = ({
                   !!getValues(name),
                 defaultValues: currentImage?.alt ?? "",
               }}
+              activeLanguages={activeLanguages}
             />
           </FieldRow>
           <FieldRow>
@@ -170,6 +173,7 @@ export const FieldSingleImage = ({
                   !!getValues(name),
                 defaultValues: currentImage?.credits ?? "",
               }}
+              activeLanguages={activeLanguages}
             />
           </FieldRow>
           {!doNotCollectCropPosition && (

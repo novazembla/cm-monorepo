@@ -467,18 +467,18 @@ const doChores = async () => {
                     : [];
                 mappedIds = [...mappedIds, ...mappedBarriereFreiheitTerms];
                 
+                const title_en = event.event_titel_en !== ""
+                      ? event.event_titel_en
+                      : event.event_titel_de;
                 const sharedData = {
                   description_de: convertToHtml(event.event_beschreibung_de),
                   description_en: convertToHtml(event.event_beschreibung_en),
                   title_de: event.event_titel_de,
-                  title_en:
-                    event.event_titel_en !== ""
-                      ? event.event_titel_en
-                      : event.event_titel_de,
+                  title_en,
                   slug_de: `veranstaltung-${slugify(event.event_titel_de)}-${
                     event.event_id
                   }`,
-                  slug_en: `event-${slugify(event.event_titel_en)}-${
+                  slug_en: `event-${slugify(title_en)}-${
                     event.event_id
                   }`,
 

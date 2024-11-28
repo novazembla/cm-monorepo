@@ -8,6 +8,7 @@ import TwoColFieldRow from "./TwoColFieldRow";
 import { useConfig } from "~/hooks";
 import FieldRow from "./FieldRow";
 import { flattenErrors } from ".";
+import { activeLanguages } from "~/config";
 
 export interface FieldMultiLangInputSettings {
   onChange?: ChangeEventHandler;
@@ -39,6 +40,7 @@ export const FieldMultiLangInput = ({
   type,
   isRequired,
   isDisabled,
+  activeLanguages,
 }: {
   settings?: FieldMultiLangInputSettings;
   id: string;
@@ -47,6 +49,7 @@ export const FieldMultiLangInput = ({
   label: string;
   name: string;
   type: string;
+  activeLanguages?: string[];
 }) => {
   const config = useConfig();
 
@@ -73,11 +76,8 @@ export const FieldMultiLangInput = ({
   };
 
   const flattenedErrors = flattenErrors(errors);
-  
-  return (
-    <TwoColFieldRow type="multilang">
-      {config.activeLanguages &&
-        config.activeLanguages.map((lang) => {
+  const content = (activeLanguages ?? config.activeLanguages) &&
+        (activeLanguages ?? config.activeLanguages).map((lang:any) => {
           const field_id = `${id}_${lang}`;
           const field_name = `${name}_${lang}`;
           const field_required =
@@ -127,9 +127,14 @@ export const FieldMultiLangInput = ({
               </FormControl>
             </FieldRow>
           );
-        })}
-    </TwoColFieldRow>
-  );
+        });
+
+  const out = activeLanguages?.length === 1 ? <FieldRow>{content}</FieldRow> :
+    <TwoColFieldRow type="multilang">
+      {content}
+    </TwoColFieldRow>;
+
+  return out;
 };
 
 export default FieldMultiLangInput;

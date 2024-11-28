@@ -3,22 +3,10 @@ import { string, object, number, mixed, boolean } from "yup";
 import { activeLanguages, defaultLanguage } from "~/config";
 
 export const ModuleEventCreateSchema = object().shape(
-  activeLanguages.reduce(
-    (acc, lang) => ({
-      ...acc,
-      [`title_${lang}`]: string().required(),
-      // t("validation.slug.invalidcharacters", "You can only use A-Z, -, and numbers")
-      [`slug_${lang}`]: string()
-        .lowercase()
-        .matches(/^[a-z\-\d]+$/, "validation.slug.invalidcharacters")
-        .required(),
-      [`description_${lang}`]:
-        lang === defaultLanguage
-          ? string().nonEmptyHtml({ max: 2000 }).required()
-          : string().html({ max: 2000 }),
-      [`descriptionLocation_${lang}`]: string().html({ max: 500 }),
-    }),
     {
+      "title_de": string().required(),
+      "slug_de": string().required(),
+      "description_de": string().nonEmptyHtml().required(),
       ownerId: number(),
       isImported: boolean(),
       // t("validation.slug.chooselocation", "Please choose a location")
@@ -28,7 +16,6 @@ export const ModuleEventCreateSchema = object().shape(
       address: string(),
       organiser: string(),
     }
-  )
 );
 
 export const ModuleEventUpdateSchema = ModuleEventCreateSchema.concat(

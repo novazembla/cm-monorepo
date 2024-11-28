@@ -87,12 +87,13 @@ export const ModuleForm = ({
   let updateActions;
 
   const {
-    // formState: { errors },
+    formState: { errors },
     register,
     control,
     getValues,
   } = useFormContext();
 
+  console.log(errors);
   const { fields, remove, insert } = useFieldArray({
     control,
     name: "dates",
@@ -158,6 +159,7 @@ export const ModuleForm = ({
                 },
               },
             }}
+            activeLanguages={["de"]}
           />
         </>
       );
@@ -193,6 +195,7 @@ export const ModuleForm = ({
             "Event title"
           ),
         }}
+        activeLanguages={["de"]}
       />
       <FieldMultiLangInput
         name="slug"
@@ -207,6 +210,7 @@ export const ModuleForm = ({
             "Slug / URL part"
           ),
         }}
+        activeLanguages={["de"]}
       />
       <Divider mt="10" />
       <TwoColFieldRow>
@@ -291,6 +295,7 @@ export const ModuleForm = ({
             "Event description"
           ),
         }}
+        activeLanguages={["de"]}
       />
       <Divider mt="10" />
       <TwoColFieldRow>
@@ -344,6 +349,7 @@ export const ModuleForm = ({
             defaultValues: data?.event?.metaDesc,
             maxLength: 350,
           }}
+          activeLanguages={["de"]}
         />
       </chakra.fieldset>
       <Divider mt="10" />
