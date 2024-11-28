@@ -6,7 +6,7 @@ export const ModuleEventCreateSchema = object().shape(
     {
       "title_de": string().required(),
       "slug_de": string().required(),
-      "description_de": string().nonEmptyHtml().required(),
+      "description_de": string().nonEmptyHtml({ max: 2000 }).required(),
       ownerId: number(),
       isImported: boolean(),
       // t("validation.slug.chooselocation", "Please choose a location")

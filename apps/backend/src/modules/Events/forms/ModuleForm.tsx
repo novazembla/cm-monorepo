@@ -294,6 +294,7 @@ export const ModuleForm = ({
             "module.events.forms.event.field.placeholder.description",
             "Event description"
           ),
+          maxLength: 2000
         }}
         activeLanguages={["de"]}
       />
