@@ -100,7 +100,7 @@ export const startApi = async () => {
         null, // onComplete
         true, // start
       );
-
+      
       const graceful = new Graceful({
         logger,
         customHandlers: [

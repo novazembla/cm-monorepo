@@ -14,6 +14,9 @@ export async function cronDbClearItems () {
       },
       where: {
         isImported: false,
+        status: {
+          not: PublishStatus.TRASHED
+        },
         lastEventDate: {
           lt: new Date(),
         },
@@ -27,9 +30,18 @@ export async function cronDbClearItems () {
     const countEventsCleared = await prisma.event.deleteMany({
       where: {
         status: PublishStatus.TRASHED,
-        updatedAt: {
-          lt: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 90),
-        },
+        OR: [
+          {
+            updatedAt: {
+              lt: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 90),
+            }
+          },
+          {
+            lastEventDate: {
+              lt:new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 90),
+            },
+          }  
+        ]
       },
     });
 
