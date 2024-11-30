@@ -132,7 +132,7 @@ model Event {
   organiser       String @default("")
   
   meta        Json? @default("{}")
-
+  socialMedia              Json? @default("{}")
   
   isFree     Boolean    @default(false)
   isImported Boolean    @default(false)

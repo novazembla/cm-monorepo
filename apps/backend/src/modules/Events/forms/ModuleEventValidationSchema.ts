@@ -15,6 +15,9 @@ export const ModuleEventCreateSchema = object().shape(
       isFree: boolean(),
       address: string(),
       organiser: string(),
+      facebook: string().url(),
+      instagram: string().url(),
+      website: string().url(),
     }
 );
 

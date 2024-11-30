@@ -77,6 +77,7 @@ export const Event = objectType({
     t.nonNull.int("status");
 
     t.json("meta");
+    t.json("socialMedia");
     t.boolean("isFree");
     t.boolean("isImported");
 
@@ -108,6 +109,7 @@ export const Event = objectType({
 
     t.date("createdAt");
     t.date("updatedAt");
+    
   },
 });
 
@@ -446,6 +448,7 @@ export const EventUpsertInput = inputObjectType({
     t.json("dates");
     t.json("locations");
     t.json("heroImage");
+    t.json("socialMedia");
   },
 });
 
@@ -462,6 +465,7 @@ export const EventSuggestionInput = inputObjectType({
     t.json("terms");
     t.json("heroImage");
     t.json("dates");
+    t.json("socialMedia");
   },
 });
 

@@ -79,6 +79,7 @@ export interface NexusGenInputs {
     meta?: NexusGenScalars['JSON'] | null; // JSON
     organiser: string; // String!
     slug: NexusGenScalars['JSON']; // JSON!
+    socialMedia?: NexusGenScalars['JSON'] | null; // JSON
     terms?: NexusGenScalars['JSON'] | null; // JSON
     title: NexusGenScalars['JSON']; // JSON!
   }
@@ -95,6 +96,7 @@ export interface NexusGenInputs {
     owner: NexusGenScalars['JSON']; // JSON!
     primaryTerms?: NexusGenScalars['JSON'] | null; // JSON
     slug: NexusGenScalars['JSON']; // JSON!
+    socialMedia?: NexusGenScalars['JSON'] | null; // JSON
     status: number; // Int!
     terms?: NexusGenScalars['JSON'] | null; // JSON
     title: NexusGenScalars['JSON']; // JSON!
@@ -345,6 +347,7 @@ export interface NexusGenObjects {
     organiser?: string | null; // String
     ownerId: number; // Int!
     primaryTerms?: Array<NexusGenRootTypes['Term'] | null> | null; // [Term]
+    socialMedia?: NexusGenScalars['JSON'] | null; // JSON
     status: number; // Int!
     terms?: Array<NexusGenRootTypes['Term'] | null> | null; // [Term]
     updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
@@ -677,6 +680,7 @@ export interface NexusGenFieldTypes {
     ownerId: number; // Int!
     primaryTerms: Array<NexusGenRootTypes['Term'] | null> | null; // [Term]
     slug: NexusGenScalars['JSON'] | null; // JSON
+    socialMedia: NexusGenScalars['JSON'] | null; // JSON
     status: number; // Int!
     terms: Array<NexusGenRootTypes['Term'] | null> | null; // [Term]
     title: NexusGenScalars['JSON'] | null; // JSON
@@ -1126,6 +1130,7 @@ export interface NexusGenFieldTypeNames {
     ownerId: 'Int'
     primaryTerms: 'Term'
     slug: 'JSON'
+    socialMedia: 'JSON'
     status: 'Int'
     terms: 'Term'
     title: 'JSON'

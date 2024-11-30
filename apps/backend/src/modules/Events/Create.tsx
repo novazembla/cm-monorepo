@@ -6,6 +6,7 @@ import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { filteredOutputByWhitelist, PublishStatus } from "@culturemap/core";
 import { useQuery, gql } from "@apollo/client";
+import pick from "lodash/pick";
 
 import {
   TextErrorMessage,
@@ -188,6 +189,11 @@ const Create = () => {
           terms: {
             connect: terms,
           },
+          socialMedia: pick(newData, [
+            "facebook",
+            "instagram",
+            "website",
+          ]),
           ...filteredOutputByWhitelist(
             multiLangRHFormDataToJson(
               newData,

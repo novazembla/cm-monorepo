@@ -9,6 +9,7 @@ export const eventCreateMutationGQL = gql`
       slug
       status
       description
+      socialMedia
     }
   }
 `;
@@ -22,6 +23,7 @@ export const eventUpdateMutationGQL = gql`
       slug
       status
       description
+      socialMedia
     }
   }
 `;

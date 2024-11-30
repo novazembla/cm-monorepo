@@ -36,6 +36,7 @@ import {
   TimeField,
   FieldSingleSelectAutocomplete,
   FieldSwitch,
+  FieldInput,
 } from "~/components/forms";
 
 import { HiOutlineTrash } from "react-icons/hi";
@@ -333,6 +334,76 @@ export const ModuleForm = ({
       >
         <legend>
           <chakra.span px="2">
+            {t(
+              "module.locations.forms.field.label.socialMedia",
+              "Website/Social Media"
+            )}
+          </chakra.span>
+        </legend>
+        <FieldRow>
+          <FieldInput
+            id="website"
+            type="text"
+            name="website"
+            label={t("module.locations.forms.field.label.website", "Website")}
+            isRequired={yupIsFieldRequired("website", validationSchema)}
+            settings={{
+              placeholder: t(
+                "locations.forms.field.placeholder.url",
+                "https://...."
+              ),
+            }}
+          />
+        </FieldRow>
+        <TwoColFieldRow>
+          <FieldRow>
+            <FieldInput
+              id="facebook"
+              type="text"
+              name="facebook"
+              label={t(
+                "module.locations.forms.field.label.facebook",
+                "Facebook page"
+              )}
+              isRequired={yupIsFieldRequired("facebook", validationSchema)}
+              settings={{
+                placeholder: t(
+                  "locations.forms.field.placeholder.url",
+                  "https://...."
+                ),
+              }}
+            />
+          </FieldRow>
+          <FieldRow>
+            <FieldInput
+              id="instagram"
+              type="text"
+              name="instagram"
+              label={t(
+                "module.locations.forms.field.label.instagram",
+                "Instagram"
+              )}
+              isRequired={yupIsFieldRequired("instagram", validationSchema)}
+              settings={{
+                placeholder: t(
+                  "locations.forms.field.placeholder.url",
+                  "https://...."
+                ),
+              }}
+            />
+          </FieldRow>
+        </TwoColFieldRow>
+      </chakra.fieldset>
+      <Divider mt="10" />
+      <chakra.fieldset
+        border="1px solid"
+        borderColor="gray.400"
+        p="4"
+        borderRadius="md"
+        w="100%"
+      >
+        <legend>
+          <chakra.span px="2">
             {t("module.locations.forms.fieldSet.label.seo", "SEO")}
           </chakra.span>
         </legend>
@@ -372,34 +443,6 @@ export const ModuleForm = ({
                 )}
               </chakra.span>
             </legend>
-            {data?.event?.meta?.website && (
-              <FieldRow>
-                <Box>
-                  {t("location.suggestion.fieldName.website", "Event website")}
-                  <br />
-                  <b>{data?.event?.meta?.website}</b>
-                </Box>
-              </FieldRow>
-            )}
-            {data?.event?.meta?.facebook && (
-              <FieldRow>
-                <Box>
-                  {t("location.suggestion.fieldName.facebook", "Event Facebook Page")}
-                  <br />
-                  <b>{data?.event?.meta?.facebook}</b>
-                </Box>
-              </FieldRow>
-            )}
-            {data?.event?.meta?.instagram && (
-              <FieldRow>
-                <Box>
-                  {t("location.suggestion.fieldName.instagram", "Event Instagram Account")}
-                  <br />
-                  <b>{data?.event?.meta?.instagram}</b>
-                </Box>
-              </FieldRow>
-            )}
-
             {data?.event?.meta?.suggestionSubmittersName && (
               <FieldRow>
                 <Box>

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import type * as yup from "yup";
 import { object, boolean, mixed, number } from "yup";
-
+import pick from "lodash/pick";
 import { useTranslation } from "react-i18next";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -61,6 +61,7 @@ export const eventAndContentAuthorsQueryGQL = gql`
       isFree
       isImported
       meta
+      socialMedia
       ownerId
       createdAt
       updatedAt
@@ -255,6 +256,9 @@ const Update = () => {
         config.activeLanguages ?? ["en"],
         "heroImage"
       ),
+      website: data?.event?.socialMedia?.website,
+      facebook: data?.event?.socialMedia?.facebook,
+      instagram: data?.event?.socialMedia?.instagram,
     });
   }, [reset, data, config.activeLanguages, setExtendedValidationSchema]);
 
@@ -335,6 +339,11 @@ const Update = () => {
           isImported: !!newData.isImported,
           dates: newData.dates,
           status: newData.status,
+          socialMedia: pick(newData, [
+            "facebook",
+            "instagram",
+            "website",
+          ]),
           terms: {
             set: terms,
           },

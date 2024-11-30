@@ -500,6 +500,9 @@ const doChores = async () => {
                     )}
                   `.trim()
                   ),
+                  socialMedia: {
+                    website: event.event_homepage	
+                  },
                   meta: {
                     event,
                     veranstalter,

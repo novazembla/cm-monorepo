@@ -37,7 +37,7 @@
     "package:api:watch:babel": "npx babel ./packages/api/src --watch --out-dir ./packages/api/dist --extensions .ts",
     "package:api:watch:typings": "npx tsc ./packages/api/src/*.ts --target 'es2020' --moduleResolution 'node' --watch --declaration --esModuleInterop --emitDeclarationOnly --preserveWatchOutput --outDir ./packages/api/dist",
     "package:api:lint": "eslint ./packages/api/src --ext .js,.ts --ignore-pattern nexus-typegen.ts",
-    "package:api:nexus": "node --loader ts-node/esm ./packages/api/src/nexus-graphql/schema.ts",
+    "package:api:nexus": "node --experimental-specifier-resolution=node --loader ts-node/esm ./packages/api/src/nexus-graphql/schema.ts",
     "package:api:db:push": "npx prisma db push",
     "package:api:db:migrate": "npx prisma migrate deploy",
     "package:api:db:generate": "npx prisma generate",

@@ -145,8 +145,12 @@ export const eventSuggestionCreate = async (data: any): Promise<Event> => {
 
   const event = await daoEventCreate({
     ...data,
+    socialMedia: {
+      website: data?.meta?.website,
+      instagram: data?.meta?.instagram,
+      facebook: data?.meta?.facebook,
+    },
     isImported: false,
-
     heroImage: data?.heroImage?.connect?.id
       ? {
           connect: {

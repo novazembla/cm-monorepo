@@ -56,6 +56,7 @@ export const eventGQL = gql`
       isFree
       isImported
       meta
+      socialMedia
       dates {
         id
         date

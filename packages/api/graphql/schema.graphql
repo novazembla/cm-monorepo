@@ -125,6 +125,7 @@ type Event {
   ownerId: Int!
   primaryTerms: [Term]
   slug: JSON
+  socialMedia: JSON
   status: Int!
   terms: [Term]
   title: JSON
@@ -155,6 +156,7 @@ input EventSuggestionInput {
   meta: JSON
   organiser: String!
   slug: JSON!
+  socialMedia: JSON
   terms: JSON
   title: JSON!
 }
@@ -172,6 +174,7 @@ input EventUpsertInput {
   owner: JSON!
   primaryTerms: JSON
   slug: JSON!
+  socialMedia: JSON
   status: Int!
   terms: JSON
   title: JSON!
