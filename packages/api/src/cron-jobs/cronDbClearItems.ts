@@ -18,7 +18,8 @@ export async function cronDbClearItems () {
           not: PublishStatus.TRASHED
         },
         lastEventDate: {
-          lt: new Date(),
+          // delete all events that had their last event yesterday
+          lt: new Date(new Date().getTime() - 1000 * 60 * 60 * 24),
         },
       },
     });
