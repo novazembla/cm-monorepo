@@ -98,7 +98,7 @@ const EmailConfirmation = () => {
 
   let content = (<Flex height="220" alignItems="center" justify="center" position="relative"><LoadingIcon type="inline" size={90} /></Flex>);
   
-  let buttonDashboardLogin = (<Text>
+  const buttonDashboardLogin = (<Text>
     <Button as={RouterLink} to={isLoggedIn() ? "/locations" : "/login"} textDecoration="none">
       {isLoggedIn()
         ? t(

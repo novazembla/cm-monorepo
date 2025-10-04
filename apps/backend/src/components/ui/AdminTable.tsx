@@ -159,7 +159,7 @@ export const adminTableCreateQueryVariables = (
     });
 
   if (tState.taxFilter.length > 0) {
-    if (!!tState.and) {
+    if (tState.and) {
       where = [
         ...where,
         ...tState.taxFilter.map((id: number) => ({
@@ -479,7 +479,7 @@ export const AdminTableActionCell = (cell: Cell) => {
 export const AdminTablePublishStatusCell = (cell: Cell) => {
   const { t } = useTranslation();
   let color = "gray";
-  let variant = "subtle";
+  const variant = "subtle";
   let label = t("publish.status.unknown", "Unknown");
 
   if (cell.value === PublishStatus.AUTODRAFT) {

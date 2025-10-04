@@ -16,7 +16,7 @@ export interface i18nTranslationProps {
 
 // t('validation.notunique', "This valaue is not unique")
 
-export let mixed = {
+export const mixed = {
   // t('validation.mixed.default', 'This field is invalid')
   default: ({ path }: i18nTranslationProps) => ({
     key: "validation.mixed.default",
@@ -54,7 +54,7 @@ export let mixed = {
   }),
 };
 
-export let string = {
+export const string = {
   // t('validation.string.length', 'This field must be exactly {{length}} characters long')
   length: ({ path, length }: i18nTranslationProps) => ({
     key: "validation.string.length",
@@ -116,7 +116,7 @@ export let string = {
   }),
 };
 
-export let number = {
+export const number = {
   // t('validation.number.min', 'This field must be greater than or equal to {{min}}')
   min: ({ path, min }: i18nTranslationProps) => ({
     key: "validation.number.min",
@@ -160,7 +160,7 @@ export let number = {
   }),
 };
 
-export let date = {
+export const date = {
   // t('validation.date.min', 'This field must be later than {{min}}')
   min: ({ path, min }: i18nTranslationProps) => ({
     key: "validation.date.min",
@@ -174,7 +174,7 @@ export let date = {
   }),
 };
 
-export let boolean = {
+export const boolean = {
   // t('validation.boolean.isValue', 'This field must be {{value}}')
   isValue: ({ path, value }: i18nTranslationProps) => ({
     key: "validation.boolean.isValue",
@@ -182,7 +182,7 @@ export let boolean = {
   }),
 };
 
-export let object = {
+export const object = {
   // t('validation.object.noUnknown', 'This field field has unspecified keys: {{unknown}}')
   noUnknown: ({ path, unknown }: i18nTranslationProps) => ({
     key: "validation.object.noUnknown",
@@ -190,7 +190,7 @@ export let object = {
   }),
 };
 
-export let array = {
+export const array = {
   // t('validation.array.min', 'Please select at least {{min}} item')
   min: ({ path, min }: i18nTranslationProps) => ({
     key: "validation.array.min",

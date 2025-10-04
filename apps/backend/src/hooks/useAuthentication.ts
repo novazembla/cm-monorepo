@@ -28,7 +28,7 @@ export const useAuthentication = () => {
     return await user.logout();
   };
 
-  const logoutAndRedirect = async (path: string = "/login") => {
+  const logoutAndRedirect = async (path = "/login") => {
     const result = await user.logout();
     history.push(path);
     return result;

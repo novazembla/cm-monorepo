@@ -86,7 +86,7 @@ const Create = () => {
           setIsNavigatingAway(true);
           router.push(`${moduleRootPath}/update/${data?.tourCreate?.id}/`);
         } else {
-          let slugError = multiLangSlugUniqueError(errors, setError);
+          const slugError = multiLangSlugUniqueError(errors, setError);
 
           if (!slugError) setHasFormError(true);
         }

@@ -58,7 +58,7 @@ export const FieldMultiLangInput = ({
     register,
   } = useFormContext();
 
-  let fieldProps: FieldMultiLangInputFieldProps = {
+  const fieldProps: FieldMultiLangInputFieldProps = {
     type: type,
     autoComplete: "new-password",
   };

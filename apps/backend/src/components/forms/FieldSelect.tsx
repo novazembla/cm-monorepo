@@ -53,7 +53,7 @@ export const FieldSelect = ({
     register,
   } = useFormContext();
 
-  let fieldProps: FieldSelectSettings = {
+  const fieldProps: FieldSelectSettings = {
     key: `key-${id}`,
     name: name,
   };

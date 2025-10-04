@@ -60,7 +60,7 @@ export const FieldMultiLangTextarea = ({
     register,
   } = useFormContext();
 
-  let fieldProps: FieldMultiLangTextareaFieldProps = {
+  const fieldProps: FieldMultiLangTextareaFieldProps = {
     type: type,
     autoComplete: "new-password",
   };

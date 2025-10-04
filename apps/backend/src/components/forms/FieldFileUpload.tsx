@@ -32,7 +32,7 @@ import { authentication } from "~/services";
 
 const humanFileSize = (
   size: number | undefined,
-  decimalPlaces: number = 0
+  decimalPlaces = 0
 ): string => {
   if (!size || size === 0) return "0";
   const i: number = Math.floor(Math.log(size) / Math.log(1024));

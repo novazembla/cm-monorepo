@@ -98,7 +98,7 @@ const CreateTerm = () => {
           setIsNavigatingAway(true);
           router.push(`${moduleRootPath}/${router.query.taxId}/terms`);
         } else {
-          let slugError = multiLangSlugUniqueError(errors, setError);
+          const slugError = multiLangSlugUniqueError(errors, setError);
 
           if (!slugError) setHasFormError(true);
         }

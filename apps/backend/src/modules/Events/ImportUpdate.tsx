@@ -154,7 +154,7 @@ const Update = () => {
 
   const mapping = watch("mapping");
   let canProcess = false;
-  let allRequiredErrors: string[] = [];
+  const allRequiredErrors: string[] = [];
   if (mapping && Array.isArray(mapping)) {
     const allSet = !mapping.find(
       (m) =>

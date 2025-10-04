@@ -2,7 +2,7 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import { resources, activeLanguages, defaultLanguage } from './config/internationalization';
 
-let config = {
+const config = {
   resources,
   debug: false,
 

@@ -20,6 +20,7 @@
     "func-names": "off",
     "no-underscore-dangle": "off",
     "import/no-extraneous-dependencies": "off",
+    "@typescript-eslint/no-explicit-any": "off",
     "consistent-return": "off",
     "security/detect-object-injection": "off",
     "react/jsx-filename-extension": [

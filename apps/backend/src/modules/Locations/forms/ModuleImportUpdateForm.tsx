@@ -191,7 +191,7 @@ export const ModuleImportUpdateForm = ({
           DataImportStatus.PROCESS,
           DataImportStatus.PROCESSING,
           DataImportStatus.PROCESSED,
-        ].includes(dataImportRead.status) && !!!dataImportRead?.file ? (
+        ].includes(dataImportRead.status) && !dataImportRead?.file ? (
           <Box>
             {t(
               "module.locations.forms.import.nofile",
