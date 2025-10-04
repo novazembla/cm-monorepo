@@ -435,13 +435,13 @@ export const AdminTable = ({
   });
 
   const keywordInputRef = useRef<HTMLInputElement>(null);
-
+  const hash = "#pagination";
   return (
     <>
       <VisuallyHidden>
-        <Link to="#pagination">
+        <a href={hash}>
           {t("admintable.gotopagination", "Skip to pagination")}
-        </Link>
+        </a>
       </VisuallyHidden>
 
       {(showKeywordSearch || showFilter) && (
@@ -728,7 +728,7 @@ export const AdminTable = ({
               : "admin-table"
           }
           opacity="1"
-          trasition="all 0.3s"
+          transition="all 0.3s"
           sx={{
             "&.loading": {
               opacity: 0.5,

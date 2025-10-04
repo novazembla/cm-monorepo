@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@apollo/client": "3.4.16",
-    "@chakra-ui/system": "1.12.0",
+    "@chakra-ui/system": "1.12.1",
     "@chakra-ui/react": "1.6.9",
     "@chakra-ui/icons": "1.0.17",
     "@chakra-ui/popper": "2.3.0",
@@ -60,7 +60,7 @@
     "react-i18next": "11.13.0",
     "react-redux": "7.2.6",
     "react-router-dom": "5.3.0",
-    "react-select": "5.2.1",
+    "react-select": "5.10.2",
     "react-spinners": "0.11.0",
     "react-table": "7.8.0",
     "react-use": "17.3.1",
@@ -96,9 +96,7 @@
     ]
   },
   "devDependencies": {
-    "@types/apollo-upload-client": "14.1.0",
     "@types/leaflet": "1.7.5",
-    "@types/node": "16.18.61",
     "@types/react": "17.0.34",
     "@types/react-beautiful-dnd": "13.1.2",
     "@types/react-dom": "17.0.11",
@@ -109,16 +107,17 @@
     "@types/react-table": "7.7.7",
     "@types/styled-components": "5.1.15",
     "@swc/core": "1.13.5",
-    "@vitejs/plugin-react-swc": "3.4.1",
+    "@vitejs/plugin-react-swc": "4.1.0",
     "autoprefixer": "10.4.16",
     "craco-alias": "3.0.1",
     "i18next-cli": "^1.5.7",
     "postcss": "8.4.31",
     "react-icons": "4.3.1",
-    "sass": "1.43.4",
-    "vite": "4.5.5",
-    "vite-plugin-svgr": "4.1.0",
-    "vite-tsconfig-paths": "4.2.1"
+    "sass": "1.93.2",
+    "esbuild": "0.25.10",
+    "vite": "7.1.9",
+    "vite-plugin-svgr": "4.5.0",
+    "vite-tsconfig-paths": "5.1.4"
   },
   "husky": {
     "hooks": {

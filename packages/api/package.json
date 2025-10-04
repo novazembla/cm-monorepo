@@ -82,7 +82,6 @@
     "@types/dedent": "0.7.0",
     "@types/is-url": "1.2.30",
     "@types/jsdom": "16.2.13",
-    "@types/node": "16.18.61",
     "@types/object-hash": "2.2.1"
   },
   "prisma": {
