@@ -6,6 +6,7 @@ export const authLimiter = rateLimit({
   skipSuccessfulRequests: true,
 });
 
-export default {
+const d = {
   authLimiter,
 };
+export default d;

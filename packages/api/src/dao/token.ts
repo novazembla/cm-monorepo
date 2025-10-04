@@ -81,7 +81,7 @@ export const daoTokenDeleteExpired = async (): Promise<number> => {
   return count;
 };
 
-export default {
+const d = {
   TokenTypes,
   daoTokenDeleteMany,
   daoTokenQueryFirst,
@@ -90,3 +90,4 @@ export default {
   daoTokenDeleteByUserId,
   daoTokenGetUserIdByToken,
 };
+export default d;

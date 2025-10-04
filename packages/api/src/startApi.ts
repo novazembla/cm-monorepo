@@ -1,7 +1,7 @@
 import Graceful from "@ladjs/graceful";
 // import Bree from "bree";
 // import { join } from "path";
-import { CronJob } from 'cron';
+import { CronJob } from "cron";
 
 // !!!! Attention main thread also has to import "sharp" to ensure that the C libraries are always available in worker threads
 import "sharp";
@@ -11,7 +11,13 @@ import { app, addTerminatingErrorHandlingToApp } from "./app";
 import { getApiConfig } from "./config";
 import { logger } from "./services/serviceLogging";
 import { getPrismaClient } from "./db/client";
-import { cronDbClearItems, cronDbHouseKeeping, cronDbImageResize, cronGenerateSitemaps, cronImportCalendar } from "./cron-jobs";
+import {
+  cronDbClearItems,
+  cronDbHouseKeeping,
+  cronDbImageResize,
+  cronGenerateSitemaps,
+  cronImportCalendar,
+} from "./cron-jobs";
 
 export const startApi = async () => {
   const apiConfig = getApiConfig();
@@ -47,7 +53,7 @@ export const startApi = async () => {
           `🚀 Server ready at ${apiConfig.baseUrl.api}${server?.graphqlPath}`
         );
       });
-      
+
       // // Bree can be debugged with NODE_DEBUG=bree node ./app/...
       // const bree = new Bree({
       //   logger,
@@ -61,46 +67,46 @@ export const startApi = async () => {
       //     // {
       //     //   name: "dbHouseKeeping",
       //     //   interval: process.env.NODE_ENV === "production" ? "1m" : "2m",
-      //     // },     
+      //     // },
       //   ],
       // });
       // await bree.start();
 
       const cronJobGenerateSitemaps = new CronJob(
-        '15 6,10,14,18,22 * * *', // cronTime
+        "15 6,10,14,18,22 * * *", // cronTime
         cronGenerateSitemaps, // onTick
         null, // onComplete
-        true, // start
+        true // start
       );
 
       const cronJobDbImageResize = new CronJob(
-        process.env.NODE_ENV === "production" ? '*/1 * * * *' : '*/2 * * * *', // cronTime
+        process.env.NODE_ENV === "production" ? "*/1 * * * *" : "*/2 * * * *", // cronTime
         cronDbImageResize, // onTick
         null, // onComplete
-        true, // start
+        true // start
       );
 
       const cronJobDbHouseKeeping = new CronJob(
-        process.env.NODE_ENV === "production" ? '*/1 * * * *' : '*/2 * * * *', // cronTime
+        process.env.NODE_ENV === "production" ? "*/1 * * * *" : "*/2 * * * *", // cronTime
         cronDbHouseKeeping, // onTick
         null, // onComplete
-        true, // start
+        true // start
       );
 
       const cronJobImportCalendar = new CronJob(
-        '0 6 * * *', // cronTime
+        "0 6 * * *", // cronTime
         cronImportCalendar, // onTick
         null, // onComplete
-        true, // start
+        true // start
       );
 
       const cronJobDbClearItems = new CronJob(
-        '0 4 * * *', // cronTime
+        "0 4 * * *", // cronTime
         cronDbClearItems, // onTick
         null, // onComplete
-        true, // start
+        true // start
       );
-      
+
       const graceful = new Graceful({
         logger,
         customHandlers: [

@@ -72,7 +72,6 @@
     }
   },
   "include": [
-    "jest.config.ts",
     "packages/api/prisma/manually.seed.ts",
     "apps/*/prisma/seed.ts",
     "apps/*/prisma/seed.test.ts",

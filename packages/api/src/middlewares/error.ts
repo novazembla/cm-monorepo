@@ -55,8 +55,9 @@ export const errorConvert404ToApiError: RequestHandler = (_req, _res, next) => {
   next(new ApiError(httpStatus.NOT_FOUND, "Not found"));
 };
 
-export default {
+const d = {
   errorConvert404ToApiError,
   errorProcessErrors,
   errorDisplayInResponse,
 };
+export default d;

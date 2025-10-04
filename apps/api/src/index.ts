@@ -5,10 +5,7 @@ import {
   initializeApolloServer,
   config,
 } from "@culturemap/api";
-import express, {
-  Request,
-  Response,
-} from "express";
+import { Request, Response } from "express";
 // #ENABLE FOR PLUGIN USE import { plugins } from "@culturemap/core";
 
 // #ENABLE FOR PLUGIN USE import examplePlugins from "plugin-example";
@@ -74,7 +71,7 @@ const start = async () => {
   await startApi();
 };
 
-process.on('uncaughtException', function (exception) {
+process.on("uncaughtException", function (exception) {
   if (process.stderr) {
     process.stderr.write(exception.message);
   } else {
@@ -82,22 +79,26 @@ process.on('uncaughtException', function (exception) {
   }
 });
 
-process.on('unhandledRejection', (reason, p) => {
-  var message = "\"Unhandled Rejection at: Promise ".concat(p as any, " reason: ").concat(reason as any);
+process.on("unhandledRejection", (reason, p) => {
+  var message = '"Unhandled Rejection at: Promise '
+    .concat(p as any, " reason: ")
+    .concat(reason as any);
   if (process.stderr) {
     process.stderr.write(message);
   } else {
     console.error(message);
   }
 });
-process.on('exit', code => {
+process.on("exit", (code) => {
   console.log("Process exited with code: ".concat(code as any));
 });
-process.on('SIGTERM', signal => {
-  console.log("Process ".concat(process.pid as any, " received a SIGTERM signal"));
+process.on("SIGTERM", (/* signal */) => {
+  console.log(
+    "Process ".concat(process.pid as any, " received a SIGTERM signal")
+  );
   process.exit(0);
 });
-process.on('SIGINT', signal => {
+process.on("SIGINT", (/* signal */) => {
   console.log("Process ".concat(process.pid as any, " has been interrupted"));
   process.exit(0);
 });

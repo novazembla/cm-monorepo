@@ -24,5 +24,4 @@ export async function cronDbImageResize() {
       `[CRON:cronDbImageResize]: Failed to run cron job. ${Err.name} ${Err.message}`
     );
   }
-};
-
+}

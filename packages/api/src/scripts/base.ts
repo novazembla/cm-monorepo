@@ -70,6 +70,6 @@ doChores()
   .then(async () => {
     process.exit(0);
   })
-  .catch((err: any) => {
+  .catch((/* err: any */) => {
     process.exit(1);
   });

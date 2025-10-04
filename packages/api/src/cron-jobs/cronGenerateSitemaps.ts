@@ -24,5 +24,4 @@ export async function cronGenerateSitemaps() {
       `[CRON:generateSitemaps]: Failed to run cron job. ${Err.name} ${Err.message}`
     );
   }
-};
-
+}

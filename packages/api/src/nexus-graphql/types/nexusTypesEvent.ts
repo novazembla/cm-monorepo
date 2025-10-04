@@ -33,7 +33,10 @@ import {
   daoSharedGetTranslatedSelectColumns,
 } from "../../dao";
 
-import { eventSuggestionCreate, eventUpdate } from "../../services/serviceEvent";
+import {
+  eventSuggestionCreate,
+  eventUpdate,
+} from "../../services/serviceEvent";
 
 const apiConfigOnBoot = getApiConfig();
 
@@ -103,13 +106,12 @@ export const Event = objectType({
 
     t.string("address");
     t.string("organiser");
-    
+
     t.date("firstEventDate");
     t.date("lastEventDate");
 
     t.date("createdAt");
     t.date("updatedAt");
-    
   },
 });
 
