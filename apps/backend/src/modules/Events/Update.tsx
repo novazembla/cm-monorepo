@@ -165,7 +165,9 @@ const Update = () => {
             begin: new Date(date.begin),
             end: new Date(date.end),
           });
-        } catch (err) {}
+        } catch (err) {
+          // do nothing
+        }
         return acc;
       }, []);
 

@@ -37,10 +37,10 @@ import { dataImportExportType } from "../moduleConfig";
 
 export const ModuleImportUpdateForm = ({
   data,
-  errors,
+  // errors,
   action,
   isSubmitting,
-  validationSchema,
+  // validationSchema,
   setActiveUploadCounter,
   onUpload,
 }: {
@@ -50,6 +50,7 @@ export const ModuleImportUpdateForm = ({
   validationSchema: any;
   action: "create" | "update";
   onUpload: any;
+  // eslint-disable-next-line @typescript-eslint/ban-types
   setActiveUploadCounter?: Function;
 }) => {
   const [showMappingTable, setShowMappingTable] = useState(true);

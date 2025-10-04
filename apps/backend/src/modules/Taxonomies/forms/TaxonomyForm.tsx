@@ -13,8 +13,8 @@ import { yupIsFieldRequired } from "~/validation";
 export const TaxonomyForm = ({
   taxonomy,
   term,
-  errors,
-  action,
+  // errors,
+  // action,
   validationSchema,
   type,
 }: {

@@ -1,5 +1,6 @@
 // i18next-parser.config.js
 
+// eslint-disable-next-line no-undef
 module.exports = {
   contextSeparator: '_',
   // Key separator used in your translation keys

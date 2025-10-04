@@ -24,6 +24,7 @@ export const useLocalStorage = (key: string, initialValue: any) => {
     try {
       // Allow value to be a function so we have same API as useState
       const valueToStore =
+      // eslint-disable-next-line @typescript-eslint/ban-types
         value instanceof Function ? value(storedValue) : value;
       // Save state
       setStoredValue(valueToStore);

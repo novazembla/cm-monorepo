@@ -3,8 +3,9 @@ import { useState, useEffect } from "react";
 export const useOnScreen = (ref: React.MutableRefObject<any>, rootMargin = "0px") => {
   // State and setter for storing whether element is visible
   const [isIntersecting, setIntersecting] = useState(false);
+  const current = ref.current;
   useEffect(() => {
-    const currentRef = ref.current;
+    const currentRef = current;
     const observer = new IntersectionObserver(
       ([entry]) => {
         // Update our state when observer callback fires
@@ -14,12 +15,12 @@ export const useOnScreen = (ref: React.MutableRefObject<any>, rootMargin = "0px"
         rootMargin,
       }
     );
-    if (ref.current) {
-      observer.observe(ref.current);
+    if (current) {
+      observer.observe(current);
     }
     return () => {
       observer.unobserve(currentRef);
     };
-  }, []); // Empty array ensures that effect is only run on mount and unmount
+  }, [current, rootMargin]); // Empty array ensures that effect is only run on mount and unmount
   return isIntersecting;
 };

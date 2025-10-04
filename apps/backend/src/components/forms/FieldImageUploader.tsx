@@ -123,7 +123,7 @@ export const FieldImageUploader = ({
   route = "image",
   setActiveUploadCounter,
   shouldSetFormDirtyOnUpload = false,
-  shouldSetFormDirtyOnDelete = false,
+  // shouldSetFormDirtyOnDelete = false,
   objectFit = "contain",
   objectPosition = "center",
 }: {
@@ -139,6 +139,7 @@ export const FieldImageUploader = ({
   deleteButtonGQL: DocumentNode;
   onDelete?: (id?: number) => void;
   onUpload?: (id?: number) => void;
+  // eslint-disable-next-line @typescript-eslint/ban-types
   setActiveUploadCounter?: Function;
   connectWith?: any;
   route?: string;

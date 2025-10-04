@@ -42,6 +42,7 @@ export const SortableList = ({
         setIsUpdating(true);
         await onSortUpdate.call(null, orderedItems);
       } catch (err: any) {
+        // do noting
       } finally {
         setIsUpdating(false);
       }

@@ -16,7 +16,7 @@ export const TourPathEditor = ({
   path,
 }: {
   tourStops: any[];
-  path: object;
+  path: Record<string, any>;
   name: string;
 }) => {
   const { setValue, register } = useFormContext();

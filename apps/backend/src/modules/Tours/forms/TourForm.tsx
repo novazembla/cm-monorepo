@@ -18,7 +18,7 @@ import FieldMultiLangTextarea from "~/components/forms/FieldMultiLangTextarea";
 
 export const TourForm = ({
   data,
-  errors,
+  // errors,
   action,
   validationSchema,
   setActiveUploadCounter,
@@ -27,6 +27,7 @@ export const TourForm = ({
   errors?: any;
   validationSchema: any;
   action: "create" | "update";
+  // eslint-disable-next-line @typescript-eslint/ban-types
   setActiveUploadCounter?: Function;
 }) => {
   const { t } = useTranslation();

@@ -62,7 +62,9 @@ const parseDateToTime = (t: any, fallback: string) => {
           minute: "2-digit",
         })
       : fallback;
-  } catch (err) {}
+  } catch (err) {
+    // do noting
+  }
 
   return fallback;
 };
@@ -76,6 +78,7 @@ export const ModuleForm = ({
   data?: any;
   validationSchema: any;
   action: "create" | "update";
+  // eslint-disable-next-line @typescript-eslint/ban-types
   setActiveUploadCounter?: Function;
 }) => {
   const [appUser] = useAuthentication();
@@ -602,7 +605,7 @@ export const ModuleForm = ({
                       name={`dates[${index}].date`}
                       defaultValue={field.date}
                       render={({
-                        field: { onChange, onBlur, value, name, ref },
+                        field: { onChange, value /*, onBlur, name, ref */ },
                       }) => {
                         const date = isValidDate(value) ? value : field.date;
                         if (date instanceof Date) {
@@ -665,7 +668,6 @@ export const ModuleForm = ({
                     />
                   </Td>
                   <Td pl="0" borderColor="gray.300">
-                    {/* eslint-disable-next-line jsx-a11y/label-has-for */}
                     <label htmlFor={`dates${index}begin`}>
                       <VisuallyHidden>
                         {t(
@@ -682,7 +684,7 @@ export const ModuleForm = ({
                             : new Date(new Date().setHours(10, 0, 0))
                         }
                         render={({
-                          field: { onChange, onBlur, value, name, ref },
+                          field: { onChange, value /*, onBlur, name, ref */ },
                         }) => {
                           const time = parseDateToTime(value, "10:00");
                           return (
@@ -721,7 +723,6 @@ export const ModuleForm = ({
                     </label>
                   </Td>
                   <Td pl="0" borderColor="gray.300">
-                    {/* eslint-disable-next-line jsx-a11y/label-has-for */}
                     <label htmlFor={`dates${index}end`}>
                       <VisuallyHidden>
                         {t("module.events.forms.event.field.end.label", "End")}
@@ -735,7 +736,7 @@ export const ModuleForm = ({
                             : new Date(new Date().setHours(18, 0, 0))
                         }
                         render={({
-                          field: { onChange, onBlur, value, name, ref },
+                          field: { onChange, value /* , onBlur, name, ref */ },
                         }) => {
                           const time = parseDateToTime(value, "18:00");
                           return (

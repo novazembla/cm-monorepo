@@ -14,6 +14,3 @@ export const ConfigContextProvider = ({ children }: {
     </ConfigContext.Provider>
   );
 };
-
-const context = { ConfigContext, ConfigContextProvider };
-export default context;

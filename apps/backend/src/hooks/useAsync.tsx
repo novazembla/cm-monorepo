@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-
+// eslint-disable-next-line @typescript-eslint/ban-types
 export const useAsync = (asyncFunction: Function, immediate = true) => {
   const [status, setStatus] = useState("idle");
   const [value, setValue] = useState(null);

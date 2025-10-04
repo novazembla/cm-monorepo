@@ -137,7 +137,9 @@ const Update = () => {
                     id: highlight.id,
                     item: highlight.item,
                   });
-                } catch (err) {}
+                } catch (err) {
+                  // silence is golden
+                }
                 return acc;
               },
               []

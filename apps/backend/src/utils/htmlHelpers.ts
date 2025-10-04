@@ -44,7 +44,9 @@ export const isEmptyHtml = (html: string, fast?: boolean) => {
     } else {
       return (html ?? "").replace(/(<([^>]+)>)/gi, "").trim().length === 0;
     }
-  } catch (err) {}
+  } catch (err) {
+    // silence is golden
+  }
   return true;
 };
 

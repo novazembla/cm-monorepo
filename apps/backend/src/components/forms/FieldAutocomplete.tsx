@@ -44,7 +44,7 @@ export const FieldAutocomplete = ({
   label: string;
   name: string;
   onItemSelect: (item: any) => void;
-  createSearchVariables: (value: any) => object;
+  createSearchVariables: (value: any) => Record<string, unknown>;
   processSearchResult: (data: any) => any;
   resultItemToString: (item: any) => string;
   searchQueryGQL: DocumentNode;

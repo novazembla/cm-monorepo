@@ -4,7 +4,7 @@ import { Text } from "@chakra-ui/react";
 
 type TypeErrorMessage = {
   key: string;
-  values: object;
+  values: Record<string, unknown>;
 };
 
 export const TextErrorMessage = ({

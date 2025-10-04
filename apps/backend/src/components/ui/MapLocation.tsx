@@ -44,7 +44,6 @@ class LeafletLocationDisplay {
         minZoom: 11,
       });
 
-      // @ts-ignore
       L.maplibreGL({
         style,
         attribution:

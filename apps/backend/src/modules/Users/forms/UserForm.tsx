@@ -12,7 +12,7 @@ import { yupIsFieldRequired } from "~/validation";
 
 export const UserForm = ({
   data,
-  errors,
+  // errors,
   action,
   validationSchema,
 }: {

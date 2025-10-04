@@ -62,7 +62,6 @@ class LeafletLocationPicker {
         minZoom: 11,
       });
 
-      // @ts-ignore
       L.maplibreGL({
         style,
         attribution:

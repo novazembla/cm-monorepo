@@ -112,6 +112,7 @@ declare module 'react-table' {
 
   export type Cell<D extends Record<string, unknown> = Record<string, unknown>> = UseGroupByCellProps<D>
 
+  // eslint-disable-next-line @typescript-eslint/ban-types
   export interface Row<D extends object = {}>
     extends UseExpandedRowProps<D>,
       UseGroupByRowProps<D>,

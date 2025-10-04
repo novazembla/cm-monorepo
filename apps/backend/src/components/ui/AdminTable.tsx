@@ -7,6 +7,7 @@ import React, {
   useRef,
 } from "react";
 import "regenerator-runtime"
+// import 'regenerator-runtime/runtime';
 import type { AuthenticatedAppUser } from "@culturemap/core";
 import { PublishStatus } from "@culturemap/core";
 import { Link as RouterLink } from "react-router-dom";
@@ -102,7 +103,7 @@ export type AdminTableColumn = {
 export type AdminTableState = {
   pageIndex: number;
   pageSize: number;
-  sortBy: SortingRule<Object>[];
+  sortBy: SortingRule<Record<string, unknown>>[];
   filterKeyword: string;
   statusFilter: PublishStatus[];
   taxFilter: number[];
@@ -204,7 +205,7 @@ export const adminTableCreateNewTableState = (
   tableState: AdminTableState,
   pageIndex: number,
   pageSize: number,
-  sortBy: SortingRule<Object>[],
+  sortBy: SortingRule<Record<string, unknown>>[],
   filterKeyword: string,
   values?: any
 ): [AdminTableState, boolean, number] => {
@@ -546,7 +547,9 @@ export const AdminTableDateCell = (cell: Cell) => {
 
   try {
     date = new Date(cell.value).toLocaleString();
-  } catch (err) {}
+  } catch (err) {
+    return null;
+  }
 
   return <>{date}</>;
 };
@@ -582,7 +585,7 @@ export const AdminTable = ({
   onFetchData: (
     page: number,
     pageSize: number,
-    sortBy: SortingRule<Object>[],
+    sortBy: SortingRule<Record<string, unknown>>[],
     filterKeyword: string,
     forceRefetch?: boolean
   ) => boolean;

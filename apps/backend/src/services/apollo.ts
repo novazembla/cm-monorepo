@@ -37,15 +37,15 @@ const authLink = new ApolloLink((operation, forward) => {
 
 // Log any GraphQL errors or network error that occurred
 const retryWithRefreshTokenLink = onError(
-  ({ graphQLErrors, networkError, operation, forward }) => {
+  ({ graphQLErrors, /* networkError, */ operation, forward }) => {
     if (graphQLErrors) {
       const observables: Observable<any>[] = graphQLErrors.reduce(
         (observables, graphQLError) => {
           const { message, extensions } = graphQLError;
           if (message === "Access Denied" && extensions?.code === "FORBIDDEN") {
             const observableForbidden = new Observable((observer) => {
-              new Promise(async (resolve) => {
-                await user.logout();
+              new Promise((/* resolve */) => {
+                user.logout();
                 observer.error(new Error("Access Denied - FORBIDDEN "));
               });
             });
@@ -166,7 +166,7 @@ const createApolloClient = (settings: AppConfig) => {
         },
         attempts: {
           max: 3,
-          retryIf: (error, _operation) => {
+          retryIf: (error /*, _operation */) => {
             console.log(
               error,
               `Will retry C:${parseInt(error.statusCode, 10)} ${

@@ -66,7 +66,6 @@ export class LeafletMapGeoman {
         maxZoom: 20,
       });
 
-      // @ts-ignore
       L.maplibreGL({
         style,
         attribution:
@@ -102,7 +101,7 @@ export class LeafletMapGeoman {
         this.attachEvents(event.layer);
         this.generateGeoJson();
       });
-      this.map.on("pm:remove", (event) => {
+      this.map.on("pm:remove", (/* event */) => {
         this.generateGeoJson();
       });
     } else {

@@ -297,7 +297,7 @@ const Index = () => {
   const onFetchData = (
     pageIndex: number,
     pageSize: number,
-    sortBy: SortingRule<Object>[],
+    sortBy: SortingRule<Record<string, unknown>>[],
     filterKeyword: string,
     forceRefetch?: boolean
   ) => {

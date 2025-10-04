@@ -103,8 +103,11 @@ export type FieldFileUploaderProgessInfo = {
 };
 
 export type FieldFileFormFunctions = {
+  // eslint-disable-next-line @typescript-eslint/ban-types
   clearErrors: Function;
+  // eslint-disable-next-line @typescript-eslint/ban-types
   setUploadedFileId: Function;
+  // eslint-disable-next-line @typescript-eslint/ban-types
   setValue: Function;
 };
 
@@ -147,11 +150,14 @@ export const FieldFileUploader = ({
   deleteButtonGQL: DocumentNode;
   onDelete?: (id?: number) => void;
   onUpload?: (data: any, formFunctions: FieldFileFormFunctions) => void;
+  // eslint-disable-next-line @typescript-eslint/ban-types
   setActiveUploadCounter?: Function;
   connectWith?: any;
   route?: string;
   additionalFormData?: any[];
-  additionalDeleteData?: {};
+  additionalDeleteData?: {
+    // silence is golden
+  };
 }) => {
   const [appUser] = useAuthentication();
   const { t } = useTranslation();

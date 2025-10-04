@@ -92,7 +92,7 @@ const login = async (u: AuthenticatedAppUserData): Promise<boolean> => new Promi
   resolve(true);
 });
 
-const logout = async (): Promise<boolean> => new Promise(async (resolve) => {
+const logout = async (): Promise<boolean> => new Promise((resolve) => {
   clearTimeout(refreshTimeoutId);
     
   setRefreshing(false);
@@ -102,7 +102,7 @@ const logout = async (): Promise<boolean> => new Promise(async (resolve) => {
   store.dispatch(userLogout());
 
   // we're using resetStore (as clearStore cancels all ongoing queries)
-  if (client) await client.resetStore();
+  if (client) client.resetStore();
   
   setTabWideAccessStatus("logged-out");
   
@@ -118,7 +118,9 @@ export const isLocalSessionValid = (): boolean => {
       const d = new Date(refreshCookie);
       if (d > new Date())
         sessionOk = true;
-    } catch (err) {}
+    } catch (err) {
+      // silence is golden
+    }
   }
  
   return sessionOk;

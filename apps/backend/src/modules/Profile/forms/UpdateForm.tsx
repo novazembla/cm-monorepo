@@ -15,13 +15,15 @@ import { useConfig } from "~/hooks";
 
 export const UpdateForm = ({
   data,
-  errors,
-  disableNavigation,
+  // errors,
+  // disableNavigation,
   setActiveUploadCounter,
 }: {
   data?: any;
   errors?: any;
+  // eslint-disable-next-line @typescript-eslint/ban-types
   disableNavigation?: Function;
+  // eslint-disable-next-line @typescript-eslint/ban-types
   setActiveUploadCounter?: Function;
 }) => {
   const config = useConfig();
