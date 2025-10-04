@@ -74,6 +74,7 @@
     "@babel/preset-env": "7.23.3",
     "@babel/preset-typescript": "7.23.3",
     "@types/eslint": "7.28.2",
+    "@types/node": "^22.18.8",
     "@typescript-eslint/eslint-plugin": "4.29.3",
     "babel-plugin-add-import-extension": "1.6.0",
     "concurrently": "6.3.0",
@@ -118,5 +119,8 @@
   },
   "prisma": {
     "schema": "./packages/api/prisma/schema.prisma"
+  },
+  "engines": {
+    "node": ">=24.0.0"
   }
 }
