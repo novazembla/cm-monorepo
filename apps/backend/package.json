@@ -73,7 +73,8 @@
     "build": "tsc && vite build",
     "serve": "vite preview",
     "start": "vite",
-    "i18n-extract": "i18next --config ./scripts/i18next-parser.config.js"
+    "i18n:status": "npx i18next-cli status",
+    "i18n:extract": "npx i18next-cli extract"
   },
   "eslintConfig": {
     "extends": [
@@ -109,7 +110,7 @@
     "@vitejs/plugin-react-swc": "3.4.1",
     "autoprefixer": "10.4.16",
     "craco-alias": "3.0.1",
-    "i18next-parser": "9.0.2",
+    "i18next-cli": "^1.5.7",
     "postcss": "8.4.31",
     "react-icons": "4.3.1",
     "sass": "1.43.4",

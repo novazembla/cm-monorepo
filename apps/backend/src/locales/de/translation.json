@@ -1,54 +1,177 @@
 {
+  "admintable": {
+    "changepagesize": "{{pageSize}} pro Seite",
+    "filter": {
+      "button": {
+        "filter": "Filtern",
+        "reset": "Zurücksetzen",
+        "toggle": "Filter"
+      },
+      "status": "Pulikationsstatus",
+      "termsAndRelationship": "Alle Begriffe müssen zugewiesen sein (UND Filter)"
+    },
+    "gotopagination": "Zur Seitennavigation springen",
+    "nodata": "Keine Elemente gefunden",
+    "pagination": {
+      "gotofirstpage": "gehe zur ersten Seite",
+      "gotolastpage": "gehe zur letzten Seite",
+      "gotonextpage": "gehe zur nächsten Seite",
+      "gotopage": "gehe zu Seitennummer {{page}}",
+      "gotopreviouspage": "gehe zur vorherigen Seite"
+    },
+    "search": "Schlagwortsuche",
+    "sorted": {
+      "asc": "Aufsteigend sortieren",
+      "desc": "Absteigend sortieren"
+    },
+    "total": "Gesamtanzahl"
+  },
+  "alert": {
+    "emailnotverfied": {
+      "button": "Bestätigungs-E-Mail anfordern",
+      "info": "Bitte überprüfen Sie Ihren Posteingang und folgen Sie dem Link in der E-Mail. Falls die E-Mail nicht angekommen ist, können Sie eine weitere E-Mail anfordern, indem Sie auf die Schaltfläche klicken.",
+      "requresterrorinfo": "Etwas ist schief gelaufen. Bitte versuchen Sie es in Kürze erneut.",
+      "requrestsuccessinfo": "Wir haben Ihnen eine weitere E-Mail gesendet. Bitte überprüfen Sie Ihren Posteingang.",
+      "title": "Sie haben Ihre E-Mail-Adresse noch nicht bestätigt."
+    }
+  },
+  "apifile": {
+    "fileSavedWithFilename": "Datei erstellt und folgendem Dateinamen gespeichert",
+    "linkDownload": "herunterladen"
+  },
+  "apiimage": {
+    "errormsg": "Das Bild konnte leider nicht bearbeitet werden. Bitte versuchen Sie das Hochladen erneut.",
+    "placeholder": "Bild",
+    "processsing": "Das Bild wurde erfolgreich hochgeladen und wird von uns verarbeitet"
+  },
   "avatar": {
     "menu": {
-      "myprofile": "Mein Profil",
-      "logout": "Abmelden"
+      "logout": "Abmelden",
+      "myprofile": "Mein Profil"
     }
   },
-  "mainnav": {
-    "locations": {
-      "title": "Kartenpunkte"
+  "copied": "Kopiert",
+  "copy": "Kopieren",
+  "dangerzonealertdialog": {
+    "placeholder": "{{token}}",
+    "writedeletelabel": "Schriftliche Löschbestätigung.",
+    "writedeletetask": "Bitte geben Sie \"{{token}}\" in das Feld unten ein, um die Aktion zu bestätigen",
+    "writedeletetoken": "LÖSCHEN"
+  },
+  "editor": {
+    "button": {
+      "addH2": "Format as H2",
+      "addH3": "Format as H3",
+      "addNewLine": "Neue Zeile einfügen",
+      "bold": "Text fett formatieren",
+      "bulletList": "Auflistung an- oder ausschalten",
+      "cancel": "Abbrechen",
+      "clearFormatting": "Formatierungen entfernen",
+      "italic": "Text kursiv formatieren",
+      "link": "Link hinzufügen",
+      "openInNewTabl": "Link in neuem Tab öffnen",
+      "orderList": "Nummerierte Auflistung an- oder ausschalten",
+      "redo": "Wiederholen",
+      "removeH2": "Remove H3 format",
+      "removeH3": "Remove H3 format",
+      "save": "Speichern",
+      "unbold": "Fettgedrucktes Textformat entfernen",
+      "undo": "Rückgängig machen",
+      "unitalic": "Kursivgedrucktes Textformat entfernen",
+      "unlink": "Link entfernen"
     },
-    "events": {
-      "title": "Veranstaltungen"
+    "count": {
+      "characters_one": "{{count}}/{{maxLength}} character",
+      "characters_other": "{{count}}/{{maxLength}} characters"
     },
-    "tours": {
-      "title": "Touren"
-    },
-    "pages": {
-      "title": "Seiten"
-    },
-    "taxonomies": {
-      "title": "Taxonomien"
-    },
-    "users": {
-      "title": "BenutzerInnen"
-    },
-    "homepage": {
-      "title": "Startseite"
-    },
-    "settings": {
-      "title": "Einstellungen"
+    "link": {
+      "label": {
+        "url": "URL"
+      },
+      "url": "https://..."
     }
   },
-  "menu": {
-    "close": "Menü schließen",
-    "open": "Menü öffnen"
+  "fileuploader": {
+    "button": {
+      "deletefile": "Datei löschen"
+    },
+    "cancelupload": "Upload abbrechen",
+    "deletefile": {
+      "error": "Leider konnten wir Ihre Löschanfrage nicht bearbeiten. Bitte versuchen Sie es später erneut."
+    },
+    "droperror": {
+      "invalidtype": "Dieses Dateiformat kann nicht verwendet werden.",
+      "toolarge": "Die ausgewählte Datei ist zu groß",
+      "toosmall": "Die ausgewählte Datei ist zu klein"
+    },
+    "error": "Leider konnten wir Ihren Upload nicht abschließen, bitte versuchen Sie es später noch einmal.",
+    "filesizeabove": "Min. Dateigrösse {{minFileSize}}",
+    "filesizebelow": "Max. Dateigrösse {{maxFileSize}}",
+    "filesizebetween": "Dateigrösse zwischen {{minFileSize}} und {{maxFileSize}}",
+    "pleasedroporclick": "Ziehen Sie eine Datei hierher und legen Sie sie hier ab, oder klicken Sie, um eine Datei auszuwählen.",
+    "uploading": "Hochladen"
   },
-  "forms": {
-    "select": {
-      "autocomplete": {
-        "search": {
-          "notfound": "Nichts gefunden",
-          "loading": "Daten werden geladen"
-        },
-        "clearselection": "Ausgewähltes Element löschen"
-      }
+  "form": {
+    "datepicker": {
+      "close": "Schließen"
+    },
+    "error": {
+      "notCorrectLatitude": "Dies scheint kein Breitengrad zu sein",
+      "notCorrectLongitude": "Dies scheint kein Längengrad zu sein"
     },
     "field": {
+      "images": {
+        "addimage": "Bild hinzufügen",
+        "butto": {
+          "addOneBelow": "Neues Bild unter diesem hinzufügen"
+        },
+        "button": {
+          "deleteImage": "Bild löschen",
+          "moveDown": "Nach unten verschieben",
+          "moveUp": "Nach oben verschieben"
+        },
+        "label": {
+          "alttext": "Alternativer Text",
+          "credits": "Urheberrechtsinformation",
+          "image": "Image"
+        },
+        "noimages": "Keine Bilder hinzugefügt. Bitte laden Sie ein Bild mittels des untrigen Knopfes hoch."
+      }
+    },
+    "geolocation": {
+      "alternatives": {
+        "clearAlternatives": "Auswahl akzeptieren und alternativen löschen",
+        "distance": "Distanz",
+        "info": "Wärend des Imports wurden mehrere potentiell richtige Adressen gefunden. Die dem 'Zentrum der Schwerkraft' nächste wurde verwendet. Alle Alternativen können Sie hier finden.",
+        "useAddress": "Adresse nutzen"
+      },
+      "button": {
+        "reset": "Zurücksetzen"
+      },
+      "lat": {
+        "label": "Breitengrad"
+      },
+      "lng": {
+        "label": "Längengrad"
+      }
+    },
+    "image": {
       "label": {
-        "locationPickerSearch": "Suche",
-        "location": "Kartenpunkt"
+        "alttext": "Bildbeschreibung",
+        "credits": "Urheberrechtsinformation",
+        "image": "Bild"
+      }
+    },
+    "info": {
+      "pleasesafedraft": "Bitte speichern Sie einen Entwurf um weitere Funktionen freizuschalten"
+    },
+    "unsavedchanges": "Offenbar haben Sie Änderungen nicht gespeichert. Verlassen ohne zu speichern?"
+  },
+  "forms": {
+    "field": {
+      "label": {
+        "location": "Kartenpunkt",
+        "locationPickerSearch": "Suche"
       },
       "placeholder": {
         "locationPickerSearch": "Bitte geben Sie eine Adresse ein, um zu suchen",
@@ -60,510 +183,209 @@
     },
     "images": {
       "label": "Images"
+    },
+    "select": {
+      "autocomplete": {
+        "clearselection": "Ausgewähltes Element löschen",
+        "search": {
+          "loading": "Daten werden geladen",
+          "notfound": "Nichts gefunden"
+        }
+      }
     }
   },
-  "fileuploader": {
-    "filesizebetween": "Dateigrösse zwischen {{minFileSize}} und {{maxFileSize}}",
-    "filesizebelow": "Max. Dateigrösse {{maxFileSize}}",
-    "filesizeabove": "Min. Dateigrösse {{minFileSize}}",
-    "droperror": {
-      "toolarge": "Die ausgewählte Datei ist zu groß",
-      "toosmall": "Die ausgewählte Datei ist zu klein",
-      "invalidtype": "Dieses Dateiformat kann nicht verwendet werden."
+  "general": {
+    "error": {
+      "requestfailed": "Die Anfrage ist fehlgeschlagen. Bitte versuche es erneut.",
+      "title": "Es tut uns leid"
     },
-    "button": {
-      "deletefile": "Datei löschen"
+    "readerror": {
+      "desc": "Ein Fehler ist aufgetreten und die benötigten Informationen konnten nicht geladen werden. Bitte versuchen Sie es später noch einmal"
     },
-    "deletefile": {
-      "error": "Leider konnten wir Ihre Löschanfrage nicht bearbeiten. Bitte versuchen Sie es später erneut."
+    "success": {
+      "title": "Vielen Dank!"
     },
-    "pleasedroporclick": "Ziehen Sie eine Datei hierher und legen Sie sie hier ab, oder klicken Sie, um eine Datei auszuwählen.",
-    "uploading": "Hochladen",
-    "cancelupload": "Upload abbrechen",
-    "error": "Leider konnten wir Ihren Upload nicht abschließen, bitte versuchen Sie es später noch einmal."
+    "writeerror": {
+      "desc": "Ein Fehler ist aufgetreten und die benötigten Informationen konnten nicht verarbeitet werden. Bitte versuchen Sie es später noch einmal"
+    }
+  },
+  "http": {
+    "error": {
+      "403": {
+        "explanation": "Sie sind nicht berechtigt, diese Seite anzuzeigen.",
+        "title": "Zugriff abgelehnt"
+      },
+      "404": {
+        "backtohome": "Zurück zur Startseite",
+        "explanation": "Die angeforderte URL konnte nicht gefunden werden.",
+        "title": "Nicht gefunden"
+      }
+    }
   },
   "image": {
     "cropPosition": {
+      "bottom": "Unten",
+      "center": "Zentriert",
+      "left": "Links",
+      "right": "Rechts",
       "select": {
         "label": "Position des Bildausschnitts",
         "placeholder": "Bitte wählen Sie die Position des Bildausschnitts"
       },
-      "center": "Zentriert",
-      "top": "Oben",
-      "right": "Rechts",
-      "bottom": "Unten",
-      "left": "Links"
-    }
-  },
-  "validation": {
-    "image": {
-      "required": "Bitte laden Sie ein Bild hoch"
-    },
-    "notunique": "Dieser Wert ist nicht einzigartig",
-    "mixed": {
-      "default": "Dieses Feld ist nicht korrekt",
-      "required": "Dieses Feld ist verpflichtend",
-      "oneOf": "Dieses Feld muss einer der folgenden Werte haben: {{values}}",
-      "notOneOf": "Dieses Feld muss einer der folgenden Typen sein: {{values}}",
-      "notType": "Dieses Feld muss vom Typ {{type}} sein",
-      "defined": "Dieses Feld muss gesetzt werden"
-    },
-    "string": {
-      "length": "Der Text in entspricht nicht der Längenbeschränkung",
-      "min": "Der Text in diesem Feld ist zu kurz",
-      "max": "Der Text in diesem Feld ist zu lang",
-      "matches": "Dieses Feld muss mit folgendem übereinstimmen: \"{{regex}}\"",
-      "email": "Dieses Feld muss eine gültige E-Mail-Adresse sein",
-      "url": "Dieses Feld muss eine gültige URL sein",
-      "uuid": "Dieses Feld muss eine gültige UUID sein",
-      "trim": "Dieses Feld darf kein Leerzeichen am Anfang oder Ende haben",
-      "lowercase": "Dieses Feld muss ein String in Kleinbuchstaben sein",
-      "uppercase": "Dieses Feld muss ein String in Grossbuchstaben sein"
-    },
-    "number": {
-      "min": "Dieses Feld muss größer oder gleich {{min}} sein",
-      "max": "Dieses Feld muss kleiner oder gleich {{max}} sein",
-      "lessThan": "Dieses Feld muss kleiner sein als {{less}}",
-      "moreThan": "Dieses Feld muss grösser sein als {{more}}",
-      "positive": "Dieses Feld muss eine positive Zahl sein",
-      "negative": "Dieses Feld muss eine negative Zahl sein",
-      "integer": "Dieses Feld muss eine ganze Zahl sein",
-      "nolatitude": "Längengrade sind Zahlen zwischen -90.00 und 90.00",
-      "nolongitude": "Breitengrade sind Zahlen zwischen -180.00 und 180.00"
-    },
-    "date": {
-      "min": "Dieses Feld muss später sein als {{min}}",
-      "max": "Dieses Feld muss früher sein als {{max}}"
-    },
-    "boolean": {
-      "isValue": "Dieses Feld muss {{value}} sein"
-    },
-    "object": {
-      "noUnknown": "Dieses Feld hat nicht spezifizierte Schlüssel: {{unknown}}"
-    },
-    "array": {
-      "min": "Dieses Feld muss mindestens {{min}} Elemente enthalten",
-      "max": "Dieses Feld muss weniger oder gleich {{max}} Elemente enthalten",
-      "length": "Dieses muss {{length}} Elemente haben",
-      "minOneItem": "Bitte wähle mindestens ein Element aus"
-    },
-    "slug": {
-      "invalidcharacters": "Bitte verwenden Sie ausschliesslich A-Z, -, und Zahlen",
-      "chooselocation": "Bitte wählen Sie einen Ort",
-      "notahexcolor": "Bitte geben Sie eine gültige HEX-Farbe an (z.B. #a8f oder #f9ad9f)"
-    },
-    "page": {
-      "login": {
-        "emailRequiredError": "Bitte geben Sie Ihre Emailadresse ein",
-        "passwordRequiredError": "Bitte geben Sie ihr Passwort ein"
-      },
-      "passwordrequest": {
-        "emailRequiredError": "Bitte geben Sie Ihre Emailadresse ein"
-      },
-      "passwordreset": {
-        "pleaseProvideYourNewPassword": "Bitte geben Sie Ihr neues Passwort ein",
-        "pleaseConfirmYourNewPassword": "Bitte bestätigen Sie Ihr neues Passwort"
-      },
-      "register": {
-        "firstNameRequiredError": "Bitte geben Sie Ihren Vornamen ein",
-        "lastNameRequiredError": "Bitte geben Sie Ihren Nachnamen ein",
-        "emailRequiredError": "Bitte geben Sie Ihre Emailadresse ein",
-        "passwordRequiredError": "Bitte geben Sie ihr Passwort ein",
-        "pleaseConfirmYourPassword": "Bitte bestätigen Sie Ihr Passwort",
-        "acceptedTermsRequiredError": "Bitte akzeptieren Sie unsere Nutzungsbedingungen"
-      }
-    }
-  },
-  "form": {
-    "field": {
-      "images": {
-        "label": {
-          "image": "Image",
-          "alttext": "Alternativer Text",
-          "credits": "Urheberrechtsinformation"
-        },
-        "button": {
-          "deleteImage": "Bild löschen",
-          "moveUp": "Nach oben verschieben",
-          "moveDown": "Nach unten verschieben"
-        },
-        "butto": {
-          "addOneBelow": "Neues Bild unter diesem hinzufügen"
-        },
-        "noimages": "Keine Bilder hinzugefügt. Bitte laden Sie ein Bild mittels des untrigen Knopfes hoch.",
-        "addimage": "Bild hinzufügen"
-      }
-    },
-    "datepicker": {
-      "close": "Schließen"
-    },
-    "image": {
-      "label": {
-        "image": "Bild",
-        "alttext": "Bildbeschreibung",
-        "credits": "Urheberrechtsinformation"
-      }
-    },
-    "unsavedchanges": "Offenbar haben Sie Änderungen nicht gespeichert. Verlassen ohne zu speichern?",
-    "geolocation": {
-      "lat": {
-        "label": "Breitengrad"
-      },
-      "lng": {
-        "label": "Längengrad"
-      },
-      "button": {
-        "reset": "Zurücksetzen"
-      },
-      "alternatives": {
-        "info": "Wärend des Imports wurden mehrere potentiell richtige Adressen gefunden. Die dem 'Zentrum der Schwerkraft' nächste wurde verwendet. Alle Alternativen können Sie hier finden.",
-        "distance": "Distanz",
-        "useAddress": "Adresse nutzen",
-        "clearAlternatives": "Auswahl akzeptieren und alternativen löschen"
-      }
-    },
-    "error": {
-      "notCorrectLatitude": "Dies scheint kein Breitengrad zu sein",
-      "notCorrectLongitude": "Dies scheint kein Längengrad zu sein"
-    },
-    "info": {
-      "pleasesafedraft": "Bitte speichern Sie einen Entwurf um weitere Funktionen freizuschalten"
+      "top": "Oben"
     }
   },
   "imageuploader": {
-    "filesizebetween": "Dateigrösse zwischen {{minFileSize}} und {{maxFileSize}}",
-    "filesizebelow": "Max. Dateigrösse {{maxFileSize}}",
-    "filesizeabove": "Min. Dateigrösse {{minFileSize}}",
-    "droperror": {
-      "toolarge": "Die ausgewählte Datei ist zu groß.",
-      "toosmall": "Die ausgewählte Datei ist zu klein.",
-      "invalidtype": "Dieses Dateiformat kann nicht verwendet werden."
-    },
     "button": {
       "deleteimage": "Bild löschen"
     },
+    "cancelupload": "Upload abbrechen",
     "deleteimage": {
       "error": "Leider konnten wir Ihre Löschanfrage nicht bearbeiten. Bitte versuchen Sie es später erneut."
     },
+    "droperror": {
+      "invalidtype": "Dieses Dateiformat kann nicht verwendet werden.",
+      "toolarge": "Die ausgewählte Datei ist zu groß.",
+      "toosmall": "Die ausgewählte Datei ist zu klein."
+    },
+    "error": "Leider konnten wir Ihren Upload nicht abschließen, bitte versuchen Sie es später noch einmal.",
+    "filesizeabove": "Min. Dateigrösse {{minFileSize}}",
+    "filesizebelow": "Max. Dateigrösse {{maxFileSize}}",
+    "filesizebetween": "Dateigrösse zwischen {{minFileSize}} und {{maxFileSize}}",
     "pleasedroporclick": "Hier ein Bild mit der Maus fallen lassen, oder klicken Sie, um eine Bild auszuwählen.",
-    "uploading": "Hochladen",
-    "cancelupload": "Upload abbrechen",
-    "error": "Leider konnten wir Ihren Upload nicht abschließen, bitte versuchen Sie es später noch einmal."
+    "uploading": "Hochladen"
   },
-  "ui": {
-    "button": {
-      "label": {
-        "show": "Anzeigen",
-        "hide": "Verstecken"
+  "import": {
+    "status": {
+      "autodraft": "CSV Datei fehlt",
+      "created": "Erstellt",
+      "error": "Fehler",
+      "forreview": "Spalten zuweisen",
+      "processing": "In Bearbeitung",
+      "published": "Berarbeitet",
+      "scheduled": "In Auftrag",
+      "trashed": "Gelöscht"
+    }
+  },
+  "location": {
+    "suggestion": {
+      "fieldName": {
+        "comments": "Kartenpunktvorschlagende(r): Anmerkungen",
+        "email": "Kartenpunktvorschlagende(r): Emailadresse",
+        "name": "Kartenpunktvorschlagende(r): Name",
+        "phone": "Suggester's phone number",
+        "suggestionImageRightsConfirmation": "Kartenpunktvorschlagende(r): Bestätigt, dass das Bild veröffentlicht werden darf.",
+        "suggestionIsOwner": "Kartenpunktvorschlagende(r): Erklärt legal verantwortlich zu sein",
+        "suggestionTandC": "Kartenpunktvorschlagende(r): Zustimmung Datenschutzerklärung"
+      },
+      "no": "Nein",
+      "yes": "Ja"
+    }
+  },
+  "locations": {
+    "forms": {
+      "field": {
+        "placeholder": {
+          "agency": "Träger",
+          "city": "Stadt",
+          "co": "C/O ...",
+          "email": "petra.meier@contact.me",
+          "eventLocationId": "berlin.de Veranstaltungsort ID",
+          "houseNumber": "126a",
+          "phone": "+49327876780",
+          "postCode": "Postleitzahl",
+          "street1": "Straße (1)",
+          "street2": "Straße (2)",
+          "url": "https://...."
+        }
       }
     }
   },
-  "module": {
-    "forms": {
-      "taxonomy": {
-        "label": {
-          "primaryTerm": "Hauptbegriff",
-          "choosePrimaryTerm": "Hauptbegriff wählen"
-        }
-      },
-      "field": {
-        "label": {
-          "author": "AutorIn"
-        },
-        "placeholder": {
-          "author": "Bitte AutorIn auswählen"
-        }
-      }
-    },
-    "button": {
-      "cancel": "Abbrechen",
-      "update": "Aktualisieren",
-      "save": "Speichern",
-      "savedraft": "Entwurf speichern",
-      "back": "Zurück",
-      "import": "Importieren",
-      "preview": "Vorschau"
-    },
-    "users": {
-      "deletealter": {
-        "title": "Bitte bestätigen",
-        "message": "Möchten Sie wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden!"
-      },
-      "title": "NutzerIn",
-      "page": {
-        "title": {
-          "createuser": "NutzerIn hinzufügen",
-          "updateuser": "NutzerIn aktualisieren"
-        }
-      },
-      "forms": {
-        "update": {
-          "field": {
-            "label": {
-              "firstName": "Vorname",
-              "lastName": "Nachname",
-              "email": "Email Adresse",
-              "role": "Rolle der NutzerIn",
-              "ownsEventImports": "Besitzt automatisch neu importierte Events",
-              "ownsContentOnDelete": "Dieser NutzerIn die Inhalte der gelöschter NutzerInnen zuweisen",
-              "ownsSubmittedSuggestions": "Dieser NutzerIn Inhaltsvorschläge zuweisen",
-              "userBanned": "NutzerIn sperren"
-            },
-            "placeholder": {
-              "firstName": "Vorname der NutzerIn",
-              "lastName": "Nachname der NutzerIn",
-              "email": "Email Adresse der NutzerIn",
-              "role": "Rolle der NutzerIn"
-            }
-          }
-        },
-        "create": {
-          "field": {
-            "label": {
-              "password": "Passwort",
-              "passwordConfirmation": "Passwort bestätigen"
-            },
-            "placeholder": {
-              "password": "Bitte das Passwort der NutzerIn eingeben",
-              "passwordConfirmation": "Bitte das Passwort der NutzerIn wiederholen"
-            }
-          }
-        },
-        "messageUserBanned": "Die NutzerIn wird gesperrt"
-      },
-      "button": {
-        "create": "NutzerIn hinzufügen",
-        "edit": "NutzerIn bearbeiten",
-        "delete": "NutzerIn löschen"
-      }
+  "mainnav": {
+    "events": {
+      "title": "Veranstaltungen"
     },
     "homepage": {
-      "field": {
-        "highlights": {
-          "chooseAtLeastOne": "Bitte wählen Sie mindestens 1 Highlight aus. Wir empfehlen die Auswahl von 5 bis 10 Highlights.",
-          "noneConfigured": "Keine Highlights ausgewählt. Bitte nutzen Sie den untrigen Schaltknopf um ein erstes Highlight auszuwählen",
-          "add": "Highlight hinzufügen"
-        },
-        "label": {
-          "highlights": "Highlights",
-          "missionStatement": "Mission statement"
-        },
-        "type": {
-          "label": "Typ",
-          "location": {
-            "label": "Kartenpunkt"
-          },
-          "event": {
-            "label": "Veranstaltung"
-          },
-          "tour": {
-            "label": "Tour"
-          }
-        },
-        "autocomplete": "Suchanfrage",
-        "button": {
-          "delte": "Löschen",
-          "addOneBelow": "Neues Highlight unter dem jetzigen hinzufügen"
-        },
-        "placeholder": {
-          "missionStatement": "Kurzes auf der Homepage angezeigtes Mission Statement ..."
-        }
-      },
+      "title": "Startseite"
+    },
+    "locations": {
+      "title": "Kartenpunkte"
+    },
+    "pages": {
+      "title": "Seiten"
+    },
+    "settings": {
+      "title": "Einstellungen"
+    },
+    "taxonomies": {
+      "title": "Taxonomien"
+    },
+    "tours": {
+      "title": "Touren"
+    },
+    "users": {
+      "title": "BenutzerInnen"
+    }
+  },
+  "menu": {
+    "close": "Menü schließen",
+    "open": "Menü öffnen"
+  },
+  "module": {
+    "button": {
+      "back": "Zurück",
+      "cancel": "Abbrechen",
+      "import": "Importieren",
+      "preview": "Vorschau",
+      "save": "Speichern",
+      "savedraft": "Entwurf speichern",
+      "update": "Aktualisieren"
+    },
+    "event": {
       "forms": {
         "field": {
           "label": {
-            "searchitem": "Suche",
-            "missionStatementPage": "Mission Statement Seite (bspw. Über uns)"
+            "additionalSuggestionInformation": "Diese Veranstaltung wurder über die Webseite mit folgenden Zusatzinformationen vorgeschlagen"
           }
         }
       }
     },
-    "locations": {
-      "forms": {
-        "fieldSet": {
-          "label": {
-            "seo": "SEO"
-          }
-        },
-        "location": {
-          "field": {
-            "label": {
-              "metaDesc": "Meta Beschreibung",
-              "title": "Titel",
-              "slug": "Slug",
-              "description": "Beschreibung",
-              "offers": "Angebote",
-              "accessibilityInformation": "Informationen zur Barrierefreiheit"
-            },
-            "placeholder": {
-              "csvfile": "CSV Datei hochladen",
-              "title": "Titel des Kartenpunktes",
-              "slug": "Slug / URL Zusatz",
-              "description": "Beschreibung des Kartenpunktes",
-              "offers": "Angebote des Kartenpunktes",
-              "accessibilityInformation": "Informationen zur Barrierefreiheit"
-            }
-          },
-          "geoloaction": "Lage des Kartenpunkts auf der Karte"
-        },
-        "import": {
-          "errors": "Fehlermeldungen",
-          "log": "Log",
-          "field": {
-            "label": {
-              "title": "Titel",
-              "csv": "CSV Datei"
-            },
-            "placeholder": {
-              "title": "Importiere den Titel"
-            }
-          },
-          "select": "Zielspalte auswählen",
-          "nofile": "Dieses ist der Importbericht eines dateilosen automatisierten Importes",
-          "mapping": {
-            "title": "Zuordnung von CSV-Spalte(n) zu Datenbankspalten",
-            "columCSV": "Kopfzeile in CSV",
-            "firstRow": "Beispiel (1. Zeile in CSV)",
-            "columnInDb": "Spalte in DB"
-          },
-          "warnings": "Warnungen"
-        },
-        "field": {
-          "label": {
-            "address": "Adresse",
-            "street1": "Straße (1)",
-            "houseNumber": "Hausnummer",
-            "street2": "Straße (2)",
-            "co": "C/O",
-            "postCode": "Postleitzahl",
-            "city": "Stadt",
-            "contactInformation": "Kontaktinformation",
-            "email1": "Email Adresse (1)",
-            "email2": "Email Adresse (2)",
-            "phone1": "Telefonnummer (1)",
-            "phone2": "Telefonnummer (2)",
-            "socialMedia": "Website/Social Media",
-            "website": "Website",
-            "facebook": "Facebook",
-            "instagram": "Instagram",
-            "twitter": "Twitter",
-            "youtube": "YouTube",
-            "additionalInformation": "Zusätzliche Informationen",
-            "agency": "Träger",
-            "eventLocationId": "ID des korrespondierenden Veranstaltungsortes auf berlin.de"
-          }
-        }
-      },
-      "menuitem": {
-        "dataExports": "Export",
-        "imports": "Importe",
-        "createimport": "Neuen Import hinzufügen",
-        "exports": "Exporte",
-        "createlocation": "Neuen Kartenpunkt hinzufügen"
-      },
-      "exports": {
-        "button": {
-          "view": "Import ansehen"
-        }
-      },
-      "import": {
-        "button": {
-          "delete": "Import löschen",
-          "create": "Neuer Import",
-          "edit": "Import bearbeiten"
-        }
-      },
-      "breadcrumb": {
-        "exportdetail": "Exportdetail"
-      },
-      "export": {
-        "exportIsProcessing": "Ihr Export wird auf dem Server bearbeited.",
-        "exportProcessed": "Ihr Export wurde vollständig durchgeführt.",
-        "field": {
-          "label": {
-            "exportName": "Exportname"
-          },
-          "placeholder": {
-            "title": "Kurzer Titel um den Export in der Exportliste wiedererkennen zu können"
-          }
-        },
-        "create": {
-          "label": "Exportieren"
-        },
-        "introduction": "Exportiere alle {{num}} Einträge als .xlsx Datei",
-        "button": {
-          "label": {
-            "scheduleExport": "Export durchführen"
-          }
-        }
-      },
-      "imports": {
-        "title": "Imports",
-        "menu": {
-          "title": "Importe"
-        },
-        "updatepage": {
-          "title": "Import bearbeiten"
-        },
-        "requiredMissing": "Die folgenden erforderlichen Spalten sind nicht zugewiesen: ",
-        "assignColumnsToTriggerImport": "Um den Import planen zu können, müssen Sie alle (erforderlichen) Spalten zuweisen",
-        "importIsProcessing": "Ihr Import wird auf dem Server verarbeitet."
-      },
-      "title": "Kartenpunkte",
-      "button": {
-        "create": "Kartenpunkt hinzufügen",
-        "edit": "Kartenpunkt bearbeiten",
-        "delete": "Kartenpunkt löschen"
-      },
-      "location": {
-        "title": {
-          "updatepage": "Kartenpunkt aktualisieren"
-        }
-      },
-      "associatedevents": {
-        "title": "Zugehörige Veranstaltungen"
-      },
-      "events": {
-        "title": "Titel"
-      },
-      "fields": {
-        "label": {
-          "actions": "Aktionen",
-          "viewevent": "Veranstaltung ansehen"
-        }
-      },
-      "noasscoiatedevents": "Keine zugehörigen Veranstaltungen"
-    },
     "events": {
-      "title": "Veranstaltungen",
-      "menuitem": {
-        "createevent": "Veranstaltung hinzufügen"
+      "button": {
+        "create": "Neue Veranstaltung hinzufügen",
+        "delete": "Veranstaltung löschen",
+        "edit": "Veranstaltung bearbeiten"
+      },
+      "event": {
+        "title": {
+          "updatepage": "Veranstaltung aktualisieren"
+        }
       },
       "forms": {
         "event": {
           "field": {
-            "label": {
-              "title": "Titel",
-              "slug": "Slug",
-              "description": "Beschreibung"
-            },
-            "placeholder": {
-              "title": "Veranstaltungstitel",
-              "slug": "Slug / URL Zusatz",
-              "description": "Veranstaltungsbeschreibung"
+            "begin": {
+              "label": "Beginn"
             },
             "date": {
               "placeholder": "Datum"
             },
-            "begin": {
-              "label": "Beginn"
+            "dates": {
+              "clone": "Aktuelle Zeile duplizieren",
+              "removedate": "Entfernen"
             },
             "end": {
               "label": "Ende"
             },
-            "dates": {
-              "removedate": "Entfernen",
-              "clone": "Aktuelle Zeile duplizieren"
+            "label": {
+              "description": "Beschreibung",
+              "slug": "Slug",
+              "title": "Titel"
+            },
+            "placeholder": {
+              "description": "Veranstaltungsbeschreibung",
+              "slug": "Slug / URL Zusatz",
+              "title": "Veranstaltungstitel"
             }
           },
           "table": {
@@ -577,14 +399,6 @@
             }
           }
         },
-        "field": {
-          "label": {
-            "isFree": "Diese Veranstaltung ist kostenfrei",
-            "isImported": "Diese Veranstaltung wird automatisch importiert und aktualisiert"
-          },
-          "address": "Veranstaltungsort",
-          "organiser": "Veranstalter"
-        },
         "eventdates": {
           "heading": "Veranstaltungsdatum / -daten",
           "table": {
@@ -594,24 +408,74 @@
               }
             }
           }
+        },
+        "field": {
+          "address": "Veranstaltungsort",
+          "label": {
+            "isFree": "Diese Veranstaltung ist kostenfrei",
+            "isImported": "Diese Veranstaltung wird automatisch importiert und aktualisiert"
+          },
+          "organiser": "Veranstalter"
         }
       },
-      "button": {
-        "create": "Neue Veranstaltung hinzufügen",
-        "edit": "Veranstaltung bearbeiten",
-        "delete": "Veranstaltung löschen"
+      "menuitem": {
+        "createevent": "Veranstaltung hinzufügen"
       },
-      "event": {
-        "title": {
-          "updatepage": "Veranstaltung aktualisieren"
+      "title": "Veranstaltungen"
+    },
+    "forms": {
+      "field": {
+        "label": {
+          "author": "AutorIn"
+        },
+        "placeholder": {
+          "author": "Bitte AutorIn auswählen"
+        }
+      },
+      "taxonomy": {
+        "label": {
+          "choosePrimaryTerm": "Hauptbegriff wählen",
+          "primaryTerm": "Hauptbegriff"
         }
       }
     },
-    "event": {
+    "homepage": {
+      "field": {
+        "autocomplete": "Suchanfrage",
+        "button": {
+          "addOneBelow": "Neues Highlight unter dem jetzigen hinzufügen",
+          "delte": "Löschen"
+        },
+        "highlights": {
+          "add": "Highlight hinzufügen",
+          "chooseAtLeastOne": "Bitte wählen Sie mindestens 1 Highlight aus. Wir empfehlen die Auswahl von 5 bis 10 Highlights.",
+          "noneConfigured": "Keine Highlights ausgewählt. Bitte nutzen Sie den untrigen Schaltknopf um ein erstes Highlight auszuwählen"
+        },
+        "label": {
+          "highlights": "Highlights",
+          "missionStatement": "Mission statement"
+        },
+        "placeholder": {
+          "missionStatement": "Kurzes auf der Homepage angezeigtes Mission Statement ..."
+        },
+        "type": {
+          "event": {
+            "label": "Veranstaltung"
+          },
+          "label": "Typ",
+          "location": {
+            "label": "Kartenpunkt"
+          },
+          "tour": {
+            "label": "Tour"
+          }
+        }
+      },
       "forms": {
         "field": {
           "label": {
-            "additionalSuggestionInformation": "Diese Veranstaltung wurder über die Webseite mit folgenden Zusatzinformationen vorgeschlagen"
+            "missionStatementPage": "Mission Statement Seite (bspw. Über uns)",
+            "searchitem": "Suche"
           }
         }
       }
@@ -627,66 +491,221 @@
         }
       }
     },
+    "locations": {
+      "associatedevents": {
+        "title": "Zugehörige Veranstaltungen"
+      },
+      "breadcrumb": {
+        "exportdetail": "Exportdetail"
+      },
+      "button": {
+        "create": "Kartenpunkt hinzufügen",
+        "delete": "Kartenpunkt löschen",
+        "edit": "Kartenpunkt bearbeiten"
+      },
+      "events": {
+        "title": "Titel"
+      },
+      "export": {
+        "button": {
+          "label": {
+            "scheduleExport": "Export durchführen"
+          }
+        },
+        "create": {
+          "label": "Exportieren"
+        },
+        "exportIsProcessing": "Ihr Export wird auf dem Server bearbeited.",
+        "exportProcessed": "Ihr Export wurde vollständig durchgeführt.",
+        "field": {
+          "label": {
+            "exportName": "Exportname"
+          },
+          "placeholder": {
+            "title": "Kurzer Titel um den Export in der Exportliste wiedererkennen zu können"
+          }
+        },
+        "introduction": "Exportiere alle {{num}} Einträge als .xlsx Datei"
+      },
+      "exports": {
+        "button": {
+          "view": "Import ansehen"
+        }
+      },
+      "fields": {
+        "label": {
+          "actions": "Aktionen",
+          "viewevent": "Veranstaltung ansehen"
+        }
+      },
+      "forms": {
+        "field": {
+          "label": {
+            "additionalInformation": "Zusätzliche Informationen",
+            "address": "Adresse",
+            "agency": "Träger",
+            "city": "Stadt",
+            "co": "C/O",
+            "contactInformation": "Kontaktinformation",
+            "email1": "Email Adresse (1)",
+            "email2": "Email Adresse (2)",
+            "eventLocationId": "ID des korrespondierenden Veranstaltungsortes auf berlin.de",
+            "facebook": "Facebook",
+            "houseNumber": "Hausnummer",
+            "instagram": "Instagram",
+            "phone1": "Telefonnummer (1)",
+            "phone2": "Telefonnummer (2)",
+            "postCode": "Postleitzahl",
+            "socialMedia": "Website/Social Media",
+            "street1": "Straße (1)",
+            "street2": "Straße (2)",
+            "twitter": "Twitter",
+            "website": "Website",
+            "youtube": "YouTube"
+          }
+        },
+        "fieldSet": {
+          "label": {
+            "seo": "SEO"
+          }
+        },
+        "import": {
+          "errors": "Fehlermeldungen",
+          "field": {
+            "label": {
+              "csv": "CSV Datei",
+              "title": "Titel"
+            },
+            "placeholder": {
+              "title": "Importiere den Titel"
+            }
+          },
+          "log": "Log",
+          "mapping": {
+            "columCSV": "Kopfzeile in CSV",
+            "columnInDb": "Spalte in DB",
+            "firstRow": "Beispiel (1. Zeile in CSV)",
+            "title": "Zuordnung von CSV-Spalte(n) zu Datenbankspalten"
+          },
+          "nofile": "Dieses ist der Importbericht eines dateilosen automatisierten Importes",
+          "select": "Zielspalte auswählen",
+          "warnings": "Warnungen"
+        },
+        "location": {
+          "field": {
+            "label": {
+              "accessibilityInformation": "Informationen zur Barrierefreiheit",
+              "description": "Beschreibung",
+              "metaDesc": "Meta Beschreibung",
+              "offers": "Angebote",
+              "slug": "Slug",
+              "title": "Titel"
+            },
+            "placeholder": {
+              "accessibilityInformation": "Informationen zur Barrierefreiheit",
+              "csvfile": "CSV Datei hochladen",
+              "description": "Beschreibung des Kartenpunktes",
+              "offers": "Angebote des Kartenpunktes",
+              "slug": "Slug / URL Zusatz",
+              "title": "Titel des Kartenpunktes"
+            }
+          },
+          "geoloaction": "Lage des Kartenpunkts auf der Karte"
+        }
+      },
+      "import": {
+        "button": {
+          "create": "Neuer Import",
+          "delete": "Import löschen",
+          "edit": "Import bearbeiten"
+        }
+      },
+      "imports": {
+        "assignColumnsToTriggerImport": "Um den Import planen zu können, müssen Sie alle (erforderlichen) Spalten zuweisen",
+        "importIsProcessing": "Ihr Import wird auf dem Server verarbeitet.",
+        "menu": {
+          "title": "Importe"
+        },
+        "requiredMissing": "Die folgenden erforderlichen Spalten sind nicht zugewiesen: ",
+        "title": "Imports",
+        "updatepage": {
+          "title": "Import bearbeiten"
+        }
+      },
+      "location": {
+        "title": {
+          "updatepage": "Kartenpunkt aktualisieren"
+        }
+      },
+      "menuitem": {
+        "createimport": "Neuen Import hinzufügen",
+        "createlocation": "Neuen Kartenpunkt hinzufügen",
+        "dataExports": "Export",
+        "exports": "Exporte",
+        "imports": "Importe"
+      },
+      "noasscoiatedevents": "Keine zugehörigen Veranstaltungen",
+      "title": "Kartenpunkte"
+    },
     "pages": {
-      "title": "Seiten",
+      "button": {
+        "create": "Seite hinzufügen",
+        "delete": "Seite löschen",
+        "edit": "Seite bearbeiten"
+      },
+      "forms": {
+        "page": {
+          "field": {
+            "label": {
+              "content": "Inhalt",
+              "intro": "Einleitung",
+              "slug": "Slug",
+              "title": "Titel"
+            },
+            "placeholder": {
+              "content": "Seiteninhalt",
+              "intro": "Einführungsblock der Seite",
+              "slug": "Slug / URL Zusatz",
+              "title": "Seiten Titel"
+            }
+          }
+        }
+      },
       "page": {
         "title": {
           "createpage": "Neue Seite hinzufügen",
           "updatepage": "Seite aktualisieren"
         }
       },
-      "forms": {
-        "page": {
-          "field": {
-            "label": {
-              "title": "Titel",
-              "slug": "Slug",
-              "intro": "Einleitung",
-              "content": "Inhalt"
-            },
-            "placeholder": {
-              "title": "Seiten Titel",
-              "slug": "Slug / URL Zusatz",
-              "intro": "Einführungsblock der Seite",
-              "content": "Seiteninhalt"
-            }
-          }
-        }
-      },
-      "button": {
-        "create": "Seite hinzufügen",
-        "edit": "Seite bearbeiten",
-        "delete": "Seite löschen"
-      }
+      "title": "Seiten"
     },
     "profile": {
-      "title": "Profil",
       "button": {
         "update": "Profil aktualisieren",
         "updatepassword": "Passwort aktualisieren"
       },
-      "image": {
-        "placeholder": "Kein Profilbild hochgeladen"
-      },
       "data": {
         "title": {
-          "fullname": "Name",
           "email": "Email Adresse",
           "emailverificationstatus": {
+            "notverified": "Sie haben Ihre E-Mail-Adresse nicht bestätigt. Überprüfe deinen Posteingang!",
             "status": "E-Mail-Bestätigungsstatus",
-            "verified": "Sie haben Ihre E-Mail-Adresse bestätigt",
-            "notverified": "Sie haben Ihre E-Mail-Adresse nicht bestätigt. Überprüfe deinen Posteingang!"
-          }
+            "verified": "Sie haben Ihre E-Mail-Adresse bestätigt"
+          },
+          "fullname": "Name"
         }
+      },
+      "image": {
+        "placeholder": "Kein Profilbild hochgeladen"
       },
       "page": {
         "title": {
           "updateprofile": "Profil aktualisieren"
         }
-      }
+      },
+      "title": "Profil"
     },
     "settings": {
-      "title": "Einstellungen",
       "button": {
         "update": "Einstellungen aktualisieren"
       },
@@ -694,19 +713,52 @@
         "title": {
           "updatesettings": "Einstellungen aktualisieren"
         }
-      }
+      },
+      "title": "Einstellungen"
     },
     "taxonomies": {
-      "title": "Taxonomies",
-      "page": {
-        "title": {
-          "createtax": "Begriff aktualisieren",
-          "createterm": "Begriff hinzufügen",
-          "updatetaxonomy": "Taxonomie aktualisieren",
-          "updatetax": "Begriff aktualisieren"
-        }
+      "button": {
+        "create": "Neue Taxonomie hinzufügen",
+        "delete": "Taxonomie löschen",
+        "edit": "Taxonomie bearbeiten",
+        "view": "Taxonomiebegriffe anzeigen"
       },
       "forms": {
+        "field": {
+          "berlinDeKey": {
+            "label": "Berlin.de Barrierefreiheit ID (numerisch)"
+          },
+          "collectPrimaryTerm": {
+            "label": "Primärbegriffsauswahlelement anzeigen"
+          },
+          "color": {
+            "label": "Farbe (hell)"
+          },
+          "colorDark": {
+            "label": "Farbe (dunkel)"
+          },
+          "hasColor": {
+            "label": "Farbfelder anzeigen"
+          },
+          "hasIcons": {
+            "label": "Icon-Schlüssel Feld anzeigen"
+          },
+          "hasReducedVisibility": {
+            "label": "Term has reduced visibility"
+          },
+          "hasReducedVisibilityField": {
+            "label": "'Reduzierte Sichtbarkeit' Checkbox anzeigen"
+          },
+          "iconKey": {
+            "label": "Icon Schlüssel"
+          },
+          "isRequired": {
+            "label": "Auswahl von mindestens einem Begriff ist erforderlich"
+          },
+          "modules": {
+            "label": "Aktiv für folgende Module"
+          }
+        },
         "taxonomy": {
           "field": {
             "label": {
@@ -718,114 +770,25 @@
               "slug": "Slug / URL Zusatz"
             }
           }
-        },
-        "field": {
-          "modules": {
-            "label": "Aktiv für folgende Module"
-          },
-          "hasIcons": {
-            "label": "Icon-Schlüssel Feld anzeigen"
-          },
-          "hasReducedVisibilityField": {
-            "label": "'Reduzierte Sichtbarkeit' Checkbox anzeigen"
-          },
-          "hasColor": {
-            "label": "Farbfelder anzeigen"
-          },
-          "collectPrimaryTerm": {
-            "label": "Primärbegriffsauswahlelement anzeigen"
-          },
-          "isRequired": {
-            "label": "Auswahl von mindestens einem Begriff ist erforderlich"
-          },
-          "hasReducedVisibility": {
-            "label": "Term has reduced visibility"
-          },
-          "iconKey": {
-            "label": "Icon Schlüssel"
-          },
-          "berlinDeKey": {
-            "label": "Berlin.de Barrierefreiheit ID (numerisch)"
-          },
-          "color": {
-            "label": "Farbe (hell)"
-          },
-          "colorDark": {
-            "label": "Farbe (dunkel)"
-          }
         }
       },
-      "button": {
-        "create": "Neue Taxonomie hinzufügen",
-        "edit": "Taxonomie bearbeiten",
-        "view": "Taxonomiebegriffe anzeigen",
-        "delete": "Taxonomie löschen"
-      }
-    },
-    "terms": {
-      "title": "Taxonomien",
-      "button": {
-        "create": "Neuen Begriff hinzufügen",
-        "edit": "Begriff bearbeiten",
-        "delete": "Begriff löschen"
-      }
-    },
-    "tours": {
-      "title": "Touren",
       "page": {
         "title": {
-          "createtax": "Neue Tour hinzufügen",
-          "createtourStop": "Neuer Tour Stop",
-          "updatetour": "Tour aktualisieren",
-          "updateTourStop": "Tour Stop aktualisieren"
+          "createtax": "Begriff aktualisieren",
+          "createterm": "Begriff hinzufügen",
+          "updatetax": "Begriff aktualisieren",
+          "updatetaxonomy": "Taxonomie aktualisieren"
         }
       },
-      "forms": {
-        "tour": {
-          "field": {
-            "label": {
-              "title": "Titel",
-              "slug": "Slug",
-              "duration": "Dauer",
-              "distance": "Entfernung",
-              "teaser": "Zusammenfasssung",
-              "description": "Beschreibung"
-            },
-            "placeholder": {
-              "title": "Tour Name",
-              "slug": "Slug / URL Zusatz",
-              "duration": "1 Std",
-              "distance": "3 Kilometer",
-              "teaser": "Teaser für die Tourliste",
-              "description": "vollständige Tourenbeschreibung"
-            }
-          }
-        },
-        "field": {
-          "label": {
-            "orderNumber": "Sortierungsnummer"
-          }
-        },
-        "tourStop": {
-          "field": {
-            "label": {
-              "title": "Titel",
-              "teaser": "Zusammenfasssung",
-              "description": "Beschreibung"
-            },
-            "placeholder": {
-              "title": "Tour Stop Name",
-              "teaser": "Teaser für Tour Stop-Auflistung",
-              "description": "vollständige Tourenbeschreibung"
-            }
-          }
-        }
-      },
+      "title": "Taxonomies"
+    },
+    "terms": {
       "button": {
-        "create": "Neue Tour hinzufügen",
-        "edit": "Tour bearbeiten",
-        "delete": "Tour löschen"
-      }
+        "create": "Neuen Begriff hinzufügen",
+        "delete": "Begriff löschen",
+        "edit": "Begriff bearbeiten"
+      },
+      "title": "Taxonomien"
     },
     "tour": {
       "heading": {
@@ -834,16 +797,211 @@
       },
       "table": {
         "tourstops": {
-          "delete": "Tour Stop löschen",
-          "update": "Tour Stop aktualisieren",
-          "number": "Nummer",
-          "title": "Titel",
-          "empty": "Diese Tour hat derzeit keine Stopps.",
           "button": {
             "add": "Tour Stop hinzufügen"
-          }
+          },
+          "delete": "Tour Stop löschen",
+          "empty": "Diese Tour hat derzeit keine Stopps.",
+          "number": "Nummer",
+          "title": "Titel",
+          "update": "Tour Stop aktualisieren"
         }
       }
+    },
+    "tours": {
+      "button": {
+        "create": "Neue Tour hinzufügen",
+        "delete": "Tour löschen",
+        "edit": "Tour bearbeiten"
+      },
+      "forms": {
+        "field": {
+          "label": {
+            "orderNumber": "Sortierungsnummer"
+          }
+        },
+        "tour": {
+          "field": {
+            "label": {
+              "description": "Beschreibung",
+              "distance": "Entfernung",
+              "duration": "Dauer",
+              "slug": "Slug",
+              "teaser": "Zusammenfasssung",
+              "title": "Titel"
+            },
+            "placeholder": {
+              "description": "vollständige Tourenbeschreibung",
+              "distance": "3 Kilometer",
+              "duration": "1 Std",
+              "slug": "Slug / URL Zusatz",
+              "teaser": "Teaser für die Tourliste",
+              "title": "Tour Name"
+            }
+          }
+        },
+        "tourStop": {
+          "field": {
+            "label": {
+              "description": "Beschreibung",
+              "teaser": "Zusammenfasssung",
+              "title": "Titel"
+            },
+            "placeholder": {
+              "description": "vollständige Tourenbeschreibung",
+              "teaser": "Teaser für Tour Stop-Auflistung",
+              "title": "Tour Stop Name"
+            }
+          }
+        }
+      },
+      "page": {
+        "title": {
+          "createtax": "Neue Tour hinzufügen",
+          "createtourStop": "Neuer Tour Stop",
+          "updatetour": "Tour aktualisieren",
+          "updateTourStop": "Tour Stop aktualisieren"
+        }
+      },
+      "title": "Touren"
+    },
+    "users": {
+      "button": {
+        "create": "NutzerIn hinzufügen",
+        "delete": "NutzerIn löschen",
+        "edit": "NutzerIn bearbeiten"
+      },
+      "deletealter": {
+        "message": "Möchten Sie wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden!",
+        "title": "Bitte bestätigen"
+      },
+      "forms": {
+        "create": {
+          "field": {
+            "confirmPasswordNoMatch": "",
+            "label": {
+              "password": "Passwort",
+              "passwordConfirmation": "Passwort bestätigen"
+            },
+            "placeholder": {
+              "password": "Bitte das Passwort der NutzerIn eingeben",
+              "passwordConfirmation": "Bitte das Passwort der NutzerIn wiederholen"
+            }
+          }
+        },
+        "messageUserBanned": "Die NutzerIn wird gesperrt",
+        "update": {
+          "field": {
+            "label": {
+              "email": "Email Adresse",
+              "firstName": "Vorname",
+              "lastName": "Nachname",
+              "ownsContentOnDelete": "Dieser NutzerIn die Inhalte der gelöschter NutzerInnen zuweisen",
+              "ownsEventImports": "Besitzt automatisch neu importierte Events",
+              "ownsSubmittedSuggestions": "Dieser NutzerIn Inhaltsvorschläge zuweisen",
+              "role": "Rolle der NutzerIn",
+              "userBanned": "NutzerIn sperren"
+            },
+            "placeholder": {
+              "email": "Email Adresse der NutzerIn",
+              "firstName": "Vorname der NutzerIn",
+              "lastName": "Nachname der NutzerIn",
+              "role": "Rolle der NutzerIn"
+            }
+          }
+        }
+      },
+      "page": {
+        "title": {
+          "createuser": "NutzerIn hinzufügen",
+          "updateuser": "NutzerIn aktualisieren"
+        }
+      },
+      "title": "NutzerIn"
+    }
+  },
+  "page": {
+    "emailconfirmation": {
+      "button_goto_backend": "Zum Administrationswerkzeug",
+      "button_goto_login": "Zum Login",
+      "errorExplanation": "Wir konnten Ihre E-Mail-Adresse anhand der bereitgestellten Informationen nicht verifizieren.",
+      "logintoproceed": "Bitte melden Sie sich an, um eine weitere Bestätigungs-E-Mail anzufordern.",
+      "requestanotheremail": "Neue Bestätigungsmail anfordern.",
+      "requestsuccessexplanation": "Wir haben Ihnen eine weitere E-Mail gesendet. Bitte überprüfen Sie Ihren Posteingang.",
+      "requestsuccesstitles": "Vielen Dank",
+      "youCanNowLogin": "Ihre Email wurde bestätigt."
+    },
+    "login": {
+      "error": "Die Anmeldung ist fehlgeschlagen. Bitte versuchen Sie es erneut.",
+      "forgot_your_password": "Passwort vergessen?",
+      "form_button_login": "Anmeldung",
+      "form_field_login_label": "Email-Adresse",
+      "form_field_login_placeholder": "Geben Sie bitte Ihre Email-Adresse ein",
+      "form_field_password_label": "Ihr Passwort",
+      "form_field_password_placeholder": "Bitte geben Sie Ihr Passwort ein",
+      "no_account_prompt": "Sie haben kein Konto?",
+      "prompt": "Bitte melden Sie sich an, um auf das Administrationstool zuzugreifen.",
+      "register_link": "Als neue NutzerIn registrieren",
+      "title": "Anmeldung"
+    },
+    "passwordrequest": {
+      "back_to_login": "Zurück zur Anmeldung",
+      "error": "Die Zurücksetzung ist fehlgeschlagen. Bitte versuche es erneut.",
+      "form_button_submit": "Link zum Zurücksetzen anfordern",
+      "form_field_email_label": "Email-Adresse",
+      "form_field_email_placeholder": "Geben Sie bitte Ihre Email-Adresse ein",
+      "info": "Geben Sie Ihre registrierte E-Mail-Adresse ein, um einen Link zum Zurücksetzen des Passworts per E-Mail anzufordern.",
+      "requestInYourEmail": "Wir haben Ihnen eine E-Mail mit einem Link zur Passwortanforderung gesendet. Bitte klicken Sie auf den bereitgestellten Link, um Ihr Passwort zurückzusetzen.",
+      "thankyou": "Vielen dank!",
+      "title": "Passwort vergessen?"
+    },
+    "passwordreset": {
+      "back_to_login": "Zurück zum Login",
+      "button_goto_login": "Zum Login",
+      "form_button_submit": "Passwort ändern",
+      "form_field_password_confirm_placeholder": "Bitte bestätigen Sie ihr Passwort",
+      "form_field_password_confirmation_label": "Bitte bestätigen Sie ihr neues Passwort",
+      "form_field_password_label": "Neues Passwort",
+      "form_field_password_placeholder": "Bitte geben Sie ihr Passwort ein",
+      "info": "Geben Sie Ihr neues Passwort ein und bestätigen Sie es im zweiten Feld.",
+      "title": "Setze dein Passwort zurück",
+      "youCanNowLogin": "Dein Passwort wurde zurück gesetzt.",
+      "youPasswordHasBeenResetPleaseReauthenticate": "Ihr Passwort wurde geändert. Bitte melden Sie sich erneut an."
+    },
+    "register": {
+      "accpt_terms_and_conditions": "Ich akzeptiere die Nutzungsbedingungen",
+      "emailtaken": "Die angegebene E-Mail-Adresse wird bereits verwendet. Vielleicht haben Sie Ihr Passwort vergessen?",
+      "error": "Es tut uns leid. Etwas ist schief gegangen. Bitte überprüfen Sie Ihre Eingaben und versuchen Sie es erneut.",
+      "form_button_submit": "Registrieren",
+      "form_field_firstName_label": "Vorname",
+      "form_field_firstName_placeholder": "Ihr Vorname",
+      "form_field_lastName_label": "Nachname",
+      "form_field_lastName_placeholder": "Ihr Nachname",
+      "form_field_password_label": "Ihr Passwort",
+      "form_field_password_placeholder": "Bitte geben Sie Ihr Passwort ein",
+      "form_field_registration_label": "Email Adresse",
+      "form_field_registration_placeholder": "Geben Sie bitte Ihre Email-Adresse ein",
+      "profileimage": "Profilbild",
+      "prompt": "Bitte füllen Sie das Formular aus, um sich als neue NutzerIn zu registrieren.",
+      "title": "Als neue NutzerIn registrieren"
+    },
+    "signup": {
+      "back_to_login": "Zurück zur Anmeldung"
+    }
+  },
+  "publish": {
+    "status": {
+      "autodraft": "automatischer Entwurf",
+      "draft": "Entwurf",
+      "forreview": "Zur Kontrolle",
+      "imported": "Importiert",
+      "importedwarning": "Importiert mit Warnung(en)",
+      "importedwrning": "Importiert mit Warnung(en)",
+      "published": "Publiziert",
+      "rejected": "Zurückgewiesen",
+      "suggestion": "Inhaltsvorschlag",
+      "trashed": "Gelöscht",
+      "unknown": "Unbekannt"
     }
   },
   "PublishStatus": {
@@ -852,46 +1010,15 @@
       "placeholder": "Veröffentlichungsstatus auswählen"
     }
   },
-  "publish": {
-    "status": {
-      "suggestion": "Inhaltsvorschlag",
-      "imported": "Importiert",
-      "importedwarning": "Importiert mit Warnung(en)",
-      "draft": "Entwurf",
-      "forreview": "Zur Kontrolle",
-      "rejected": "Zurückgewiesen",
-      "published": "Publiziert",
-      "trashed": "Gelöscht",
-      "unknown": "Unbekannt",
-      "autodraft": "automatischer Entwurf",
-      "importedwrning": "Importiert mit Warnung(en)"
-    }
+  "role": {
+    "administrator": "AdministratorIn",
+    "contributor": "Beitragende",
+    "editor": "LektorIn",
+    "user": "BenutzerIn"
   },
   "settings": {
-    "taxMapping": {
-      "options": {
-        "label": {
-          "typeOfInstitution": "Einrichtungsart",
-          "typeOfOrganisation": "Trägerart",
-          "targetAudience": "Angebote für",
-          "eventType": "Veranstaltungsart",
-          "accessibility": "Barrierefreiheitinformationen"
-        }
-      },
-      "taxonmies": {
-        "label": "Taxonomien",
-        "pleaseChoose": "Bitte wählen Sie eine Taxonomie"
-      },
-      "label": "Taxonomiezuweisung"
-    },
-    "empty": {
-      "defaultvalue": "Nicht gesetzt! Bitte die Einstellungen aktualisieren"
-    },
-    "nameofyoursetting": {
-      "label": "Label"
-    },
-    "error": {
-      "label": "Es wurde kein Übersetzungsschlüssel definiert"
+    "centerOfGravity": {
+      "label": "Kartenmitte (Georeferenzierung)"
     },
     "contactEmail": {
       "label": "Kontakt Email Adresse (erhält Kartenpunktvorschlagsnotifikationen)"
@@ -899,284 +1026,48 @@
     "contactInfo": {
       "label": "Kontaktinformation für technische Fragen"
     },
+    "defaultMetaDesc": {
+      "label": "Meta Beschreibung für Listen (Veranstaltungen/Karte) und anderen Spezialseiten"
+    },
+    "empty": {
+      "defaultvalue": "Nicht gesetzt! Bitte die Einstellungen aktualisieren"
+    },
+    "error": {
+      "label": "Es wurde kein Übersetzungsschlüssel definiert"
+    },
+    "nameofyoursetting": {
+      "label": "Label"
+    },
+    "quickSearchInfo": {
+      "label": "Kurzinformation in Schnellsuchresultat"
+    },
     "suggestionsIntro": {
       "label": "Kartenpunktvorschlagseite: Einleitung"
     },
     "suggestionsIntroEvent": {
       "label": "Veranstaltungsvorschlagseite: Einleitung"
     },
-    "suggestionsTandCInfo": {
-      "label": "Inhaltsvorschlagsseiten: Kurzer Text über Einverständniserklärung"
-    },
     "suggestionsMetaDesc": {
       "label": "Inhaltsvorschlagsseiten: SEO Meta Beschreibung"
     },
-    "quickSearchInfo": {
-      "label": "Kurzinformation in Schnellsuchresultat"
+    "suggestionsTandCInfo": {
+      "label": "Inhaltsvorschlagsseiten: Kurzer Text über Einverständniserklärung"
     },
-    "defaultMetaDesc": {
-      "label": "Meta Beschreibung für Listen (Veranstaltungen/Karte) und anderen Spezialseiten"
-    },
-    "centerOfGravity": {
-      "label": "Kartenmitte (Georeferenzierung)"
-    }
-  },
-  "editor": {
-    "button": {
-      "save": "Speichern",
-      "cancel": "Abbrechen",
-      "openInNewTabl": "Link in neuem Tab öffnen",
-      "removeH2": "Remove H3 format",
-      "addH2": "Format as H2",
-      "removeH3": "Remove H3 format",
-      "addH3": "Format as H3",
-      "unbold": "Fettgedrucktes Textformat entfernen",
-      "bold": "Text fett formatieren",
-      "unitalic": "Kursivgedrucktes Textformat entfernen",
-      "italic": "Text kursiv formatieren",
-      "orderList": "Nummerierte Auflistung an- oder ausschalten",
-      "bulletList": "Auflistung an- oder ausschalten",
-      "addNewLine": "Neue Zeile einfügen",
-      "clearFormatting": "Formatierungen entfernen",
-      "undo": "Rückgängig machen",
-      "redo": "Wiederholen",
-      "link": "Link hinzufügen",
-      "unlink": "Link entfernen"
-    },
-    "link": {
-      "label": {
-        "url": "URL"
-      },
-      "url": "https://..."
-    },
-    "count": {
-      "characters_one": "{{count}}/{{maxLength}} character",
-      "characters_other": "{{count}}/{{maxLength}} characters"
-    }
-  },
-  "alert": {
-    "emailnotverfied": {
-      "title": "Sie haben Ihre E-Mail-Adresse noch nicht bestätigt.",
-      "info": "Bitte überprüfen Sie Ihren Posteingang und folgen Sie dem Link in der E-Mail. Falls die E-Mail nicht angekommen ist, können Sie eine weitere E-Mail anfordern, indem Sie auf die Schaltfläche klicken.",
-      "requresterrorinfo": "Etwas ist schief gelaufen. Bitte versuchen Sie es in Kürze erneut.",
-      "requrestsuccessinfo": "Wir haben Ihnen eine weitere E-Mail gesendet. Bitte überprüfen Sie Ihren Posteingang.",
-      "button": "Bestätigungs-E-Mail anfordern"
-    }
-  },
-  "general": {
-    "error": {
-      "title": "Es tut uns leid",
-      "requestfailed": "Die Anfrage ist fehlgeschlagen. Bitte versuche es erneut."
-    },
-    "success": {
-      "title": "Vielen Dank!"
-    },
-    "readerror": {
-      "desc": "Ein Fehler ist aufgetreten und die benötigten Informationen konnten nicht geladen werden. Bitte versuchen Sie es später noch einmal"
-    },
-    "writeerror": {
-      "desc": "Ein Fehler ist aufgetreten und die benötigten Informationen konnten nicht verarbeitet werden. Bitte versuchen Sie es später noch einmal"
-    }
-  },
-  "http": {
-    "error": {
-      "403": {
-        "title": "Zugriff abgelehnt",
-        "explanation": "Sie sind nicht berechtigt, diese Seite anzuzeigen."
-      },
-      "404": {
-        "title": "Nicht gefunden",
-        "explanation": "Die angeforderte URL konnte nicht gefunden werden.",
-        "backtohome": "Zurück zur Startseite"
-      }
-    }
-  },
-  "admintable": {
-    "gotopagination": "Zur Seitennavigation springen",
-    "filter": {
-      "button": {
-        "toggle": "Filter",
-        "reset": "Zurücksetzen",
-        "filter": "Filtern"
-      },
-      "status": "Pulikationsstatus",
-      "termsAndRelationship": "Alle Begriffe müssen zugewiesen sein (UND Filter)"
-    },
-    "search": "Schlagwortsuche",
-    "sorted": {
-      "desc": "Absteigend sortieren",
-      "asc": "Aufsteigend sortieren"
-    },
-    "nodata": "Keine Elemente gefunden",
-    "total": "Gesamtanzahl",
-    "pagination": {
-      "gotofirstpage": "gehe zur ersten Seite",
-      "gotopreviouspage": "gehe zur vorherigen Seite",
-      "gotopage": "gehe zu Seitennummer {{page}}",
-      "gotonextpage": "gehe zur nächsten Seite",
-      "gotolastpage": "gehe zur letzten Seite"
-    },
-    "changepagesize": "{{pageSize}} pro Seite"
-  },
-  "apifile": {
-    "fileSavedWithFilename": "Datei erstellt und folgendem Dateinamen gespeichert",
-    "linkDownload": "herunterladen"
-  },
-  "apiimage": {
-    "errormsg": "Das Bild konnte leider nicht bearbeitet werden. Bitte versuchen Sie das Hochladen erneut.",
-    "processsing": "Das Bild wurde erfolgreich hochgeladen und wird von uns verarbeitet",
-    "placeholder": "Bild"
-  },
-  "dangerzonealertdialog": {
-    "writedeletetoken": "LÖSCHEN",
-    "writedeletetask": "Bitte geben Sie \"{{token}}\" in das Feld unten ein, um die Aktion zu bestätigen",
-    "writedeletelabel": "Schriftliche Löschbestätigung.",
-    "placeholder": "{{token}}"
-  },
-  "translation": {
-    "comingSoon": "Wir arbeiten an einer deutschen Übersetzung"
-  },
-  "translationnotfound": "Übersetzung nicht gefunden",
-  "toast": {
-    "title": {
-      "success": "Okay!"
-    },
-    "info": {
-      "datasaved": "Die Daten wurden gespeichert",
-      "datadeleted": "Die gewünschten Daten wurden gelöscht"
-    }
-  },
-  "import": {
-    "status": {
-      "created": "Erstellt",
-      "scheduled": "In Auftrag",
-      "processing": "In Bearbeitung",
-      "published": "Berarbeitet",
-      "error": "Fehler",
-      "trashed": "Gelöscht",
-      "autodraft": "CSV Datei fehlt",
-      "forreview": "Spalten zuweisen"
-    }
-  },
-  "table": {
-    "label": {
-      "id": "ID",
-      "lastUpdate": "Zuletzt aktualisiert",
-      "status": "Status",
-      "title": "Titel",
-      "actions": "Aktionen",
-      "errors": "Fehler",
-      "warnings": "Warnungen",
-      "name": "Name",
-      "orderNumber": "Sortierungsnummer"
-    }
-  },
-  "copied": "Kopiert",
-  "copy": "Kopieren",
-  "location": {
-    "suggestion": {
-      "fieldName": {
-        "website": "Event website",
-        "facebook": "Event Facebook Page",
-        "instagram": "Event Instagram Account",
-        "name": "Kartenpunktvorschlagende(r): Name",
-        "email": "Kartenpunktvorschlagende(r): Emailadresse",
-        "phone": "Suggester's phone number",
-        "comments": "Kartenpunktvorschlagende(r): Anmerkungen",
-        "suggestionTandC": "Kartenpunktvorschlagende(r): Zustimmung Datenschutzerklärung",
-        "suggestionIsOwner": "Kartenpunktvorschlagende(r): Erklärt legal verantwortlich zu sein",
-        "suggestionImageRightsConfirmation": "Kartenpunktvorschlagende(r): Bestätigt, dass das Bild veröffentlicht werden darf."
-      },
-      "yes": "Ja",
-      "no": "Nein"
-    }
-  },
-  "locations": {
-    "forms": {
-      "field": {
-        "placeholder": {
-          "street1": "Straße (1)",
-          "houseNumber": "126a",
-          "street2": "Straße (2)",
-          "co": "C/O ...",
-          "postCode": "Postleitzahl",
-          "city": "Stadt",
-          "email": "petra.meier@contact.me",
-          "phone": "+49327876780",
-          "url": "https://....",
-          "agency": "Träger",
-          "eventLocationId": "berlin.de Veranstaltungsort ID"
+    "taxMapping": {
+      "label": "Taxonomiezuweisung",
+      "options": {
+        "label": {
+          "accessibility": "Barrierefreiheitinformationen",
+          "eventType": "Veranstaltungsart",
+          "targetAudience": "Angebote für",
+          "typeOfInstitution": "Einrichtungsart",
+          "typeOfOrganisation": "Trägerart"
         }
+      },
+      "taxonmies": {
+        "label": "Taxonomien",
+        "pleaseChoose": "Bitte wählen Sie eine Taxonomie"
       }
-    }
-  },
-  "page": {
-    "passwordreset": {
-      "form_field_password_label": "Neues Passwort",
-      "form_field_password_placeholder": "Bitte geben Sie ihr Passwort ein",
-      "form_field_password_confirmation_label": "Bitte bestätigen Sie ihr neues Passwort",
-      "form_field_password_confirm_placeholder": "Bitte bestätigen Sie ihr Passwort",
-      "youPasswordHasBeenResetPleaseReauthenticate": "Ihr Passwort wurde geändert. Bitte melden Sie sich erneut an.",
-      "button_goto_login": "Zum Login",
-      "youCanNowLogin": "Dein Passwort wurde zurück gesetzt.",
-      "title": "Setze dein Passwort zurück",
-      "info": "Geben Sie Ihr neues Passwort ein und bestätigen Sie es im zweiten Feld.",
-      "back_to_login": "Zurück zum Login",
-      "form_button_submit": "Passwort ändern"
-    },
-    "register": {
-      "profileimage": "Profilbild",
-      "form_field_firstName_label": "Vorname",
-      "form_field_firstName_placeholder": "Ihr Vorname",
-      "form_field_lastName_label": "Nachname",
-      "form_field_lastName_placeholder": "Ihr Nachname",
-      "form_field_registration_label": "Email Adresse",
-      "form_field_registration_placeholder": "Geben Sie bitte Ihre Email-Adresse ein",
-      "error": "Es tut uns leid. Etwas ist schief gegangen. Bitte überprüfen Sie Ihre Eingaben und versuchen Sie es erneut.",
-      "emailtaken": "Die angegebene E-Mail-Adresse wird bereits verwendet. Vielleicht haben Sie Ihr Passwort vergessen?",
-      "title": "Als neue NutzerIn registrieren",
-      "prompt": "Bitte füllen Sie das Formular aus, um sich als neue NutzerIn zu registrieren.",
-      "form_field_password_label": "Ihr Passwort",
-      "form_field_password_placeholder": "Bitte geben Sie Ihr Passwort ein",
-      "accpt_terms_and_conditions": "Ich akzeptiere die Nutzungsbedingungen",
-      "form_button_submit": "Registrieren"
-    },
-    "passwordrequest": {
-      "thankyou": "Vielen dank!",
-      "requestInYourEmail": "Wir haben Ihnen eine E-Mail mit einem Link zur Passwortanforderung gesendet. Bitte klicken Sie auf den bereitgestellten Link, um Ihr Passwort zurückzusetzen.",
-      "title": "Passwort vergessen?",
-      "info": "Geben Sie Ihre registrierte E-Mail-Adresse ein, um einen Link zum Zurücksetzen des Passworts per E-Mail anzufordern.",
-      "error": "Die Zurücksetzung ist fehlgeschlagen. Bitte versuche es erneut.",
-      "form_field_email_label": "Email-Adresse",
-      "form_field_email_placeholder": "Geben Sie bitte Ihre Email-Adresse ein",
-      "back_to_login": "Zurück zur Anmeldung",
-      "form_button_submit": "Link zum Zurücksetzen anfordern"
-    },
-    "emailconfirmation": {
-      "button_goto_backend": "Zum Administrationswerkzeug",
-      "button_goto_login": "Zum Login",
-      "requestsuccesstitles": "Vielen Dank",
-      "errorExplanation": "Wir konnten Ihre E-Mail-Adresse anhand der bereitgestellten Informationen nicht verifizieren.",
-      "requestsuccessexplanation": "Wir haben Ihnen eine weitere E-Mail gesendet. Bitte überprüfen Sie Ihren Posteingang.",
-      "logintoproceed": "Bitte melden Sie sich an, um eine weitere Bestätigungs-E-Mail anzufordern.",
-      "requestanotheremail": "Neue Bestätigungsmail anfordern.",
-      "youCanNowLogin": "Ihre Email wurde bestätigt."
-    },
-    "login": {
-      "error": "Die Anmeldung ist fehlgeschlagen. Bitte versuchen Sie es erneut.",
-      "title": "Anmeldung",
-      "prompt": "Bitte melden Sie sich an, um auf das Administrationstool zuzugreifen.",
-      "no_account_prompt": "Sie haben kein Konto?",
-      "register_link": "Als neue NutzerIn registrieren",
-      "form_field_login_label": "Email-Adresse",
-      "form_field_login_placeholder": "Geben Sie bitte Ihre Email-Adresse ein",
-      "form_field_password_label": "Ihr Passwort",
-      "form_field_password_placeholder": "Bitte geben Sie Ihr Passwort ein",
-      "forgot_your_password": "Passwort vergessen?",
-      "form_button_login": "Anmeldung"
-    },
-    "signup": {
-      "back_to_login": "Zurück zur Anmeldung"
     }
   },
   "tablae": {
@@ -1186,11 +1077,33 @@
       "slug": "Slug"
     }
   },
+  "table": {
+    "label": {
+      "actions": "Aktionen",
+      "errors": "Fehler",
+      "id": "ID",
+      "lastUpdate": "Zuletzt aktualisiert",
+      "name": "Name",
+      "orderNumber": "Sortierungsnummer",
+      "status": "Status",
+      "title": "Titel",
+      "warnings": "Warnungen"
+    }
+  },
   "taxonomies": {
     "fields": {
       "label": {
         "termCount": "Anzahl Begriffe"
       }
+    }
+  },
+  "toast": {
+    "info": {
+      "datadeleted": "Die gewünschten Daten wurden gelöscht",
+      "datasaved": "Die Daten wurden gespeichert"
+    },
+    "title": {
+      "success": "Okay!"
     }
   },
   "tours": {
@@ -1200,27 +1113,113 @@
       }
     }
   },
-  "role": {
-    "user": "BenutzerIn",
-    "contributor": "Beitragende",
-    "editor": "LektorIn",
-    "administrator": "AdministratorIn"
+  "translation": {
+    "comingSoon": "Wir arbeiten an einer deutschen Übersetzung"
+  },
+  "translationnotfound": "Übersetzung nicht gefunden",
+  "ui": {
+    "button": {
+      "label": {
+        "hide": "Verstecken",
+        "show": "Anzeigen"
+      }
+    }
   },
   "users": {
-    "fields": {
-      "label": {
-        "firstName": "Vorname",
-        "lastName": "Nachname",
-        "email": "Emailadresse",
-        "email verified": "Emailadresse bestätigt",
-        "role": "Rolle"
-      }
-    },
     "field": {
       "emailverification": {
-        "verified": "Bestätigt",
-        "notverified": "Nicht bestätigt"
+        "notverified": "Nicht bestätigt",
+        "verified": "Bestätigt"
       }
+    },
+    "fields": {
+      "label": {
+        "email": "Emailadresse",
+        "email verified": "Emailadresse bestätigt",
+        "firstName": "Vorname",
+        "lastName": "Nachname",
+        "role": "Rolle"
+      }
+    }
+  },
+  "validation": {
+    "array": {
+      "length": "Dieses muss {{length}} Elemente haben",
+      "max": "Dieses Feld muss weniger oder gleich {{max}} Elemente enthalten",
+      "min": "Dieses Feld muss mindestens {{min}} Elemente enthalten",
+      "minOneItem": "Bitte wähle mindestens ein Element aus"
+    },
+    "boolean": {
+      "isValue": "Dieses Feld muss {{value}} sein"
+    },
+    "date": {
+      "max": "Dieses Feld muss früher sein als {{max}}",
+      "min": "Dieses Feld muss später sein als {{min}}"
+    },
+    "image": {
+      "required": "Bitte laden Sie ein Bild hoch"
+    },
+    "mixed": {
+      "default": "Dieses Feld ist nicht korrekt",
+      "defined": "Dieses Feld muss gesetzt werden",
+      "notOneOf": "Dieses Feld muss einer der folgenden Typen sein: {{values}}",
+      "notType": "Dieses Feld muss vom Typ {{type}} sein",
+      "oneOf": "Dieses Feld muss einer der folgenden Werte haben: {{values}}",
+      "required": "Dieses Feld ist verpflichtend"
+    },
+    "notunique": "Dieser Wert ist nicht einzigartig",
+    "number": {
+      "integer": "Dieses Feld muss eine ganze Zahl sein",
+      "lessThan": "Dieses Feld muss kleiner sein als {{less}}",
+      "max": "Dieses Feld muss kleiner oder gleich {{max}} sein",
+      "min": "Dieses Feld muss größer oder gleich {{min}} sein",
+      "moreThan": "Dieses Feld muss grösser sein als {{more}}",
+      "negative": "Dieses Feld muss eine negative Zahl sein",
+      "nolatitude": "Längengrade sind Zahlen zwischen -90.00 und 90.00",
+      "nolongitude": "Breitengrade sind Zahlen zwischen -180.00 und 180.00",
+      "positive": "Dieses Feld muss eine positive Zahl sein"
+    },
+    "object": {
+      "noUnknown": "Dieses Feld hat nicht spezifizierte Schlüssel: {{unknown}}"
+    },
+    "page": {
+      "login": {
+        "emailRequiredError": "Bitte geben Sie Ihre Emailadresse ein",
+        "passwordRequiredError": "Bitte geben Sie ihr Passwort ein"
+      },
+      "passwordrequest": {
+        "emailRequiredError": "Bitte geben Sie Ihre Emailadresse ein"
+      },
+      "passwordreset": {
+        "passwordDoNotMatch": "",
+        "pleaseConfirmYourNewPassword": "Bitte bestätigen Sie Ihr neues Passwort",
+        "pleaseProvideYourNewPassword": "Bitte geben Sie Ihr neues Passwort ein"
+      },
+      "register": {
+        "acceptedTermsRequiredError": "Bitte akzeptieren Sie unsere Nutzungsbedingungen",
+        "emailRequiredError": "Bitte geben Sie Ihre Emailadresse ein",
+        "firstNameRequiredError": "Bitte geben Sie Ihren Vornamen ein",
+        "lastNameRequiredError": "Bitte geben Sie Ihren Nachnamen ein",
+        "passwordRequiredError": "Bitte geben Sie ihr Passwort ein",
+        "pleaseConfirmYourPassword": "Bitte bestätigen Sie Ihr Passwort"
+      }
+    },
+    "slug": {
+      "chooselocation": "Bitte wählen Sie einen Ort",
+      "invalidcharacters": "Bitte verwenden Sie ausschliesslich A-Z, -, und Zahlen",
+      "notahexcolor": "Bitte geben Sie eine gültige HEX-Farbe an (z.B. #a8f oder #f9ad9f)"
+    },
+    "string": {
+      "email": "Dieses Feld muss eine gültige E-Mail-Adresse sein",
+      "length": "Der Text in entspricht nicht der Längenbeschränkung",
+      "lowercase": "Dieses Feld muss ein String in Kleinbuchstaben sein",
+      "matches": "Dieses Feld muss mit folgendem übereinstimmen: \"{{regex}}\"",
+      "max": "Der Text in diesem Feld ist zu lang",
+      "min": "Der Text in diesem Feld ist zu kurz",
+      "trim": "Dieses Feld darf kein Leerzeichen am Anfang oder Ende haben",
+      "uppercase": "Dieses Feld muss ein String in Grossbuchstaben sein",
+      "url": "Dieses Feld muss eine gültige URL sein",
+      "uuid": "Dieses Feld muss eine gültige UUID sein"
     }
   }
 }
