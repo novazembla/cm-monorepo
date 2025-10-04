@@ -32,7 +32,7 @@ export const FieldMultiLangTextEditor = ({
   name,
   type,
   isRequired,
-  isDisabled,
+  // isDisabled,
   size = "small",
   activeLanguages,
 }: {

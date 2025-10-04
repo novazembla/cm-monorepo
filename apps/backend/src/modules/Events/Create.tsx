@@ -40,7 +40,7 @@ import {
   mapGroupOptionsToData,
 } from "~/utils";
 
-export const eventGetTaxonomies = gql`
+const eventGetTaxonomies = gql`
   query event {
     moduleTaxonomies(key: "event") {
       id

@@ -43,7 +43,7 @@ import { config } from "~/config";
 import { SortingRule } from "react-table";
 import { Divider, chakra, Button, Box, Flex } from "@chakra-ui/react";
 
-export const locationsQueryGQL = gql`
+const locationsQueryGQL = gql`
   query locations(
     $where: JSON
     $orderBy: JSON

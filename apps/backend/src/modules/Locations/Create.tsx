@@ -41,7 +41,7 @@ import {
   mapPrimaryTermsToData
 } from "~/utils";
 
-export const locationGetTaxonomies = gql`
+const locationGetTaxonomies = gql`
   query moduleTaxonomies {
     moduleTaxonomies(key: "location") {
       id

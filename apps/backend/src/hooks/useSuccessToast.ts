@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { useToast, UseToastOptions } from "@chakra-ui/react";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const useAppToast = (defaultTitle: string, defaultMsg: string, status: UseToastOptions["status"]) => {
   const toast = useToast();
 

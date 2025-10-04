@@ -2,7 +2,6 @@ import React, {
   ChangeEventHandler,
   ChangeEvent,
   MouseEventHandler,
-  MouseEvent,
   useRef,
   useEffect,
 } from "react";
@@ -109,7 +108,7 @@ export const FieldInput = ({
   fieldProps.type = revealFlag ? "text" : fieldProps.type;
 
   const visibilityClickEvent: MouseEventHandler<HTMLButtonElement> = (
-    event: MouseEvent
+    // event: MouseEvent
   ) => {
     setRevealFlag.toggle();
     fieldRef?.current?.focus();

@@ -133,7 +133,7 @@ export const FieldFileUploader = ({
   route = "file",
   setActiveUploadCounter,
   shouldSetFormDirtyOnUpload = false,
-  shouldSetFormDirtyOnDelete = false,
+  // shouldSetFormDirtyOnDelete = false,
   additionalFormData,
   additionalDeleteData,
 }: {

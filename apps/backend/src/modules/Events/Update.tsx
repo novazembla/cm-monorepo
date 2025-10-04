@@ -47,7 +47,7 @@ import {
   getMultilangValue,
 } from "~/utils";
 
-export const eventAndContentAuthorsQueryGQL = gql`
+const eventAndContentAuthorsQueryGQL = gql`
   query event($id: Int!) {
     event(id: $id) {
       id

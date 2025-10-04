@@ -39,7 +39,7 @@ import { config } from "~/config";
 import { SortingRule } from "react-table";
 import { Divider, chakra, Button, Box, Flex } from "@chakra-ui/react";
 
-export const eventsQueryGQL = gql`
+const eventsQueryGQL = gql`
   query events($where: JSON, $orderBy: JSON, $pageIndex: Int, $pageSize: Int) {
     events(
       where: $where

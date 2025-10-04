@@ -141,7 +141,7 @@ export class TimeField extends React.Component<Props, State> {
 
   render(): ReactElement {
     const {value} = this.state;
-    const {onChange, style, showSeconds, input, inputRef, colon, ...props} = this.props; //eslint-disable-line no-unused-vars
+    const {onChange, style, showSeconds, input, inputRef, /* colon, */ ...props} = this.props; //eslint-disable-line no-unused-vars
     const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) =>
       this.onInputChange(event, (e: ChangeEvent<HTMLInputElement>, v: string) => onChange && onChange(e, v));
 

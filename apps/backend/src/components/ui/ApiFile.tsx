@@ -11,7 +11,7 @@ export type ApiFileProps = {
   allowDownload: boolean;
 };
 
-export const ApiFile = ({ id, meta, status, allowDownload }: ApiFileProps) => {
+export const ApiFile = ({ /* id, */ meta, status, allowDownload }: ApiFileProps) => {
   const { t } = useTranslation();
 
   let content;

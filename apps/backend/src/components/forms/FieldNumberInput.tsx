@@ -140,7 +140,7 @@ export const FieldNumberInput = ({
             <NumberInput
               {...{
                 ...restField,
-                onBlur: (event) => {
+                onBlur: (/* event */) => {
                   // weirdly restField.onBlur()
                   // sets the field value to undefined
                   // and then the validation fails.

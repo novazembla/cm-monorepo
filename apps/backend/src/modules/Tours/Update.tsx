@@ -48,7 +48,7 @@ import {
   getMultilangValue,
 } from "~/utils";
 
-export const tourAndContentAuthorsQueryGQL = gql`
+const tourAndContentAuthorsQueryGQL = gql`
   query tour($id: Int!) {
     tour(id: $id) {
       id

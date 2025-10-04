@@ -56,7 +56,7 @@ export const FieldSingleDate = ({
         render={({
           field: { onChange, value /* , onBlur, name, ref */ },
           // fieldState: { invalid, isTouched, isDirty, error },
-          formState,
+          // formState,
         }) => {
           const date = isValidDate(value) ? value : defaultValue;
           return (

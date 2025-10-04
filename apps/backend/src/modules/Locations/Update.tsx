@@ -65,7 +65,7 @@ import {
 
 import { MultiLangValue } from "~/components/ui";
 
-export const locationAndContentAuthorsQueryGQL = gql`
+const locationAndContentAuthorsQueryGQL = gql`
   query location($id: Int!) {
     location(id: $id) {
       id

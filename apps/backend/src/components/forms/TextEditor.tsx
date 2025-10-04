@@ -309,7 +309,7 @@ const EditorMenuBar = ({
               editor.view.state.selection.empty && !editor.isActive("link")
             }
             label={t("editor.button.link", "Add link")}
-            onClick={(event) => {
+            onClick={(/* event */) => {
               setLinkValue(editor.getAttributes("link")?.href ?? "");
 
               setNewTabActive(

@@ -42,7 +42,7 @@ import {
   getMultilangValue,
 } from "~/utils";
 
-export const pageAndContentAuthorsQueryGQL = gql`
+const pageAndContentAuthorsQueryGQL = gql`
   query page($id: Int!) {
     page(id: $id) {
       id

@@ -88,7 +88,7 @@ export const FieldAutocomplete = ({
   } = useCombobox({
     initialSelectedItem: undefined,
     items: searchResult,
-    onStateChange: ({ inputValue, type, selectedItem, isOpen }) => {
+    onStateChange: ({ inputValue, type, selectedItem /*, isOpen */ }) => {
       switch (type) {
         case useCombobox.stateChangeTypes.InputChange:
           if (typeof inputValue === "string" && inputValue.length > minLength)

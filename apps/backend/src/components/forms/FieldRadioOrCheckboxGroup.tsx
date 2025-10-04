@@ -19,7 +19,7 @@ export type FieldRadioOrCheckboxGroupOption = {
 export const FieldRadioOrCheckboxGroup = ({
   id,
   label,
-  type,
+  // type,
   name,
   options,
   defaultValues,
@@ -64,7 +64,7 @@ export const FieldRadioOrCheckboxGroup = ({
         </legend>
 
         <Flex flexWrap="wrap">
-          {options.map((option, index) => (
+          {options.map((option /*, index */) => (
             <Controller
               key={`${name}_${option.id}`}
               control={control}
@@ -72,7 +72,7 @@ export const FieldRadioOrCheckboxGroup = ({
               defaultValue={
                 defaultValues && defaultValues[`${name}_${option.id}` as any]
               }
-              render={({ field: { onChange, onBlur, value, ref } }) => {
+              render={({ field: { onChange, onBlur, value /*, ref */ } }) => {
                 return (
                   <Checkbox
                     value={option.id}
