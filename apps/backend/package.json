@@ -35,7 +35,6 @@
     "@tiptap/extension-placeholder": "2.0.0-beta.39",
     "@tiptap/extension-text": "2.0.0-beta.13",
     "@tiptap/react": "2.0.0-beta.88",
-    "axios": "1.7.8",
     "downshift": "6.1.7",
     "framer-motion": "4.1.17",
     "i18next": "21.4.0",
