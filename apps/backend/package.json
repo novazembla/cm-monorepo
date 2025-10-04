@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "@apollo/client": "3.4.16",
+    "@chakra-ui/system": "1.12.0",
+    "@chakra-ui/react": "1.6.9",
     "@chakra-ui/icons": "1.0.17",
     "@chakra-ui/popper": "2.3.0",
     "@choc-ui/paginator": "3.2.2",
@@ -106,6 +108,7 @@
     "@types/react-router-dom": "5.3.2",
     "@types/react-table": "7.7.7",
     "@types/styled-components": "5.1.15",
+    "@swc/core": "1.13.5",
     "@vitejs/plugin-react-swc": "3.4.1",
     "autoprefixer": "10.4.16",
     "craco-alias": "3.0.1",

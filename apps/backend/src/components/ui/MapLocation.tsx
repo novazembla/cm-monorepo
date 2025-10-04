@@ -44,6 +44,8 @@ class LeafletLocationDisplay {
         minZoom: 11,
       });
 
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       L.maplibreGL({
         style,
         attribution:
