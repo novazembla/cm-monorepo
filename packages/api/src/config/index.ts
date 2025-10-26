@@ -406,8 +406,8 @@ let apiConfig = {
     },
   ],
   geoCodingProvider: {
-    autocomplete: "here",
-    import: "here",
+    autocomplete: "nominatim",
+    import: "nominatim",
   },
   geoCodingThrottle: 500,
   geoCodingRegions: ["DEU"],

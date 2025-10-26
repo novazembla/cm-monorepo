@@ -1,11 +1,11 @@
 /// <reference path="../../types/nexus-typegen.ts" />
 import { objectType, extendType, nonNull, stringArg } from "nexus";
-import { getApiConfig } from "../../config";
-import { getPrismaClient } from "../../db";
+// import { getApiConfig } from "../../config";
+// import { getPrismaClient } from "../../db";
 
 import {
-  GeoCoderKomoot,
-  GeoCoderHere,
+  // GeoCoderKomoot,
+  // GeoCoderHere,
   GeoCoderNominatim,
 } from "../../utils/geocoding";
 
@@ -28,51 +28,50 @@ export const MapQueries = extendType({
       },
 
       async resolve(...[, args]) {
-        const apiConfig = getApiConfig();
+        
+        // const apiConfig = getApiConfig();
+        // console.error(apiConfig.geoCodingProvider);
 
-        if (apiConfig.geoCodingProvider.autocomplete === "komoot") {
-          const result = await new GeoCoderKomoot().query(
-            {
-              street1: args.q,
-            },
-            getPrismaClient()
-          );
-          return {
-            geojson: result,
-            count: Array.isArray(result?.features)
-              ? result?.features?.length
-              : 0,
-          } as any;
-        }
+        // if (apiConfig.geoCodingProvider.autocomplete === "komoot") {
+        //   const result = await new GeoCoderKomoot().query(
+        //     {
+        //       street1: args.q,
+        //     },
+        //     getPrismaClient()
+        //   );
+        //   return {
+        //     geojson: result,
+        //     count: Array.isArray(result?.features)
+        //       ? result?.features?.length
+        //       : 0,
+        //   } as any;
+        // }
 
-        if (apiConfig.geoCodingProvider.autocomplete === "here") {
-          const result = await new GeoCoderHere().query({
-            street1: args.q,
-          });
-          return {
-            geojson: result,
-            count: Array.isArray(result?.features)
-              ? result?.features?.length
-              : 0,
-          } as any;
-        }
-
-        if (apiConfig.geoCodingProvider.autocomplete === "nominatim") {
-          const result = await new GeoCoderNominatim().query({
-            street1: args.q,
-          });
-          return {
-            geojson: result,
-            count: Array.isArray(result?.features)
-              ? result?.features?.length
-              : 0,
-          } as any;
-        }
-
+        // if (apiConfig.geoCodingProvider.autocomplete === "here") {
+        //   const result = await new GeoCoderHere().query({
+        //     street1: args.q,
+        //   });
+        //   return {
+        //     geojson: result,
+        //     count: Array.isArray(result?.features)
+        //       ? result?.features?.length
+        //       : 0,
+        //   } as any;
+        // }
+        // if (apiConfig.geoCodingProvider.autocomplete === "nominatim") {
+        const result = await new GeoCoderNominatim().query({
+          street1: args.q,
+        });
         return {
-          geojson: { features: [], type: "FeatureCollection" },
-          count: 0,
+          geojson: result,
+          count: Array.isArray(result?.features) ? result?.features?.length : 0,
         } as any;
+        // }
+
+        // return {
+        //   geojson: { features: [], type: "FeatureCollection" },
+        //   count: 0,
+        // } as any;
       },
     });
   },
