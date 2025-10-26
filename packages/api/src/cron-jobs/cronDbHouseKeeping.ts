@@ -14,15 +14,15 @@ import { getPrismaClient } from "../db/client";
 
 const prisma = getPrismaClient();
 
-function sleep(ms:number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 export async function cronDbHouseKeeping() {
   await sleep(30000);
-  
+
   logger.info("[CRON:cronDbHouseKeeping]: starting cron job");
-  
+
   try {
     const apiConfig = getApiConfig();
 
@@ -405,4 +405,4 @@ export async function cronDbHouseKeeping() {
       `[CRON:dbHousekeeping]: Failed to run cron job. ${Err.name} ${Err.message}`
     );
   }
-};
+}

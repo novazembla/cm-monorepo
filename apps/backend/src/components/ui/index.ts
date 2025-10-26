@@ -7,6 +7,7 @@ export * from "./AlertBox";
 export * from "./Map";
 export * from "./MapLocation";
 export * from "./AdminTable";
+export * from "./admin-table-utils";
 export * from "./ApiImage";
 export * from "./ApiFile";
 export * from "./MultiLangValue";

@@ -38,7 +38,7 @@ import { SortingRule, Cell } from "react-table";
 export const AdminTableDataExportStatusCell = (cell: Cell) => {
   const { t } = useTranslation();
   let color = "gray";
-  let variant = "subtle";
+  const variant = "subtle";
   let label = t("publish.status.unknown", "Unknown");
 
   if (cell.value === DataExportStatus.CREATED) {
@@ -237,7 +237,7 @@ const DataExports = () => {
   const onFetchData = (
     pageIndex: number,
     pageSize: number,
-    sortBy: SortingRule<Object>[],
+    sortBy: SortingRule<Record<string, unknown>>[],
     filterKeyword: string
   ) => {
     refetchPageIndex = undefined;

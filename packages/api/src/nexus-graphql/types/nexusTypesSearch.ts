@@ -95,7 +95,7 @@ export const SearchQueries = extendType({
         const modules = args.modules ?? [];
         const result: NexusGenObjects["SearchResult"][] = [];
 
-        console.log("Modules", modules)
+        console.log("Modules", modules);
         const query =
           parsedQuery.length === 1
             ? {
@@ -113,7 +113,7 @@ export const SearchQueries = extendType({
                 })),
               };
         if (modules.includes("location")) {
-          console.log("module", "location")
+          console.log("module", "location");
           const locations = await daoLocationSelectQuery(
             {
               status: PublishStatus.PUBLISHED,
@@ -204,8 +204,8 @@ export const SearchQueries = extendType({
           }
         }
         if (modules.includes("event")) {
-          console.log("module", "event")
-          
+          console.log("module", "event");
+
           const events = await daoEventSelectQuery(
             {
               status: PublishStatus.PUBLISHED,
@@ -299,8 +299,8 @@ export const SearchQueries = extendType({
           }
         }
         if (modules.includes("page")) {
-          console.log("module", "page")
-          
+          console.log("module", "page");
+
           const pages = await daoPageSelectQuery(
             {
               status: PublishStatus.PUBLISHED,
@@ -352,8 +352,8 @@ export const SearchQueries = extendType({
         }
         /// tour stop count ... TODO:
         if (modules.includes("tour")) {
-          console.log("module", "tour")
-          
+          console.log("module", "tour");
+
           const tours = await daoTourSelectQuery(
             {
               status: PublishStatus.PUBLISHED,

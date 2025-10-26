@@ -32,7 +32,7 @@ import { authentication } from "~/services";
 
 const humanFileSize = (
   size: number | undefined,
-  decimalPlaces: number = 0
+  decimalPlaces = 0
 ): string => {
   if (!size || size === 0) return "0";
   const i: number = Math.floor(Math.log(size) / Math.log(1024));
@@ -103,8 +103,11 @@ export type FieldFileUploaderProgessInfo = {
 };
 
 export type FieldFileFormFunctions = {
+  // eslint-disable-next-line @typescript-eslint/ban-types
   clearErrors: Function;
+  // eslint-disable-next-line @typescript-eslint/ban-types
   setUploadedFileId: Function;
+  // eslint-disable-next-line @typescript-eslint/ban-types
   setValue: Function;
 };
 
@@ -130,7 +133,7 @@ export const FieldFileUploader = ({
   route = "file",
   setActiveUploadCounter,
   shouldSetFormDirtyOnUpload = false,
-  shouldSetFormDirtyOnDelete = false,
+  // shouldSetFormDirtyOnDelete = false,
   additionalFormData,
   additionalDeleteData,
 }: {
@@ -147,11 +150,14 @@ export const FieldFileUploader = ({
   deleteButtonGQL: DocumentNode;
   onDelete?: (id?: number) => void;
   onUpload?: (data: any, formFunctions: FieldFileFormFunctions) => void;
+  // eslint-disable-next-line @typescript-eslint/ban-types
   setActiveUploadCounter?: Function;
   connectWith?: any;
   route?: string;
   additionalFormData?: any[];
-  additionalDeleteData?: {};
+  additionalDeleteData?: {
+    // silence is golden
+  };
 }) => {
   const [appUser] = useAuthentication();
   const { t } = useTranslation();

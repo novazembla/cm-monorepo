@@ -37,10 +37,10 @@ import { dataImportExportType } from "../moduleConfig";
 
 export const ModuleImportUpdateForm = ({
   data,
-  errors,
+  // errors,
   action,
   isSubmitting,
-  validationSchema,
+  // validationSchema,
   setActiveUploadCounter,
   onUpload,
 }: {
@@ -50,6 +50,7 @@ export const ModuleImportUpdateForm = ({
   validationSchema: any;
   action: "create" | "update";
   onUpload: any;
+  // eslint-disable-next-line @typescript-eslint/ban-types
   setActiveUploadCounter?: Function;
 }) => {
   const [showMappingTable, setShowMappingTable] = useState(true);
@@ -191,7 +192,7 @@ export const ModuleImportUpdateForm = ({
           DataImportStatus.PROCESS,
           DataImportStatus.PROCESSING,
           DataImportStatus.PROCESSED,
-        ].includes(dataImportRead.status) && !!!dataImportRead?.file ? (
+        ].includes(dataImportRead.status) && !dataImportRead?.file ? (
           <Box>
             {t(
               "module.locations.forms.import.nofile",

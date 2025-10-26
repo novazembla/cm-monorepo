@@ -15,15 +15,16 @@ import { useAuthentication } from "~/hooks";
 
 export const PageForm = ({
   data,
-  errors,
+  // errors,
   action,
-  validationSchema,
+  // validationSchema,
   setActiveUploadCounter,
 }: {
   data?: any;
   errors?: any;
   validationSchema: any;
   action: "create" | "update";
+  // eslint-disable-next-line @typescript-eslint/ban-types
   setActiveUploadCounter?: Function;
 }) => {
   const [appUser] = useAuthentication();

@@ -102,7 +102,7 @@ export const FieldSingleSelectAutocomplete = ({
     data[searchQueryDataKey]?.totalCount > 0
   ) {
     searchResult = data[searchQueryDataKey][searchQueryDataKey].map(
-      (item: any, index: number) => ({
+      (item: any /*, index: number */) => ({
         id: item.id,
         label: getMultilangValue(item.title),
       })

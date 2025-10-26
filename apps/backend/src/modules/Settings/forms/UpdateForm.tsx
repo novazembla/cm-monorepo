@@ -17,7 +17,7 @@ import { findSettingDbValueByKey } from "../moduleConfig";
 import { useTranslation } from "react-i18next";
 import FieldMultiLangTextarea from "~/components/forms/FieldMultiLangTextarea";
 
-export const UpdateForm = ({ data, errors }: { data?: any; errors?: any }) => {
+export const UpdateForm = ({ data /*, errors */ }: { data?: any; errors?: any }) => {
   const { t } = useTranslation();
   const settingsFieldDefinitions = getSettingsFieldDefinitions();
 

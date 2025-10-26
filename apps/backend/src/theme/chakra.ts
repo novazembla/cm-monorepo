@@ -155,7 +155,7 @@ const themeConfig = {
   },
 };
 
-const defaultPropsForFormComponentents = (components: string[]): object => {
+const defaultPropsForFormComponentents = (components: string[]): Record<string, unknown> => {
   return {
     components: components.reduce((options, key) => {
       return {

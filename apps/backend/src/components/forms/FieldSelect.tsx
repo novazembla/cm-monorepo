@@ -53,7 +53,7 @@ export const FieldSelect = ({
     register,
   } = useFormContext();
 
-  let fieldProps: FieldSelectSettings = {
+  const fieldProps: FieldSelectSettings = {
     key: `key-${id}`,
     name: name,
   };
@@ -90,7 +90,7 @@ export const FieldSelect = ({
         render={({ field }) => (
           <Select
             styles={{
-              control: (styles: any, state: any) => ({
+              control: (styles: any /*, state: any */) => ({
                 ...styles,
                 borderColor:  "var(--chakra-colors-gray-400)",
               }),

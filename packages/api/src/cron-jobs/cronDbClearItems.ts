@@ -5,7 +5,7 @@ import { getPrismaClient } from "../db/client";
 
 const prisma = getPrismaClient();
 
-export async function cronDbClearItems () {
+export async function cronDbClearItems() {
   logger.info("[CRON:dbClearItems]: starting cron job");
   try {
     const countEventsTrashed = await prisma.event.updateMany({
@@ -15,7 +15,7 @@ export async function cronDbClearItems () {
       where: {
         isImported: false,
         status: {
-          not: PublishStatus.TRASHED
+          not: PublishStatus.TRASHED,
         },
         lastEventDate: {
           // delete all events that had their last event yesterday
@@ -35,14 +35,14 @@ export async function cronDbClearItems () {
           {
             updatedAt: {
               lt: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 7),
-            }
+            },
           },
           {
             lastEventDate: {
-              lt:new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 7),
+              lt: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 7),
             },
-          }  
-        ]
+          },
+        ],
       },
     });
 
@@ -94,4 +94,4 @@ export async function cronDbClearItems () {
       `[CRON:dbClearItems]: Failed to run cron job. ${Err.name} ${Err.message}`
     );
   }
-};
+}

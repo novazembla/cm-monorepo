@@ -46,6 +46,7 @@ const PasswordReset = () => {
     if (!token) {
       router.push("/login");
     } else {
+      // nothing to do
     }
   }, [token, router]);
 

@@ -66,6 +66,7 @@ export class LeafletMapGeoman {
         maxZoom: 20,
       });
 
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       L.maplibreGL({
         style,
@@ -102,7 +103,7 @@ export class LeafletMapGeoman {
         this.attachEvents(event.layer);
         this.generateGeoJson();
       });
-      this.map.on("pm:remove", (event) => {
+      this.map.on("pm:remove", (/* event */) => {
         this.generateGeoJson();
       });
     } else {
@@ -129,7 +130,7 @@ export class LeafletMapGeoman {
     };
 
     layers.forEach((layer) => {
-      var geoJson = layer.toGeoJSON();
+      const geoJson = layer.toGeoJSON();
       if (!geoJson.properties) {
         geoJson.properties = {};
       }
@@ -137,7 +138,7 @@ export class LeafletMapGeoman {
       geoJson.properties.options = pick(layer.options, ["weight", "color"]);
 
       if (layer.options.radius) {
-        var radius = parseFloat(layer.options.radius);
+        const radius = parseFloat(layer.options.radius);
         if (radius % 1 !== 0) {
           geoJson.properties.options.radius = radius.toFixed(6);
         } else {
@@ -212,12 +213,12 @@ export class LeafletMapGeoman {
     if (!Array.isArray(stops)) return;
 
     this.map.eachLayer((layer: any) => {
-      if (!!!layer.pm && layer instanceof L.Marker) {
+      if (!layer.pm && layer instanceof L.Marker) {
         layer.remove();
       }
     });
 
-    let points = stops.map((stop) => ({
+    const points = stops.map((stop) => ({
       type: "Feature",
       properties: {
         number: stop.number,

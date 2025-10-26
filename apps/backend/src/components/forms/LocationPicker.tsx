@@ -23,7 +23,7 @@ import icon from "leaflet/dist/images/marker-icon.png";
 import iconRetina from "leaflet/dist/images/marker-icon-2x.png";
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
 
-let DefaultIcon = L.icon({
+const DefaultIcon = L.icon({
   iconRetinaUrl: iconRetina,
   iconUrl: icon,
   shadowUrl: iconShadow,
@@ -62,6 +62,7 @@ class LeafletLocationPicker {
         minZoom: 11,
       });
 
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       L.maplibreGL({
         style,

@@ -44,7 +44,9 @@ export const isEmptyHtml = (html: string, fast?: boolean) => {
     } else {
       return (html ?? "").replace(/(<([^>]+)>)/gi, "").trim().length === 0;
     }
-  } catch (err) {}
+  } catch (err) {
+    // silence is golden
+  }
   return true;
 };
 
@@ -52,7 +54,7 @@ export const isEmptyHtml = (html: string, fast?: boolean) => {
 export const htmlToTrimmedString = (val: any, length: number) => {
   if (typeof val !== "string") return val;
 
-  let str = htmlToString(val) ?? "";
+  const str = htmlToString(val) ?? "";
 
   if (str.length > length)
     return `${str.replace(new RegExp("^(.{" + length + "}[^\\s]*).*"), "$1")}`;

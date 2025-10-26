@@ -152,7 +152,7 @@ const Index = () => {
       Cell: (cell) => {
         let color = "gray";
         let value = cell.value;
-        let variant = "subtle";
+        const variant = "subtle";
 
         switch (cell.value) {
           case "administrator":
@@ -218,7 +218,7 @@ const Index = () => {
   const onFetchData = (
     pageIndex: number,
     pageSize: number,
-    sortBy: SortingRule<Object>[],
+    sortBy: SortingRule<Record<string, unknown>>[],
     filterKeyword: string
   ) => {
     refetchPageIndex = undefined;

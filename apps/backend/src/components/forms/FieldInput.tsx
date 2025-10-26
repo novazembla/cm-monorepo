@@ -2,7 +2,6 @@ import React, {
   ChangeEventHandler,
   ChangeEvent,
   MouseEventHandler,
-  MouseEvent,
   useRef,
   useEffect,
 } from "react";
@@ -68,7 +67,7 @@ export const FieldInput = ({
     setValue,
   } = useFormContext();
 
-  let fieldProps: FieldInputSettings = {
+  const fieldProps: FieldInputSettings = {
     key: `key-${id}`,
     name: name,
     type: type,
@@ -109,7 +108,7 @@ export const FieldInput = ({
   fieldProps.type = revealFlag ? "text" : fieldProps.type;
 
   const visibilityClickEvent: MouseEventHandler<HTMLButtonElement> = (
-    event: MouseEvent
+    // event: MouseEvent
   ) => {
     setRevealFlag.toggle();
     fieldRef?.current?.focus();
@@ -142,7 +141,7 @@ export const FieldInput = ({
   // (visibly) filled.
   useEffect(() => {
     let counter = 0;
-    let interval = setInterval(() => {
+    const interval = setInterval(() => {
       if (fieldRef.current && fieldRef.current.value) {
         setValue(name, fieldRef.current.value);
         clearInterval(interval);

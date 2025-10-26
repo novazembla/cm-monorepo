@@ -132,6 +132,7 @@ export const multiLangTranslationsJsonRHFormData = (
 
 export const multiLangSlugUniqueError = (
   errors: any,
+  // eslint-disable-next-line @typescript-eslint/ban-types
   setError: Function
 ): boolean => {
   if (Array.isArray(errors) && errors.length) {

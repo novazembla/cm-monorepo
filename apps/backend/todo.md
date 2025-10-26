@@ -60,8 +60,6 @@ https://classic.yarnpkg.com/blog/2017/08/02/introducing-workspaces/
 
 https://classic.yarnpkg.com/en/docs/workspaces/
 
-https://github.com/lerna/lerna
-
 https://www.robinwieruch.de/react-internationalization
 Extract translations: https://react.i18next.com/guides/extracting-translations, https://www.i18next.com/overview/plugins-and-utils#extraction-tools
 

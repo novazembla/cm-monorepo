@@ -8,8 +8,9 @@ import {
 } from "~/validation";
 
 export const PasswordUpdateForm = ({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   data,
-  errors,
+  // errors,
 }: {
   data?: any;
   errors?: any;

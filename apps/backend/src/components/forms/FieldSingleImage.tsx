@@ -52,6 +52,7 @@ export const FieldSingleImage = ({
   name: string;
   currentImage: Record<string, any>;
   connectWith?: any;
+  // eslint-disable-next-line @typescript-eslint/ban-types
   setActiveUploadCounter?: Function;
   activeLanguages?: string[];
 }) => {

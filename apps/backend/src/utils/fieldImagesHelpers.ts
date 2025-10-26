@@ -22,7 +22,9 @@ export const fieldImagesParseIncomingImages = (images: any) => {
             config.activeLanguages
           ),
         });
-      } catch (err) {}
+      } catch (err) {
+        // silence is golden
+      }
       return acc;
     }, []);
 

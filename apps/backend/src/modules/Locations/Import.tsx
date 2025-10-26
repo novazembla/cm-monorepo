@@ -43,7 +43,7 @@ import { SortingRule, Cell } from "react-table";
 export const AdminTableDataImportStatusCell = (cell: Cell) => {
   const { t } = useTranslation();
   let color = "gray";
-  let variant = "subtle";
+  const variant = "subtle";
   let label = t("publish.status.unknown", "Unknown");
 
   if (cell.value === DataImportStatus.CREATED) {
@@ -262,7 +262,7 @@ const Import = () => {
   const onFetchData = (
     pageIndex: number,
     pageSize: number,
-    sortBy: SortingRule<Object>[],
+    sortBy: SortingRule<Record<string, unknown>>[],
     filterKeyword: string
   ) => {
     refetchPageIndex = undefined;

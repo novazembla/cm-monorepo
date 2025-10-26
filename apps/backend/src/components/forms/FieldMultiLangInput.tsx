@@ -8,7 +8,6 @@ import TwoColFieldRow from "./TwoColFieldRow";
 import { useConfig } from "~/hooks";
 import FieldRow from "./FieldRow";
 import { flattenErrors } from ".";
-import { activeLanguages } from "~/config";
 
 export interface FieldMultiLangInputSettings {
   onChange?: ChangeEventHandler;
@@ -58,7 +57,7 @@ export const FieldMultiLangInput = ({
     register,
   } = useFormContext();
 
-  let fieldProps: FieldMultiLangInputFieldProps = {
+  const fieldProps: FieldMultiLangInputFieldProps = {
     type: type,
     autoComplete: "new-password",
   };

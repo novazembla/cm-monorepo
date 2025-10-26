@@ -21,7 +21,7 @@ import { yupIsFieldRequired } from "~/validation";
 
 export const ModuleForm = ({
   data,
-  errors,
+  // errors,
   action,
   validationSchema,
   setActiveUploadCounter,
@@ -31,6 +31,7 @@ export const ModuleForm = ({
   errors?: any;
   validationSchema: any;
   action: "create" | "update";
+  // eslint-disable-next-line @typescript-eslint/ban-types
   setActiveUploadCounter?: Function;
   clearAlternatives?: () => void;
 }) => {

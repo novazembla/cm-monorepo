@@ -65,7 +65,7 @@ export const FieldImageCropPositionSelect = ({
         render={({ field }) => (
           <Select
             styles={{
-              control: (styles: any, state: any) => ({
+              control: (styles: any /*, state: any */) => ({
                 ...styles,
                 borderColor: "var(--chakra-colors-gray-400)",
               }),

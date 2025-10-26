@@ -21,6 +21,7 @@ const QUERY_SETTINGS = gql`
   }
 `;
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const SettingsLoader = ({ type = "full" }: { type?: string }) => {
   const dispatch = useTypedDispatch();
 

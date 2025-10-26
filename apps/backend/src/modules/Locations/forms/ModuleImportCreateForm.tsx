@@ -3,16 +3,17 @@ import { useTranslation } from "react-i18next";
 import { FieldInput, FieldRow } from "~/components/forms";
 
 export const ModuleImportCreateForm = ({
-  data,
-  errors,
+  // data,
+  // errors,
   action,
-  validationSchema,
-  setActiveUploadCounter,
+  // validationSchema,
+  // setActiveUploadCounter,
 }: {
   data?: any;
   errors?: any;
   validationSchema: any;
   action: "create" | "update";
+  // eslint-disable-next-line @typescript-eslint/ban-types
   setActiveUploadCounter?: Function;
 }) => {
   const { t } = useTranslation();

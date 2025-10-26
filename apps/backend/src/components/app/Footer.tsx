@@ -5,6 +5,7 @@ import { useSettings } from "~/hooks";
 
 import { isEmptyHtml } from "~/utils";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const Footer = ({ type = "full" }: { type?: string }) => {
   const settings = useSettings();
 

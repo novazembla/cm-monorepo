@@ -613,8 +613,6 @@ const doChores = async () => {
     }
   } catch (err: any) {
     if (prisma) {
-
-    
       const exportInDb = await prisma.dataExport.findUnique({
         where: {
           id: args.exportId,

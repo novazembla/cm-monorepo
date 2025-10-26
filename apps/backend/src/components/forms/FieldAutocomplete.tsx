@@ -44,7 +44,7 @@ export const FieldAutocomplete = ({
   label: string;
   name: string;
   onItemSelect: (item: any) => void;
-  createSearchVariables: (value: any) => object;
+  createSearchVariables: (value: any) => Record<string, unknown>;
   processSearchResult: (data: any) => any;
   resultItemToString: (item: any) => string;
   searchQueryGQL: DocumentNode;
@@ -88,7 +88,7 @@ export const FieldAutocomplete = ({
   } = useCombobox({
     initialSelectedItem: undefined,
     items: searchResult,
-    onStateChange: ({ inputValue, type, selectedItem, isOpen }) => {
+    onStateChange: ({ inputValue, type, selectedItem /*, isOpen */ }) => {
       switch (type) {
         case useCombobox.stateChangeTypes.InputChange:
           if (typeof inputValue === "string" && inputValue.length > minLength)

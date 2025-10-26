@@ -107,7 +107,7 @@ export const FieldNumberInput = ({
   // value and the field does not validate successfully despite being
   // (visibly) filled.
   useEffect(() => {
-    let interval = setInterval(() => {
+    const interval = setInterval(() => {
       if (fieldRef.current && fieldRef.current.value) {
         setValue(name, fieldRef.current.value);
         clearInterval(interval);
@@ -140,7 +140,7 @@ export const FieldNumberInput = ({
             <NumberInput
               {...{
                 ...restField,
-                onBlur: (event) => {
+                onBlur: (/* event */) => {
                   // weirdly restField.onBlur()
                   // sets the field value to undefined
                   // and then the validation fails.

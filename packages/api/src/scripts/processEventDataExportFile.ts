@@ -495,7 +495,7 @@ const doChores = async () => {
         where: {
           id: exportInDb.id,
         },
-      });      
+      });
     } else {
       throw Error(
         exportInDb?.lang === "de"

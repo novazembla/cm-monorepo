@@ -42,7 +42,7 @@ import {
   getMultilangValue,
 } from "~/utils";
 
-export const pageAndContentAuthorsQueryGQL = gql`
+const pageAndContentAuthorsQueryGQL = gql`
   query page($id: Int!) {
     page(id: $id) {
       id
@@ -210,7 +210,7 @@ const Update = () => {
             }
           }
         } else {
-          let slugError = multiLangSlugUniqueError(errors, setError);
+          const slugError = multiLangSlugUniqueError(errors, setError);
 
           if (!slugError) setHasFormError(true);
         }

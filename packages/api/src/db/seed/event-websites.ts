@@ -11,11 +11,11 @@ async function main() {
   const events = await prisma.event.findMany({
     where: {
       status: {
-        notIn: [5,6]
-      }
-    }
+        notIn: [5, 6],
+      },
+    },
   });
-  
+
   async function processEvent(event: Prisma.Event) {
     if ((event?.meta as any)?.event?.event_homepage) {
       console.log(event.id);
@@ -25,13 +25,13 @@ async function main() {
         data: {
           socialMedia: {
             ...((event?.socialMedia as any) ?? {}),
-            website: (event?.meta as any)?.event?.event_homepage
-          }
+            website: (event?.meta as any)?.event?.event_homepage,
+          },
         },
         where: {
-          id: event.id
-        }
-      })
+          id: event.id,
+        },
+      });
     }
   }
 
@@ -44,13 +44,17 @@ async function main() {
 
 main()
   .then(async () => {
-    console.log("🎉  Copied event website information from meta to socialMedia");
+    console.log(
+      "🎉  Copied event website information from meta to socialMedia"
+    );
     prisma.$disconnect();
     process.exit(0);
   })
   .catch((e) => {
     console.error(e);
-    console.error("\n❌  Failed to copy event website information from meta to socialMedia.");
+    console.error(
+      "\n❌  Failed to copy event website information from meta to socialMedia."
+    );
     prisma.$disconnect();
     process.exit(1);
   });

@@ -190,7 +190,7 @@ const Update = () => {
             }
           );
         } else {
-          let slugError = multiLangSlugUniqueError(errors, setError);
+          const slugError = multiLangSlugUniqueError(errors, setError);
 
           if (!slugError) setHasFormError(true);
         }

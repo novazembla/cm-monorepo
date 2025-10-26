@@ -24,4 +24,4 @@ export async function cronImportCalendar() {
       `[CRON:importCalendar]: Failed to run cron job. ${Err.name} ${Err.message}`
     );
   }
-};
+}

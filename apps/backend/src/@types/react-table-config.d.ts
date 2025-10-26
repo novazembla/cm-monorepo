@@ -45,10 +45,12 @@ import {
 } from 'react-table'
 
 declare module 'react-table' {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   export interface UseFlexLayoutInstanceProps<D extends Record<string, unknown>> {
     totalColumnsMinWidth: number
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   export interface UseFlexLayoutColumnProps<D extends Record<string, unknown>> {
     totalMinWidth: number
   }
@@ -110,8 +112,9 @@ declare module 'react-table' {
       UseFlexLayoutColumnProps<D>,
       UseSortByColumnProps<D> {}
 
-  export interface Cell<D extends Record<string, unknown> = Record<string, unknown>> extends UseGroupByCellProps<D> {}
+  export type Cell<D extends Record<string, unknown> = Record<string, unknown>> = UseGroupByCellProps<D>
 
+  // eslint-disable-next-line @typescript-eslint/ban-types
   export interface Row<D extends object = {}>
     extends UseExpandedRowProps<D>,
       UseGroupByRowProps<D>,

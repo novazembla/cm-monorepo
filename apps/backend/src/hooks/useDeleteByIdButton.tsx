@@ -11,6 +11,7 @@ import { useTranslation } from "react-i18next";
 type dZADState = {
   open: boolean;
   id: number | undefined;
+  // eslint-disable-next-line @typescript-eslint/ban-types
   onDelete: Function | undefined;
 };
 

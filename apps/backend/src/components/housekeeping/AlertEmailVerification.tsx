@@ -51,7 +51,7 @@ export const AlertEmailVerification = () => {
     },
   });
 
-  let localEmailVerified =
+  const localEmailVerified =
     typeof data?.userProfileRead?.emailVerified === "boolean"
       ? data?.userProfileRead?.emailVerified
         ? "yes"

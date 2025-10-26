@@ -466,21 +466,20 @@ const doChores = async () => {
                       )
                     : [];
                 mappedIds = [...mappedIds, ...mappedBarriereFreiheitTerms];
-                
-                const title_en = event.event_titel_en !== ""
-                      ? event.event_titel_en
-                      : event.event_titel_de;
+
+                const titleEn =
+                  event.event_titel_en !== ""
+                    ? event.event_titel_en
+                    : event.event_titel_de;
                 const sharedData = {
                   description_de: convertToHtml(event.event_beschreibung_de),
                   description_en: convertToHtml(event.event_beschreibung_en),
                   title_de: event.event_titel_de,
-                  title_en,
+                  title_en: titleEn,
                   slug_de: `veranstaltung-${slugify(event.event_titel_de)}-${
                     event.event_id
                   }`,
-                  slug_en: `event-${slugify(title_en)}-${
-                    event.event_id
-                  }`,
+                  slug_en: `event-${slugify(titleEn)}-${event.event_id}`,
 
                   organiser: convertToHtml(
                     dedent`${getValue(veranstalter?.name)}
@@ -501,7 +500,7 @@ const doChores = async () => {
                   `.trim()
                   ),
                   socialMedia: {
-                    website: event.event_homepage	
+                    website: event.event_homepage,
                   },
                   meta: {
                     event,
@@ -587,7 +586,9 @@ const doChores = async () => {
                             parseInt(event.event_last_mod) * 1000
                           )
                         );
-                        skip = modified < updated && !process.env.CALENDAR_UPDATE_ALL;
+                        skip =
+                          modified < updated &&
+                          !process.env.CALENDAR_UPDATE_ALL;
                       }
 
                       if (
@@ -730,7 +731,7 @@ const doChores = async () => {
       errors.push(`import.berlin.de: ${err.name} ${err.message}`);
       logger.debug(JSON.stringify(err));
       await saveDataImportLog(prisma, DataImportStatus.ERROR);
-    }    
+    }
   } catch (err: any) {
     logger.error(`import.berlin.de: ${err.name} ${err.message}`);
     errors.push(`import.berlin.de: ${err.name} ${err.message}`);

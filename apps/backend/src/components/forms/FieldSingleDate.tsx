@@ -54,9 +54,9 @@ export const FieldSingleDate = ({
         control={control}
         name={name}
         render={({
-          field: { onChange, onBlur, value, name, ref },
-          fieldState: { invalid, isTouched, isDirty, error },
-          formState,
+          field: { onChange, value /* , onBlur, name, ref */ },
+          // fieldState: { invalid, isTouched, isDirty, error },
+          // formState,
         }) => {
           const date = isValidDate(value) ? value : defaultValue;
           return (

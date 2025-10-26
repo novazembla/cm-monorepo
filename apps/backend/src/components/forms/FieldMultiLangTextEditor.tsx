@@ -32,7 +32,7 @@ export const FieldMultiLangTextEditor = ({
   name,
   type,
   isRequired,
-  isDisabled,
+  // isDisabled,
   size = "small",
   activeLanguages,
 }: {
@@ -59,7 +59,7 @@ export const FieldMultiLangTextEditor = ({
             (lang === config.defaultLanguage &&
               settings?.defaultRequired === true);
 
-          let defaultValue = settings?.defaultValues && typeof settings?.defaultValues === "object" && lang in settings.defaultValues ? settings.defaultValues[lang] : undefined;
+          const defaultValue = settings?.defaultValues && typeof settings?.defaultValues === "object" && lang in settings.defaultValues ? settings.defaultValues[lang] : undefined;
 
           return (
             <FieldRow key={field_id}>

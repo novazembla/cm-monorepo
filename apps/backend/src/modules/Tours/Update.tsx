@@ -48,7 +48,7 @@ import {
   getMultilangValue,
 } from "~/utils";
 
-export const tourAndContentAuthorsQueryGQL = gql`
+const tourAndContentAuthorsQueryGQL = gql`
   query tour($id: Int!) {
     tour(id: $id) {
       id
@@ -123,7 +123,7 @@ const Update = () => {
     useDeleteByIdButton(
       tourStopDeleteMutationGQL,
       (id: number | undefined) => {
-        setTourStops(tourStops.filter((ts: any) => ts.id !== id));;
+        setTourStops(tourStops.filter((ts: any) => ts.id !== id));
       },
       {
         requireTextualConfirmation: false,
@@ -283,7 +283,7 @@ const Update = () => {
             }
           }
         } else {
-          let slugError = multiLangSlugUniqueError(errors, setError);
+          const slugError = multiLangSlugUniqueError(errors, setError);
 
           if (!slugError) setHasFormError(true);
         }

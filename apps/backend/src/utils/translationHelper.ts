@@ -18,7 +18,7 @@ export const getMultilangValue = (
     ? `${json[config.defaultLanguage ?? ""]}`
     : undefined;
 
-  let value =
+  const value =
     json[i18n.language] ??
     defVal ??
     i18n.t("translationnotfound", "Trans. not found");

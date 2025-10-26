@@ -37,7 +37,9 @@ export const Header = (/* props */) => {
     if (appUser) {
       try {
         await logoutMutation(appUser.id);
-      } catch (err) {}
+      } catch (err) {
+        // do nothing
+      }
       await logoutAndRedirect();
     }
   };

@@ -52,7 +52,7 @@ export const FieldImages = ({
   label,
   name,
   deleteButtonGQL = imageDeleteMutationGQL,
-  currentImages,
+  // currentImages,
   connectWith,
   setActiveUploadCounter,
 }: {
@@ -64,6 +64,7 @@ export const FieldImages = ({
   name: string;
   currentImages: any[] | undefined;
   connectWith?: any;
+  // eslint-disable-next-line @typescript-eslint/ban-types
   setActiveUploadCounter?: Function;
 }) => {
   const { t } = useTranslation();
@@ -79,7 +80,9 @@ export const FieldImages = ({
   const config = useConfig();
 
   const [deleteButtonOnClick, DeleteAlertDialog, isDeleteError] =
-    useDeleteByIdButton(deleteButtonGQL, () => {}, {
+    useDeleteByIdButton(deleteButtonGQL, () => {
+      // do nothing
+    }, {
       requireTextualConfirmation: false,
     });
 

@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 
 type TypeErrorMessage = {
   key: string;
-  values: object;
+  values: Record<string, unknown>;
 };
 
 export const FieldErrorMessage = ({

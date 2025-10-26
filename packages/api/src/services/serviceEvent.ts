@@ -5,11 +5,11 @@ import httpStatus from "http-status";
 import { ApiError } from "../utils";
 import { logger } from "./serviceLogging";
 import { PublishStatus } from "@culturemap/core";
-import { getPrismaClient } from "../db/client";
-import {
-  geocodingGetAddressCandidates,
-  geocodingGetBestMatchingLocation,
-} from "../utils/geocoding";
+// import { getPrismaClient } from "../db/client";
+// import {
+//   geocodingGetAddressCandidates,
+//   geocodingGetBestMatchingLocation,
+// } from "../utils/geocoding";
 import { getApiConfig } from "../config";
 import { sendEmail } from "./serviceEmail";
 import { getSettings } from "./serviceSetting";

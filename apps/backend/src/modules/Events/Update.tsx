@@ -47,7 +47,7 @@ import {
   getMultilangValue,
 } from "~/utils";
 
-export const eventAndContentAuthorsQueryGQL = gql`
+const eventAndContentAuthorsQueryGQL = gql`
   query event($id: Int!) {
     event(id: $id) {
       id
@@ -165,7 +165,9 @@ const Update = () => {
             begin: new Date(date.begin),
             end: new Date(date.end),
           });
-        } catch (err) {}
+        } catch (err) {
+          // do nothing
+        }
         return acc;
       }, []);
 
@@ -178,7 +180,7 @@ const Update = () => {
     let moduleTerms = {};
 
     if (data?.moduleTaxonomies) {
-      let requiredModules = data.moduleTaxonomies.reduce((acc: any, m: any) => {
+      const requiredModules = data.moduleTaxonomies.reduce((acc: any, m: any) => {
         if (!m?.isRequired || !Array.isArray(m.terms) || m.terms.length === 0)
           return acc;
 
@@ -390,7 +392,7 @@ const Update = () => {
             }
           }
         } else {
-          let slugError = multiLangSlugUniqueError(errors, setError);
+          const slugError = multiLangSlugUniqueError(errors, setError);
 
           if (!slugError) setHasFormError(true);
         }

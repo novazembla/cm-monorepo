@@ -43,7 +43,7 @@ import { config } from "~/config";
 import { SortingRule } from "react-table";
 import { Divider, chakra, Button, Box, Flex } from "@chakra-ui/react";
 
-export const locationsQueryGQL = gql`
+const locationsQueryGQL = gql`
   query locations(
     $where: JSON
     $orderBy: JSON
@@ -297,7 +297,7 @@ const Index = () => {
   const onFetchData = (
     pageIndex: number,
     pageSize: number,
-    sortBy: SortingRule<Object>[],
+    sortBy: SortingRule<Record<string, unknown>>[],
     filterKeyword: string,
     forceRefetch?: boolean
   ) => {

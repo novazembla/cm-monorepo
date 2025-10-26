@@ -15,15 +15,16 @@ import FieldMultiLangTextarea from "~/components/forms/FieldMultiLangTextarea";
 
 export const TourStopForm = ({
   data,
-  errors,
+  // errors,
   action,
-  validationSchema,
+  // validationSchema,
   setActiveUploadCounter,
 }: {
   data?: any;
   errors?: any;
   validationSchema: any;
   action: "create" | "update";
+  // eslint-disable-next-line @typescript-eslint/ban-types
   setActiveUploadCounter?: Function;
 }) => {
   const { t } = useTranslation();

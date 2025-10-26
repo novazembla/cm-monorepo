@@ -40,7 +40,7 @@ import {
   mapGroupOptionsToData,
 } from "~/utils";
 
-export const eventGetTaxonomies = gql`
+const eventGetTaxonomies = gql`
   query event {
     moduleTaxonomies(key: "event") {
       id
@@ -81,7 +81,7 @@ const Create = () => {
   useEffect(() => {
     if (!data || !Array.isArray(data.moduleTaxonomies)) return;
 
-    let requiredModules = data.moduleTaxonomies.reduce((acc: any, m: any) => {
+    const requiredModules = data.moduleTaxonomies.reduce((acc: any, m: any) => {
       if (!m?.isRequired || !Array.isArray(m.terms) || m.terms.length === 0)
         return acc;
 
@@ -217,7 +217,7 @@ const Create = () => {
             `${moduleRootPath}/update/${mutationResults.data?.eventCreate?.id}`
           );
         } else {
-          let slugError = multiLangSlugUniqueError(
+          const slugError = multiLangSlugUniqueError(
             mutationResults.errors,
             setError
           );
