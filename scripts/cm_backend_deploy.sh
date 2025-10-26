@@ -16,7 +16,7 @@ else
   exit 1
 fi
 
-nvm use 16
+nvm use 24
 
 npm ci
 if [ $? -eq 0 ]; then

@@ -10,7 +10,7 @@ git stash
 git stash drop
 git pull 
 
-nvm use 20
+nvm use 24
 
 npm ci
 
