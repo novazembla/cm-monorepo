@@ -34,12 +34,12 @@ export async function cronDbClearItems () {
         OR: [
           {
             updatedAt: {
-              lt: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 90),
+              lt: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 7),
             }
           },
           {
             lastEventDate: {
-              lt:new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 90),
+              lt:new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 7),
             },
           }  
         ]
@@ -54,7 +54,7 @@ export async function cronDbClearItems () {
       where: {
         status: PublishStatus.TRASHED,
         updatedAt: {
-          lt: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 90),
+          lt: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 7),
         },
       },
     });
@@ -67,7 +67,7 @@ export async function cronDbClearItems () {
       where: {
         status: PublishStatus.TRASHED,
         updatedAt: {
-          lt: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 90),
+          lt: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 7),
         },
       },
     });
@@ -80,7 +80,7 @@ export async function cronDbClearItems () {
       where: {
         status: PublishStatus.TRASHED,
         updatedAt: {
-          lt: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 90),
+          lt: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 7),
         },
       },
     });
