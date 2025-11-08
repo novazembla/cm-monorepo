@@ -47,6 +47,7 @@
     "package:api:db:generate": "npx prisma generate",
     "package:api:db:studio": "npx prisma studio",
     "package:api:calendar:sync": "NODE_ENV=development dotenv -e .env -- node ./packages/api/dist/scripts/import.berlin.de.calendar.js",
+    "package:api:settings:highlight:clear": "NODE_ENV=development dotenv -e .env -- node ./packages/api/dist/scripts/settings.homepage.highlights.clear.js",
     "package:api:calendar:sync:all": "NODE_ENV=development CALENDAR_UPDATE_ALL=1 dotenv -e .env -- node ./packages/api/dist/scripts/import.berlin.de.calendar.js",
     "package:api:db:seed:init": "NODE_ENV=development dotenv -e .env -- node ./packages/api/dist/db/seed/init.js",
     "package:api:db:seed:accessibility": "NODE_ENV=development dotenv -e .env -- node ./packages/api/dist/db/seed/accessibility.js",
