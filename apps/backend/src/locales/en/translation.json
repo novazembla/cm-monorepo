@@ -296,6 +296,7 @@
           "postCode": "Post code",
           "street1": "Street (1)",
           "street2": "Street (2)",
+          "ticketFee": "10 - 16 Euro",
           "url": "https://...."
         }
       }
@@ -345,7 +346,8 @@
       "forms": {
         "field": {
           "label": {
-            "additionalSuggestionInformation": "This event has been suggested via the website with the following additional Information"
+            "additionalSuggestionInformation": "This event has been suggested via the website with the following additional Information",
+            "ticketFee": "Admission Fee"
           }
         }
       }
@@ -1207,7 +1209,8 @@
     "slug": {
       "chooselocation": "Please choose a location",
       "invalidcharacters": "You can only use A-Z, -, and numbers",
-      "notahexcolor": "Please provide a valid HEX color (like #a8f or #f9ad9f)"
+      "notahexcolor": "Please provide a valid HEX color (like #a8f or #f9ad9f)",
+      "ticketFee": "Please state further information regarding the admission fee/costs of the event"
     },
     "string": {
       "email": "This field must be a valid email address",

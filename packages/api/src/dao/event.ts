@@ -189,6 +189,14 @@ export const daoEventUpdate = async (
   id: number,
   data: Prisma.EventUpdateInput
 ): Promise<Event> => {
+  console.log(data);
+  if (!data.isFree && ((data?.ticketFee ?? "") as string).trim() === "") {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      `ticketFee may not be empty if event is not free`
+    );
+  }
+
   const result = await daoSharedCheckSlugUnique(
     prisma.event.findMany,
     (data as any).slug,

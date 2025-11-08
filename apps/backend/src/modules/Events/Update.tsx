@@ -59,6 +59,7 @@ const eventAndContentAuthorsQueryGQL = gql`
       address
       organiser
       isFree
+      ticketFee
       isImported
       meta
       socialMedia
@@ -242,7 +243,8 @@ const Update = () => {
       ...mapDataToPrimaryTerms(data.event.primaryTerms, data.moduleTaxonomies),
       address: data?.event.address ?? "",
       organiser: data?.event.organiser ?? "",
-      isFree: !!data.event.isFree,
+      isFree: !!data?.event?.isFree,
+      ticketFee: data?.event?.ticketFee ?? "",
       isImported: !!data.event.isImported,
       date: new Date("12/20/2021"),
       dates: parseIncomingDates(data?.event?.dates),
@@ -338,6 +340,7 @@ const Update = () => {
           address: newData?.address ?? "",
           organiser: newData?.organiser ?? "",
           isFree: !!newData.isFree,
+          ticketFee: newData?.ticketFee ?? "",
           isImported: !!newData.isImported,
           dates: newData.dates,
           status: newData.status,

@@ -296,6 +296,7 @@
           "postCode": "Postleitzahl",
           "street1": "Straße (1)",
           "street2": "Straße (2)",
+          "ticketFee": "8 - 12 Euro",
           "url": "https://...."
         }
       }
@@ -345,7 +346,8 @@
       "forms": {
         "field": {
           "label": {
-            "additionalSuggestionInformation": "Diese Veranstaltung wurder über die Webseite mit folgenden Zusatzinformationen vorgeschlagen"
+            "additionalSuggestionInformation": "Diese Veranstaltung wurder über die Webseite mit folgenden Zusatzinformationen vorgeschlagen",
+            "ticketFee": "Informationen zu den Veranstaltungskosten"
           }
         }
       }
@@ -1207,7 +1209,8 @@
     "slug": {
       "chooselocation": "Bitte wählen Sie einen Ort",
       "invalidcharacters": "Bitte verwenden Sie ausschliesslich A-Z, -, und Zahlen",
-      "notahexcolor": "Bitte geben Sie eine gültige HEX-Farbe an (z.B. #a8f oder #f9ad9f)"
+      "notahexcolor": "Bitte geben Sie eine gültige HEX-Farbe an (z.B. #a8f oder #f9ad9f)",
+      "ticketFee": "Bitte geben Sie nähere Informationen über die Kosten der Verantstaltung an"
     },
     "string": {
       "email": "Dieses Feld muss eine gültige E-Mail-Adresse sein",

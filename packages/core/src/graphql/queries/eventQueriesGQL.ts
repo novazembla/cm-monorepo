@@ -16,6 +16,7 @@ export const eventsQueryGQL = gql`
         status
         description
         isFree
+        ticketFee
         isImported
         meta
         updatedAt
@@ -54,6 +55,7 @@ export const eventGQL = gql`
       description
       metaDesc
       isFree
+      ticketFee
       isImported
       meta
       socialMedia

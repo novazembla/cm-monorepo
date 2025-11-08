@@ -9,6 +9,8 @@ import { getApiConfig } from "../config";
 
 import * as types from "./types";
 
+import { logger } from "../services/serviceLogging";
+
 const apiConfigOnBoot = getApiConfig();
 
 // TODO: interesting plugins:
@@ -22,7 +24,7 @@ let schemaConfig: core.SchemaConfig = {
 };
 
 // in production we don't need to generate typings or the schema file
-if (process.env.NODE_ENV !== "production")
+if (process.env.NODE_ENV !== "production") {
   schemaConfig = {
     ...schemaConfig,
     ...{
@@ -42,7 +44,7 @@ if (process.env.NODE_ENV !== "production")
       },
     },
   };
-
+}
 export const schema = makeSchema(schemaConfig);
 
 export default schema;

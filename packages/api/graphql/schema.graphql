@@ -128,6 +128,7 @@ type Event {
   socialMedia: JSON
   status: Int!
   terms: [Term]
+  ticketFee: String!
   title: JSON
   updatedAt: DateTime
 }
@@ -158,6 +159,7 @@ input EventSuggestionInput {
   slug: JSON!
   socialMedia: JSON
   terms: JSON
+  ticketFee: String!
   title: JSON!
 }
 
@@ -177,6 +179,7 @@ input EventUpsertInput {
   socialMedia: JSON
   status: Int!
   terms: JSON
+  ticketFee: String!
   title: JSON!
 }
 

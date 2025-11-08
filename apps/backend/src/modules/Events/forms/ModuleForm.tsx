@@ -95,6 +95,7 @@ export const ModuleForm = ({
     register,
     control,
     getValues,
+    watch,
   } = useFormContext();
 
   console.log(errors);
@@ -174,6 +175,8 @@ export const ModuleForm = ({
     }
   }
 
+  const isFree = !!watch(`isFree`);
+  
   // TODO: allow taxonomies to be required (And validated accordingly)
   return (
     <>
@@ -249,6 +252,22 @@ export const ModuleForm = ({
           </FieldRow>
         )}
       </TwoColFieldRow>
+      {!isFree &&
+        <FieldRow>
+          <FieldInput
+            id="ticketFee"
+            type="text"
+            name="ticketFee"
+            label={t("module.event.forms.field.label.ticketFee", "Ticket Fee")}
+            isRequired={yupIsFieldRequired("ticketFee", validationSchema)}
+            settings={{
+              placeholder: t(
+                "locations.forms.field.placeholder.ticketFee",
+                "10 - 24 Euro"
+              ),
+            }}
+          />
+        </FieldRow>}
       {updateActions}
       {data && data?.moduleTaxonomies && (
         <>

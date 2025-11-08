@@ -5,21 +5,11 @@ import { LoremIpsum } from "lorem-ipsum";
 import type { Address } from "../src/types";
 
 import { getApiConfig } from "../src/config";
+import { slugify } from "../src/utils";
 
 const { PrismaClient } = PrismaComplete;
 
 const prisma = new PrismaClient();
-
-const slugify = (text: string) => {
-  return text
-    .toString()
-    .toLowerCase()
-    .replace(/\s+/g, "-") // Replace spaces with -
-    .replace(/[^\w-]+/g, "") // Remove all non-word chars
-    .replace(/--+/g, "-") // Replace multiple - with single -
-    .replace(/^-+/, "") // Trim - from start of text
-    .replace(/-+$/, ""); // Trim - from end of text
-};
 
 const categories = [
   ["Begegnungsstätten", "Community Places"],

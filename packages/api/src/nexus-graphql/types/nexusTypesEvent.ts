@@ -82,6 +82,7 @@ export const Event = objectType({
     t.json("meta");
     t.json("socialMedia");
     t.boolean("isFree");
+    t.nonNull.string("ticketFee");
     t.boolean("isImported");
 
     t.list.field("dates", {
@@ -439,6 +440,7 @@ export const EventUpsertInput = inputObjectType({
     t.nonNull.json("slug");
     t.nonNull.int("status");
     t.nonNull.boolean("isFree");
+    t.nonNull.string("ticketFee");
     t.boolean("isImported");
     t.nonNull.string("address");
     t.nonNull.string("organiser");
@@ -463,6 +465,7 @@ export const EventSuggestionInput = inputObjectType({
     t.nonNull.string("address");
     t.nonNull.string("organiser");
     t.nonNull.boolean("isFree");
+    t.nonNull.string("ticketFee");
     t.json("meta");
     t.json("terms");
     t.json("heroImage");

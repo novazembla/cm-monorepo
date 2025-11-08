@@ -81,6 +81,7 @@ export interface NexusGenInputs {
     slug: NexusGenScalars['JSON']; // JSON!
     socialMedia?: NexusGenScalars['JSON'] | null; // JSON
     terms?: NexusGenScalars['JSON'] | null; // JSON
+    ticketFee: string; // String!
     title: NexusGenScalars['JSON']; // JSON!
   }
   EventUpsertInput: { // input type
@@ -99,6 +100,7 @@ export interface NexusGenInputs {
     socialMedia?: NexusGenScalars['JSON'] | null; // JSON
     status: number; // Int!
     terms?: NexusGenScalars['JSON'] | null; // JSON
+    ticketFee: string; // String!
     title: NexusGenScalars['JSON']; // JSON!
   }
   ImageUpdateInput: { // input type
@@ -350,6 +352,7 @@ export interface NexusGenObjects {
     socialMedia?: NexusGenScalars['JSON'] | null; // JSON
     status: number; // Int!
     terms?: Array<NexusGenRootTypes['Term'] | null> | null; // [Term]
+    ticketFee: string; // String!
     updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
   }
   EventDate: { // root type
@@ -683,6 +686,7 @@ export interface NexusGenFieldTypes {
     socialMedia: NexusGenScalars['JSON'] | null; // JSON
     status: number; // Int!
     terms: Array<NexusGenRootTypes['Term'] | null> | null; // [Term]
+    ticketFee: string; // String!
     title: NexusGenScalars['JSON'] | null; // JSON
     updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
   }
@@ -1133,6 +1137,7 @@ export interface NexusGenFieldTypeNames {
     socialMedia: 'JSON'
     status: 'Int'
     terms: 'Term'
+    ticketFee: 'String'
     title: 'JSON'
     updatedAt: 'DateTime'
   }

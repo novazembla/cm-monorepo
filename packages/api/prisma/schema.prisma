@@ -135,6 +135,7 @@ model Event {
   socialMedia              Json? @default("{}")
   
   isFree     Boolean    @default(false)
+  ticketFee  String     @default("")
   isImported Boolean    @default(false)
   locations  Location[]
 
