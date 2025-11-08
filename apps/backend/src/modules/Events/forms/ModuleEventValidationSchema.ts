@@ -14,11 +14,7 @@ export const ModuleEventCreateSchema = object().shape(
       status: number(),
       isFree: boolean(),
       // t("validation.slug.ticketFee", "Please state further information regarding the admission fee/costs of the event")
-      ticketFee: string().when("isFree", {
-        is: false,
-        then: string().required("validation.slug.ticketFee"),
-        otherwise: string().nullable(),
-      }),
+      ticketFee: string(),
       address: string(),
       organiser: string(),
       facebook: string().url(),

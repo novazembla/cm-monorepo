@@ -131,7 +131,9 @@ export async function cronDbClearItems() {
         );
         await prisma.setting.update({
           data: {
-            value: stillActiveHiglights,
+            value: {
+              json: stillActiveHiglights,
+            },
           },
           where: {
             id: setting.id,

@@ -70,7 +70,9 @@ const doChores = async () => {
         );
         await prisma.setting.update({
           data: {
-            value: stillActiveHiglights,
+            value: {
+              json: stillActiveHiglights,
+            },
           },
           where: {
             id: setting.id,
