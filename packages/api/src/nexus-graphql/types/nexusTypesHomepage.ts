@@ -196,6 +196,7 @@ export const HomepageQuery = extendType({
                               id: loc?.heroImage.id,
                               meta: loc?.heroImage.meta,
                               status: loc?.heroImage.status,
+                              cropPosition: loc?.heroImage.cropPosition,
                               alt: daoSharedMapTranslatedColumnsInRowToJson(
                                 loc?.heroImage,
                                 "alt"
@@ -396,6 +397,7 @@ export const HomepageQuery = extendType({
                               id: item?.heroImage.id,
                               meta: item?.heroImage.meta,
                               status: item?.heroImage.status,
+                              cropPosition: item?.heroImage.cropPosition,
                               alt: daoSharedMapTranslatedColumnsInRowToJson(
                                 item?.heroImage,
                                 "alt"
@@ -589,6 +591,7 @@ export const HomepageQuery = extendType({
                               id: item?.heroImage.id,
                               meta: item?.heroImage.meta,
                               status: item?.heroImage.status,
+                              cropPosition: item?.heroImage.cropPosition,
                               alt: daoSharedMapTranslatedColumnsInRowToJson(
                                 item?.heroImage,
                                 "alt"
